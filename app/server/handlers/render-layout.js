@@ -18,13 +18,17 @@ const getConfig = state => {
     gtmId: get(state, ["qt", "config", "publisher-attributes", "google_tag_manager", "id"], ""),
     gaId: get(state, ["qt", "config", "publisher-attributes", "google_analytics", "id"], ""),
     cdnImage: get(state, ["qt", "config", "cdn-image"], ""),
-    isOnesignalEnable: get(state, ["qt", "config", "publisher-attributes", "onesignal", "is_enable"], false)
+    oneSignalSafariId: get(state, ["qt", "config", "publisher-attributes", "onesignal", "safari_web_id"], null),
+    isOnesignalEnable: get(state, ["qt", "config", "publisher-attributes", "onesignal", "is_enable"], false),
+    oneSignalAppId: get(state, ["qt", "config", "public-integrations", "one-signal", "app-id"], null)
   };
 };
 
 export function renderLayout(res, params) {
   const chunk = params.shell ? null : allChunks[getChunkName(params.pageType)];
-  const { gtmId, gaId, cdnImage, isOnesignalEnable } = getConfig(params.store.getState());
+  const { gtmId, gaId, cdnImage, oneSignalSafariId, isOnesignalEnable, oneSignalAppId } = getConfig(
+    params.store.getState()
+  );
   res.render(
     "pages/layout",
     Object.assign(
@@ -51,8 +55,9 @@ export function renderLayout(res, params) {
         store: params.store,
         shell: params.shell,
         serialize,
-        isOnesignalEnable,
-        oneSignalScript: params.oneSignalScript
+        oneSignalAppId,
+        oneSignalSafariId,
+        isOnesignalEnable
       },
       params
     )
