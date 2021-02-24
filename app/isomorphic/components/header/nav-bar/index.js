@@ -1,4 +1,4 @@
-import React, { useState, useEffect, lazy, Suspense } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import get from "lodash/get";
 import { object, bool } from "prop-types";
@@ -10,9 +10,9 @@ import { MenuItem } from "../helper-components";
 import { AppLogo } from "../app-logo";
 
 import "./styles.m.css";
+import AccountModal from "../../login/AccountModal";
 
 const NavBar = ({ menu, enableLogin }) => {
-  const AccountModal = lazy(() => import("../../login/AccountModal"));
   const [showAccountModal, setShowAccountModal] = useState(false);
   const dispatch = useDispatch();
 
@@ -30,12 +30,16 @@ const NavBar = ({ menu, enableLogin }) => {
   }, []);
 
   const logoutHandler = () => {
-    logout().then(() => {
-      dispatch({
-        type: MEMBER_UPDATED,
-        member: null
+    logout()
+      .then(() => {
+        dispatch({
+          type: MEMBER_UPDATED,
+          member: null
+        });
+      })
+      .finally(() => {
+        setShowAccountModal(false);
       });
-    });
   };
 
   const member = useSelector(state => get(state, ["member"], null));
@@ -53,7 +57,7 @@ const NavBar = ({ menu, enableLogin }) => {
         })}
         {enableLogin && (
           <li>
-            {member ? (
+            {member && member["verification-status"] ? (
               <>
                 <button onClick={logoutHandler}>Logout</button>
                 <p>{`Username: ${get(member, ["name"], "")}`}</p>
@@ -61,11 +65,7 @@ const NavBar = ({ menu, enableLogin }) => {
             ) : (
               <>
                 <button onClick={() => setShowAccountModal(true)}>Login</button>
-                {showAccountModal && (
-                  <Suspense fallback={<div></div>}>
-                    <AccountModal onBackdropClick={() => setShowAccountModal(false)} />
-                  </Suspense>
-                )}
+                {showAccountModal && <AccountModal onBackdropClick={() => setShowAccountModal(false)} />}
               </>
             )}
           </li>

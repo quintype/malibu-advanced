@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { func } from "prop-types";
 
+import { sendOtp } from "@quintype/bridgekeeper-js";
+
 import { Modal } from "../Modal";
 import { Login } from "../../molecules/forms/login";
 import { SignUp } from "../../molecules/forms/sign-up";
@@ -13,7 +15,6 @@ const AccountModal = ({ onBackdropClick, checkForMemberUpdated }) => {
   const [activeTab, setActiveTab] = useState("login");
   const [member, setMember] = useState(null);
   const [otpToken, setOtpToken] = useState(null);
-  // const [error, setError] = useState({});
 
   const otpHandler = (member, otpDetails) => {
     setMember(member);
@@ -21,11 +22,13 @@ const AccountModal = ({ onBackdropClick, checkForMemberUpdated }) => {
     setActiveTab("otp");
   };
 
-  const onSuccess = member => {
-    console.log("need to get the verify email api from BK library");
-    // verifyEmail(member.email)
-    //   .then(res => otpHandler(member, res))
-    //   .catch(error => setError(error));
+  const onSuccess = async member => {
+    try {
+      const otpDetails = await sendOtp(member.email);
+      otpHandler(member, otpDetails);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const getScreen = () => {
@@ -39,9 +42,16 @@ const AccountModal = ({ onBackdropClick, checkForMemberUpdated }) => {
           />
         );
       case "register":
-        return <SignUp onSignup={member => onSuccess(member)} />;
+        return (
+          <SignUp
+            onSignup={member => onSuccess(member)}
+            onLogin={() => {
+              setActiveTab("login");
+            }}
+          />
+        );
       case "otp":
-        return <OTP id={otpToken} member={member} checkForMemberUpdated={checkForMemberUpdated} />;
+        return <OTP id={otpToken} member={member} />;
       case "forgot-password":
         return <ForgotPassword onBackdropClick={onBackdropClick} />;
       default:

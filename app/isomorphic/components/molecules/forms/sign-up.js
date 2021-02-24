@@ -1,20 +1,20 @@
 import React, { useState } from "react";
-import PT from "prop-types";
-// import wretch from "wretch";
+import { func } from "prop-types";
+import { register } from "@quintype/bridgekeeper-js";
 
 import { InputField } from "../../atoms/InputField";
-// import { register, checkForMemberInFirebase } from "../../helper/api";
 
 import "./forms.m.css";
 
-export const SignUp = ({ onSignup }) => {
+export const SignUp = ({ onSignup, onLogin }) => {
   const [userInfo, setUserInfo] = useState({
     name: "",
     email: "",
     password: "",
     mobile: ""
   });
-  // const [errorMsg, setError] = useState("");
+  const [errorMsg, setError] = useState("");
+  const [ifUserExists, setUserExists] = useState(false);
 
   // const sendEmail = user => {
   //   const data = {
@@ -28,27 +28,27 @@ export const SignUp = ({ onSignup }) => {
   const signUpHandler = async e => {
     e.preventDefault();
     e.stopPropagation();
-    // const userObj = {
-    //   name: userInfo.name,
-    //   email: userInfo.email,
-    //   username: userInfo.email,
-    //   password: userInfo.password,
-    //   "dont-login": false,
-    // };
+    const userObj = {
+      name: userInfo.name,
+      email: userInfo.email,
+      username: userInfo.email,
+      password: userInfo.password,
+      "dont-login": false
+    };
 
-    // register(userObj)
-    //   .then(({ user }) => {
-    //     onSignup(user);
-    //     sendEmail(user);
-    //     checkForMemberInFirebase(user);
-    //   })
-    //   .catch(err => {
-    //     if (err.status === 409) {
-    //       setError(`The email '${userObj.email}' already exists`);
-    //     } else {
-    //       setError("Oops! Something went wrong");
-    //     }
-    //   });
+    try {
+      const { user, message } = await register(userObj);
+      if (!user && message === "User Already exists") {
+        return setUserExists(true);
+      }
+      onSignup(user);
+    } catch (err) {
+      if (err.status === 409) {
+        setError(`The email '${userObj.email}' already exists`);
+      } else {
+        setError("Oops! Something went wrong");
+      }
+    }
   };
 
   const setData = e => {
@@ -61,18 +61,15 @@ export const SignUp = ({ onSignup }) => {
   return (
     <form styleName="malibu-form" onSubmit={signUpHandler}>
       <InputField name="Name" id="name" required onChange={setData} />
-      {/* <InputField
-        name="Mobile Number"
-        type="tel"
-        id="mobile"
-        maxLength="10"
-        pattern="^\d{10}$"
-        onChange={setData}
-        required
-      /> */}
       <InputField name="Email" type="email" id="email" onChange={setData} required />
       <InputField name="Password" type="password" id="password" onChange={setData} required />
-      {/* {errorMsg && <p styleName="error">{errorMsg}</p>} */}
+      {ifUserExists && (
+        <p styleName="error">
+          The email ID is already registered. Please <button onClick={() => onSignup(userInfo)}>verify</button> or{" "}
+          <button onClick={onLogin}>login</button>.
+        </p>
+      )}
+      {errorMsg && <p styleName="error">{errorMsg}</p>}
       <button aria-label="signup-button" onClick={signUpHandler} className="malibu-btn-large malibu-btn-right">
         Sign up
       </button>
@@ -81,6 +78,7 @@ export const SignUp = ({ onSignup }) => {
 };
 
 SignUp.propTypes = {
-  onSignup: PT.func,
-  setMember: PT.func
+  onSignup: func,
+  setMember: func,
+  onLogin: func
 };
