@@ -1,5 +1,5 @@
 asset_host: http://localhost:8080
-sketches_host: https://malibu-web.qtstage.io
+sketches_host: https://malibu-web.quintype.io
 host_to_api_host:
   help.lvh.me: https://user-documentation.quintype.io
 host_to_automatic_api_host:
@@ -9,6 +9,7 @@ domain_mapping:
   subdomain.lvh.me: subdomain
 
 publisher:
+  timezone: "Asia/Baku"
   google_tag_manager:
     id: "gtm-id"
   google_analytics:
