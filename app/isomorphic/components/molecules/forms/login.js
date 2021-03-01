@@ -5,9 +5,9 @@ import { func, bool } from "prop-types";
 import { SocialLogin } from "../SocialLogin";
 import { InputField } from "../../atoms/InputField";
 import { login, sendOtp, currentUser } from "@quintype/bridgekeeper-js";
+import { IS_OPEN_LOGIN_FORM, MEMBER_UPDATED } from "../../store/actions";
 
 import "./forms.m.css";
-import { IS_OPEN_LOGIN_FORM, MEMBER_UPDATED } from "../../store/actions";
 
 const LoginBase = ({ onLogin, checkForMemberUpdated, forgotPassword, manageLoginForm }) => {
   const [user, setUser] = useState({

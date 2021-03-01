@@ -17,12 +17,10 @@ class HeaderBase extends React.Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    menu: get(state, ["qt", "data", "navigationMenu"], []),
-    enableLogin: get(state, ["qt", "config", "publisher-attributes", "enableLogin"], false),
-    isLoginOpen: get(state, ["isLoginOpen"], false)
-  };
-};
+const mapStateToProps = state => ({
+  menu: get(state, ["qt", "data", "navigationMenu"], []),
+  enableLogin: get(state, ["qt", "config", "publisher-attributes", "enableLogin"], false),
+  isLoginOpen: get(state, ["isLoginOpen"], false)
+});
 
 export const Header = connect(mapStateToProps, () => ({}))(HeaderBase);
