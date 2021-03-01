@@ -4,11 +4,10 @@ import { connect, useDispatch } from "react-redux";
 import { func, bool } from "prop-types";
 import { SocialLogin } from "../SocialLogin";
 import { InputField } from "../../atoms/InputField";
-// import { IS_OPEN_LOGIN_FORM } from "../../helper/actions";
 import { login, sendOtp, currentUser } from "@quintype/bridgekeeper-js";
 
 import "./forms.m.css";
-import { MEMBER_UPDATED } from "../../store/actions";
+import { IS_OPEN_LOGIN_FORM, MEMBER_UPDATED } from "../../store/actions";
 
 const LoginBase = ({ onLogin, checkForMemberUpdated, forgotPassword, manageLoginForm }) => {
   const [user, setUser] = useState({
@@ -102,7 +101,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   manageLoginForm: function(payload) {
     dispatch({
-      // type: IS_OPEN_LOGIN_FORM,
+      type: IS_OPEN_LOGIN_FORM,
       payload: payload
     });
   }

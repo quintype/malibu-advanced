@@ -12,8 +12,8 @@ import { AppLogo } from "../app-logo";
 import "./styles.m.css";
 import AccountModal from "../../login/AccountModal";
 
-const NavBar = ({ menu, enableLogin }) => {
-  const [showAccountModal, setShowAccountModal] = useState(false);
+const NavBar = ({ menu, enableLogin, isLoginOpen }) => {
+  const [showAccountModal, setShowAccountModal] = useState(isLoginOpen);
   const dispatch = useDispatch();
 
   const getCurrentUser = async () => {
@@ -78,7 +78,8 @@ const NavBar = ({ menu, enableLogin }) => {
 
 NavBar.propTypes = {
   menu: object,
-  enableLogin: bool
+  enableLogin: bool,
+  isLoginOpen: bool
 };
 
 export { NavBar };
