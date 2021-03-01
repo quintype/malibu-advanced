@@ -50,7 +50,11 @@ const LoginBase = ({ onLogin, checkForMemberUpdated, forgotPassword, manageLogin
     }
 
     login(userObj)
-      .then(async ({ user }) => {
+      .then(async ({ user, message }) => {
+        if (!user) {
+          setError({ message });
+          return;
+        }
         if (user["verification-status"]) {
           // User email is verified
           await getCurrentUser();
