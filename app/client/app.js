@@ -3,13 +3,14 @@ import { startApp } from "@quintype/framework/client/start";
 import wretch from "wretch";
 
 import { renderApplication, preRenderApplication } from "./render";
-import "../../app/assets/stylesheets/app.scss";
 import { REDUCERS } from "../isomorphic/components/store/reducers";
+import "../../app/assets/stylesheets/app.scss";
+
 
 const opts = {
   enableServiceWorker: process.env.NODE_ENV === "production",
   appVersion: require("../isomorphic/app-version"),
-  preRenderApplication
+  preRenderApplication,
 };
 
 function enableHotReload(store) {
@@ -18,8 +19,12 @@ function enableHotReload(store) {
   }
 }
 
-const CUSTOM_REDUCERS = REDUCERS;
+if (window.OneSignal) {
+  Object.assign(opts, {
+    serviceWorkerLocation: "/OneSignalSDKWorker.js",
+  });
+}
 
 global.wretch = wretch;
 
-startApp(renderApplication, CUSTOM_REDUCERS, opts).then(enableHotReload);
+startApp(renderApplication, REDUCERS, opts).then(enableHotReload);

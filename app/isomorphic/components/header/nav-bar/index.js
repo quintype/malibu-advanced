@@ -1,11 +1,13 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect, useState  } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import get from "lodash/get";
 import { object, bool } from "prop-types";
+import { currentUser, logout } from "@quintype/bridgekeeper-js";
 
-import { OPEN_HAMBURGER_MENU, OPEN_SEARCHBAR } from "../../store/actions";
+import { OPEN_HAMBURGER_MENU, OPEN_SEARCHBAR, MEMBER_UPDATED } from "../../store/actions";
 import { MenuItem } from "../menu-item";
 import HamburgerMenu from "../../atoms/hamburger-menu";
+import AccountModal from "../../login/AccountModal";
 
 import "./navbar.m.css";
 
@@ -26,6 +28,8 @@ const getNavbarMenu = menu => {
 
 const NavBar = () => {
   const dispatch = useDispatch();
+  const [showAccountModal, setShowAccountModal] = useState(false)
+  const enableLogin = useSelector(state => get(state, ["qt", "config", "publisher-attributes", "enableLogin"], true));
   const isHamburgerMenuOpen = useSelector(state => get(state, ["isHamburgerMenuOpen"], false));
   const menu = useSelector(state => get(state, ["qt", "data", "navigationMenu", "homeMenu"], []));
   const hamburgerMenu = useSelector(state => get(state, ["qt", "data", "navigationMenu", "hamburgerMenu"], []));
@@ -42,6 +46,34 @@ const NavBar = () => {
       isSearchBarOpen: false
     });
   };
+
+  const getCurrentUser = async () => {
+    try {
+      const currentUserResp = await currentUser();
+      dispatch({ type: MEMBER_UPDATED, member: get(currentUserResp, ["user"], null) });
+    } catch (err) {
+      console.log("error--------", err);
+    }
+  };
+
+  useEffect(() => {
+    getCurrentUser();
+  }, []);
+
+  const logoutHandler = () => {
+    logout()
+      .then(() => {
+        dispatch({
+          type: MEMBER_UPDATED,
+          member: null
+        });
+      })
+      .finally(() => {
+        setShowAccountModal(false);
+      });
+  };
+
+  const member = useSelector(state => get(state, ["member"], null));
 
   const getDropdownList = () => {
     if (!isHamburgerMenuOpen) {
@@ -77,7 +109,24 @@ const NavBar = () => {
           <div />
         )}
         {getNavbarMenu(menu)}
-        <div> user</div>
+        <div>
+          {" "}
+          {enableLogin && (
+            <li>
+              {member && member["verification-status"] ? (
+                <>
+                  <button onClick={logoutHandler}>Logout</button>
+                  <p>{`Username: ${get(member, ["name"], "")}`}</p>
+                </>
+              ) : (
+                <>
+                  <button onClick={() => setShowAccountModal(true)}>Login</button>
+                  {showAccountModal && <AccountModal onBackdropClick={() => setShowAccountModal(false)} />}
+                </>
+              )}
+            </li>
+          )}
+        </div>
       </nav>
     </div>
   );

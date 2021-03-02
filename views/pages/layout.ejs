@@ -47,6 +47,9 @@
       <link rel="preload" href="<%= jsPath %>" as="script">
     <%_ }) _%>
     <%_ } _%>
+    <%_ if(isOnesignalEnable) { _%>
+      <%- oneSignalScript -%>
+    <%_ } _%>
   </head>
 
   <body>
