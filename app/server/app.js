@@ -73,7 +73,7 @@ getWithConfig(app, "/collection/:collectionSlug", redirectCollectionHandler(), {
 });
 
 app.get("/qlitics.js", (req, res) => {
-  console.log("----------------------------------");
+  console.log("----------------------------------1");
   console.log(req, res);
 });
 
