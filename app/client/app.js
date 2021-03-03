@@ -6,11 +6,10 @@ import { renderApplication, preRenderApplication } from "./render";
 import { REDUCERS } from "../isomorphic/components/store/reducers";
 import "../../app/assets/stylesheets/app.scss";
 
-
 const opts = {
   enableServiceWorker: process.env.NODE_ENV === "production",
   appVersion: require("../isomorphic/app-version"),
-  preRenderApplication,
+  preRenderApplication
 };
 
 function enableHotReload(store) {
@@ -21,7 +20,7 @@ function enableHotReload(store) {
 
 if (window.OneSignal) {
   Object.assign(opts, {
-    serviceWorkerLocation: "/OneSignalSDKWorker.js",
+    serviceWorkerLocation: "/OneSignalSDKWorker.js"
   });
 }
 

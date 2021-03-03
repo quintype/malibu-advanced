@@ -31,5 +31,5 @@ function memberReducer(state = null, action) {
 export const REDUCERS = {
   isHamburgerMenuOpen: hamburgerMenuReducer,
   isSearchBarOpen: searchBarReducer,
-  member: memberReducer,
+  member: memberReducer
 };

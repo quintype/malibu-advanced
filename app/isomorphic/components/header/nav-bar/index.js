@@ -109,8 +109,8 @@ const NavBar = () => {
       </Fragment>
     );
   };
-  const imageUrl =
-    member && member["avatar-s3-key"] ? publisherConfig["cdn-image"] + member["avatar-s3-key"] : assetify(User);
+  const getImageCdn = useSelector(state => get(state, ["qt", "cdn-image"], ""));
+  const imageUrl = member && member["avatar-s3-key"] ? `${getImageCdn}/${member["avatar-s3-key"]}` : assetify(User);
   return (
     <div styleName="main-wrapper" id="sticky-navbar">
       <nav className="container" styleName="wrapper">
