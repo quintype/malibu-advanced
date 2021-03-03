@@ -1,13 +1,16 @@
-import React, { Fragment, useEffect, useState  } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import get from "lodash/get";
 import { object, bool } from "prop-types";
 import { currentUser, logout } from "@quintype/bridgekeeper-js";
+import assetify from "@quintype/framework/assetify";
 
 import { OPEN_HAMBURGER_MENU, OPEN_SEARCHBAR, MEMBER_UPDATED } from "../../store/actions";
 import { MenuItem } from "../menu-item";
 import HamburgerMenu from "../../atoms/hamburger-menu";
 import AccountModal from "../../login/AccountModal";
+import UserIcon from "../../../../assets/images/user-icon.svg";
+import User from "../../../../assets/images/user.svg";
 
 import "./navbar.m.css";
 
@@ -28,7 +31,8 @@ const getNavbarMenu = menu => {
 
 const NavBar = () => {
   const dispatch = useDispatch();
-  const [showAccountModal, setShowAccountModal] = useState(false)
+  const [showAccountModal, setShowAccountModal] = useState(false);
+  const [showUserHandler, setUserHandler] = useState(false);
   const enableLogin = useSelector(state => get(state, ["qt", "config", "publisher-attributes", "enableLogin"], true));
   const isHamburgerMenuOpen = useSelector(state => get(state, ["isHamburgerMenuOpen"], false));
   const menu = useSelector(state => get(state, ["qt", "data", "navigationMenu", "homeMenu"], []));
@@ -41,6 +45,14 @@ const NavBar = () => {
       type: OPEN_HAMBURGER_MENU,
       isHamburgerMenuOpen: !isHamburgerMenuOpen
     });
+    dispatch({
+      type: OPEN_SEARCHBAR,
+      isSearchBarOpen: false
+    });
+  };
+
+  const userAccountHandler = () => {
+    setUserHandler(!showUserHandler);
     dispatch({
       type: OPEN_SEARCHBAR,
       isSearchBarOpen: false
@@ -70,6 +82,7 @@ const NavBar = () => {
       })
       .finally(() => {
         setShowAccountModal(false);
+        setUserHandler(false);
       });
   };
 
@@ -96,7 +109,8 @@ const NavBar = () => {
       </Fragment>
     );
   };
-
+  const imageUrl =
+    member && member["avatar-s3-key"] ? publisherConfig["cdn-image"] + member["avatar-s3-key"] : assetify(User);
   return (
     <div styleName="main-wrapper" id="sticky-navbar">
       <nav className="container" styleName="wrapper">
@@ -109,24 +123,34 @@ const NavBar = () => {
           <div />
         )}
         {getNavbarMenu(menu)}
-        <div>
-          {" "}
-          {enableLogin && (
-            <li>
-              {member && member["verification-status"] ? (
-                <>
-                  <button onClick={logoutHandler}>Logout</button>
-                  <p>{`Username: ${get(member, ["name"], "")}`}</p>
-                </>
-              ) : (
-                <>
-                  <button onClick={() => setShowAccountModal(true)}>Login</button>
-                  {showAccountModal && <AccountModal onBackdropClick={() => setShowAccountModal(false)} />}
-                </>
-              )}
-            </li>
-          )}
-        </div>
+
+        {enableLogin && (
+          <div>
+            {member && member["verification-status"] ? (
+              <>
+                <img src={imageUrl} styleName="member-img" onClick={() => userAccountHandler()} />
+                {showUserHandler && (
+                  <Fragment>
+                    <div styleName="overlay" onClick={() => userAccountHandler()}></div>
+                    <ul styleName="dropdown-content user-account">
+                      <li styleName="user-account-item" onClick={logoutHandler}>
+                        Logout
+                      </li>
+                      <li styleName="user-account-item">Profile</li>
+                    </ul>
+                  </Fragment>
+                )}
+              </>
+            ) : (
+              <>
+                <button styleName="user-btn" onClick={() => setShowAccountModal(true)}>
+                  <img src={assetify(UserIcon)} />
+                </button>
+                {showAccountModal && <AccountModal onBackdropClick={() => setShowAccountModal(false)} />}
+              </>
+            )}
+          </div>
+        )}
       </nav>
     </div>
   );
