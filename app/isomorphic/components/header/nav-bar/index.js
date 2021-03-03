@@ -33,7 +33,7 @@ const NavBar = () => {
   const dispatch = useDispatch();
   const [showAccountModal, setShowAccountModal] = useState(false);
   const [showUserHandler, setUserHandler] = useState(false);
-  const enableLogin = useSelector(state => get(state, ["qt", "config", "publisher-attributes", "enableLogin"], true));
+  const enableLogin = useSelector(state => get(state, ["qt", "config", "publisher-attributes", "enableLogin"], false));
   const isHamburgerMenuOpen = useSelector(state => get(state, ["isHamburgerMenuOpen"], false));
   const menu = useSelector(state => get(state, ["qt", "data", "navigationMenu", "homeMenu"], []));
   const hamburgerMenu = useSelector(state => get(state, ["qt", "data", "navigationMenu", "hamburgerMenu"], []));
@@ -128,10 +128,10 @@ const NavBar = () => {
           <div>
             {member && member["verification-status"] ? (
               <>
-                <img src={imageUrl} styleName="member-img" onClick={() => userAccountHandler()} />
+                <img alt="user" src={imageUrl} styleName="member-img" onClick={userAccountHandler} />
                 {showUserHandler && (
                   <Fragment>
-                    <div styleName="overlay" onClick={() => userAccountHandler()}></div>
+                    <div styleName="overlay" onClick={userAccountHandler}></div>
                     <ul styleName="dropdown-content user-account">
                       <li styleName="user-account-item" onClick={logoutHandler}>
                         Logout
@@ -144,7 +144,7 @@ const NavBar = () => {
             ) : (
               <>
                 <button styleName="user-btn" onClick={() => setShowAccountModal(true)}>
-                  <img src={assetify(UserIcon)} />
+                  <img src={assetify(UserIcon)}  alt="user-icon"/>
                 </button>
                 {showAccountModal && <AccountModal onBackdropClick={() => setShowAccountModal(false)} />}
               </>
@@ -157,8 +157,7 @@ const NavBar = () => {
 };
 
 NavBar.propTypes = {
-  menu: object,
-  enableLogin: bool
+  menu: object
 };
 
 export { NavBar };
