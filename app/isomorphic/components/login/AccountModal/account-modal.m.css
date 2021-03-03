@@ -16,11 +16,11 @@
   .tab-item {
     padding: 10px;
     text-transform: uppercase;
-    color: var(--malibu-gray9);
+    color: var(--grey-dark);
     line-height: 1.63;
     letter-spacing: 1.8px;
   }
   .active {
-    border-bottom: 2px solid var(--malibu-gray9);
+    border-bottom: 2px solid var(--grey-dark);
   }
 }
