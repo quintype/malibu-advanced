@@ -72,6 +72,11 @@ getWithConfig(app, "/collection/:collectionSlug", redirectCollectionHandler(), {
   logError
 });
 
+app.get("/qlitics.js", (req, res) => {
+  console.log("----------------------------------");
+  console.log(req, res);
+});
+
 isomorphicRoutes(app, {
   appVersion: require("../isomorphic/app-version"),
   logError: error => logger.error(error),

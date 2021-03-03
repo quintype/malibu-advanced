@@ -4,9 +4,6 @@ import { shape, string, object, integer, arrayOf } from "prop-types";
 import "./story-grid.m.css";
 
 function StoryGridStoryItem(props) {
-  if (typeof window === "undefined") {
-    return <h1>Placeholder</h1>;
-  }
   return (
     <Link href={`${props.story.slug}`} className="story-grid-item">
       <figure className="qt-image-16x9" styleName="story-grid-item-image">
