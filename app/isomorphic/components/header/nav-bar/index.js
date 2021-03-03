@@ -1,10 +1,10 @@
 import React, { useState, useEffect, Suspense } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { /* useDispatch, */ useSelector } from "react-redux";
 import get from "lodash/get";
 import { object, bool } from "prop-types";
-import { currentUser, logout } from "@quintype/bridgekeeper-js";
+// import { /*currentUser*/, logout } from "@quintype/bridgekeeper-js";
 
-import { MEMBER_UPDATED } from "../../store/actions";
+// import { MEMBER_UPDATED } from "../../store/actions";
 import { NavbarSearch } from "../navbar-search";
 import { MenuItem } from "../helper-components";
 import { AppLogo } from "../app-logo";
@@ -14,33 +14,33 @@ import "./styles.m.css";
 const NavBar = ({ menu, enableLogin }) => {
   const AccountModal = React.lazy(() => import("../../login/AccountModal"));
   const [showAccountModal, setShowAccountModal] = useState(false);
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
-  const getCurrentUser = async () => {
-    try {
-      const currentUserResp = await currentUser();
-      dispatch({ type: MEMBER_UPDATED, member: get(currentUserResp, ["user"], null) });
-    } catch (err) {
-      console.log("error--------", err);
-    }
-  };
+  // const getCurrentUser = async () => {
+  //   try {
+  //     const currentUserResp = await currentUser();
+  //     dispatch({ type: MEMBER_UPDATED, member: get(currentUserResp, ["user"], null) });
+  //   } catch (err) {
+  //     console.log("error--------", err);
+  //   }
+  // };
 
   useEffect(() => {
-    getCurrentUser();
+    // getCurrentUser();
   }, []);
 
-  const logoutHandler = () => {
-    logout()
-      .then(() => {
-        dispatch({
-          type: MEMBER_UPDATED,
-          member: null
-        });
-      })
-      .finally(() => {
-        setShowAccountModal(false);
-      });
-  };
+  // const logoutHandler = () => {
+  //   logout()
+  //     .then(() => {
+  //       dispatch({
+  //         type: MEMBER_UPDATED,
+  //         member: null
+  //       });
+  //     })
+  //     .finally(() => {
+  //       setShowAccountModal(false);
+  //     });
+  // };
 
   const member = useSelector(state => get(state, ["member"], null));
 
@@ -59,7 +59,7 @@ const NavBar = ({ menu, enableLogin }) => {
           <li>
             {member && member["verification-status"] ? (
               <>
-                <button onClick={logoutHandler}>Logout</button>
+                {/* <button onClick={logoutHandler}>Logout</button> */}
                 <p>{`Username: ${get(member, ["name"], "")}`}</p>
               </>
             ) : (
