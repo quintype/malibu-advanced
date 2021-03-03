@@ -11,11 +11,13 @@ import { AppLogo } from "../app-logo";
 import "./styles.m.css";
 
 const NavBar = ({ menu, enableLogin }) => {
+  // Import account modal dynamically
   const AccountModal = React.lazy(() => import("../../login/AccountModal"));
   const [showAccountModal, setShowAccountModal] = useState(false);
   const dispatch = useDispatch();
 
   const getCurrentUser = async () => {
+    // Import current user function only when this function is called
     const { currentUser } = await import("@quintype/bridgekeeper-js");
     try {
       const currentUserResp = await currentUser();
@@ -30,6 +32,7 @@ const NavBar = ({ menu, enableLogin }) => {
   }, []);
 
   const logoutHandler = async () => {
+    // Import logout on click of the logout button
     const { logout } = await import("@quintype/bridgekeeper-js");
     logout()
       .then(() => {
