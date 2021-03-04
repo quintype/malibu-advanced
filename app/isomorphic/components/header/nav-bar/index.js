@@ -12,21 +12,6 @@ import User from "../../../../assets/images/user.svg";
 
 import "./navbar.m.css";
 
-const getNavbarMenu = menu => {
-  return (
-    <ul styleName="navbar">
-      {menu.length > 0 &&
-        menu.map(item => {
-          return (
-            <li key={item.title} styleName="dropdown">
-              <MenuItem item={item} />
-            </li>
-          );
-        })}
-    </ul>
-  );
-};
-
 const NavBar = () => {
   const AccountModal = lazy(() => import("../../login/AccountModal"));
   const dispatch = useDispatch();
@@ -89,7 +74,28 @@ const NavBar = () => {
       });
   };
 
-  const member = useSelector(state => get(state, ["member"], null));
+  const getNavbarMenu = menu => {
+    return (
+      <ul styleName="navbar">
+        {menu.length > 0 &&
+          menu.map(item => {
+            return (
+              <li key={item.title} styleName="dropdown">
+                <MenuItem
+                  item={item}
+                  toggleHandler={() =>
+                    dispatch({
+                      type: OPEN_SEARCHBAR,
+                      isSearchBarOpen: false
+                    })
+                  }
+                />
+              </li>
+            );
+          })}
+      </ul>
+    );
+  };
 
   const getDropdownList = () => {
     if (!isHamburgerMenuOpen) {
@@ -113,7 +119,9 @@ const NavBar = () => {
     );
   };
 
+  const member = useSelector(state => get(state, ["member"], null));
   const imageUrl = member && member["avatar-url"] ? member["avatar-url"] : assetify(User);
+
   return (
     <div styleName="main-wrapper" id="sticky-navbar">
       <nav className="container" styleName="wrapper">
@@ -131,7 +139,14 @@ const NavBar = () => {
           <div styleName="user-profile">
             {member && member["verification-status"] ? (
               <>
-                <img width="24" height="24" alt="user" src={imageUrl} styleName="member-img" onClick={userAccountHandler} />
+                <img
+                  width="24"
+                  height="24"
+                  alt="user"
+                  src={imageUrl}
+                  styleName="member-img"
+                  onClick={userAccountHandler}
+                />
                 {showUserHandler && (
                   <Fragment>
                     <div styleName="overlay" onClick={userAccountHandler}></div>
@@ -147,7 +162,7 @@ const NavBar = () => {
             ) : (
               <>
                 <button styleName="user-btn" onClick={() => setShowAccountModal(true)}>
-                  <img  width="18" height="20" src={assetify(UserIcon)}  alt="user-icon"/>
+                  <img width="18" height="20" src={assetify(UserIcon)} alt="user-icon" />
                 </button>
                 {showAccountModal && (
                   <Suspense fallback={<div></div>}>
@@ -157,7 +172,9 @@ const NavBar = () => {
               </>
             )}
           </div>
-        ):<span></span> }
+        ) : (
+          <span></span>
+        )}
       </nav>
     </div>
   );
