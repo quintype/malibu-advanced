@@ -106,6 +106,9 @@ export function ForgotPasswordBase({ onBackdropClick, isEmailVerification, activ
           <button aria-label="change-password-button" onClick={changePassword} className="malibu-btn-large">
             Verify OTP
           </button>
+          <button aria-label="change-password-button" onClick={emailHandler} className="malibu-btn-large">
+            Resend OTP
+          </button>
         </div>
       </form>
     );
