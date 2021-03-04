@@ -161,7 +161,16 @@ const NavBar = () => {
               </>
             ) : (
               <>
-                <button styleName="user-btn" onClick={() => setShowAccountModal(true)}>
+                <button
+                  styleName="user-btn"
+                  onClick={() => {
+                    setShowAccountModal(true),
+                      dispatch({
+                        type: OPEN_SEARCHBAR,
+                        isSearchBarOpen: false
+                      });
+                  }}
+                >
                   <img width="18" height="20" src={assetify(UserIcon)} alt="user-icon" />
                 </button>
                 {showAccountModal && (
