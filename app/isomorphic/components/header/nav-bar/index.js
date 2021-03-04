@@ -33,7 +33,7 @@ const NavBar = () => {
   const dispatch = useDispatch();
   const [showAccountModal, setShowAccountModal] = useState(false);
   const [showUserHandler, setUserHandler] = useState(false);
-  const enableLogin = useSelector(state => get(state, ["qt", "config", "publisher-attributes", "enableLogin"], false));
+  const enableLogin = useSelector(state => get(state, ["qt", "config", "publisher-attributes", "enableLogin"], true));
   const isHamburgerMenuOpen = useSelector(state => get(state, ["isHamburgerMenuOpen"], false));
   const menu = useSelector(state => get(state, ["qt", "data", "navigationMenu", "homeMenu"], []));
   const hamburgerMenu = useSelector(state => get(state, ["qt", "data", "navigationMenu", "hamburgerMenu"], []));
@@ -109,8 +109,8 @@ const NavBar = () => {
       </Fragment>
     );
   };
-  const getImageCdn = useSelector(state => get(state, ["qt", "cdn-image"], ""));
-  const imageUrl = member && member["avatar-s3-key"] ? `${getImageCdn}/${member["avatar-s3-key"]}` : assetify(User);
+
+  const imageUrl = member && member["avatar-url"] ? member["avatar-url"] : assetify(User);
   return (
     <div styleName="main-wrapper" id="sticky-navbar">
       <nav className="container" styleName="wrapper">
@@ -124,11 +124,11 @@ const NavBar = () => {
         )}
         {getNavbarMenu(menu)}
 
-        {enableLogin && (
-          <div>
+        {enableLogin ? (
+          <div styleName="user-profile">
             {member && member["verification-status"] ? (
               <>
-                <img alt="user" src={imageUrl} styleName="member-img" onClick={userAccountHandler} />
+                <img width="24" height="24" alt="user" src={imageUrl} styleName="member-img" onClick={userAccountHandler} />
                 {showUserHandler && (
                   <Fragment>
                     <div styleName="overlay" onClick={userAccountHandler}></div>
@@ -150,7 +150,7 @@ const NavBar = () => {
               </>
             )}
           </div>
-        )}
+        ):<span></span> }
       </nav>
     </div>
   );

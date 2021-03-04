@@ -92,6 +92,10 @@
   opacity: 0.4;
 }
 
+.user-profile {
+  flex-shrink: 0;
+}
+
 .user-btn {
   background-color: transparent;
   border: none;
@@ -102,6 +106,7 @@
   width: 24px;
   border-radius: 50%;
   cursor: pointer;
+  object-fit: cover;
 }
 
 .user-account {
