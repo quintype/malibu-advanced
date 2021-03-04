@@ -1,14 +1,15 @@
 import React, { useState } from "react";
-import PT from "prop-types";
-import { forgotPassword } from "@quintype/bridgekeeper-js";
+import { func, bool } from "prop-types";
+import { forgotPassword, sendOtp, resetPassword } from "@quintype/bridgekeeper-js";
+import get from "lodash/get";
+import { connect } from "react-redux";
 
 // import { Button } from "../../atoms/button";
 import { InputField } from "../../atoms/InputField";
 // import { verifyEmailOTP, verifyEmail } from "../../helper/api";
-
 import "./forms.m.css";
 
-export function ForgotPassword({ onBackdropClick }) {
+export function ForgotPasswordBase({ onBackdropClick, isEmailVerification, activeLoginTab }) {
   const [email, setEmail] = useState("");
   const [data, setOTPData] = useState({
     otp: "",
@@ -20,27 +21,29 @@ export function ForgotPassword({ onBackdropClick }) {
   const [error, setError] = useState({});
   const [showVerficationScreen, verificationScreenHandler] = useState(false);
   const [showMessage, setMessage] = useState(null);
+  const [emailVerificationMessage, setVerificationMessage] = useState(null);
+  const [otpMessage, setOtpMessage] = useState(null);
   const emailHandler = async e => {
     e.preventDefault();
     e.stopPropagation();
-    const emailObj = { email };
-    const { message, error } = await forgotPassword(emailObj);
+
+    const { message, error } = isEmailVerification ? await forgotPassword({ email }) : await sendOtp(email);
     if (error) {
       setError(error.message);
       return;
     }
-    setMessage(message);
-    setTimeout(() => {
-      setMessage(null);
-      onBackdropClick();
-    }, 5000);
-    // const verifiedData = await verifyEmail(email);
-    // if (verifiedData) {
-    //   data.id = verifiedData["email-token"];
-    //   verificationScreenHandler(true);
-    // } else {
-    //   setError({ message: "error" });
-    // }
+    if (!isEmailVerification) {
+      setVerificationMessage(false);
+      verificationScreenHandler(true);
+    } else {
+      setVerificationMessage(true);
+      setOtpMessage(false);
+      setMessage(message);
+      setTimeout(() => {
+        setMessage(null);
+        onBackdropClick();
+      }, 5000);
+    }
   };
 
   const setEmailData = e => {
@@ -54,7 +57,7 @@ export function ForgotPassword({ onBackdropClick }) {
     setOTPData(userObj);
   };
 
-  const changePassword = e => {
+  const changePassword = async e => {
     e.preventDefault();
     e.stopPropagation();
 
@@ -62,26 +65,24 @@ export function ForgotPassword({ onBackdropClick }) {
       setError({ message: "Password does not match" });
       return null;
     }
+    const resObj = {
+      email: email,
+      otp: data.otp.trim(),
+      "new-password": data.password
+    };
+    const { message } = await resetPassword(resObj);
+    setOtpMessage(true);
     verificationScreenHandler(false); // please remove this
-    console.log("need to write verify email otp logic");
-    // verifyEmailOTP(data.otp.trim(), data.id, data.password)
-    //   .then(() => {
-    //     setSuccessMsg("Your Password has been changed");
-    //     setTimeout(() => {
-    //       onBackdropClick(); // hinding modal after 3 second
-    //     }, 3000);
-    //   })
-    //   .catch(error => {
-    //     console.log("error", error);
-    //     setError({ message: `Invalid OTP or member not found` });
-    //   });
+    setMessage(message);
+    setTimeout(() => {
+      setMessage(null);
+      activeLoginTab();
+    }, 5000);
   };
   if (showVerficationScreen) {
     return (
       <form styleName="malibu-form" key="otp" onSubmit={changePassword}>
-        <p styleName="message">
-          Please check your spam and promotions, and if you still don&apost write to contact@newslaundry
-        </p>
+        <p styleName="message">Please enter 6-digit verification code sent to {email} to reset your password.</p>
         <InputField name="Enter OTP" id="otp" type="text" value={data.otp} required onChange={setData} />
         <InputField
           name="Enter Password"
@@ -109,9 +110,14 @@ export function ForgotPassword({ onBackdropClick }) {
       </form>
     );
   }
-  if (showMessage) {
+  if (emailVerificationMessage) {
     return <div styleName="success">A password reset link has been sent to your email address.</div>;
   }
+
+  if (otpMessage) {
+    return <div styleName="success">{showMessage}</div>;
+  }
+
   return (
     <form styleName="malibu-form" onSubmit={emailHandler}>
       <InputField name="Email" id="email" type="email" required onChange={setEmailData} />
@@ -124,6 +130,14 @@ export function ForgotPassword({ onBackdropClick }) {
   );
 }
 
-ForgotPassword.propTypes = {
-  onBackdropClick: PT.func
+ForgotPasswordBase.propTypes = {
+  onBackdropClick: func,
+  isEmailVerification: bool,
+  activeLoginTab: func
 };
+
+const mapStateToProps = state => ({
+  isEmailVerification: get(state, ["qt", "config", "publisher-attributes", "is_email_verification"], false)
+});
+
+export const ForgotPassword = connect(mapStateToProps, {})(ForgotPasswordBase);
