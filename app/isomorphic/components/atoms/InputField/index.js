@@ -4,7 +4,7 @@ import { string, bool } from "prop-types";
 import "./input.m.css";
 
 export const InputField = ({ name, placeholder, type = "text", value, required, ...props }) => (
-  <React.Fragment>
+  <div>
     <label htmlFor={name} styleName="label" className="sr-only">
       {name}
     </label>
@@ -16,7 +16,7 @@ export const InputField = ({ name, placeholder, type = "text", value, required, 
       {...props}
       styleName="input"
     />
-  </React.Fragment>
+  </div>
 );
 
 InputField.propTypes = {
