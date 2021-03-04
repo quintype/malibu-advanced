@@ -1,14 +1,12 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState, Suspense, lazy } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import get from "lodash/get";
 import { object, bool } from "prop-types";
-import { currentUser, logout } from "@quintype/bridgekeeper-js";
 import assetify from "@quintype/framework/assetify";
 
 import { OPEN_HAMBURGER_MENU, OPEN_SEARCHBAR, MEMBER_UPDATED } from "../../store/actions";
 import { MenuItem } from "../menu-item";
 import HamburgerMenu from "../../atoms/hamburger-menu";
-import AccountModal from "../../login/AccountModal";
 import UserIcon from "../../../../assets/images/user-icon.svg";
 import User from "../../../../assets/images/user.svg";
 
@@ -30,6 +28,7 @@ const getNavbarMenu = menu => {
 };
 
 const NavBar = () => {
+  const AccountModal = lazy(() => import("../../login/AccountModal"));
   const dispatch = useDispatch();
   const [showAccountModal, setShowAccountModal] = useState(false);
   const [showUserHandler, setUserHandler] = useState(false);
@@ -60,6 +59,8 @@ const NavBar = () => {
   };
 
   const getCurrentUser = async () => {
+    // Import current user function only when this function is called
+    const { currentUser } = await import("@quintype/bridgekeeper-js");
     try {
       const currentUserResp = await currentUser();
       dispatch({ type: MEMBER_UPDATED, member: get(currentUserResp, ["user"], null) });
@@ -72,7 +73,9 @@ const NavBar = () => {
     getCurrentUser();
   }, []);
 
-  const logoutHandler = () => {
+  const logoutHandler = async () => {
+    // Import logout on click of the logout button
+    const { logout } = await import("@quintype/bridgekeeper-js");
     logout()
       .then(() => {
         dispatch({
@@ -144,9 +147,13 @@ const NavBar = () => {
             ) : (
               <>
                 <button styleName="user-btn" onClick={() => setShowAccountModal(true)}>
-                  <img src={assetify(UserIcon)}  alt="user-icon"/>
+                  <img  width="18" height="20" src={assetify(UserIcon)}  alt="user-icon"/>
                 </button>
-                {showAccountModal && <AccountModal onBackdropClick={() => setShowAccountModal(false)} />}
+                {showAccountModal && (
+                  <Suspense fallback={<div></div>}>
+                    <AccountModal onBackdropClick={() => setShowAccountModal(false)} />
+                  </Suspense>
+                )}
               </>
             )}
           </div>
