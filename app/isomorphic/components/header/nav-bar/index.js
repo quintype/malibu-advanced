@@ -86,7 +86,8 @@ const NavBar = ({ menu, enableLogin }) => {
 
 NavBar.propTypes = {
   menu: object,
-  enableLogin: bool
+  enableLogin: bool,
+  isLoginOpen: bool
 };
 
 export { NavBar };
