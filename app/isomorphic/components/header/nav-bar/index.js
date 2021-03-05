@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import get from "lodash/get";
 import { object, bool } from "prop-types";
-import { currentUser, logout } from "@quintype/bridgekeeper-js";
 
 import { MEMBER_UPDATED } from "../../store/actions";
 import { NavbarSearch } from "../navbar-search";
@@ -10,13 +9,16 @@ import { MenuItem } from "../helper-components";
 import { AppLogo } from "../app-logo";
 
 import "./styles.m.css";
-import AccountModal from "../../login/AccountModal";
 
 const NavBar = ({ menu, enableLogin }) => {
+  // Import account modal dynamically
+  const AccountModal = React.lazy(() => import("../../login/AccountModal"));
   const [showAccountModal, setShowAccountModal] = useState(false);
   const dispatch = useDispatch();
 
   const getCurrentUser = async () => {
+    // Import current user function only when this function is called
+    const { currentUser } = await import("@quintype/bridgekeeper-js");
     try {
       const currentUserResp = await currentUser();
       dispatch({ type: MEMBER_UPDATED, member: get(currentUserResp, ["user"], null) });
@@ -29,7 +31,9 @@ const NavBar = ({ menu, enableLogin }) => {
     getCurrentUser();
   }, []);
 
-  const logoutHandler = () => {
+  const logoutHandler = async () => {
+    // Import logout on click of the logout button
+    const { logout } = await import("@quintype/bridgekeeper-js");
     logout()
       .then(() => {
         dispatch({
@@ -65,7 +69,11 @@ const NavBar = ({ menu, enableLogin }) => {
             ) : (
               <>
                 <button onClick={() => setShowAccountModal(true)}>Login</button>
-                {showAccountModal && <AccountModal onBackdropClick={() => setShowAccountModal(false)} />}
+                {showAccountModal && (
+                  <Suspense fallback={<div></div>}>
+                    <AccountModal onBackdropClick={() => setShowAccountModal(false)} />
+                  </Suspense>
+                )}
               </>
             )}
           </li>
@@ -78,7 +86,8 @@ const NavBar = ({ menu, enableLogin }) => {
 
 NavBar.propTypes = {
   menu: object,
-  enableLogin: bool
+  enableLogin: bool,
+  isLoginOpen: bool
 };
 
 export { NavBar };

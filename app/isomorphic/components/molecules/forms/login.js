@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import get from "lodash/get";
-import { connect } from "react-redux";
+import { connect, useDispatch } from "react-redux";
 import { func, bool } from "prop-types";
 import { SocialLogin } from "../SocialLogin";
 import { InputField } from "../../atoms/InputField";
-// import { IS_OPEN_LOGIN_FORM } from "../../helper/actions";
+import { login, sendOtp, currentUser } from "@quintype/bridgekeeper-js";
+import { IS_OPEN_LOGIN_FORM, MEMBER_UPDATED } from "../../store/actions";
 
 import "./forms.m.css";
 
@@ -13,6 +14,17 @@ const LoginBase = ({ onLogin, checkForMemberUpdated, forgotPassword, manageLogin
     email: "",
     password: ""
   });
+
+  const dispatch = useDispatch();
+
+  const getCurrentUser = async () => {
+    try {
+      const currentUserResp = await currentUser();
+      dispatch({ type: MEMBER_UPDATED, member: get(currentUserResp, ["user"], null) });
+    } catch (err) {
+      console.log("error--------", err);
+    }
+  };
 
   const [error, setError] = useState({});
 
@@ -26,36 +38,36 @@ const LoginBase = ({ onLogin, checkForMemberUpdated, forgotPassword, manageLogin
   const loginHandler = async e => {
     e.preventDefault();
     e.stopPropagation();
-    // const userObj = {
-    //   username: user.email,
-    //   email: user.email,
-    //   password: user.password
-    // };
+    const userObj = {
+      username: user.email,
+      email: user.email,
+      password: user.password
+    };
 
     if (user.email.length < 1 || user.password.length < 1) {
       setError({ message: "Please provide username and password" });
       return null;
     }
 
-    console.log("need to implement logic flow through BK library");
-
-    // login(userObj)
-    //   .then(({ user }) => {
-    //     assignUserIdToLogger(user.id);
-    //     if (user["verification-status"]) {
-    //       // User email is verified
-    //       return checkForMemberUpdated().then(() => {
-    //         manageLoginForm(false);
-    //         console.log("loged in successfully");
-    //       });
-    //     } else {
-    //       // User needs to validate the email account so send out an email to verify
-    //       return verifyEmail(user.email)
-    //         .then(res => onLogin(user, res))
-    //         .catch(error => setError(error));
-    //     }
-    //   })
-    //   .catch(error => setError(error));
+    login(userObj)
+      .then(async ({ user, message }) => {
+        if (!user) {
+          setError({ message });
+          return;
+        }
+        if (user["verification-status"]) {
+          // User email is verified
+          await getCurrentUser();
+          await manageLoginForm(false);
+          console.log("loged in successfully");
+        } else {
+          // User needs to validate the email account so send out an email to verify
+          return sendOtp(user.email)
+            .then(res => onLogin(user, res))
+            .catch(error => setError(error));
+        }
+      })
+      .catch(error => console.log("error msg", error.message));
   };
 
   return (
@@ -93,7 +105,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   manageLoginForm: function(payload) {
     dispatch({
-      // type: IS_OPEN_LOGIN_FORM,
+      type: IS_OPEN_LOGIN_FORM,
       payload: payload
     });
   }

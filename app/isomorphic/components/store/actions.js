@@ -1,1 +1,2 @@
 export const MEMBER_UPDATED = "MEMBER_UPDATED";
+export const IS_OPEN_LOGIN_FORM = "IS_OPEN_LOGIN_FORM";

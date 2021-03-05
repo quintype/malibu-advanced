@@ -5,7 +5,7 @@ import { connect, useDispatch } from "react-redux";
 import { sendOtp, updateWithOtp, currentUser } from "@quintype/bridgekeeper-js";
 
 import { InputField } from "../../atoms/InputField";
-import { MEMBER_UPDATED } from "../../store/actions";
+import { IS_OPEN_LOGIN_FORM, MEMBER_UPDATED } from "../../store/actions";
 
 import "./forms.m.css";
 
@@ -92,7 +92,7 @@ function mapStateToProps(state) {
 const mapDispatchToProps = dispatch => ({
   manageLoginForm: function(payload) {
     dispatch({
-      // type: IS_OPEN_LOGIN_FORM,
+      type: IS_OPEN_LOGIN_FORM,
       payload: payload
     });
   }
