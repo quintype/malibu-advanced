@@ -2,14 +2,29 @@ const url = `https://${process.env.LH_USER}:${process.env.LH_PASSWORD}@lighthous
 const lhciConfig = {
   ci: {
     collect: {
+      method: "node",
+      numberOfRuns: 5,
       url: JSON.parse(process.env.LHCI_SITES),
       settings: {
-        emulatedFormFactor: "mobile"
+        emulatedFormFactor: "mobile",
+        throttlingMethod: "devtools"
       }
     },
     assert: {
+      preset: "lighthouse:no-pwa",
       assertions: {
-        "categories:performance": ["error", { minScore: 0.9 }]
+        "categories:pwa": "off",
+        "color-contrast": "off",
+        "font-size": "off",
+        "heading-levels": "off",
+        "is-crawlable": "off",
+        "meta-description": "warn",
+        "errors-in-console": "warn",
+        "no-document-write": "warn",
+        "total-byte-weight": "warn",
+        "unused-css-rules": "warn",
+        "unused-javascript": "warn",
+        "uses-text-compression": "warn"
       }
     },
     upload: {
