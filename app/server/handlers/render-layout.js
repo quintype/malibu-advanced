@@ -34,7 +34,9 @@ export async function renderLayout(res, params) {
   const { gtmId, gaId, cdnImage, isOnesignalEnable, isGtmEnable, isGaEnable } = getConfig(params.store.getState());
   const chunk = params.shell ? null : allChunks[getChunkName(params.pageType)];
   const extractor = new ChunkExtractor({ statsFile, entrypoints: ["topbarCriticalCss", "navbarCriticalCss"] });
+  console.log("extractor--------------", extractor)
   const criticalCss = await extractor.getCssString();
+  console.log("criticalCss-------", criticalCss)
 
   res.render(
     "pages/layout",

@@ -1,35 +1,19 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState, Suspense, lazy } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import get from "lodash/get";
 import { object, bool } from "prop-types";
-import { currentUser, logout } from "@quintype/bridgekeeper-js";
 import assetify from "@quintype/framework/assetify";
 
 import { OPEN_HAMBURGER_MENU, OPEN_SEARCHBAR, MEMBER_UPDATED } from "../../store/actions";
 import { MenuItem } from "../menu-item";
 import HamburgerMenu from "../../atoms/hamburger-menu";
-import AccountModal from "../../login/AccountModal";
 import UserIcon from "../../../../assets/images/user-icon.svg";
 import User from "../../../../assets/images/user.svg";
 
 import "./navbar.m.css";
 
-const getNavbarMenu = menu => {
-  return (
-    <ul styleName="navbar">
-      {menu.length > 0 &&
-        menu.map(item => {
-          return (
-            <li key={item.title} styleName="dropdown">
-              <MenuItem item={item} />
-            </li>
-          );
-        })}
-    </ul>
-  );
-};
-
 const NavBar = () => {
+  const AccountModal = lazy(() => import("../../login/AccountModal"));
   const dispatch = useDispatch();
   const [showAccountModal, setShowAccountModal] = useState(false);
   const [showUserHandler, setUserHandler] = useState(false);
@@ -60,6 +44,8 @@ const NavBar = () => {
   };
 
   const getCurrentUser = async () => {
+    // Import current user function only when this function is called
+    const { currentUser } = await import("@quintype/bridgekeeper-js");
     try {
       const currentUserResp = await currentUser();
       dispatch({ type: MEMBER_UPDATED, member: get(currentUserResp, ["user"], null) });
@@ -72,7 +58,9 @@ const NavBar = () => {
     getCurrentUser();
   }, []);
 
-  const logoutHandler = () => {
+  const logoutHandler = async () => {
+    // Import logout on click of the logout button
+    const { logout } = await import("@quintype/bridgekeeper-js");
     logout()
       .then(() => {
         dispatch({
@@ -86,7 +74,28 @@ const NavBar = () => {
       });
   };
 
-  const member = useSelector(state => get(state, ["member"], null));
+  const getNavbarMenu = menu => {
+    return (
+      <ul styleName="navbar">
+        {menu.length > 0 &&
+          menu.map(item => {
+            return (
+              <li key={item.title} styleName="dropdown">
+                <MenuItem
+                  item={item}
+                  toggleHandler={() =>
+                    dispatch({
+                      type: OPEN_SEARCHBAR,
+                      isSearchBarOpen: false
+                    })
+                  }
+                />
+              </li>
+            );
+          })}
+      </ul>
+    );
+  };
 
   const getDropdownList = () => {
     if (!isHamburgerMenuOpen) {
@@ -110,7 +119,9 @@ const NavBar = () => {
     );
   };
 
+  const member = useSelector(state => get(state, ["member"], null));
   const imageUrl = member && member["avatar-url"] ? member["avatar-url"] : assetify(User);
+
   return (
     <div styleName="main-wrapper" id="sticky-navbar">
       <nav className="container" styleName="wrapper">
@@ -128,7 +139,14 @@ const NavBar = () => {
           <div styleName="user-profile">
             {member && member["verification-status"] ? (
               <>
-                <img width="24" height="24" alt="user" src={imageUrl} styleName="member-img" onClick={userAccountHandler} />
+                <img
+                  width="24"
+                  height="24"
+                  alt="user"
+                  src={imageUrl}
+                  styleName="member-img"
+                  onClick={userAccountHandler}
+                />
                 {showUserHandler && (
                   <Fragment>
                     <div styleName="overlay" onClick={userAccountHandler}></div>
@@ -143,14 +161,29 @@ const NavBar = () => {
               </>
             ) : (
               <>
-                <button styleName="user-btn" onClick={() => setShowAccountModal(true)}>
-                  <img src={assetify(UserIcon)}  alt="user-icon"/>
+                <button
+                  styleName="user-btn"
+                  onClick={() => {
+                    setShowAccountModal(true),
+                      dispatch({
+                        type: OPEN_SEARCHBAR,
+                        isSearchBarOpen: false
+                      });
+                  }}
+                >
+                  <img width="18" height="20" src={assetify(UserIcon)} alt="user-icon" />
                 </button>
-                {showAccountModal && <AccountModal onBackdropClick={() => setShowAccountModal(false)} />}
+                {showAccountModal && (
+                  <Suspense fallback={<div></div>}>
+                    <AccountModal onBackdropClick={() => setShowAccountModal(false)} />
+                  </Suspense>
+                )}
               </>
             )}
           </div>
-        ):<span></span> }
+        ) : (
+          <span></span>
+        )}
       </nav>
     </div>
   );
