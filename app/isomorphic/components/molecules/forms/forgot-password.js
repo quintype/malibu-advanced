@@ -1,15 +1,16 @@
 import React, { useState } from "react";
 import { func, bool } from "prop-types";
 import { forgotPassword, sendOtp, resetPassword } from "@quintype/bridgekeeper-js";
+import { useSelector } from "react-redux";
 import get from "lodash/get";
-import { connect } from "react-redux";
 
-// import { Button } from "../../atoms/button";
 import { InputField } from "../../atoms/InputField";
-// import { verifyEmailOTP, verifyEmail } from "../../helper/api";
 import "./forms.m.css";
 
-export function ForgotPasswordBase({ onBackdropClick, isEmailVerification, activeLoginTab }) {
+export function ForgotPassword({ onBackdropClick, activeLoginTab }) {
+  const isEmailVerification = useSelector(state =>
+    get(state, ["qt", "config", "publisher-attributes", "is_email_verification"], false)
+  );
   const [email, setEmail] = useState("");
   const [data, setOTPData] = useState({
     otp: "",
@@ -17,21 +18,23 @@ export function ForgotPasswordBase({ onBackdropClick, isEmailVerification, activ
     confirmPassword: "",
     id: ""
   });
-  // const [successMsg, setSuccessMsg] = useState("");
   const [error, setError] = useState({});
   const [showVerficationScreen, verificationScreenHandler] = useState(false);
   const [showMessage, setMessage] = useState(null);
   const [emailVerificationMessage, setVerificationMessage] = useState(null);
   const [otpMessage, setOtpMessage] = useState(null);
+
   const emailHandler = async e => {
     e.preventDefault();
     e.stopPropagation();
 
     const { message, error } = isEmailVerification ? await forgotPassword({ email }) : await sendOtp(email);
+
     if (error) {
       setError(error.message);
       return;
     }
+
     if (!isEmailVerification) {
       setVerificationMessage(false);
       verificationScreenHandler(true);
@@ -44,10 +47,6 @@ export function ForgotPasswordBase({ onBackdropClick, isEmailVerification, activ
         onBackdropClick();
       }, 5000);
     }
-  };
-
-  const setEmailData = e => {
-    setEmail(e.target.value);
   };
 
   const setData = e => {
@@ -63,8 +62,9 @@ export function ForgotPasswordBase({ onBackdropClick, isEmailVerification, activ
 
     if (data.password !== data.confirmPassword) {
       setError({ message: "Password does not match" });
-      return null;
+      return;
     }
+
     const resObj = {
       email: email,
       otp: data.otp.trim(),
@@ -100,7 +100,6 @@ export function ForgotPasswordBase({ onBackdropClick, isEmailVerification, activ
           required
           onChange={setData}
         />
-        {/* {successMsg && <p>{successMsg}</p>} */}
         {error && <p styleName="error">{error.message}</p>}
         <div styleName="actions">
           <button aria-label="change-password-button" onClick={changePassword} className="malibu-btn-large">
@@ -123,7 +122,7 @@ export function ForgotPasswordBase({ onBackdropClick, isEmailVerification, activ
 
   return (
     <form styleName="malibu-form" onSubmit={emailHandler}>
-      <InputField name="Email" id="email" type="email" required onChange={setEmailData} />
+      <InputField name="Email" id="email" type="email" required onChange={e => setEmail(e.target.value)} />
       <div styleName="actions">
         <button aria-label="forgot-password-submit" onClick={emailHandler} className="malibu-btn-large">
           Submit
@@ -133,14 +132,8 @@ export function ForgotPasswordBase({ onBackdropClick, isEmailVerification, activ
   );
 }
 
-ForgotPasswordBase.propTypes = {
+ForgotPassword.propTypes = {
   onBackdropClick: func,
   isEmailVerification: bool,
   activeLoginTab: func
 };
-
-const mapStateToProps = state => ({
-  isEmailVerification: get(state, ["qt", "config", "publisher-attributes", "is_email_verification"], false)
-});
-
-export const ForgotPassword = connect(mapStateToProps, {})(ForgotPasswordBase);
