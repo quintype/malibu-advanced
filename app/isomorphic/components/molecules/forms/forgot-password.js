@@ -78,8 +78,8 @@ export function ForgotPassword({ onBackdropClick, activeLoginTab }) {
     e.preventDefault();
     e.stopPropagation();
 
-    if (data.otp.trim().length < 6) {
-      setError({ message: "Please enter 6 digit otp !" });
+    if (data.otp.trim().length < 5) {
+      setError({ message: "Please enter valid otp !" });
       return;
     }
 
@@ -110,7 +110,7 @@ export function ForgotPassword({ onBackdropClick, activeLoginTab }) {
   if (showVerficationScreen) {
     return (
       <form styleName="malibu-form" key="otp" onSubmit={changePassword}>
-        <p styleName="message">Please enter 6-digit verification code sent to {email} to reset your password.</p>
+        <p styleName="message">Please enter verification code sent to {email} to reset your password.</p>
         <InputField name="Enter OTP" id="otp" type="text" value={data.otp} required onChange={setData} />
         <InputField
           name="Enter Password"
