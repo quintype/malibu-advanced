@@ -71,6 +71,7 @@ const ResetPasswordPage = () => {
         value={user.newPassword}
         onChange={setData}
         required
+        styleName="input"
       />
       <InputField
         name="Confirm Password"
@@ -79,10 +80,11 @@ const ResetPasswordPage = () => {
         value={user.confirmPassword}
         onChange={setData}
         required
+        styleName="input"
       />
       {error && <span styleName="error">{error}</span>}
       <span onClick={e => resetPasswordHandler(e)}>
-        <Button>Reset Password</Button>
+        <Button styleName="btn">Reset Password</Button>
       </span>
       {message && <span styleName="success">{message}</span>}
     </div>
