@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import get from "lodash/get";
 
 import { InputField } from "../../atoms/InputField";
+import { isValidEmail } from "../../utils";
 import "./forms.m.css";
 
 export function ForgotPassword({ onBackdropClick, activeLoginTab }) {
@@ -27,13 +28,6 @@ export function ForgotPassword({ onBackdropClick, activeLoginTab }) {
   const emailHandler = async e => {
     e.preventDefault();
     e.stopPropagation();
-
-    function isValidEmail(email) {
-      const re = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
-      if (!re.test(email)) return false;
-      if (email.length > 150 || email.length < 6) return false;
-      return true;
-    }
 
     if (!email) {
       setError({ message: "Email id required !" });
@@ -98,7 +92,11 @@ export function ForgotPassword({ onBackdropClick, activeLoginTab }) {
       otp: data.otp.trim(),
       "new-password": data.password
     };
-    const { message } = await resetPassword(resObj);
+    const { message, error } = await resetPassword(resObj);
+    if (error) {
+      setError(error);
+      return;
+    }
     setOtpMessage(true);
     verificationScreenHandler(false); // please remove this
     setMessage(message);
