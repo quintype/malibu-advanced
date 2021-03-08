@@ -27,6 +27,26 @@ export function ForgotPassword({ onBackdropClick, activeLoginTab }) {
   const emailHandler = async e => {
     e.preventDefault();
     e.stopPropagation();
+
+    function isValidEmail(email) {
+      const re = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
+      if (!re.test(email)) return false;
+      if (email.length > 150 || email.length < 6) return false;
+      return true;
+    }
+
+    if (!email) {
+      setError({ message: "Email id required !" });
+      return;
+    }
+
+    if (!isValidEmail(email)) {
+      setError({ message: "Please enter a valid email address" });
+      return;
+    }
+
+    setError(null);
+
     const { message, error } = isEmailVerification ? await forgotPassword({ email }) : await sendOtp(email);
     if (error) {
       setError(error);
@@ -58,8 +78,18 @@ export function ForgotPassword({ onBackdropClick, activeLoginTab }) {
     e.preventDefault();
     e.stopPropagation();
 
+    if (data.otp.trim().length < 6) {
+      setError({ message: "Please enter 6 digit otp !" });
+      return;
+    }
+
+    if (!data.password || !data.confirmPassword) {
+      setError({ message: "Password and confirm password can't be empty !" });
+      return;
+    }
+
     if (data.password !== data.confirmPassword) {
-      setError({ message: "Password does not match" });
+      setError({ message: "Password does not match !" });
       return;
     }
 
@@ -120,7 +150,7 @@ export function ForgotPassword({ onBackdropClick, activeLoginTab }) {
 
   return (
     <form styleName="malibu-form" onSubmit={emailHandler}>
-      <InputField name="Email" id="email" type="email" required onChange={e => setEmail(e.target.value)} />
+      <InputField name="Email" id="email" type="email" onChange={e => setEmail(e.target.value)} required />
       {error && <p styleName="error">{error.message}</p>}
       <div styleName="actions">
         <button aria-label="forgot-password-submit" onClick={emailHandler} className="malibu-btn-large">
