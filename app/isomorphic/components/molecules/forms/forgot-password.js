@@ -27,11 +27,9 @@ export function ForgotPassword({ onBackdropClick, activeLoginTab }) {
   const emailHandler = async e => {
     e.preventDefault();
     e.stopPropagation();
-
     const { message, error } = isEmailVerification ? await forgotPassword({ email }) : await sendOtp(email);
-
     if (error) {
-      setError(error.message);
+      setError(error);
       return;
     }
 
@@ -123,6 +121,7 @@ export function ForgotPassword({ onBackdropClick, activeLoginTab }) {
   return (
     <form styleName="malibu-form" onSubmit={emailHandler}>
       <InputField name="Email" id="email" type="email" required onChange={e => setEmail(e.target.value)} />
+      {error && <p styleName="error">{error.message}</p>}
       <div styleName="actions">
         <button aria-label="forgot-password-submit" onClick={emailHandler} className="malibu-btn-large">
           Submit
