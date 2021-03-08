@@ -25,7 +25,7 @@ export const SocialLoginBase = ({ checkForMemberUpdated, googleAppId, facebookAp
     login()
       .then(() => {
         checkForMemberUpdated().then(res => {
-          console.log("successfully login");
+          console.log("successfully logged in");
         });
       })
       .catch(error => {
