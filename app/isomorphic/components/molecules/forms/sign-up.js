@@ -1,17 +1,19 @@
 import React, { useState } from "react";
-import { func } from "prop-types";
+import { func, string } from "prop-types";
 import { register } from "@quintype/bridgekeeper-js";
+import wretch from "wretch";
 
 import { InputField } from "../../atoms/InputField";
 
 import "./forms.m.css";
+import { get } from "lodash";
+import { connect } from "react-redux";
 
-export const SignUp = ({ onSignup, onLogin }) => {
+const SignUpBase = ({ onSignup, onLogin, loginType }) => {
   const [userInfo, setUserInfo] = useState({
     name: "",
     email: "",
-    password: "",
-    mobile: ""
+    password: ""
   });
   const [errorMsg, setError] = useState("");
   const [ifUserExists, setUserExists] = useState(false);
@@ -25,9 +27,40 @@ export const SignUp = ({ onSignup, onLogin }) => {
   //   wretch("/send-email").post(data);
   // };
 
+  const sendVerificationLink = async (email, redirectUrl) => {
+    try {
+      wretch()
+        .options({ credentials: "same-origin" })
+        .url("/api/auth/v1/users/send-verification-link")
+        .post({
+          email: email,
+          "redirect-url": redirectUrl
+        })
+        .json(() => Promise.resolve())
+        .catch(ex => Promise.reject(ex));
+    } catch (err) {
+      return await Promise.reject(err);
+    }
+  };
+
   const signUpHandler = async e => {
     e.preventDefault();
     e.stopPropagation();
+
+    if (!userInfo.name && !userInfo.email && !userInfo.password) {
+      setError("Please provide your name, email and password");
+      return;
+    } else if (!userInfo.name) {
+      setError("Please provide your name");
+      return;
+    } else if (!userInfo.email) {
+      setError("Please provide your email");
+      return;
+    } else if (!userInfo.password) {
+      setError("Please provide password");
+      return;
+    }
+
     const userObj = {
       name: userInfo.name,
       email: userInfo.email,
@@ -38,10 +71,19 @@ export const SignUp = ({ onSignup, onLogin }) => {
 
     try {
       const { user, message } = await register(userObj);
+
       if (!user && message === "User Already exists") {
+        console.log("fooooooo", message);
         return setUserExists(true);
       }
-      onSignup(user);
+
+      if (loginType === "otp") {
+        onSignup(user);
+      } else {
+        console.log("foooooooooo");
+        sendVerificationLink(userInfo.email, "/");
+        setError(`We have sent an activation email to you at ${userInfo.email}. Please check your email inbox.`);
+      }
     } catch (err) {
       if (err.status === 409) {
         setError(`The email '${userObj.email}' already exists`);
@@ -77,8 +119,15 @@ export const SignUp = ({ onSignup, onLogin }) => {
   );
 };
 
-SignUp.propTypes = {
+SignUpBase.propTypes = {
   onSignup: func,
   setMember: func,
-  onLogin: func
+  onLogin: func,
+  loginType: string
 };
+
+const mapStateToProps = state => ({
+  loginType: get(state, ["qt", "config", "publisher-attributes", "loginType"], "")
+});
+
+export const SignUp = connect(mapStateToProps, null)(SignUpBase);
