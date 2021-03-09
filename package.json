@@ -27,7 +27,7 @@
   "devDependencies": {
     "@loadable/babel-plugin": "^5.13.2",
     "@loadable/webpack-plugin": "^5.14.2",
-    "@quintype/build": "^3.11.0-loadable-component.1",
+    "@quintype/build": "^3.11.0-loadable-component.2",
     "babel-eslint": "^10.0.3",
     "cosmiconfig": "^7.0.0",
     "eslint": "^6.8.0",

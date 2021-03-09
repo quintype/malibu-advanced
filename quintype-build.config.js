@@ -8,6 +8,6 @@ const loadableConfigObj = {
     }
   }
 };
-const modifiedBuildConfig = { ...quintypeBuildConfig, loadableConfigObj };
+const modifiedBuildConfig = { ...quintypeBuildConfig, ...loadableConfigObj };
 
 module.exports = modifiedBuildConfig;
