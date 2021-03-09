@@ -30,13 +30,16 @@ const getConfig = state => {
   };
 };
 
+const extractor = new ChunkExtractor({ statsFile, entrypoints: ["topbarCriticalCss", "navbarCriticalCss"] });
+export const foobar = async () => {
+  const criticalCss = await extractor.getCssString();
+  return criticalCss.trim();
+};
+
 export async function renderLayout(res, params) {
   const { gtmId, gaId, cdnImage, isOnesignalEnable, isGtmEnable, isGaEnable } = getConfig(params.store.getState());
+  foobar();
   const chunk = params.shell ? null : allChunks[getChunkName(params.pageType)];
-  const extractor = new ChunkExtractor({ statsFile, entrypoints: ["topbarCriticalCss", "navbarCriticalCss"] });
-  console.log("extractor--------------", extractor)
-  const criticalCss = await extractor.getCssString();
-  console.log("criticalCss-------", criticalCss)
 
   res.render(
     "pages/layout",
@@ -45,7 +48,7 @@ export async function renderLayout(res, params) {
         assetPath: assetPath,
         content: "",
         cssContent: cssContent,
-        criticalCss,
+        foobar,
         fontJsContent: fontJsContent,
         fontFace: fontFace,
         contentTemplate: null,
