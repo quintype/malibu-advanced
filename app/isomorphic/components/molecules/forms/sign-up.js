@@ -28,19 +28,15 @@ const SignUpBase = ({ onSignup, onLogin, loginType }) => {
   // };
 
   const sendVerificationLink = async (email, redirectUrl) => {
-    try {
-      wretch()
-        .options({ credentials: "same-origin" })
-        .url("/api/auth/v1/users/send-verification-link")
-        .post({
-          email: email,
-          "redirect-url": redirectUrl
-        })
-        .json(() => Promise.resolve())
-        .catch(ex => Promise.reject(ex));
-    } catch (err) {
-      return await Promise.reject(err);
-    }
+    return wretch()
+      .options({ credentials: "same-origin" })
+      .url("/api/auth/v1/users/send-verification-link")
+      .post({
+        email: email,
+        "redirect-url": redirectUrl
+      })
+      .json(() => Promise.resolve())
+      .catch(ex => Promise.reject(ex));
   };
 
   const signUpHandler = async e => {
