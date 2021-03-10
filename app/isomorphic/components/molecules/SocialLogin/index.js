@@ -6,6 +6,7 @@ import get from "lodash/get";
 
 import { FbIcon } from "../../atoms/icons/fb-icon";
 import { Google } from "../../atoms/icons/google";
+import { Apple } from "../../atoms/icons/apple";
 import Button from "../../atoms/Button";
 
 import "./social-login.m.css";
@@ -76,6 +77,19 @@ export const SocialLoginBase = ({ checkForMemberUpdated, googleAppId, facebookAp
     );
   };
 
+  const appleOnClick = (e, serverSideLoginPath) => {
+    window.location.href = serverSideLoginPath;
+  };
+
+  const AppleLogin = () => {
+    const appleLoginPath = `/api/auth/v1/login?auth-provider=apple&redirect-url=${currentLocation}`;
+    return (
+      <Button color="#dd4b39" flat href={appleLoginPath} onClick={e => appleOnClick(e, appleLoginPath)} socialButton>
+        <Apple /> Apple
+      </Button>
+    );
+  };
+
   return (
     <div styleName="social-login">
       <h3 styleName="title">Or login with</h3>
@@ -85,6 +99,11 @@ export const SocialLoginBase = ({ checkForMemberUpdated, googleAppId, facebookAp
         </li>
         <li styleName="button">
           <GoogleLogin />
+        </li>
+      </ul>
+      <ul>
+        <li styleName="button">
+          <AppleLogin />
         </li>
       </ul>
       <p styleName="error">{error}</p>
