@@ -8,7 +8,7 @@ import { InputField } from "../../atoms/InputField";
 
 import "./forms.m.css";
 
-const SignUpBase = ({ onSignup, onLogin, loginType }) => {
+const SignUpBase = ({ onSignup, onLogin, verificationType }) => {
   const [userInfo, setUserInfo] = useState({
     name: "",
     email: "",
@@ -59,7 +59,7 @@ const SignUpBase = ({ onSignup, onLogin, loginType }) => {
         return setUserExists(true);
       }
 
-      if (loginType === "otp") {
+      if (verificationType === "otp") {
         onSignup(user);
       } else {
         sendVerificationLink(userInfo.email, "/");
@@ -85,7 +85,7 @@ const SignUpBase = ({ onSignup, onLogin, loginType }) => {
   };
 
   const onVerify = () => {
-    if (loginType === "otp") {
+    if (verificationType === "otp") {
       return onSignup(userInfo);
     }
 
@@ -128,11 +128,11 @@ SignUpBase.propTypes = {
   onSignup: func,
   setMember: func,
   onLogin: func,
-  loginType: string
+  verificationType: string
 };
 
 const mapStateToProps = state => ({
-  loginType: get(state, ["qt", "config", "publisher-attributes", "loginType"], "")
+  verificationType: get(state, ["qt", "config", "publisher-attributes", "verificationType"], "")
 });
 
 export const SignUp = connect(mapStateToProps, null)(SignUpBase);

@@ -27,5 +27,5 @@ publisher:
   should_use_collection: true
   google_app_id: ""
   facebook_app_id: ""
-  loginType: "verification-link"
+  verificationType: "verification-link"
   is_email_verification: false
