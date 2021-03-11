@@ -117,7 +117,7 @@ const SignUpBase = ({ onSignup, onLogin, loginType }) => {
       {verfificationSuccessMessage && (
         <>
           <p styleName="error">
-            {verfificationSuccessMessage} If you &apos received email, click{" "}
+            {verfificationSuccessMessage} If you have&aposnt received email, click{" "}
             <button onClick={() => sendVerificationLink(userInfo.email, "/")}>resend</button>{" "}
           </p>
         </>
