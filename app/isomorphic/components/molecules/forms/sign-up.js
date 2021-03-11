@@ -16,6 +16,7 @@ const SignUpBase = ({ onSignup, onLogin, loginType }) => {
     password: ""
   });
   const [errorMsg, setError] = useState("");
+  const [verfificationSuccessMessage, setSuccessMessage] = useState("");
   const [ifUserExists, setUserExists] = useState(false);
 
   // const sendEmail = user => {
@@ -78,7 +79,9 @@ const SignUpBase = ({ onSignup, onLogin, loginType }) => {
       } else {
         console.log("foooooooooo");
         sendVerificationLink(userInfo.email, "/");
-        setError(`We have sent an activation email to you at ${userInfo.email}. Please check your email inbox.`);
+        setSuccessMessage(
+          `We have sent an activation email to you at ${userInfo.email}. Please check your email inbox.`
+        );
       }
     } catch (err) {
       if (err.status === 409) {
@@ -111,6 +114,14 @@ const SignUpBase = ({ onSignup, onLogin, loginType }) => {
       <button aria-label="signup-button" onClick={signUpHandler} className="malibu-btn-large malibu-btn-right">
         Sign up
       </button>
+      {verfificationSuccessMessage && (
+        <>
+          <p styleName="error">
+            {verfificationSuccessMessage} If you &apos received email, click{" "}
+            <button onClick={() => sendVerificationLink(userInfo.email, "/")}>resend</button>{" "}
+          </p>
+        </>
+      )}
     </form>
   );
 };
