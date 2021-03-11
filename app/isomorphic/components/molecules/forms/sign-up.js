@@ -61,13 +61,13 @@ const SignUpBase = ({ onSignup, onLogin, isVerificationLinkflow }) => {
       }
 
       if (isVerificationLinkflow) {
-        onSignup(user);
-      } else {
         sendVerificationLink(userInfo.email, currentLocation);
         !ifUserExists &&
           setSuccessMessage(
             `We have sent an activation email to you at ${userInfo.email}. Please check your email inbox.`
           );
+      } else {
+        onSignup(user);
       }
     } catch (err) {
       if (err.status === 409) {
@@ -87,10 +87,10 @@ const SignUpBase = ({ onSignup, onLogin, isVerificationLinkflow }) => {
 
   const onVerify = () => {
     if (isVerificationLinkflow) {
-      return onSignup(userInfo);
+      return sendVerificationLink(userInfo.email, currentLocation);
     }
 
-    return sendVerificationLink(userInfo.email, currentLocation);
+    return onSignup(userInfo);
   };
 
   const onResendVerification = () => {
