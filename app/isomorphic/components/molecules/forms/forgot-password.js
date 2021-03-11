@@ -9,8 +9,8 @@ import { isValidEmail } from "../../utils";
 import "./forms.m.css";
 
 export function ForgotPassword({ onBackdropClick, activeLoginTab }) {
-  const isEmailVerification = useSelector(state =>
-    get(state, ["qt", "config", "publisher-attributes", "is_email_verification"], false)
+  const isVerificationLinkFlow= useSelector(state =>
+    get(state, ["qt", "config", "publisher-attributes", "is_verification_Link_flow"], false)
   );
   const [email, setEmail] = useState("");
   const [data, setOTPData] = useState({
@@ -41,13 +41,13 @@ export function ForgotPassword({ onBackdropClick, activeLoginTab }) {
 
     setError(null);
 
-    const { message, error } = isEmailVerification ? await forgotPassword({ email }) : await sendOtp(email);
+    const { message, error } = isVerificationLinkFlow ? await forgotPassword({ email }) : await sendOtp(email);
     if (error) {
       setError(error);
       return;
     }
 
-    if (!isEmailVerification) {
+    if (!isVerificationLinkFlow) {
       setVerificationMessage(false);
       verificationScreenHandler(true);
     } else {
@@ -161,6 +161,6 @@ export function ForgotPassword({ onBackdropClick, activeLoginTab }) {
 
 ForgotPassword.propTypes = {
   onBackdropClick: func,
-  isEmailVerification: bool,
+  isVerificationLinkFlow: bool,
   activeLoginTab: func
 };
