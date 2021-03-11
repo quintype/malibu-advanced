@@ -34,7 +34,8 @@
 
 .otp-text,
 .otp,
-.resend-otp {
+.resend-otp,
+.message-text {
   padding: 0 0 16px;
   color: var(--malibu-gray2);
   font-size: 16px;

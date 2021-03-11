@@ -8,13 +8,13 @@ import { NavbarSearch } from "../navbar-search";
 import { MenuItem } from "../helper-components";
 import { AppLogo } from "../app-logo";
 import MessageWrapper from "../../molecules/forms/message-wrapper";
+import { Modal } from "../../login/Modal";
 
 import "./styles.m.css";
 
 const NavBar = ({ menu, enableLogin }) => {
   // Import account modal dynamically
   const AccountModal = React.lazy(() => import("../../login/AccountModal"));
-  const Modal = React.lazy(() => import("../../login/Modal"));
   const [showAccountModal, setShowAccountModal] = useState(false);
   const [message, setMessage] = useState(null);
   const dispatch = useDispatch();
@@ -29,22 +29,6 @@ const NavBar = ({ menu, enableLogin }) => {
       console.log("error--------", err);
     }
   };
-
-  useEffect(() => {
-    getCurrentUser();
-
-    if (global.location) {
-      if (global.location.hash === "#email-verified") {
-        setMessage("Email verified.");
-      } else if (global.location.hash === "#token-consumed") {
-        setMessage("The verification link is already used.");
-      } else if (global.location.hash === "#invalid-token") {
-        setMessage("The verification link is invalid. Please request for a new link.");
-      } else if (global.location.hash === "#internal-error") {
-        setMessage("Something went wrong. Please try again.");
-      }
-    }
-  }, []);
 
   const logoutHandler = async () => {
     // Import logout on click of the logout button
@@ -62,6 +46,23 @@ const NavBar = ({ menu, enableLogin }) => {
   };
 
   const member = useSelector(state => get(state, ["member"], null));
+
+  useEffect(() => {
+    getCurrentUser();
+
+    switch (global.location.hash) {
+      case "#email-verified":
+        return setMessage("Email verified.");
+      case "#token-consumed":
+        return setMessage("The verification link is already used.");
+      case "#invalid-token":
+        return setMessage("The verification link is invalid. Please request for a new link.");
+      case "#internal-error":
+        return setMessage("Something went wrong. Please try again.");
+      default:
+        return setMessage(null);
+    }
+  }, []);
 
   return (
     <React.Fragment>
@@ -94,11 +95,9 @@ const NavBar = ({ menu, enableLogin }) => {
           </li>
         )}
         {message && (
-          <Suspense fallback={<div></div>}>
-            <Modal onBackdropClick={() => setMessage(null)}>
-              <MessageWrapper message={message} />
-            </Modal>
-          </Suspense>
+          <Modal onBackdropClick={() => setMessage(null)}>
+            <MessageWrapper message={message} />
+          </Modal>
         )}
       </ul>
       <NavbarSearch />

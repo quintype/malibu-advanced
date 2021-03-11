@@ -5,7 +5,7 @@ import "./forms.m.css";
 
 const MessageWrapper = ({ message }) => (
   <div styleName="message-wrapper">
-    <p styleName="otp-text">{message}</p>
+    <p styleName="message-text">{message}</p>
   </div>
 );
 

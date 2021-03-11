@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { func, string } from "prop-types";
 import { register, sendVerificationLink } from "@quintype/bridgekeeper-js";
 import { get } from "lodash";
@@ -8,15 +8,16 @@ import { InputField } from "../../atoms/InputField";
 
 import "./forms.m.css";
 
-const SignUpBase = ({ onSignup, onLogin, verificationType }) => {
+const SignUpBase = ({ onSignup, onLogin, isVerificationLinkflow }) => {
   const [userInfo, setUserInfo] = useState({
     name: "",
     email: "",
     password: ""
   });
   const [errorMsg, setError] = useState("");
-  const [verfificationSuccessMessage, setSuccessMessage] = useState("");
+  const [verficationSuccessMessage, setSuccessMessage] = useState("");
   const [ifUserExists, setUserExists] = useState(false);
+  const [currentLocation, setCurrentLocation] = useState("/");
 
   // const sendEmail = user => {
   //   const data = {
@@ -59,10 +60,10 @@ const SignUpBase = ({ onSignup, onLogin, verificationType }) => {
         return setUserExists(true);
       }
 
-      if (verificationType === "otp") {
+      if (isVerificationLinkflow) {
         onSignup(user);
       } else {
-        sendVerificationLink(userInfo.email, "/");
+        sendVerificationLink(userInfo.email, currentLocation);
         !ifUserExists &&
           setSuccessMessage(
             `We have sent an activation email to you at ${userInfo.email}. Please check your email inbox.`
@@ -85,24 +86,28 @@ const SignUpBase = ({ onSignup, onLogin, verificationType }) => {
   };
 
   const onVerify = () => {
-    if (verificationType === "otp") {
+    if (isVerificationLinkflow) {
       return onSignup(userInfo);
     }
 
-    return sendVerificationLink(userInfo.email, "/");
+    return sendVerificationLink(userInfo.email, currentLocation);
   };
 
   const onResendVerification = () => {
-    sendVerificationLink(userInfo.email, "/");
+    sendVerificationLink(userInfo.email, currentLocation);
     setSuccessMessage("We have resend the verification link");
   };
+
+  useEffect(() => {
+    setCurrentLocation(window.location.href);
+  }, []);
 
   return (
     <form styleName="malibu-form" onSubmit={signUpHandler}>
       <InputField name="Name" id="name" required onChange={setData} />
       <InputField name="Email" type="email" id="email" onChange={setData} required />
       <InputField name="Password" type="password" id="password" onChange={setData} required />
-      {!verfificationSuccessMessage && ifUserExists && (
+      {!verficationSuccessMessage && ifUserExists && (
         <p styleName="error">
           The email ID is already registered. Please <button onClick={onVerify}>verify</button> or{" "}
           <button onClick={onLogin}>login</button>.
@@ -112,10 +117,10 @@ const SignUpBase = ({ onSignup, onLogin, verificationType }) => {
       <button aria-label="signup-button" onClick={signUpHandler} className="malibu-btn-large malibu-btn-right">
         Sign up
       </button>
-      {verfificationSuccessMessage && (
+      {verficationSuccessMessage && (
         <>
           <p styleName="error">
-            {verfificationSuccessMessage} If you have not received a email, click{" "}
+            {verficationSuccessMessage} If you have not received a email, click{" "}
             <button onClick={onResendVerification}>resend</button>{" "}
           </p>
         </>
@@ -128,11 +133,11 @@ SignUpBase.propTypes = {
   onSignup: func,
   setMember: func,
   onLogin: func,
-  verificationType: string
+  isVerificationLinkflow: string
 };
 
 const mapStateToProps = state => ({
-  verificationType: get(state, ["qt", "config", "publisher-attributes", "verificationType"], "")
+  isVerificationLinkflow: get(state, ["qt", "config", "publisher-attributes", "is_verification_link_flow"], true)
 });
 
 export const SignUp = connect(mapStateToProps, null)(SignUpBase);
