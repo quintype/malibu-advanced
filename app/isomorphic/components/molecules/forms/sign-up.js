@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 import { func, string } from "prop-types";
-import { register } from "@quintype/bridgekeeper-js";
-import wretch from "wretch";
+import { register, sendVerificationLink } from "@quintype/bridgekeeper-js";
+import { get } from "lodash";
+import { connect } from "react-redux";
 
 import { InputField } from "../../atoms/InputField";
 
 import "./forms.m.css";
-import { get } from "lodash";
-import { connect } from "react-redux";
 
 const SignUpBase = ({ onSignup, onLogin, loginType }) => {
   const [userInfo, setUserInfo] = useState({
@@ -27,18 +26,6 @@ const SignUpBase = ({ onSignup, onLogin, loginType }) => {
   //   };
   //   wretch("/send-email").post(data);
   // };
-
-  const sendVerificationLink = async (email, redirectUrl) => {
-    return wretch()
-      .options({ credentials: "same-origin" })
-      .url("/api/auth/v1/users/send-verification-link")
-      .post({
-        email: email,
-        "redirect-url": redirectUrl
-      })
-      .json(() => Promise.resolve())
-      .catch(ex => Promise.reject(ex));
-  };
 
   const signUpHandler = async e => {
     e.preventDefault();
@@ -68,20 +55,18 @@ const SignUpBase = ({ onSignup, onLogin, loginType }) => {
 
     try {
       const { user, message } = await register(userObj);
-
       if (!user && message === "User Already exists") {
-        console.log("fooooooo", message);
         return setUserExists(true);
       }
 
       if (loginType === "otp") {
         onSignup(user);
       } else {
-        console.log("foooooooooo");
         sendVerificationLink(userInfo.email, "/");
-        setSuccessMessage(
-          `We have sent an activation email to you at ${userInfo.email}. Please check your email inbox.`
-        );
+        !ifUserExists &&
+          setSuccessMessage(
+            `We have sent an activation email to you at ${userInfo.email}. Please check your email inbox.`
+          );
       }
     } catch (err) {
       if (err.status === 409) {
@@ -99,14 +84,27 @@ const SignUpBase = ({ onSignup, onLogin, loginType }) => {
     setUserInfo(userObj);
   };
 
+  const onVerify = () => {
+    if (loginType === "otp") {
+      return onSignup(userInfo);
+    }
+
+    return sendVerificationLink(userInfo.email, "/");
+  };
+
+  const onResendVerification = () => {
+    sendVerificationLink(userInfo.email, "/");
+    setSuccessMessage("We have resend the verification link");
+  };
+
   return (
     <form styleName="malibu-form" onSubmit={signUpHandler}>
       <InputField name="Name" id="name" required onChange={setData} />
       <InputField name="Email" type="email" id="email" onChange={setData} required />
       <InputField name="Password" type="password" id="password" onChange={setData} required />
-      {ifUserExists && (
+      {!verfificationSuccessMessage && ifUserExists && (
         <p styleName="error">
-          The email ID is already registered. Please <button onClick={() => onSignup(userInfo)}>verify</button> or{" "}
+          The email ID is already registered. Please <button onClick={onVerify}>verify</button> or{" "}
           <button onClick={onLogin}>login</button>.
         </p>
       )}
@@ -117,8 +115,8 @@ const SignUpBase = ({ onSignup, onLogin, loginType }) => {
       {verfificationSuccessMessage && (
         <>
           <p styleName="error">
-            {verfificationSuccessMessage} If you have&aposnt received email, click{" "}
-            <button onClick={() => sendVerificationLink(userInfo.email, "/")}>resend</button>{" "}
+            {verfificationSuccessMessage} If you have not received a email, click{" "}
+            <button onClick={onResendVerification}>resend</button>{" "}
           </p>
         </>
       )}
