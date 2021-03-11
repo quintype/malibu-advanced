@@ -49,7 +49,12 @@ const ISOMORPHIC_ROUTES = [
     exact: true
   },
   { path: "/collection/:collectionSlug", pageType: PAGE_TYPE.COLLECTION_PAGE, exact: true, skipPWA: true },
-  { path: "/author/:authorSlug", pageType: PAGE_TYPE.AUTHOR_PAGE, exact: true }
+  { path: "/author/:authorSlug", pageType: PAGE_TYPE.AUTHOR_PAGE, exact: true },
+  {
+    path: "/auth/reset-password",
+    pageType: PAGE_TYPE.RESET_PASSWORD_PAGE,
+    exact: true
+  }
 ];
 
 export function generateRoutes(config, domainSlug = undefined) {

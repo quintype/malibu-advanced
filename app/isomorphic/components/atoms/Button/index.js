@@ -17,7 +17,9 @@ const Button = ({ href, children, color, flat, socialButton = false, onClick, ..
       {children}
     </Link>
   ) : (
-    <button styleName="btn">{children}</button>
+    <button {...props} styleName="btn">
+      {children}
+    </button>
   );
 };
 
