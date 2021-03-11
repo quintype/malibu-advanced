@@ -7,7 +7,7 @@ import { MEMBER_UPDATED } from "../../store/actions";
 import { NavbarSearch } from "../navbar-search";
 import { MenuItem } from "../helper-components";
 import { AppLogo } from "../app-logo";
-import SuccessPopup from "../../molecules/forms/success-popup";
+import MessageWrapper from "../../molecules/forms/message-wrapper";
 
 import "./styles.m.css";
 
@@ -96,7 +96,7 @@ const NavBar = ({ menu, enableLogin }) => {
         {message && (
           <Suspense fallback={<div></div>}>
             <Modal onBackdropClick={() => setMessage(null)}>
-              <SuccessPopup message={message} />
+              <MessageWrapper message={message} />
             </Modal>
           </Suspense>
         )}

@@ -3,14 +3,14 @@ import { string } from "prop-types";
 
 import "./forms.m.css";
 
-const SuccessPopup = ({ message }) => (
-  <div styleName="success-popup-wrapper">
+const MessageWrapper = ({ message }) => (
+  <div styleName="message-wrapper">
     <p styleName="otp-text">{message}</p>
   </div>
 );
 
-SuccessPopup.propTypes = {
+MessageWrapper.propTypes = {
   message: string
 };
 
-export default SuccessPopup;
+export default MessageWrapper;
