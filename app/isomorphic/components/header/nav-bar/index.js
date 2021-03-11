@@ -7,10 +7,10 @@ import { MEMBER_UPDATED } from "../../store/actions";
 import { NavbarSearch } from "../navbar-search";
 import { MenuItem } from "../helper-components";
 import { AppLogo } from "../app-logo";
-
-import "./styles.m.css";
 import { Modal } from "../../login/Modal";
 import SuccessPopup from "../../molecules/forms/success-popup";
+
+import "./styles.m.css";
 
 const NavBar = ({ menu, enableLogin }) => {
   // Import account modal dynamically
