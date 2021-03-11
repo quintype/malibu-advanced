@@ -7,7 +7,6 @@ import { MEMBER_UPDATED } from "../../store/actions";
 import { NavbarSearch } from "../navbar-search";
 import { MenuItem } from "../helper-components";
 import { AppLogo } from "../app-logo";
-import { Modal } from "../../login/Modal";
 import SuccessPopup from "../../molecules/forms/success-popup";
 
 import "./styles.m.css";
@@ -15,6 +14,7 @@ import "./styles.m.css";
 const NavBar = ({ menu, enableLogin }) => {
   // Import account modal dynamically
   const AccountModal = React.lazy(() => import("../../login/AccountModal"));
+  const Modal = React.lazy(() => import("../../login/Modal"));
   const [showAccountModal, setShowAccountModal] = useState(false);
   const [message, setMessage] = useState(null);
   const dispatch = useDispatch();
@@ -94,9 +94,11 @@ const NavBar = ({ menu, enableLogin }) => {
           </li>
         )}
         {message && (
-          <Modal onBackdropClick={() => setMessage(null)}>
-            <SuccessPopup message={message} />
-          </Modal>
+          <Suspense fallback={<div></div>}>
+            <Modal onBackdropClick={() => setMessage(null)}>
+              <SuccessPopup message={message} />
+            </Modal>
+          </Suspense>
         )}
       </ul>
       <NavbarSearch />
