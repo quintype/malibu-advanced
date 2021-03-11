@@ -9,11 +9,14 @@ import { MenuItem } from "../helper-components";
 import { AppLogo } from "../app-logo";
 
 import "./styles.m.css";
+import { Modal } from "../../login/Modal";
+import SuccessPopup from "../../molecules/forms/success-popup";
 
 const NavBar = ({ menu, enableLogin }) => {
   // Import account modal dynamically
   const AccountModal = React.lazy(() => import("../../login/AccountModal"));
   const [showAccountModal, setShowAccountModal] = useState(false);
+  const [message, setMessage] = useState(null);
   const dispatch = useDispatch();
 
   const getCurrentUser = async () => {
@@ -29,6 +32,18 @@ const NavBar = ({ menu, enableLogin }) => {
 
   useEffect(() => {
     getCurrentUser();
+
+    if (global.location) {
+      if (global.location.hash === "#email-verified") {
+        setMessage("Email verified.");
+      } else if (global.location.hash === "#token-consumed") {
+        setMessage("The verification link is already used.");
+      } else if (global.location.hash === "#invalid-token") {
+        setMessage("The verification link is invalid. Please request for a new link.");
+      } else if (global.location.hash === "#internal-error") {
+        setMessage("Something went wrong. Please try again.");
+      }
+    }
   }, []);
 
   const logoutHandler = async () => {
@@ -77,6 +92,11 @@ const NavBar = ({ menu, enableLogin }) => {
               </>
             )}
           </li>
+        )}
+        {message && (
+          <Modal onBackdropClick={() => setMessage(null)}>
+            <SuccessPopup message={message} />
+          </Modal>
         )}
       </ul>
       <NavbarSearch />
