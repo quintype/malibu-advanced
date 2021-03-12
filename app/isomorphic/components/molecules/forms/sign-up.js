@@ -87,6 +87,7 @@ const SignUpBase = ({ onSignup, onLogin, isVerificationLinkflow }) => {
 
   const onVerify = () => {
     if (isVerificationLinkflow) {
+      setSuccessMessage("We have resend the verification link");
       return sendVerificationLink(userInfo.email, currentLocation);
     }
 
