@@ -4,15 +4,15 @@ import { Link } from "@quintype/components";
 import "./app-logo.m.css";
 
 const AppLogo = () => (
-  <h1>
+  <h1 className="logo-wrapper">
     <Link href="/">
       <img
-        height="66"
+        height="36"
         width="178"
         loading="lazy"
         styleName="publisher-logo"
-        srcSet="https://qtstage-01.gumlet.io/malibu/2021-03/554af9ae-cbfd-4cf7-9aed-759fc96217f1/Malibu_ullLogo.svg?auto=format%2Ccompress&format=webp&w=66&dpr=2.0"
-        src="https://qtstage-01.gumlet.io/malibu/2021-03/554af9ae-cbfd-4cf7-9aed-759fc96217f1/Malibu_ullLogo.svg?auto=format%2Ccompress&format=webp&w=66&dpr=2.0"
+        srcSet="https://qtstage-01.gumlet.io/malibu/2021-03/193b1a09-89cf-4b07-8d4f-fcf00d534577/malibu_logo_new.svg"
+        src="https://qtstage-01.gumlet.io/malibu/2021-03/193b1a09-89cf-4b07-8d4f-fcf00d534577/malibu_logo_new.svg"
         alt="Logo"
       />
     </Link>
