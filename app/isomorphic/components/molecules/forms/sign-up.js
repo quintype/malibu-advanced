@@ -16,7 +16,7 @@ const SignUpBase = ({ onSignup, onLogin, isVerificationLinkflow }) => {
   });
   const [errorMsg, setError] = useState("");
   const [verficationSuccessMessage, setSuccessMessage] = useState("");
-  const [ifUserExists, setUserExists] = useState(false);
+  const [userExists, setUserExists] = useState(false);
   const [currentLocation, setCurrentLocation] = useState("/");
 
   // const sendEmail = user => {
@@ -62,7 +62,7 @@ const SignUpBase = ({ onSignup, onLogin, isVerificationLinkflow }) => {
 
       if (isVerificationLinkflow) {
         sendVerificationLink(userInfo.email, currentLocation);
-        !ifUserExists &&
+        !userExists &&
           setSuccessMessage(
             `We have sent an activation email to you at ${userInfo.email}. Please check your email inbox.`
           );
@@ -107,7 +107,7 @@ const SignUpBase = ({ onSignup, onLogin, isVerificationLinkflow }) => {
       <InputField name="Name" id="name" required onChange={setData} />
       <InputField name="Email" type="email" id="email" onChange={setData} required />
       <InputField name="Password" type="password" id="password" onChange={setData} required />
-      {!verficationSuccessMessage && ifUserExists && (
+      {!verficationSuccessMessage && userExists && (
         <p styleName="error">
           The email ID is already registered. Please <button onClick={onVerify}>verify</button> or{" "}
           <button onClick={onLogin}>login</button>.
@@ -119,7 +119,7 @@ const SignUpBase = ({ onSignup, onLogin, isVerificationLinkflow }) => {
       </button>
       {verficationSuccessMessage && (
         <>
-          <p styleName="error">
+          <p styleName="message-text">
             {verficationSuccessMessage} If you have not received a email, click{" "}
             <button onClick={onResendVerification}>resend</button>{" "}
           </p>
