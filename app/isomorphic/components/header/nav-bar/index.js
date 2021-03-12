@@ -1,7 +1,6 @@
 import React, { Fragment, useEffect, useState, Suspense, lazy } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import get from "lodash/get";
-import { object, bool } from "prop-types";
 import assetify from "@quintype/framework/assetify";
 
 import { OPEN_HAMBURGER_MENU, OPEN_SEARCHBAR, MEMBER_UPDATED } from "../../store/actions";
@@ -72,6 +71,14 @@ const NavBar = () => {
         setShowAccountModal(false);
         setUserHandler(false);
       });
+  };
+
+  const userBtnClick = () => {
+    setShowAccountModal(true);
+    dispatch({
+      type: OPEN_SEARCHBAR,
+      isSearchBarOpen: false
+    });
   };
 
   const getNavbarMenu = menu => {
@@ -161,16 +168,7 @@ const NavBar = () => {
               </>
             ) : (
               <>
-                <button
-                  styleName="user-btn"
-                  onClick={() => {
-                    setShowAccountModal(true),
-                      dispatch({
-                        type: OPEN_SEARCHBAR,
-                        isSearchBarOpen: false
-                      });
-                  }}
-                >
+                <button styleName="user-btn" onClick={() => userBtnClick()}>
                   <img width="18" height="20" src={assetify(UserIcon)} alt="user-icon" />
                 </button>
                 {showAccountModal && (
@@ -187,10 +185,6 @@ const NavBar = () => {
       </nav>
     </div>
   );
-};
-
-NavBar.propTypes = {
-  menu: object
 };
 
 export { NavBar };

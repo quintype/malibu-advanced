@@ -53,7 +53,7 @@ const AccountModal = ({ onBackdropClick, checkForMemberUpdated }) => {
       case "otp":
         return <OTP id={otpToken} member={member} />;
       case "forgot-password":
-        return <ForgotPassword onBackdropClick={onBackdropClick} />;
+        return <ForgotPassword onBackdropClick={onBackdropClick} activeLoginTab={() => setActiveTab("login")} />;
       default:
         return null;
     }

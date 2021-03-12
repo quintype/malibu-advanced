@@ -42,6 +42,7 @@
 .error {
   font-size: 16px;
   margin-bottom: 25px;
+  color: var(--torch-red);
 }
 .resend-otp {
   cursor: pointer;
@@ -51,4 +52,8 @@
   color: var(--brand-secondary);
   font-size: 14px;
   margin-bottom: 18px;
+}
+
+.success {
+  color: var(--lime-green);
 }

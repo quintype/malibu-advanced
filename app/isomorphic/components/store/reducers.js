@@ -1,4 +1,4 @@
-import { OPEN_HAMBURGER_MENU, OPEN_SEARCHBAR, MEMBER_UPDATED } from "./actions";
+import { OPEN_HAMBURGER_MENU, OPEN_SEARCHBAR, MEMBER_UPDATED, IS_OPEN_LOGIN_FORM } from "./actions";
 
 function hamburgerMenuReducer(state = false, action) {
   switch (action.type) {
@@ -28,8 +28,18 @@ function memberReducer(state = null, action) {
   }
 }
 
+function loginReducer(state = false, action) {
+  switch (action.type) {
+    case IS_OPEN_LOGIN_FORM:
+      return action.payload;
+    default:
+      return state;
+  }
+}
+
 export const REDUCERS = {
   isHamburgerMenuOpen: hamburgerMenuReducer,
   isSearchBarOpen: searchBarReducer,
-  member: memberReducer
+  member: memberReducer,
+  isLoginOpen: loginReducer
 };
