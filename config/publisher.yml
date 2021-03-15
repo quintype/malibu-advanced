@@ -27,4 +27,4 @@ publisher:
   should_use_collection: true
   google_app_id: ""
   facebook_app_id: ""
-  is_email_verification: false
+  is_verification_link_flow: true
