@@ -7,7 +7,7 @@ import { OPEN_HAMBURGER_MENU, OPEN_SEARCHBAR, MEMBER_UPDATED } from "../../store
 import { MenuItem } from "../menu-item";
 import HamburgerMenu from "../../atoms/hamburger-menu";
 import MessageWrapper from "../../molecules/forms/message-wrapper";
-import { Modal } from "../../login/Modal";
+import { Modal } from "../../login/modal";
 import UserIcon from "../../../../assets/images/user-icon.svg";
 import User from "../../../../assets/images/user.svg";
 

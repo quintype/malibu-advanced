@@ -35,5 +35,4 @@ const lhciConfig = {
   }
 };
 
-
 module.exports = lhciConfig;
