@@ -29,6 +29,9 @@
     <style>
       <%- cssContent %>
     </style>
+    <style>
+      <%- criticalCss %>
+    </style>
     <%_ if(pageChunk) { _%>
     <%_ pageChunk.cssFiles.map(cssFile => {_%>
       <style data-href="<%= cssFile.path %>"><%- cssFile.content %></style>
@@ -43,9 +46,12 @@
   </head>
 
   <body>
-    <%- include ./partials/noscriptgtm -%>
-    <div class="container">
-      <header id="header"><%- navbar %></header>
+    <% if (isGtmEnable) { %>
+      <%- include ./partials/noscriptgtm -%>
+    <% } %>
+    <div>
+      <div><%- topbar %></div>
+      <header id="nav-bar" class="sticky-header"><%- navbar %></header>
       <div id='breaking-news-container'><%- breakingNews -%></div>
       <div id="container"><%_ if(contentTemplate) { _%><%- include(contentTemplate) -%><%_ }else { _%><%- content %><%_ } _%></div>
       <footer id="footer"><%- footer %></footer>
@@ -71,8 +77,12 @@
       <% } else { %>
       <script type="application/json" id="static-page"><%- serialize(store.getState(), {isJSON: true}) -%></script>
       <% } %>
+    <% if (isGtmEnable) { %>
       <%- include ./partials/gtm -%>
+    <% } %>
+    <% if (isGaEnable) { %>
       <%- include ./partials/ga -%>
+    <% } %>
     <script type="text/javascript" src="<%= assetPath("app.js") %>" id="app-js" async></script>
    </body>
 </html>

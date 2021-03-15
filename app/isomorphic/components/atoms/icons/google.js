@@ -1,5 +1,5 @@
 import React from "react";
-import { number } from "prop-types";
+import PT from "prop-types";
 
 export const Google = ({ width = 13, height = 13 }) => {
   return (
@@ -25,6 +25,6 @@ export const Google = ({ width = 13, height = 13 }) => {
 };
 
 Google.propTypes = {
-  width: number,
-  height: number
+  width: PT.number,
+  height: PT.number
 };
