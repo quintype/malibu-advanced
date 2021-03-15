@@ -34,7 +34,8 @@
 
 .otp-text,
 .otp,
-.resend-otp {
+.resend-otp,
+.message-text {
   padding: 0 0 16px;
   color: var(--brand-secondary);
   font-size: 16px;
@@ -56,4 +57,8 @@
 
 .success {
   color: var(--lime-green);
+}
+
+.message-wrapper {
+  padding: 40px 40px 16px;
 }

@@ -6,15 +6,19 @@ import assetify from "@quintype/framework/assetify";
 import { OPEN_HAMBURGER_MENU, OPEN_SEARCHBAR, MEMBER_UPDATED } from "../../store/actions";
 import { MenuItem } from "../menu-item";
 import HamburgerMenu from "../../atoms/hamburger-menu";
+import MessageWrapper from "../../molecules/forms/message-wrapper";
+import { Modal } from "../../login/Modal";
 import UserIcon from "../../../../assets/images/user-icon.svg";
 import User from "../../../../assets/images/user.svg";
 
 import "./navbar.m.css";
 
 const NavBar = () => {
+  // Import account modal dynamically
   const AccountModal = lazy(() => import("../../login/AccountModal"));
-  const dispatch = useDispatch();
   const [showAccountModal, setShowAccountModal] = useState(false);
+  const [message, setMessage] = useState(null);
+  const dispatch = useDispatch();
   const [showUserHandler, setUserHandler] = useState(false);
   const enableLogin = useSelector(state => get(state, ["qt", "config", "publisher-attributes", "enableLogin"], true));
   const isHamburgerMenuOpen = useSelector(state => get(state, ["isHamburgerMenuOpen"], false));
@@ -52,10 +56,6 @@ const NavBar = () => {
       console.log("error--------", err);
     }
   };
-
-  useEffect(() => {
-    getCurrentUser();
-  }, []);
 
   const logoutHandler = async () => {
     // Import logout on click of the logout button
@@ -129,6 +129,23 @@ const NavBar = () => {
   const member = useSelector(state => get(state, ["member"], null));
   const imageUrl = member && member["avatar-url"] ? member["avatar-url"] : assetify(User);
 
+  useEffect(() => {
+    getCurrentUser();
+
+    switch (global.location.hash) {
+      case "#email-verified":
+        return setMessage("Email verified.");
+      case "#token-consumed":
+        return setMessage("The verification link is already used.");
+      case "#invalid-token":
+        return setMessage("The verification link is invalid. Please request for a new link.");
+      case "#internal-error":
+        return setMessage("Something went wrong. Please try again.");
+      default:
+        return setMessage(null);
+    }
+  }, []);
+
   return (
     <div styleName="main-wrapper" id="sticky-navbar">
       <nav className="container" styleName="wrapper">
@@ -181,6 +198,11 @@ const NavBar = () => {
           </div>
         ) : (
           <span></span>
+        )}
+        {message && (
+          <Modal onBackdropClick={() => setMessage(null)}>
+            <MessageWrapper message={message} />
+          </Modal>
         )}
       </nav>
     </div>
