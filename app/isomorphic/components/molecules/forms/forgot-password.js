@@ -9,8 +9,8 @@ import { isValidEmail } from "../../utils";
 import "./forms.m.css";
 
 export function ForgotPassword({ onBackdropClick, activeLoginTab }) {
-  const isEmailVerification = useSelector(state =>
-    get(state, ["qt", "config", "publisher-attributes", "is_email_verification"], false)
+  const isVerificationLinkFlow = useSelector(state =>
+    get(state, ["qt", "config", "publisher-attributes", "is_verification_link_flow"], false)
   );
   const [email, setEmail] = useState("");
   const [data, setOTPData] = useState({
@@ -22,7 +22,7 @@ export function ForgotPassword({ onBackdropClick, activeLoginTab }) {
   const [error, setError] = useState({});
   const [showVerficationScreen, verificationScreenHandler] = useState(false);
   const [showMessage, setMessage] = useState(null);
-  const [emailVerificationMessage, setVerificationMessage] = useState(null);
+  const [verificationLinkMessage, setVerificationLinkMessage] = useState(null);
   const [otpMessage, setOtpMessage] = useState(null);
 
   const emailHandler = async e => {
@@ -41,17 +41,17 @@ export function ForgotPassword({ onBackdropClick, activeLoginTab }) {
 
     setError(null);
 
-    const { message, error } = isEmailVerification ? await forgotPassword({ email }) : await sendOtp(email);
+    const { message, error } = isVerificationLinkFlow ? await forgotPassword({ email }) : await sendOtp(email);
     if (error) {
       setError(error);
       return;
     }
 
-    if (!isEmailVerification) {
-      setVerificationMessage(false);
+    if (!isVerificationLinkFlow) {
+      setVerificationLinkMessage(false);
       verificationScreenHandler(true);
     } else {
-      setVerificationMessage(true);
+      setVerificationLinkMessage(true);
       setOtpMessage(false);
       setMessage(message);
       setTimeout(() => {
@@ -138,7 +138,7 @@ export function ForgotPassword({ onBackdropClick, activeLoginTab }) {
       </form>
     );
   }
-  if (emailVerificationMessage) {
+  if (verificationLinkMessage) {
     return <div styleName="success">A password reset link has been sent to your email address.</div>;
   }
 
@@ -161,6 +161,6 @@ export function ForgotPassword({ onBackdropClick, activeLoginTab }) {
 
 ForgotPassword.propTypes = {
   onBackdropClick: func,
-  isEmailVerification: bool,
+  isVerificationLinkFlow: bool,
   activeLoginTab: func
 };
