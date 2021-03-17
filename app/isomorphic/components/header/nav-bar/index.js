@@ -178,7 +178,6 @@ const NavBar = () => {
                       <li styleName="user-account-item" onClick={logoutHandler}>
                         Logout
                       </li>
-                      <li styleName="user-account-item">Profile</li>
                     </ul>
                   </Fragment>
                 )}
