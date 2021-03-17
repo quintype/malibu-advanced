@@ -6,7 +6,7 @@ import { CloseIcon } from "../../icons/CloseIcon";
 
 import "./modal.m.css";
 
-export const Modal = ({ onBackdropClick, children, hideCloseIcon }) => {
+const Modal = ({ onBackdropClick, children, hideCloseIcon }) => {
   return (
     <ReactModal
       className="malibu-modal"
@@ -31,3 +31,5 @@ Modal.propTypes = {
   children: object,
   hideCloseIcon: bool
 };
+
+export default Modal;
