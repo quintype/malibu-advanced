@@ -3,7 +3,7 @@ import { func } from "prop-types";
 
 import { sendOtp } from "@quintype/bridgekeeper-js";
 
-import { Modal } from "../Modal";
+import { Modal } from "../modal";
 import { Login } from "../../molecules/forms/login";
 import { SignUp } from "../../molecules/forms/sign-up";
 import { OTP } from "../../molecules/forms/otp";
@@ -53,7 +53,7 @@ const AccountModal = ({ onBackdropClick, checkForMemberUpdated }) => {
       case "otp":
         return <OTP id={otpToken} member={member} />;
       case "forgot-password":
-        return <ForgotPassword onBackdropClick={onBackdropClick} />;
+        return <ForgotPassword onBackdropClick={onBackdropClick} activeLoginTab={() => setActiveTab("login")} />;
       default:
         return null;
     }

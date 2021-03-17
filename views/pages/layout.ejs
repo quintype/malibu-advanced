@@ -1,16 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <%- include ./partials/gtm -%>
-    <%- include ./partials/ga -%>
     <%- metaTags -%>
     <link href="/manifest.json" rel="manifest">
     <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0,maximum-scale=5.0,minimum-scale=1.0">
     <meta content="yes" name="apple-mobile-web-app-capable">
     <meta content="black" name="apple-mobile-web-app-status-bar-style">
     <meta content="<%- title -%>" name="apple-mobile-web-app-title">
-    <link rel="preconnect dns-prefetch" href="https://prod-analytics.qlitics.com" crossorigin />
-    <link rel="preconnect dns-prefetch" href="https://fonts.gstatic.com/" crossorigin />
+    <link rel="preconnect" href="https://prod-analytics.qlitics.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />
 
     <script type="text/javascript">
       window.GUMLET_CONFIG = {
@@ -19,7 +17,6 @@
         auto_webp: true
       }
     </script>
-    <script src="https://cdn.gumlet.com/gumlet.js/2.0/gumlet.min.js" type="text/javascript" defer="defer"></script>
     <%# load any CSS fonts just below this, curl -vH "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:27.0) Gecko/20100101 Firefox/27.0" 'https://fonts.googleapis.com/css?family=Lato:400,700|Roboto:400,700' | curl -X POST -s --data-urlencode 'input@-' https://cssminifier.com/raw %>
     <style>
       @font-face{font-display:swap;font-family:Lato;font-style:normal;font-weight:400;src:local('Lato Regular'),local('Lato-Regular'),url(https://fonts.gstatic.com/s/lato/v14/S6uyw4BMUTPHjx4wWA.woff) format('woff')}@font-face{font-display:swap;font-family:Lato;font-style:normal;font-weight:700;src:local('Lato Bold'),local('Lato-Bold'),url(https://fonts.gstatic.com/s/lato/v14/S6u9w4BMUTPHh6UVSwiPHw.woff) format('woff')}@font-face{font-display:swap;font-family:Roboto;font-style:normal;font-weight:400;src:local('Roboto'),local('Roboto-Regular'),url(https://fonts.gstatic.com/s/roboto/v18/KFOmCnqEu92Fr1Mu4mxM.woff) format('woff')}@font-face{font-display:swap;font-family:Roboto;font-style:normal;font-weight:700;src:local('Roboto Bold'),local('Roboto-Bold'),url(https://fonts.gstatic.com/s/roboto/v18/KFOlCnqEu92Fr1MmWUlfBBc-.woff) format('woff')}
@@ -31,6 +28,9 @@
 
     <style>
       <%- cssContent %>
+    </style>
+    <style>
+      <%- criticalCss %>
     </style>
     <%_ if(pageChunk) { _%>
     <%_ pageChunk.cssFiles.map(cssFile => {_%>
@@ -46,9 +46,12 @@
   </head>
 
   <body>
-    <%- include ./partials/noscriptgtm -%>
-    <div class="container">
-      <header id="header"><%- navbar %></header>
+    <% if (isGtmEnable) { %>
+      <%- include ./partials/noscriptgtm -%>
+    <% } %>
+    <div>
+      <div><%- topbar %></div>
+      <header id="nav-bar" class="sticky-header"><%- navbar %></header>
       <div id='breaking-news-container'><%- breakingNews -%></div>
       <div id="container"><%_ if(contentTemplate) { _%><%- include(contentTemplate) -%><%_ }else { _%><%- content %><%_ } _%></div>
       <footer id="footer"><%- footer %></footer>
@@ -64,6 +67,7 @@
         document.getElementsByTagName('head')[0].appendChild(s);
       }
     </script>
+    <script src="https://cdn.gumlet.com/gumlet.js/2.0/gumlet.min.js" type="text/javascript" defer="defer"></script>
     <script type="text/javascript">
       <%- fontJsContent %>
       window.loadFonts(<%- serialize(fontFace.preloadFonts, {isJSON: true}) %>, 'fonts-loaded');
@@ -73,6 +77,12 @@
       <% } else { %>
       <script type="application/json" id="static-page"><%- serialize(store.getState(), {isJSON: true}) -%></script>
       <% } %>
+    <% if (isGtmEnable) { %>
+      <%- include ./partials/gtm -%>
+    <% } %>
+    <% if (isGaEnable) { %>
+      <%- include ./partials/ga -%>
+    <% } %>
     <script type="text/javascript" src="<%= assetPath("app.js") %>" id="app-js" async></script>
    </body>
 </html>

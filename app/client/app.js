@@ -1,9 +1,9 @@
 /* eslint-disable global-require */
-import wretch from "wretch";
 import { startApp } from "@quintype/framework/client/start";
+import wretch from "wretch";
+
 import { renderApplication, preRenderApplication } from "./render";
 import { REDUCERS } from "../isomorphic/components/store/reducers";
-
 import "../../app/assets/stylesheets/app.scss";
 
 const opts = {

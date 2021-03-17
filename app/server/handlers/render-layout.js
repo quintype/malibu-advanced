@@ -1,30 +1,45 @@
 /* eslint-disable object-shorthand */
-import { assetPath, readAsset, getAllChunks } from "@quintype/framework/server/asset-helper";
+import { ChunkExtractor } from "@loadable/server";
+import path from "path";
+import serialize from "serialize-javascript";
 import get from "lodash/get";
+
+import { assetPath, readAsset, getAllChunks } from "@quintype/framework/server/asset-helper";
+import { renderReduxComponent, renderLoadableReduxComponent } from "@quintype/framework/server/render";
+
 import { getChunkName } from "../../isomorphic/pick-component";
-import { renderReduxComponent } from "@quintype/framework/server/render";
 import { Header } from "../../isomorphic/components/header";
+import { NavBar } from "../../isomorphic/components/header/nav-bar";
 import { Footer } from "../../isomorphic/components/layouts/footer";
 import fontFace from "../font";
 import { BreakingNewsView } from "../../isomorphic/components/breaking-news-view";
-import serialize from "serialize-javascript";
+
+const statsFile = path.resolve("stats.json");
 const cssContent = assetPath("app.css") ? readAsset("app.css") : "";
 const fontJsContent = assetPath("font.js") ? readAsset("font.js") : "";
 const allChunks = getAllChunks("list", "story");
 
 const getConfig = state => {
-  // get onesignal config
   return {
     gtmId: get(state, ["qt", "config", "publisher-attributes", "google_tag_manager", "id"], ""),
+    isGtmEnable: get(state, ["qt", "config", "publisher-attributes", "google_tag_manager", "is_enable"], false),
     gaId: get(state, ["qt", "config", "publisher-attributes", "google_analytics", "id"], ""),
+    isGaEnable: get(state, ["qt", "config", "publisher-attributes", "google_analytics", "is_enable"], false),
     cdnImage: get(state, ["qt", "config", "cdn-image"], ""),
     isOnesignalEnable: get(state, ["qt", "config", "publisher-attributes", "onesignal", "is_enable"], false)
   };
 };
 
-export function renderLayout(res, params) {
+const extractor = new ChunkExtractor({ statsFile, entrypoints: ["topbarCriticalCss", "navbarCriticalCss"] });
+export const getCriticalCss = async () => {
+  const criticalCss = await extractor.getCssString();
+  return criticalCss.trim();
+};
+
+export async function renderLayout(res, params) {
+  const { gtmId, gaId, cdnImage, isOnesignalEnable, isGtmEnable, isGaEnable } = getConfig(params.store.getState());
   const chunk = params.shell ? null : allChunks[getChunkName(params.pageType)];
-  const { gtmId, gaId, cdnImage, isOnesignalEnable } = getConfig(params.store.getState());
+
   res.render(
     "pages/layout",
     Object.assign(
@@ -32,11 +47,13 @@ export function renderLayout(res, params) {
         assetPath: assetPath,
         content: "",
         cssContent: cssContent,
+        criticalCss: getCriticalCss(),
         fontJsContent: fontJsContent,
         fontFace: fontFace,
         contentTemplate: null,
         title: params.title,
-        navbar: renderReduxComponent(Header, params.store),
+        topbar: renderLoadableReduxComponent(Header, params.store, extractor),
+        navbar: renderLoadableReduxComponent(NavBar, params.store, extractor),
         footer: renderReduxComponent(Footer, params.store),
         breakingNews: renderReduxComponent(BreakingNewsView, params.store, {
           breakingNews: [],
@@ -51,6 +68,8 @@ export function renderLayout(res, params) {
         store: params.store,
         shell: params.shell,
         serialize,
+        isGtmEnable,
+        isGaEnable,
         isOnesignalEnable,
         oneSignalScript: params.oneSignalScript
       },

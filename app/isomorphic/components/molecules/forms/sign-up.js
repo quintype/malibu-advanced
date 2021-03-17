@@ -1,20 +1,23 @@
-import React, { useState } from "react";
-import { func } from "prop-types";
-import { register } from "@quintype/bridgekeeper-js";
+import React, { useState, useEffect } from "react";
+import { func, string } from "prop-types";
+import { register, sendVerificationLink } from "@quintype/bridgekeeper-js";
+import { get } from "lodash";
+import { connect } from "react-redux";
 
 import { InputField } from "../../atoms/InputField";
 
 import "./forms.m.css";
 
-export const SignUp = ({ onSignup, onLogin }) => {
+const SignUpBase = ({ onSignup, onLogin, isVerificationLinkflow }) => {
   const [userInfo, setUserInfo] = useState({
     name: "",
     email: "",
-    password: "",
-    mobile: ""
+    password: ""
   });
   const [errorMsg, setError] = useState("");
-  const [ifUserExists, setUserExists] = useState(false);
+  const [verficationSuccessMessage, setSuccessMessage] = useState("");
+  const [userExists, setUserExists] = useState(false);
+  const [currentLocation, setCurrentLocation] = useState("/");
 
   // const sendEmail = user => {
   //   const data = {
@@ -28,6 +31,21 @@ export const SignUp = ({ onSignup, onLogin }) => {
   const signUpHandler = async e => {
     e.preventDefault();
     e.stopPropagation();
+
+    if (!userInfo.name && !userInfo.email && !userInfo.password) {
+      setError("Please provide your name, email and password");
+      return;
+    } else if (!userInfo.name) {
+      setError("Please provide your name");
+      return;
+    } else if (!userInfo.email) {
+      setError("Please provide your email");
+      return;
+    } else if (!userInfo.password) {
+      setError("Please provide password");
+      return;
+    }
+
     const userObj = {
       name: userInfo.name,
       email: userInfo.email,
@@ -41,7 +59,16 @@ export const SignUp = ({ onSignup, onLogin }) => {
       if (!user && message === "User Already exists") {
         return setUserExists(true);
       }
-      onSignup(user);
+
+      if (isVerificationLinkflow) {
+        sendVerificationLink(userInfo.email, currentLocation);
+        !userExists &&
+          setSuccessMessage(
+            `We have sent an activation email to you at ${userInfo.email}. Please check your email inbox.`
+          );
+      } else {
+        onSignup(user);
+      }
     } catch (err) {
       if (err.status === 409) {
         setError(`The email '${userObj.email}' already exists`);
@@ -58,14 +85,32 @@ export const SignUp = ({ onSignup, onLogin }) => {
     setUserInfo(userObj);
   };
 
+  const onVerify = () => {
+    if (isVerificationLinkflow) {
+      setSuccessMessage("We have resend the verification link");
+      return sendVerificationLink(userInfo.email, currentLocation);
+    }
+
+    return onSignup(userInfo);
+  };
+
+  const onResendVerification = () => {
+    sendVerificationLink(userInfo.email, currentLocation);
+    setSuccessMessage("We have resend the verification link");
+  };
+
+  useEffect(() => {
+    setCurrentLocation(window.location.href);
+  }, []);
+
   return (
     <form styleName="malibu-form" onSubmit={signUpHandler}>
       <InputField name="Name" id="name" required onChange={setData} />
       <InputField name="Email" type="email" id="email" onChange={setData} required />
       <InputField name="Password" type="password" id="password" onChange={setData} required />
-      {ifUserExists && (
+      {!verficationSuccessMessage && userExists && (
         <p styleName="error">
-          The email ID is already registered. Please <button onClick={() => onSignup(userInfo)}>verify</button> or{" "}
+          The email ID is already registered. Please <button onClick={onVerify}>verify</button> or{" "}
           <button onClick={onLogin}>login</button>.
         </p>
       )}
@@ -73,12 +118,27 @@ export const SignUp = ({ onSignup, onLogin }) => {
       <button aria-label="signup-button" onClick={signUpHandler} className="malibu-btn-large malibu-btn-right">
         Sign up
       </button>
+      {verficationSuccessMessage && (
+        <>
+          <p styleName="message-text">
+            {verficationSuccessMessage} If you have not received a email, click{" "}
+            <button onClick={onResendVerification}>resend</button>{" "}
+          </p>
+        </>
+      )}
     </form>
   );
 };
 
-SignUp.propTypes = {
+SignUpBase.propTypes = {
   onSignup: func,
   setMember: func,
-  onLogin: func
+  onLogin: func,
+  isVerificationLinkflow: string
 };
+
+const mapStateToProps = state => ({
+  isVerificationLinkflow: get(state, ["qt", "config", "publisher-attributes", "is_verification_link_flow"], true)
+});
+
+export const SignUp = connect(mapStateToProps, null)(SignUpBase);
