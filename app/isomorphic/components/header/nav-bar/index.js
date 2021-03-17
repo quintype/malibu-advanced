@@ -150,7 +150,7 @@ const NavBar = () => {
     const Modal = lazy(() => import("../../login/modal"));
     return (
       <Suspense fallback={<div></div>}>
-        <Modal>
+        <Modal onClose={() => setMessage(null)}>
           <MessageWrapper message={message} />
         </Modal>
       </Suspense>
@@ -200,7 +200,7 @@ const NavBar = () => {
                 </button>
                 {showAccountModal && (
                   <Suspense fallback={<div></div>}>
-                    <AccountModal />
+                    <AccountModal onClose={() => setShowAccountModal(false)} />
                   </Suspense>
                 )}
               </>

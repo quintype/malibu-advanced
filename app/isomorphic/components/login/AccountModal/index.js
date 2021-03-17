@@ -11,7 +11,7 @@ import { ForgotPassword } from "../../molecules/forms/forgot-password";
 
 import "./account-modal.m.css";
 
-const AccountModal = ({ onBackdropClick, checkForMemberUpdated }) => {
+const AccountModal = ({ onClose, checkForMemberUpdated }) => {
   const [activeTab, setActiveTab] = useState("login");
   const [member, setMember] = useState(null);
   const [otpToken, setOtpToken] = useState(null);
@@ -53,7 +53,7 @@ const AccountModal = ({ onBackdropClick, checkForMemberUpdated }) => {
       case "otp":
         return <OTP id={otpToken} member={member} />;
       case "forgot-password":
-        return <ForgotPassword onBackdropClick={onBackdropClick} activeLoginTab={() => setActiveTab("login")} />;
+        return <ForgotPassword onClose={onClose} activeLoginTab={() => setActiveTab("login")} />;
       default:
         return null;
     }
@@ -80,7 +80,7 @@ const AccountModal = ({ onBackdropClick, checkForMemberUpdated }) => {
   };
 
   return (
-    <Modal>
+    <Modal onClose={onClose}>
       <div styleName="account-modal">
         <div styleName="form-wrapper">
           {getActiveTabHeading()}
@@ -92,7 +92,7 @@ const AccountModal = ({ onBackdropClick, checkForMemberUpdated }) => {
 };
 
 AccountModal.propTypes = {
-  onBackdropClick: func,
+  onClose: func,
   checkForMemberUpdated: func
 };
 
