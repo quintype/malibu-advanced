@@ -7,7 +7,6 @@ import { OPEN_HAMBURGER_MENU, OPEN_SEARCHBAR, MEMBER_UPDATED } from "../../store
 import { MenuItem } from "../menu-item";
 import HamburgerMenu from "../../atoms/hamburger-menu";
 import MessageWrapper from "../../molecules/forms/message-wrapper";
-import { Modal } from "../../login/modal";
 import UserIcon from "../../../../assets/images/user-icon.svg";
 import User from "../../../../assets/images/user.svg";
 
@@ -146,6 +145,18 @@ const NavBar = () => {
     }
   }, []);
 
+  const messageModal = message => {
+    // Import modal on message
+    const Modal = lazy(() => import("../../login/modal"));
+    return (
+      <Suspense fallback={<div></div>}>
+        <Modal onClose={() => setMessage(null)}>
+          <MessageWrapper message={message} />
+        </Modal>
+      </Suspense>
+    );
+  };
+
   return (
     <div styleName="main-wrapper" id="sticky-navbar">
       <nav className="container" styleName="wrapper">
@@ -189,7 +200,7 @@ const NavBar = () => {
                 </button>
                 {showAccountModal && (
                   <Suspense fallback={<div></div>}>
-                    <AccountModal onBackdropClick={() => setShowAccountModal(false)} />
+                    <AccountModal onClose={() => setShowAccountModal(false)} />
                   </Suspense>
                 )}
               </>
@@ -198,11 +209,7 @@ const NavBar = () => {
         ) : (
           <span></span>
         )}
-        {message && (
-          <Modal onBackdropClick={() => setMessage(null)}>
-            <MessageWrapper message={message} />
-          </Modal>
-        )}
+        {message && messageModal(message)}
       </nav>
     </div>
   );

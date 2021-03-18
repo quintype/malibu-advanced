@@ -8,7 +8,7 @@ import { InputField } from "../../atoms/InputField";
 import { isValidEmail } from "../../utils";
 import "./forms.m.css";
 
-export function ForgotPassword({ onBackdropClick, activeLoginTab }) {
+export function ForgotPassword({ onClose, activeLoginTab }) {
   const isVerificationLinkFlow = useSelector(state =>
     get(state, ["qt", "config", "publisher-attributes", "is_verification_link_flow"], false)
   );
@@ -56,7 +56,7 @@ export function ForgotPassword({ onBackdropClick, activeLoginTab }) {
       setMessage(message);
       setTimeout(() => {
         setMessage(null);
-        onBackdropClick();
+        onClose();
       }, 5000);
     }
   };
@@ -160,7 +160,7 @@ export function ForgotPassword({ onBackdropClick, activeLoginTab }) {
 }
 
 ForgotPassword.propTypes = {
-  onBackdropClick: func,
+  onClose: func,
   isVerificationLinkFlow: bool,
   activeLoginTab: func
 };
