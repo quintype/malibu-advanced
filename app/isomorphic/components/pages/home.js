@@ -8,13 +8,36 @@ const useDfpSlot = ({ path, size, id }) => {
     const googletag = window.googletag || {};
     googletag.cmd = googletag.cmd || [];
     googletag.cmd.push(function() {
-      googletag.defineSlot(path, size, id).addService(googletag.pubads());
-      googletag.pubads().enableSingleRequest();
+      googletag
+        .defineSlot(path, size, id)
+        .setTargeting("test", "lazyload")
+        .addService(googletag.pubads());
+
+      googletag.pubads().enableLazyLoad({
+        fetchMarginPercent: 500,
+        renderMarginPercent: 200,
+        mobileScaling: 2.0
+      });
+
+      googletag.pubads().addEventListener("slotRequested", function(event) {
+        updateSlotStatus(event.slot.getSlotElementId(), "fetched");
+      });
+
+      googletag.pubads().addEventListener("slotOnload", function(event) {
+        updateSlotStatus(event.slot.getSlotElementId(), "rendered");
+      });
       googletag.enableServices();
     });
+
     googletag.cmd.push(function() {
       googletag.display(id);
     });
+
+    function updateSlotStatus(slotId, state) {
+      var elem = document.getElementById(slotId + "-" + state);
+      elem.className = "activated";
+      elem.innerText = "Yes";
+    }
   }, [path, size, id]);
 };
 
