@@ -13,10 +13,26 @@ export const useDfpSlot = ({ path, size, id }) => {
       mobileScaling: 0
     });
 
+    googletag.pubads().addEventListener("slotRequested", function(event) {
+      updateSlotStatus(event.slot.getSlotElementId(), "fetched");
+    });
+
+    googletag.pubads().addEventListener("slotOnload", function(event) {
+      updateSlotStatus(event.slot.getSlotElementId(), "rendered");
+    });
+
     googletag.enableServices();
   });
 
   googletag.cmd.push(function() {
     googletag.display(id);
   });
+
+  function updateSlotStatus(slotId, state) {
+    var elem = document.getElementById(slotId + "-" + state);
+    if(elem) {
+      elem.className = "activated";
+      elem.innerText = "Yes";
+    }
+  }
 };
