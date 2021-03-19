@@ -42,12 +42,14 @@ const useDfpSlot = ({ path, size, id }) => {
 
 export const HomePage = props => {
   useEffect(() => {
-    var gads = document.createElement("script");
-    var useSSL = document.location.protocol === "https:";
-    gads.src = (useSSL ? "https:" : "http:") + "//www.googletagservices.com/tag/js/gpt.js";
-    var node = document.getElementsByTagName("script")[0];
-    gads.setAttribute("async", "");
-    node.parentNode.insertBefore(gads, node);
+    setTimeout(function() {
+      var gads = document.createElement("script");
+      var useSSL = document.location.protocol === "https:";
+      gads.src = (useSSL ? "https:" : "http:") + "//www.googletagservices.com/tag/js/gpt.js";
+      var node = document.getElementsByTagName("script")[0];
+      gads.setAttribute("async", "");
+      node.parentNode.insertBefore(gads, node);
+    }, 2000);
 
     setTimeout(function() {
       useDfpSlot({
@@ -61,7 +63,7 @@ export const HomePage = props => {
         size: [300, 250],
         id: "banner-ad-1"
       });
-    }, 3000);
+    }, 4000);
   }, []);
 
   return (
