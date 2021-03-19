@@ -35,8 +35,10 @@ const useDfpSlot = ({ path, size, id }) => {
 
   function updateSlotStatus(slotId, state) {
     var elem = document.getElementById(slotId + "-" + state);
-    elem.className = "activated";
-    elem.innerText = "Yes";
+    if (elem) {
+      elem.className = "activated";
+      elem.innerText = "Yes";
+    }
   }
 };
 
