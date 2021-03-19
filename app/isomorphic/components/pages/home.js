@@ -1,6 +1,6 @@
-import { LazyCollection, LazyLoadImages, replaceAllStoriesInCollection, WithPreview } from "@quintype/components";
-import { object, shape } from "prop-types";
 import React, { useEffect } from "react";
+import { object, shape } from "prop-types";
+import { LazyCollection, LazyLoadImages, replaceAllStoriesInCollection, WithPreview } from "@quintype/components";
 import { getCollectionTemplate } from "../get-collection-template";
 import { useDfpSlot } from "../ads/dfp-slot";
 
