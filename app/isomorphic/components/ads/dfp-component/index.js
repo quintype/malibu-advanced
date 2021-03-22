@@ -1,10 +1,8 @@
 import React, { useEffect } from "react";
 import { string, array } from "prop-types";
 import { useSelector } from "react-redux";
-import { get } from "lodash";
-
 import { useDfpSlot } from "../../utils";
-
+import { get } from "lodash";
 import "./dfp-component.m.css";
 
 const DfpComponent = ({ adType, id, size, path }) => {
@@ -12,25 +10,30 @@ const DfpComponent = ({ adType, id, size, path }) => {
     get(state, ["qt", "config", "publisher-attributes", "load_ads_synchronously"], false)
   );
 
+  const enableAds = useSelector(state =>
+    get(state, ["qt", "config", "publisher-attributes", "enable_ads"], false)
+  );
   useEffect(() => {
-    if (loadAdsSynchronously) {
-      useDfpSlot({
-        path: path,
-        size: size,
-        id: id
-      });
-    } else {
-      setTimeout(() => {
+    if(!!enableAds) {
+      if (loadAdsSynchronously) {
         useDfpSlot({
           path: path,
           size: size,
           id: id
         });
-      }, 4000);
+      } else {
+        setTimeout(() => {
+          useDfpSlot({
+            path: path,
+            size: size,
+            id: id
+          });
+        }, 4000);
+      }
     }
   }, []);
 
-  return <div styleName={`ad-slot ${adType}`} id={id}></div>;
+  return !!enableAds && !!loadAdsSynchronously && <div styleName={`ad-slot ${adType}`} id={id}></div>;
 };
 
 DfpComponent.propTypes = {

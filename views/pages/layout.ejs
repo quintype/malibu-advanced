@@ -10,8 +10,10 @@
     <link rel="preconnect" href="https://prod-analytics.qlitics.com" crossorigin />
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />
 
-    <%_ if(loadAdsSynchronously) { _%>
-      <script async="async" src="https://www.googletagservices.com/tag/js/gpt.js"></script>
+    <%_ if(enableAds) { _%>
+      <%_ if(loadAdsSynchronously) { _%>
+        <script async="async" src="https://www.googletagservices.com/tag/js/gpt.js"></script>
+      <%_ } _%>
     <%_ } _%>
 
     <script type="text/javascript">

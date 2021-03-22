@@ -126,21 +126,26 @@ const NavBar = () => {
   };
 
   const member = useSelector(state => get(state, ["member"], null));
+  const enableAds = useSelector(state =>
+    get(state, ["qt", "config", "publisher-attributes", "enable_ads"], false)
+  );
   const loadAdsSynchronously = useSelector(state =>
     get(state, ["qt", "config", "publisher-attributes", "load_ads_synchronously"], false)
   );
   const imageUrl = member && member["avatar-url"] ? member["avatar-url"] : assetify(User);
 
   useEffect(() => {
-    if (!loadAdsSynchronously) {
-      setTimeout(function() {
-        var gads = document.createElement("script");
-        var useSSL = document.location.protocol === "https:";
-        gads.src = (useSSL ? "https:" : "http:") + "//www.googletagservices.com/tag/js/gpt.js";
-        var node = document.getElementsByTagName("script")[0];
-        gads.setAttribute("async", "");
-        node.parentNode.insertBefore(gads, node);
-      }, 2000);
+    if(!!enableAds) {
+      if (!loadAdsSynchronously) {
+        setTimeout(function() {
+          var gads = document.createElement("script");
+          var useSSL = document.location.protocol === "https:";
+          gads.src = (useSSL ? "https:" : "http:") + "//www.googletagservices.com/tag/js/gpt.js";
+          var node = document.getElementsByTagName("script")[0];
+          gads.setAttribute("async", "");
+          node.parentNode.insertBefore(gads, node);
+        }, 2000);
+      }
     }
 
     getCurrentUser();
