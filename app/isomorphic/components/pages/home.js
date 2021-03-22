@@ -10,8 +10,8 @@ export const HomePage = props => (
     <LazyLoadImages>
       <DfpComponent
         adType="ad-slot-size-250x250"
-        id="banner-ad"
-        path="/6355419/Travel/Europe/France/Paris"
+        id="Malibu-Ad-Unit-1"
+        path="2834149807"
         size={[300, 250]}
       />
       <LazyCollection collection={props.data.collection} collectionTemplates={getCollectionTemplate} lazyAfter={2} />
