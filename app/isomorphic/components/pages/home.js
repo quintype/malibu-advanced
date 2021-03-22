@@ -1,21 +1,12 @@
-import { LazyCollection, LazyLoadImages, replaceAllStoriesInCollection, WithPreview } from "@quintype/components";
-import { object, shape } from "prop-types";
 import React, { useEffect } from "react";
+import { object, shape } from "prop-types";
+import { LazyCollection, LazyLoadImages, replaceAllStoriesInCollection, WithPreview } from "@quintype/components";
 import { getCollectionTemplate } from "../get-collection-template";
-import { useDfpSlot } from "../ads/dfp-slot";
+import { useDfpSlot } from "../utils";
 import { DfpComponent } from "../ads/dfp-component";
 
 export const HomePage = props => {
   useEffect(() => {
-    setTimeout(function() {
-      var gads = document.createElement("script");
-      var useSSL = document.location.protocol === "https:";
-      gads.src = (useSSL ? "https:" : "http:") + "//www.googletagservices.com/tag/js/gpt.js";
-      var node = document.getElementsByTagName("script")[0];
-      gads.setAttribute("async", "");
-      node.parentNode.insertBefore(gads, node);
-    }, 2000);
-
     setTimeout(function() {
       useDfpSlot({
         path: "/6355419/Travel/Europe/France/Paris",

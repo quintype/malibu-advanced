@@ -129,6 +129,15 @@ const NavBar = () => {
   const imageUrl = member && member["avatar-url"] ? member["avatar-url"] : assetify(User);
 
   useEffect(() => {
+    setTimeout(function() {
+      var gads = document.createElement("script");
+      var useSSL = document.location.protocol === "https:";
+      gads.src = (useSSL ? "https:" : "http:") + "//www.googletagservices.com/tag/js/gpt.js";
+      var node = document.getElementsByTagName("script")[0];
+      gads.setAttribute("async", "");
+      node.parentNode.insertBefore(gads, node);
+    }, 2000);
+
     getCurrentUser();
 
     switch (global.location.hash) {
