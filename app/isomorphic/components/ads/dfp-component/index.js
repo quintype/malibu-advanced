@@ -26,7 +26,7 @@ const DfpComponent = ({ adType, id, size, path }) => {
           size: size,
           id: id
         });
-      }, 4000);
+      }, 5000);
     }
   }, []);
 
