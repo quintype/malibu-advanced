@@ -10,30 +10,32 @@ const DfpComponent = ({ adType, id, size, path }) => {
     get(state, ["qt", "config", "publisher-attributes", "load_ads_synchronously"], false)
   );
 
-  const enableAds = useSelector(state =>
-    get(state, ["qt", "config", "publisher-attributes", "enable_ads"], false)
-  );
+  const enableAds = useSelector(state => get(state, ["qt", "config", "publisher-attributes", "enable_ads"], true));
+
+  if (!enableAds) {
+    return null;
+  }
+
   useEffect(() => {
-    if(!!enableAds) {
-      if (loadAdsSynchronously) {
+    console.log("inside fooooo");
+    if (loadAdsSynchronously) {
+      useDfpSlot({
+        path: path,
+        size: size,
+        id: id
+      });
+    } else {
+      setTimeout(() => {
         useDfpSlot({
           path: path,
           size: size,
           id: id
         });
-      } else {
-        setTimeout(() => {
-          useDfpSlot({
-            path: path,
-            size: size,
-            id: id
-          });
-        }, 4000);
-      }
+      }, 4000);
     }
   }, []);
 
-  return !!enableAds && !!loadAdsSynchronously && <div styleName={`ad-slot ${adType}`} id={id}></div>;
+  return <div styleName={`ad-slot ${adType}`} id={id} />;
 };
 
 DfpComponent.propTypes = {
