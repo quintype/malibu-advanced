@@ -3,6 +3,7 @@ import { object, shape } from "prop-types";
 import { LazyCollection, LazyLoadImages, replaceAllStoriesInCollection, WithPreview } from "@quintype/components";
 import { getCollectionTemplate } from "../get-collection-template";
 import { useDfpSlot } from "../utils";
+import { DfpComponent } from "../ads/dfp-component";
 
 export const HomePage = props => {
   useEffect(() => {
@@ -24,10 +25,9 @@ export const HomePage = props => {
   return (
     <div className="container">
       <LazyLoadImages>
-        <div id="banner-ad" style={{ width: "300px", height: "250px" }}></div>
+        <DfpComponent adType="ad-slot-size-250x250" id="banner-ad" />
         <LazyCollection collection={props.data.collection} collectionTemplates={getCollectionTemplate} lazyAfter={2} />
       </LazyLoadImages>
-      <div id="banner-ad-1" style={{ width: "300px", height: "250px" }} />
     </div>
   );
 };
