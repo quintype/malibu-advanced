@@ -26,7 +26,8 @@ const getConfig = state => {
     gaId: get(state, ["qt", "config", "publisher-attributes", "google_analytics", "id"], ""),
     isGaEnable: get(state, ["qt", "config", "publisher-attributes", "google_analytics", "is_enable"], false),
     cdnImage: get(state, ["qt", "config", "cdn-image"], ""),
-    isOnesignalEnable: get(state, ["qt", "config", "publisher-attributes", "onesignal", "is_enable"], false)
+    isOnesignalEnable: get(state, ["qt", "config", "publisher-attributes", "onesignal", "is_enable"], false),
+    loadAdsSynchronously: get(state, ["qt", "config", "publisher-attributes", "load_ads_synchronously"], false)
   };
 };
 
@@ -37,7 +38,9 @@ export const getCriticalCss = async () => {
 };
 
 export async function renderLayout(res, params) {
-  const { gtmId, gaId, cdnImage, isOnesignalEnable, isGtmEnable, isGaEnable } = getConfig(params.store.getState());
+  const { gtmId, gaId, cdnImage, isOnesignalEnable, isGtmEnable, isGaEnable, loadAdsSynchronously } = getConfig(
+    params.store.getState()
+  );
   const chunk = params.shell ? null : allChunks[getChunkName(params.pageType)];
 
   res.render(
@@ -71,7 +74,8 @@ export async function renderLayout(res, params) {
         isGtmEnable,
         isGaEnable,
         isOnesignalEnable,
-        oneSignalScript: params.oneSignalScript
+        oneSignalScript: params.oneSignalScript,
+        loadAdsSynchronously
       },
       params
     )
