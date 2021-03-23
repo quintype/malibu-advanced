@@ -1,8 +1,10 @@
 import React, { useEffect } from "react";
 import { string, array } from "prop-types";
 import { useSelector } from "react-redux";
-import { useDfpSlot } from "../../utils";
 import { get } from "lodash";
+
+import { useDfpSlot } from "../../utils";
+
 import "./dfp-component.m.css";
 
 const DfpComponent = ({ adType, id, size, path }) => {
@@ -17,7 +19,6 @@ const DfpComponent = ({ adType, id, size, path }) => {
   }
 
   useEffect(() => {
-    console.log("inside fooooo");
     if (loadAdsSynchronously) {
       useDfpSlot({
         path: path,
