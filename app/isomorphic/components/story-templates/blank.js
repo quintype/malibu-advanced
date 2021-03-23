@@ -34,12 +34,12 @@ function BlankStoryTemplate(props) {
       </figure>
       <h1>{props.story.headline}</h1>
       <span className="blank-story-author">{props.story["author-name"]}</span>
-      {props.story.cards.map(card => (
+      {props.story.cards.map((card, index) => (
         <Fragment>
           <StoryCard key={card.id} card={card} story={props.story} />
           <DfpComponent
             adType="ad-slot-size-250x250"
-            id="banner-ad"
+            id={`banner-ad-${index}`}
             path="/6355419/Travel/Europe/France/Paris"
             size={[250, 250]}
           />
