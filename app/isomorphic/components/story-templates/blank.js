@@ -41,7 +41,7 @@ function BlankStoryTemplate(props) {
             adType="ad-slot-size-250x250"
             id={`banner-ad-${index}`}
             path="/6355419/Travel/Europe/France/Paris"
-            size={[250, 250]}
+            size={[300, 250]}
           />
         </Fragment>
       ))}
