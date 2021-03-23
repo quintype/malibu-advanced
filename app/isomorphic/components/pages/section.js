@@ -5,6 +5,7 @@ import { collectionToStories, LazyCollection } from "@quintype/components";
 
 import { StoryGrid } from "../story-grid";
 import { getCollectionTemplate } from "../get-collection-template";
+import { DfpComponent } from "../ads/dfp-component";
 
 const SectionPage = props => {
   const stories = (props.data.collection.items && collectionToStories(props.data.collection)) || [];
@@ -20,10 +21,17 @@ const SectionPage = props => {
   if (stories.length === 0) {
     return <h1>{noStoriesFound}</h1>;
   }
+  console.log(props, "<----props");
   return (
     <div className="container">
       <h1>{pageTitle}</h1>
       <StoryGrid stories={stories} />
+      <DfpComponent
+        adType="ad-slot-size-250x250"
+        id="banner-ad-1"
+        path="/6355419/Travel/Europe/France/Paris"
+        size={[300, 250]}
+      />
       <LazyCollection collection={{ items: childCollections }} collectionTemplates={getCollectionTemplate} />
     </div>
   );
