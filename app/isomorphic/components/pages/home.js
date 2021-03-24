@@ -1,18 +1,11 @@
 import React from "react";
 import { object, shape } from "prop-types";
 import { LazyCollection, LazyLoadImages, replaceAllStoriesInCollection, WithPreview } from "@quintype/components";
-import { DfpComponent } from "../ads/dfp-component";
 import { getCollectionTemplate } from "../get-collection-template";
 
 export const HomePage = props => (
   <div className="container">
     <LazyLoadImages>
-      <DfpComponent
-        adType="res-ad-slot-size-300x250"
-        id="banner-ad"
-        path="/6355419/Travel/Europe/France/Paris"
-        size={[300, 250]}
-      />
       <LazyCollection collection={props.data.collection} collectionTemplates={getCollectionTemplate} lazyAfter={2} />
     </LazyLoadImages>
   </div>
