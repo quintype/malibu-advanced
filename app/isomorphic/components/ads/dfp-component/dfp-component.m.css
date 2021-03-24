@@ -8,7 +8,7 @@
 }
 
 /* For Responsive ad slots */
-.ad-slot-size-300x250 {
+.res-ad-slot-size-300x250 {
   width: 300px;
   height: 250px;
   @media screen and (min-width: 1280px) {
@@ -17,11 +17,7 @@
   }
 }
 
-.ad-slot-size-250x250 {
-  width: 250px;
+.ad-slot-size-300x250 {
+  width: 300px;
   height: 250px;
-  @media screen and (min-width: 1280px) {
-    width: 728px;
-    height: 90px;
-  }
 }

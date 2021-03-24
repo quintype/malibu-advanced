@@ -1,7 +1,8 @@
-import React from "react";
+import React, { Fragment } from "react";
 import PT from "prop-types";
 
 import { ResponsiveImage, StoryElement } from "@quintype/components";
+import { DfpComponent } from "../ads/dfp-component";
 
 function StoryCard(props) {
   return (
@@ -33,8 +34,16 @@ function BlankStoryTemplate(props) {
       </figure>
       <h1>{props.story.headline}</h1>
       <span className="blank-story-author">{props.story["author-name"]}</span>
-      {props.story.cards.map(card => (
-        <StoryCard key={card.id} card={card} story={props.story} />
+      {props.story.cards.map((card, index) => (
+        <Fragment key={index}>
+          <StoryCard key={card.id} card={card} story={props.story} />
+          <DfpComponent
+            adType="ad-slot-size-300x250"
+            id={`banner-ad-${index}`}
+            path="/6355419/Travel/Europe/France/Paris"
+            size={[300, 250]}
+          />
+        </Fragment>
       ))}
       <div className="space-before-next-story" style={{ minHeight: 100 }} />
     </div>

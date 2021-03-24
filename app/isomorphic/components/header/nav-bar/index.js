@@ -141,7 +141,7 @@ const NavBar = () => {
         var node = document.getElementsByTagName("script")[0];
         gads.setAttribute("async", "");
         node.parentNode.insertBefore(gads, node);
-      }, 2000);
+      }, 3000);
     }
 
     getCurrentUser();
