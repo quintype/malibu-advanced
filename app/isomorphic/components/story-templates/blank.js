@@ -38,7 +38,7 @@ function BlankStoryTemplate(props) {
         <Fragment>
           <StoryCard key={card.id} card={card} story={props.story} />
           <DfpComponent
-            adType="ad-slot-size-250x250"
+            adType="ad-slot-size-300x250"
             id={`banner-ad-${index}`}
             path="/6355419/Travel/Europe/France/Paris"
             size={[300, 250]}

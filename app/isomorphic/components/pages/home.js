@@ -9,7 +9,7 @@ export const HomePage = props => (
   <div className="container">
     <LazyLoadImages>
       <DfpComponent
-        adType="ad-slot-size-250x250"
+        adType="res-ad-slot-size-300x250"
         id="banner-ad"
         path="/6355419/Travel/Europe/France/Paris"
         size={[300, 250]}

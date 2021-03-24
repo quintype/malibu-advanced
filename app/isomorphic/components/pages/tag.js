@@ -10,7 +10,7 @@ const TagPage = props => (
     <h1>{get(props, "data.tag.name") || "Tag Page"}</h1>
     <StoryGrid stories={props.data.stories} />
     <DfpComponent
-      adType="ad-slot-size-250x250"
+      adType="ad-slot-size-300x250"
       id="banner-ad-1"
       path="/6355419/Travel/Europe/France/Paris"
       size={[300, 250]}

@@ -14,7 +14,7 @@ const AuthorPage = props => {
       <h1>{`Author - ${props.data.author.name}`}</h1>
       <StoryGrid stories={stories} />
       <DfpComponent
-        adType="ad-slot-size-250x250"
+        adType="ad-slot-size-300x250"
         id="banner-ad-1"
         path="/6355419/Travel/Europe/France/Paris"
         size={[300, 250]}

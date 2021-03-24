@@ -21,13 +21,12 @@ const SectionPage = props => {
   if (stories.length === 0) {
     return <h1>{noStoriesFound}</h1>;
   }
-  console.log(props, "<----props");
   return (
     <div className="container">
       <h1>{pageTitle}</h1>
       <StoryGrid stories={stories} />
       <DfpComponent
-        adType="ad-slot-size-250x250"
+        adType="ad-slot-size-300x250"
         id="banner-ad-1"
         path="/6355419/Travel/Europe/France/Paris"
         size={[300, 250]}

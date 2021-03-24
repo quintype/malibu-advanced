@@ -26,5 +26,5 @@ publisher:
   google_app_id: ""
   facebook_app_id: ""
   is_verification_link_flow: true
-  load_ads_synchronously: true
+  load_ads_synchronously: false
   enable_ads: true
