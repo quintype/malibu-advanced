@@ -17,6 +17,7 @@ export function preRenderApplication(store) {
     updateInterval: breakingNewsInterval * 1000
   };
 
+  global.qtLoadedFromShell && renderComponent(Footer, "footer", store, hydrate);
   renderComponent(NavbarSearch, "search-bar", store, hydrate);
   renderComponent(NavBar, "nav-bar", store, hydrate);
   breakingNewsConfig.is_enable &&
