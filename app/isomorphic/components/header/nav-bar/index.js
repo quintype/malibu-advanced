@@ -23,6 +23,7 @@ const NavBar = () => {
   const isHamburgerMenuOpen = useSelector(state => get(state, ["isHamburgerMenuOpen"], false));
   const menu = useSelector(state => get(state, ["qt", "data", "navigationMenu", "homeMenu"], []));
   const hamburgerMenu = useSelector(state => get(state, ["qt", "data", "navigationMenu", "hamburgerMenu"], []));
+  const currentPath = useSelector(state => get(state, ["qt", "currentPath"], "/"));
 
   const displayStyle = isHamburgerMenuOpen ? "flex" : "none";
 
@@ -161,6 +162,13 @@ const NavBar = () => {
         return setMessage(null);
     }
   }, []);
+
+  useEffect(() => {
+    if (window.googletag) {
+      const googletag = window.googletag || {};
+      googletag.destroySlots();
+    }
+  }, [currentPath]);
 
   const messageModal = message => {
     // Import modal on message
