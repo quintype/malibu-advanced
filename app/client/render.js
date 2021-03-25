@@ -22,7 +22,6 @@ export function preRenderApplication(store) {
   renderComponent(NavBar, "nav-bar", store, hydrate);
   breakingNewsConfig.is_enable &&
     renderBreakingNews("breaking-news-container", store, BreakingNewsView, breakingNewsbaseProps);
-  renderComponent(Footer, "footer", store, hydrate);
 }
 
 // This is a separate file as everything from here on is hot reloaded when the app changes
