@@ -7,7 +7,7 @@ export const isValidEmail = email => {
   return true;
 };
 
-const getStorySectionName = (state, pageType) => {
+const getStorySectionSlug = (state, pageType) => {
   if (pageType === "story-page") {
     return get(state, ["data", "story", "sections", 0, "slug"]);
   } else if (pageType === "section-page") {
@@ -54,15 +54,20 @@ const getTagList = (state, pageType) => {
 
 export const useDfpSlot = ({ path, size, id, qtState }) => {
   const googletag = window.googletag || {};
+
   const pageType = get(qtState, ["pageType"]) || "";
   const environment = get(qtState, ["config", "publisher-attributes", "env"], "");
-  const sectionName = getStorySectionName(qtState, pageType);
+
+  const sectionSlug = getStorySectionSlug(qtState, pageType);
   const sectionId = getStorySectionId(qtState, pageType);
   const StoryId = getStoryId(qtState, pageType);
   const sectionList = getSectionList(qtState, pageType);
   const tagList = getTagList(qtState, pageType);
 
-  console.log("foooooooo");
+  let mobileSize = [300, 250];
+  if (path === "/5463099287/BannerAd") {
+    mobileSize = [320, 50];
+  }
 
   googletag.cmd = googletag.cmd || [];
 
@@ -70,22 +75,17 @@ export const useDfpSlot = ({ path, size, id, qtState }) => {
     googletag.pubads().refresh();
   });
 
-  let mobileSize = [320, 50];
-  if (id === "top-ad") {
-    mobileSize = [320, 50];
-  }
-
   googletag.cmd.push(function() {
-    var responsiveAdSlot = googletag
+    const responsiveAdSlot = googletag
       .defineSlot(path, size, id)
       .setTargeting("pageType", pageType)
+      .setTargeting("pageType", pageType)
       .setTargeting("environment", environment)
-      .setTargeting("sectionName", sectionName)
+      .setTargeting("sectionSlug", sectionSlug)
       .setTargeting("sectionId", sectionId)
       .setTargeting("storyId", StoryId)
       .setTargeting("sectionList", sectionList)
       .setTargeting("tagList", tagList)
-
       .addService(googletag.pubads());
 
     var mapping = googletag
@@ -95,11 +95,6 @@ export const useDfpSlot = ({ path, size, id, qtState }) => {
       .build();
 
     responsiveAdSlot.defineSizeMapping(mapping);
-
-    googletag.cmd.push(function() {
-      googletag.pubads().refresh(responsiveAdSlot);
-    });
-
     googletag.pubads().enableLazyLoad({
       fetchMarginPercent: 0,
       renderMarginPercent: 0,
@@ -117,10 +112,6 @@ export const useDfpSlot = ({ path, size, id, qtState }) => {
     googletag.enableServices();
   });
 
-  googletag.cmd.push(function() {
-    googletag.display(id);
-  });
-
   function updateSlotStatus(slotId, state) {
     var elem = document.getElementById(slotId + "-" + state);
     if (elem) {
@@ -128,4 +119,8 @@ export const useDfpSlot = ({ path, size, id, qtState }) => {
       elem.innerText = "Yes";
     }
   }
+
+  googletag.cmd.push(function() {
+    googletag.display(id);
+  });
 };

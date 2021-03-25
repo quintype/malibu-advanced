@@ -1,15 +1,20 @@
 import React from "react";
+import { string } from "prop-types";
 
-import { DfpComponent } from ".";
+import { DfpComponent } from "./index";
 
-export const TopAd = () => (
+export const TopAd = ({ id }) => (
   <DfpComponent
     adType="res-ad-slot-size-300x250"
-    id="top-ad"
-    path="/5463099287/foo"
+    id={id}
+    path="/5463099287/BannerAd"
     size={[
       [320, 50],
       [728, 90]
     ]}
   />
 );
+
+TopAd.propTypes = {
+  id: string
+};
