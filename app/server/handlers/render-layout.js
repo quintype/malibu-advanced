@@ -29,11 +29,7 @@ const getConfig = state => {
     cdnImage: get(state, ["qt", "config", "cdn-image"], ""),
     isOnesignalEnable: get(state, ["qt", "config", "publisher-attributes", "onesignal", "is_enable"], false),
     enableAds: get(state, ["qt", "config", "publisher-attributes", "dfp_ads", "enable_ads"], true),
-    loadAdsSynchronously: get(state, ["qt", "config", "publisher-attributes", "dfp_ads", "load_ads_synchronously"], false),
-    enableLazyLoadAds: get(state, ["qt", "config", "publisher-attributes", "dfp_ads", "enable_lazy_load_ads"], true),
-    fetchMarginPercent: get(state, ["qt", "config", "publisher-attributes", "dfp_ads", "fetch_margin_percent"], 0),
-    renderMarginPercent: get(state, ["qt", "config", "publisher-attributes", "dfp_ads", "render_margin_percent"], 0),
-    mobileScaling: get(state, ["qt", "config", "publisher-attributes", "dfp_ads", "mobile_scaling"], 0)
+    loadAdsSynchronously: get(state, ["qt", "config", "publisher-attributes", "dfp_ads", "load_ads_synchronously"], false)
   };
 };
 
@@ -52,11 +48,7 @@ export async function renderLayout(res, params) {
     isGtmEnable,
     isGaEnable,
     enableAds,
-    loadAdsSynchronously,
-    enableLazyLoadAds,
-    fetchMarginPercent,
-    renderMarginPercent,
-    mobileScaling
+    loadAdsSynchronously
   } = getConfig(params.store.getState());
   const chunk = params.shell ? null : allChunks[getChunkName(params.pageType)];
 
@@ -94,11 +86,7 @@ export async function renderLayout(res, params) {
         isOnesignalEnable,
         oneSignalScript: params.oneSignalScript,
         enableAds,
-        loadAdsSynchronously,
-        enableLazyLoadAds,
-        fetchMarginPercent,
-        renderMarginPercent,
-        mobileScaling
+        loadAdsSynchronously
       },
       params
     )
