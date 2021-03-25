@@ -2,8 +2,7 @@
   display: flex;
   justify-content: center; /* For other ads, where width isn't specified */
   overflow: auto;
-  margin-left: auto; /* This works only when width is specified in case of responisive ads */
-  margin-right: auto; /* This works only when width is specified in case of responisive ads */
+  margin: 0 auto 16px;
   z-index: 1;
 }
 
