@@ -62,12 +62,19 @@ export const useDfpSlot = ({ path, size, id, qtState }) => {
   const sectionList = getSectionList(qtState, pageType);
   const tagList = getTagList(qtState, pageType);
 
-  let mobileSize = [300, 250];
+  console.log("foooooooo");
+
+  googletag.cmd = googletag.cmd || [];
+
+  googletag.cmd.push(function() {
+    googletag.pubads().refresh();
+  });
+
+  let mobileSize = [320, 50];
   if (id === "top-ad") {
     mobileSize = [320, 50];
   }
 
-  googletag.cmd = googletag.cmd || [];
   googletag.cmd.push(function() {
     var responsiveAdSlot = googletag
       .defineSlot(path, size, id)
@@ -88,6 +95,10 @@ export const useDfpSlot = ({ path, size, id, qtState }) => {
       .build();
 
     responsiveAdSlot.defineSizeMapping(mapping);
+
+    googletag.cmd.push(function() {
+      googletag.pubads().refresh(responsiveAdSlot);
+    });
 
     googletag.pubads().enableLazyLoad({
       fetchMarginPercent: 0,
