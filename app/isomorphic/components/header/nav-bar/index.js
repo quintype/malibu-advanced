@@ -126,7 +126,9 @@ const NavBar = () => {
   };
 
   const member = useSelector(state => get(state, ["member"], null));
-  const enableAds = useSelector(state => get(state, ["qt", "config", "publisher-attributes", "dfp_ads", "enable_ads"], true));
+  const enableAds = useSelector(state =>
+    get(state, ["qt", "config", "publisher-attributes", "dfp_ads", "enable_ads"], true)
+  );
   const loadAdsSynchronously = useSelector(state =>
     get(state, ["qt", "config", "publisher-attributes", "dfp_ads", "load_ads_synchronously"], false)
   );
@@ -135,10 +137,10 @@ const NavBar = () => {
   useEffect(() => {
     if (enableAds && !loadAdsSynchronously) {
       setTimeout(function() {
-        var gads = document.createElement("script");
-        var useSSL = document.location.protocol === "https:";
+        const gads = document.createElement("script");
+        const useSSL = document.location.protocol === "https:";
         gads.src = (useSSL ? "https:" : "http:") + "//www.googletagservices.com/tag/js/gpt.js";
-        var node = document.getElementsByTagName("script")[0];
+        const node = document.getElementsByTagName("script")[0];
         gads.setAttribute("async", "");
         node.parentNode.insertBefore(gads, node);
       }, 3000);

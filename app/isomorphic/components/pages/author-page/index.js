@@ -3,6 +3,7 @@ import { object, array, shape } from "prop-types";
 
 import { StoryGrid } from "../../story-grid";
 import { DfpComponent } from "../../ads/dfp-component";
+import { TopAd } from "../../ads/top-ad";
 
 const AuthorPage = props => {
   const stories = props.data.stories.map(({ story }) => story) || [];
@@ -11,6 +12,7 @@ const AuthorPage = props => {
   }
   return (
     <div className="container">
+      <TopAd id="author-banner-ad" />
       <h1>{`Author - ${props.data.author.name}`}</h1>
       <StoryGrid stories={stories} />
       <DfpComponent

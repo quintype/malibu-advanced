@@ -15,9 +15,12 @@ export function FourColGrid({ collection, stories }) {
       <StoryGrid stories={stories} />
       <DfpComponent
         adType="ad-slot-size-300x250"
-        id="banner-ad-1"
-        path="/6355419/Travel/Europe/France/Paris"
-        size={[300, 250]}
+        id={`fourcol-${collection.slug}-ad`}
+        path="/5463099287/foo"
+        size={[
+          [320, 50],
+          [728, 90]
+        ]}
       />
     </div>
   );

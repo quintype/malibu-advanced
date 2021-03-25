@@ -4,9 +4,11 @@ import PropTypes from "prop-types";
 
 import { StoryGrid } from "../story-grid";
 import { DfpComponent } from "../ads/dfp-component";
+import { TopAd } from "../ads/top-ad";
 
 const TagPage = props => (
   <div className="container">
+    <TopAd id="tag-banner-ad" />
     <h1>{get(props, "data.tag.name") || "Tag Page"}</h1>
     <StoryGrid stories={props.data.stories} />
     <DfpComponent

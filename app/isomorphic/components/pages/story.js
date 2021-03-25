@@ -2,8 +2,10 @@
 
 import React from "react";
 import { InfiniteStoryBase, WithPreview } from "@quintype/components";
-import { BlankStory } from "../story-templates/blank";
 import { number, object, shape, any } from "prop-types";
+
+import { TopAd } from "../ads/top-ad";
+import { BlankStory } from "../story-templates/blank";
 
 function StoryPageBase({ index, story, otherProp }) {
   // Can switch to a different template based story-template, or only show a spoiler if index > 0
@@ -32,15 +34,18 @@ function storyPageLoadItems(pageNumber) {
 
 export function StoryPage(props) {
   return (
-    <InfiniteStoryBase
-      {...props}
-      render={StoryPageBase}
-      loadItems={storyPageLoadItems}
-      onInitialItemFocus={item =>
-        app.registerPageView({ pageType: "story-page", data: { story: item.story } }, `/${item.story.slug}`)
-      }
-      onItemFocus={item => console.log(`Story In View: ${item.story.headline}`)}
-    />
+    <>
+      <TopAd id="story-banner-ad" />
+      <InfiniteStoryBase
+        {...props}
+        render={StoryPageBase}
+        loadItems={storyPageLoadItems}
+        onInitialItemFocus={item =>
+          app.registerPageView({ pageType: "story-page", data: { story: item.story } }, `/${item.story.slug}`)
+        }
+        onItemFocus={item => console.log(`Story In View: ${item.story.headline}`)}
+      />
+    </>
   );
 }
 
