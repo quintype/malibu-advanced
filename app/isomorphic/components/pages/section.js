@@ -10,11 +10,7 @@ import { DfpComponent } from "../ads/dfp-component";
 
 const SectionPage = props => {
   const stories =
-    (props.data.collection &&
-      props.data.collection.items &&
-      props.data.collection.items &&
-      collectionToStories(props.data.collection)) ||
-    [];
+    (props.data.collection && props.data.collection.items && collectionToStories(props.data.collection)) || [];
 
   const noStoriesFound =
     props.pageType === "collection-page" ? "No Collection Stories Found" : "No Section Stories Found";

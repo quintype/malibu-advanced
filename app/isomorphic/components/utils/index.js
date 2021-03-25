@@ -60,7 +60,7 @@ export const useDfpSlot = ({ path, size, id, qtState }) => {
   const environment = get(publisherAttributes, ["env"], "");
   const sectionSlug = getStorySectionSlug(qtState, pageType);
   const sectionId = getStorySectionId(qtState, pageType);
-  const StoryId = getStoryId(qtState, pageType);
+  const storyId = getStoryId(qtState, pageType);
   const sectionList = getSectionList(qtState, pageType);
   const tagList = getTagList(qtState, pageType);
   const enableLazyLoadAds = get(publisherAttributes, ["dfp_ads", "enable_lazy_load_ads"], true);
@@ -86,7 +86,7 @@ export const useDfpSlot = ({ path, size, id, qtState }) => {
         .setTargeting("environment", environment)
         .setTargeting("sectionSlug", sectionSlug)
         .setTargeting("sectionId", sectionId)
-        .setTargeting("storyId", StoryId)
+        .setTargeting("storyId", storyId)
         .setTargeting("sectionList", sectionList)
         .setTargeting("tagList", tagList);
 

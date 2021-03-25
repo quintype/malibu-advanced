@@ -137,12 +137,12 @@ const NavBar = () => {
   useEffect(() => {
     if (enableAds && !loadAdsSynchronously) {
       setTimeout(function() {
-        const gads = document.createElement("script");
-        const useSSL = document.location.protocol === "https:";
-        gads.src = (useSSL ? "https:" : "http:") + "//www.googletagservices.com/tag/js/gpt.js";
+        const script = document.createElement("script");
+        const isSSL = document.location.protocol === "https:";
+        script.src = (isSSL ? "https:" : "http:") + "//www.googletagservices.com/tag/js/gpt.js";
         const node = document.getElementsByTagName("script")[0];
-        gads.setAttribute("async", "");
-        node.parentNode.insertBefore(gads, node);
+        script.setAttribute("async", "");
+        node.parentNode.insertBefore(script, node);
       }, 3000);
     }
 
