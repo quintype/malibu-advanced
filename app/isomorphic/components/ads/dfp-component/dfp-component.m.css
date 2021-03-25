@@ -2,16 +2,14 @@
   display: flex;
   justify-content: center; /* For other ads, where width isn't specified */
   overflow: auto;
-  margin-left: auto; /* This works only when width is specified in case of responisive ads */
-  margin-right: auto; /* This works only when width is specified in case of responisive ads */
+  margin: 0 auto 16px;
   z-index: 1;
 }
 
-/* For Responsive ad slots */
-.res-ad-slot-size-300x250 {
-  width: 300px;
-  height: 250px;
-  @media screen and (min-width: 1280px) {
+.ad-slot-size-320x50 {
+  width: 320px;
+  height: 50px;
+  @media screen and (min-width: 998px) {
     width: 728px;
     height: 90px;
   }
@@ -20,4 +18,8 @@
 .ad-slot-size-300x250 {
   width: 300px;
   height: 250px;
+  @media screen and (min-width: 998px) {
+    width: 728px;
+    height: 90px;
+  }
 }

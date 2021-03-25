@@ -126,22 +126,24 @@ const NavBar = () => {
   };
 
   const member = useSelector(state => get(state, ["member"], null));
-  const enableAds = useSelector(state => get(state, ["qt", "config", "publisher-attributes", "enable_ads"], true));
+  const enableAds = useSelector(state =>
+    get(state, ["qt", "config", "publisher-attributes", "dfp_ads", "enable_ads"], true)
+  );
   const loadAdsSynchronously = useSelector(state =>
-    get(state, ["qt", "config", "publisher-attributes", "load_ads_synchronously"], false)
+    get(state, ["qt", "config", "publisher-attributes", "dfp_ads", "load_ads_synchronously"], false)
   );
   const imageUrl = member && member["avatar-url"] ? member["avatar-url"] : assetify(User);
 
   useEffect(() => {
     if (enableAds && !loadAdsSynchronously) {
-      // setTimeout(function() {
-      var gads = document.createElement("script");
-      var useSSL = document.location.protocol === "https:";
-      gads.src = (useSSL ? "https:" : "http:") + "//www.googletagservices.com/tag/js/gpt.js";
-      var node = document.getElementsByTagName("script")[0];
-      gads.setAttribute("async", "");
-      node.parentNode.insertBefore(gads, node);
-      // }, 3000);
+      setTimeout(function() {
+        const gads = document.createElement("script");
+        const useSSL = document.location.protocol === "https:";
+        gads.src = (useSSL ? "https:" : "http:") + "//www.googletagservices.com/tag/js/gpt.js";
+        const node = document.getElementsByTagName("script")[0];
+        gads.setAttribute("async", "");
+        node.parentNode.insertBefore(gads, node);
+      }, 3000);
     }
 
     getCurrentUser();

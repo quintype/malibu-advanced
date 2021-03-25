@@ -53,16 +53,20 @@ const getTagList = (state, pageType) => {
 };
 
 export const useDfpSlot = ({ path, size, id, qtState }) => {
+  const publisherAttributes = get(qtState, ["config", "publisher-attributes"]) || {};
   const googletag = window.googletag || {};
 
   const pageType = get(qtState, ["pageType"]) || "";
-  const environment = get(qtState, ["config", "publisher-attributes", "env"], "");
-
+  const environment = get(publisherAttributes, ["env"], "");
   const sectionSlug = getStorySectionSlug(qtState, pageType);
   const sectionId = getStorySectionId(qtState, pageType);
   const StoryId = getStoryId(qtState, pageType);
   const sectionList = getSectionList(qtState, pageType);
   const tagList = getTagList(qtState, pageType);
+  const enableLazyLoadAds = get(publisherAttributes, ["dfp_ads", "enable_lazy_load_ads"], true);
+  const fetchMarginPercent = get(publisherAttributes, ["dfp_ads", "fetch_margin_percent"], 0);
+  const renderMarginPercent = get(publisherAttributes, ["dfp_ads", "render_margin_percent"], 0);
+  const mobileScaling = get(publisherAttributes, ["dfp_ads", "mobile_scaling"], 0);
 
   let mobileSize = [300, 250];
   if (path === "/5463099287/BannerAd") {
@@ -88,37 +92,41 @@ export const useDfpSlot = ({ path, size, id, qtState }) => {
       .setTargeting("tagList", tagList)
       .addService(googletag.pubads());
 
-    var mapping = googletag
+    const mapping = googletag
       .sizeMapping()
       .addSize([1024, 0], [[728, 90]])
       .addSize([0, 0], mobileSize)
       .build();
 
     responsiveAdSlot.defineSizeMapping(mapping);
-    googletag.pubads().enableLazyLoad({
-      fetchMarginPercent: 0,
-      renderMarginPercent: 0,
-      mobileScaling: 0
-    });
 
-    googletag.pubads().addEventListener("slotRequested", function(event) {
-      updateSlotStatus(event.slot.getSlotElementId(), "fetched");
-    });
+    // Lazy loading
+    if (enableLazyLoadAds) {
+      const updateSlotStatus = (slotId, state) => {
+        var elem = document.getElementById(slotId + "-" + state);
+        if (elem) {
+          elem.className = "activated";
+          elem.innerText = "Yes";
+        }
+      };
 
-    googletag.pubads().addEventListener("slotOnload", function(event) {
-      updateSlotStatus(event.slot.getSlotElementId(), "rendered");
-    });
+      googletag.pubads().enableLazyLoad({
+        fetchMarginPercent, // Fetch slots within specified viewports
+        renderMarginPercent, // Render slots within specified viewports
+        mobileScaling // Multiplies the specified value with the above values for mobile
+      });
+
+      googletag.pubads().addEventListener("slotRequested", function(event) {
+        updateSlotStatus(event.slot.getSlotElementId(), "fetched");
+      });
+
+      googletag.pubads().addEventListener("slotOnload", function(event) {
+        updateSlotStatus(event.slot.getSlotElementId(), "rendered");
+      });
+    }
 
     googletag.enableServices();
   });
-
-  function updateSlotStatus(slotId, state) {
-    var elem = document.getElementById(slotId + "-" + state);
-    if (elem) {
-      elem.className = "activated";
-      elem.innerText = "Yes";
-    }
-  }
 
   googletag.cmd.push(function() {
     googletag.display(id);
