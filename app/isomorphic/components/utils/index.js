@@ -53,18 +53,19 @@ const getTagList = (state, pageType) => {
 };
 
 export const useDfpSlot = ({ path, size, id, qtState }) => {
+  const publisherAttributes = get(qtState, ["config", "publisher-attributes"]) || {};
   const googletag = window.googletag || {};
   const pageType = get(qtState, ["pageType"]) || "";
-  const environment = get(qtState, ["config", "publisher-attributes", "env"], "");
+  const environment = get(publisherAttributes, ["env"], "");
   const sectionName = getStorySectionName(qtState, pageType);
   const sectionId = getStorySectionId(qtState, pageType);
   const StoryId = getStoryId(qtState, pageType);
   const sectionList = getSectionList(qtState, pageType);
   const tagList = getTagList(qtState, pageType);
-  const enableLazyLoadAds = get(qtState, ["config", "publisher-attributes", "dfp_ads", "enable_lazy_load_ads"], true);
-  const fetchMarginPercent = get(qtState, ["config", "publisher-attributes", "dfp_ads", "fetch_margin_percent"], 0);
-  const renderMarginPercent = get(qtState, ["config", "publisher-attributes", "dfp_ads", "render_margin_percent"], 0);
-  const mobileScaling = get(qtState, ["config", "publisher-attributes", "dfp_ads", "mobile_scaling"], 0);
+  const enableLazyLoadAds = get(publisherAttributes, ["dfp_ads", "enable_lazy_load_ads"], true);
+  const fetchMarginPercent = get(publisherAttributes, ["dfp_ads", "fetch_margin_percent"], 0);
+  const renderMarginPercent = get(publisherAttributes, ["dfp_ads", "render_margin_percent"], 0);
+  const mobileScaling = get(publisherAttributes, ["dfp_ads", "mobile_scaling"], 0);
 
   let mobileSize = [300, 250];
   if (id === "top-ad") {
@@ -93,13 +94,13 @@ export const useDfpSlot = ({ path, size, id, qtState }) => {
 
     responsiveAdSlot.defineSizeMapping(mapping);
 
+    // Lazy loading
     if(enableLazyLoadAds) {
       googletag.pubads().enableLazyLoad({
       fetchMarginPercent,  // Fetch slots within specified viewports
       renderMarginPercent,   // Render slots within specified viewports
       mobileScaling // Multiplies the specified value with the above values for mobile
     });
-  }
 
     googletag.pubads().addEventListener("slotRequested", function(event) {
       updateSlotStatus(event.slot.getSlotElementId(), "fetched");
@@ -109,6 +110,15 @@ export const useDfpSlot = ({ path, size, id, qtState }) => {
       updateSlotStatus(event.slot.getSlotElementId(), "rendered");
     });
 
+    function updateSlotStatus(slotId, state) {
+      var elem = document.getElementById(slotId + "-" + state);
+      if (elem) {
+        elem.className = "activated";
+        elem.innerText = "Yes";
+      }
+    }
+  }
+
     googletag.enableServices();
   });
 
@@ -116,11 +126,4 @@ export const useDfpSlot = ({ path, size, id, qtState }) => {
     googletag.display(id);
   });
 
-  function updateSlotStatus(slotId, state) {
-    var elem = document.getElementById(slotId + "-" + state);
-    if (elem) {
-      elem.className = "activated";
-      elem.innerText = "Yes";
-    }
-  }
 };

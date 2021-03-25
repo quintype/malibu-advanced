@@ -7,8 +7,10 @@ import "./dfp-component.m.css";
 
 const DfpComponent = ({ adType, id, size, path }) => {
   const qtState = useSelector(state => get(state, ["qt"], {}));
-  const loadAdsSynchronously = get(qtState, ["config", "publisher-attributes", "dfp_ads", "load_ads_synchronously"], false);
-  const enableAds = get(qtState, ["config", "publisher-attributes", "dfp_ads", "enable_ads"], true);
+  const publisherAttributes = get(qtState, ["config", "publisher-attributes"]) || {};
+  console.log(publisherAttributes, "<-publisherAttributes");
+  const loadAdsSynchronously = get(publisherAttributes, ["dfp_ads", "load_ads_synchronously"], false);
+  const enableAds = get(publisherAttributes, ["dfp_ads", "enable_ads"], true);
   const currentPath = get(qtState, ["currentPath"], "/");
 
   if (!enableAds) {
