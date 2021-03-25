@@ -76,29 +76,28 @@ export const useDfpSlot = ({ path, size, id, qtState }) => {
   googletag.cmd = googletag.cmd || [];
 
   googletag.cmd.push(function() {
-    googletag.pubads().refresh();
-  });
+    const responsiveAdSlot = googletag.defineSlot(path, size, id);
 
-  googletag.cmd.push(function() {
-    const responsiveAdSlot = googletag
-      .defineSlot(path, size, id)
-      .setTargeting("pageType", pageType)
-      .setTargeting("pageType", pageType)
-      .setTargeting("environment", environment)
-      .setTargeting("sectionSlug", sectionSlug)
-      .setTargeting("sectionId", sectionId)
-      .setTargeting("storyId", StoryId)
-      .setTargeting("sectionList", sectionList)
-      .setTargeting("tagList", tagList)
-      .addService(googletag.pubads());
+    if (responsiveAdSlot) {
+      responsiveAdSlot
+        .addService(googletag.pubads())
+        .setTargeting("pageType", pageType)
+        .setTargeting("pageType", pageType)
+        .setTargeting("environment", environment)
+        .setTargeting("sectionSlug", sectionSlug)
+        .setTargeting("sectionId", sectionId)
+        .setTargeting("storyId", StoryId)
+        .setTargeting("sectionList", sectionList)
+        .setTargeting("tagList", tagList);
 
-    const mapping = googletag
-      .sizeMapping()
-      .addSize([1024, 0], [[728, 90]])
-      .addSize([0, 0], mobileSize)
-      .build();
+      const mapping = googletag
+        .sizeMapping()
+        .addSize([1024, 0], [[728, 90]])
+        .addSize([0, 0], mobileSize)
+        .build();
 
-    responsiveAdSlot.defineSizeMapping(mapping);
+      responsiveAdSlot.defineSizeMapping(mapping);
+    }
 
     // Lazy loading
     if (enableLazyLoadAds) {

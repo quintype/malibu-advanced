@@ -3,7 +3,7 @@ import { object, array, shape } from "prop-types";
 
 import { StoryGrid } from "../../story-grid";
 import { DfpComponent } from "../../ads/dfp-component";
-import { TopAd } from "../../ads/dfp-component/top-ad";
+import { TopAd } from "../../ads/top-ad";
 
 const AuthorPage = props => {
   const stories = props.data.stories.map(({ story }) => story) || [];

@@ -4,7 +4,7 @@ import React from "react";
 import { InfiniteStoryBase, WithPreview } from "@quintype/components";
 import { number, object, shape, any } from "prop-types";
 
-import { TopAd } from "../ads/dfp-component/top-ad";
+import { TopAd } from "../ads/top-ad";
 import { BlankStory } from "../story-templates/blank";
 
 function StoryPageBase({ index, story, otherProp }) {

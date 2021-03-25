@@ -34,6 +34,16 @@ const DfpComponent = ({ adType, id, size, path }) => {
         });
       }, 5000);
     }
+
+    if (window.googletag) {
+      const googletag = window.googletag || {};
+
+      googletag.cmd = googletag.cmd || [];
+
+      googletag.cmd.push(function() {
+        googletag.pubads().refresh();
+      });
+    }
   }, []);
 
   return <div styleName={`ad-slot ${adType}`} id={id} />;
