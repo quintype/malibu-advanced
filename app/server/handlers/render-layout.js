@@ -13,7 +13,7 @@ import { NavBar } from "../../isomorphic/components/header/nav-bar";
 import { Footer } from "../../isomorphic/components/layouts/footer";
 import fontFace from "../font";
 import { BreakingNewsView } from "../../isomorphic/components/breaking-news-view";
-import { TopAd } from "../../isomorphic/components/ads/dfp-component/top-ad";
+import { TopAd } from "../../isomorphic/components/ads/top-ad";
 
 const statsFile = path.resolve("stats.json");
 const cssContent = assetPath("app.css") ? readAsset("app.css") : "";
@@ -30,6 +30,7 @@ const getConfig = state => {
     isOnesignalEnable: get(state, ["qt", "config", "publisher-attributes", "onesignal", "is_enable"], false),
     enableAds: get(state, ["qt", "config", "publisher-attributes", "dfp_ads", "enable_ads"], true),
     loadAdsSynchronously: get(state, ["qt", "config", "publisher-attributes", "dfp_ads", "load_ads_synchronously"], false),
+    enableLazyLoadAds: get(state, ["qt", "config", "publisher-attributes", "dfp_ads", "enable_lazy_load_ads"], true),
     fetchMarginPercent: get(state, ["qt", "config", "publisher-attributes", "dfp_ads", "fetch_margin_percent"], 0),
     renderMarginPercent: get(state, ["qt", "config", "publisher-attributes", "dfp_ads", "render_margin_percent"], 0),
     mobileScaling: get(state, ["qt", "config", "publisher-attributes", "dfp_ads", "mobile_scaling"], 0)
@@ -51,7 +52,11 @@ export async function renderLayout(res, params) {
     isGtmEnable,
     isGaEnable,
     enableAds,
-    loadAdsSynchronously
+    loadAdsSynchronously,
+    enableLazyLoadAds,
+    fetchMarginPercent,
+    renderMarginPercent,
+    mobileScaling
   } = getConfig(params.store.getState());
   const chunk = params.shell ? null : allChunks[getChunkName(params.pageType)];
 
@@ -89,7 +94,11 @@ export async function renderLayout(res, params) {
         isOnesignalEnable,
         oneSignalScript: params.oneSignalScript,
         enableAds,
-        loadAdsSynchronously
+        loadAdsSynchronously,
+        enableLazyLoadAds,
+        fetchMarginPercent,
+        renderMarginPercent,
+        mobileScaling
       },
       params
     )
