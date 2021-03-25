@@ -61,6 +61,9 @@ export const useDfpSlot = ({ path, size, id, qtState }) => {
   const StoryId = getStoryId(qtState, pageType);
   const sectionList = getSectionList(qtState, pageType);
   const tagList = getTagList(qtState, pageType);
+  const fetchMarginPercent = get(qtState, ["config", "publisher-attributes", "dfp_ads", "fetch_margin_percent"], 0);
+  const renderMarginPercent = get(qtState, ["config", "publisher-attributes", "dfp_ads", "render_margin_percent"], 0);
+  const mobileScaling = get(qtState, ["config", "publisher-attributes", "dfp_ads", "mobile_scaling"], 0);
 
   let mobileSize = [300, 250];
   if (id === "top-ad") {
@@ -90,9 +93,9 @@ export const useDfpSlot = ({ path, size, id, qtState }) => {
     responsiveAdSlot.defineSizeMapping(mapping);
 
     googletag.pubads().enableLazyLoad({
-      fetchMarginPercent: 0,
-      renderMarginPercent: 0,
-      mobileScaling: 0
+      fetchMarginPercent,  // Fetch slots within specified viewports
+      renderMarginPercent,   // Render slots within specified viewports
+      mobileScaling // Multiplies the specified value with the above values on mobile
     });
 
     googletag.pubads().addEventListener("slotRequested", function(event) {
