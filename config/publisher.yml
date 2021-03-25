@@ -26,5 +26,10 @@ publisher:
   google_app_id: ""
   facebook_app_id: ""
   is_verification_link_flow: true
-  load_ads_synchronously: false
-  enable_ads: true
+  dfp_ads:
+    load_ads_synchronously: false
+    enable_ads: true
+    enable_lazy_load_ads: true
+    fetch_margin_percent: 0
+    render_margin_percent: 0
+    mobile_scaling: 0

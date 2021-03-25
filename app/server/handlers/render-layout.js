@@ -13,7 +13,7 @@ import { NavBar } from "../../isomorphic/components/header/nav-bar";
 import { Footer } from "../../isomorphic/components/layouts/footer";
 import fontFace from "../font";
 import { BreakingNewsView } from "../../isomorphic/components/breaking-news-view";
-import { TopAd } from "../../isomorphic/components/ads/dfp-component/top-ad";
+import { TopAd } from "../../isomorphic/components/ads/top-ad";
 
 const statsFile = path.resolve("stats.json");
 const cssContent = assetPath("app.css") ? readAsset("app.css") : "";
@@ -28,8 +28,8 @@ const getConfig = state => {
     isGaEnable: get(state, ["qt", "config", "publisher-attributes", "google_analytics", "is_enable"], false),
     cdnImage: get(state, ["qt", "config", "cdn-image"], ""),
     isOnesignalEnable: get(state, ["qt", "config", "publisher-attributes", "onesignal", "is_enable"], false),
-    enableAds: get(state, ["qt", "config", "publisher-attributes", "enable_ads"], true),
-    loadAdsSynchronously: get(state, ["qt", "config", "publisher-attributes", "load_ads_synchronously"], false)
+    enableAds: get(state, ["qt", "config", "publisher-attributes", "dfp_ads", "enable_ads"], true),
+    loadAdsSynchronously: get(state, ["qt", "config", "publisher-attributes", "dfp_ads", "load_ads_synchronously"], false)
   };
 };
 

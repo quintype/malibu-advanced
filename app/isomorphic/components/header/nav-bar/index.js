@@ -126,9 +126,9 @@ const NavBar = () => {
   };
 
   const member = useSelector(state => get(state, ["member"], null));
-  const enableAds = useSelector(state => get(state, ["qt", "config", "publisher-attributes", "enable_ads"], true));
+  const enableAds = useSelector(state => get(state, ["qt", "config", "publisher-attributes", "dfp_ads", "enable_ads"], true));
   const loadAdsSynchronously = useSelector(state =>
-    get(state, ["qt", "config", "publisher-attributes", "load_ads_synchronously"], false)
+    get(state, ["qt", "config", "publisher-attributes", "dfp_ads", "load_ads_synchronously"], false)
   );
   const imageUrl = member && member["avatar-url"] ? member["avatar-url"] : assetify(User);
 

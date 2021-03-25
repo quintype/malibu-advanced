@@ -6,7 +6,7 @@ import { BreakingNewsView } from "../isomorphic/components/breaking-news-view";
 import { Footer } from "../isomorphic/components/layouts/footer";
 import { NavbarSearch } from "../isomorphic/components/header/navbar-search";
 import { NavBar } from "../isomorphic/components/header/nav-bar";
-import { TopAd } from "../isomorphic/components/ads/dfp-component/top-ad";
+import { TopAd } from "../isomorphic/components/ads/top-ad";
 
 export function preRenderApplication(store) {
   const hydrate = { hydrate: !global.qtLoadedFromShell };
