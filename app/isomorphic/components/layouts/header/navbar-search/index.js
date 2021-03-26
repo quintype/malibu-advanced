@@ -3,9 +3,9 @@ import { SearchBox } from "@quintype/components";
 import { useDispatch, useSelector } from "react-redux";
 import get from "lodash/get";
 
-import { OPEN_SEARCHBAR } from "../../store/actions";
-import { Search } from "../../atoms/icons/search";
-import { CloseIcon } from "../../atoms/icons/close-icon";
+import { OPEN_SEARCHBAR } from "../../../store/actions";
+import { Search } from "../../../atoms/icons/search";
+import { CloseIcon } from "../../../atoms/icons/close-icon";
 
 import "./navbar-search.m.css";
 
