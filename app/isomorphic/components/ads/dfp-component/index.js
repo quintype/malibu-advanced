@@ -3,7 +3,7 @@ import { string, array } from "prop-types";
 import { useSelector } from "react-redux";
 import { get } from "lodash";
 
-import { useDfpSlot } from "../../utils";
+import { useDfpSlot } from "../utils";
 
 import "./dfp-component.m.css";
 

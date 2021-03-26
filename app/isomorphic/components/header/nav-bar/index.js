@@ -11,6 +11,7 @@ import UserIcon from "../../../../assets/images/user-icon.svg";
 import User from "../../../../assets/images/user.svg";
 
 import "./navbar.m.css";
+import { appendGoogleTagServices } from "../../ads/utils";
 
 const NavBar = () => {
   // Import account modal dynamically
@@ -138,12 +139,7 @@ const NavBar = () => {
   useEffect(() => {
     if (enableAds && !loadAdsSynchronously) {
       setTimeout(function() {
-        const script = document.createElement("script");
-        const isSSL = document.location.protocol === "https:";
-        script.src = (isSSL ? "https:" : "http:") + "//www.googletagservices.com/tag/js/gpt.js";
-        const node = document.getElementsByTagName("script")[0];
-        script.setAttribute("async", "");
-        node.parentNode.insertBefore(script, node);
+        appendGoogleTagServices();
       }, 3000);
     }
 
