@@ -2,25 +2,25 @@ import { get } from "lodash";
 
 const getSectionSlug = (state, pageType) => {
   if (pageType === "story-page") {
-    return get(state, ["data", "story", "sections", 0, "slug"]);
+    return get(state, ["data", "story", "sections", 0, "slug"], "NA");
   } else if (pageType === "section-page") {
-    return get(state, ["data", "section", "slug"]);
+    return get(state, ["data", "section", "slug"], "NA");
   }
   return "NA";
 };
 
 const getSectionId = (state, pageType) => {
   if (pageType === "story-page") {
-    return get(state, ["data", "story", "sections", 0, "id"]) || "NA";
+    return get(state, ["data", "story", "sections", 0, "id"], "NA");
   } else if (pageType === "section-page") {
-    return get(state, ["data", "section", "id"]) || "NA";
+    return get(state, ["data", "section", "id"], "NA");
   }
   return "NA";
 };
 
 const getStoryId = (state, pageType) => {
   if (pageType === "story-page") {
-    return get(state, ["data", "story", "id"]) || "NA";
+    return get(state, ["data", "story", "id"], "NA");
   }
   return "NA";
 };
