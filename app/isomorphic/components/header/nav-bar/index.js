@@ -11,7 +11,6 @@ import UserIcon from "../../../../assets/images/user-icon.svg";
 import User from "../../../../assets/images/user.svg";
 
 import "./navbar.m.css";
-import { appendGoogleTagServices } from "../../ads/utils";
 
 const NavBar = () => {
   // Import account modal dynamically
@@ -24,7 +23,6 @@ const NavBar = () => {
   const isHamburgerMenuOpen = useSelector(state => get(state, ["isHamburgerMenuOpen"], false));
   const menu = useSelector(state => get(state, ["qt", "data", "navigationMenu", "homeMenu"], []));
   const hamburgerMenu = useSelector(state => get(state, ["qt", "data", "navigationMenu", "hamburgerMenu"], []));
-  const currentPath = useSelector(state => get(state, ["qt", "currentPath"], "/"));
 
   const displayStyle = isHamburgerMenuOpen ? "flex" : "none";
 
@@ -128,21 +126,9 @@ const NavBar = () => {
   };
 
   const member = useSelector(state => get(state, ["member"], null));
-  const enableAds = useSelector(state =>
-    get(state, ["qt", "config", "publisher-attributes", "dfp_ads", "enable_ads"], true)
-  );
-  const loadAdsSynchronously = useSelector(state =>
-    get(state, ["qt", "config", "publisher-attributes", "dfp_ads", "load_ads_synchronously"], false)
-  );
   const imageUrl = member && member["avatar-url"] ? member["avatar-url"] : assetify(User);
 
   useEffect(() => {
-    if (enableAds && !loadAdsSynchronously) {
-      setTimeout(function() {
-        appendGoogleTagServices();
-      }, 3000);
-    }
-
     getCurrentUser();
 
     switch (global.location.hash) {
@@ -158,13 +144,6 @@ const NavBar = () => {
         return setMessage(null);
     }
   }, []);
-
-  useEffect(() => {
-    if (window.googletag) {
-      const googletag = window.googletag || {};
-      googletag.destroySlots();
-    }
-  }, [currentPath]);
 
   const messageModal = message => {
     // Import modal on message

@@ -4,7 +4,6 @@ import React from "react";
 import { InfiniteStoryBase, WithPreview } from "@quintype/components";
 import { number, object, shape, any } from "prop-types";
 
-import { TopAd } from "../ads/top-ad";
 import { BlankStory } from "../story-templates/blank";
 
 function StoryPageBase({ index, story, otherProp }) {
@@ -34,18 +33,15 @@ function storyPageLoadItems(pageNumber) {
 
 export function StoryPage(props) {
   return (
-    <>
-      <TopAd id="story-banner-ad" />
-      <InfiniteStoryBase
-        {...props}
-        render={StoryPageBase}
-        loadItems={storyPageLoadItems}
-        onInitialItemFocus={item =>
-          app.registerPageView({ pageType: "story-page", data: { story: item.story } }, `/${item.story.slug}`)
-        }
-        onItemFocus={item => console.log(`Story In View: ${item.story.headline}`)}
-      />
-    </>
+    <InfiniteStoryBase
+      {...props}
+      render={StoryPageBase}
+      loadItems={storyPageLoadItems}
+      onInitialItemFocus={item =>
+        app.registerPageView({ pageType: "story-page", data: { story: item.story } }, `/${item.story.slug}`)
+      }
+      onItemFocus={item => console.log(`Story In View: ${item.story.headline}`)}
+    />
   );
 }
 

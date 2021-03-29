@@ -6,6 +6,7 @@ import { BreakingNewsView } from "../isomorphic/components/breaking-news-view";
 import { Footer } from "../isomorphic/components/layouts/footer";
 import { NavbarSearch } from "../isomorphic/components/header/navbar-search";
 import { NavBar } from "../isomorphic/components/header/nav-bar";
+import { TopAd } from "../isomorphic/components/ads/top-ad";
 
 export function preRenderApplication(store) {
   const hydrate = { hydrate: !global.qtLoadedFromShell };
@@ -22,6 +23,7 @@ export function preRenderApplication(store) {
   breakingNewsConfig.is_enable &&
     renderBreakingNews("breaking-news-container", store, BreakingNewsView, breakingNewsbaseProps);
   renderComponent(Footer, "footer", store, hydrate);
+  renderComponent(TopAd, "top-ad", store, hydrate);
 }
 
 // This is a separate file as everything from here on is hot reloaded when the app changes

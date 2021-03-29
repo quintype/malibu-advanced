@@ -12,6 +12,7 @@ const DfpComponent = ({ adType, id, size, path }) => {
   const publisherAttributes = get(qtState, ["config", "publisher-attributes"]) || {};
   const loadAdsSynchronously = get(publisherAttributes, ["dfp_ads", "load_ads_synchronously"], false);
   const enableAds = get(publisherAttributes, ["dfp_ads", "enable_ads"], true);
+  const currentPath = useSelector(state => get(state, ["qt", "currentPath"], "/"));
 
   if (!enableAds) {
     return null;
@@ -35,7 +36,7 @@ const DfpComponent = ({ adType, id, size, path }) => {
         });
       }, 5000);
     }
-  }, []);
+  }, [currentPath]);
 
   return <div styleName={`ad-slot ${adType}`} id={id} />;
 };

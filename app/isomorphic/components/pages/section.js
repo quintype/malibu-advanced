@@ -5,7 +5,6 @@ import { collectionToStories, LazyCollection } from "@quintype/components";
 
 import { StoryGrid } from "../story-grid";
 import { getCollectionTemplate } from "../get-collection-template";
-import { TopAd } from "../ads/top-ad";
 import { DfpComponent } from "../ads/dfp-component";
 
 const SectionPage = props => {
@@ -29,7 +28,6 @@ const SectionPage = props => {
 
   return (
     <div className="container">
-      <TopAd id={`banner-${props.data.collection.slug}-ad`} />
       <h1>{pageTitle}</h1>
       <StoryGrid stories={stories} />
       <DfpComponent

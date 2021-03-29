@@ -13,6 +13,7 @@ import { NavBar } from "../../isomorphic/components/header/nav-bar";
 import { Footer } from "../../isomorphic/components/layouts/footer";
 import fontFace from "../font";
 import { BreakingNewsView } from "../../isomorphic/components/breaking-news-view";
+import { TopAd } from "../../isomorphic/components/ads/top-ad";
 
 const statsFile = path.resolve("stats.json");
 const cssContent = assetPath("app.css") ? readAsset("app.css") : "";
@@ -70,6 +71,7 @@ export async function renderLayout(res, params) {
         topbar: renderLoadableReduxComponent(Header, params.store, extractor),
         navbar: renderLoadableReduxComponent(NavBar, params.store, extractor),
         footer: renderReduxComponent(Footer, params.store),
+        topad: renderReduxComponent(TopAd, params.store),
         breakingNews: renderReduxComponent(BreakingNewsView, params.store, {
           breakingNews: [],
           breakingNewsLoaded: false
