@@ -14,7 +14,7 @@ export function FourColGrid({ collection, stories }) {
       <h2 styleName="heading">{collection.name}</h2>
       <StoryGrid stories={stories} />
       <DfpComponent
-        adType="ad-slot-size-300x250"
+        adStyleName="ad-slot-size-300x250"
         id={`fourcol-${collection.slug}-ad`}
         path="/5463099287/foo"
         size={[

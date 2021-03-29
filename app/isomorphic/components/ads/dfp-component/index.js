@@ -7,7 +7,7 @@ import { useDfpSlot } from "../utils";
 
 import "./dfp-component.m.css";
 
-const DfpComponent = ({ adType, id, size, path }) => {
+const DfpComponent = ({ adStyleName, id, size, path, type = "" }) => {
   const qtState = useSelector(state => get(state, ["qt"], {}));
   const publisherAttributes = get(qtState, ["config", "publisher-attributes"]) || {};
   const loadAdsSynchronously = get(publisherAttributes, ["dfp_ads", "load_ads_synchronously"], false);
@@ -24,7 +24,8 @@ const DfpComponent = ({ adType, id, size, path }) => {
         path: path,
         size: size,
         id: id,
-        qtState: qtState
+        qtState: qtState,
+        type: type
       });
     } else {
       setTimeout(() => {
@@ -32,20 +33,22 @@ const DfpComponent = ({ adType, id, size, path }) => {
           path: path,
           size: size,
           id: id,
-          qtState: qtState
+          qtState: qtState,
+          type: type
         });
       }, 5000);
     }
   }, [currentPath]);
 
-  return <div styleName={`ad-slot ${adType}`} id={id} />;
+  return <div styleName={`ad-slot ${adStyleName}`} id={id} />;
 };
 
 DfpComponent.propTypes = {
-  adType: string,
+  adStyleName: string,
   id: string,
   size: array,
-  path: string
+  path: string,
+  type: string
 };
 
 export { DfpComponent };

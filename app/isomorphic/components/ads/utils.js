@@ -45,11 +45,11 @@ const getTagList = (state, pageType) => {
   return [];
 };
 
-export const useDfpSlot = ({ path, size, id, qtState }) => {
-  const publisherAttributes = get(qtState, ["config", "publisher-attributes"]) || {};
+export const useDfpSlot = ({ path, size, id, qtState, type = "" }) => {
+  const publisherAttributes = get(qtState, ["config", "publisher-attributes"], {});
   const googletag = window.googletag || {};
 
-  const pageType = get(qtState, ["pageType"]) || "";
+  const pageType = get(qtState, ["pageType"], "");
   const environment = get(publisherAttributes, ["env"], "");
   const sectionSlug = getStorySectionSlug(qtState, pageType);
   const sectionId = getStorySectionId(qtState, pageType);
@@ -62,7 +62,7 @@ export const useDfpSlot = ({ path, size, id, qtState }) => {
   const mobileScaling = get(publisherAttributes, ["dfp_ads", "mobile_scaling"], 0);
 
   let mobileSize = [300, 250];
-  if (path === "/5463099287/BannerAd") {
+  if (type === "top-ad") {
     mobileSize = [320, 50];
   }
 
@@ -74,7 +74,6 @@ export const useDfpSlot = ({ path, size, id, qtState }) => {
     if (responsiveAdSlot) {
       responsiveAdSlot
         .addService(googletag.pubads())
-        .setTargeting("pageType", pageType)
         .setTargeting("pageType", pageType)
         .setTargeting("environment", environment)
         .setTargeting("sectionSlug", sectionSlug)

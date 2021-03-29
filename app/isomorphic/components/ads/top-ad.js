@@ -33,13 +33,14 @@ export const TopAd = () => {
 
   return (
     <DfpComponent
-      adType="ad-slot-size-320x50"
+      adStyleName="ad-slot-size-320x50"
       id={`${pageType}-banner-${collectionSlug}-ad`}
       path="/5463099287/BannerAd"
       size={[
         [320, 50],
         [728, 90]
       ]}
+      type="top-ad"
     />
   );
 };

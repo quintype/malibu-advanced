@@ -3,7 +3,7 @@
   justify-content: center; /* For other ads, where width isn't specified */
   overflow: auto;
   margin: 0 auto 16px;
-  z-index: 1;
+  z-index: var(--zlevel0);
 }
 
 .ad-slot-size-320x50 {

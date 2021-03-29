@@ -11,7 +11,7 @@ const SearchPage = props => (
     </h1>
     <StoryGrid stories={props.data.stories} />
     <DfpComponent
-      adType="ad-slot-size-300x250"
+      adStyleName="ad-slot-size-300x250"
       id="banner-ad-1"
       path="/6355419/Travel/Europe/France/Paris"
       size={[300, 250]}

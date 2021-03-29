@@ -31,7 +31,7 @@ const SectionPage = props => {
       <h1>{pageTitle}</h1>
       <StoryGrid stories={stories} />
       <DfpComponent
-        adType="ad-slot-size-300x250"
+        adStyleName="ad-slot-size-300x250"
         id="first-section-ad"
         path="/5463099287/fooo"
         size={[
