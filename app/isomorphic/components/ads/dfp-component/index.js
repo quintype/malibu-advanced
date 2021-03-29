@@ -12,7 +12,7 @@ const DfpComponent = ({ adStyleName, id, size, path, type = "", viewPortSizeMapp
   const adsConfig = get(qtState, ["config", "ads-config", "dfp_ads"], {});
   const loadAdsSynchronously = get(adsConfig, ["load_ads_synchronously"]);
   const enableAds = get(adsConfig, ["enable_ads"]);
-  const currentPath = get(qtState, ["currentPath"], "");
+  const currentPath = get(qtState, ["currentPath"]);
 
   if (!enableAds) {
     return null;

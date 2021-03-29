@@ -28,12 +28,8 @@ const getConfig = state => {
     isGaEnable: get(state, ["qt", "config", "publisher-attributes", "google_analytics", "is_enable"], false),
     cdnImage: get(state, ["qt", "config", "cdn-image"], ""),
     isOnesignalEnable: get(state, ["qt", "config", "publisher-attributes", "onesignal", "is_enable"], false),
-    enableAds: get(state, ["qt", "config", "ads-config", "dfp_ads", "enable_ads"], true),
-    loadAdsSynchronously: get(
-      state,
-      ["qt", "config", "ads-config", "dfp_ads", "load_ads_synchronously"],
-      false
-    )
+    enableAds: get(state, ["qt", "config", "ads-config", "dfp_ads", "enable_ads"]),
+    loadAdsSynchronously: get(state, ["qt", "config", "ads-config", "dfp_ads", "load_ads_synchronously"])
   };
 };
 
