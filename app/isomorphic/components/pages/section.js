@@ -38,6 +38,7 @@ const SectionPage = props => {
         id="section-page-ad"
         path={adConfig.adUnit}
         size={adConfig.sizes}
+        viewPortSizeMapping={adConfig.viewPortSizeMapping}
       />
       <LazyCollection collection={{ items: childCollections }} collectionTemplates={getCollectionTemplate} />
     </div>

@@ -38,6 +38,7 @@ export const TopAd = () => {
       id={`${pageType}-banner-${collectionSlug}-ad`}
       path={topAdConfig.adUnit}
       size={topAdConfig.sizes}
+      viewPortSizeMapping={topAdConfig.viewPortSizeMapping}
       type="top-ad"
     />
   );

@@ -22,6 +22,7 @@ export function FourColGrid({ collection, stories }) {
         id={`fourcol-${collection.slug}-ad`}
         path={adConfig.adUnit}
         size={adConfig.sizes}
+        viewPortSizeMapping={adConfig.viewPortSizeMapping}
       />
     </div>
   );

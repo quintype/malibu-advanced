@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { string, array } from "prop-types";
+import { string, array, object } from "prop-types";
 import { useSelector } from "react-redux";
 import { get } from "lodash";
 
@@ -7,7 +7,7 @@ import { useDfpSlot } from "../utils";
 
 import "./dfp-component.m.css";
 
-const DfpComponent = ({ adStyleName, id, size, path, type = "" }) => {
+const DfpComponent = ({ adStyleName, id, size, path, type = "", viewPortSizeMapping }) => {
   const qtState = useSelector(state => get(state, ["qt"], {}));
   const publisherAttributes = get(qtState, ["config", "publisher-attributes"]) || {};
   const loadAdsSynchronously = get(publisherAttributes, ["dfp_ads", "load_ads_synchronously"], false);
@@ -25,7 +25,8 @@ const DfpComponent = ({ adStyleName, id, size, path, type = "" }) => {
         size: size,
         id: id,
         qtState: qtState,
-        type: type
+        type: type,
+        viewPortSizeMapping: viewPortSizeMapping
       });
     } else {
       setTimeout(() => {
@@ -34,7 +35,8 @@ const DfpComponent = ({ adStyleName, id, size, path, type = "" }) => {
           size: size,
           id: id,
           qtState: qtState,
-          type: type
+          type: type,
+          viewPortSizeMapping: viewPortSizeMapping
         });
       }, 5000);
     }
@@ -48,7 +50,8 @@ DfpComponent.propTypes = {
   id: string,
   size: array,
   path: string,
-  type: string
+  type: string,
+  viewPortSizeMapping: object
 };
 
 export { DfpComponent };

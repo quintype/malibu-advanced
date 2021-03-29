@@ -45,7 +45,7 @@ const getTagList = (state, pageType) => {
   return [];
 };
 
-export const useDfpSlot = ({ path, size, id, qtState, type = "" }) => {
+export const useDfpSlot = ({ path, size, id, qtState, type = "", viewPortSizeMapping }) => {
   const publisherAttributes = get(qtState, ["config", "publisher-attributes"], {});
   const googletag = window.googletag || {};
 
@@ -60,11 +60,6 @@ export const useDfpSlot = ({ path, size, id, qtState, type = "" }) => {
   const fetchMarginPercent = get(publisherAttributes, ["dfp_ads", "fetch_margin_percent"], 0);
   const renderMarginPercent = get(publisherAttributes, ["dfp_ads", "render_margin_percent"], 0);
   const mobileScaling = get(publisherAttributes, ["dfp_ads", "mobile_scaling"], 0);
-
-  let mobileSize = [300, 250];
-  if (type === "top-ad") {
-    mobileSize = [320, 50];
-  }
 
   googletag.cmd = googletag.cmd || [];
 
@@ -84,8 +79,8 @@ export const useDfpSlot = ({ path, size, id, qtState, type = "" }) => {
 
       const mapping = googletag
         .sizeMapping()
-        .addSize([1024, 0], [[728, 90]])
-        .addSize([0, 0], mobileSize)
+        .addSize(viewPortSizeMapping[0].viewport, viewPortSizeMapping[0].sizes)
+        .addSize(viewPortSizeMapping[1].viewport, viewPortSizeMapping[1].sizes)
         .build();
 
       responsiveAdSlot.defineSizeMapping(mapping);

@@ -13,7 +13,13 @@ const TagPage = props => {
     <div className="container">
       <h1>{get(props, "data.tag.name") || "Tag Page"}</h1>
       <StoryGrid stories={props.data.stories} />
-      <DfpComponent adStyleName="ad-slot-size-300x250" id="tag-page-ad" path={adConfig.adUnit} size={adConfig.sizes} />
+      <DfpComponent
+        adStyleName="ad-slot-size-300x250"
+        id="tag-page-ad"
+        path={adConfig.adUnit}
+        size={adConfig.sizes}
+        viewPortSizeMapping={adConfig.viewPortSizeMapping}
+      />
     </div>
   );
 };

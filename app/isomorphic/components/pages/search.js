@@ -20,6 +20,7 @@ const SearchPage = props => {
         id="search-page-ad"
         path={adConfig.adUnit}
         size={adConfig.sizes}
+        viewPortSizeMapping={adConfig.viewPortSizeMapping}
       />
     </div>
   );

@@ -46,6 +46,7 @@ function BlankStoryTemplate(props) {
             id={`story-card-ad-${index}`}
             path={adConfig.adUnit}
             size={adConfig.sizes}
+            viewPortSizeMapping={adConfig.viewPortSizeMapping}
           />
         </Fragment>
       ))}
