@@ -9,10 +9,10 @@ import "./dfp-component.m.css";
 
 const DfpComponent = ({ adStyleName, id, size, path, type = "", viewPortSizeMapping }) => {
   const qtState = useSelector(state => get(state, ["qt"], {}));
-  const publisherAttributes = get(qtState, ["config", "publisher-attributes"]) || {};
-  const loadAdsSynchronously = get(publisherAttributes, ["dfp_ads", "load_ads_synchronously"], false);
-  const enableAds = get(publisherAttributes, ["dfp_ads", "enable_ads"], true);
-  const currentPath = useSelector(state => get(state, ["qt", "currentPath"], "/"));
+  const adsConfig = get(qtState, ["config", "ads-config", "dfp_ads"], {});
+  const loadAdsSynchronously = get(adsConfig, ["load_ads_synchronously"]);
+  const enableAds = get(adsConfig, ["enable_ads"]);
+  const currentPath = get(qtState, ["currentPath"], "");
 
   if (!enableAds) {
     return null;

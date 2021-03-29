@@ -1,6 +1,6 @@
 import { get } from "lodash";
 
-const getStorySectionSlug = (state, pageType) => {
+const getSectionSlug = (state, pageType) => {
   if (pageType === "story-page") {
     return get(state, ["data", "story", "sections", 0, "slug"]);
   } else if (pageType === "section-page") {
@@ -9,11 +9,11 @@ const getStorySectionSlug = (state, pageType) => {
   return "NA";
 };
 
-const getStorySectionId = (state, pageType) => {
+const getSectionId = (state, pageType) => {
   if (pageType === "story-page") {
-    return get(state, ["data", "story", "sections", 0, "id"]);
+    return get(state, ["data", "story", "sections", 0, "id"]) || "NA";
   } else if (pageType === "section-page") {
-    return get(state, ["data", "section", "id"]);
+    return get(state, ["data", "section", "id"]) || "NA";
   }
   return "NA";
 };
@@ -38,7 +38,7 @@ const getSectionList = (state, pageType) => {
 const getTagList = (state, pageType) => {
   if (pageType === "story-page") {
     const tags = get(state, ["data", "story", "tags"], []);
-    const tagList = tags.length > 0 ? tags.map(item => item.name) : [];
+    const tagList = tags.map(item => item.name);
     return tagList;
   }
 
@@ -46,20 +46,20 @@ const getTagList = (state, pageType) => {
 };
 
 export const useDfpSlot = ({ path, size, id, qtState, type = "", viewPortSizeMapping }) => {
-  const publisherAttributes = get(qtState, ["config", "publisher-attributes"], {});
+  const adsConfig = get(qtState, ["config", "ads-config", "dfp_ads"], {});
   const googletag = window.googletag || {};
 
   const pageType = get(qtState, ["pageType"], "");
-  const environment = get(publisherAttributes, ["env"], "");
-  const sectionSlug = getStorySectionSlug(qtState, pageType);
-  const sectionId = getStorySectionId(qtState, pageType);
+  const environment = get(qtState, ["config", "publisher-attributes", "env"], "");
+  const sectionSlug = getSectionSlug(qtState, pageType);
+  const sectionId = getSectionId(qtState, pageType);
   const storyId = getStoryId(qtState, pageType);
   const sectionList = getSectionList(qtState, pageType);
   const tagList = getTagList(qtState, pageType);
-  const enableLazyLoadAds = get(publisherAttributes, ["dfp_ads", "enable_lazy_load_ads"], true);
-  const fetchMarginPercent = get(publisherAttributes, ["dfp_ads", "fetch_margin_percent"], 0);
-  const renderMarginPercent = get(publisherAttributes, ["dfp_ads", "render_margin_percent"], 0);
-  const mobileScaling = get(publisherAttributes, ["dfp_ads", "mobile_scaling"], 0);
+  const enableLazyLoadAds = get(adsConfig, ["enable_lazy_load_ads"]);
+  const fetchMarginPercent = get(adsConfig, ["fetch_margin_percent"], 0);
+  const renderMarginPercent = get(adsConfig, ["render_margin_percent"], 0);
+  const mobileScaling = get(adsConfig, ["mobile_scaling"], 0);
 
   googletag.cmd = googletag.cmd || [];
 

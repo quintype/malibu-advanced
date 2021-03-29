@@ -6,16 +6,13 @@ import { DfpComponent } from "./dfp-component";
 import { appendGoogleTagServices } from "./utils";
 
 export const TopAd = () => {
-  const enableAds = useSelector(state =>
-    get(state, ["qt", "config", "publisher-attributes", "dfp_ads", "enable_ads"], true)
-  );
-  const loadAdsSynchronously = useSelector(state =>
-    get(state, ["qt", "config", "publisher-attributes", "dfp_ads", "load_ads_synchronously"], false)
-  );
-  const currentPath = useSelector(state => get(state, ["qt", "currentPath"], "/"));
-  const pageType = useSelector(state => get(state, ["qt", "pageType"], "home-page"));
-  const collectionSlug = useSelector(state => get(state, ["qt", "data", "collection", "slug"], "home"));
-  const topAdConfig = useSelector(state => get(state, ["qt", "config", "ads-config", "slots", "top-ad"], {}));
+  const qtState = useSelector(state => get(state, ["qt"], {}));
+  const enableAds = get(qtState, ["config", "ads-config", "dfp_ads", "enable_ads"]);
+  const loadAdsSynchronously = get(qtState, ["config", "ads-config", "dfp_ads", "load_ads_synchronously"]);
+  const currentPath = get(qtState, ["currentPath"], "");
+  const pageType = get(qtState, ["pageType"], "");
+  const collectionSlug = get(qtState, ["data", "collection", "slug"], "");
+  const topAdConfig = get(qtState, ["config", "ads-config", "slots", "top-ad"], {});
 
   useEffect(() => {
     if (enableAds && !loadAdsSynchronously) {

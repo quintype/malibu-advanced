@@ -1,5 +1,5 @@
 asset_host: http://localhost:8080
-sketches_host: http://malibu-advanced-web.qtstage.io
+sketches_host: https://malibu-web.qtstage.io
 host_to_api_host:
   help.lvh.me: https://user-documentation.quintype.io
 host_to_automatic_api_host:
@@ -26,10 +26,3 @@ publisher:
   google_app_id: ""
   facebook_app_id: ""
   is_verification_link_flow: true
-  dfp_ads:
-    load_ads_synchronously: false
-    enable_ads: true
-    enable_lazy_load_ads: true
-    fetch_margin_percent: 0
-    render_margin_percent: 0
-    mobile_scaling: 0

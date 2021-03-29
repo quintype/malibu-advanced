@@ -1,7 +1,3 @@
 collection-layouts:
 - name: FourColGrid
   display: Default Malibu Widget
-  options:
-  - default: ""
-    name: ad_unit_name
-    type: string
