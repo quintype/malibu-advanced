@@ -3,18 +3,18 @@ import { useDispatch, useSelector } from "react-redux";
 import get from "lodash/get";
 import assetify from "@quintype/framework/assetify";
 
-import { OPEN_HAMBURGER_MENU, OPEN_SEARCHBAR, MEMBER_UPDATED } from "../../store/actions";
-import { MenuItem } from "../menu-item";
-import HamburgerMenu from "../../atoms/hamburger-menu";
-import MessageWrapper from "../../molecules/forms/message-wrapper";
-import UserIcon from "../../../../assets/images/user-icon.svg";
-import User from "../../../../assets/images/user.svg";
+import { OPEN_HAMBURGER_MENU, OPEN_SEARCHBAR, MEMBER_UPDATED } from "../../../store/actions";
+import { MenuItem } from "../../menu-item";
+import HamburgerMenu from "../../../atoms/hamburger-menu";
+import MessageWrapper from "../../../molecules/forms/message-wrapper";
+import UserIcon from "../../../../../assets/images/user-icon.svg";
+import User from "../../../../../assets/images/user.svg";
 
 import "./navbar.m.css";
 
 const NavBar = () => {
   // Import account modal dynamically
-  const AccountModal = lazy(() => import("../../login/AccountModal"));
+  const AccountModal = lazy(() => import("../../../login/AccountModal"));
   const [showAccountModal, setShowAccountModal] = useState(false);
   const [message, setMessage] = useState(null);
   const dispatch = useDispatch();
@@ -89,6 +89,7 @@ const NavBar = () => {
               <li key={item.title} styleName="dropdown">
                 <MenuItem
                   item={item}
+                  menuStyle="menu-link"
                   toggleHandler={() =>
                     dispatch({
                       type: OPEN_SEARCHBAR,
@@ -116,7 +117,7 @@ const NavBar = () => {
             hamburgerMenu.map(item => {
               return (
                 <li key={item.title} styleName="dropdown">
-                  <MenuItem item={item} toggleHandler={() => toggleHandler()} />
+                  <MenuItem menuStyle="menu-link" item={item} toggleHandler={() => toggleHandler()} />
                 </li>
               );
             })}
@@ -147,7 +148,7 @@ const NavBar = () => {
 
   const messageModal = message => {
     // Import modal on message
-    const Modal = lazy(() => import("../../login/modal"));
+    const Modal = lazy(() => import("../../../login/modal"));
     return (
       <Suspense fallback={<div></div>}>
         <Modal onClose={() => setMessage(null)}>

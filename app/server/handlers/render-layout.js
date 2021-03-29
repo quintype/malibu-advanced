@@ -8,8 +8,8 @@ import { assetPath, readAsset, getAllChunks } from "@quintype/framework/server/a
 import { renderReduxComponent, renderLoadableReduxComponent } from "@quintype/framework/server/render";
 
 import { getChunkName } from "../../isomorphic/pick-component";
-import { Header } from "../../isomorphic/components/header";
-import { NavBar } from "../../isomorphic/components/header/nav-bar";
+import { Header } from "../../isomorphic/components/layouts/header";
+import { NavBar } from "../../isomorphic/components/layouts/header/nav-bar";
 import { Footer } from "../../isomorphic/components/layouts/footer";
 import fontFace from "../font";
 import { BreakingNewsView } from "../../isomorphic/components/breaking-news-view";
@@ -30,7 +30,7 @@ const getConfig = state => {
   };
 };
 
-const extractor = new ChunkExtractor({ statsFile, entrypoints: ["topbarCriticalCss", "navbarCriticalCss"] });
+const extractor = new ChunkExtractor({ statsFile, entrypoints: ["topbar", "navbar", "footer"] });
 export const getCriticalCss = async () => {
   const criticalCss = await extractor.getCssString();
   return criticalCss.trim();
@@ -39,6 +39,7 @@ export const getCriticalCss = async () => {
 export async function renderLayout(res, params) {
   const { gtmId, gaId, cdnImage, isOnesignalEnable, isGtmEnable, isGaEnable } = getConfig(params.store.getState());
   const chunk = params.shell ? null : allChunks[getChunkName(params.pageType)];
+  const criticalCss = await getCriticalCss();
 
   res.render(
     "pages/layout",
@@ -47,14 +48,14 @@ export async function renderLayout(res, params) {
         assetPath: assetPath,
         content: "",
         cssContent: cssContent,
-        criticalCss: getCriticalCss(),
+        criticalCss: criticalCss,
         fontJsContent: fontJsContent,
         fontFace: fontFace,
         contentTemplate: null,
         title: params.title,
         topbar: renderLoadableReduxComponent(Header, params.store, extractor),
         navbar: renderLoadableReduxComponent(NavBar, params.store, extractor),
-        footer: renderReduxComponent(Footer, params.store),
+        footer: renderLoadableReduxComponent(Footer, params.store, extractor),
         breakingNews: renderReduxComponent(BreakingNewsView, params.store, {
           breakingNews: [],
           breakingNewsLoaded: false
