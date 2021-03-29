@@ -15,6 +15,7 @@ export const TopAd = () => {
   const currentPath = useSelector(state => get(state, ["qt", "currentPath"], "/"));
   const pageType = useSelector(state => get(state, ["qt", "pageType"], "home-page"));
   const collectionSlug = useSelector(state => get(state, ["qt", "data", "collection", "slug"], "home"));
+  const topAdConfig = useSelector(state => get(state, ["qt", "config", "ads-config", "slots", "top-ad"], {}));
 
   useEffect(() => {
     if (enableAds && !loadAdsSynchronously) {
@@ -35,11 +36,8 @@ export const TopAd = () => {
     <DfpComponent
       adStyleName="ad-slot-size-320x50"
       id={`${pageType}-banner-${collectionSlug}-ad`}
-      path="/5463099287/BannerAd"
-      size={[
-        [320, 50],
-        [728, 90]
-      ]}
+      path={topAdConfig.adUnit}
+      size={topAdConfig.sizes}
       type="top-ad"
     />
   );

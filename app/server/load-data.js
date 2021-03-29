@@ -15,6 +15,8 @@ import { loadCollectionPageData } from "./data-loaders/collection-page-data";
 import { loadAuthorPageData } from "./data-loaders/author-page-data";
 import { PAGE_TYPE } from "../isomorphic/constants";
 
+const { ads } = require("@quintype/framework/server/static-configuration");
+
 const WHITELIST_CONFIG_KEYS = [
   "cdn-image",
   "polltype-host",
@@ -40,7 +42,8 @@ export function loadErrorData(error, config) {
       navigationMenu: getNavigationMenuArray(config.layout.menu, config.sections)
     },
     config: Object.assign(pick(config.asJson(), WHITELIST_CONFIG_KEYS), {
-      "publisher-attributes": publisherAttributes
+      "publisher-attributes": publisherAttributes,
+      "ads-config": ads
     }),
     pageType: errorComponents[error.httpStatusCode],
     httpStatusCode: error.httpStatusCode || 500
@@ -91,7 +94,8 @@ export function loadData(pageType, params, config, client, { host, next, domainS
       }),
       config: Object.assign(pick(config.asJson(), WHITELIST_CONFIG_KEYS), {
         "publisher-attributes": publisherAttributes,
-        "image-cdn-format": "gumlet"
+        "image-cdn-format": "gumlet",
+        "ads-config": ads
       })
     };
   });

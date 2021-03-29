@@ -1,0 +1,26 @@
+network-id: "5463099287"
+slots:
+  top-ad:
+    adUnit: "/5463099287/BannerAd"
+    sizes: [[728, 90], [320, 50]]
+    viewPortSizeMapping:
+      - viewport: [728, 0]
+        sizes: [[728, 90]]
+      - viewport: [0, 0]
+        sizes: [[320, 50]]
+  listing-page-ads:
+    adUnit: "/5463099287/ListingPageAd"
+    sizes: [[728, 90], [300, 250]]
+    viewPortSizeMapping:
+      - viewport: [728, 0]
+        sizes: [[728, 90]]
+      - viewport: [0, 0]
+        sizes: [[300, 250]]
+  story-page-ads:
+    adUnit: "/5463099287/StoryPageAd"
+    sizes: [[728, 90], [300, 250]]
+    viewPortSizeMapping:
+      - viewport: [728, 0]
+        sizes: [[728, 90]]
+      - viewport: [0, 0]
+        sizes: [[300, 250]]
