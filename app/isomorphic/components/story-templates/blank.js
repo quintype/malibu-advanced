@@ -1,5 +1,7 @@
 import React, { Fragment } from "react";
 import PT from "prop-types";
+import { useSelector } from "react-redux";
+import { get } from "lodash";
 
 import { ResponsiveImage, StoryElement } from "@quintype/components";
 import { DfpComponent } from "../ads/dfp-component";
@@ -20,6 +22,8 @@ StoryCard.propTypes = {
 };
 
 function BlankStoryTemplate(props) {
+  const adConfig = useSelector(state => get(state, ["qt", "config", "ads-config", "slots", "story-page-ads"], {}));
+
   return (
     <div className="blank-story container">
       <figure className="blank-story-image qt-image-16x9">
@@ -39,9 +43,9 @@ function BlankStoryTemplate(props) {
           <StoryCard key={card.id} card={card} story={props.story} />
           <DfpComponent
             adStyleName="ad-slot-size-300x250"
-            id={`banner-ad-${index}`}
-            path="/6355419/Travel/Europe/France/Paris"
-            size={[300, 250]}
+            id={`story-card-ad-${index}`}
+            path={adConfig.adUnit}
+            size={adConfig.sizes}
           />
         </Fragment>
       ))}

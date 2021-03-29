@@ -2,12 +2,15 @@ import React from "react";
 import { string, shape, object } from "prop-types";
 import get from "lodash/get";
 import { collectionToStories, LazyCollection } from "@quintype/components";
+import { useSelector } from "react-redux";
 
 import { StoryGrid } from "../story-grid";
 import { getCollectionTemplate } from "../get-collection-template";
 import { DfpComponent } from "../ads/dfp-component";
 
 const SectionPage = props => {
+  const adConfig = useSelector(state => get(state, ["qt", "config", "ads-config", "slots", "listing-page-ads"], {}));
+
   const stories =
     (props.data.collection && props.data.collection.items && collectionToStories(props.data.collection)) || [];
 
@@ -32,12 +35,9 @@ const SectionPage = props => {
       <StoryGrid stories={stories} />
       <DfpComponent
         adStyleName="ad-slot-size-300x250"
-        id="first-section-ad"
-        path="/5463099287/fooo"
-        size={[
-          [300, 250],
-          [728, 90]
-        ]}
+        id="section-page-ad"
+        path={adConfig.adUnit}
+        size={adConfig.sizes}
       />
       <LazyCollection collection={{ items: childCollections }} collectionTemplates={getCollectionTemplate} />
     </div>
