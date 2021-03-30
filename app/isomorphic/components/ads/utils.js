@@ -45,7 +45,7 @@ const getTagList = (state, pageType) => {
   return [];
 };
 
-export const getViewportSizeMapping = (adSlot, googletag, viewPortSizeMapping) => {
+export const setViewportSizeMapping = (adSlot, googletag, viewPortSizeMapping) => {
   const mapping = googletag
     .sizeMapping()
     .addSize(viewPortSizeMapping[0].viewport, viewPortSizeMapping[0].sizes)
@@ -99,50 +99,32 @@ export const setTargetingParams = (googletag, adSlot, qtState, storySectionSlug)
     .setTargeting("tagList", tagList);
 };
 
-export const generateDfp = ({
-  googletag,
-  responsiveAdSlot,
-  qtState,
-  viewPortSizeMapping,
-  enableLazyLoadAds,
-  fetchMarginPercent = 0,
-  renderMarginPercent = 0,
-  mobileScaling = 0,
-  storySectionSlug
-}) => {
-  setTargetingParams(googletag, responsiveAdSlot, qtState, storySectionSlug);
-  getViewportSizeMapping(responsiveAdSlot, googletag, viewPortSizeMapping);
-  if (enableLazyLoadAds) {
-    generateLazyLoading(googletag, fetchMarginPercent, renderMarginPercent, mobileScaling);
-  }
-  googletag.enableServices();
-};
-
-export const useDfpSlot = ({ path, size, id, qtState, viewPortSizeMapping }) => {
+export const useDfpSlot = ({ path, size, id, qtState, viewPortSizeMapping, storySectionSlug, refreshAdUnit }) => {
   const adsConfig = get(qtState, ["config", "ads-config", "dfp_ads"], {});
-  const googletag = window.googletag || {};
-
   const enableLazyLoadAds = get(adsConfig, ["enable_lazy_load_ads"]);
   const fetchMarginPercent = get(adsConfig, ["fetch_margin_percent"], 0);
   const renderMarginPercent = get(adsConfig, ["render_margin_percent"], 0);
   const mobileScaling = get(adsConfig, ["mobile_scaling"], 0);
 
+  const googletag = window.googletag || {};
   googletag.cmd = googletag.cmd || [];
+
+  if (refreshAdUnit) {
+    googletag.cmd.push(function() {
+      googletag.pubads().refresh();
+    });
+  }
 
   googletag.cmd.push(function() {
     const responsiveAdSlot = googletag.defineSlot(path, size, id);
 
     if (responsiveAdSlot) {
-      generateDfp({
-        googletag,
-        responsiveAdSlot,
-        qtState,
-        viewPortSizeMapping,
-        enableLazyLoadAds,
-        fetchMarginPercent,
-        renderMarginPercent,
-        mobileScaling
-      });
+      setTargetingParams(googletag, responsiveAdSlot, qtState, storySectionSlug);
+      setViewportSizeMapping(responsiveAdSlot, googletag, viewPortSizeMapping);
+      if (enableLazyLoadAds) {
+        generateLazyLoading(googletag, fetchMarginPercent, renderMarginPercent, mobileScaling);
+      }
+      googletag.enableServices();
     }
   });
 
