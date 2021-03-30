@@ -24,12 +24,14 @@ StoryCard.propTypes = {
 };
 
 const BlankStoryTemplate = props => {
-  const adConfig = useSelector(state => get(state, ["qt", "config", "ads-config", "slots", "story-page-ads"], {}));
   const qtState = useSelector(state => get(state, ["qt"], {}));
+  const adsConfig = get(qtState, ["config", "ads-config"], {});
+  const adConfig = get(adsConfig, ["slots", "story-page-ads"], {});
+  const loadAdsSynchronously = get(adsConfig, ["dfp_ads", "load_ads_synchronously"], null);
 
   useEffect(() => {
-    setTimeout(() => {
-      const sectionSlug = get(props, ["story", "sections", 0, "slug"], "NA");
+    const sectionSlug = get(props, ["story", "sections", 0, "slug"], "NA");
+    if (loadAdsSynchronously) {
       useDfpSlot({
         path: adConfig.adUnit,
         size: adConfig.sizes,
@@ -39,7 +41,19 @@ const BlankStoryTemplate = props => {
         storySectionSlug: sectionSlug,
         refreshAdUnit: true
       });
-    }, 5000);
+    } else {
+      setTimeout(() => {
+        useDfpSlot({
+          path: adConfig.adUnit,
+          size: adConfig.sizes,
+          id: `story-card-${props.story.id}-ad`,
+          qtState,
+          viewPortSizeMapping: adConfig.viewPortSizeMapping,
+          storySectionSlug: sectionSlug,
+          refreshAdUnit: true
+        });
+      }, 4000);
+    }
   }, [props.story]);
 
   return (
