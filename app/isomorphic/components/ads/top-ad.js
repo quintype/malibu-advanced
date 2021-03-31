@@ -25,7 +25,10 @@ export const TopAd = () => {
   useEffect(() => {
     if (window.googletag) {
       const googletag = window.googletag || {};
-      googletag.destroySlots();
+      googletag.cmd = googletag.cmd || [];
+      googletag.cmd.push(function() {
+        googletag.pubads().refresh();
+      });
     }
   }, [currentPath]);
 
