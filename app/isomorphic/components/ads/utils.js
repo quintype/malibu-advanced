@@ -141,3 +141,42 @@ export const appendGoogleTagServices = () => {
   script.setAttribute("async", "");
   node.parentNode.insertBefore(script, node);
 };
+
+export const getAdSlots = ({
+  path,
+  size,
+  id,
+  qtState,
+  type,
+  viewPortSizeMapping,
+  storySectionSlug,
+  loadAdsSynchronously,
+  delayPeriod,
+  refreshAdUnit
+}) => {
+  if (loadAdsSynchronously) {
+    useDfpSlot({
+      path: path,
+      size: size,
+      id: id,
+      qtState: qtState,
+      type: type,
+      viewPortSizeMapping: viewPortSizeMapping,
+      storySectionSlug,
+      refreshAdUnit
+    });
+  } else {
+    setTimeout(() => {
+      useDfpSlot({
+        path: path,
+        size: size,
+        id: id,
+        qtState: qtState,
+        type: type,
+        viewPortSizeMapping: viewPortSizeMapping,
+        storySectionSlug,
+        refreshAdUnit
+      });
+    }, delayPeriod);
+  }
+};

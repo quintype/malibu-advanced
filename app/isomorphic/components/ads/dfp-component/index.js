@@ -3,7 +3,7 @@ import { string, array, object } from "prop-types";
 import { useSelector } from "react-redux";
 import { get } from "lodash";
 
-import { useDfpSlot } from "../utils";
+import { getAdSlots } from "../utils";
 
 import "./dfp-component.m.css";
 
@@ -19,27 +19,16 @@ const DfpComponent = ({ adStyleName, id, size, path, type = "", viewPortSizeMapp
   }
 
   useEffect(() => {
-    if (loadAdsSynchronously) {
-      useDfpSlot({
-        path: path,
-        size: size,
-        id: id,
-        qtState: qtState,
-        type: type,
-        viewPortSizeMapping: viewPortSizeMapping
-      });
-    } else {
-      setTimeout(() => {
-        useDfpSlot({
-          path: path,
-          size: size,
-          id: id,
-          qtState: qtState,
-          type: type,
-          viewPortSizeMapping: viewPortSizeMapping
-        });
-      }, 5000);
-    }
+    getAdSlots({
+      path,
+      size,
+      id,
+      qtState,
+      type,
+      viewPortSizeMapping,
+      loadAdsSynchronously,
+      delayPeriod: 5000
+    });
   }, [currentPath]);
 
   return <div styleName={`ad-slot ${adStyleName}`} id={id} />;

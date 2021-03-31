@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { get } from "lodash";
 import { ResponsiveImage, StoryElement } from "@quintype/components";
 
-import { useDfpSlot } from "../ads/utils";
+import { getAdSlots } from "../ads/utils";
 
 import "../ads/dfp-component/dfp-component.m.css";
 
@@ -26,33 +26,24 @@ StoryCard.propTypes = {
 const BlankStoryTemplate = props => {
   const qtState = useSelector(state => get(state, ["qt"], {}));
   const adsConfig = get(qtState, ["config", "ads-config"], {});
+  const enableAds = get(adsConfig, ["dfp_ads", "enable_ads"]);
   const adConfig = get(adsConfig, ["slots", "story-page-ads"], {});
   const loadAdsSynchronously = get(adsConfig, ["dfp_ads", "load_ads_synchronously"], null);
 
   useEffect(() => {
-    const sectionSlug = get(props, ["story", "sections", 0, "slug"], "NA");
-    if (loadAdsSynchronously) {
-      useDfpSlot({
+    if (enableAds) {
+      const sectionSlug = get(props, ["story", "sections", 0, "slug"], "NA");
+      getAdSlots({
         path: adConfig.adUnit,
         size: adConfig.sizes,
         id: `story-card-${props.story.id}-ad`,
         qtState,
         viewPortSizeMapping: adConfig.viewPortSizeMapping,
         storySectionSlug: sectionSlug,
-        refreshAdUnit: true
+        refreshAdUnit: true,
+        loadAdsSynchronously,
+        delayPeriod: 4000
       });
-    } else {
-      setTimeout(() => {
-        useDfpSlot({
-          path: adConfig.adUnit,
-          size: adConfig.sizes,
-          id: `story-card-${props.story.id}-ad`,
-          qtState,
-          viewPortSizeMapping: adConfig.viewPortSizeMapping,
-          storySectionSlug: sectionSlug,
-          refreshAdUnit: true
-        });
-      }, 4000);
     }
   }, [props.story]);
 
@@ -73,7 +64,9 @@ const BlankStoryTemplate = props => {
       {props.story.cards.map((card, index) => (
         <Fragment key={index}>
           <StoryCard key={card.id} card={card} story={props.story} />
-          {index === 0 && <div styleName="ad-slot ad-slot-size-300x250" id={`story-card-${props.story.id}-ad`} />}
+          {enableAds && index === 0 && (
+            <div styleName="ad-slot ad-slot-size-300x250" id={`story-card-${props.story.id}-ad`} />
+          )}
         </Fragment>
       ))}
       <div className="space-before-next-story" style={{ minHeight: 100 }} />
