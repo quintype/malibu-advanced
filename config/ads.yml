@@ -5,28 +5,28 @@ dfp_ads:
   fetch_margin_percent: 0
   render_margin_percent: 0
   mobile_scaling: 0
-network-id: ""
+network_id: "5463099287"
 slots:
-  top-ad:
-    adUnit: ""
+  top_ad:
+    ad_unit: "/5463099287/BannerAd"
     sizes: [[728, 90], [320, 50]]
-    viewPortSizeMapping:
+    view_port_size_mapping:
       - viewport: [728, 0]
         sizes: [[728, 90]]
       - viewport: [0, 0]
         sizes: [[320, 50]]
-  listing-page-ads:
-    adUnit: ""
+  listing_page_ads:
+    ad_unit: "/5463099287/ListingPageAd"
     sizes: [[728, 90], [300, 250]]
-    viewPortSizeMapping:
+    view_port_size_mapping:
       - viewport: [728, 0]
         sizes: [[728, 90]]
       - viewport: [0, 0]
         sizes: [[300, 250]]
-  story-page-ads:
-    adUnit: ""
+  story_page_ads:
+    ad_unit: "/5463099287/ScrollAdUnit"
     sizes: [[728, 90], [300, 250]]
-    viewPortSizeMapping:
+    view_port_size_mapping:
       - viewport: [728, 0]
         sizes: [[728, 90]]
       - viewport: [0, 0]

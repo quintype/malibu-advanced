@@ -51,7 +51,7 @@ DfpComponent.propTypes = {
   size: array,
   path: string,
   type: string,
-  viewPortSizeMapping: object
+  viewPortSizeMapping: array
 };
 
 export { DfpComponent };

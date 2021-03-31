@@ -4,9 +4,9 @@ import get from "lodash/get";
 
 export const CONFIG = {
   "homepage-banner": {
-    adUnit: "Large_Leaderboard",
+    ad_unit: "Large_Leaderboard",
     sizes: [[970, 90], [728, 90], [320, 100], [320, 50]],
-    viewPortSizeMapping: [
+    view_port_size_mapping: [
       { viewport: [980, 0], sizes: [[970, 90], [728, 90]] },
       { viewport: [500, 0], sizes: [[320, 100], [320, 50]] },
       { viewport: [0, 0], sizes: [[320, 100], [320, 50]] }

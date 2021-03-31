@@ -22,7 +22,7 @@ StoryCard.propTypes = {
 };
 
 function BlankStoryTemplate(props) {
-  const adConfig = useSelector(state => get(state, ["qt", "config", "ads-config", "slots", "story-page-ads"], {}));
+  const adConfig = useSelector(state => get(state, ["qt", "config", "ads-config", "slots", "story_page_ads"], {}));
 
   return (
     <div className="blank-story container">
@@ -44,9 +44,9 @@ function BlankStoryTemplate(props) {
           <DfpComponent
             adStyleName="ad-slot-size-300x250"
             id={`story-card-ad-${index}`}
-            path={adConfig.adUnit}
+            path={adConfig.ad_unit}
             size={adConfig.sizes}
-            viewPortSizeMapping={adConfig.viewPortSizeMapping}
+            viewPortSizeMapping={adConfig.view_port_size_mapping}
           />
         </Fragment>
       ))}
