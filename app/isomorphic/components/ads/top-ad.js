@@ -23,9 +23,9 @@ export const TopAd = () => {
   }, []);
 
   useEffect(() => {
-    console.log("foooooo", typeof window.googletag.cmd, window.googletag);
-    if (window.googletag.cmd) {
+    if (window.googletag) {
       const googletag = window.googletag || {};
+      googletag.cmd = googletag.cmd || [];
       googletag.cmd.push(function() {
         googletag.pubads().refresh();
       });
