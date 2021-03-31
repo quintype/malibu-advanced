@@ -27,18 +27,18 @@ const BlankStoryTemplate = props => {
   const qtState = useSelector(state => get(state, ["qt"], {}));
   const adsConfig = get(qtState, ["config", "ads-config"], {});
   const enableAds = get(adsConfig, ["dfp_ads", "enable_ads"]);
-  const adConfig = get(adsConfig, ["slots", "story-page-ads"], {});
+  const adConfig = get(adsConfig, ["slots", "story_page_ads"], {});
   const loadAdsSynchronously = get(adsConfig, ["dfp_ads", "load_ads_synchronously"], null);
 
   useEffect(() => {
     if (enableAds) {
       const sectionSlug = get(props, ["story", "sections", 0, "slug"], "NA");
       getAdSlots({
-        path: adConfig.adUnit,
+        path: adConfig.ad_unit,
         size: adConfig.sizes,
         id: `story-card-${props.story.id}-ad`,
         qtState,
-        viewPortSizeMapping: adConfig.viewPortSizeMapping,
+        viewPortSizeMapping: adConfig.view_port_size_mapping,
         storySectionSlug: sectionSlug,
         refreshAdUnit: true,
         loadAdsSynchronously,

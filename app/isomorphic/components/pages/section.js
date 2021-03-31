@@ -9,7 +9,7 @@ import { getCollectionTemplate } from "../get-collection-template";
 import { DfpComponent } from "../ads/dfp-component";
 
 const SectionPage = props => {
-  const adConfig = useSelector(state => get(state, ["qt", "config", "ads-config", "slots", "listing-page-ads"], {}));
+  const adConfig = useSelector(state => get(state, ["qt", "config", "ads-config", "slots", "listing_page_ads"], {}));
 
   const stories =
     (props.data.collection && props.data.collection.items && collectionToStories(props.data.collection)) || [];
@@ -36,9 +36,9 @@ const SectionPage = props => {
       <DfpComponent
         adStyleName="ad-slot-size-300x250"
         id="section-page-ad"
-        path={adConfig.adUnit}
+        path={adConfig.ad_unit}
         size={adConfig.sizes}
-        viewPortSizeMapping={adConfig.viewPortSizeMapping}
+        viewPortSizeMapping={adConfig.view_port_size_mapping}
       />
       <LazyCollection collection={{ items: childCollections }} collectionTemplates={getCollectionTemplate} />
     </div>

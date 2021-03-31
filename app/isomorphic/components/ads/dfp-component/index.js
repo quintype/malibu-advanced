@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { string, array, object } from "prop-types";
+import { string, array } from "prop-types";
 import { useSelector } from "react-redux";
 import { get } from "lodash";
 
@@ -40,7 +40,7 @@ DfpComponent.propTypes = {
   size: array,
   path: string,
   type: string,
-  viewPortSizeMapping: object
+  viewPortSizeMapping: array
 };
 
 export { DfpComponent };

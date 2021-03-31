@@ -12,7 +12,7 @@ const AuthorPage = props => {
     return <h1>No author found</h1>;
   }
 
-  const adConfig = useSelector(state => get(state, ["qt", "config", "ads-config", "slots", "listing-page-ads"], {}));
+  const adConfig = useSelector(state => get(state, ["qt", "config", "ads-config", "slots", "listing_page_ads"], {}));
 
   return (
     <div className="container">
@@ -21,9 +21,9 @@ const AuthorPage = props => {
       <DfpComponent
         adStyleName="ad-slot-size-300x250"
         id="author-page-ad"
-        path={adConfig.adUnit}
+        path={adConfig.ad_unit}
         size={adConfig.sizes}
-        viewPortSizeMapping={adConfig.viewPortSizeMapping}
+        viewPortSizeMapping={adConfig.view_port_size_mapping}
       />
     </div>
   );
