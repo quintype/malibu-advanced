@@ -23,9 +23,12 @@ export const TopAd = () => {
   }, []);
 
   useEffect(() => {
-    if (window.googletag) {
+    console.log("foooooo", typeof window.googletag.cmd, window.googletag);
+    if (window.googletag.cmd) {
       const googletag = window.googletag || {};
-      googletag.destroySlots();
+      googletag.cmd.push(function() {
+        googletag.pubads().refresh();
+      });
     }
   }, [currentPath]);
 
