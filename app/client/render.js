@@ -23,11 +23,11 @@ export function preRenderApplication(store) {
   renderComponent(NavBar, "nav-bar", store, hydrate);
   breakingNewsConfig.is_enable &&
     renderBreakingNews("breaking-news-container", store, BreakingNewsView, breakingNewsbaseProps);
-  renderComponent(TopAd, "top-ad", store, hydrate);
 }
 
 // This is a separate file as everything from here on is hot reloaded when the app changes
 export function renderApplication(store) {
+  renderComponent(TopAd, "top-ad", store);
   renderIsomorphicComponent("container", store, pickComponent, {
     hydrate: !global.qtLoadedFromShell
   });
