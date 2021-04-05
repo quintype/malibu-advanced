@@ -6,7 +6,7 @@ import { BreakingNewsView } from "../isomorphic/components/breaking-news-view";
 import { Footer } from "../isomorphic/components/layouts/footer";
 import { NavbarSearch } from "../isomorphic/components/layouts/header/navbar-search";
 import { NavBar } from "../isomorphic/components/layouts/header/nav-bar";
-import { OneSignal } from "../isomorphic/components/one-signal";
+import { OneSignal } from "../isomorphic/components/onesignal";
 
 export function preRenderApplication(store) {
   const hydrate = { hydrate: !global.qtLoadedFromShell };
