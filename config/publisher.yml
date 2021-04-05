@@ -1,5 +1,5 @@
 asset_host: http://localhost:8080
-sketches_host: https://malibu-web.qtstage.io
+sketches_host: https://malibu-advanced-web.qtstage.io
 host_to_api_host:
   help.lvh.me: https://user-documentation.quintype.io
 host_to_automatic_api_host:
@@ -26,3 +26,6 @@ publisher:
   google_app_id: ""
   facebook_app_id: ""
   is_verification_link_flow: true
+  onesignal:
+    safari_web_id: "web.onesignal.auto.37a647a2-1bdc-46a8-a505-4f4cc6400a46"
+    is_enable: true

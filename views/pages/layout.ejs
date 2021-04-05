@@ -40,9 +40,9 @@
       <link rel="preload" href="<%= jsPath %>" as="script">
     <%_ }) _%>
     <%_ } _%>
-    <%_ if(isOnesignalEnable) { _%>
-      <%- oneSignalScript -%>
-    <%_ } _%>
+    <% if (isOnesignalEnable && oneSignalAppId) { %>
+      <%- include ./partials/onesignal.ejs -%>
+    <% } %>
   </head>
 
   <body>
@@ -83,6 +83,7 @@
     <% if (isGaEnable) { %>
       <%- include ./partials/ga -%>
     <% } %>
+    <div id="one-signal"></div>
     <script type="text/javascript" src="<%= assetPath("app.js") %>" id="app-js" async></script>
    </body>
 </html>
