@@ -14,6 +14,13 @@
       <script async="async" src="https://www.googletagservices.com/tag/js/gpt.js"></script>
     <%_ } _%>
 
+    <%_ if(enableAds) { _%>
+      <script type="text/javascript">
+        window.googletag = window.googletag || {};
+        window.googletag.cmd = window.googletag.cmd || [];
+      </script>
+    <%_ } _%>
+
     <script type="text/javascript">
       window.GUMLET_CONFIG = {
         hosts: [{ current: "<%= cdnImage %>", gumlet: "<%= cdnImage %>" }],

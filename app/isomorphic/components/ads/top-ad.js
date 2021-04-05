@@ -23,11 +23,11 @@ export const TopAd = () => {
   }, []);
 
   useEffect(() => {
-    if (window.googletag) {
-      const googletag = window.googletag || {};
-      googletag.cmd = googletag.cmd || [];
-      googletag.cmd.push(function() {
-        googletag.pubads().refresh();
+    if (window.googletag && window.googletag.apiReady) { // check if the API is ready
+      window.googletag.cmd.push(function() {
+        if(window.googletag.pubadsReady) { // detect whether PubAdsService is fully loaded
+          window.googletag.pubads().refresh();
+        }
       });
     }
   }, [currentPath]);
