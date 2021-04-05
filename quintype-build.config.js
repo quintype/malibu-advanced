@@ -5,8 +5,7 @@ const loadableConfigObj = {
     entryFiles: {
       topbar: "./app/isomorphic/components/layouts/header",
       navbar: "./app/isomorphic/components/layouts/header/nav-bar",
-      footer: "./app/isomorphic/components/layouts/footer",
-      onesignal: "./app/isomorphic/components/onesignal"
+      footer: "./app/isomorphic/components/layouts/footer"
     }
   }
 };

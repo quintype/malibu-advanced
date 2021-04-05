@@ -13,7 +13,6 @@ import { NavBar } from "../../isomorphic/components/layouts/header/nav-bar";
 import { Footer } from "../../isomorphic/components/layouts/footer";
 import fontFace from "../font";
 import { BreakingNewsView } from "../../isomorphic/components/breaking-news-view";
-import { OneSignal } from "../../isomorphic/components/onesignal";
 
 const statsFile = path.resolve("stats.json");
 const cssContent = assetPath("app.css") ? readAsset("app.css") : "";
@@ -33,7 +32,7 @@ const getConfig = state => {
   };
 };
 
-const extractor = new ChunkExtractor({ statsFile, entrypoints: ["topbar", "navbar", "footer", "onesignal"] });
+const extractor = new ChunkExtractor({ statsFile, entrypoints: ["topbar", "navbar", "footer"] });
 export const getCriticalCss = async () => {
   const criticalCss = await extractor.getCssString();
   return criticalCss.trim();
@@ -68,7 +67,6 @@ export async function renderLayout(res, params) {
         topbar: renderLoadableReduxComponent(Header, params.store, extractor),
         navbar: renderLoadableReduxComponent(NavBar, params.store, extractor),
         footer: renderLoadableReduxComponent(Footer, params.store, extractor),
-        onesignal: renderLoadableReduxComponent(OneSignal, params.store, extractor),
         breakingNews: renderReduxComponent(BreakingNewsView, params.store, {
           breakingNews: [],
           breakingNewsLoaded: false
