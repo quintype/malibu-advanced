@@ -7,6 +7,6 @@ export const OneSignal = () => {
     myScript.setAttribute("async", "true");
     const head = document.head;
     head.insertBefore(myScript, head.firstElementChild);
-  });
+  }, []);
   return null;
 };
