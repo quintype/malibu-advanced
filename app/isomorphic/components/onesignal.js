@@ -10,5 +10,5 @@ export const OneSignal = () => {
       head.insertBefore(myScript, head.firstElementChild);
     }, 4000);
   }, []);
-  return null;
+  return undefined;
 };
