@@ -11,6 +11,11 @@ import { OneSignal } from "../isomorphic/components/onesignal";
 export function preRenderApplication(store) {
   const hydrate = { hydrate: !global.qtLoadedFromShell };
   const breakingNewsConfig = get(store.getState(), ["qt", "config", "publisher-attributes", "breaking_news"], {});
+  const enableClientSideOneSignal = get(
+    store.getState(),
+    ["qt", "config", "publisher-attributes", "onesignal", "enable_clientside_onesignal"],
+    false
+  );
   const breakingNewsInterval =
     breakingNewsConfig.interval && breakingNewsConfig.interval <= 60 ? 60 : breakingNewsConfig.interval;
   const breakingNewsbaseProps = {
@@ -23,7 +28,7 @@ export function preRenderApplication(store) {
   renderComponent(NavBar, "nav-bar", store, hydrate);
   breakingNewsConfig.is_enable &&
     renderBreakingNews("breaking-news-container", store, BreakingNewsView, breakingNewsbaseProps);
-  renderComponent(OneSignal, "one-signal", store);
+  enableClientSideOneSignal && renderComponent(OneSignal, "one-signal", store);
 }
 
 // This is a separate file as everything from here on is hot reloaded when the app changes

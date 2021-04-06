@@ -28,7 +28,12 @@ const getConfig = state => {
     cdnImage: get(state, ["qt", "config", "cdn-image"], ""),
     isOnesignalEnable: get(state, ["qt", "config", "publisher-attributes", "onesignal", "is_enable"], false),
     oneSignalSafariId: get(state, ["qt", "config", "publisher-attributes", "onesignal", "safari_web_id"], null),
-    oneSignalAppId: get(state, ["qt", "config", "public-integrations", "one-signal", "app-id"], null)
+    oneSignalAppId: get(state, ["qt", "config", "public-integrations", "one-signal", "app-id"], null),
+    enableClientSideOneSignal: get(
+      state,
+      ["qt", "config", "publisher-attributes", "onesignal", "enable_clientside_onesignal"],
+      false
+    )
   };
 };
 
@@ -47,7 +52,8 @@ export async function renderLayout(res, params) {
     oneSignalSafariId,
     oneSignalAppId,
     isGtmEnable,
-    isGaEnable
+    isGaEnable,
+    enableClientSideOneSignal
   } = getConfig(params.store.getState());
   const chunk = params.shell ? null : allChunks[getChunkName(params.pageType)];
   const criticalCss = await getCriticalCss();
@@ -84,7 +90,9 @@ export async function renderLayout(res, params) {
         isGaEnable,
         isOnesignalEnable,
         oneSignalSafariId,
-        oneSignalAppId
+        oneSignalAppId,
+        oneSignalScript: params.oneSignalScript || null,
+        enableClientSideOneSignal
       },
       params
     )

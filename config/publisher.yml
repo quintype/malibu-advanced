@@ -29,3 +29,4 @@ publisher:
   onesignal:
     safari_web_id: "web.onesignal.auto.37a647a2-1bdc-46a8-a505-4f4cc6400a46"
     is_enable: true
+    enable_clientside_onesignal: true
