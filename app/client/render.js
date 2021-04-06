@@ -27,7 +27,9 @@ export function preRenderApplication(store) {
 
 // This is a separate file as everything from here on is hot reloaded when the app changes
 export function renderApplication(store) {
-  renderComponent(TopAd, "top-ad", store);
+  const enableAds = get(store.getState(), ["qt", "config", "ads-config", "dfp_ads", "enable_ads"]);
+
+  enableAds && renderComponent(TopAd, "top-ad", store);
   renderIsomorphicComponent("container", store, pickComponent, {
     hydrate: !global.qtLoadedFromShell
   });
