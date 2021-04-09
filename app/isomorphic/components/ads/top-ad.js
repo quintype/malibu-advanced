@@ -23,9 +23,11 @@ export const TopAd = () => {
   }, []);
 
   useEffect(() => {
-    if (window.googletag && window.googletag.apiReady) { // check if the API is ready
+    if (window.googletag && window.googletag.apiReady) {
+      // check if the API is ready
       window.googletag.cmd.push(function() {
-        if(window.googletag.pubadsReady) { // detect whether PubAdsService is fully loaded
+        if (window.googletag.pubadsReady) {
+          // detect whether PubAdsService is fully loaded
           window.googletag.pubads().refresh();
         }
       });
