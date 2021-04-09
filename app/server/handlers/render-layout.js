@@ -13,6 +13,7 @@ import { NavBar } from "../../isomorphic/components/layouts/header/nav-bar";
 import { Footer } from "../../isomorphic/components/layouts/footer";
 import fontFace from "../font";
 import { BreakingNewsView } from "../../isomorphic/components/breaking-news-view";
+import { TopAd } from "../../isomorphic/components/ads/top-ad";
 
 const statsFile = path.resolve("stats.json");
 const cssContent = assetPath("app.css") ? readAsset("app.css") : "";
@@ -26,7 +27,9 @@ const getConfig = state => {
     gaId: get(state, ["qt", "config", "publisher-attributes", "google_analytics", "id"], ""),
     isGaEnable: get(state, ["qt", "config", "publisher-attributes", "google_analytics", "is_enable"], false),
     cdnImage: get(state, ["qt", "config", "cdn-image"], ""),
-    isOnesignalEnable: get(state, ["qt", "config", "publisher-attributes", "onesignal", "is_enable"], false)
+    isOnesignalEnable: get(state, ["qt", "config", "publisher-attributes", "onesignal", "is_enable"], false),
+    enableAds: get(state, ["qt", "config", "ads-config", "dfp_ads", "enable_ads"]),
+    loadAdsSynchronously: get(state, ["qt", "config", "ads-config", "dfp_ads", "load_ads_synchronously"])
   };
 };
 
@@ -37,7 +40,16 @@ export const getCriticalCss = async () => {
 };
 
 export async function renderLayout(res, params) {
-  const { gtmId, gaId, cdnImage, isOnesignalEnable, isGtmEnable, isGaEnable } = getConfig(params.store.getState());
+  const {
+    gtmId,
+    gaId,
+    cdnImage,
+    isOnesignalEnable,
+    isGtmEnable,
+    isGaEnable,
+    enableAds,
+    loadAdsSynchronously
+  } = getConfig(params.store.getState());
   const chunk = params.shell ? null : allChunks[getChunkName(params.pageType)];
   const criticalCss = await getCriticalCss();
 
@@ -56,6 +68,7 @@ export async function renderLayout(res, params) {
         topbar: renderLoadableReduxComponent(Header, params.store, extractor),
         navbar: renderLoadableReduxComponent(NavBar, params.store, extractor),
         footer: renderLoadableReduxComponent(Footer, params.store, extractor),
+        topad: renderReduxComponent(TopAd, params.store),
         breakingNews: renderReduxComponent(BreakingNewsView, params.store, {
           breakingNews: [],
           breakingNewsLoaded: false
@@ -72,7 +85,9 @@ export async function renderLayout(res, params) {
         isGtmEnable,
         isGaEnable,
         isOnesignalEnable,
-        oneSignalScript: params.oneSignalScript
+        oneSignalScript: params.oneSignalScript,
+        enableAds,
+        loadAdsSynchronously
       },
       params
     )

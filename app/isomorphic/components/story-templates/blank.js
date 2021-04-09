@@ -1,7 +1,12 @@
-import React from "react";
+import React, { Fragment, useEffect } from "react";
 import PT from "prop-types";
-
+import { useSelector } from "react-redux";
+import { get } from "lodash";
 import { ResponsiveImage, StoryElement } from "@quintype/components";
+
+import { getAdSlots } from "../ads/utils";
+
+import "../ads/dfp-component/dfp-component.m.css";
 
 function StoryCard(props) {
   return (
@@ -18,7 +23,30 @@ StoryCard.propTypes = {
   story: PT.object
 };
 
-function BlankStoryTemplate(props) {
+const BlankStoryTemplate = props => {
+  const qtState = useSelector(state => get(state, ["qt"], {}));
+  const adsConfig = get(qtState, ["config", "ads-config"], {});
+  const enableAds = get(adsConfig, ["dfp_ads", "enable_ads"]);
+  const adConfig = get(adsConfig, ["slots", "story_page_ads"], {});
+  const loadAdsSynchronously = get(adsConfig, ["dfp_ads", "load_ads_synchronously"], null);
+
+  useEffect(() => {
+    if (enableAds) {
+      const sectionSlug = get(props, ["story", "sections", 0, "slug"], "NA");
+      getAdSlots({
+        path: adConfig.ad_unit,
+        size: adConfig.sizes,
+        id: `story-card-${props.story.id}-ad`,
+        qtState,
+        viewPortSizeMapping: adConfig.view_port_size_mapping,
+        storySectionSlug: sectionSlug,
+        refreshAdUnit: true,
+        loadAdsSynchronously,
+        delayPeriod: 4000
+      });
+    }
+  }, [props.story]);
+
   return (
     <div className="blank-story container">
       <figure className="blank-story-image qt-image-16x9">
@@ -33,13 +61,18 @@ function BlankStoryTemplate(props) {
       </figure>
       <h1>{props.story.headline}</h1>
       <span className="blank-story-author">{props.story["author-name"]}</span>
-      {props.story.cards.map(card => (
-        <StoryCard key={card.id} card={card} story={props.story} />
+      {props.story.cards.map((card, index) => (
+        <Fragment key={index}>
+          <StoryCard key={card.id} card={card} story={props.story} />
+          {enableAds && index === 0 && (
+            <div styleName="ad-slot ad-slot-size-300x250" id={`story-card-${props.story.id}-ad`} />
+          )}
+        </Fragment>
       ))}
       <div className="space-before-next-story" style={{ minHeight: 100 }} />
     </div>
   );
-}
+};
 
 BlankStoryTemplate.propTypes = {
   card: PT.object,
