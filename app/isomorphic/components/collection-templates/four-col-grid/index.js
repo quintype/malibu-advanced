@@ -6,12 +6,13 @@ import { useSelector } from "react-redux";
 import { get } from "lodash";
 
 import { StoryGrid } from "../../story-grid";
-import { DfpComponent } from "../../ads/dfp-component";
 
 import "./four-col-grid.m.css";
+import { DfpComponent } from "../../ads/dfp-component";
 
 export function FourColGrid({ collection, stories }) {
   const adConfig = useSelector(state => get(state, ["qt", "config", "ads-config", "slots", "listing_page_ads"], {}));
+  const pageType = useSelector(state => get(state, ["qt", "pageType"], null));
 
   return (
     <div>
@@ -19,7 +20,7 @@ export function FourColGrid({ collection, stories }) {
       <StoryGrid stories={stories} />
       <DfpComponent
         adStyleName="ad-slot-size-300x250"
-        id={`fourcol-${collection.slug}-ad`}
+        id={`${pageType}-listing-${collection.slug}-ad`}
         path={adConfig.ad_unit}
         size={adConfig.sizes}
         viewPortSizeMapping={adConfig.view_port_size_mapping}
