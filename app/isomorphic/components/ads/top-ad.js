@@ -37,7 +37,7 @@ export const TopAd = () => {
   return (
     <DfpComponent
       adStyleName="ad-slot-size-320x50"
-      id={`${pageType}-banner-${collectionSlug}-ad`}
+      id={collectionSlug ? `${pageType}-banner-${collectionSlug || ""}-ad` : `${pageType}-banner-ad`}
       path={topAdConfig.ad_unit}
       size={topAdConfig.sizes}
       viewPortSizeMapping={topAdConfig.view_port_size_mapping}
