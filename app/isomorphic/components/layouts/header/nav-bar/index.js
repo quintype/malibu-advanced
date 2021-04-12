@@ -137,7 +137,7 @@ const NavBar = () => {
       script.src = "https://cdn.gumlet.com/gumlet.js/2.0/gumlet.min.js";
       const node = document.getElementsByTagName("script")[0];
       node.parentNode.insertBefore(script, node);
-    }, 2000)
+    }, 1000)
 
 
     switch (global.location.hash) {
