@@ -28,6 +28,7 @@ RUN apk update && \
     adduser -S -g app app
 
 ENV NODE_ENV production
+ENV TOGGLE_APM true
 WORKDIR /app
 USER app
 
