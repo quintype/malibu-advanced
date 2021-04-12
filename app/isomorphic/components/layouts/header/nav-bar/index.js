@@ -132,6 +132,14 @@ const NavBar = () => {
   useEffect(() => {
     getCurrentUser();
 
+    setTimeout(() => {
+      const script = document.createElement("script");
+      script.src = "https://cdn.gumlet.com/gumlet.js/2.0/gumlet.min.js";
+      const node = document.getElementsByTagName("script")[0];
+      node.parentNode.insertBefore(script, node);
+    }, 1000)
+
+
     switch (global.location.hash) {
       case "#email-verified":
         return setMessage("Email verified.");

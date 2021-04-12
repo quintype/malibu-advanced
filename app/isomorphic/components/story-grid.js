@@ -4,18 +4,18 @@ import { shape, string, object, integer, arrayOf } from "prop-types";
 import "./story-grid.m.css";
 
 const StoryGridStoryItem = (props) => {
-  const [foo, setFoo] = useState(false);
+  // const [foo, setFoo] = useState(false);
 
-  useEffect(() => {
-   setTimeout(() => {
-     setFoo(true);
-   }, 4000);
-  }, []);
+  // useEffect(() => {
+  //  setTimeout(() => {
+  //    setFoo(true);
+  //  }, 4000);
+  // }, []);
 
   return (
     <Link href={`/${props.story.slug}`} className="story-grid-item">
       <figure className="qt-image-16x9" styleName="story-grid-item-image">
-      {foo &&
+      {/* {foo && */}
         <ResponsiveImage
           slug={props.story["hero-image-s3-key"]}
           metadata={props.story["hero-image-metadata"]}
@@ -27,7 +27,7 @@ const StoryGridStoryItem = (props) => {
           eager={props.position < 2 ? "above-fold" : "below-fold"}
           alt={props.story.headline || ""}
         />
-      }
+      {/* } */}
       </figure>
       <h3>{props.story.headline}</h3>
       <span className="story-grid-item-author">{props.story["author-name"]}</span>
