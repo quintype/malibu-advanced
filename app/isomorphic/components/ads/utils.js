@@ -108,10 +108,16 @@ export const useDfpSlot = ({ path, size, id, qtState, viewPortSizeMapping, story
     window.googletag.cmd.push(function() {
       if (window.googletag.pubadsReady) {
         // detect whether PubAdsService is fully loaded
-        window.googletag.pubads().refresh();
+        const existingSlot = window.googletag
+          .pubads()
+          .getSlots()
+          .filter(item => id === item.getSlotElementId());
+
+        window.googletag.pubads().refresh(existingSlot);
       }
     });
   }
+
   window.googletag.cmd.push(function() {
     const responsiveAdSlot = window.googletag.defineSlot(path, size, id);
     const adsConfig = get(qtState, ["config", "ads-config", "dfp_ads"], {});
