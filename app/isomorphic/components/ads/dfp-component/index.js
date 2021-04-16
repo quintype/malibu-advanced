@@ -13,6 +13,7 @@ const DfpComponent = ({ adStyleName, id, size, path, type = "", viewPortSizeMapp
   const loadAdsSynchronously = get(adsConfig, ["load_ads_synchronously"], null);
   const enableAds = get(adsConfig, ["enable_ads"], null);
   const currentPath = get(qtState, ["currentPath"], null);
+  const delayAdLoad = get(adsConfig, ["delay_ad_load"], 4);
 
   if (!enableAds) {
     return null;
@@ -27,7 +28,7 @@ const DfpComponent = ({ adStyleName, id, size, path, type = "", viewPortSizeMapp
       type,
       viewPortSizeMapping,
       loadAdsSynchronously,
-      delayPeriod: 5000
+      delayPeriod: delayAdLoad * 1000
     });
   }, [currentPath]);
 
