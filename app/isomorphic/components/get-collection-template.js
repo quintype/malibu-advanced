@@ -1,7 +1,8 @@
 import templates from "./collection-templates";
 
 export function getCollectionTemplate(designTemplate, index) {
-  return templates[designTemplate] || templates.defaultTemplate;
+  // return templates[designTemplate] || templates.defaultTemplate;
+  return templates.defaultTemplate;
 }
 
 const storyLimits = Object.entries(templates).reduce(
