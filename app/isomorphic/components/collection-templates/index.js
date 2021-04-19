@@ -1,6 +1,8 @@
 import { wrapCollectionLayout, EagerLoadImages } from "@quintype/components";
 import { FourColGrid } from "./four-col-grid";
 import { ArrowThreeColGrid } from "./arrow-rows/three-col-grid";
+import { ArrowFourColTwelveStories } from "./arrow-rows/four-col-12-stories";
+import { ArrowFourColGrid } from "./arrow-rows/four-col-grid";
 import React from "react";
 
 // This should not be needed anymore as we are using Gumlet
@@ -24,5 +26,8 @@ function wrapEager(f) {
 
 export default {
   FourColGrid: wrapEager(wrapCollectionLayout(FourColGrid)),
+  ArrowFourColTwelveStories: wrapEager(wrapCollectionLayout(ArrowFourColTwelveStories)),
+  ArrowThreeColGrid: wrapEager(wrapCollectionLayout(ArrowThreeColGrid)),
+  ArrowFourColGrid: wrapEager(wrapCollectionLayout(ArrowFourColGrid)),
   defaultTemplate: wrapEager(wrapCollectionLayout(ArrowThreeColGrid))
 };

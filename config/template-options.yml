@@ -8,7 +8,7 @@ collection-layouts:
 - name : ArrowFourColGrid
   display name: Arrow Four Col Grid
   options: []
-- name : ArrowFourCol12Stories
+- name : ArrowFourColTwelveStories
   display name: Arrow Four Col 12 Stories
   options: []
 - name : ArrowFullScreenSlider
