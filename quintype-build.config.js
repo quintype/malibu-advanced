@@ -7,6 +7,9 @@ const loadableConfigObj = {
       navbar: "./app/isomorphic/components/layouts/header/nav-bar",
       footer: "./app/isomorphic/components/layouts/footer"
     }
+  },
+  entryFiles: {
+    arrowHomePageStyles: "./app/assets/stylesheets/arrow/arrow-home-page.scss"
   }
 };
 const modifiedBuildConfig = { ...quintypeBuildConfig, ...loadableConfigObj };

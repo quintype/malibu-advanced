@@ -43,6 +43,9 @@
     <style>
       <%- criticalCss %>
     </style>
+    <style data-info="arrow-styles">
+      <%- arrowCriticalCss %>
+    </style>
     <%_ if(pageChunk) { _%>
     <%_ pageChunk.cssFiles.map(cssFile => {_%>
       <style data-href="<%= cssFile.path %>"><%- cssFile.content %></style>
