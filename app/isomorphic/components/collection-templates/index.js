@@ -1,9 +1,14 @@
+import React from "react";
 import { wrapCollectionLayout, EagerLoadImages } from "@quintype/components";
 import { FourColGrid } from "./four-col-grid";
 import { ArrowThreeColGrid } from "./arrow-rows/three-col-grid";
 import { ArrowFourColTwelveStories } from "./arrow-rows/four-col-12-stories";
 import { ArrowFourColGrid } from "./arrow-rows/four-col-grid";
-import React from "react";
+import { ArrowThreeColSevenStory } from "./arrow-rows/three-col-seven-stories";
+import { ArrowElevenStories } from "./arrow-rows/eleven-stories";
+import { ArrowTwoColFourStories } from "./arrow-rows/two-col-four-stories";
+import { ArrowFullScreenSlider } from "./arrow-rows/full-screen-slider";
+import { ArrowOneColStoryList } from "./arrow-rows/one-col-story-list";
 
 // This should not be needed anymore as we are using Gumlet
 function wrapEager(f) {
@@ -29,5 +34,10 @@ export default {
   ArrowFourColTwelveStories: wrapEager(wrapCollectionLayout(ArrowFourColTwelveStories)),
   ArrowThreeColGrid: wrapEager(wrapCollectionLayout(ArrowThreeColGrid)),
   ArrowFourColGrid: wrapEager(wrapCollectionLayout(ArrowFourColGrid)),
-  defaultTemplate: wrapEager(wrapCollectionLayout(ArrowThreeColGrid))
+  ArrowElevenStories: wrapEager(wrapCollectionLayout(ArrowElevenStories)),
+  ArrowTwoColFourStories: wrapEager(wrapCollectionLayout(ArrowTwoColFourStories)),
+  ArrowFullScreenSlider: wrapEager(wrapCollectionLayout(ArrowFullScreenSlider)),
+  ArrowOneColStoryList: wrapEager(wrapCollectionLayout(ArrowOneColStoryList)),
+  ArrowThreeColSevenStory: wrapEager(wrapCollectionLayout(ArrowThreeColSevenStory)),
+  defaultTemplate: wrapEager(wrapCollectionLayout(ArrowFourColGrid))
 };
