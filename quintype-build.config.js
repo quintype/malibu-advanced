@@ -9,7 +9,9 @@ const customConfig = {
     }
   },
   entryFiles: {
-    arrowHomePageStyles: "./app/assets/stylesheets/arrow/arrow-home-page.scss"
+    arrowThreeColSevenStoryChunk: "@quintype/arrow/ThreeColSevenStory/styles.arrow.css",
+    arrowThreeColGridChunk: "@quintype/arrow/ThreeColGrid/styles.arrow.css",
+    arrowFourColGridChunk: "@quintype/arrow/FourColGrid/styles.arrow.css"
   }
 };
 const modifiedBuildConfig = { ...quintypeBuildConfig, ...customConfig };

@@ -13,7 +13,7 @@ import { getConfig, extractor, getCriticalCss, getArrowCriticalCss } from "../he
 
 const cssContent = assetPath("app.css") ? readAsset("app.css") : "";
 const fontJsContent = assetPath("font.js") ? readAsset("font.js") : "";
-const allChunks = getAllChunks("list", "story");
+const allChunks = getAllChunks("list", "story", "home");
 
 export async function renderLayout(res, params) {
   const {
@@ -28,14 +28,14 @@ export async function renderLayout(res, params) {
   } = getConfig(params.store.getState());
   const chunk = params.shell ? null : allChunks[getChunkName(params.pageType)];
   const criticalCss = await getCriticalCss();
-  const arrowCriticalCss = getArrowCriticalCss(params.pageType);
+  const arrowCriticalCss = getArrowCriticalCss(params);
 
   res.render(
     "pages/layout",
     Object.assign(
       {
         assetPath: assetPath,
-        content: "",
+        content: params.content || "",
         cssContent: cssContent,
         criticalCss: criticalCss,
         arrowCriticalCss,

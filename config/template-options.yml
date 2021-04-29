@@ -17,9 +17,6 @@ collection-layouts:
 - name : ArrowThreeColSevenStories
   display name: Arrow Three Col Seven Stories
   options: []
-- name : ArrowElevenStoriesRow
-  display name: Arrow Three Col Seven Stories
-  options: []
 - name : ArrowTwoColFourStories
   display name: Arrow Two Col Four Stories
   options: []
