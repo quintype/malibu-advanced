@@ -2,12 +2,14 @@ import path from "path";
 import get from "lodash/get";
 import { assetPath, readAsset } from "@quintype/framework/server/asset-helper";
 import { ChunkExtractor } from "@loadable/server";
+import { PAGE_TYPE } from "../../isomorphic/constants";
 
 const statsFile = path.resolve("stats.json");
 
 export function getArrowCriticalCss(pageType) {
+  const { HOME_PAGE } = PAGE_TYPE;
   switch (pageType) {
-    case "home-page":
+    case HOME_PAGE:
       return assetPath("arrowHomePageStyles.css") ? readAsset("arrowHomePageStyles.css") : "";
   }
 }
