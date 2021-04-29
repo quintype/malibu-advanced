@@ -12,7 +12,7 @@
     "@quintype/arrow": "^1.1.0-arrow-to-malibu.3",
     "@quintype/bridgekeeper-js": "^2.3.0",
     "@quintype/components": "^2.27.1",
-    "@quintype/framework": "^4.13.2",
+    "@quintype/framework": "^4.13.8-malibu-arrow-integration.0",
     "@quintype/seo": "^1.38.29",
     "fontfaceobserver": "^2.1.0",
     "formiojs": "^4.12.0",
