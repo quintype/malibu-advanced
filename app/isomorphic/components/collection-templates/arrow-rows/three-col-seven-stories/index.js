@@ -3,17 +3,12 @@ import { ThreeColSevenStory } from "@quintype/arrow";
 import { object } from "prop-types";
 // import "@quintype/arrow/ThreeColSevenStory/styles.arrow.css";
 
-export const ArrowThreeColSevenStory = ({collection}) => {
+export const ArrowThreeColSevenStories = ({ collection }) => {
+  return <ThreeColSevenStory collection={collection} />;
+};
 
-  return (
-     <ThreeColSevenStory
-      collection={collection}
-    />
-  )
-}
-
-ArrowThreeColSevenStory.propTypes = {
+ArrowThreeColSevenStories.propTypes = {
   collection: object
-}
+};
 
-ArrowThreeColSevenStory.storyLimit = 7;
+ArrowThreeColSevenStories.storyLimit = 7;
