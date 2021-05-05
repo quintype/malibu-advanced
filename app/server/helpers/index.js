@@ -11,8 +11,8 @@ const statsFile = path.resolve("stats.json");
  * For this to work, separate CSS chunks need to be created for every arrow row that will be used in the app
  * Layout names here should match those in template-options.yml
  */
-export function getArrowCriticalCss(params) {
-  const layout = get(params, ["data", "collection", "items", 0, "associated-metadata", "layout"], null);
+export function getArrowCriticalCss(state) {
+  const layout = get(state, ["qt", "data", "collection", "items", 0, "associated-metadata", "layout"], null);
   switch (layout) {
     case "ArrowElevenStories":
       return getAsset("arrowElevenStoriesCssChunk.css");
@@ -35,8 +35,8 @@ export function getArrowCriticalCss(params) {
   }
 }
 
-function getAsset(chunk) {
-  return assetPath(chunk) ? readAsset(chunk) : "";
+function getAsset(asset) {
+  return assetPath(asset) ? readAsset(asset) : "";
 }
 
 export const getConfig = state => {

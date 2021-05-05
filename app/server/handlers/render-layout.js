@@ -28,7 +28,7 @@ export async function renderLayout(res, params) {
   } = getConfig(params.store.getState());
   const chunk = params.shell ? null : allChunks[getChunkName(params.pageType)];
   const criticalCss = await getCriticalCss();
-  const arrowCriticalCss = getArrowCriticalCss(params);
+  const arrowCriticalCss = getArrowCriticalCss(params.store.getState());
 
   res.render(
     "pages/layout",
