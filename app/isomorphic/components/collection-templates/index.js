@@ -41,5 +41,5 @@ export default {
   ArrowFullScreenSlider: wrapEager(wrapCollectionLayout(ArrowFullScreenSlider)),
   ArrowOneColStoryList: wrapEager(wrapCollectionLayout(ArrowOneColStoryList)),
   ArrowThreeColSevenStories: wrapEager(wrapCollectionLayout(ArrowThreeColSevenStories)),
-  defaultTemplate: wrapEager(wrapCollectionLayout(ArrowFourColGrid))
+  defaultTemplate: wrapEager(wrapCollectionLayout(FourColGrid))
 };

@@ -6,20 +6,37 @@ import { ChunkExtractor } from "@loadable/server";
 const statsFile = path.resolve("stats.json");
 
 /**
- * Returns the css of the first arrow row. "layout" is specified in template-options.yml
+ * Returns css of 1st arrow row. If 1st row isn't arrow, returns empty str
+ * This can be used to add styles while server-side rendering
+ * For this to work, separate CSS chunks need to be created for every arrow row that will be used in the app
+ * Layout names here should match those in template-options.yml
  */
 export function getArrowCriticalCss(params) {
   const layout = get(params, ["data", "collection", "items", 0, "associated-metadata", "layout"], null);
   switch (layout) {
-    case "ArrowThreeColSevenStories":
-      return assetPath("arrowThreeColSevenStoryChunk.css") ? readAsset("arrowThreeColSevenStoryChunk.css") : "";
-    case "ArrowThreeColGrid":
-      return assetPath("arrowThreeColGridChunk.css") ? readAsset("arrowThreeColGridChunk.css") : "";
+    case "ArrowElevenStories":
+      return getAsset("arrowElevenStoriesCssChunk.css");
     case "ArrowFourColGrid":
-      return assetPath("arrowFourColGridChunk.css") ? readAsset("arrowFourColGridChunk.css") : "";
+      return getAsset("arrowFourColGridCssChunk.css");
+    case "ArrowFourColTwelveStories":
+      return getAsset("arrowFourColTwelveStoriesCssChunk.css");
+    case "ArrowFullScreenSlider":
+      return getAsset("arrowFullScreenSliderCssChunk.css");
+    case "ArrowOneColStoryList":
+      return getAsset("arrowOneColStoryListCssChunk.css");
+    case "ArrowThreeColGrid":
+      return getAsset("arrowThreeColGridCssChunk.css");
+    case "ArrowThreeColSevenStories":
+      return getAsset("arrowThreeColSevenStoryCssChunk.css");
+    case "ArrowTwoColFourStories":
+      return getAsset("arrowTwoColFourStoriesCssChunk.css");
     default:
       return "";
   }
+}
+
+function getAsset(chunk) {
+  return assetPath(chunk) ? readAsset(chunk) : "";
 }
 
 export const getConfig = state => {
