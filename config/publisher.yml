@@ -26,3 +26,10 @@ publisher:
   google_app_id: ""
   facebook_app_id: ""
   is_verification_link_flow: true
+  collectionParams:
+    depth: 2
+    storyLimits:
+      FourColGrid: 8
+      defaultTemplate: 8
+      ArrowThreeColGrid: 4
+    defaultNestedLimit: 4
