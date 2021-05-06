@@ -1,6 +1,5 @@
 import path from "path";
 import get from "lodash/get";
-import { assetPath, readAsset } from "@quintype/framework/server/asset-helper";
 import { ChunkExtractor } from "@loadable/server";
 
 const statsFile = path.resolve("stats.json");
@@ -11,31 +10,35 @@ const statsFile = path.resolve("stats.json");
  * For this to work, separate CSS chunks need to be created for every arrow row that will be used in the app
  * Layout names here should match those in template-options.yml
  */
-export function getArrowCriticalCss(state) {
+export function getArrowCriticalCss(
+  state,
+  { qtAssetHelpers = require("@quintype/framework/server/asset-helper") } = {}
+) {
   const layout = get(state, ["qt", "data", "collection", "items", 0, "associated-metadata", "layout"], null);
   switch (layout) {
     case "ArrowElevenStories":
-      return getAsset("arrowElevenStoriesCssChunk.css");
+      return getAsset("arrowElevenStoriesCssChunk.css", qtAssetHelpers);
     case "ArrowFourColGrid":
-      return getAsset("arrowFourColGridCssChunk.css");
+      return getAsset("arrowFourColGridCssChunk.css", qtAssetHelpers);
     case "ArrowFourColTwelveStories":
-      return getAsset("arrowFourColTwelveStoriesCssChunk.css");
+      return getAsset("arrowFourColTwelveStoriesCssChunk.css", qtAssetHelpers);
     case "ArrowFullScreenSlider":
-      return getAsset("arrowFullScreenSliderCssChunk.css");
+      return getAsset("arrowFullScreenSliderCssChunk.css", qtAssetHelpers);
     case "ArrowOneColStoryList":
-      return getAsset("arrowOneColStoryListCssChunk.css");
+      return getAsset("arrowOneColStoryListCssChunk.css", qtAssetHelpers);
     case "ArrowThreeColGrid":
-      return getAsset("arrowThreeColGridCssChunk.css");
+      return getAsset("arrowThreeColGridCssChunk.css", qtAssetHelpers);
     case "ArrowThreeColSevenStories":
-      return getAsset("arrowThreeColSevenStoryCssChunk.css");
+      return getAsset("arrowThreeColSevenStoryCssChunk.css", qtAssetHelpers);
     case "ArrowTwoColFourStories":
-      return getAsset("arrowTwoColFourStoriesCssChunk.css");
+      return getAsset("arrowTwoColFourStoriesCssChunk.css", qtAssetHelpers);
     default:
       return "";
   }
 }
 
-function getAsset(asset) {
+function getAsset(asset, qtAssetHelpers) {
+  const { assetPath, readAsset } = qtAssetHelpers;
   return assetPath(asset) ? readAsset(asset) : "";
 }
 
