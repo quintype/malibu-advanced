@@ -9,7 +9,7 @@ import { Footer } from "../../isomorphic/components/layouts/footer";
 import fontFace from "../font";
 import { BreakingNewsView } from "../../isomorphic/components/breaking-news-view";
 import { TopAd } from "../../isomorphic/components/ads/top-ad";
-import { getConfig, extractor, getCriticalCss, getArrowCriticalCss } from "../helpers";
+import { getConfig, extractor, getCriticalCss, getArrowCss } from "../helpers";
 
 const cssContent = assetPath("app.css") ? readAsset("app.css") : "";
 const fontJsContent = assetPath("font.js") ? readAsset("font.js") : "";
@@ -28,7 +28,7 @@ export async function renderLayout(res, params) {
   } = getConfig(params.store.getState());
   const chunk = params.shell ? null : allChunks[getChunkName(params.pageType)];
   const criticalCss = await getCriticalCss();
-  const arrowCriticalCss = getArrowCriticalCss(params.store.getState());
+  const arrowCss = getArrowCss(params.store.getState());
 
   res.render(
     "pages/layout",
@@ -38,7 +38,7 @@ export async function renderLayout(res, params) {
         content: params.content || "",
         cssContent: cssContent,
         criticalCss: criticalCss,
-        arrowCriticalCss,
+        arrowCss,
         fontJsContent: fontJsContent,
         fontFace: fontFace,
         contentTemplate: null,

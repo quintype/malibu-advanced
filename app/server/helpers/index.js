@@ -10,10 +10,7 @@ const statsFile = path.resolve("stats.json");
  * For this to work, separate CSS chunks need to be created for every arrow row that will be used in the app
  * Layout names here should match those in template-options.yml
  */
-export function getArrowCriticalCss(
-  state,
-  { qtAssetHelpers = require("@quintype/framework/server/asset-helper") } = {}
-) {
+export function getArrowCss(state, { qtAssetHelpers = require("@quintype/framework/server/asset-helper") } = {}) {
   const layout = get(state, ["qt", "data", "collection", "items", 0, "associated-metadata", "layout"], null);
   switch (layout) {
     case "ArrowElevenStories":
