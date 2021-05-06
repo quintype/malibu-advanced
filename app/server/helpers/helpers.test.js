@@ -1,14 +1,14 @@
-import { getArrowCriticalCss } from "./index";
+import { getArrowCss } from "./index";
 
-describe("getArrowCriticalCss helper function", () => {
+describe("getArrowCss helper function", () => {
   it("returns css when 1st row is an arrow row", () => {
     const mockState = getMockState({ makeFirstRowArrow: true });
-    const arrowCss = getArrowCriticalCss(mockState, { qtAssetHelpers: getMockAssetHelpers() });
+    const arrowCss = getArrowCss(mockState, { qtAssetHelpers: getMockAssetHelpers() });
     expect(arrowCss).toBe("this is mock css for arrow rows");
   });
   it("returns empty str when 1st row is not an arrow row", () => {
     const mockState = getMockState({ makeFirstRowArrow: false });
-    const arrowCss = getArrowCriticalCss(mockState, { qtAssetHelpers: getMockAssetHelpers() });
+    const arrowCss = getArrowCss(mockState, { qtAssetHelpers: getMockAssetHelpers() });
     expect(arrowCss).toBe("");
   });
 });
