@@ -1,6 +1,6 @@
 const quintypeBuildConfig = require("@quintype/build/config/quintype-build");
 
-const customConfig = {
+const loadableConfigObj = {
   loadableConfig: {
     entryFiles: {
       topbar: "./app/isomorphic/components/layouts/header",
@@ -17,6 +17,6 @@ const customConfig = {
     }
   }
 };
-const modifiedBuildConfig = { ...quintypeBuildConfig, ...customConfig };
+const modifiedBuildConfig = { ...quintypeBuildConfig, ...loadableConfigObj };
 
 module.exports = modifiedBuildConfig;
