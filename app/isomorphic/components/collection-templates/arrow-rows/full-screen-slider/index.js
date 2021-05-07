@@ -3,7 +3,11 @@ import { FullScreenSlider } from "@quintype/arrow";
 import { object } from "prop-types";
 
 export const ArrowFullScreenSlider = ({ collection }) => {
-  return <FullScreenSlider collection={collection} />;
+  const contextConfig = {
+    numberOfStoriesToShow: 5
+  };
+
+  return <FullScreenSlider collection={collection} config={contextConfig} />;
 };
 
 ArrowFullScreenSlider.propTypes = {
