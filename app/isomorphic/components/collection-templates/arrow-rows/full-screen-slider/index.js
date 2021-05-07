@@ -1,7 +1,6 @@
 import React from "react";
 import { FullScreenSlider } from "@quintype/arrow";
 import { object } from "prop-types";
-// import "@quintype/arrow/FullScreenSlider/styles.arrow.css";
 
 export const ArrowFullScreenSlider = ({ collection }) => {
   const contextConfig = {
