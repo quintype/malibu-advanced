@@ -14,4 +14,4 @@ ArrowFullScreenSlider.propTypes = {
   collection: object
 };
 
-ArrowFullScreenSlider.storyLimit = 7;
+ArrowFullScreenSlider.storyLimit = 6;
