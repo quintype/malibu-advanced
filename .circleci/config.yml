@@ -56,16 +56,15 @@ jobs:
     steps:
       - checkout
       - run: |
-          export LHCI_SITES="[\"https://malibu-advanced-web.qtstage.io/\"]"
+          export LHCI_SITES="[\"https://malibu-advanced-web.qtstage.io/?uptime\"]"
           npx @lhci/cli@0.6.x autorun
-
   prod_lighthouse_task:
     docker:
       - image: circleci/node:10.16-browsers
     steps:
       - checkout
       - run: |
-          export LHCI_SITES="[\"https://malibu-advanced-web.quintype.io/\"]"
+          export LHCI_SITES="[\"https://malibu-advanced-web.quintype.io/?uptime\"]"
           npx @lhci/cli@0.6.x autorun
 
 workflows:
