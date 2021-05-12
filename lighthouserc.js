@@ -24,7 +24,8 @@ const lhciConfig = {
         "total-byte-weight": "warn",
         "unused-css-rules": "warn",
         "unused-javascript": "warn",
-        "uses-text-compression": "warn"
+        "uses-text-compression": "warn",
+        "categories:performance": ["error", { minScore: 0.87 }]
       }
     },
     upload: {
