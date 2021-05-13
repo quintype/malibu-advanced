@@ -13,11 +13,6 @@ const lhciConfig = {
     assert: {
       preset: "lighthouse:no-pwa",
       assertions: {
-        "categories:pwa": "off",
-        "color-contrast": "off",
-        "font-size": "off",
-        "heading-levels": "off",
-        "is-crawlable": "off",
         "meta-description": "warn",
         "errors-in-console": "warn",
         "no-document-write": "warn",
