@@ -17,7 +17,9 @@ const lhciConfig = {
         "is-crawlable": "off",
         "tap-targets": "off",
         "uses-responsive-images": "off",
-        "categories:performance": ["error", { minScore: 0.9 }]
+        "errors-in-console": "off",
+        "uses-text-compression": "off",
+        "categories:performance": ["error", { minScore: 1 }]
       }
     },
     upload: {
