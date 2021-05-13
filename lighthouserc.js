@@ -12,6 +12,7 @@ const lhciConfig = {
     assert: {
       preset: "lighthouse:no-pwa",
       assertions: {
+        "unused-javascript": "off",
         "categories:performance": ["error", { minScore: 0.9 }]
       }
     },
