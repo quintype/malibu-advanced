@@ -3,11 +3,12 @@ const lhciConfig = {
   ci: {
     collect: {
       method: "node",
-      numberOfRuns: 5,
+      additive: false,
+      headful: false,
+      numberOfRuns: 2,
       url: JSON.parse(process.env.LHCI_SITES),
       settings: {
-        emulatedFormFactor: "mobile",
-        throttlingMethod: "devtools"
+        emulatedFormFactor: "mobile"
       }
     },
     assert: {
