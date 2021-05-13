@@ -13,6 +13,10 @@ const lhciConfig = {
       preset: "lighthouse:no-pwa",
       assertions: {
         "unused-javascript": "off",
+        "heading-order": "off",
+        "is-crawlable": "off",
+        "tap-targets": "off",
+        "uses-responsive-images": "off",
         "categories:performance": ["error", { minScore: 0.9 }]
       }
     },
