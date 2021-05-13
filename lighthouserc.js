@@ -25,7 +25,7 @@ const lhciConfig = {
         "unused-css-rules": "warn",
         "unused-javascript": "warn",
         "uses-text-compression": "warn",
-        "categories:performance": ["error", { minScore: 0.9 }]
+        "categories:performance": ["error", { minScore: 0.87 }]
       }
     },
     upload: {
