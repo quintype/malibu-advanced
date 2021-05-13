@@ -22,6 +22,9 @@ const lhciConfig = {
         "uses-responsive-images": "warn",
         "errors-in-console": "warn",
         "uses-text-compression": "warn",
+        "uses-optimized-images": "warn",
+        "no-unload-listeners": "warn",
+        "no-document-write": "warn",
         "categories:performance": ["error", { minScore: 0.9 }]
       }
     },
