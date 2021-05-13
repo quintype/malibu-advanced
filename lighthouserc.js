@@ -13,14 +13,7 @@ const lhciConfig = {
     assert: {
       preset: "lighthouse:no-pwa",
       assertions: {
-        "meta-description": "warn",
-        "errors-in-console": "warn",
-        "no-document-write": "warn",
-        "total-byte-weight": "warn",
-        "unused-css-rules": "warn",
-        "unused-javascript": "warn",
-        "uses-text-compression": "warn",
-        "categories:performance": ["warn", { aggregationMethod: "optimistic", minScore: 0.9 }]
+        "meta-description": "warn"
       }
     },
     upload: {
