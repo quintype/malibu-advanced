@@ -16,15 +16,15 @@ const lhciConfig = {
       preset: "lighthouse:no-pwa",
       assertions: {
         "unused-javascript": "warn",
-        "heading-order": "warn",
+        "heading-order": "off", // Heading elements are not in a sequentially-descending order
         "is-crawlable": "warn",
-        "tap-targets": "warn",
+        "tap-targets": "warn", // Tap targets are the areas of a web page that users on touch devices can interact with. Buttons, links, and form elements all have tap targets.
         "uses-responsive-images": "warn",
-        "errors-in-console": "warn",
+        "errors-in-console": "warn", // Browser errors were logged to the console
         "uses-text-compression": "warn",
         "uses-optimized-images": "warn",
-        "no-unload-listeners": "warn",
-        "no-document-write": "warn",
+        "no-unload-listeners": "off",
+        "no-document-write": "warn", // Avoid `document.write()`
         "categories:performance": ["error", { minScore: 0.9 }]
       }
     },
