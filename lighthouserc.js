@@ -12,14 +12,14 @@ const lhciConfig = {
     assert: {
       preset: "lighthouse:no-pwa",
       assertions: {
-        "unused-javascript": "off",
-        "heading-order": "off",
-        "is-crawlable": "off",
-        "tap-targets": "off",
-        "uses-responsive-images": "off",
-        "errors-in-console": "off",
-        "uses-text-compression": "off",
-        "categories:performance": ["error", { minScore: 1 }]
+        "unused-javascript": "warn",
+        "heading-order": "warn",
+        "is-crawlable": "warn",
+        "tap-targets": "warn",
+        "uses-responsive-images": "warn",
+        "errors-in-console": "warn",
+        "uses-text-compression": "warn",
+        "categories:performance": ["error", { minScore: 0.9 }]
       }
     },
     upload: {
