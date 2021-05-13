@@ -28,6 +28,10 @@ function wrapEager(f) {
     wrappedComponent.storyLimit = f.storyLimit;
   }
 
+  if (f.nestedCollectionLimit) {
+    wrappedComponent.nestedCollectionLimit = f.nestedCollectionLimit;
+  }
+
   return wrappedComponent;
 }
 
