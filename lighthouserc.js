@@ -37,3 +37,13 @@ const lhciConfig = {
 };
 
 module.exports = lhciConfig;
+
+// Note: Below are the points that are affecting our current scores.
+// bootup-time: js execution time
+// first-cpu-idle: First CPU Idle is deprecated in Lighthouse 6.0 (but is similar to time to interactive)
+// heading-order: Heading elements are not in a sequentially-descending order
+// interactive: Time to Interactive
+// mainthread-work-breakdown: Main thread execution
+// max-potential-fid: First input delay
+// no-document-write: Avoid `document.write()`
+// no-unload-listeners: Timetaken by event listeners
