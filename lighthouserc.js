@@ -8,8 +8,7 @@ const lhciConfig = {
       headful: false,
       url: JSON.parse(process.env.LHCI_SITES),
       settings: {
-        emulatedFormFactor: "mobile",
-        throttlingMethod: "devtools"
+        emulatedFormFactor: "mobile"
       }
     },
     assert: {
