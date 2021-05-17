@@ -8,7 +8,8 @@ const lhciConfig = {
       headful: false,
       url: JSON.parse(process.env.LHCI_SITES),
       settings: {
-        emulatedFormFactor: "mobile"
+        emulatedFormFactor: "mobile",
+        throttlingMethod: "devtools"
       }
     },
     assert: {
@@ -24,7 +25,7 @@ const lhciConfig = {
         "uses-optimized-images": "warn",
         "no-unload-listeners": "off",
         "no-document-write": "warn", // Avoid `document.write()`
-        "categories:performance": ["error", { minScore: 0.9 }]
+        "categories:performance": ["error", { minScore: 0.7 }]
       }
     },
     upload: {
