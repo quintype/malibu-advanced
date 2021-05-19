@@ -9,7 +9,7 @@
   "dependencies": {
     "@loadable/component": "^5.14.1",
     "@loadable/server": "^5.14.2",
-    "@quintype/arrow": "^1.3.0-malibu-integration.4",
+    "@quintype/arrow": "^1.3.0-malibu-integration.6",
     "@quintype/bridgekeeper-js": "^2.3.0",
     "@quintype/components": "^2.28.0",
     "@quintype/framework": "^4.13.8",
