@@ -11,7 +11,7 @@
     "@loadable/server": "^5.14.2",
     "@quintype/bridgekeeper-js": "^2.3.0",
     "@quintype/components": "^2.28.0",
-    "@quintype/framework": "^4.13.8",
+    "@quintype/framework": "^4.15.4",
     "@quintype/seo": "^1.38.29",
     "fontfaceobserver": "^2.1.0",
     "formiojs": "^4.12.0",
