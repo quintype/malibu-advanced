@@ -3,8 +3,8 @@ import { string, shape, object } from "prop-types";
 import get from "lodash/get";
 import { collectionToStories, LazyCollection } from "@quintype/components";
 import { useSelector } from "react-redux";
+import { OneColStoryList } from "@quintype/arrow";
 
-import { StoryGrid } from "../story-grid";
 import { getCollectionTemplate } from "../get-collection-template";
 import { DfpComponent } from "../ads/dfp-component";
 
@@ -32,7 +32,7 @@ const SectionPage = props => {
   return (
     <div className="container">
       <h1>{pageTitle}</h1>
-      <StoryGrid stories={stories} />
+      <OneColStoryList collection={props.data.collection} isLoadMoreVisible={false} />
       <DfpComponent
         adStyleName="ad-slot-size-300x250"
         id="section-page-ad"
