@@ -16,7 +16,7 @@ export function loadSectionPageData(client, sectionId, config, publisherAttribut
       };
     });
   } else {
-    return Story.getStories(client, "top", { "section-id": section.id, fields: storyFields, limit: 20 }).then(
+    return Story.getStories(client, "top", { "section-id": section.id, fields: storyFields, limit: 9 }).then(
       stories => {
         const allStories = stories.map(story => {
           return { story: story.asJson(), type: "story" };

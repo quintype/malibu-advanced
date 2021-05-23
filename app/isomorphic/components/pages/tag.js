@@ -18,7 +18,7 @@ const TagPage = props => {
 
   const getMoreStories = async (offset, limit) => {
     const { stories } = await (
-      await fetch(`/api/v1//stories?tag-slugs=${props.data.tag.slug}&offset=${offset}&limit=${limit + 1}`)
+      await fetch(`/api/v1/stories?tag-slugs=${props.data.tag.slug}&offset=${offset}&limit=${limit + 1}`)
     ).json();
     const loadMoreStories = stories.map(story => {
       return { type: "story", story: story };
