@@ -18,21 +18,6 @@ const SectionPage = props => {
   const [storiesToRender, setStoriesToRender] = useState(8);
   const [sectionPageStories, setStories] = useState(props.data.collection.items);
 
-  const getMoreStories = async (offset, limit) => {
-    await getLoadMoreStories({
-      offset: offset,
-      limit: limit,
-      slug: props.data.section.id,
-      query: "section-id",
-      shouldUseCollection: shouldUseCollection,
-      setStories: setStories,
-      storiesToRender: storiesToRender,
-      setStoriesToRender: setStoriesToRender,
-      stories: sectionPageStories,
-      isSectionPage: true
-    });
-  };
-
   const stories =
     (props.data.collection && props.data.collection.items && collectionToStories(props.data.collection)) || [];
 
@@ -49,6 +34,21 @@ const SectionPage = props => {
 
   const collection = {
     items: !childCollections.length ? sectionPageStories.slice(0, storiesToRender) : props.data.collection.items
+  };
+
+  const getMoreStories = async (offset, limit) => {
+    await getLoadMoreStories({
+      offset: offset,
+      limit: limit,
+      slug: shouldUseCollection ? props.data.collection.slug : props.data.section.id,
+      query: "section-id",
+      shouldUseCollection: shouldUseCollection,
+      setStories: setStories,
+      storiesToRender: storiesToRender,
+      setStoriesToRender: setStoriesToRender,
+      stories: sectionPageStories,
+      isSectionPage: true
+    });
   };
 
   const pageTitle =
