@@ -7,13 +7,12 @@
     "prettier/react",
     "prettier/standard"
   ],
-  "plugins": [
-    "react",
-    "standard",
-    "jest"
-  ],
+  "plugins": ["react", "standard", "jest"],
   "parser": "babel-eslint",
   "rules": {
     "max-len": ["warn", { "code": 120 }]
+  },
+  "globals": {
+    "fetch": false
   }
 }
