@@ -28,7 +28,8 @@ const SectionPage = props => {
       setStories: setStories,
       storiesToRender: storiesToRender,
       setStoriesToRender: setStoriesToRender,
-      stories: sectionPageStories
+      stories: sectionPageStories,
+      isSectionPage: true
     });
   };
 

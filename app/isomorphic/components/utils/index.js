@@ -17,21 +17,25 @@ export const getLoadMoreStories = async ({
   setStories,
   storiesToRender,
   setStoriesToRender,
-  stories
+  stories,
+  isSectionPage
 }) => {
   if (isSearchPage) {
     const loadMoreStories = await getSearchPageItems(slug, offset, limit);
     setStories(stories.slice(0, storiesToRender).concat(loadMoreStories));
     setStoriesToRender(storiesToRender + offset);
+    return null;
   }
 
-  if (shouldUseCollection) {
+  if (shouldUseCollection && isSectionPage) {
     const loadMoreStories = await getCollectionitems(slug, offset, limit);
     setStories(stories.slice(0, storiesToRender).concat(loadMoreStories));
     setStoriesToRender(storiesToRender + offset);
+    return null;
   }
 
   const loadMoreStories = await getStories(query, slug, offset, limit);
   setStories(stories.slice(0, storiesToRender).concat(loadMoreStories));
   setStoriesToRender(storiesToRender + offset);
+  return null;
 };
