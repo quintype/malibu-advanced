@@ -24,7 +24,10 @@ const lhciConfig = {
         "uses-optimized-images": "warn",
         "no-unload-listeners": "off",
         "no-document-write": "warn", // Avoid `document.write()`
-        "categories:performance": ["error", { minScore: 0.7 }]
+        "categories:performance": ["error", { minScore: 0.7 }],
+        "image-alt": "warn",
+        "link-name": "warn",
+        "link-text": "warn"
       }
     },
     upload: {
@@ -46,3 +49,6 @@ module.exports = lhciConfig;
 // max-potential-fid: First input delay
 // no-document-write: Avoid `document.write()`
 // no-unload-listeners: Timetaken by event listeners
+// image-alt: Image elements do not have `[alt]` attributes
+// link-name: Links do not have a discernible name
+// link-text: Links do not have descriptive text
