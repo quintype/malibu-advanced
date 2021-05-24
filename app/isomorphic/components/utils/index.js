@@ -7,13 +7,21 @@ export const isValidEmail = email => {
   return true;
 };
 
-export const getLoadMoreStories = async ({ offset, limit, isSearchPage = false, slug, query }) => {
+export const getLoadMoreStories = async ({ offset, limit, isSearchPage = false, slug, query, shouldUseCollection }) => {
   if (isSearchPage) {
     const { results } = await (await fetch(`/api/v1/search?q=${slug}&offset=${offset}&limit=${limit + 1}`)).json();
     const loadMoreStories = results.stories.map(story => {
       return { type: "story", story: story };
     });
     return loadMoreStories;
+  }
+
+  if (shouldUseCollection) {
+    const { items } = await (
+      await fetch(`/api/v1/collections/${slug}?&item-type=story&offset=${offset}&limit=${limit + 1}`)
+    ).json();
+
+    return items;
   }
 
   const { stories } = await (

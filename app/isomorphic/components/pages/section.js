@@ -11,6 +11,9 @@ import { getLoadMoreStories } from "../utils";
 
 const SectionPage = props => {
   const adConfig = useSelector(state => get(state, ["qt", "config", "ads-config", "slots", "listing_page_ads"], {}));
+  const shouldUseCollection = useSelector(state =>
+    get(state, ["qt", "config", "publisher-attributes", "should_use_collection"])
+  );
   const [storiesToRender, setStoriesToRender] = useState(8);
   const [sectionPageStories, setStories] = useState(props.data.collection.items);
 
@@ -19,7 +22,8 @@ const SectionPage = props => {
       offset: offset,
       limit: limit,
       slug: props.data.section.id,
-      query: "section-id"
+      query: "section-id",
+      shouldUseCollection: shouldUseCollection
     });
     setStories(sectionPageStories.slice(0, storiesToRender).concat(loadMoreStories));
     setStoriesToRender(storiesToRender + offset);

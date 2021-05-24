@@ -8,7 +8,7 @@ export function loadSectionPageData(client, sectionId, config, publisherAttribut
   const collectionSlug = section.collection === null ? null : section.collection.slug;
   const shouldUseCollection = collectionSlug && publisherAttributes.should_use_collection;
   if (shouldUseCollection) {
-    return Collection.getCollectionBySlug(client, collectionSlug, { limit: 20 }, { depth: 2 }).then(collection => {
+    return Collection.getCollectionBySlug(client, collectionSlug, { limit: 9 }, { depth: 2 }).then(collection => {
       return {
         section: section,
         collection: collection.asJson(),
