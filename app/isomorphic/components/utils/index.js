@@ -1,4 +1,4 @@
-import fetch from "node-fetch";
+import { getCollectionitems, getSearchPageItems, getStories } from "../../../api/utils";
 
 export const isValidEmail = email => {
   const re = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
@@ -7,28 +7,31 @@ export const isValidEmail = email => {
   return true;
 };
 
-export const getLoadMoreStories = async ({ offset, limit, isSearchPage = false, slug, query, shouldUseCollection }) => {
+export const getLoadMoreStories = async ({
+  offset,
+  limit,
+  isSearchPage = false,
+  slug,
+  query,
+  shouldUseCollection,
+  setStories,
+  storiesToRender,
+  setStoriesToRender,
+  stories
+}) => {
   if (isSearchPage) {
-    const { results } = await (await fetch(`/api/v1/search?q=${slug}&offset=${offset}&limit=${limit + 1}`)).json();
-    const loadMoreStories = results.stories.map(story => {
-      return { type: "story", story: story };
-    });
-    return loadMoreStories;
+    const loadMoreStories = await getSearchPageItems(slug, offset, limit);
+    setStories(stories.slice(0, storiesToRender).concat(loadMoreStories));
+    setStoriesToRender(storiesToRender + offset);
   }
 
   if (shouldUseCollection) {
-    const { items } = await (
-      await fetch(`/api/v1/collections/${slug}?&item-type=story&offset=${offset}&limit=${limit + 1}`)
-    ).json();
-
-    return items;
+    const loadMoreStories = await getCollectionitems(slug, offset, limit);
+    setStories(stories.slice(0, storiesToRender).concat(loadMoreStories));
+    setStoriesToRender(storiesToRender + offset);
   }
 
-  const { stories } = await (
-    await fetch(`/api/v1/stories?${query}=${slug}&offset=${offset}&limit=${limit + 1}`)
-  ).json();
-  const loadMoreStories = stories.map(story => {
-    return { type: "story", story: story };
-  });
-  return loadMoreStories;
+  const loadMoreStories = await getStories(query, slug, offset, limit);
+  setStories(stories.slice(0, storiesToRender).concat(loadMoreStories));
+  setStoriesToRender(storiesToRender + offset);
 };

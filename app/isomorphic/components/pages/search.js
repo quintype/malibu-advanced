@@ -8,6 +8,7 @@ import { DfpComponent } from "../ads/dfp-component";
 import { getLoadMoreStories } from "../utils";
 
 const SearchPage = props => {
+  // will be getting initially 9 stories, but showing only 8 for loadmore functionality
   const adConfig = useSelector(state => get(state, ["qt", "config", "ads-config", "slots", "listing_page_ads"], {}));
   const [storiesToRender, setStoriesToRender] = useState(8);
   const [stories, setStories] = useState(props.data.stories);
@@ -17,14 +18,16 @@ const SearchPage = props => {
   };
 
   const getMoreStories = async (offset, limit) => {
-    const loadMoreStories = await getLoadMoreStories({
+    await getLoadMoreStories({
       offset: offset,
       limit: limit,
       isSearchPage: true,
-      slug: props.data.query
+      slug: props.data.query,
+      setStories: setStories,
+      storiesToRender: storiesToRender,
+      setStoriesToRender: setStoriesToRender,
+      stories: stories
     });
-    setStories(stories.slice(0, storiesToRender).concat(loadMoreStories));
-    setStoriesToRender(storiesToRender + offset);
   };
 
   return (
@@ -38,7 +41,6 @@ const SearchPage = props => {
         isLoadMoreVisible={stories.length > storiesToRender}
         getMoreStories={getMoreStories}
       />
-      {/* <StoryGrid stories={props.data.stories} /> */}
       <DfpComponent
         adStyleName="ad-slot-size-300x250"
         id="search-page-ad"

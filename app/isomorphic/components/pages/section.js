@@ -10,6 +10,7 @@ import { DfpComponent } from "../ads/dfp-component";
 import { getLoadMoreStories } from "../utils";
 
 const SectionPage = props => {
+  // will be getting initially 9 items, but showing only 8 for loadmore functionality
   const adConfig = useSelector(state => get(state, ["qt", "config", "ads-config", "slots", "listing_page_ads"], {}));
   const shouldUseCollection = useSelector(state =>
     get(state, ["qt", "config", "publisher-attributes", "should_use_collection"])
@@ -18,15 +19,17 @@ const SectionPage = props => {
   const [sectionPageStories, setStories] = useState(props.data.collection.items);
 
   const getMoreStories = async (offset, limit) => {
-    const loadMoreStories = await getLoadMoreStories({
+    await getLoadMoreStories({
       offset: offset,
       limit: limit,
       slug: props.data.section.id,
       query: "section-id",
-      shouldUseCollection: shouldUseCollection
+      shouldUseCollection: shouldUseCollection,
+      setStories: setStories,
+      storiesToRender: storiesToRender,
+      setStoriesToRender: setStoriesToRender,
+      stories: sectionPageStories
     });
-    setStories(sectionPageStories.slice(0, storiesToRender).concat(loadMoreStories));
-    setStoriesToRender(storiesToRender + offset);
   };
 
   const stories =
