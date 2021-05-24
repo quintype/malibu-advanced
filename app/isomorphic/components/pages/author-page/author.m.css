@@ -1,0 +1,11 @@
+:global {
+  @import "../../../../../node_modules/@quintype/arrow/AuthorIntroductionCard/styles.arrow.css";
+}
+.wrapper {
+  :global .arr--author-intro-card {
+    figure {
+      width: 224px;
+      height: 224px;
+    }
+  }
+}
