@@ -4,10 +4,10 @@ import get from "lodash/get";
 import { collectionToStories, LazyCollection } from "@quintype/components";
 import { useSelector } from "react-redux";
 import { OneColStoryList } from "@quintype/arrow";
-import fetch from "node-fetch";
 
 import { getCollectionTemplate } from "../get-collection-template";
 import { DfpComponent } from "../ads/dfp-component";
+import { getLoadMoreStories } from "../utils";
 
 const SectionPage = props => {
   const adConfig = useSelector(state => get(state, ["qt", "config", "ads-config", "slots", "listing_page_ads"], {}));
@@ -15,11 +15,11 @@ const SectionPage = props => {
   const [sectionPageStories, setStories] = useState(props.data.collection.items);
 
   const getMoreStories = async (offset, limit) => {
-    const { stories } = await (
-      await fetch(`/api/v1/stories?section-id=${props.data.section.id}&offset=${offset}&limit=${limit + 1}`)
-    ).json();
-    const loadMoreStories = stories.map(story => {
-      return { type: "story", story: story };
+    const loadMoreStories = await getLoadMoreStories({
+      offset: offset,
+      limit: limit,
+      slug: props.data.section.id,
+      query: "section-id"
     });
     setStories(sectionPageStories.slice(0, storiesToRender).concat(loadMoreStories));
     setStoriesToRender(storiesToRender + offset);
