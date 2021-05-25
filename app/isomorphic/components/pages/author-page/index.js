@@ -54,9 +54,7 @@ export const AuthorPage = props => {
           getMoreStories={getMoreStories}
         />
       ) : (
-        <div>
-          <h1 styleName="text-info">No stories found!</h1>
-        </div>
+        <h1 styleName="text-info">No stories found!</h1>
       )}
       <DfpComponent
         adStyleName="ad-slot-size-300x250"
