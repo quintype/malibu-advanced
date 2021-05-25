@@ -3,9 +3,9 @@ import { object, shape } from "prop-types";
 import { useSelector } from "react-redux";
 import get from "lodash/get";
 import { AuthorIntroductionCard, ThreeColGrid } from "@quintype/arrow";
+import { getLoadMoreStories } from "../../utils";
 
 import { DfpComponent } from "../../ads/dfp-component";
-// import { LoadMoreHoc } from "../../hoc-wrappers";
 
 import "./author.m.css";
 
@@ -14,47 +14,50 @@ export const AuthorPage = props => {
   if (!props.data.author.id) {
     return (
       <div className="container">
-        <h1 styleName="not-found">Author not found!</h1>{" "}
+        <h1 styleName="text-info">Author not found!</h1>
       </div>
     );
   }
-  console.log("props---------------", props);
-  const authorCollection = get(props, ["data", "authorCollection"], {});
-  const [storiesToRender] = useState(8);
-  // const [stories, setStories] = useState(props.data.stories);
 
-  // const collection = {
-  //   items: stories.slice(0, storiesToRender)
-  // };
-  // const arrowThreeColGridWithLoadMore = (
-  //   <LoadMoreHoc Component={<ArrowThreeColGrid collection={props.data.authorCollection} />} defaultLoadCount={3} />
-  // );
+  const authorCollection = get(props, ["data", "authorCollection"], {});
+  const [storiesToRender, setStoriesToRender] = useState(4);
+  const authorCollectionStories = {
+    items: authorCollection.items.slice(0, storiesToRender)
+  };
+  const [authorPageStories, setStories] = useState(authorCollectionStories.items);
   const authorIntrCardConfig = {
     enableBio: true,
     enableSocialLinks: true
   };
 
-  const getMoreStories = async (offset, limit) => {
-    // await getLoadMoreStories({
-    //   offset: offset,
-    //   limit: limit,
-    //   isSearchPage: false,
-    //   slug: props.data.query,
-    //   setStories: setStories,
-    //   storiesToRender: storiesToRender,
-    //   setStoriesToRender: setStoriesToRender,
-    //   stories: stories
-    // });
+  const getMoreStories = async () => {
+    await getLoadMoreStories({
+      offset: 4,
+      limit: 4,
+      authorId: props.data.author.id,
+      slug: props.data.query,
+      setStories: setStories,
+      storiesToRender: storiesToRender,
+      setStoriesToRender: setStoriesToRender,
+      stories: authorPageStories
+    });
   };
+
   return (
     <div className="container" styleName="wrapper">
       <AuthorIntroductionCard data={props.data.author} config={authorIntrCardConfig} />
-      {/* {arrowThreeColGridWithLoadMore} */}
-      <ThreeColGrid
-        collection={props.data.authorCollection}
-        isLoadMoreVisible={authorCollection["total-count"] > storiesToRender}
-        getMoreStories={getMoreStories}
-      />
+      {authorCollectionStories.items.length > 0 ? (
+        <ThreeColGrid
+          collection={authorCollectionStories}
+          config={{ buttonText: "Load More", footerButton: "SubsequentLoadCount" }}
+          isLoadMoreVisible={authorCollection["total-count"] > storiesToRender}
+          getMoreStories={getMoreStories}
+        />
+      ) : (
+        <div>
+          <h1 styleName="text-info">No stories found!</h1>
+        </div>
+      )}
       <DfpComponent
         adStyleName="ad-slot-size-300x250"
         id="author-page-ad"

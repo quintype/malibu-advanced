@@ -1,4 +1,4 @@
-import { getCollectionitems, getSearchPageItems, getStories } from "../../../api/utils";
+import { getCollectionitems, getSearchPageItems, getStories, getAuthorStories } from "../../../api/utils";
 
 export const isValidEmail = email => {
   const re = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
@@ -18,7 +18,8 @@ export const getLoadMoreStories = async ({
   storiesToRender,
   setStoriesToRender,
   stories,
-  isSectionPage
+  isSectionPage,
+  authorId
 }) => {
   if (isSearchPage) {
     const loadMoreStories = await getSearchPageItems(slug, offset, limit);
@@ -29,6 +30,13 @@ export const getLoadMoreStories = async ({
 
   if (shouldUseCollection && isSectionPage) {
     const loadMoreStories = await getCollectionitems(slug, offset, limit);
+    setStories(stories.slice(0, storiesToRender).concat(loadMoreStories));
+    setStoriesToRender(storiesToRender + offset);
+    return null;
+  }
+
+  if (authorId) {
+    const loadMoreStories = await getAuthorStories(authorId, offset, limit);
     setStories(stories.slice(0, storiesToRender).concat(loadMoreStories));
     setStoriesToRender(storiesToRender + offset);
     return null;
