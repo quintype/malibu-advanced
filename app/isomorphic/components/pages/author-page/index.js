@@ -11,14 +11,6 @@ import "./author.m.css";
 
 export const AuthorPage = props => {
   const adConfig = useSelector(state => get(state, ["qt", "config", "ads-config", "slots", "listing_page_ads"], {}));
-  if (!props.data.author.id) {
-    return (
-      <div className="container">
-        <h1 styleName="text-info">Author not found!</h1>
-      </div>
-    );
-  }
-
   const authorCollection = get(props, ["data", "authorCollection"], {});
   const [storiesToRender, setStoriesToRender] = useState(4);
   const authorCollectionStories = {
