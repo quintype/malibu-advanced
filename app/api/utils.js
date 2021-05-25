@@ -25,7 +25,7 @@ export const getCollectionitems = async (slug, offset, limit) => {
 
 export const getAuthorStories = async (id, offset, limit) => {
   const { items } = await (
-    await fetch(`/api/v1/authors/${id}/collection?&item-type=story&offset=${offset}&limit=${limit + 1}`)
+    await fetch(`/api/v1/authors/${id}/collection?&item-type=story&offset=${offset}&limit=${limit}`)
   ).json();
   return items;
 };
