@@ -12,7 +12,7 @@ import "./author.m.css";
 export const AuthorPage = props => {
   const adConfig = useSelector(state => get(state, ["qt", "config", "ads-config", "slots", "listing_page_ads"], {}));
   const authorCollection = get(props, ["data", "authorCollection"], {});
-  const [storiesToRender, setStoriesToRender] = useState(4);
+  const [storiesToRender, setStoriesToRender] = useState(6);
   const authorCollectionStories = {
     items: authorCollection.items.slice(0, storiesToRender)
   };
@@ -24,8 +24,8 @@ export const AuthorPage = props => {
 
   const getMoreStories = async () => {
     await getLoadMoreStories({
-      offset: 4,
-      limit: 4,
+      offset: 6,
+      limit: 6,
       authorId: props.data.author.id,
       slug: props.data.query,
       setStories: setStories,
