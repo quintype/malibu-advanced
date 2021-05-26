@@ -15,7 +15,6 @@ function StoryGridStoryItem(props) {
           widths={[250, 480, 640]}
           sizes="5vw"
           imgParams={{ auto: ["format", "compress"] }}
-          eager={props.position < 2 ? "above-fold" : "below-fold"}
           alt={props.story.headline || ""}
         />
       </figure>
