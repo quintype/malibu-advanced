@@ -7,6 +7,12 @@
       width: 224px;
       height: 224px;
     }
+    .arrow-component {
+      svg {
+        width: 224px;
+        height: 224px;
+      }
+    }
   }
 }
 
