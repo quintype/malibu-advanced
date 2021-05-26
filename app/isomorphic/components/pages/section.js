@@ -15,7 +15,7 @@ const SectionPage = props => {
   const shouldUseCollection = useSelector(state =>
     get(state, ["qt", "config", "publisher-attributes", "should_use_collection"])
   );
-  const [storiesToRender, setStoriesToRender] = useState(2);
+  const [storiesToRender, setStoriesToRender] = useState(8);
   const [sectionPageStories, setStories] = useState(props.data.collection.items);
 
   const stories =
@@ -39,7 +39,7 @@ const SectionPage = props => {
   const getMoreStories = async (offset, limit) => {
     await getLoadMoreStories({
       offset: offset,
-      limit: 2,
+      limit: limit,
       slug: shouldUseCollection ? props.data.collection.slug : props.data.section.id,
       query: "section-id",
       shouldUseCollection: shouldUseCollection,

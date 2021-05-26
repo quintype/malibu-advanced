@@ -8,7 +8,7 @@ export function loadSectionPageData(client, sectionId, config, publisherAttribut
   const collectionSlug = section.collection === null ? null : section.collection.slug;
   const shouldUseCollection = collectionSlug && publisherAttributes.should_use_collection;
   if (shouldUseCollection) {
-    return Collection.getCollectionBySlug(client, collectionSlug, { limit: 3 }, { depth: 2 }).then(collection => {
+    return Collection.getCollectionBySlug(client, collectionSlug, { limit: 9 }, { depth: 2 }).then(collection => {
       return {
         section: section,
         collection: collection.asJson(),
@@ -16,7 +16,7 @@ export function loadSectionPageData(client, sectionId, config, publisherAttribut
       };
     });
   } else {
-    return Story.getStories(client, "top", { "section-id": section.id, fields: storyFields, limit: 3 }).then(
+    return Story.getStories(client, "top", { "section-id": section.id, fields: storyFields, limit: 9 }).then(
       stories => {
         const allStories = stories.map(story => {
           return { story: story.asJson(), type: "story" };
