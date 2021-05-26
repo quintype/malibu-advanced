@@ -13,18 +13,20 @@ export const AuthorPage = props => {
   const adConfig = useSelector(state => get(state, ["qt", "config", "ads-config", "slots", "listing_page_ads"], {}));
   const authorCollection = get(props, ["data", "authorCollection"], {});
   const [storiesToRender, setStoriesToRender] = useState(6);
+  const [authorPageStories, setStories] = useState(authorCollection.items);
+
   const authorCollectionStories = {
-    items: authorCollection.items.slice(0, storiesToRender)
+    items: authorPageStories.slice(0, storiesToRender)
   };
-  const [authorPageStories, setStories] = useState(authorCollectionStories.items);
+
   const authorIntrCardConfig = {
     enableBio: true,
     enableSocialLinks: true
   };
 
-  const getMoreStories = async () => {
+  const getMoreStories = async (offset, limit) => {
     await getLoadMoreStories({
-      offset: 6,
+      offset: offset,
       limit: 6,
       authorId: props.data.author.id,
       slug: props.data.query,
@@ -42,7 +44,7 @@ export const AuthorPage = props => {
         <ThreeColGrid
           collection={authorCollectionStories}
           config={{ buttonText: "Load More", footerButton: "SubsequentLoadCount", showAuthor: false, showTime: false }}
-          isLoadMoreVisible={authorCollection["total-count"] > storiesToRender}
+          isLoadMoreVisible={authorCollection["total-count"] > authorPageStories.length}
           getMoreStories={getMoreStories}
         />
       ) : (

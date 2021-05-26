@@ -10,7 +10,7 @@ import { getLoadMoreStories } from "../utils";
 const SearchPage = props => {
   // will be getting initially 9 stories, but showing only 8 for loadmore functionality
   const adConfig = useSelector(state => get(state, ["qt", "config", "ads-config", "slots", "listing_page_ads"], {}));
-  const [storiesToRender, setStoriesToRender] = useState(8);
+  const [storiesToRender, setStoriesToRender] = useState(2);
   const [stories, setStories] = useState(props.data.stories);
 
   const collection = {
@@ -20,7 +20,7 @@ const SearchPage = props => {
   const getMoreStories = async (offset, limit) => {
     await getLoadMoreStories({
       offset: offset,
-      limit: limit,
+      limit: 2,
       isSearchPage: true,
       slug: props.data.query,
       setStories: setStories,

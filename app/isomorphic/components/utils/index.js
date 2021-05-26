@@ -24,26 +24,26 @@ export const getLoadMoreStories = async ({
   if (isSearchPage) {
     const loadMoreStories = await getSearchPageItems(slug, offset, limit);
     setStories(stories.slice(0, storiesToRender).concat(loadMoreStories));
-    setStoriesToRender(storiesToRender + offset);
+    setStoriesToRender(storiesToRender + limit);
     return null;
   }
 
   if (shouldUseCollection && isSectionPage) {
     const loadMoreStories = await getCollectionitems(slug, offset, limit);
     setStories(stories.slice(0, storiesToRender).concat(loadMoreStories));
-    setStoriesToRender(storiesToRender + offset);
+    setStoriesToRender(storiesToRender + limit);
     return null;
   }
 
   if (authorId) {
     const loadMoreStories = await getAuthorStories(authorId, offset, limit);
     setStories(stories.slice(0, storiesToRender).concat(loadMoreStories));
-    setStoriesToRender(storiesToRender + offset);
+    setStoriesToRender(storiesToRender + limit);
     return null;
   }
 
   const loadMoreStories = await getStories(query, slug, offset, limit);
   setStories(stories.slice(0, storiesToRender).concat(loadMoreStories));
-  setStoriesToRender(storiesToRender + offset);
+  setStoriesToRender(storiesToRender + limit);
   return null;
 };
