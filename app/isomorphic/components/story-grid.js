@@ -12,7 +12,7 @@ function StoryGridStoryItem(props) {
           metadata={props.story["hero-image-metadata"]}
           aspectRatio={[16, 9]}
           defaultWidth={480}
-          widths={[250, 480, 640]}
+          widths={[100]}
           sizes="20vw"
           imgParams={{ auto: ["format", "compress"] }}
           alt={props.story.headline || ""}
