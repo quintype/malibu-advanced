@@ -41,7 +41,7 @@ export const AuthorPage = props => {
       {authorCollectionStories.items.length > 0 ? (
         <ThreeColGrid
           collection={authorCollectionStories}
-          config={{ buttonText: "Load More", footerButton: "SubsequentLoadCount" }}
+          config={{ buttonText: "Load More", footerButton: "SubsequentLoadCount", showAuthor: false, showTime: false }}
           isLoadMoreVisible={authorCollection["total-count"] > storiesToRender}
           getMoreStories={getMoreStories}
         />
