@@ -13,7 +13,8 @@ const loadableConfigObj = {
       arrowOneColStoryListCssChunk: "@quintype/arrow/OneColStoryList/styles.arrow.css",
       arrowThreeColGridCssChunk: "@quintype/arrow/ThreeColGrid/styles.arrow.css",
       arrowThreeColSevenStoryCssChunk: "@quintype/arrow/ThreeColSevenStory/styles.arrow.css",
-      arrowTwoColFourStoriesCssChunk: "@quintype/arrow/TwoColFourStories/styles.arrow.css"
+      arrowTwoColFourStoriesCssChunk: "@quintype/arrow/TwoColFourStories/styles.arrow.css",
+      authorPage: "./app/isomorphic/components/pages/author-page/index.js"
     }
   }
 };

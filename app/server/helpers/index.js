@@ -10,8 +10,17 @@ const statsFile = path.resolve("stats.json");
  * For this to work, separate CSS chunks need to be created for every arrow row that will be used in the app
  * Layout names here should match those in template-options.yml
  */
-export function getArrowCss(state, { qtAssetHelpers = require("@quintype/framework/server/asset-helper") } = {}) {
+export async function getArrowCss(state, { qtAssetHelpers = require("@quintype/framework/server/asset-helper") } = {}) {
   const layout = get(state, ["qt", "data", "collection", "items", 0, "associated-metadata", "layout"], null);
+  const pageType = get(state, ["qt", "pageType"], "");
+  const extractor = entryPoint => {
+    const getExtractor = new ChunkExtractor({ statsFile, entrypoints: [entryPoint] });
+    return getExtractor.getCssString();
+  };
+  switch (pageType) {
+    case "author-page":
+      return await extractor("authorPage");
+  }
   switch (layout) {
     case "ArrowElevenStories":
       return getAsset("arrowElevenStoriesCssChunk.css", qtAssetHelpers);
@@ -48,7 +57,8 @@ export const getConfig = state => {
     cdnImage: get(state, ["qt", "config", "cdn-image"], ""),
     isOnesignalEnable: get(state, ["qt", "config", "publisher-attributes", "onesignal", "is_enable"], false),
     enableAds: get(state, ["qt", "config", "ads-config", "dfp_ads", "enable_ads"]),
-    loadAdsSynchronously: get(state, ["qt", "config", "ads-config", "dfp_ads", "load_ads_synchronously"])
+    loadAdsSynchronously: get(state, ["qt", "config", "ads-config", "dfp_ads", "load_ads_synchronously"]),
+    pageType: get(state, ["qt", "pageType"], "")
   };
 };
 

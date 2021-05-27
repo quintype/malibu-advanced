@@ -1,4 +1,4 @@
-import { getCollectionitems, getSearchPageItems, getStories } from "../../../api/utils";
+import { getCollectionitems, getSearchPageItems, getStories, getAuthorStories } from "../../../api/utils";
 
 export const isValidEmail = email => {
   const re = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
@@ -18,24 +18,32 @@ export const getLoadMoreStories = async ({
   storiesToRender,
   setStoriesToRender,
   stories,
-  isSectionPage
+  isSectionPage,
+  authorId
 }) => {
   if (isSearchPage) {
     const loadMoreStories = await getSearchPageItems(slug, offset, limit);
     setStories(stories.slice(0, storiesToRender).concat(loadMoreStories));
-    setStoriesToRender(storiesToRender + offset);
+    setStoriesToRender(storiesToRender + limit);
     return null;
   }
 
   if (shouldUseCollection && isSectionPage) {
     const loadMoreStories = await getCollectionitems(slug, offset, limit);
     setStories(stories.slice(0, storiesToRender).concat(loadMoreStories));
-    setStoriesToRender(storiesToRender + offset);
+    setStoriesToRender(storiesToRender + limit);
+    return null;
+  }
+
+  if (authorId) {
+    const loadMoreStories = await getAuthorStories(authorId, offset, limit);
+    setStories(stories.slice(0, storiesToRender).concat(loadMoreStories));
+    setStoriesToRender(storiesToRender + limit);
     return null;
   }
 
   const loadMoreStories = await getStories(query, slug, offset, limit);
   setStories(stories.slice(0, storiesToRender).concat(loadMoreStories));
-  setStoriesToRender(storiesToRender + offset);
+  setStoriesToRender(storiesToRender + limit);
   return null;
 };
