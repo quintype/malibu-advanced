@@ -12,3 +12,12 @@ const storyLimits = Object.entries(templates).reduce(
 export function getStoryLimits() {
   return storyLimits;
 }
+
+const collectionLimits = Object.entries(templates).reduce(
+  (acc, [key, value]) => Object.assign(acc, { [key]: value.nestedCollectionLimit }),
+  {}
+);
+
+export function getNestedCollectionLimit() {
+  return collectionLimits;
+}
