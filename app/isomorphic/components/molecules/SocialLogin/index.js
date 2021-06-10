@@ -10,7 +10,7 @@ import Button from "../../atoms/Button";
 
 import "./social-login.m.css";
 
-export const SocialLoginBase = ({ checkForMemberUpdated, googleAppId, facebookAppId }) => {
+export const SocialLoginBase = ({ checkForMemberUpdated }) => {
   const [error, setError] = useState("");
   const [currentLocation, setCurrentLocation] = useState("/");
 
@@ -47,7 +47,7 @@ export const SocialLoginBase = ({ checkForMemberUpdated, googleAppId, facebookAp
   };
 
   const FaceBookLogin = () => {
-    const { login, serverSideLoginPath } = withFacebookLogin(facebookAppId, "email", true, currentLocation);
+    const { login, serverSideLoginPath } = withFacebookLogin("email", true, currentLocation);
     return (
       <Button color="#3b5998" flat href={serverSideLoginPath} onClick={e => socialLogin(e, login)} socialButton>
         <span styleName="icon">
@@ -59,7 +59,7 @@ export const SocialLoginBase = ({ checkForMemberUpdated, googleAppId, facebookAp
   };
 
   const GoogleLogin = () => {
-    const { serverSideLoginPath } = withGoogleLogin(googleAppId, "email", true, currentLocation);
+    const { serverSideLoginPath } = withGoogleLogin("email", true, currentLocation);
     return (
       <Button
         color="#dd4b39"
