@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { func, string } from "prop-types";
-import { withFacebookLogin, withGoogleLogin } from "@quintype/bridgekeeper-js";
+import { withFacebookLogin, withGoogleLogin, withAppleLogin } from "@quintype/bridgekeeper-js";
 import { connect } from "react-redux";
 import get from "lodash/get";
 
@@ -82,9 +82,16 @@ export const SocialLoginBase = ({ checkForMemberUpdated, googleAppId, facebookAp
   };
 
   const AppleLogin = () => {
-    const appleLoginPath = `/api/auth/v1/login?auth-provider=apple&redirect-url=${currentLocation}`;
+    const { foo, serverSideLoginPath } = withAppleLogin(currentLocation);
+    console.log(foo, "===============", serverSideLoginPath);
     return (
-      <Button color="#dd4b39" flat href={appleLoginPath} onClick={e => appleOnClick(e, appleLoginPath)} socialButton>
+      <Button
+        color="#dd4b39"
+        flat
+        href={serverSideLoginPath}
+        onClick={e => appleOnClick(e, serverSideLoginPath)}
+        socialButton
+      >
         <Apple /> Apple
       </Button>
     );
