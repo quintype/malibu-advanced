@@ -82,8 +82,7 @@ export const SocialLoginBase = ({ checkForMemberUpdated, googleAppId, facebookAp
   };
 
   const AppleLogin = () => {
-    const { foo, serverSideLoginPath } = withAppleLogin(currentLocation);
-    console.log(foo, "===============", serverSideLoginPath);
+    const { serverSideLoginPath } = withAppleLogin(currentLocation);
     return (
       <Button
         color="#dd4b39"
