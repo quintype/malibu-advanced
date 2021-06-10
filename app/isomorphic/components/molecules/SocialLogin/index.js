@@ -106,8 +106,6 @@ export const SocialLoginBase = ({ checkForMemberUpdated, googleAppId, facebookAp
         <li styleName="button">
           <GoogleLogin />
         </li>
-      </ul>
-      <ul>
         <li styleName="button">
           <AppleLogin />
         </li>
