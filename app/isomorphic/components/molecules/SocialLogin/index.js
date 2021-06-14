@@ -11,7 +11,7 @@ import Button from "../../atoms/Button";
 
 import "./social-login.m.css";
 
-export const SocialLoginBase = ({ checkForMemberUpdated, googleAppId, facebookAppId }) => {
+export const SocialLoginBase = ({ getCurrentUser, googleAppId, facebookAppId }) => {
   const [error, setError] = useState("");
   const [currentLocation, setCurrentLocation] = useState("/");
 
@@ -24,10 +24,9 @@ export const SocialLoginBase = ({ checkForMemberUpdated, googleAppId, facebookAp
     e.preventDefault();
 
     login()
-      .then(() => {
-        checkForMemberUpdated().then(res => {
-          console.log("successfully logged in");
-        });
+      .then(async () => {
+        await getCurrentUser();
+        console.log("successfully login");
       })
       .catch(error => {
         console.log("error", error);
@@ -106,7 +105,7 @@ export const SocialLoginBase = ({ checkForMemberUpdated, googleAppId, facebookAp
 };
 
 SocialLoginBase.propTypes = {
-  checkForMemberUpdated: func,
+  getCurrentUser: func,
   googleAppId: string,
   facebookAppId: string
 };

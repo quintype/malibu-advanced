@@ -11,7 +11,7 @@ import { ForgotPassword } from "../../molecules/forms/forgot-password";
 
 import "./account-modal.m.css";
 
-const AccountModal = ({ onClose, checkForMemberUpdated }) => {
+const AccountModal = ({ onClose }) => {
   const [activeTab, setActiveTab] = useState("login");
   const [member, setMember] = useState(null);
   const [otpToken, setOtpToken] = useState(null);
@@ -37,7 +37,6 @@ const AccountModal = ({ onClose, checkForMemberUpdated }) => {
         return (
           <Login
             onLogin={(member, res) => otpHandler(member, res)}
-            checkForMemberUpdated={checkForMemberUpdated}
             forgotPassword={() => setActiveTab("forgot-password")}
           />
         );
@@ -92,8 +91,7 @@ const AccountModal = ({ onClose, checkForMemberUpdated }) => {
 };
 
 AccountModal.propTypes = {
-  onClose: func,
-  checkForMemberUpdated: func
+  onClose: func
 };
 
 export default AccountModal;

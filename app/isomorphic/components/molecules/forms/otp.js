@@ -78,7 +78,6 @@ const OTPBase = ({ member, manageLoginForm }) => {
 OTPBase.propTypes = {
   onSubmit: PT.func,
   member: PT.object,
-  checkForMemberUpdated: PT.func,
   manageLoginForm: PT.func,
   isLoginOpen: PT.bool
 };
