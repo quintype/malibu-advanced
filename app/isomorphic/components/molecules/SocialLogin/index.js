@@ -77,20 +77,10 @@ export const SocialLoginBase = ({ checkForMemberUpdated, googleAppId, facebookAp
     );
   };
 
-  const appleOnClick = (e, serverSideLoginPath) => {
-    window.location.href = serverSideLoginPath;
-  };
-
   const AppleLogin = () => {
     const { serverSideLoginPath } = withAppleLogin(currentLocation);
     return (
-      <Button
-        color="#dd4b39"
-        flat
-        href={serverSideLoginPath}
-        onClick={e => appleOnClick(e, serverSideLoginPath)}
-        socialButton
-      >
+      <Button color="#dd4b39" flat href={serverSideLoginPath} socialButton>
         <Apple /> Apple
       </Button>
     );
