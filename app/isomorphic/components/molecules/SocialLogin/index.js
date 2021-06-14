@@ -16,8 +16,9 @@ export const SocialLoginBase = ({ getCurrentUser, googleAppId, facebookAppId }) 
   const [currentLocation, setCurrentLocation] = useState("/");
 
   useEffect(() => {
-    const location = window.location.href;
-    location && setCurrentLocation(location);
+    const location = new URL(window.location.href);
+    const redirectUrl = `${location.origin}${location.pathname}`;
+    location && setCurrentLocation(redirectUrl);
   }, []);
 
   const socialLogin = (e, login) => {
