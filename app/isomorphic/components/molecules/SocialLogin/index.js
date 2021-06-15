@@ -21,7 +21,7 @@ export const SocialLoginBase = ({ getCurrentUser }) => {
 
   const socialLogin = (e, login) => {
     e.preventDefault();
-
+    console.log("here come");
     login()
       .then(async () => {
         await getCurrentUser();
@@ -48,7 +48,7 @@ export const SocialLoginBase = ({ getCurrentUser }) => {
   const FaceBookLogin = () => {
     const { login } = withFacebookLogin("email", true, currentLocation);
     return (
-      <Button color="#3b5998" flat onClick={e => socialLogin(e, login)} socialButton>
+      <Button color="#3b5998" flat onClick={e => socialLogin(e, login)}>
         <span styleName="icon">
           <FbIcon color="#3b5998" width={9} height={15} />
         </span>{" "}
