@@ -10,7 +10,7 @@ import Button from "../../atoms/Button";
 
 import "./social-login.m.css";
 
-export const SocialLoginBase = ({ checkForMemberUpdated }) => {
+export const SocialLoginBase = ({ getCurrentUser }) => {
   const [error, setError] = useState("");
   const [currentLocation, setCurrentLocation] = useState("/");
 
@@ -23,10 +23,9 @@ export const SocialLoginBase = ({ checkForMemberUpdated }) => {
     e.preventDefault();
 
     login()
-      .then(() => {
-        checkForMemberUpdated().then(res => {
-          console.log("successfully login");
-        });
+      .then(async () => {
+        await getCurrentUser();
+        console.log("successfully login");
       })
       .catch(error => {
         console.log("error", error);
@@ -47,9 +46,9 @@ export const SocialLoginBase = ({ checkForMemberUpdated }) => {
   };
 
   const FaceBookLogin = () => {
-    const { login, serverSideLoginPath } = withFacebookLogin("email", true, currentLocation);
+    const { login } = withFacebookLogin("email", true, currentLocation);
     return (
-      <Button color="#3b5998" flat href={serverSideLoginPath} onClick={e => socialLogin(e, login)} socialButton>
+      <Button color="#3b5998" flat onClick={e => socialLogin(e, login)} socialButton>
         <span styleName="icon">
           <FbIcon color="#3b5998" width={9} height={15} />
         </span>{" "}
@@ -93,7 +92,7 @@ export const SocialLoginBase = ({ checkForMemberUpdated }) => {
 };
 
 SocialLoginBase.propTypes = {
-  checkForMemberUpdated: func,
+  getCurrentUser: func,
   googleAppId: string,
   facebookAppId: string
 };
