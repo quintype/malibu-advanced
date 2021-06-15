@@ -1,32 +1,33 @@
 import React, { useEffect, useState } from "react";
 import { func, string } from "prop-types";
-import { withFacebookLogin, withGoogleLogin } from "@quintype/bridgekeeper-js";
+import { withFacebookLogin, withGoogleLogin, withAppleLogin } from "@quintype/bridgekeeper-js";
 import { connect } from "react-redux";
 import get from "lodash/get";
 
 import { FbIcon } from "../../atoms/icons/fb-icon";
 import { Google } from "../../atoms/icons/google";
+import { Apple } from "../../atoms/icons/apple";
 import Button from "../../atoms/Button";
 
 import "./social-login.m.css";
 
-export const SocialLoginBase = ({ checkForMemberUpdated, googleAppId, facebookAppId }) => {
+export const SocialLoginBase = ({ getCurrentUser, googleAppId, facebookAppId }) => {
   const [error, setError] = useState("");
   const [currentLocation, setCurrentLocation] = useState("/");
 
   useEffect(() => {
-    const location = window.location.href;
-    location && setCurrentLocation(location);
+    const location = new URL(window.location.href);
+    const redirectUrl = `${location.origin}${location.pathname}`;
+    location && setCurrentLocation(redirectUrl);
   }, []);
 
   const socialLogin = (e, login) => {
     e.preventDefault();
 
     login()
-      .then(() => {
-        checkForMemberUpdated().then(res => {
-          console.log("successfully login");
-        });
+      .then(async () => {
+        await getCurrentUser();
+        console.log("successfully login");
       })
       .catch(error => {
         console.log("error", error);
@@ -76,6 +77,15 @@ export const SocialLoginBase = ({ checkForMemberUpdated, googleAppId, facebookAp
     );
   };
 
+  const AppleLogin = () => {
+    const { serverSideLoginPath } = withAppleLogin(currentLocation);
+    return (
+      <Button color="#dd4b39" flat href={serverSideLoginPath} socialButton>
+        <Apple /> Apple
+      </Button>
+    );
+  };
+
   return (
     <div styleName="social-login">
       <h3 styleName="title">Or login with</h3>
@@ -86,6 +96,9 @@ export const SocialLoginBase = ({ checkForMemberUpdated, googleAppId, facebookAp
         <li styleName="button">
           <GoogleLogin />
         </li>
+        <li styleName="button">
+          <AppleLogin />
+        </li>
       </ul>
       <p styleName="error">{error}</p>
     </div>
@@ -93,7 +106,7 @@ export const SocialLoginBase = ({ checkForMemberUpdated, googleAppId, facebookAp
 };
 
 SocialLoginBase.propTypes = {
-  checkForMemberUpdated: func,
+  getCurrentUser: func,
   googleAppId: string,
   facebookAppId: string
 };
