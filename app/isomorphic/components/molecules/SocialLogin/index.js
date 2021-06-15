@@ -10,7 +10,7 @@ import Button from "../../atoms/Button";
 
 import "./social-login.m.css";
 
-export const SocialLoginBase = ({ getCurrentUser }) => {
+export const SocialLoginBase = ({ getCurrentUser, googleAppId, facebookAppId }) => {
   const [error, setError] = useState("");
   const [currentLocation, setCurrentLocation] = useState("/");
 
@@ -21,7 +21,7 @@ export const SocialLoginBase = ({ getCurrentUser }) => {
 
   const socialLogin = (e, login) => {
     e.preventDefault();
-    console.log("here come");
+
     login()
       .then(async () => {
         await getCurrentUser();
@@ -46,7 +46,7 @@ export const SocialLoginBase = ({ getCurrentUser }) => {
   };
 
   const FaceBookLogin = () => {
-    const { login } = withFacebookLogin("email", true, currentLocation);
+    const { login } = withFacebookLogin(facebookAppId, "email", true, currentLocation);
     return (
       <Button color="#3b5998" flat onClick={e => socialLogin(e, login)}>
         <span styleName="icon">
