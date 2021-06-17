@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { func, string } from "prop-types";
-import { withGoogleLogin } from "@quintype/bridgekeeper-js";
-import { WithFacebookLogin /* WithTwitterLogin */ } from "@quintype/components";
+import { withFacebookLogin, withGoogleLogin } from "@quintype/bridgekeeper-js";
 import { connect } from "react-redux";
 import get from "lodash/get";
 
@@ -42,38 +41,26 @@ export const SocialLoginBase = ({ getCurrentUser, googleAppId, facebookAppId }) 
       }); // Can also make an API call to /api/v1/members/me
   };
 
-  const googleOnClick = (e, serverSideLoginPath) => {
-    window.location.href = serverSideLoginPath;
-  };
+  // const googleOnClick = (e, serverSideLoginPath) => {
+  //   window.location.href = serverSideLoginPath;
+  // };
 
   const FaceBookLogin = () => {
-    // const { login } = withFacebookLogin(facebookAppId, "email", true, currentLocation);
-    // return (
-    //   <Button color="#3b5998" flat onClick={e => socialLogin(e, login)}>
-    //     <span styleName="icon">
-    //       <FbIcon color="#3b5998" width={9} height={15} />
-    //     </span>{" "}
-    //     Facebook
-    //   </Button>
-    // );
+    const { login } = withFacebookLogin(facebookAppId, "email", true, currentLocation);
     return (
-      <WithFacebookLogin sso={true} redirectUrl={currentLocation} appId={facebookAppId} scope="email" emailMandatory>
-        {({ login }) => (
-          <Button color="#3b5998" flat onClick={e => socialLogin(e, login)}>
-            <span styleName="icon">
-              <FbIcon color="#3b5998" width={9} height={15} />
-            </span>{" "}
-            Facebook
-          </Button>
-        )}
-      </WithFacebookLogin>
+      <Button color="#3b5998" flat onClick={e => socialLogin(e, login)}>
+        <span styleName="icon">
+          <FbIcon color="#3b5998" width={9} height={15} />
+        </span>{" "}
+        Facebook
+      </Button>
     );
   };
 
   const GoogleLogin = () => {
-    const { serverSideLoginPath } = withGoogleLogin(googleAppId, "email", true, currentLocation);
+    const { login } = withGoogleLogin(googleAppId, "email", true, currentLocation);
     return (
-      <Button color="#dd4b39" flat onClick={e => googleOnClick(e, serverSideLoginPath)}>
+      <Button color="#dd4b39" flat onClick={e => socialLogin(e, login)}>
         <span styleName="icon">
           <Google />
         </span>{" "}
