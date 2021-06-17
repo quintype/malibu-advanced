@@ -58,15 +58,9 @@ export const SocialLoginBase = ({ getCurrentUser, googleAppId, facebookAppId }) 
   };
 
   const GoogleLogin = () => {
-    const { serverSideLoginPath } = withGoogleLogin("email", true, currentLocation);
+    const { serverSideLoginPath } = withGoogleLogin(googleAppId, "email", true, currentLocation);
     return (
-      <Button
-        color="#dd4b39"
-        flat
-        href={serverSideLoginPath}
-        onClick={e => googleOnClick(e, serverSideLoginPath)}
-        socialButton
-      >
+      <Button color="#dd4b39" flat onClick={e => googleOnClick(e, serverSideLoginPath)}>
         <span styleName="icon">
           <Google />
         </span>{" "}
