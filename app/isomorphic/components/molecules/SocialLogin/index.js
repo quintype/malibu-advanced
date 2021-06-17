@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { func, string } from "prop-types";
-import { withFacebookLogin, withGoogleLogin } from "@quintype/bridgekeeper-js";
+import { withGoogleLogin } from "@quintype/bridgekeeper-js";
+import { WithFacebookLogin /* WithTwitterLogin */ } from "@quintype/components";
 import { connect } from "react-redux";
 import get from "lodash/get";
 
@@ -46,14 +47,26 @@ export const SocialLoginBase = ({ getCurrentUser, googleAppId, facebookAppId }) 
   };
 
   const FaceBookLogin = () => {
-    const { login } = withFacebookLogin(facebookAppId, "email", true, currentLocation);
+    // const { login } = withFacebookLogin(facebookAppId, "email", true, currentLocation);
+    // return (
+    //   <Button color="#3b5998" flat onClick={e => socialLogin(e, login)}>
+    //     <span styleName="icon">
+    //       <FbIcon color="#3b5998" width={9} height={15} />
+    //     </span>{" "}
+    //     Facebook
+    //   </Button>
+    // );
     return (
-      <Button color="#3b5998" flat onClick={e => socialLogin(e, login)}>
-        <span styleName="icon">
-          <FbIcon color="#3b5998" width={9} height={15} />
-        </span>{" "}
-        Facebook
-      </Button>
+      <WithFacebookLogin sso={true} redirectUrl={currentLocation} appId={facebookAppId} scope="email" emailMandatory>
+        {({ login }) => (
+          <Button color="#3b5998" flat onClick={e => socialLogin(e, login)}>
+            <span styleName="icon">
+              <FbIcon color="#3b5998" width={9} height={15} />
+            </span>{" "}
+            Facebook
+          </Button>
+        )}
+      </WithFacebookLogin>
     );
   };
 
