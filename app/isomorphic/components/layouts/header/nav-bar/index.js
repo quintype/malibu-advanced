@@ -1,14 +1,13 @@
 import React, { Fragment, useEffect, useState, Suspense, lazy } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import get from "lodash/get";
-import assetify from "@quintype/framework/assetify";
 
 import { OPEN_HAMBURGER_MENU, OPEN_SEARCHBAR, MEMBER_UPDATED } from "../../../store/actions";
 import { MenuItem } from "../../menu-item";
 import HamburgerMenu from "../../../atoms/hamburger-menu";
 import MessageWrapper from "../../../molecules/forms/message-wrapper";
-import UserIcon from "../../../../../assets/images/user-icon.svg";
-import User from "../../../../../assets/images/user.svg";
+
+import { SvgIconHandler } from "../../../atoms/svg-icon-hadler";
 
 import "./navbar.m.css";
 
@@ -127,7 +126,7 @@ const NavBar = () => {
   };
 
   const member = useSelector(state => get(state, ["member"], null));
-  const imageUrl = member && member["avatar-url"] ? member["avatar-url"] : assetify(User);
+  const imageUrl = member && member["avatar-url"];
 
   useEffect(() => {
     getCurrentUser();
@@ -175,14 +174,27 @@ const NavBar = () => {
           <div styleName="user-profile">
             {member && member["verification-status"] ? (
               <>
-                <img
-                  width="24"
-                  height="24"
-                  alt="user"
-                  src={imageUrl}
-                  styleName="member-img"
-                  onClick={userAccountHandler}
-                />
+                {imageUrl ? (
+                  <img
+                    width="24"
+                    height="24"
+                    alt="user"
+                    src={imageUrl}
+                    styleName="member-img"
+                    onClick={userAccountHandler}
+                  />
+                ) : (
+                  <span styleName="member-img" onClick={userAccountHandler}>
+                    <SvgIconHandler
+                      type="user"
+                      width="24px"
+                      height="24px"
+                      viewBox="0 0 24 24"
+                      iconStyle={{ borderRadius: "50%" }}
+                      onClick={userAccountHandler}
+                    />
+                  </span>
+                )}
                 {showUserHandler && (
                   <Fragment>
                     <div styleName="overlay" onClick={userAccountHandler}></div>
@@ -197,7 +209,7 @@ const NavBar = () => {
             ) : (
               <>
                 <button styleName="user-btn" onClick={() => userBtnClick()}>
-                  <img width="18" height="20" src={assetify(UserIcon)} alt="user-icon" />
+                  <SvgIconHandler type="user-icon" width="18" height="20" viewBox="0 0 18 20" />
                 </button>
                 {showAccountModal && (
                   <Suspense fallback={<div></div>}>

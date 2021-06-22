@@ -4,11 +4,9 @@ import { withFacebookLogin, withGoogleLogin, withAppleLogin } from "@quintype/br
 import { connect } from "react-redux";
 import get from "lodash/get";
 
-import { FbIcon } from "../../atoms/icons/fb-icon";
-import { Google } from "../../atoms/icons/google";
-import { Apple } from "../../atoms/icons/apple";
 import Button from "../../atoms/Button";
 
+import { SvgIconHandler } from "../../atoms/svg-icon-hadler";
 import "./social-login.m.css";
 
 export const SocialLoginBase = ({ getCurrentUser, googleAppId, facebookAppId }) => {
@@ -52,7 +50,7 @@ export const SocialLoginBase = ({ getCurrentUser, googleAppId, facebookAppId }) 
     return (
       <Button color="#3b5998" flat href={serverSideLoginPath} onClick={e => socialLogin(e, login)} socialButton>
         <span styleName="icon">
-          <FbIcon color="#3b5998" width={9} height={15} />
+          <SvgIconHandler type="facebook" iconStyle={{ color: "#3b5998" }} width="9" height="15" viewBox="0 0 12 21" />
         </span>{" "}
         Facebook
       </Button>
@@ -70,7 +68,7 @@ export const SocialLoginBase = ({ getCurrentUser, googleAppId, facebookAppId }) 
         socialButton
       >
         <span styleName="icon">
-          <Google />
+          <SvgIconHandler type="google" width="13" height="13" viewBox="0 0 13 13" />
         </span>{" "}
         Google
       </Button>
@@ -81,7 +79,7 @@ export const SocialLoginBase = ({ getCurrentUser, googleAppId, facebookAppId }) 
     const { serverSideLoginPath } = withAppleLogin(currentLocation);
     return (
       <Button color="#dd4b39" flat href={serverSideLoginPath} socialButton>
-        <Apple /> Apple
+        <SvgIconHandler type="apple" height="44" width="44" iconStyle={{ color: "#000" }} /> Apple
       </Button>
     );
   };
