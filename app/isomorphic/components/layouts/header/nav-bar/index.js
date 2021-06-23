@@ -11,6 +11,7 @@ import UserIcon from "../../../../../assets/images/user-icon.svg";
 import User from "../../../../../assets/images/user.svg";
 
 import "./navbar.m.css";
+import { Link } from "@quintype/components";
 
 const NavBar = () => {
   // Import account modal dynamically
@@ -175,14 +176,16 @@ const NavBar = () => {
           <div styleName="user-profile">
             {member && member["verification-status"] ? (
               <>
-                <img
-                  width="24"
-                  height="24"
-                  alt="user"
-                  src={imageUrl}
-                  styleName="member-img"
-                  onClick={userAccountHandler}
-                />
+                <Link href="/profile">
+                  <img
+                    width="24"
+                    height="24"
+                    alt="user"
+                    src={imageUrl}
+                    styleName="member-img"
+                    onClick={userAccountHandler}
+                  />
+                </Link>
                 {showUserHandler && (
                   <Fragment>
                     <div styleName="overlay" onClick={userAccountHandler}></div>
