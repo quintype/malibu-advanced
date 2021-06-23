@@ -122,7 +122,9 @@ const SignUpBase = ({ onSignup, onLogin, isVerificationLinkflow }) => {
         <>
           <p styleName="message-text">
             {verficationSuccessMessage} If you have not received a email, click{" "}
-            <button onClick={onResendVerification}>resend</button>{" "}
+            <button aria-label="button-resend" onClick={onResendVerification}>
+              resend
+            </button>{" "}
           </p>
         </>
       )}
