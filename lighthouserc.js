@@ -24,6 +24,7 @@ const lhciConfig = {
         "uses-optimized-images": "warn",
         "no-unload-listeners": "off",
         "no-document-write": "warn", // Avoid `document.write()`
+        "button-name": "warn", // It suggests that the button should have inner text content or an aria-label or aria-labelledBy.
         "categories:performance": ["error", { minScore: 0.7 }]
       }
     },
@@ -46,3 +47,4 @@ module.exports = lhciConfig;
 // max-potential-fid: First input delay
 // no-document-write: Avoid `document.write()`
 // no-unload-listeners: Timetaken by event listeners
+// button-name: It suggests that the button should have inner text content or an aria-label or aria-labelledBy.
