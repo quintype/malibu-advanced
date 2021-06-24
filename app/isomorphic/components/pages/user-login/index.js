@@ -1,4 +1,4 @@
-import React from "React";
+import React from "react";
 import AccountModal from "../../login/AccountModal";
 
 const UserLoginPage = () => {
