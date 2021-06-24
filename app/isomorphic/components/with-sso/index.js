@@ -1,6 +1,4 @@
 /* eslint-disable no-unused-vars */
-import React from "react";
-
 const WithSSO = ({ ssoHost, redirectUrl, callbackUrl, signInPath, signUpPath, children }) => {
   const formUrl = path => {
     if (!path) {
