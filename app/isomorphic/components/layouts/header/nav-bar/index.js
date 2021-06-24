@@ -24,6 +24,8 @@ const NavBar = () => {
   const isHamburgerMenuOpen = useSelector(state => get(state, ["isHamburgerMenuOpen"], false));
   const menu = useSelector(state => get(state, ["qt", "data", "navigationMenu", "homeMenu"], []));
   const hamburgerMenu = useSelector(state => get(state, ["qt", "data", "navigationMenu", "hamburgerMenu"], []));
+  const [callbackUrl, setCallbackUrl] = useState(null);
+  const [redirectUrl, setRedirectUrl] = useState(null);
 
   const displayStyle = isHamburgerMenuOpen ? "flex" : "none";
 
@@ -133,6 +135,9 @@ const NavBar = () => {
   useEffect(() => {
     getCurrentUser();
 
+    global.location && setCallbackUrl(global.location.origin);
+    global.location && setRedirectUrl(global.location.href);
+
     switch (global.location.hash) {
       case "#email-verified":
         return setMessage("Email verified.");
@@ -216,8 +221,8 @@ const NavBar = () => {
                   <WithSSO
                     ssoHost="https://malibu-advanced-web-auth.qtstage.io"
                     signInPath="/user-login"
-                    redirectUrl="http://malibu.lvh.me:3000"
-                    callbackUrl="http://malibu.lvh.me:3000"
+                    redirectUrl={redirectUrl}
+                    callbackUrl={callbackUrl}
                   >
                     {({ signInHref }) => (
                       <Link href={signInHref}>
