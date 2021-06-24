@@ -10,6 +10,8 @@ import MessageWrapper from "../../../molecules/forms/message-wrapper";
 import { SvgIconHandler } from "../../../atoms/svg-icon-hadler";
 
 import "./navbar.m.css";
+import { Link } from "@quintype/components";
+import WithSSO from "../../../with-sso";
 
 const NavBar = () => {
   // Import account modal dynamically
@@ -157,6 +159,8 @@ const NavBar = () => {
     );
   };
 
+  const isSSO = true;
+
   return (
     <div styleName="main-wrapper" id="sticky-navbar">
       <nav className="container" styleName="wrapper">
@@ -208,9 +212,24 @@ const NavBar = () => {
               </>
             ) : (
               <>
-                <button styleName="user-btn" onClick={() => userBtnClick()}>
-                  <SvgIconHandler type="user-icon" width="18" height="20" viewBox="0 0 18 20" />
-                </button>
+                {isSSO ? (
+                  <WithSSO
+                    ssoHost="https://malibu-advanced-web-auth.qtstage.io"
+                    signInPath="/user-login"
+                    redirectUrl="http://malibu.lvh.me:3000"
+                    callbackUrl="http://malibu.lvh.me:3000"
+                  >
+                    {({ signInHref }) => (
+                      <Link href={signInHref}>
+                        <SvgIconHandler type="user-icon" width="18" height="20" viewBox="0 0 18 20" />
+                      </Link>
+                    )}
+                  </WithSSO>
+                ) : (
+                  <button styleName="user-btn" onClick={() => userBtnClick()}>
+                    <SvgIconHandler type="user-icon" width="18" height="20" viewBox="0 0 18 20" />
+                  </button>
+                )}
                 {showAccountModal && (
                   <Suspense fallback={<div></div>}>
                     <AccountModal onClose={() => setShowAccountModal(false)} />

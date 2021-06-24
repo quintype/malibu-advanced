@@ -84,7 +84,7 @@ const AccountModal = ({ onClose, checkForMemberUpdated, isPopup = true }) => {
     );
   };
 
-  if (!renderModal) {
+  if (!renderModal && !isPopup) {
     return null;
   }
 
