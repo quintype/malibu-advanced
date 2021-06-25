@@ -27,6 +27,7 @@ const NavBar = () => {
   const hamburgerMenu = useSelector(state => get(state, ["qt", "data", "navigationMenu", "hamburgerMenu"], []));
   const [callbackUrl, setCallbackUrl] = useState(null);
   const [redirectUrl, setRedirectUrl] = useState(null);
+  const currentPath = useSelector(state => get(state, ["qt", "currentPath"], ""));
 
   const displayStyle = isHamburgerMenuOpen ? "flex" : "none";
 
@@ -136,7 +137,7 @@ const NavBar = () => {
   useEffect(() => {
     getCurrentUser();
 
-    const params = parseUrl(this.props.currentPath);
+    const params = parseUrl(currentPath);
 
     setCallbackUrl(get(params, ["query", "callback-url"], global.location.origin));
     setRedirectUrl(get(params, ["query", "redirect-url"], global && global.location && global.location.href));
