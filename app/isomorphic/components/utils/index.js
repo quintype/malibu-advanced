@@ -9,7 +9,7 @@ export const getQueryParams = (url, requiredParam) => {
   const urlObj = new URL(url);
   const urlSubstring = urlObj.search.substring(1);
   var getQuery = new URLSearchParams(urlSubstring);
-  let queryObj;
+  const queryObj = {};
   if (requiredParam.length) {
     return requiredParam.map(param => {
       Object.assign(queryObj, {
