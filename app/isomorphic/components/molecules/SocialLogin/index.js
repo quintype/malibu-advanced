@@ -13,15 +13,17 @@ import "./social-login.m.css";
 
 export const SocialLoginBase = ({ getCurrentUser, googleAppId, facebookAppId }) => {
   const [error, setError] = useState("");
-  const currentPath = useSelector(state => get(state, ["qt", "currentPath"], ""));
-
-  const [redirectUrl, setRedirectUrl] = useState(getQueryParams(currentPath, ["redirect-url"]));
+  const [redirectUrl, setRedirectUrl] = useState("/");
   const enableSSO = useSelector(state => get(state, ["qt", "config", "publisher-attributes", "enable_sso"]));
 
   useEffect(() => {
-    const location = new URL(window.location.href);
-    const currentLocation = `${location.origin}${location.pathname}`;
-    location && !enableSSO && setRedirectUrl(currentLocation);
+    if (enableSSO) {
+      setRedirectUrl(getQueryParams(window.location.href, ["redirect-url"]));
+    } else {
+      const location = new URL(window.location.href);
+      const currentLocation = `${location.origin}${location.pathname}`;
+      location && !enableSSO && setRedirectUrl(currentLocation);
+    }
   }, []);
 
   const socialLogin = (e, login) => {
