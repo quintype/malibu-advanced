@@ -5,8 +5,6 @@ import "./profile-page.m.css";
 
 const ProfilePage = () => {
   const member = useSelector(state => get(state, ["member"], null));
-  const dob = get(member, ["metadata"], "-");
-  console.log("fooooo", member, "---------------------", dob);
   if (!member) {
     return <div>Please Login</div>;
   }
@@ -26,18 +24,9 @@ const ProfilePage = () => {
           <strong>Email: </strong>
           {member.email}
         </p>
-        <p styleName="fields">
-          <strong>Mobile: </strong>
-          {member["phone-number"]}
-        </p>
-        <p styleName="fields">
-          <strong>DOB: </strong>
-          {member.dob}
-        </p>
       </div>
       <div>
         <button styleName="button">Edit Profile</button>
-        <button styleName="button">Change Password</button>
       </div>
     </div>
   );
