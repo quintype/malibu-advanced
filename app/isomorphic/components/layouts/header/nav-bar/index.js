@@ -12,6 +12,7 @@ import { SvgIconHandler } from "../../../atoms/svg-icon-hadler";
 import "./navbar.m.css";
 import { Link } from "@quintype/components";
 import WithSSO from "../../../with-sso";
+import { parseUrl } from "query-string";
 
 const NavBar = () => {
   // Import account modal dynamically
@@ -135,8 +136,10 @@ const NavBar = () => {
   useEffect(() => {
     getCurrentUser();
 
-    global.location && setCallbackUrl(global.location.origin);
-    global.location && setRedirectUrl(global.location.href);
+    const params = parseUrl(this.props.currentPath);
+
+    setCallbackUrl(get(params, ["query", "callback-url"], global.location.origin));
+    setRedirectUrl(get(params, ["query", "redirect-url"], global && global.location && global.location.href));
 
     switch (global.location.hash) {
       case "#email-verified":
