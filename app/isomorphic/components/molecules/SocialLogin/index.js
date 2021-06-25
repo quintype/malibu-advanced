@@ -18,6 +18,8 @@ export const SocialLoginBase = ({ getCurrentUser, googleAppId, facebookAppId }) 
 
   useEffect(() => {
     if (enableSSO) {
+      console.log("foooo1", window.location.href);
+      console.log("foooo2", getQueryParams(window.location.href, ["redirect-url"])["redirect-url"]);
       setRedirectUrl(getQueryParams(window.location.href, ["redirect-url"]));
     } else {
       const location = new URL(window.location.href);

@@ -10,11 +10,17 @@ export const getQueryParams = (url, requiredParam) => {
   const urlSubstring = urlObj.search.substring(1);
   var getQuery = new URLSearchParams(urlSubstring);
   const queryObj = {};
-  if (requiredParam.length) {
-    return requiredParam.map(param => {
-      Object.assign(queryObj, {
-        param: getQuery.get(param)
-      });
-    });
+
+  if (requiredParam.length < 1) {
+    return null;
   }
+
+  requiredParam.forEach(param => {
+    Object.assign(queryObj, {
+      param: getQuery.get(param)
+    });
+  });
+
+  console.log("foooo3", queryObj);
+  return queryObj;
 };
