@@ -5,16 +5,17 @@ import { connect, useSelector } from "react-redux";
 import get from "lodash/get";
 
 import Button from "../../atoms/Button";
+import { getQueryParams } from "../../utils";
 
 import { SvgIconHandler } from "../../atoms/svg-icon-hadler";
+
 import "./social-login.m.css";
-import { parseUrl } from "query-string";
 
 export const SocialLoginBase = ({ getCurrentUser, googleAppId, facebookAppId }) => {
   const [error, setError] = useState("");
   const currentPath = useSelector(state => get(state, ["qt", "currentPath"], ""));
-  const params = parseUrl(currentPath);
-  const [redirectUrl, setRedirectUrl] = useState(get(params, ["query", "redirect-url"], "/"));
+
+  const [redirectUrl, setRedirectUrl] = useState(getQueryParams(currentPath, ["redirect-url"]));
   const enableSSO = useSelector(state => get(state, ["qt", "config", "publisher-attributes", "enable_sso"]));
 
   useEffect(() => {
