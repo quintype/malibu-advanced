@@ -9,6 +9,7 @@ domain_mapping:
   subdomain.lvh.me: subdomain
   malibu.lvh.me: localhost:3000
 publisher:
+  sso_host: "https://malibu-advanced-web-auth.qtstage.io"
   timezone: "Asia/Baku"
   google_tag_manager:
     id: "gtm-id"
@@ -26,6 +27,7 @@ publisher:
   google_app_id: ""
   facebook_app_id: ""
   is_verification_link_flow: true
+  enable_sso: true
   collectionParams:
     depth: 2
     storyLimits:

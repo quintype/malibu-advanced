@@ -12,17 +12,15 @@ import { parseUrl } from "query-string";
 
 export const SocialLoginBase = ({ getCurrentUser, googleAppId, facebookAppId }) => {
   const [error, setError] = useState("");
-  const [currentLocation, setCurrentLocation] = useState("/");
   const currentPath = useSelector(state => get(state, ["qt", "currentPath"], ""));
   const params = parseUrl(currentPath);
-  const redirectUrl = get(params, ["query", "redirect-url"], "/");
-
-  const isSSO = true;
+  const [redirectUrl, setRedirectUrl] = useState(get(params, ["query", "redirect-url"], "/"));
+  const enableSSO = useSelector(state => get(state, ["qt", "config", "publisher-attributes", "enable_sso"]));
 
   useEffect(() => {
     const location = new URL(window.location.href);
-    const redirectUrl = `${location.origin}${location.pathname}`;
-    location && setCurrentLocation(redirectUrl);
+    const currentLocation = `${location.origin}${location.pathname}`;
+    location && !enableSSO && setRedirectUrl(currentLocation);
   }, []);
 
   const socialLogin = (e, login) => {
@@ -51,10 +49,8 @@ export const SocialLoginBase = ({ getCurrentUser, googleAppId, facebookAppId }) 
     window.location.href = serverSideLoginPath;
   };
 
-  const rUrl = isSSO ? redirectUrl : currentLocation;
-
   const FaceBookLogin = () => {
-    const { login, serverSideLoginPath } = withFacebookLogin(facebookAppId, "email", true, rUrl);
+    const { login, serverSideLoginPath } = withFacebookLogin(facebookAppId, "email", true, redirectUrl);
     return (
       <Button color="#3b5998" flat href={serverSideLoginPath} onClick={e => socialLogin(e, login)} socialButton>
         <span styleName="icon">
@@ -66,7 +62,7 @@ export const SocialLoginBase = ({ getCurrentUser, googleAppId, facebookAppId }) 
   };
 
   const GoogleLogin = () => {
-    const { serverSideLoginPath } = withGoogleLogin(googleAppId, "email", true, rUrl);
+    const { serverSideLoginPath } = withGoogleLogin(googleAppId, "email", true, redirectUrl);
     return (
       <Button
         color="#dd4b39"
@@ -84,7 +80,7 @@ export const SocialLoginBase = ({ getCurrentUser, googleAppId, facebookAppId }) 
   };
 
   const AppleLogin = () => {
-    const { serverSideLoginPath } = withAppleLogin(rUrl);
+    const { serverSideLoginPath } = withAppleLogin(redirectUrl);
     return (
       <Button color="#dd4b39" flat href={serverSideLoginPath} socialButton>
         <SvgIconHandler type="apple" height="44" width="44" iconStyle={{ color: "#000" }} /> Apple

@@ -12,7 +12,6 @@ import { SvgIconHandler } from "../../../atoms/svg-icon-hadler";
 import "./navbar.m.css";
 import { Link } from "@quintype/components";
 import WithSSO from "../../../with-sso";
-import { parseUrl } from "query-string";
 
 const NavBar = () => {
   // Import account modal dynamically
@@ -27,7 +26,8 @@ const NavBar = () => {
   const hamburgerMenu = useSelector(state => get(state, ["qt", "data", "navigationMenu", "hamburgerMenu"], []));
   const [callbackUrl, setCallbackUrl] = useState(null);
   const [redirectUrl, setRedirectUrl] = useState(null);
-  const currentPath = useSelector(state => get(state, ["qt", "currentPath"], ""));
+  const enableSSO = useSelector(state => get(state, ["qt", "config", "publisher-attributes", "enable_sso"]));
+  const ssoHost = useSelector(state => get(state, ["qt", "config", "publisher-attributes", "sso_host"]));
 
   const displayStyle = isHamburgerMenuOpen ? "flex" : "none";
 
@@ -137,10 +137,8 @@ const NavBar = () => {
   useEffect(() => {
     getCurrentUser();
 
-    const params = parseUrl(currentPath);
-
-    setCallbackUrl(get(params, ["query", "callback-url"], global.location.origin));
-    setRedirectUrl(get(params, ["query", "redirect-url"], global && global.location && global.location.href));
+    setCallbackUrl(global.location.origin);
+    setRedirectUrl(global.location.href);
 
     switch (global.location.hash) {
       case "#email-verified":
@@ -167,8 +165,6 @@ const NavBar = () => {
       </Suspense>
     );
   };
-
-  const isSSO = true;
 
   return (
     <div styleName="main-wrapper" id="sticky-navbar">
@@ -221,9 +217,9 @@ const NavBar = () => {
               </>
             ) : (
               <>
-                {isSSO ? (
+                {enableSSO ? (
                   <WithSSO
-                    ssoHost="https://malibu-advanced-web-auth.qtstage.io"
+                    ssoHost={ssoHost}
                     signInPath="/user-login"
                     redirectUrl={redirectUrl}
                     callbackUrl={callbackUrl}
