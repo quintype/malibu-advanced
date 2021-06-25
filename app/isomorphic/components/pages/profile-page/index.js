@@ -1,20 +1,44 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import get from "lodash/get";
+import "./profile-page.m.css";
 
 const ProfilePage = () => {
   const member = useSelector(state => get(state, ["member"], null));
-  console.log("fooooo", member);
+  const dob = get(member, ["metadata"], "-");
+  console.log("fooooo", member, "---------------------", dob);
   if (!member) {
     return <div>Please Login</div>;
   }
 
   return (
-    <div>
-      <h2>Profile page</h2>
-      <div>Name: {member.name}</div>
-      <div>Username: {member.username}</div>
-      <div>Email: {member.email}</div>
+    <div styleName="profile-page">
+      <div styleName="avatar">
+        <img src={member["avatar-url"]} alt="avatar" styleName="avatar-image" />
+        <p styleName="fullName">{member.name}</p>
+      </div>
+      <div styleName="profile-information">
+        <p styleName="fields">
+          <strong>Name: </strong>
+          {member.name}
+        </p>
+        <p styleName="fields">
+          <strong>Email: </strong>
+          {member.email}
+        </p>
+        <p styleName="fields">
+          <strong>Mobile: </strong>
+          {member["phone-number"]}
+        </p>
+        <p styleName="fields">
+          <strong>DOB: </strong>
+          {member.dob}
+        </p>
+      </div>
+      <div>
+        <button styleName="button">Edit Profile</button>
+        <button styleName="button">Change Password</button>
+      </div>
     </div>
   );
 };

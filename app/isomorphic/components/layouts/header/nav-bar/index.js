@@ -176,20 +176,21 @@ const NavBar = () => {
           <div styleName="user-profile">
             {member && member["verification-status"] ? (
               <>
-                <Link href="/profile">
-                  <img
-                    width="24"
-                    height="24"
-                    alt="user"
-                    src={imageUrl}
-                    styleName="member-img"
-                    onClick={userAccountHandler}
-                  />
-                </Link>
+                <img
+                  width="24"
+                  height="24"
+                  alt="user"
+                  src={imageUrl}
+                  styleName="member-img"
+                  onClick={userAccountHandler}
+                />
                 {showUserHandler && (
                   <Fragment>
                     <div styleName="overlay" onClick={userAccountHandler}></div>
                     <ul styleName="dropdown-content user-account">
+                      <Link styleName="user-account-item" onClick={() => toggleHandler()} href="/profile">
+                        Profile
+                      </Link>
                       <li styleName="user-account-item" onClick={logoutHandler}>
                         Logout
                       </li>

@@ -1,0 +1,33 @@
+.profile-page {
+  margin: 0 auto;
+  width: 320px;
+}
+
+.avatar {
+  margin-top: 2rem;
+}
+.avatar-image {
+  height: 160px;
+  width: 160px;
+  margin: 0 80px;
+  border-radius: 50%;
+}
+
+.fullName {
+  text-align: center;
+  margin-top: 10px;
+}
+
+.profile-information {
+  margin-top: 50px;
+}
+
+.fields {
+  margin-bottom: 15px;
+}
+
+.button {
+  height: 30px;
+  padding: 0 10px;
+  width: fit-content;
+}
