@@ -17,7 +17,7 @@ const Button = ({ href, children, color, flat, socialButton = false, onClick, ..
       {children}
     </Link>
   ) : (
-    <button {...props} styleName="btn">
+    <button {...props} styleName="btn" aria-label="button">
       {children}
     </button>
   );
