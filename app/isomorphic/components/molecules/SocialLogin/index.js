@@ -1,17 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { func, string } from "prop-types";
 import { withFacebookLogin, withGoogleLogin, withAppleLogin } from "@quintype/bridgekeeper-js";
-import { connect } from "react-redux";
+import { connect, useSelector } from "react-redux";
 import get from "lodash/get";
 
 import Button from "../../atoms/Button";
 
 import { SvgIconHandler } from "../../atoms/svg-icon-hadler";
 import "./social-login.m.css";
+import { parseUrl } from "query-string";
 
 export const SocialLoginBase = ({ getCurrentUser, googleAppId, facebookAppId }) => {
   const [error, setError] = useState("");
   const [currentLocation, setCurrentLocation] = useState("/");
+  const currentPath = useSelector(state => get(state, ["qt", "currentPath"], ""));
+  const params = parseUrl(currentPath);
+  const redirectUrl = get(params, ["query", "redirect-url"], "/");
+
+  const isSSO = true;
 
   useEffect(() => {
     const location = new URL(window.location.href);
@@ -45,8 +51,10 @@ export const SocialLoginBase = ({ getCurrentUser, googleAppId, facebookAppId }) 
     window.location.href = serverSideLoginPath;
   };
 
+  const rUrl = isSSO ? redirectUrl : currentLocation;
+
   const FaceBookLogin = () => {
-    const { login, serverSideLoginPath } = withFacebookLogin(facebookAppId, "email", true, currentLocation);
+    const { login, serverSideLoginPath } = withFacebookLogin(facebookAppId, "email", true, rUrl);
     return (
       <Button color="#3b5998" flat href={serverSideLoginPath} onClick={e => socialLogin(e, login)} socialButton>
         <span styleName="icon">
@@ -58,7 +66,7 @@ export const SocialLoginBase = ({ getCurrentUser, googleAppId, facebookAppId }) 
   };
 
   const GoogleLogin = () => {
-    const { serverSideLoginPath } = withGoogleLogin(googleAppId, "email", true, currentLocation);
+    const { serverSideLoginPath } = withGoogleLogin(googleAppId, "email", true, rUrl);
     return (
       <Button
         color="#dd4b39"
@@ -76,7 +84,7 @@ export const SocialLoginBase = ({ getCurrentUser, googleAppId, facebookAppId }) 
   };
 
   const AppleLogin = () => {
-    const { serverSideLoginPath } = withAppleLogin(currentLocation);
+    const { serverSideLoginPath } = withAppleLogin(rUrl);
     return (
       <Button color="#dd4b39" flat href={serverSideLoginPath} socialButton>
         <SvgIconHandler type="apple" height="44" width="44" iconStyle={{ color: "#000" }} /> Apple
