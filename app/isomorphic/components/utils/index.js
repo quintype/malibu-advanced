@@ -17,7 +17,7 @@ export const getQueryParams = (url, requiredParam) => {
 
   requiredParam.forEach(param => {
     Object.assign(queryObj, {
-      param: getQuery.get(param)
+      [param]: getQuery.get(param)
     });
   });
 
