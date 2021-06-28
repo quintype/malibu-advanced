@@ -41,14 +41,14 @@ export const SocialLoginBase = ({ getCurrentUser, googleAppId, facebookAppId }) 
       }); // Can also make an API call to /api/v1/members/me
   };
 
-  const googleOnClick = (e, serverSideLoginPath) => {
-    window.location.href = serverSideLoginPath;
-  };
+  // const googleOnClick = (e, serverSideLoginPath) => {
+  //   window.location.href = serverSideLoginPath;
+  // };
 
   const FaceBookLogin = () => {
-    const { login, serverSideLoginPath } = withFacebookLogin(facebookAppId, "email", true, currentLocation);
+    const { login } = withFacebookLogin(facebookAppId, "email", true, currentLocation);
     return (
-      <Button color="#3b5998" flat href={serverSideLoginPath} onClick={e => socialLogin(e, login)} socialButton>
+      <Button color="#3b5998" flat onClick={e => socialLogin(e, login)}>
         <span styleName="icon">
           <SvgIconHandler type="facebook" iconStyle={{ color: "#3b5998" }} width="9" height="15" viewBox="0 0 12 21" />
         </span>{" "}
@@ -58,15 +58,9 @@ export const SocialLoginBase = ({ getCurrentUser, googleAppId, facebookAppId }) 
   };
 
   const GoogleLogin = () => {
-    const { serverSideLoginPath } = withGoogleLogin(googleAppId, "email", true, currentLocation);
+    const { login } = withGoogleLogin(googleAppId, "email", true, currentLocation);
     return (
-      <Button
-        color="#dd4b39"
-        flat
-        href={serverSideLoginPath}
-        onClick={e => googleOnClick(e, serverSideLoginPath)}
-        socialButton
-      >
+      <Button color="#dd4b39" flat onClick={e => socialLogin(e, login)}>
         <span styleName="icon">
           <SvgIconHandler type="google" width="13" height="13" viewBox="0 0 13 13" />
         </span>{" "}
@@ -76,9 +70,9 @@ export const SocialLoginBase = ({ getCurrentUser, googleAppId, facebookAppId }) 
   };
 
   const AppleLogin = () => {
-    const { serverSideLoginPath } = withAppleLogin(currentLocation);
+    const { login } = withAppleLogin(currentLocation);
     return (
-      <Button color="#dd4b39" flat href={serverSideLoginPath} socialButton>
+      <Button color="#dd4b39" flat onClick={e => socialLogin(e, login)}>
         <SvgIconHandler type="apple" height="44" width="44" iconStyle={{ color: "#000" }} /> Apple
       </Button>
     );
