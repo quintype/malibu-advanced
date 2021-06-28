@@ -5,7 +5,6 @@ import { connect } from "react-redux";
 import get from "lodash/get";
 
 import Button from "../../atoms/Button";
-
 import { SvgIconHandler } from "../../atoms/svg-icon-hadler";
 import "./social-login.m.css";
 
@@ -36,14 +35,10 @@ export const SocialLoginBase = ({ getCurrentUser, googleAppId, facebookAppId }) 
         } else if (error === "NOT_GRANTED") {
           setError("There seems to be an error with social logins. Please do a manual email/password login.");
         } else {
-          setError("Oops! Something went wrong. Please try again later.", error, "here");
+          setError("Oops! Something went wrong. Please try again later.");
         }
       }); // Can also make an API call to /api/v1/members/me
   };
-
-  // const googleOnClick = (e, serverSideLoginPath) => {
-  //   window.location.href = serverSideLoginPath;
-  // };
 
   const FaceBookLogin = () => {
     const { login } = withFacebookLogin(facebookAppId, "email", true, currentLocation);
