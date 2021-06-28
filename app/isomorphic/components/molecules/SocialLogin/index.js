@@ -10,7 +10,7 @@ import { SvgIconHandler } from "../../atoms/svg-icon-hadler";
 import "./social-login.m.css";
 
 export const SocialLoginBase = ({ getCurrentUser, googleAppId, facebookAppId }) => {
-  // const [error, setError] = useState("");
+  const [error, setError] = useState("");
   const [currentLocation, setCurrentLocation] = useState("/");
 
   useEffect(() => {
@@ -19,11 +19,26 @@ export const SocialLoginBase = ({ getCurrentUser, googleAppId, facebookAppId }) 
     location && setCurrentLocation(redirectUrl);
   }, []);
 
-  const socialLogin = async (e, login) => {
+  const socialLogin = (e, login) => {
     e.preventDefault();
 
-    const res = await login();
-    console.log(res, "res here");
+    login()
+      .then(async () => {
+        await getCurrentUser();
+        console.log("successfully login");
+      })
+      .catch(error => {
+        console.log("error", error);
+        if (error === "NO_EMAIL") {
+          setError("The account you are using does not have an email id. Please try with another account.");
+        } else if (error === "NOT_LOADED") {
+          setError("");
+        } else if (error === "NOT_GRANTED") {
+          setError("There seems to be an error with social logins. Please do a manual email/password login.");
+        } else {
+          setError("Oops! Something went wrong. Please try again later.");
+        }
+      }); // Can also make an API call to /api/v1/members/me
   };
 
   // const googleOnClick = (e, serverSideLoginPath) => {
@@ -77,6 +92,7 @@ export const SocialLoginBase = ({ getCurrentUser, googleAppId, facebookAppId }) 
           <AppleLogin />
         </li>
       </ul>
+      <p styleName="error">{error}</p>
     </div>
   );
 };
