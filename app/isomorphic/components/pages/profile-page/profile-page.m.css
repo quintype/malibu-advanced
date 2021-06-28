@@ -1,10 +1,10 @@
 .profile-page {
   margin: 0 auto;
-  width: 320px;
+  max-width: 320px;
 }
 
 .avatar {
-  margin-top: 2rem;
+  margin-top: 20px;
 }
 .avatar-image {
   height: 160px;
@@ -13,7 +13,7 @@
   border-radius: 50%;
 }
 
-.fullName {
+.full-name {
   text-align: center;
   margin-top: 10px;
 }
@@ -23,7 +23,7 @@
 }
 
 .fields {
-  margin-bottom: 15px;
+  margin-bottom: 16px;
 }
 
 .button {
