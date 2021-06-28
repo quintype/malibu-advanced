@@ -36,7 +36,7 @@ export const SocialLoginBase = ({ getCurrentUser, googleAppId, facebookAppId }) 
         } else if (error === "NOT_GRANTED") {
           setError("There seems to be an error with social logins. Please do a manual email/password login.");
         } else {
-          setError("Oops! Something went wrong. Please try again later.");
+          setError("Oops! Something went wrong. Please try again later.", error);
         }
       }); // Can also make an API call to /api/v1/members/me
   };
