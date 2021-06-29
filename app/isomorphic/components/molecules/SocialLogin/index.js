@@ -41,7 +41,12 @@ export const SocialLoginBase = ({ getCurrentUser, googleAppId, facebookAppId }) 
   };
 
   const FaceBookLogin = () => {
-    const { login } = withFacebookLogin(facebookAppId, "email", true, currentLocation);
+    const { login } = withFacebookLogin({
+      appId: facebookAppId,
+      scope: "email",
+      emailMandatory: true,
+      redirectUrl: currentLocation
+    });
     return (
       <Button color="#3b5998" flat onClick={e => socialLogin(e, login)}>
         <span styleName="icon">
@@ -53,7 +58,12 @@ export const SocialLoginBase = ({ getCurrentUser, googleAppId, facebookAppId }) 
   };
 
   const GoogleLogin = () => {
-    const { login } = withGoogleLogin(googleAppId, "email", true, currentLocation);
+    const { login } = withGoogleLogin({
+      clientId: googleAppId,
+      scope: "email",
+      emailMandatory: true,
+      redirectUrl: currentLocation
+    });
     return (
       <Button color="#dd4b39" flat onClick={e => socialLogin(e, login)}>
         <span styleName="icon">
