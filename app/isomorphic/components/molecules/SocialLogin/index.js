@@ -75,9 +75,9 @@ export const SocialLoginBase = ({ getCurrentUser, googleAppId, facebookAppId }) 
   };
 
   const AppleLogin = () => {
-    const { login } = withAppleLogin(currentLocation);
+    const { serverSideLoginPath } = withAppleLogin(currentLocation);
     return (
-      <Button color="#dd4b39" flat onClick={e => socialLogin(e, login)}>
+      <Button color="#dd4b39" flat href={serverSideLoginPath} socialButton>
         <SvgIconHandler type="apple" height="44" width="44" iconStyle={{ color: "#000" }} /> Apple
       </Button>
     );
