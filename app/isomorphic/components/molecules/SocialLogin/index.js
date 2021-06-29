@@ -19,7 +19,12 @@ export const SocialLoginBase = ({ googleAppId, facebookAppId }) => {
   }, []);
 
   const FaceBookLogin = () => {
-    const { serverSideLoginPath } = withFacebookLogin("email", true, currentLocation);
+    const { serverSideLoginPath } = withFacebookLogin({
+      appId: facebookAppId,
+      scope: "email",
+      emailMandatory: true,
+      redirectUrl: currentLocation
+    });
     return (
       <Button color="#3b5998" flat href={serverSideLoginPath} socialButton>
         <span styleName="icon">
@@ -31,7 +36,12 @@ export const SocialLoginBase = ({ googleAppId, facebookAppId }) => {
   };
 
   const GoogleLogin = () => {
-    const { serverSideLoginPath } = withGoogleLogin("email", true, currentLocation);
+    const { serverSideLoginPath } = withGoogleLogin({
+      clientId: googleAppId,
+      scope: "email",
+      emailMandatory: true,
+      redirectUrl: currentLocation
+    });
     return (
       <Button color="#dd4b39" flat href={serverSideLoginPath} socialButton>
         <span styleName="icon">
