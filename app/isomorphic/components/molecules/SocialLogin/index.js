@@ -20,7 +20,6 @@ export const SocialLoginBase = ({ googleAppId, facebookAppId }) => {
 
   const FaceBookLogin = () => {
     const { serverSideLoginPath } = withFacebookLogin({
-      appId: facebookAppId,
       scope: "email",
       emailMandatory: true,
       redirectUrl: currentLocation
@@ -37,7 +36,6 @@ export const SocialLoginBase = ({ googleAppId, facebookAppId }) => {
 
   const GoogleLogin = () => {
     const { serverSideLoginPath } = withGoogleLogin({
-      clientId: googleAppId,
       scope: "email",
       emailMandatory: true,
       redirectUrl: currentLocation
