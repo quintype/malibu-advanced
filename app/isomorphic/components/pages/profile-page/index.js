@@ -1,11 +1,12 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import get from "lodash/get";
+
+import { SvgIconHandler } from "../../atoms/svg-icon-hadler";
+
 import "./profile-page.m.css";
-import { SvgIconHandler } from "../../atoms/svg-icon-hadler/index";
 
 const ProfilePage = () => {
-  const member = useSelector(state => get(state, ["member"], null));
+  const member = useSelector(state => state.member || null);
   if (!member) {
     return <div>Please Login</div>;
   }
@@ -14,7 +15,7 @@ const ProfilePage = () => {
     <div styleName="profile-page">
       <div styleName="avatar">
         {member["avatar-url"] ? (
-          <img src={member["avatar-url"]} alt="avatar" styleName="avatar-image" />
+          <img src={member["avatar-url"]} alt="avatar" height="160px" width="160px" styleName="avatar-image" />
         ) : (
           <SvgIconHandler type="user" styleName="avatar-image" />
         )}
