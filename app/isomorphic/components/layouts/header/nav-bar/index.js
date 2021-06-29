@@ -9,8 +9,8 @@ import MessageWrapper from "../../../molecules/forms/message-wrapper";
 
 import { SvgIconHandler } from "../../../atoms/svg-icon-hadler";
 
-import "./navbar.m.css";
 import { Link } from "@quintype/components";
+import "./navbar.m.css";
 
 const NavBar = () => {
   // Import account modal dynamically
