@@ -13,7 +13,69 @@ import { loadData, loadErrorData } from "./load-data";
 import { pickComponent } from "../isomorphic/pick-component";
 import { SEO } from "@quintype/seo";
 import { Collection } from "@quintype/framework/server/api-client";
+import { get } from "lodash";
+import wretch from "wretch";
 export const app = createApp();
+
+const signupHandler = async (req, res) => {
+  const { code } = req.body;
+  if (!code) {
+    return res.status(400).send({ error: "no auth code provided" });
+  }
+
+  const bridgekeeperIntegrationId = 51;
+  const bridgekeeperIntegrationSecret = "kcRFrsf89as8fHkfhHihbg3LMHjii8";
+  const bridgekeeperHost = "http://bridgekeeper.alb.staging.quinpress.internal";
+  const bridgekeeperApiKey = "mxdnwJFPrZUQDPuV";
+
+  const brkeConfig = { bridgekeeperIntegrationId, bridgekeeperIntegrationSecret, bridgekeeperHost, bridgekeeperApiKey };
+
+  const getAccessToken = async (authCode, brkeConfig) => {
+    const {
+      bridgekeeperIntegrationId,
+      bridgekeeperIntegrationSecret,
+      bridgekeeperHost,
+      bridgekeeperApiKey
+    } = brkeConfig;
+
+    if (!bridgekeeperIntegrationId || !bridgekeeperIntegrationSecret || !bridgekeeperHost) {
+      return Promise.reject(new Error("Unable to get accessToken: invalid bridgekeeper config"));
+    }
+
+    const tokenUrl = `${bridgekeeperHost}/api/auth/v1/oauth/token`;
+
+    const form = new URLSearchParams();
+    form.append("client_id", bridgekeeperIntegrationId);
+    form.append("client_secret", bridgekeeperIntegrationSecret);
+    form.append("grant_type", "authorization_code");
+    form.append("code", authCode);
+
+    try {
+      const requestTokenResponse = await wretch(tokenUrl)
+        .post(form)
+        .headers({ "Content-Type": "application/x-www-form-urlencoded", "X-BK-AUTH": bridgekeeperApiKey });
+      const accessToken = get(requestTokenResponse, ["data", "access_token"]);
+      return accessToken;
+    } catch (err) {
+      console.log(`Request for Access Token Failed:${err}`);
+    }
+  };
+
+  try {
+    const accessToken = await getAccessToken(code, brkeConfig);
+    const cookieConf = { httpOnly: true };
+    if (process.env.NODE_ENV !== "development") {
+      cookieConf.secure = true;
+    }
+    res.cookie("token", accessToken, cookieConf);
+    return res.send({});
+  } catch (err) {
+    console.log(err);
+    return res.send({ error: "User authentication failed" });
+  }
+};
+
+app.post(`/api/v1/accounts/signup`, signupHandler);
 
 upstreamQuintypeRoutes(app, { forwardAmp: true });
 

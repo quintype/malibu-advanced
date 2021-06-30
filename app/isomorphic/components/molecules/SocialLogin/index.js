@@ -55,7 +55,12 @@ export const SocialLoginBase = ({ getCurrentUser, googleAppId, facebookAppId }) 
   };
 
   const FaceBookLogin = () => {
-    const { login, serverSideLoginPath } = withFacebookLogin(facebookAppId, "email", true, redirectUrl);
+    const { login, serverSideLoginPath } = withFacebookLogin(
+      facebookAppId,
+      "email",
+      true,
+      "https://malibu-advanced-web-auth.qtstage.io"
+    );
     return (
       <Button color="#3b5998" flat href={serverSideLoginPath} onClick={e => socialLogin(e, login)} socialButton>
         <span styleName="icon">
@@ -67,15 +72,15 @@ export const SocialLoginBase = ({ getCurrentUser, googleAppId, facebookAppId }) 
   };
 
   const GoogleLogin = () => {
-    const { serverSideLoginPath } = withGoogleLogin(googleAppId, "email", true, redirectUrl);
+    const { serverSideLoginPath } = withGoogleLogin(
+      googleAppId,
+      "email",
+      true,
+      "https://malibu-advanced-web-auth.qtstage.io/user-login"
+    );
+    const signInUrl = `${serverSideLoginPath}/?redirect-uri=https://malibu-advanced-web.qtstage.io/user/signup`;
     return (
-      <Button
-        color="#dd4b39"
-        flat
-        href={serverSideLoginPath}
-        onClick={e => googleOnClick(e, serverSideLoginPath)}
-        socialButton
-      >
+      <Button color="#dd4b39" flat href={signInUrl} onClick={e => googleOnClick(e, serverSideLoginPath)} socialButton>
         <span styleName="icon">
           <SvgIconHandler type="google" width="13" height="13" viewBox="0 0 13 13" />
         </span>{" "}
