@@ -9,8 +9,7 @@ import Button from "../../atoms/Button";
 import { SvgIconHandler } from "../../atoms/svg-icon-hadler";
 import "./social-login.m.css";
 
-export const SocialLoginBase = ({ getCurrentUser, googleAppId, facebookAppId }) => {
-  const [error, setError] = useState("");
+export const SocialLoginBase = ({ googleAppId, facebookAppId }) => {
   const [currentLocation, setCurrentLocation] = useState("/");
 
   useEffect(() => {
@@ -19,36 +18,14 @@ export const SocialLoginBase = ({ getCurrentUser, googleAppId, facebookAppId }) 
     location && setCurrentLocation(redirectUrl);
   }, []);
 
-  const socialLogin = (e, login) => {
-    e.preventDefault();
-
-    login()
-      .then(async () => {
-        await getCurrentUser();
-        console.log("successfully login");
-      })
-      .catch(error => {
-        console.log("error", error);
-        if (error === "NO_EMAIL") {
-          setError("The account you are using does not have an email id. Please try with another account.");
-        } else if (error === "NOT_LOADED") {
-          setError("");
-        } else if (error === "NOT_GRANTED") {
-          setError("There seems to be an error with social logins. Please do a manual email/password login.");
-        } else {
-          setError("Oops! Something went wrong. Please try again later.");
-        }
-      }); // Can also make an API call to /api/v1/members/me
-  };
-
-  const googleOnClick = (e, serverSideLoginPath) => {
-    window.location.href = serverSideLoginPath;
-  };
-
   const FaceBookLogin = () => {
-    const { login, serverSideLoginPath } = withFacebookLogin(facebookAppId, "email", true, currentLocation);
+    const { serverSideLoginPath } = withFacebookLogin({
+      scope: "email",
+      emailMandatory: true,
+      redirectUrl: currentLocation
+    });
     return (
-      <Button color="#3b5998" flat href={serverSideLoginPath} onClick={e => socialLogin(e, login)} socialButton>
+      <Button color="#3b5998" flat href={serverSideLoginPath} socialButton>
         <span styleName="icon">
           <SvgIconHandler type="facebook" iconStyle={{ color: "#3b5998" }} width="9" height="15" viewBox="0 0 12 21" />
         </span>{" "}
@@ -58,15 +35,13 @@ export const SocialLoginBase = ({ getCurrentUser, googleAppId, facebookAppId }) 
   };
 
   const GoogleLogin = () => {
-    const { serverSideLoginPath } = withGoogleLogin(googleAppId, "email", true, currentLocation);
+    const { serverSideLoginPath } = withGoogleLogin({
+      scope: "email",
+      emailMandatory: true,
+      redirectUrl: currentLocation
+    });
     return (
-      <Button
-        color="#dd4b39"
-        flat
-        href={serverSideLoginPath}
-        onClick={e => googleOnClick(e, serverSideLoginPath)}
-        socialButton
-      >
+      <Button color="#dd4b39" flat href={serverSideLoginPath} socialButton>
         <span styleName="icon">
           <SvgIconHandler type="google" width="13" height="13" viewBox="0 0 13 13" />
         </span>{" "}
@@ -98,7 +73,6 @@ export const SocialLoginBase = ({ getCurrentUser, googleAppId, facebookAppId }) 
           <AppleLogin />
         </li>
       </ul>
-      <p styleName="error">{error}</p>
     </div>
   );
 };

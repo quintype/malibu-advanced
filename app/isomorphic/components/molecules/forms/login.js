@@ -85,7 +85,7 @@ const LoginBase = ({ onLogin, checkForMemberUpdated, forgotPassword, manageLogin
           </button>
         </div>
       </form>
-      <SocialLogin checkForMemberUpdated={checkForMemberUpdated} />
+      <SocialLogin checkForMemberUpdated={checkForMemberUpdated} getCurrentUser={getCurrentUser} />
     </React.Fragment>
   );
 };
