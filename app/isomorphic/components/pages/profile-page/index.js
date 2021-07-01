@@ -19,7 +19,6 @@ const ProfilePage = () => {
         ) : (
           <SvgIconHandler type="user" styleName="user-icon" />
         )}
-        <p styleName="full-name">{member.name}</p>
       </div>
       <div styleName="profile-information">
         <p styleName="fields">

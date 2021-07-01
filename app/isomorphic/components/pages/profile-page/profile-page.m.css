@@ -6,16 +6,16 @@
 .user-icon {
   height: 160px;
   width: 160px;
-  margin: 0 96px;
-  border-radius: var(--mobile-width);
+  margin: 0 100px;
+  border-radius: 160px;
 }
 
 .avatar {
   margin-top: 20px;
 }
 .avatar-image {
-  margin: 0 96px;
-  border-radius: var(--mobile-width);
+  margin: 0 100px;
+  border-radius: 160px;
 }
 
 .full-name {
@@ -34,10 +34,4 @@
 .not-logged-in {
   font-size: var(--large);
   text-align: center;
-}
-
-.button {
-  height: 32px;
-  padding: 0 12px;
-  width: fit-content;
 }
