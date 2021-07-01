@@ -3,11 +3,18 @@
   max-width: var(--mobile-width);
 }
 
+.user-icon {
+  height: 160px;
+  width: 160px;
+  margin: 0 96px;
+  border-radius: var(--mobile-width);
+}
+
 .avatar {
   margin-top: 20px;
 }
 .avatar-image {
-  margin: 0 80px;
+  margin: 0 96px;
   border-radius: var(--mobile-width);
 }
 
@@ -22,6 +29,11 @@
 
 .fields {
   margin-bottom: 16px;
+}
+
+.not-logged-in {
+  font-size: var(--large);
+  text-align: center;
 }
 
 .button {

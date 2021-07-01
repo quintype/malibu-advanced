@@ -8,7 +8,7 @@ import "./profile-page.m.css";
 const ProfilePage = () => {
   const member = useSelector(state => state.member || null);
   if (!member) {
-    return <div>Please Login</div>;
+    return <div styleName="not-logged-in">Please Login</div>;
   }
 
   return (
@@ -17,7 +17,7 @@ const ProfilePage = () => {
         {member["avatar-url"] ? (
           <img src={member["avatar-url"]} alt="avatar" height="160px" width="160px" styleName="avatar-image" />
         ) : (
-          <SvgIconHandler type="user" styleName="avatar-image" />
+          <SvgIconHandler type="user" styleName="user-icon" />
         )}
         <p styleName="full-name">{member.name}</p>
       </div>
@@ -30,9 +30,6 @@ const ProfilePage = () => {
           <strong>Email: </strong>
           {member.email}
         </p>
-      </div>
-      <div>
-        <button styleName="button">Edit Profile</button>
       </div>
     </div>
   );

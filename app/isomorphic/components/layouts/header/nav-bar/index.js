@@ -200,7 +200,11 @@ const NavBar = () => {
                   <Fragment>
                     <div styleName="overlay" onClick={userAccountHandler}></div>
                     <ul styleName="dropdown-content user-account">
-                      <Link styleName="user-account-item" href="/profile">
+                      <Link
+                        styleName="user-account-item"
+                        callback={() => setUserHandler(!showUserHandler)}
+                        href="/profile"
+                      >
                         Profile
                       </Link>
                       <li styleName="user-account-item" onClick={logoutHandler}>
