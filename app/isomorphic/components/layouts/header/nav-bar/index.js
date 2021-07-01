@@ -1,6 +1,7 @@
 import React, { Fragment, useEffect, useState, Suspense, lazy } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import get from "lodash/get";
+import { Link } from "@quintype/components";
 
 import { OPEN_HAMBURGER_MENU, OPEN_SEARCHBAR, MEMBER_UPDATED } from "../../../store/actions";
 import { MenuItem } from "../../menu-item";
@@ -9,7 +10,6 @@ import MessageWrapper from "../../../molecules/forms/message-wrapper";
 
 import { SvgIconHandler } from "../../../atoms/svg-icon-hadler";
 
-import { Link } from "@quintype/components";
 import "./navbar.m.css";
 
 const NavBar = () => {
