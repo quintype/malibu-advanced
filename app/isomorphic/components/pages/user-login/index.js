@@ -6,9 +6,9 @@ function useQuery() {
   const urlSubstring2 = urlObj2.search;
   console.log("fooooo urlSubstring2", urlSubstring2);
 
-  console.log("foooooo usequery", new URLSearchParams(urlSubstring2));
+  console.log("foooooo usequery", new URLSearchParams(urlSubstring2).get("redirect_urii"));
 
-  return new URLSearchParams(urlSubstring2);
+  return new URLSearchParams(urlSubstring2).get("redirect_urii");
 }
 
 const foo = async () => {
@@ -34,9 +34,7 @@ const foo = async () => {
 
 const UserLoginPage = () => {
   useEffect(() => {
-    const queryParams = useQuery();
-    console.log("foooooooo queryParams", queryParams);
-    const redirectUrl = queryParams.get("redirect_urii");
+    const redirectUrl = useQuery();
     if (redirectUrl) {
       foo();
     }
