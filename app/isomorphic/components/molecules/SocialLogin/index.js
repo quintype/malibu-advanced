@@ -78,7 +78,7 @@ export const SocialLoginBase = ({ getCurrentUser, googleAppId, facebookAppId }) 
       true,
       "https://malibu-advanced-web-auth.qtstage.io/user-login"
     );
-    const signInUrl = `${serverSideLoginPath}/?redirect-uri=https://malibu-advanced-web.qtstage.io/user/signup`;
+    const signInUrl = `${serverSideLoginPath}/?redirect-urii=https://malibu-advanced-web.qtstage.io/user/signup`;
     return (
       <Button color="#dd4b39" flat href={signInUrl} onClick={e => googleOnClick(e, serverSideLoginPath)} socialButton>
         <span styleName="icon">
