@@ -6,7 +6,7 @@ function useQuery() {
   const urlSubstring2 = urlObj2.search;
   console.log("fooooo urlSubstring2", urlSubstring2);
 
-  console.log("foooooo usequery", new URLSearchParams(urlSubstring2).get("redirect_urii"));
+  console.log("foooooo usequery", new URLSearchParams(urlSubstring2).get("redirect-urii"));
 
   return new URLSearchParams(urlSubstring2).get("redirect_urii");
 }
