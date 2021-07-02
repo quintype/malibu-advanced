@@ -17,6 +17,7 @@ export const UserSignupPage = () => {
       const queryParams = useQuery();
       const code = queryParams.get("code");
       const signupReq = await wretch(`/api/v1/accounts/signup`).post({ code });
+      console.log("foooooooo", signupReq);
       setUserStatus(signupReq.data);
     };
     !userStatus && getUserStatus();

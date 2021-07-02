@@ -4,10 +4,6 @@ import AccountModal from "../../login/AccountModal";
 function useQuery() {
   const urlObj2 = new URL(window.location.href);
   const urlSubstring2 = urlObj2.search;
-  console.log("fooooo urlSubstring2", urlSubstring2);
-
-  console.log("foooooo usequery", new URLSearchParams(urlSubstring2).get("redirect-urii"));
-
   return new URLSearchParams(urlSubstring2).get("redirect-urii");
 }
 
@@ -23,7 +19,6 @@ const foo = async () => {
   if (res) {
     if (res.status === 200) {
       const response = await res.json();
-      console.log("fooooooo", response);
       window.location.href = response.redirect_uri;
     } else {
       const response = await res.json();
