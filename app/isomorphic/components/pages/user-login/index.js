@@ -32,6 +32,7 @@ const foo = async () => {
 const UserLoginPage = () => {
   useEffect(() => {
     const queryParams = useQuery();
+    console.log("foooooooo queryParams", queryParams);
     const redirectUrl = queryParams.get("redirect_urii");
     if (redirectUrl) {
       foo();
