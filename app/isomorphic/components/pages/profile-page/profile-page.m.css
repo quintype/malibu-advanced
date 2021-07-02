@@ -1,6 +1,6 @@
 .profile-page {
   margin: 0 auto;
-  max-width: var(--mobile-width);
+  max-width: var(--profile-card-width);
 }
 
 .user-icon {
@@ -13,6 +13,7 @@
 .avatar {
   margin-top: 20px;
 }
+
 .avatar-image {
   margin: 0 100px;
   border-radius: 50%;
