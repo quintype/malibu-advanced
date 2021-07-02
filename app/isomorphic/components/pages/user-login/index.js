@@ -4,6 +4,9 @@ import AccountModal from "../../login/AccountModal";
 function useQuery() {
   const urlObj2 = new URL(window.location.href);
   const urlSubstring2 = urlObj2.search;
+  console.log("fooooo urlSubstring2", urlSubstring2);
+
+  console.log("foooooo usequery", new URLSearchParams(urlSubstring2));
 
   return new URLSearchParams(urlSubstring2);
 }

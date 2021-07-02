@@ -40,8 +40,6 @@ const WithSSO = ({ ssoHost, redirectUrl, callbackUrl, signInPath, signUpPath, ch
     return url.href;
   };
 
-  console.log("foooo1", formUrl(signInPath));
-
   return children({
     signInHref: redirectUrl1,
     signUpHref: formUrl(signUpPath)

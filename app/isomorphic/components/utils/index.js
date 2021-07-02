@@ -20,7 +20,5 @@ export const getQueryParams = (url, requiredParam) => {
       [param]: getQuery.get(param)
     });
   });
-
-  console.log("foooo3", queryObj);
   return queryObj;
 };
