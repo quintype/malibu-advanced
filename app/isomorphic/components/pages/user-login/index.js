@@ -20,6 +20,7 @@ const foo = async () => {
   if (res) {
     if (res.status === 200) {
       const response = await res.json();
+      console.log("fooooooo", response);
       window.location.href = response.redirect_uri;
     } else {
       const response = await res.json();
