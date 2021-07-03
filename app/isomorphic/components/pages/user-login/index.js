@@ -31,8 +31,9 @@ const foo = async () => {
 };
 
 const UserLoginPage = () => {
+  const member = useSelector(state => get(state, ["member"], null));
+
   useEffect(() => {
-    const member = useSelector(state => get(state, ["member"], null));
     const redirectUrl = useQuery();
     if (redirectUrl || member) {
       foo();
