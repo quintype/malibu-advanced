@@ -3,10 +3,10 @@ import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import AccountModal from "../../login/AccountModal";
 
-function useQuery() {
+function useQuery(params) {
   const urlObj2 = new URL(window.location.href);
   const urlSubstring2 = urlObj2.search;
-  return new URLSearchParams(urlSubstring2).get("redirect-urii");
+  return new URLSearchParams(urlSubstring2).get(params);
 }
 
 const foo = async redirectUrl => {
@@ -32,15 +32,15 @@ const UserLoginPage = () => {
   const member = useSelector(state => get(state, ["member"], null));
 
   useEffect(() => {
-    const redirectUrl = useQuery();
+    const redirectUrl = useQuery("redirect-urii");
     if (redirectUrl) {
       foo(redirectUrl);
     }
   }, []);
 
   useEffect(() => {
-    const redirectUrl = useQuery();
-    if (member) {
+    const redirectUrl = useQuery("redirect_uri");
+    if (redirectUrl && member) {
       foo(redirectUrl);
     }
   }, [member]);
