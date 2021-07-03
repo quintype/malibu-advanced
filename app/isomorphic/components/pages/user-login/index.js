@@ -1,4 +1,6 @@
+import { get } from "lodash";
 import React, { useEffect } from "react";
+import { useSelector } from "react-redux";
 import AccountModal from "../../login/AccountModal";
 
 function useQuery() {
@@ -30,8 +32,9 @@ const foo = async () => {
 
 const UserLoginPage = () => {
   useEffect(() => {
+    const member = useSelector(state => get(state, ["member"], null));
     const redirectUrl = useQuery();
-    if (redirectUrl) {
+    if (redirectUrl || member) {
       foo();
     }
   }, []);
