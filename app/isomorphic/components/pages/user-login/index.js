@@ -34,6 +34,7 @@ const UserLoginPage = () => {
 
   useEffect(() => {
     const redirectUrl = useQuery();
+    console.log("fooooooo redirectUrl", redirectUrl);
     if (redirectUrl || member) {
       foo();
     }
