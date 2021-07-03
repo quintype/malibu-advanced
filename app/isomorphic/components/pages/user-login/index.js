@@ -40,6 +40,11 @@ const UserLoginPage = () => {
     }
   }, []);
 
+  useEffect(() => {
+    if (member) {
+      foo();
+    }
+  }, [member]);
   console.log("foooooo member", member);
   return <AccountModal isPopup={false} />;
 };
