@@ -33,7 +33,6 @@ const UserLoginPage = () => {
   const member = useSelector(state => get(state, ["member"], null));
 
   useEffect(() => {
-    console.log("foooooo useEffect member", member);
     const redirectUrl = useQuery();
     if (redirectUrl || member) {
       foo();
@@ -45,7 +44,6 @@ const UserLoginPage = () => {
       foo();
     }
   }, [member]);
-  console.log("foooooo member", member);
   return <AccountModal isPopup={false} />;
 };
 

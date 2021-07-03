@@ -1,5 +1,6 @@
 import { get } from "lodash";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
+import { useSelector } from "react-redux";
 import wretch from "wretch";
 
 function useQuery() {
@@ -10,21 +11,22 @@ function useQuery() {
 }
 
 export const UserSignupPage = () => {
-  const [userStatus, setUserStatus] = useState(null);
+  const member = useSelector(state => get(state, ["member"], null));
 
   useEffect(() => {
     const getUserStatus = async () => {
       const queryParams = useQuery();
       const code = queryParams.get("code");
-      const signupReq = await wretch(`/api/v1/accounts/signup`).post({ code });
-      console.log("foooooooo", signupReq);
-      setUserStatus(signupReq.data);
+      await wretch(`/api/v1/accounts/signup`).post({ code });
     };
-    !userStatus && getUserStatus();
 
-    if (userStatus && get(userStatus, ["status"]) === "success") {
+    getUserStatus();
+  }, []);
+
+  useEffect(() => {
+    if (member) {
       window.location.href = "/";
     }
-  });
+  }, [member]);
   return <div></div>;
 };
