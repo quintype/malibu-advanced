@@ -70,13 +70,23 @@ export const SocialLoginBase = ({ getCurrentUser, googleAppId, facebookAppId }) 
   };
 
   const GoogleLogin = () => {
+    const [redirectUriHost, setRedirectUriHost] = useState("https://malibu-advanced-web.qtstage.io/user/signup");
+
+    useEffect(() => {
+      const urlObj2 = new URL(window.location.href);
+      const urlSubstring2 = urlObj2.search;
+      const host = new URLSearchParams(urlSubstring2).get("redirect_uri");
+      setRedirectUriHost(host);
+    }, []);
+
     const { serverSideLoginPath } = withGoogleLogin(
       googleAppId,
       "email",
       true,
       "https://malibu-advanced-web-auth.qtstage.io/user-login"
     );
-    const signInUrl = `${serverSideLoginPath}/?redirect-urii=https://malibu-advanced-web.qtstage.io/user/signup`;
+
+    const signInUrl = `${serverSideLoginPath}/?redirect-urii=${redirectUriHost}`;
     return (
       <Button color="#dd4b39" flat href={signInUrl} onClick={e => googleOnClick(e, serverSideLoginPath)} socialButton>
         <span styleName="icon">

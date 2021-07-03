@@ -5,7 +5,7 @@ const WithSSO = ({ ssoHost, redirectUrl, callbackUrl, signInPath, signUpPath, ch
   const [redirectUrl1, setRedirectUrl1] = useState(null);
   const foo = async () => {
     const integrationId = 51;
-    const redirectUri = `https://malibu-advanced-web.qtstage.io/user/signup`;
+    const redirectUri = `${callbackUrl}/user/signup`;
 
     const params = `client_id=${integrationId}&redirect_uri=${redirectUri}&response_type=code&allow_ajax=true`;
     const url = `/api/auth/v1/oauth/authorize?${params}`;

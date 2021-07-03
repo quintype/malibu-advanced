@@ -9,11 +9,10 @@ function useQuery() {
   return new URLSearchParams(urlSubstring2).get("redirect-urii");
 }
 
-const foo = async () => {
+const foo = async redirectUrl => {
   const integrationId = 51;
-  const redirectUri = `https://malibu-advanced-web.qtstage.io/user/signup`;
 
-  const params = `client_id=${integrationId}&redirect_uri=${redirectUri}&response_type=code&allow_ajax=true`;
+  const params = `client_id=${integrationId}&redirect_uri=${redirectUrl}&response_type=code&allow_ajax=true`;
   const url = `/api/auth/v1/oauth/authorize?${params}`;
   const res = await window.fetch(url, {
     method: "GET"
@@ -34,15 +33,15 @@ const UserLoginPage = () => {
 
   useEffect(() => {
     const redirectUrl = useQuery();
-    console.log("fooooooo redirectUrl", redirectUrl);
-    if (redirectUrl || member) {
-      foo();
+    if (redirectUrl) {
+      foo(redirectUrl);
     }
   }, []);
 
   useEffect(() => {
-    if (member) {
-      foo();
+    const redirectUrl = useQuery();
+    if (redirectUrl || member) {
+      foo(redirectUrl);
     }
   }, [member]);
   return <AccountModal isPopup={false} />;
