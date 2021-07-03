@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 /* eslint-disable no-unused-vars */
 const WithSSO = ({ ssoHost, redirectUrl, callbackUrl, signInPath, signUpPath, children }) => {
   const [redirectUrl1, setRedirectUrl1] = useState(null);
+
   const foo = async () => {
     const integrationId = 51;
     const redirectUri = `${callbackUrl}/user/signup`;
@@ -12,6 +13,7 @@ const WithSSO = ({ ssoHost, redirectUrl, callbackUrl, signInPath, signUpPath, ch
     const res = await window.fetch(url, {
       method: "GET"
     });
+
     if (res) {
       if (res.status === 200) {
         const response = await res.json();
@@ -22,8 +24,11 @@ const WithSSO = ({ ssoHost, redirectUrl, callbackUrl, signInPath, signUpPath, ch
       }
     }
   };
+
   useEffect(() => {
-    foo();
+    if (callbackUrl) {
+      foo();
+    }
   }, []);
 
   const formUrl = path => {
