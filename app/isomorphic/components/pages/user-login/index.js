@@ -40,7 +40,7 @@ const UserLoginPage = () => {
 
   useEffect(() => {
     const redirectUrl = useQuery();
-    if (redirectUrl || member) {
+    if (member) {
       foo(redirectUrl);
     }
   }, [member]);
