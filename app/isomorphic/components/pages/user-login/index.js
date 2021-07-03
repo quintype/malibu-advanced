@@ -21,7 +21,6 @@ const foo = async () => {
   if (res) {
     if (res.status === 200) {
       const response = await res.json();
-      console.log("fooooo", response);
       window.location.href = response.redirect_uri;
     } else {
       const response = await res.json();
@@ -34,11 +33,14 @@ const UserLoginPage = () => {
   const member = useSelector(state => get(state, ["member"], null));
 
   useEffect(() => {
+    console.log("foooooo useEffect member", member);
     const redirectUrl = useQuery();
     if (redirectUrl || member) {
       foo();
     }
   }, []);
+
+  console.log("foooooo member", member);
   return <AccountModal isPopup={false} />;
 };
 
