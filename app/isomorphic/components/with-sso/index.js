@@ -48,7 +48,7 @@ const WithSSO = ({ ssoHost, redirectUrl, callbackUrl, signInPath, signUpPath, ch
     return url.href;
   };
 
-  console.log("fooooooo redirectUrl1", redirectUrl1);
+  console.log("fooooooo callbackUrl", callbackUrl);
 
   return children({
     signInHref: redirectUrl1,
