@@ -1,10 +1,10 @@
-// import { get } from "lodash";
+import { get } from "lodash";
 import React, { useEffect } from "react";
-// import { useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import AccountModal from "../../login/AccountModal";
 
 const UserLoginPage = () => {
-  // const member = useSelector(state => get(state, ["member"], null));
+  const member = useSelector(state => get(state, ["member"], null));
 
   useEffect(() => {
     const redirectUrl = useQuery("redirect_uri");
@@ -14,13 +14,13 @@ const UserLoginPage = () => {
     }
   }, []);
 
-  // useEffect(() => {
-  //   const redirectUrl = useQuery("redirect-urii") || useQuery("redirect_uri");
-  //   console.log("foooooo redirectUrl2222222", redirectUrl, member);
-  //   if (redirectUrl && member) {
-  //     foo(redirectUrl);
-  //   }
-  // }, [member]);
+  useEffect(() => {
+    const redirectUrl = useQuery("redirect-urii") || useQuery("redirect_uri");
+    console.log("foooooo redirectUrl2222222", redirectUrl, member);
+    if (redirectUrl && member) {
+      foo(redirectUrl);
+    }
+  }, [member]);
 
   return <AccountModal isPopup={false} />;
 };

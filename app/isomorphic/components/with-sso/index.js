@@ -25,7 +25,7 @@ const WithSSO = ({ ssoHost, redirectUrl, callbackUrl, signInPath, signUpPath, ch
   };
 
   useEffect(() => {
-    if (callbackUrl) {
+    if (callbackUrl && !callbackUrl.includes("auth")) {
       foo();
     }
   }, [callbackUrl]);
