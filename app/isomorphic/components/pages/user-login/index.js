@@ -17,6 +17,8 @@ const foo = async redirectUrl => {
   const res = await window.fetch(url, {
     method: "GET"
   });
+  console.log("foooooo params", params);
+  console.log("foooooo res", res);
   if (res) {
     if (res.status === 200) {
       const response = await res.json();

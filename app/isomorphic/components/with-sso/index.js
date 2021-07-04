@@ -7,13 +7,11 @@ const WithSSO = ({ ssoHost, redirectUrl, callbackUrl, signInPath, signUpPath, ch
   const foo = async () => {
     const integrationId = 51;
     const redirectUri = `${callbackUrl}/user/signup`;
-    console.log("fooooo redirectUri", redirectUri);
     const params = `client_id=${integrationId}&redirect_uri=${redirectUri}&response_type=code&allow_ajax=true`;
     const url = `/api/auth/v1/oauth/authorize?${params}`;
     const res = await window.fetch(url, {
       method: "GET"
     });
-    console.log("fooooo res", res);
 
     if (res) {
       if (res.status === 200) {
@@ -27,9 +25,7 @@ const WithSSO = ({ ssoHost, redirectUrl, callbackUrl, signInPath, signUpPath, ch
   };
 
   useEffect(() => {
-    console.log("outside useffect", callbackUrl);
     if (callbackUrl) {
-      console.log("inside useffect");
       foo();
     }
   }, [callbackUrl]);
@@ -47,8 +43,6 @@ const WithSSO = ({ ssoHost, redirectUrl, callbackUrl, signInPath, signUpPath, ch
 
     return url.href;
   };
-
-  console.log("fooooooo callbackUrl", callbackUrl);
 
   return children({
     signInHref: redirectUrl1,
