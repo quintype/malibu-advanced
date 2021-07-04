@@ -32,7 +32,7 @@ const WithSSO = ({ ssoHost, redirectUrl, callbackUrl, signInPath, signUpPath, ch
       console.log("inside useffect");
       foo();
     }
-  }, []);
+  }, [callbackUrl]);
 
   const formUrl = path => {
     if (!path) {
