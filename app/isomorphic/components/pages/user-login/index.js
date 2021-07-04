@@ -15,8 +15,8 @@ const UserLoginPage = () => {
   }, []);
 
   useEffect(() => {
-    const redirectUrl = useQuery("redirect-urii");
-    console.log("foooooo redirectUrl2222222", redirectUrl);
+    const redirectUrl = useQuery("redirect-urii") || useQuery("redirect_uri");
+    console.log("foooooo redirectUrl2222222", redirectUrl, member);
     if (redirectUrl && member) {
       foo(redirectUrl);
     }
