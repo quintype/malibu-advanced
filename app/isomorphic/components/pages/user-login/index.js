@@ -36,7 +36,7 @@ function useQuery(params) {
 const foo = async redirectUrl => {
   const integrationId = 51;
 
-  const params = `client_id=${integrationId}&redirect_uri=${redirectUrl}&response_type=code&allow_ajax=true`;
+  const params = `client_id=${integrationId}&redirect_uri=${redirectUrl}&response_type=code&allow_ajax=true&foooooo_value=foo`;
   console.log("foooooo params", params);
   const url = `/api/auth/v1/oauth/authorize?${params}`;
   const res = await window.fetch(url, {
