@@ -13,7 +13,6 @@ const WithSSO = ({ ssoHost, redirectUrl, callbackUrl, signInPath, signUpPath, ch
     const res = await window.fetch(url, {
       method: "GET"
     });
-    console.log("fooooo params", params);
     console.log("fooooo res", res);
 
     if (res) {
@@ -28,7 +27,9 @@ const WithSSO = ({ ssoHost, redirectUrl, callbackUrl, signInPath, signUpPath, ch
   };
 
   useEffect(() => {
+    console.log("outside useffect", callbackUrl);
     if (callbackUrl) {
+      console.log("inside useffect");
       foo();
     }
   }, []);
