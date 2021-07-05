@@ -1,6 +1,7 @@
 import React, { Fragment, useEffect, useState, Suspense, lazy } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import get from "lodash/get";
+import { Link } from "@quintype/components";
 
 import { OPEN_HAMBURGER_MENU, OPEN_SEARCHBAR, MEMBER_UPDATED } from "../../../store/actions";
 import { MenuItem } from "../../menu-item";
@@ -199,6 +200,13 @@ const NavBar = () => {
                   <Fragment>
                     <div styleName="overlay" onClick={userAccountHandler}></div>
                     <ul styleName="dropdown-content user-account">
+                      <Link
+                        styleName="user-account-item"
+                        callback={() => setUserHandler(!showUserHandler)}
+                        href="/profile"
+                      >
+                        Profile
+                      </Link>
                       <li styleName="user-account-item" onClick={logoutHandler}>
                         Logout
                       </li>
