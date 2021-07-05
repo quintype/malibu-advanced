@@ -18,6 +18,7 @@ import wretch from "wretch";
 export const app = createApp();
 
 const signupHandler = async (req, res) => {
+  console.log("fooooooo inside signupHandler");
   const { code } = req.body;
   if (!code) {
     return res.status(400).send({ error: "no auth code provided" });
