@@ -23,18 +23,8 @@ export const app = createApp();
 const logError = error => logger.error(error);
 
 const signupHandler = async (req, res) => {
-  console.log("fooooooo inside signupHandler");
-  const { code } = req.body;
-  if (!code) {
-    return res.status(400).send({ error: "no auth code provided" });
-  }
-
-  const bridgekeeperIntegrationId = 51;
-  const bridgekeeperIntegrationSecret = "kcRFrsf89as8fHkfhHihbg3LMHjii8";
-  const bridgekeeperHost = "http://bridgekeeper.alb.staging.quinpress.internal";
-  const bridgekeeperApiKey = "mxdnwJFPrZUQDPuV";
-
-  const brkeConfig = { bridgekeeperIntegrationId, bridgekeeperIntegrationSecret, bridgekeeperHost, bridgekeeperApiKey };
+  console.log("fooooooo inside signupHandler", req.query.code);
+  const code = req.query.code;
 
   const getAccessToken = async (authCode, brkeConfig) => {
     const {
@@ -61,12 +51,23 @@ const signupHandler = async (req, res) => {
         headers: { "Content-Type": "application/x-www-form-urlencoded", "X-BK-AUTH": bridgekeeperApiKey }
       });
       const accessToken = get(requestTokenResponse, ["data", "access_token"]);
+      console.log("foooooo accesstoken", accessToken);
       return accessToken;
     } catch (err) {
-      console.log(`Request for Access Token Failed:${err}`);
       res.send(`foooooooo accesstoken error${err}`);
     }
   };
+
+  if (!code) {
+    return res.status(400).send({ error: "no auth code provided" });
+  }
+
+  const bridgekeeperIntegrationId = 51;
+  const bridgekeeperIntegrationSecret = "kcRFrsf89as8fHkfhHihbg3LMHjii8";
+  const bridgekeeperHost = "http://bridgekeeper.alb.staging.quinpress.internal";
+  const bridgekeeperApiKey = "mxdnwJFPrZUQDPuV";
+
+  const brkeConfig = { bridgekeeperIntegrationId, bridgekeeperIntegrationSecret, bridgekeeperHost, bridgekeeperApiKey };
 
   try {
     const accessToken = await getAccessToken(code, brkeConfig);
@@ -75,14 +76,18 @@ const signupHandler = async (req, res) => {
       cookieConf.secure = true;
     }
     res.cookie("token", accessToken, cookieConf);
-    return res.send({});
+    return res.send(accessToken);
   } catch (err) {
     console.log(err);
     return res.send({ error: "User authentication failed" });
   }
 };
 
-getWithConfig(app, "/api/v1/accounts/signup", signupHandler, { logError });
+console.log("fooooooooo 11111");
+
+app.post("/user/update", signupHandler);
+
+console.log("fooooooooo 222222");
 
 upstreamQuintypeRoutes(app, { forwardAmp: true });
 
