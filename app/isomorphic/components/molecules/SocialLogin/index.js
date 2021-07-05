@@ -79,12 +79,11 @@ export const SocialLoginBase = ({ getCurrentUser, googleAppId, facebookAppId }) 
       setRedirectUriHost(host);
     }, []);
 
-    const { serverSideLoginPath } = withGoogleLogin(
-      googleAppId,
-      "email",
-      true,
-      "https://malibu-advanced-web-auth.qtstage.io/user-login"
-    );
+    const { serverSideLoginPath } = withGoogleLogin({
+      scope: "email",
+      emailMandatory: true,
+      redirectUrl: "https://malibu-advanced-web-auth.qtstage.io/user-login"
+    });
 
     const signInUrl = `${serverSideLoginPath}/?redirect-urii=${redirectUriHost}`;
     return (
