@@ -2,7 +2,7 @@ import React from "react";
 import { func, object, bool } from "prop-types";
 import ReactModal from "react-modal";
 
-import { CloseIcon } from "../../icons/CloseIcon";
+import { SvgIconHandler } from "../../atoms/svg-icon-hadler";
 
 import "./modal.m.css";
 
@@ -13,7 +13,7 @@ const Modal = ({ onClose, children, hideCloseIcon }) => {
         {children}
         {!hideCloseIcon && (
           <button aria-label="close-button" styleName="close-button" onClick={onClose}>
-            <CloseIcon />
+            <SvgIconHandler iconStyle={{ color: "#000" }} type="close" width="18" height="18" viewBox="0 0 18 18" />
           </button>
         )}
       </div>

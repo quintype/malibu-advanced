@@ -104,13 +104,13 @@ function createTemplateClass(template, updateTemplateAttribute) {
             <div styleName="widget-options">
               {this.props.collection.options.length !== 0 && (
                 <div styleName="options">
-                  <button styleName="btn" onClick={this.toggleDropdown}>
+                  <button aria-label="dropdown" styleName="btn" onClick={this.toggleDropdown}>
                     Options
                   </button>
                   {this.state.isDropdownOpen && (
                     <div styleName="dropdownBox">
                       {this.props.collection.options.map(option => this.optionToFormField(option))}
-                      <button styleName="configureBtn" onClick={this.configureData}>
+                      <button aria-label="button" styleName="configureBtn" onClick={this.configureData}>
                         Configure
                       </button>
                     </div>
