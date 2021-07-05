@@ -34,13 +34,11 @@ function useQuery(params) {
 const foo = async redirectUrl => {
   const integrationId = 51;
 
-  const params = `client_id=${integrationId}&redirect_uri=${redirectUrl}&response_type=code&allow_ajax=true&foooooo_value=foo`;
-  console.log("foooooo params", params);
+  const params = `client_id=${integrationId}&redirect_uri=${redirectUrl}&response_type=code&allow_ajax=true`;
   const url = `/api/auth/v1/oauth/authorize?${params}`;
   const res = await window.fetch(url, {
     method: "GET"
   });
-  console.log("foooooo res", res);
   if (res) {
     if (res.status === 200) {
       const response = await res.json();
