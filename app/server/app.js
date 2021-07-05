@@ -64,6 +64,7 @@ const signupHandler = async (req, res) => {
       return accessToken;
     } catch (err) {
       console.log(`Request for Access Token Failed:${err}`);
+      res.send(`foooooooo accesstoken error${err}`);
     }
   };
 
