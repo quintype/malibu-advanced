@@ -6,6 +6,7 @@
 @import "./base/colors.scss";
 @import "./base/normalize.scss";
 @import "./base/typography.scss";
+@import "@quintype/arrow/app.scss";
 
 :root {
   --container-width: 1280px;
@@ -182,7 +183,7 @@ a {
 .sticky-header {
   position: sticky;
   top: 0;
-  z-index: 1;
+  z-index: var(--zlevel1);
 }
 
 .logo-wrapper {
