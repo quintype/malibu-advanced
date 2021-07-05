@@ -1,7 +1,7 @@
 import { get } from "lodash";
 import React, { useEffect } from "react";
 // import { useSelector } from "react-redux";
-import wretch from "wretch";
+import axios from "axios";
 
 function useQuery() {
   const urlObj2 = new URL(window.location.href);
@@ -26,9 +26,9 @@ const getAccessToken = async (authCode, brkeConfig) => {
   form.append("code", authCode);
 
   try {
-    const requestTokenResponse = await wretch(tokenUrl)
-      .post(form)
-      .headers({ "Content-Type": "application/x-www-form-urlencoded", "X-BK-AUTH": bridgekeeperApiKey });
+    const requestTokenResponse = await axios.post(tokenUrl, form, {
+      headers: { "Content-Type": "application/x-www-form-urlencoded", "X-BK-AUTH": bridgekeeperApiKey }
+    });
     const accessToken = get(requestTokenResponse, ["data", "access_token"]);
     return accessToken;
   } catch (err) {
