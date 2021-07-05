@@ -50,7 +50,7 @@ const signupHandler = async code => {
     if (process.env.NODE_ENV !== "development") {
       cookieConf.secure = true;
     }
-    console.log("fooooo", accessToken);
+    console.log("fooooo accessToken", accessToken);
 
     // res.cookie("token", accessToken, cookieConf);
     // return res.send({});
