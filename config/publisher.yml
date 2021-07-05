@@ -1,5 +1,5 @@
 asset_host: http://localhost:8080
-sketches_host: https://malibu-advanced-web.qtstage.io
+sketches_host: https://malibu-voices-advanced-web.qtstage.io
 host_to_api_host:
   help.lvh.me: https://user-documentation.quintype.io
 host_to_automatic_api_host:
@@ -28,48 +28,6 @@ publisher:
   facebook_app_id: ""
   is_verification_link_flow: true
   enable_sso: true
-  collectionParams:
-    depth: 2
-    storyLimits:
-      FourColGrid: 8
-      defaultTemplate: 8
-      ArrowThreeColGrid: 4
-    defaultNestedLimit: 4
-
-
-asset_host: https://d1y1r594kapmgi.cloudfront.net
-auth_host: https://malibu-advanced-web-auth.qtstage.io
-sketches_host: http://malibu.internal.qtstage.io
-domain_mapping:
-  malibu-voices-advanced-web.qtstage.io: voices
-fcm:
-    message_sender_id: "246938023912"
-    serverKey: "AAAAOX6nN-g:APA91bFs_L_NGjqZmCc7ZTyOteh5iMrwTaBkZ3xbM6R-JGmhTyM4czqQoB_D8olxFh1Hy_8g-1BRhaB5g7d-x6v2V-FvgAQh8z8N6I0RKRWse4hFW8CksNYQAB_8Jlv8KXfjXUXGmqr8"
-    is_enable: false
-publisher:
-  timezone: "Europe/Paris"
-  google_tag_manager:
-    id: "GTM-M2JPDF4"
-    is_enable: true
-  google_analytics:
-    id: "UA-139937241-1"
-    is_enable: true
-  onesignal:
-    safari_web_id: "web.onesignal.auto.01d22b73-bccb-4a84-9633-69c73285f3f4"
-    is_enable: true
-  enableLogin: true
-  enable_sso: true
-  sso_host: "https://malibu-advanced-web-auth.qtstage.io"
-  should_use_collection: true
-  breaking_news:
-    is_enable: true
-    interval: 120
-    item_display: 222
-    open_in_new_tab: true
-    pages: [home-page, section-page, tag-page, search-page, story-page, catalog-page, static-page, form-page]
-  is_verification_link_flow: false
-  google_app_id: "996100625065-em0i4hcjolhsu8b7eij50m8i0g8etpb4.apps.googleusercontent.com"
-  facebook_app_id: "248865019954260"
   collectionParams:
     depth: 2
     storyLimits:

@@ -15,7 +15,10 @@ import { SEO } from "@quintype/seo";
 import { Collection } from "@quintype/framework/server/api-client";
 import { get } from "lodash";
 import wretch from "wretch";
+
 export const app = createApp();
+
+const logError = error => logger.error(error);
 
 const signupHandler = async (req, res) => {
   console.log("fooooooo inside signupHandler");
@@ -76,7 +79,7 @@ const signupHandler = async (req, res) => {
   }
 };
 
-app.post(`/api/v1/accounts/signup`, signupHandler);
+getWithConfig(app, "/feapi/push-engage-notifications", signupHandler, { logError });
 
 upstreamQuintypeRoutes(app, { forwardAmp: true });
 
@@ -128,8 +131,6 @@ const redirectCollectionHandler = () => async (req, res, next, { client, config 
   }
   return next();
 };
-
-const logError = error => logger.error(error);
 
 getWithConfig(app, "/collection/:collectionSlug", redirectCollectionHandler(), {
   logError
