@@ -50,9 +50,10 @@ const signupHandler = async (req, res) => {
       const requestTokenResponse = await fetch(tokenUrl, {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded", "X-BK-AUTH": bridgekeeperApiKey },
-        body: form
+        body: JSON.stringify(form),
+        credentials: "same-origin"
       });
-      console.log("foooooo requestTokenResponse", requestTokenResponse);
+      console.log("foooooo requestTokenResponse111111", requestTokenResponse);
       const accessToken = get(requestTokenResponse, ["data", "access_token"]);
       console.log("foooooo accesstoken newwwwwww", accessToken);
       return accessToken;
