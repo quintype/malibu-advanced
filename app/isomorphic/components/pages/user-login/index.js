@@ -29,7 +29,7 @@ const UserLoginPage = () => {
     const redirectUrl = getQueryParam(window.location.href, "redirect_uri");
     const originUrl = getQueryParam(window.location.href, "origin_url");
     if (redirectUrl && member && originUrl) {
-      redirectionHandler(integrationId, redirectUrl);
+      redirectionHandler(integrationId, redirectUrl, originUrl);
     }
   }, [member]);
 

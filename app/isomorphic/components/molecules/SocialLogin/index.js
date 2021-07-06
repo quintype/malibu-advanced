@@ -21,7 +21,7 @@ export const SocialLoginBase = ({ getCurrentUser, googleAppId, facebookAppId }) 
 
   useEffect(() => {
     const authHost = getQueryParam(window.location.href, "redirect_uri");
-    const origin = getQueryParam(window.location.href, "origin_uri");
+    const origin = getQueryParam(window.location.href, "origin_url");
     setRedirectUriHost(authHost);
     setOriginUrl(origin);
 
