@@ -14,9 +14,7 @@ import { pickComponent } from "../isomorphic/pick-component";
 import { SEO } from "@quintype/seo";
 import { Collection } from "@quintype/framework/server/api-client";
 import { get } from "lodash";
-import axios from "axios";
-
-// import wretch from "wretch";
+import wretch from "wretch";
 
 export const app = createApp();
 
@@ -47,11 +45,17 @@ const signupHandler = async (req, res) => {
     form.append("code", authCode);
 
     try {
-      const requestTokenResponse = await axios.post(tokenUrl, form, {
-        headers: { "Content-Type": "application/x-www-form-urlencoded", "X-BK-AUTH": bridgekeeperApiKey }
-      });
+      const requestTokenResponse = await wretch()
+        .url(tokenUrl)
+        .post(form)
+        .options({ "Content-Type": "application/x-www-form-urlencoded", "X-BK-AUTH": bridgekeeperApiKey })
+        .res(res => {
+          console.log("foooooo res", res);
+          return Promise.resolve(res);
+        })
+        .catch(ex => Promise.reject(ex));
       const accessToken = get(requestTokenResponse, ["data", "access_token"]);
-      console.log("foooooo accesstoken", accessToken);
+      console.log("foooooo accesstoken111111", accessToken);
       return accessToken;
     } catch (err) {
       res.send(`error: ${err}`);

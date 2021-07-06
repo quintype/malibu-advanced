@@ -23,8 +23,7 @@
     "react-modal": "^3.12.1",
     "react-redux": "^7.0.3",
     "redux": "^4.0.1",
-    "wretch": "^1.4.1",
-    "axios": "^0.19.0"
+    "wretch": "^1.4.1"
   },
   "devDependencies": {
     "@lhci/cli": "^0.7.0",

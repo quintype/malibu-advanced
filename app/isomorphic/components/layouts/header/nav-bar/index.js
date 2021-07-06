@@ -27,6 +27,7 @@ const NavBar = () => {
   const [callbackUrl, setCallbackUrl] = useState(null);
   const [originUrl, setOriginUrl] = useState(null);
   const enableSSO = useSelector(state => get(state, ["qt", "config", "publisher-attributes", "enable_sso"]));
+  const pageType = useSelector(state => get(state, ["qt", "pageType"], null));
   // const ssoHost = useSelector(state => get(state, ["qt", "config", "publisher-attributes", "sso_host"]));
   const integrationId = 51;
 
@@ -154,6 +155,10 @@ const NavBar = () => {
         return setMessage(null);
     }
   }, []);
+
+  useEffect(() => {
+    setOriginUrl(global.location.href);
+  }, [pageType]);
 
   const messageModal = message => {
     // Import modal on message
