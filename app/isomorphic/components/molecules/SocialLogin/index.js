@@ -15,12 +15,15 @@ export const SocialLoginBase = ({ getCurrentUser, googleAppId, facebookAppId }) 
   const [error, setError] = useState("");
   const [redirectUrl, setRedirectUrl] = useState("/");
   const [redirectUriHost, setRedirectUriHost] = useState(null);
+  const [originUrl, setOriginUrl] = useState(null);
   // const enableSSO = useSelector(state => get(state, ["qt", "config", "publisher-attributes", "enable_sso"]));
   const ssoHost = useSelector(state => get(state, ["qt", "config", "publisher-attributes", "sso_host"]));
 
   useEffect(() => {
-    const host = getQueryParam(window.location.href, "redirect_uri");
-    setRedirectUriHost(host);
+    const authHost = getQueryParam(window.location.href, "redirect_uri");
+    const origin = getQueryParam(window.location.href, "origin_uri");
+    setRedirectUriHost(authHost);
+    setOriginUrl(origin);
 
     const location = new URL(window.location.href);
     const currentLocation = `${location.origin}${location.pathname}`;
@@ -77,7 +80,7 @@ export const SocialLoginBase = ({ getCurrentUser, googleAppId, facebookAppId }) 
       redirectUrl: `${ssoHost}/user-login`
     });
 
-    const signInUrl = `${serverSideLoginPath}/?post-login-redirect-uri=${redirectUriHost}`;
+    const signInUrl = `${serverSideLoginPath}/?post-login-redirect-uri=${redirectUriHost}&origin-url=${originUrl}`;
     return (
       <Button color="#dd4b39" flat href={signInUrl} onClick={e => googleOnClick(e, serverSideLoginPath)} socialButton>
         <span styleName="icon">

@@ -54,7 +54,7 @@ const signupHandler = async (req, res) => {
       console.log("foooooo accesstoken", accessToken);
       return accessToken;
     } catch (err) {
-      res.send(`foooooooo accesstoken error${err}`);
+      res.send(`error: ${err}`);
     }
   };
 
@@ -83,11 +83,7 @@ const signupHandler = async (req, res) => {
   }
 };
 
-console.log("fooooooooo 11111");
-
 app.post("/user/update", signupHandler);
-
-console.log("fooooooooo 222222");
 
 upstreamQuintypeRoutes(app, { forwardAmp: true });
 

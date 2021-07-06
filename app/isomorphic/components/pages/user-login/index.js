@@ -4,22 +4,32 @@ import { useSelector } from "react-redux";
 
 import AccountModal from "../../login/AccountModal";
 
-import { getQueryParam } from "../../utils";
+import { generateRedirect, getQueryParam } from "../../utils";
 
 const UserLoginPage = () => {
+  const integrationId = 51;
   const member = useSelector(state => get(state, ["member"], null));
+
+  const redirectionHandler = async (integrationId, redirectUrl, originUrl) => {
+    if (originUrl) {
+      const signupUrl = await generateRedirect(integrationId, redirectUrl);
+      window.location.href = `${signupUrl}&origin_url=${originUrl}`;
+    }
+    window.location.href = await generateRedirect(integrationId, redirectUrl);
+  };
 
   useEffect(() => {
     const redirectUrl = getQueryParam(window.location.href, "post-login-redirect-uri");
     if (redirectUrl) {
-      generateRedirect(redirectUrl);
+      redirectionHandler(integrationId, redirectUrl);
     }
   }, []);
 
   useEffect(() => {
     const redirectUrl = getQueryParam(window.location.href, "redirect_uri");
-    if (redirectUrl && member) {
-      generateRedirect(redirectUrl);
+    const originUrl = getQueryParam(window.location.href, "origin_url");
+    if (redirectUrl && member && originUrl) {
+      redirectionHandler(integrationId, redirectUrl);
     }
   }, [member]);
 
@@ -27,22 +37,3 @@ const UserLoginPage = () => {
 };
 
 export { UserLoginPage };
-
-const generateRedirect = async redirectUrl => {
-  const integrationId = 51;
-
-  const params = `client_id=${integrationId}&redirect_uri=${redirectUrl}&response_type=code&allow_ajax=true`;
-  const url = `/api/auth/v1/oauth/authorize?${params}`;
-  const res = await window.fetch(url, {
-    method: "GET"
-  });
-  if (res) {
-    if (res.status === 200) {
-      const response = await res.json();
-      window.location.href = response.redirect_uri;
-    } else {
-      const response = await res.json();
-      window.alert(response.error_description);
-    }
-  }
-};

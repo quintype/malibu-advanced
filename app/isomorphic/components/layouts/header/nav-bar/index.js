@@ -6,6 +6,7 @@ import { OPEN_HAMBURGER_MENU, OPEN_SEARCHBAR, MEMBER_UPDATED } from "../../../st
 import { MenuItem } from "../../menu-item";
 import HamburgerMenu from "../../../atoms/hamburger-menu";
 import MessageWrapper from "../../../molecules/forms/message-wrapper";
+import { generateRedirect } from "../../../utils";
 
 import { SvgIconHandler } from "../../../atoms/svg-icon-hadler";
 
@@ -165,27 +166,10 @@ const NavBar = () => {
     );
   };
 
-  const generateRedirect = async (callbackUrl, integrationId) => {
+  const onClick = async (callbackUrl, integrationId) => {
     const redirectUri = `${callbackUrl}/user/signup`;
-    const params = `client_id=${integrationId}&redirect_uri=${redirectUri}&response_type=code&allow_ajax=true`;
-    const url = `/api/auth/v1/oauth/authorize?${params}`;
-    const res = await window.fetch(url, {
-      method: "GET"
-    });
-
-    if (res) {
-      if (res.status === 200) {
-        const response = await res.json();
-        window.location.href = `${response.redirect_uri}&origin_uri=${originUrl}`;
-      } else {
-        const response = await res.json();
-        window.alert(response.error_description);
-      }
-    }
-  };
-
-  const onClick = (callbackUrl, integrationId) => {
-    generateRedirect(callbackUrl, integrationId);
+    const authUrl = await generateRedirect(integrationId, redirectUri);
+    window.location.href = `${authUrl}&origin_url=${originUrl}`;
   };
 
   return (
