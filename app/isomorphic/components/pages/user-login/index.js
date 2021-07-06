@@ -10,11 +10,7 @@ const UserLoginPage = () => {
   const integrationId = 51;
   const member = useSelector(state => get(state, ["member"], null));
 
-  const redirectionHandler = async (integrationId, redirectUrl, originUrl) => {
-    if (originUrl) {
-      const signupUrl = await generateRedirect(integrationId, redirectUrl);
-      window.location.href = `${signupUrl}&origin_url=${originUrl}`;
-    }
+  const redirectionHandler = async (integrationId, redirectUrl) => {
     window.location.href = await generateRedirect(integrationId, redirectUrl);
   };
 
@@ -27,9 +23,8 @@ const UserLoginPage = () => {
 
   useEffect(() => {
     const redirectUrl = getQueryParam(window.location.href, "redirect_uri");
-    const originUrl = getQueryParam(window.location.href, "origin_url");
-    if (redirectUrl && member && originUrl) {
-      redirectionHandler(integrationId, redirectUrl, originUrl);
+    if (redirectUrl && member) {
+      redirectionHandler(integrationId, redirectUrl);
     }
   }, [member]);
 

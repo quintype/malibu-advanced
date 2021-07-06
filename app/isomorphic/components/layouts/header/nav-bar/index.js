@@ -170,7 +170,8 @@ const NavBar = () => {
   const onClick = async (callbackUrl, integrationId) => {
     const redirectUri = `${callbackUrl}/user/signup`;
     const authUrl = await generateRedirect(integrationId, redirectUri);
-    window.location.href = `${authUrl}&origin_url=${originUrl}`;
+    document.cookie = `origin_url=${originUrl}`;
+    window.location.href = authUrl;
   };
 
   return (

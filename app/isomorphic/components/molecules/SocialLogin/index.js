@@ -13,7 +13,6 @@ import "./social-login.m.css";
 
 export const SocialLoginBase = () => {
   const [redirectUriHost, setRedirectUriHost] = useState(null);
-  const [originUrl, setOriginUrl] = useState(null);
   const [currentLocation, setCurrentLocation] = useState("/");
   // const enableSSO = useSelector(state => get(state, ["qt", "config", "publisher-attributes", "enable_sso"]));
   const ssoHost = useSelector(state => get(state, ["qt", "config", "publisher-attributes", "sso_host"]));
@@ -23,9 +22,7 @@ export const SocialLoginBase = () => {
     const redirectUrl = `${location.origin}${location.pathname}`;
     location && setCurrentLocation(redirectUrl);
     const authHost = getQueryParam(window.location.href, "redirect_uri");
-    const origin = getQueryParam(window.location.href, "origin_url");
     setRedirectUriHost(authHost);
-    setOriginUrl(origin);
   }, []);
 
   const googleOnClick = (e, serverSideLoginPath) => {
@@ -55,7 +52,7 @@ export const SocialLoginBase = () => {
       redirectUrl: `${ssoHost}/user-login`
     });
 
-    const signInUrl = `${serverSideLoginPath}/?post-login-redirect-uri=${redirectUriHost}?origin-url=${originUrl}`;
+    const signInUrl = `${serverSideLoginPath}/?post-login-redirect-uri=${redirectUriHost}`;
     return (
       <Button color="#dd4b39" flat href={signInUrl} onClick={e => googleOnClick(e, serverSideLoginPath)} socialButton>
         <span styleName="icon">
