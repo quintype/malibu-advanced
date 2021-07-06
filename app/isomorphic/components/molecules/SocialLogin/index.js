@@ -5,7 +5,7 @@ import { connect, useSelector } from "react-redux";
 import get from "lodash/get";
 
 import Button from "../../atoms/Button";
-import { getQueryParams } from "../../utils";
+import { getQueryParam } from "../../utils";
 
 import { SvgIconHandler } from "../../atoms/svg-icon-hadler";
 
@@ -14,16 +14,17 @@ import "./social-login.m.css";
 export const SocialLoginBase = ({ getCurrentUser, googleAppId, facebookAppId }) => {
   const [error, setError] = useState("");
   const [redirectUrl, setRedirectUrl] = useState("/");
-  const enableSSO = useSelector(state => get(state, ["qt", "config", "publisher-attributes", "enable_sso"]));
+  const [redirectUriHost, setRedirectUriHost] = useState(null);
+  // const enableSSO = useSelector(state => get(state, ["qt", "config", "publisher-attributes", "enable_sso"]));
+  const ssoHost = useSelector(state => get(state, ["qt", "config", "publisher-attributes", "sso_host"]));
 
   useEffect(() => {
-    if (enableSSO) {
-      setRedirectUrl(getQueryParams(window.location.href, ["redirect-url"])["redirect-url"]);
-    } else {
-      const location = new URL(window.location.href);
-      const currentLocation = `${location.origin}${location.pathname}`;
-      location && !enableSSO && setRedirectUrl(currentLocation);
-    }
+    const host = getQueryParam(window.location.href, "redirect_uri");
+    setRedirectUriHost(host);
+
+    const location = new URL(window.location.href);
+    const currentLocation = `${location.origin}${location.pathname}`;
+    location && setRedirectUrl(currentLocation);
   }, []);
 
   const socialLogin = (e, login) => {
@@ -70,19 +71,10 @@ export const SocialLoginBase = ({ getCurrentUser, googleAppId, facebookAppId }) 
   };
 
   const GoogleLogin = () => {
-    const [redirectUriHost, setRedirectUriHost] = useState("https://malibu-advanced-web.qtstage.io/user/signup");
-
-    useEffect(() => {
-      const urlObj2 = new URL(window.location.href);
-      const urlSubstring2 = urlObj2.search;
-      const host = new URLSearchParams(urlSubstring2).get("redirect_uri");
-      setRedirectUriHost(host);
-    }, []);
-
     const { serverSideLoginPath } = withGoogleLogin({
       scope: "email",
       emailMandatory: true,
-      redirectUrl: "https://malibu-advanced-web-auth.qtstage.io/user-login"
+      redirectUrl: `${ssoHost}/user-login`
     });
 
     const signInUrl = `${serverSideLoginPath}/?post-login-redirect-uri=${redirectUriHost}`;

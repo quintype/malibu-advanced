@@ -1,20 +1,23 @@
 import { get } from "lodash";
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
+
 import AccountModal from "../../login/AccountModal";
+
+import { getQueryParam } from "../../utils";
 
 const UserLoginPage = () => {
   const member = useSelector(state => get(state, ["member"], null));
 
   useEffect(() => {
-    const redirectUrl = useQuery("post-login-redirect-uri");
+    const redirectUrl = getQueryParam(window.location.href, "post-login-redirect-uri");
     if (redirectUrl) {
       generateRedirect(redirectUrl);
     }
   }, []);
 
   useEffect(() => {
-    const redirectUrl = useQuery("redirect_uri");
+    const redirectUrl = getQueryParam(window.location.href, "redirect_uri");
     if (redirectUrl && member) {
       generateRedirect(redirectUrl);
     }
@@ -24,12 +27,6 @@ const UserLoginPage = () => {
 };
 
 export { UserLoginPage };
-
-function useQuery(params) {
-  const urlObj2 = new URL(window.location.href);
-  const urlSubstring2 = urlObj2.search;
-  return new URLSearchParams(urlSubstring2).get(params);
-}
 
 const generateRedirect = async redirectUrl => {
   const integrationId = 51;

@@ -5,20 +5,8 @@ export const isValidEmail = email => {
   return true;
 };
 
-export const getQueryParams = (url, requiredParam) => {
+export const getQueryParam = (url, query) => {
   const urlObj = new URL(url);
-  const urlSubstring = urlObj.search.substring(1);
-  var getQuery = new URLSearchParams(urlSubstring);
-  const queryObj = {};
-
-  if (requiredParam.length < 1) {
-    return null;
-  }
-
-  requiredParam.forEach(param => {
-    Object.assign(queryObj, {
-      [param]: getQuery.get(param)
-    });
-  });
-  return queryObj;
+  const urlSubstring = urlObj.search;
+  return new URLSearchParams(urlSubstring).get(query);
 };
