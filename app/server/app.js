@@ -158,5 +158,6 @@ isomorphicRoutes(app, {
     structuredData: STRUCTURED_DATA
   }),
   preloadJs: true,
-  oneSignalServiceWorkers: true
+  oneSignalServiceWorkers: true,
+  prerenderServiceUrl: "https://prerender.quintype.io"
 });

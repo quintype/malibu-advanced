@@ -27,7 +27,9 @@ const lhciConfig = {
         "link-name": "warn",
         "image-size-responsive": "warn",
         "button-name": "warn", // It suggests that the button should have inner text content or an aria-label or aria-labelledBy.
-        "categories:performance": ["error", { minScore: 0.7 }]
+        "categories:performance": ["error", { minScore: 0.7 }],
+        "image-alt": "warn",
+        "link-text": "warn"
       }
     },
     upload: {
@@ -50,3 +52,6 @@ module.exports = lhciConfig;
 // no-document-write: Avoid `document.write()`
 // no-unload-listeners: Timetaken by event listeners
 // button-name: It suggests that the button should have inner text content or an aria-label or aria-labelledBy.
+// image-alt: Image elements do not have `[alt]` attributes
+// link-name: Links do not have a discernible name
+// link-text: Links do not have descriptive text

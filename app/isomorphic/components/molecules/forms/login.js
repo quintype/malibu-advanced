@@ -9,7 +9,7 @@ import { IS_OPEN_LOGIN_FORM, MEMBER_UPDATED } from "../../store/actions";
 
 import "./forms.m.css";
 
-const LoginBase = ({ onLogin, checkForMemberUpdated, forgotPassword, manageLoginForm }) => {
+const LoginBase = ({ onLogin, forgotPassword, manageLoginForm }) => {
   const [user, setUser] = useState({
     email: "",
     password: ""
@@ -85,13 +85,12 @@ const LoginBase = ({ onLogin, checkForMemberUpdated, forgotPassword, manageLogin
           </button>
         </div>
       </form>
-      <SocialLogin checkForMemberUpdated={checkForMemberUpdated} getCurrentUser={getCurrentUser} />
+      <SocialLogin getCurrentUser={getCurrentUser} />
     </React.Fragment>
   );
 };
 
 LoginBase.propTypes = {
-  checkForMemberUpdated: func,
   onLogin: func,
   forgotPassword: func,
   manageLoginForm: func,

@@ -62,7 +62,11 @@ const ISOMORPHIC_ROUTES = [
   },
   {
     path: "/user/signup",
-    pageType: PAGE_TYPE.USER_SIGNUP,
+    pageType: PAGE_TYPE.USER_SIGNUP
+  },
+  {
+    path: "/profile",
+    pageType: PAGE_TYPE.PROFILE_PAGE,
     exact: true
   }
 ];

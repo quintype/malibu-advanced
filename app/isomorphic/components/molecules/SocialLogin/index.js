@@ -11,60 +11,35 @@ import { SvgIconHandler } from "../../atoms/svg-icon-hadler";
 
 import "./social-login.m.css";
 
-export const SocialLoginBase = ({ getCurrentUser, googleAppId, facebookAppId }) => {
-  const [error, setError] = useState("");
-  const [redirectUrl, setRedirectUrl] = useState("/");
+export const SocialLoginBase = () => {
   const [redirectUriHost, setRedirectUriHost] = useState(null);
   const [originUrl, setOriginUrl] = useState(null);
+  const [currentLocation, setCurrentLocation] = useState("/");
   // const enableSSO = useSelector(state => get(state, ["qt", "config", "publisher-attributes", "enable_sso"]));
   const ssoHost = useSelector(state => get(state, ["qt", "config", "publisher-attributes", "sso_host"]));
 
   useEffect(() => {
+    const location = new URL(window.location.href);
+    const redirectUrl = `${location.origin}${location.pathname}`;
+    location && setCurrentLocation(redirectUrl);
     const authHost = getQueryParam(window.location.href, "redirect_uri");
     const origin = getQueryParam(window.location.href, "origin_url");
     setRedirectUriHost(authHost);
     setOriginUrl(origin);
-
-    const location = new URL(window.location.href);
-    const currentLocation = `${location.origin}${location.pathname}`;
-    location && setRedirectUrl(currentLocation);
   }, []);
-
-  const socialLogin = (e, login) => {
-    e.preventDefault();
-
-    login()
-      .then(async () => {
-        await getCurrentUser();
-        console.log("successfully login");
-      })
-      .catch(error => {
-        console.log("error", error);
-        if (error === "NO_EMAIL") {
-          setError("The account you are using does not have an email id. Please try with another account.");
-        } else if (error === "NOT_LOADED") {
-          setError("");
-        } else if (error === "NOT_GRANTED") {
-          setError("There seems to be an error with social logins. Please do a manual email/password login.");
-        } else {
-          setError("Oops! Something went wrong. Please try again later.");
-        }
-      }); // Can also make an API call to /api/v1/members/me
-  };
 
   const googleOnClick = (e, serverSideLoginPath) => {
     window.location.href = serverSideLoginPath;
   };
 
   const FaceBookLogin = () => {
-    const { login, serverSideLoginPath } = withFacebookLogin(
-      facebookAppId,
-      "email",
-      true,
-      "https://malibu-advanced-web-auth.qtstage.io"
-    );
+    const { serverSideLoginPath } = withFacebookLogin({
+      scope: "email",
+      emailMandatory: true,
+      redirectUrl: currentLocation
+    });
     return (
-      <Button color="#3b5998" flat href={serverSideLoginPath} onClick={e => socialLogin(e, login)} socialButton>
+      <Button color="#3b5998" flat href={serverSideLoginPath} socialButton>
         <span styleName="icon">
           <SvgIconHandler type="facebook" iconStyle={{ color: "#3b5998" }} width="9" height="15" viewBox="0 0 12 21" />
         </span>{" "}
@@ -92,7 +67,7 @@ export const SocialLoginBase = ({ getCurrentUser, googleAppId, facebookAppId }) 
   };
 
   const AppleLogin = () => {
-    const { serverSideLoginPath } = withAppleLogin(redirectUrl);
+    const { serverSideLoginPath } = withAppleLogin(currentLocation);
     return (
       <Button color="#dd4b39" flat href={serverSideLoginPath} socialButton>
         <SvgIconHandler type="apple" height="44" width="44" iconStyle={{ color: "#000" }} /> Apple
@@ -114,7 +89,6 @@ export const SocialLoginBase = ({ getCurrentUser, googleAppId, facebookAppId }) 
           <AppleLogin />
         </li>
       </ul>
-      <p styleName="error">{error}</p>
     </div>
   );
 };

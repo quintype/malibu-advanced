@@ -14,7 +14,8 @@ export const PAGE_TYPE = Object.freeze({
   AUTHOR_PAGE: "author-page",
   RESET_PASSWORD_PAGE: "reset-password-page",
   USER_LOGIN: "user-login",
-  USER_SIGNUP: "user-signup"
+  USER_SIGNUP: "user-signup",
+  PROFILE_PAGE: "profile-page"
 });
 export const TAG_PAGE_URL_PREFIX = "/topic/";
 export const storyFields =
