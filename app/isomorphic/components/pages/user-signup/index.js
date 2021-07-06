@@ -24,8 +24,10 @@ export const UserSignupPage = () => {
   });
 
   useEffect(() => {
-    if (member) {
-      window.location.href = getCookie("origin_url") || "/";
+    const originUrl = getCookie("origin_url");
+    console.log("foooooo", originUrl);
+    if (member && originUrl) {
+      window.location.href = originUrl;
     }
   }, [member]);
   return <div></div>;
