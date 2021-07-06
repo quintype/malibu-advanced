@@ -10,8 +10,6 @@ import MessageWrapper from "../../../molecules/forms/message-wrapper";
 import { SvgIconHandler } from "../../../atoms/svg-icon-hadler";
 
 import "./navbar.m.css";
-import { Link } from "@quintype/components";
-import WithSSO from "../../../with-sso";
 
 const NavBar = () => {
   // Import account modal dynamically
@@ -25,9 +23,10 @@ const NavBar = () => {
   const menu = useSelector(state => get(state, ["qt", "data", "navigationMenu", "homeMenu"], []));
   const hamburgerMenu = useSelector(state => get(state, ["qt", "data", "navigationMenu", "hamburgerMenu"], []));
   const [callbackUrl, setCallbackUrl] = useState(null);
-  const [redirectUrl, setRedirectUrl] = useState(null);
+  // const [redirectUrl, setRedirectUrl] = useState(null);
   const enableSSO = useSelector(state => get(state, ["qt", "config", "publisher-attributes", "enable_sso"]));
-  const ssoHost = useSelector(state => get(state, ["qt", "config", "publisher-attributes", "sso_host"]));
+  // const ssoHost = useSelector(state => get(state, ["qt", "config", "publisher-attributes", "sso_host"]));
+  const integrationId = 51;
 
   const displayStyle = isHamburgerMenuOpen ? "flex" : "none";
 
@@ -138,7 +137,7 @@ const NavBar = () => {
     getCurrentUser();
 
     setCallbackUrl(global.location.origin);
-    setRedirectUrl(global.location.href);
+    // setRedirectUrl(global.location.href);
 
     switch (global.location.hash) {
       case "#email-verified":
@@ -164,6 +163,29 @@ const NavBar = () => {
         </Modal>
       </Suspense>
     );
+  };
+
+  const generateRedirect = async (callbackUrl, integrationId) => {
+    const redirectUri = `${callbackUrl}/user/signup`;
+    const params = `client_id=${integrationId}&redirect_uri=${redirectUri}&response_type=code&allow_ajax=true`;
+    const url = `/api/auth/v1/oauth/authorize?${params}`;
+    const res = await window.fetch(url, {
+      method: "GET"
+    });
+
+    if (res) {
+      if (res.status === 200) {
+        const response = await res.json();
+        window.location.href = response.redirect_uri;
+      } else {
+        const response = await res.json();
+        window.alert(response.error_description);
+      }
+    }
+  };
+
+  const onClick = (callbackUrl, integrationId) => {
+    generateRedirect(callbackUrl, integrationId);
   };
 
   return (
@@ -218,18 +240,9 @@ const NavBar = () => {
             ) : (
               <>
                 {enableSSO ? (
-                  <WithSSO
-                    ssoHost={ssoHost}
-                    signInPath="/user-login"
-                    redirectUrl={redirectUrl}
-                    callbackUrl={callbackUrl}
-                  >
-                    {({ signInHref }) => (
-                      <Link href={signInHref}>
-                        <SvgIconHandler type="user-icon" width="18" height="20" viewBox="0 0 18 20" />
-                      </Link>
-                    )}
-                  </WithSSO>
+                  <span onClick={() => onClick(callbackUrl, integrationId)}>
+                    <SvgIconHandler type="user-icon" width="18" height="20" viewBox="0 0 18 20" />
+                  </span>
                 ) : (
                   <button styleName="user-btn" onClick={() => userBtnClick()}>
                     <SvgIconHandler type="user-icon" width="18" height="20" viewBox="0 0 18 20" />
