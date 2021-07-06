@@ -23,7 +23,7 @@ const NavBar = () => {
   const menu = useSelector(state => get(state, ["qt", "data", "navigationMenu", "homeMenu"], []));
   const hamburgerMenu = useSelector(state => get(state, ["qt", "data", "navigationMenu", "hamburgerMenu"], []));
   const [callbackUrl, setCallbackUrl] = useState(null);
-  // const [redirectUrl, setRedirectUrl] = useState(null);
+  const [originUrl, setOriginUrl] = useState(null);
   const enableSSO = useSelector(state => get(state, ["qt", "config", "publisher-attributes", "enable_sso"]));
   // const ssoHost = useSelector(state => get(state, ["qt", "config", "publisher-attributes", "sso_host"]));
   const integrationId = 51;
@@ -137,7 +137,7 @@ const NavBar = () => {
     getCurrentUser();
 
     setCallbackUrl(global.location.origin);
-    // setRedirectUrl(global.location.href);
+    setOriginUrl(global.location.href);
 
     switch (global.location.hash) {
       case "#email-verified":
@@ -176,7 +176,7 @@ const NavBar = () => {
     if (res) {
       if (res.status === 200) {
         const response = await res.json();
-        window.location.href = response.redirect_uri;
+        window.location.href = `${response.redirect_uri}&origin_uri=${originUrl}`;
       } else {
         const response = await res.json();
         window.alert(response.error_description);

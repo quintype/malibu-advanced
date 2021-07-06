@@ -7,16 +7,16 @@ const UserLoginPage = () => {
   const member = useSelector(state => get(state, ["member"], null));
 
   useEffect(() => {
-    const redirectUrl = useQuery("redirect-urii");
+    const redirectUrl = useQuery("post-login-redirect-uri");
     if (redirectUrl) {
-      foo(redirectUrl);
+      generateRedirect(redirectUrl);
     }
   }, []);
 
   useEffect(() => {
     const redirectUrl = useQuery("redirect_uri");
     if (redirectUrl && member) {
-      foo(redirectUrl);
+      generateRedirect(redirectUrl);
     }
   }, [member]);
 
@@ -31,7 +31,7 @@ function useQuery(params) {
   return new URLSearchParams(urlSubstring2).get(params);
 }
 
-const foo = async redirectUrl => {
+const generateRedirect = async redirectUrl => {
   const integrationId = 51;
 
   const params = `client_id=${integrationId}&redirect_uri=${redirectUrl}&response_type=code&allow_ajax=true`;
