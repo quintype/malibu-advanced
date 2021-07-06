@@ -14,7 +14,7 @@ import { pickComponent } from "../isomorphic/pick-component";
 import { SEO } from "@quintype/seo";
 import { Collection } from "@quintype/framework/server/api-client";
 import { get } from "lodash";
-import axios from "axios";
+const fetch = require("node-fetch");
 
 // import wretch from "wretch";
 
