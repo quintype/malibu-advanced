@@ -75,7 +75,7 @@ const signupHandler = async (req, res) => {
     if (process.env.NODE_ENV !== "development") {
       cookieConf.secure = true;
     }
-    res.cookie("token", accessToken, cookieConf);
+    res.cookie("qt-auth", accessToken, cookieConf);
     return res.send(accessToken);
   } catch (err) {
     console.log(err);
