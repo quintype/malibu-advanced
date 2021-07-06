@@ -1,11 +1,12 @@
+import { get } from "lodash";
 import React, { useEffect } from "react";
-// import { useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import wretch from "wretch";
 
-import { getQueryParam } from "../../utils";
+import { getCookie, getQueryParam } from "../../utils";
 
 export const UserSignupPage = () => {
-  // const member = useSelector(state => get(state, ["member"], null));
+  const member = useSelector(state => get(state, ["member"], null));
 
   useEffect(() => {
     const getUserStatus = async () => {
@@ -14,7 +15,6 @@ export const UserSignupPage = () => {
         .url(`/user/update?code=${code}`)
         .post({ code: code })
         .res(res => {
-          console.log("res-------", res);
           Promise.resolve(res);
         })
         .catch(ex => Promise.reject(ex));
@@ -23,10 +23,10 @@ export const UserSignupPage = () => {
     getUserStatus();
   });
 
-  // useEffect(() => {
-  //   if (member) {
-  //     window.location.href = "/";
-  //   }
-  // }, [member]);
+  useEffect(() => {
+    if (member) {
+      window.location.href = getCookie("origin_url") || "/";
+    }
+  }, [member]);
   return <div></div>;
 };
