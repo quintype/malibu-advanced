@@ -47,13 +47,25 @@ const signupHandler = async (req, res) => {
     form.append("code", authCode);
 
     try {
+      await fetch(tokenUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded", "X-BK-AUTH": bridgekeeperApiKey },
+        body: JSON.stringify(form),
+        credentials: "same-origin"
+      })
+        .then(response => {
+          console.log("fooooo response.json", response.json());
+          return response.json();
+        })
+        .then(data => console.log("fooooo data", data));
+
       const requestTokenResponse = await fetch(tokenUrl, {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded", "X-BK-AUTH": bridgekeeperApiKey },
         body: JSON.stringify(form),
         credentials: "same-origin"
       });
-      console.log("foooooo requestTokenResponse111111", requestTokenResponse);
+      console.log("foooooo requestTokenResponse", await requestTokenResponse);
       const accessToken = get(requestTokenResponse, ["data", "access_token"]);
       console.log("foooooo accesstoken newwwwwww", accessToken);
       return accessToken;
