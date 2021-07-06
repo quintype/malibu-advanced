@@ -80,7 +80,7 @@ export const SocialLoginBase = ({ getCurrentUser, googleAppId, facebookAppId }) 
       redirectUrl: `${ssoHost}/user-login`
     });
 
-    const signInUrl = `${serverSideLoginPath}/?post-login-redirect-uri=${redirectUriHost}&origin-url=${originUrl}`;
+    const signInUrl = `${serverSideLoginPath}/?post-login-redirect-uri=${redirectUriHost}/?origin-url=${originUrl}`;
     return (
       <Button color="#dd4b39" flat href={signInUrl} onClick={e => googleOnClick(e, serverSideLoginPath)} socialButton>
         <span styleName="icon">
