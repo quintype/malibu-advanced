@@ -52,12 +52,23 @@ const signupHandler = async (req, res) => {
         headers: { "Content-Type": "application/x-www-form-urlencoded", "X-BK-AUTH": bridgekeeperApiKey },
         body: JSON.stringify(form)
       });
+      console.log("foooooo requestTokenResponse", requestTokenResponse);
       const accessToken = get(requestTokenResponse, ["data", "access_token"]);
       console.log("foooooo accesstoken newwwwwww", accessToken);
       return accessToken;
     } catch (err) {
       return await Promise.reject(err);
     }
+    // try {
+    //   const requestTokenResponse = await axios.post(tokenUrl, form, {
+    //     headers: { "Content-Type": "application/x-www-form-urlencoded", "X-BK-AUTH": bridgekeeperApiKey }
+    //   });
+    //   const accessToken = get(requestTokenResponse, ["data", "access_token"]);
+    //   console.log("foooooo accesstoken", accessToken);
+    //   return accessToken;
+    // } catch (err) {
+    //   res.send(`error: ${err}`);
+    // }
   };
 
   if (!code) {
