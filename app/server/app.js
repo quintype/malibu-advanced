@@ -14,17 +14,21 @@ import { pickComponent } from "../isomorphic/pick-component";
 import { SEO } from "@quintype/seo";
 import { Collection } from "@quintype/framework/server/api-client";
 import { get } from "lodash";
+const bodyParser = require("body-parser");
 const fetch = require("node-fetch");
 
 // import wretch from "wretch";
 
 export const app = createApp();
 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
 const logError = error => logger.error(error);
 
 const signupHandler = async (req, res) => {
-  console.log("fooooooo inside signupHandler11111", req.query.code);
-  const code = req.query.code;
+  const { code } = req.body;
+  console.log("fooooooo inside signupHandler code -----", code);
 
   const getAccessToken = async (authCode, brkeConfig) => {
     const {
@@ -47,17 +51,17 @@ const signupHandler = async (req, res) => {
     form.append("code", authCode);
 
     try {
-      await fetch(tokenUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded", "X-BK-AUTH": bridgekeeperApiKey },
-        body: JSON.stringify(form),
-        credentials: "same-origin"
-      })
-        .then(response => {
-          console.log("fooooo response.json", response.json());
-          return response.json();
-        })
-        .then(data => console.log("fooooo data", data));
+      // await fetch(tokenUrl, {
+      //   method: "POST",
+      //   headers: { "Content-Type": "application/x-www-form-urlencoded", "X-BK-AUTH": bridgekeeperApiKey },
+      //   body: JSON.stringify(form),
+      //   credentials: "same-origin"
+      // })
+      //   .then(response => {
+      //     console.log("fooooo response.json", response.json());
+      //     return response.json();
+      //   })
+      //   .then(data => console.log("fooooo data", data));
 
       const requestTokenResponse = await fetch(tokenUrl, {
         method: "POST",

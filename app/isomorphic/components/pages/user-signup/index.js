@@ -12,7 +12,7 @@ export const UserSignupPage = () => {
     const getUserStatus = async () => {
       const code = getQueryParam(window.location.href, "code");
       wretch()
-        .url(`/user/update?code=${code}`)
+        .url("/user/update")
         .post({ code: code })
         .res(res => {
           Promise.resolve(res);
