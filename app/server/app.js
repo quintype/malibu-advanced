@@ -44,11 +44,18 @@ const signupHandler = async (req, res) => {
 
     const tokenUrl = `${bridgekeeperHost}/api/auth/v1/oauth/token`;
 
-    const form = new URLSearchParams();
-    form.append("client_id", bridgekeeperIntegrationId);
-    form.append("client_secret", bridgekeeperIntegrationSecret);
-    form.append("grant_type", "authorization_code");
-    form.append("code", authCode);
+    // const form = new URLSearchParams();
+    // form.append("client_id", bridgekeeperIntegrationId);
+    // form.append("client_secret", bridgekeeperIntegrationSecret);
+    // form.append("grant_type", "authorization_code");
+    // form.append("code", authCode);
+
+    const form = {
+      client_id: bridgekeeperIntegrationId,
+      client_secret: bridgekeeperIntegrationSecret,
+      grant_type: "authorization_code",
+      code: authCode
+    };
 
     try {
       // await fetch(tokenUrl, {
@@ -70,7 +77,7 @@ const signupHandler = async (req, res) => {
         credentials: "same-origin"
       })
         .then(response => response.json())
-        .then(result => console.log("foooooooo result", result));
+        .then(result => console.log("foooooooo result1111", result));
 
       // const requestTokenResponse = await fetch(tokenUrl, {
       //   method: "POST",
