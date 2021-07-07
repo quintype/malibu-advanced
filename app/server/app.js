@@ -30,7 +30,7 @@ const logError = error => logger.error(error);
 const signupHandler = async (req, res) => {
   const { code } = req.body;
   const publisherAttributes = get(publisher, ["publisher"], {});
-  console.log("fooooooo inside signupHandler code -----");
+  console.log("fooooooo inside signupHandler code ====");
 
   if (!code) {
     return res.status(400).send({ error: "no auth code provided" });
@@ -64,39 +64,23 @@ const getAccessToken = async (authCode, brkeConfig) => {
     return Promise.reject(new Error("Unable to get accessToken: invalid bridgekeeper config"));
   }
 
-  const tokenUrl = `${bridgekeeperHost}/api/auth/v1/oauth/token`;
-
   const form = new URLSearchParams();
   form.append("client_id", bridgekeeperIntegrationId);
   form.append("client_secret", bridgekeeperIntegrationSecret);
   form.append("grant_type", "authorization_code");
   form.append("code", authCode);
 
+  const { generateAccessToken } = await import("@quintype/bridgekeeper-js");
+
   try {
-    await fetch(tokenUrl, {
-      method: "post",
-      body: form,
-      headers: { "Content-Type": "application/x-www-form-urlencoded", "X-BK-AUTH": bridgekeeperApiKey }
-    })
-      .then(response => {
-        console.log("foooooooo response======", response.json());
-        return response.json();
-      })
-      .then(result => console.log("foooooooo result======", result));
-    return null;
+    const requestTokenResponse = await generateAccessToken(bridgekeeperHost, form, bridgekeeperApiKey);
+    console.log("foooooo requestTokenResponse", requestTokenResponse);
+    const accessToken = get(requestTokenResponse, ["data", "access_token"]);
+    console.log("foooooo accesstoken", accessToken);
+    return accessToken;
   } catch (err) {
     return await Promise.reject(err);
   }
-  // try {
-  //   const requestTokenResponse = await axios.post(tokenUrl, form, {
-  //     headers: { "Content-Type": "application/x-www-form-urlencoded", "X-BK-AUTH": bridgekeeperApiKey }
-  //   });
-  //   const accessToken = get(requestTokenResponse, ["data", "access_token"]);
-  //   console.log("foooooo accesstoken", accessToken);
-  //   return accessToken;
-  // } catch (err) {
-  //   return await Promise.reject(err);
-  // }
 };
 
 app.post("/user/update", signupHandler);
