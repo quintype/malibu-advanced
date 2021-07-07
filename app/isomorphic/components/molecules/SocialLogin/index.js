@@ -14,7 +14,7 @@ import "./social-login.m.css";
 export const SocialLoginBase = () => {
   const [redirectUriHost, setRedirectUriHost] = useState(null);
   const [currentLocation, setCurrentLocation] = useState("/");
-  // const enableSSO = useSelector(state => get(state, ["qt", "config", "publisher-attributes", "enable_sso"]));
+  const enableSSO = useSelector(state => get(state, ["qt", "config", "publisher-attributes", "enable_sso"]));
   const ssoHost = useSelector(state => get(state, ["qt", "config", "publisher-attributes", "sso_host"]));
 
   useEffect(() => {
@@ -24,10 +24,6 @@ export const SocialLoginBase = () => {
     const authHost = getQueryParam(window.location.href, "redirect_uri");
     setRedirectUriHost(authHost);
   }, []);
-
-  const googleOnClick = (e, serverSideLoginPath) => {
-    window.location.href = serverSideLoginPath;
-  };
 
   const FaceBookLogin = () => {
     const { serverSideLoginPath } = withFacebookLogin({
@@ -49,12 +45,14 @@ export const SocialLoginBase = () => {
     const { serverSideLoginPath } = withGoogleLogin({
       scope: "email",
       emailMandatory: true,
-      redirectUrl: `${ssoHost}/user-login`
+      redirectUrl: enableSSO ? `${ssoHost}/user-login` : currentLocation
     });
 
-    const signInUrl = `${serverSideLoginPath}/?post-login-redirect-uri=${redirectUriHost}`;
+    const signInUrl = enableSSO
+      ? `${serverSideLoginPath}/?post-login-redirect-uri=${redirectUriHost}`
+      : serverSideLoginPath;
     return (
-      <Button color="#dd4b39" flat href={signInUrl} onClick={e => googleOnClick(e, serverSideLoginPath)} socialButton>
+      <Button color="#dd4b39" flat href={signInUrl} socialButton>
         <span styleName="icon">
           <SvgIconHandler type="google" width="13" height="13" viewBox="0 0 13 13" />
         </span>{" "}

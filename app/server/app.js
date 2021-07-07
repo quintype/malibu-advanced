@@ -13,6 +13,7 @@ import { loadData, loadErrorData } from "./load-data";
 import { pickComponent } from "../isomorphic/pick-component";
 import { SEO } from "@quintype/seo";
 import { Collection } from "@quintype/framework/server/api-client";
+import publisher from "@quintype/framework/server/publisher-config";
 import { get } from "lodash";
 const bodyParser = require("body-parser");
 const fetch = require("node-fetch");
@@ -28,92 +29,17 @@ const logError = error => logger.error(error);
 
 const signupHandler = async (req, res) => {
   const { code } = req.body;
-  console.log("fooooooo inside signupHandler code -----", code);
-
-  const getAccessToken = async (authCode, brkeConfig) => {
-    const {
-      bridgekeeperIntegrationId,
-      bridgekeeperIntegrationSecret,
-      bridgekeeperHost,
-      bridgekeeperApiKey
-    } = brkeConfig;
-
-    if (!bridgekeeperIntegrationId || !bridgekeeperIntegrationSecret || !bridgekeeperHost) {
-      return Promise.reject(new Error("Unable to get accessToken: invalid bridgekeeper config"));
-    }
-
-    const tokenUrl = `${bridgekeeperHost}/api/auth/v1/oauth/token`;
-
-    // const form = new URLSearchParams();
-    // form.append("client_id", bridgekeeperIntegrationId);
-    // form.append("client_secret", bridgekeeperIntegrationSecret);
-    // form.append("grant_type", "authorization_code");
-    // form.append("code", authCode);
-
-    const body = {
-      client_id: bridgekeeperIntegrationId,
-      client_secret: bridgekeeperIntegrationSecret,
-      grant_type: "authorization_code",
-      code: authCode
-    };
-
-    try {
-      // await fetch(tokenUrl, {
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/x-www-form-urlencoded", "X-BK-AUTH": bridgekeeperApiKey },
-      //   body: JSON.stringify(form),
-      //   credentials: "same-origin"
-      // })
-      //   .then(response => {
-      //     console.log("fooooo response.json", response.json());
-      //     return response.json();
-      //   })
-      //   .then(data => console.log("fooooo data", data));
-
-      await fetch(tokenUrl, {
-        method: "post",
-        body: body,
-        headers: { "Content-Type": "application/x-www-form-urlencoded", "X-BK-AUTH": bridgekeeperApiKey },
-        credentials: "same-origin"
-      })
-        .then(response => response.json())
-        .then(result => console.log("foooooooo result------", result));
-
-      // const requestTokenResponse = await fetch(tokenUrl, {
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/x-www-form-urlencoded", "X-BK-AUTH": bridgekeeperApiKey },
-      //   body: JSON.stringify(form),
-      //   credentials: "same-origin"
-      // }).then(response => response.json()).then(result => console.log(result));
-
-      // console.log("foooooo requestTokenResponse", requestTokenResponse);
-      // const accessToken = get(requestTokenResponse, ["data", "access_token"]);
-      // console.log("foooooo accesstoken newwwwwww", accessToken);
-      // return accessToken;
-      return null;
-    } catch (err) {
-      return await Promise.reject(err);
-    }
-    // try {
-    //   const requestTokenResponse = await axios.post(tokenUrl, form, {
-    //     headers: { "Content-Type": "application/x-www-form-urlencoded", "X-BK-AUTH": bridgekeeperApiKey }
-    //   });
-    //   const accessToken = get(requestTokenResponse, ["data", "access_token"]);
-    //   console.log("foooooo accesstoken", accessToken);
-    //   return accessToken;
-    // } catch (err) {
-    //   res.send(`error: ${err}`);
-    // }
-  };
+  const publisherAttributes = get(publisher, ["publisher"], {});
+  console.log("fooooooo inside signupHandler code -----");
 
   if (!code) {
     return res.status(400).send({ error: "no auth code provided" });
   }
 
-  const bridgekeeperIntegrationId = 51;
-  const bridgekeeperIntegrationSecret = "kcRFrsf89as8fHkfhHihbg3LMHjii8";
-  const bridgekeeperHost = "http://bridgekeeper.alb.staging.quinpress.internal";
-  const bridgekeeperApiKey = "mxdnwJFPrZUQDPuV";
+  const bridgekeeperIntegrationId = publisherAttributes.bk_integration_id;
+  const bridgekeeperIntegrationSecret = publisherAttributes.bk_integration_secret;
+  const bridgekeeperHost = publisherAttributes.bk_host;
+  const bridgekeeperApiKey = publisherAttributes.bk_api_key;
 
   const brkeConfig = { bridgekeeperIntegrationId, bridgekeeperIntegrationSecret, bridgekeeperHost, bridgekeeperApiKey };
 
@@ -129,6 +55,48 @@ const signupHandler = async (req, res) => {
     console.log(err);
     return res.send({ error: "User authentication failed" });
   }
+};
+
+const getAccessToken = async (authCode, brkeConfig) => {
+  const { bridgekeeperIntegrationId, bridgekeeperIntegrationSecret, bridgekeeperHost, bridgekeeperApiKey } = brkeConfig;
+
+  if (!bridgekeeperIntegrationId || !bridgekeeperIntegrationSecret || !bridgekeeperHost) {
+    return Promise.reject(new Error("Unable to get accessToken: invalid bridgekeeper config"));
+  }
+
+  const tokenUrl = `${bridgekeeperHost}/api/auth/v1/oauth/token`;
+
+  const form = new URLSearchParams();
+  form.append("client_id", bridgekeeperIntegrationId);
+  form.append("client_secret", bridgekeeperIntegrationSecret);
+  form.append("grant_type", "authorization_code");
+  form.append("code", authCode);
+
+  try {
+    await fetch(tokenUrl, {
+      method: "post",
+      body: form,
+      headers: { "Content-Type": "application/x-www-form-urlencoded", "X-BK-AUTH": bridgekeeperApiKey }
+    })
+      .then(response => {
+        console.log("foooooooo response======", response.json());
+        return response.json();
+      })
+      .then(result => console.log("foooooooo result======", result));
+    return null;
+  } catch (err) {
+    return await Promise.reject(err);
+  }
+  // try {
+  //   const requestTokenResponse = await axios.post(tokenUrl, form, {
+  //     headers: { "Content-Type": "application/x-www-form-urlencoded", "X-BK-AUTH": bridgekeeperApiKey }
+  //   });
+  //   const accessToken = get(requestTokenResponse, ["data", "access_token"]);
+  //   console.log("foooooo accesstoken", accessToken);
+  //   return accessToken;
+  // } catch (err) {
+  //   return await Promise.reject(err);
+  // }
 };
 
 app.post("/user/update", signupHandler);

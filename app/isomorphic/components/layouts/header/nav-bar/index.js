@@ -28,8 +28,7 @@ const NavBar = () => {
   const [originUrl, setOriginUrl] = useState(null);
   const enableSSO = useSelector(state => get(state, ["qt", "config", "publisher-attributes", "enable_sso"]));
   const pageType = useSelector(state => get(state, ["qt", "pageType"], null));
-  // const ssoHost = useSelector(state => get(state, ["qt", "config", "publisher-attributes", "sso_host"]));
-  const integrationId = 51;
+  const integrationId = useSelector(state => get(state, ["qt", "config", "publisher-attributes", "bk_integration_id"]));
 
   const displayStyle = isHamburgerMenuOpen ? "flex" : "none";
 

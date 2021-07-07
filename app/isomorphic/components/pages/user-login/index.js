@@ -7,7 +7,7 @@ import AccountModal from "../../login/AccountModal";
 import { generateRedirect, getQueryParam } from "../../utils";
 
 const UserLoginPage = () => {
-  const integrationId = 51;
+  const integrationId = useSelector(state => get(state, ["qt", "config", "publisher-attributes", "bk_integration_id"]));
   const member = useSelector(state => get(state, ["member"], null));
 
   const redirectionHandler = async (integrationId, redirectUrl) => {
