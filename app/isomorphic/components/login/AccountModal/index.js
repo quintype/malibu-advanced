@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { func } from "prop-types";
+import React, { useEffect, useState } from "react";
+import { func, bool } from "prop-types";
 
 import { sendOtp } from "@quintype/bridgekeeper-js";
 
@@ -11,10 +11,15 @@ import { ForgotPassword } from "../../molecules/forms/forgot-password";
 
 import "./account-modal.m.css";
 
-const AccountModal = ({ onClose }) => {
+const AccountModal = ({ onClose, isPopup = true }) => {
   const [activeTab, setActiveTab] = useState("login");
   const [member, setMember] = useState(null);
   const [otpToken, setOtpToken] = useState(null);
+  const [renderModal, setRenderModal] = useState(false);
+
+  useEffect(() => {
+    setRenderModal(true);
+  }, []);
 
   const otpHandler = (member, otpDetails) => {
     setMember(member);
@@ -78,7 +83,11 @@ const AccountModal = ({ onClose }) => {
     );
   };
 
-  return (
+  if (!renderModal && !isPopup) {
+    return null;
+  }
+
+  return isPopup ? (
     <Modal onClose={onClose}>
       <div styleName="account-modal">
         <div styleName="form-wrapper">
@@ -87,11 +96,19 @@ const AccountModal = ({ onClose }) => {
         </div>
       </div>
     </Modal>
+  ) : (
+    <div styleName="account-modal">
+      <div styleName="form-wrapper">
+        {getActiveTabHeading()}
+        <div className="forms">{getScreen()}</div>
+      </div>
+    </div>
   );
 };
 
 AccountModal.propTypes = {
-  onClose: func
+  onClose: func,
+  isPopup: bool
 };
 
 export default AccountModal;

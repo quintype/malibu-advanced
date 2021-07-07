@@ -1,5 +1,5 @@
 asset_host: http://localhost:8080
-sketches_host: https://malibu-web.qtstage.io
+sketches_host: https://malibu-advanced-web.qtstage.io
 host_to_api_host:
   help.lvh.me: https://user-documentation.quintype.io
 host_to_automatic_api_host:
@@ -9,6 +9,7 @@ domain_mapping:
   subdomain.lvh.me: subdomain
   malibu.lvh.me: localhost:3000
 publisher:
+  sso_host: "https://malibu-advanced-web-auth.qtstage.io"
   timezone: "Asia/Baku"
   google_tag_manager:
     id: "gtm-id"
@@ -26,6 +27,11 @@ publisher:
   google_app_id: ""
   facebook_app_id: ""
   is_verification_link_flow: true
+  enable_sso: true
+  bk_integration_id: 0
+  bk_integration_secret: ""
+  bk_host: ""
+  bk_api_key: ""
   collectionParams:
     depth: 2
     storyLimits:

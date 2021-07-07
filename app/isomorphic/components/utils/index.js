@@ -7,6 +7,28 @@ export const isValidEmail = email => {
   return true;
 };
 
+export const getQueryParam = (url, query) => {
+  const urlObj = new URL(url);
+  const urlSubstring = urlObj.search;
+  return new URLSearchParams(urlSubstring).get(query);
+};
+
+export const generateRedirect = async (integrationId, redirectUrl) => {
+  const { generateRedirectUrl } = await import("@quintype/bridgekeeper-js");
+  const params = `client_id=${integrationId}&redirect_uri=${redirectUrl}&response_type=code&allow_ajax=true`;
+  return generateRedirectUrl(params);
+};
+
+export const getCookie = name => {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2)
+    return parts
+      .pop()
+      .split(";")
+      .shift();
+};
+
 export const getLoadMoreStories = async ({
   offset,
   limit,

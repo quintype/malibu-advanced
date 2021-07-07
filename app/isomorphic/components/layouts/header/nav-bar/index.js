@@ -7,6 +7,7 @@ import { OPEN_HAMBURGER_MENU, OPEN_SEARCHBAR, MEMBER_UPDATED } from "../../../st
 import { MenuItem } from "../../menu-item";
 import HamburgerMenu from "../../../atoms/hamburger-menu";
 import MessageWrapper from "../../../molecules/forms/message-wrapper";
+import { generateRedirect } from "../../../utils";
 
 import { SvgIconHandler } from "../../../atoms/svg-icon-hadler";
 
@@ -23,6 +24,11 @@ const NavBar = () => {
   const isHamburgerMenuOpen = useSelector(state => get(state, ["isHamburgerMenuOpen"], false));
   const menu = useSelector(state => get(state, ["qt", "data", "navigationMenu", "homeMenu"], []));
   const hamburgerMenu = useSelector(state => get(state, ["qt", "data", "navigationMenu", "hamburgerMenu"], []));
+  const [callbackUrl, setCallbackUrl] = useState(null);
+  const [originUrl, setOriginUrl] = useState(null);
+  const enableSSO = useSelector(state => get(state, ["qt", "config", "publisher-attributes", "enable_sso"]));
+  const pageType = useSelector(state => get(state, ["qt", "pageType"], null));
+  const integrationId = useSelector(state => get(state, ["qt", "config", "publisher-attributes", "bk_integration_id"]));
 
   const displayStyle = isHamburgerMenuOpen ? "flex" : "none";
 
@@ -132,6 +138,9 @@ const NavBar = () => {
   useEffect(() => {
     getCurrentUser();
 
+    setCallbackUrl(global.location.origin);
+    setOriginUrl(global.location.href);
+
     switch (global.location.hash) {
       case "#email-verified":
         return setMessage("Email verified.");
@@ -146,6 +155,10 @@ const NavBar = () => {
     }
   }, []);
 
+  useEffect(() => {
+    setOriginUrl(global.location.href);
+  }, [pageType]);
+
   const messageModal = message => {
     // Import modal on message
     const Modal = lazy(() => import("../../../login/modal"));
@@ -156,6 +169,13 @@ const NavBar = () => {
         </Modal>
       </Suspense>
     );
+  };
+
+  const onClick = async (callbackUrl, integrationId) => {
+    const redirectUri = `${callbackUrl}/user/signup`;
+    const authUrl = await generateRedirect(integrationId, redirectUri);
+    document.cookie = `origin_url=${originUrl}`;
+    window.location.href = authUrl;
   };
 
   return (
@@ -216,9 +236,15 @@ const NavBar = () => {
               </>
             ) : (
               <>
-                <button styleName="user-btn" onClick={() => userBtnClick()}>
-                  <SvgIconHandler type="user-icon" width="18" height="20" viewBox="0 0 18 20" />
-                </button>
+                {enableSSO ? (
+                  <span onClick={() => onClick(callbackUrl, integrationId)}>
+                    <SvgIconHandler type="user-icon" width="18" height="20" viewBox="0 0 18 20" />
+                  </span>
+                ) : (
+                  <button styleName="user-btn" onClick={() => userBtnClick()}>
+                    <SvgIconHandler type="user-icon" width="18" height="20" viewBox="0 0 18 20" />
+                  </button>
+                )}
                 {showAccountModal && (
                   <Suspense fallback={<div></div>}>
                     <AccountModal onClose={() => setShowAccountModal(false)} />

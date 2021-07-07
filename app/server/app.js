@@ -13,7 +13,77 @@ import { loadData, loadErrorData } from "./load-data";
 import { pickComponent } from "../isomorphic/pick-component";
 import { SEO } from "@quintype/seo";
 import { Collection } from "@quintype/framework/server/api-client";
+import publisher from "@quintype/framework/server/publisher-config";
+import { get } from "lodash";
+const bodyParser = require("body-parser");
+const fetch = require("node-fetch");
+
+// import wretch from "wretch";
+
 export const app = createApp();
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+const logError = error => logger.error(error);
+
+const signupHandler = async (req, res) => {
+  const { code } = req.body;
+  const publisherAttributes = get(publisher, ["publisher"], {});
+  console.log("fooooooo inside signupHandler code ====");
+
+  if (!code) {
+    return res.status(400).send({ error: "no auth code provided" });
+  }
+
+  const bridgekeeperIntegrationId = publisherAttributes.bk_integration_id;
+  const bridgekeeperIntegrationSecret = publisherAttributes.bk_integration_secret;
+  const bridgekeeperHost = publisherAttributes.bk_host;
+  const bridgekeeperApiKey = publisherAttributes.bk_api_key;
+
+  const brkeConfig = { bridgekeeperIntegrationId, bridgekeeperIntegrationSecret, bridgekeeperHost, bridgekeeperApiKey };
+
+  try {
+    const accessToken = await getAccessToken(code, brkeConfig);
+    const cookieConf = { httpOnly: true };
+    if (process.env.NODE_ENV !== "development") {
+      cookieConf.secure = true;
+    }
+    res.cookie("qt-auth", accessToken, cookieConf);
+    return res.send(accessToken);
+  } catch (err) {
+    console.log(err);
+    return res.send({ error: "User authentication failed" });
+  }
+};
+
+const getAccessToken = async (authCode, brkeConfig) => {
+  const { bridgekeeperIntegrationId, bridgekeeperIntegrationSecret, bridgekeeperHost, bridgekeeperApiKey } = brkeConfig;
+
+  if (!bridgekeeperIntegrationId || !bridgekeeperIntegrationSecret || !bridgekeeperHost) {
+    return Promise.reject(new Error("Unable to get accessToken: invalid bridgekeeper config"));
+  }
+
+  const form = new URLSearchParams();
+  form.append("client_id", bridgekeeperIntegrationId);
+  form.append("client_secret", bridgekeeperIntegrationSecret);
+  form.append("grant_type", "authorization_code");
+  form.append("code", authCode);
+
+  const { generateAccessToken } = await import("@quintype/bridgekeeper-js");
+
+  try {
+    const requestTokenResponse = await generateAccessToken(bridgekeeperHost, form, bridgekeeperApiKey);
+    console.log("foooooo requestTokenResponse", requestTokenResponse);
+    const accessToken = get(requestTokenResponse, ["data", "access_token"]);
+    console.log("foooooo accesstoken", accessToken);
+    return accessToken;
+  } catch (err) {
+    return await Promise.reject(err);
+  }
+};
+
+app.post("/user/update", signupHandler);
 
 upstreamQuintypeRoutes(app, { forwardAmp: true });
 
@@ -65,8 +135,6 @@ const redirectCollectionHandler = () => async (req, res, next, { client, config 
   }
   return next();
 };
-
-const logError = error => logger.error(error);
 
 getWithConfig(app, "/collection/:collectionSlug", redirectCollectionHandler(), {
   logError

@@ -1,21 +1,28 @@
 import React, { useEffect, useState } from "react";
 import { func, string } from "prop-types";
 import { withFacebookLogin, withGoogleLogin, withAppleLogin } from "@quintype/bridgekeeper-js";
-import { connect } from "react-redux";
+import { connect, useSelector } from "react-redux";
 import get from "lodash/get";
 
 import Button from "../../atoms/Button";
+import { getQueryParam } from "../../utils";
 
 import { SvgIconHandler } from "../../atoms/svg-icon-hadler";
+
 import "./social-login.m.css";
 
-export const SocialLoginBase = ({ googleAppId, facebookAppId }) => {
+export const SocialLoginBase = () => {
+  const [redirectUriHost, setRedirectUriHost] = useState(null);
   const [currentLocation, setCurrentLocation] = useState("/");
+  const enableSSO = useSelector(state => get(state, ["qt", "config", "publisher-attributes", "enable_sso"]));
+  const ssoHost = useSelector(state => get(state, ["qt", "config", "publisher-attributes", "sso_host"]));
 
   useEffect(() => {
     const location = new URL(window.location.href);
     const redirectUrl = `${location.origin}${location.pathname}`;
     location && setCurrentLocation(redirectUrl);
+    const authHost = getQueryParam(window.location.href, "redirect_uri");
+    setRedirectUriHost(authHost);
   }, []);
 
   const FaceBookLogin = () => {
@@ -38,10 +45,14 @@ export const SocialLoginBase = ({ googleAppId, facebookAppId }) => {
     const { serverSideLoginPath } = withGoogleLogin({
       scope: "email",
       emailMandatory: true,
-      redirectUrl: currentLocation
+      redirectUrl: enableSSO ? `${ssoHost}/user-login` : currentLocation
     });
+
+    const signInUrl = enableSSO
+      ? `${serverSideLoginPath}/?post-login-redirect-uri=${redirectUriHost}`
+      : serverSideLoginPath;
     return (
-      <Button color="#dd4b39" flat href={serverSideLoginPath} socialButton>
+      <Button color="#dd4b39" flat href={signInUrl} socialButton>
         <span styleName="icon">
           <SvgIconHandler type="google" width="13" height="13" viewBox="0 0 13 13" />
         </span>{" "}
