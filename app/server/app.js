@@ -72,12 +72,12 @@ const signupHandler = async (req, res) => {
 
       await fetch(tokenUrl, {
         method: "post",
-        body: JSON.stringify(body),
+        body: body,
         headers: { "Content-Type": "application/x-www-form-urlencoded", "X-BK-AUTH": bridgekeeperApiKey },
         credentials: "same-origin"
       })
         .then(response => response.json())
-        .then(result => console.log("foooooooo result1111", result));
+        .then(result => console.log("foooooooo result------", result));
 
       // const requestTokenResponse = await fetch(tokenUrl, {
       //   method: "POST",
