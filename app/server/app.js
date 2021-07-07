@@ -50,7 +50,7 @@ const signupHandler = async (req, res) => {
     // form.append("grant_type", "authorization_code");
     // form.append("code", authCode);
 
-    const form = {
+    const body = {
       client_id: bridgekeeperIntegrationId,
       client_secret: bridgekeeperIntegrationSecret,
       grant_type: "authorization_code",
@@ -71,9 +71,9 @@ const signupHandler = async (req, res) => {
       //   .then(data => console.log("fooooo data", data));
 
       await fetch(tokenUrl, {
-        method: "POST",
+        method: "post",
+        body: JSON.stringify(body),
         headers: { "Content-Type": "application/x-www-form-urlencoded", "X-BK-AUTH": bridgekeeperApiKey },
-        body: JSON.stringify(form),
         credentials: "same-origin"
       })
         .then(response => response.json())
