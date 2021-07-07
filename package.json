@@ -9,7 +9,7 @@
   "dependencies": {
     "@loadable/component": "^5.14.1",
     "@loadable/server": "^5.14.2",
-    "@quintype/arrow": "^2.0.0-remove-glide.2",
+    "@quintype/arrow": "^2.0.0-perf-fix.0",
     "@quintype/bridgekeeper-js": "^2.3.3",
     "@quintype/components": "^2.31.2",
     "@quintype/framework": "^4.16.9-perf-update.1",
