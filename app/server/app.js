@@ -63,16 +63,27 @@ const signupHandler = async (req, res) => {
       //   })
       //   .then(data => console.log("fooooo data", data));
 
-      const requestTokenResponse = await fetch(tokenUrl, {
+      await fetch(tokenUrl, {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded", "X-BK-AUTH": bridgekeeperApiKey },
         body: JSON.stringify(form),
         credentials: "same-origin"
-      });
-      console.log("foooooo requestTokenResponse", await requestTokenResponse);
-      const accessToken = get(requestTokenResponse, ["data", "access_token"]);
-      console.log("foooooo accesstoken newwwwwww", accessToken);
-      return accessToken;
+      })
+        .then(response => response.json())
+        .then(result => console.log("foooooooo result", result));
+
+      // const requestTokenResponse = await fetch(tokenUrl, {
+      //   method: "POST",
+      //   headers: { "Content-Type": "application/x-www-form-urlencoded", "X-BK-AUTH": bridgekeeperApiKey },
+      //   body: JSON.stringify(form),
+      //   credentials: "same-origin"
+      // }).then(response => response.json()).then(result => console.log(result));
+
+      // console.log("foooooo requestTokenResponse", requestTokenResponse);
+      // const accessToken = get(requestTokenResponse, ["data", "access_token"]);
+      // console.log("foooooo accesstoken newwwwwww", accessToken);
+      // return accessToken;
+      return null;
     } catch (err) {
       return await Promise.reject(err);
     }
