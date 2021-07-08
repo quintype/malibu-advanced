@@ -1,9 +1,9 @@
 import get from "lodash/get";
 import find from "lodash/find";
 
-exports.getNavigationMenuArray = function(menuList, sectionList) {
+exports.getNavigationMenuArray = function(menuList = [], sectionList) {
   menuList.forEach(menuItem => {
-    menuItem.children.filter(item => item["parent-id"] === menuItem.id).value();
+    menuItem.children = menuList.filter(item => item["parent-id"] === menuItem.id);
     switch (menuItem["item-type"]) {
       case "tag":
         menuItem.completeUrl = menuItem["tag-slug"] ? `/topic/${menuItem["tag-slug"]}` : "/#";
@@ -20,7 +20,8 @@ exports.getNavigationMenuArray = function(menuList, sectionList) {
         break;
     }
   });
-  const menu = menuList.filter(item => item["parent-id"] == null).value();
+  const menu = menuList.filter(item => item["parent-id"] == null);
+
   return {
     footer: menu.filter(item => item["menu-group-slug"] === "footer"),
     default: menu.filter(item => item["menu-group-slug"] === "default"),
