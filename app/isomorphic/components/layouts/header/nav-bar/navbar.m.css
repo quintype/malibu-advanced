@@ -124,3 +124,7 @@
 .user-account-item:hover {
   color: var(--brand-primary-dark);
 }
+
+.sso-login-button:hover {
+  cursor: pointer;
+}

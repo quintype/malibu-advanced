@@ -237,7 +237,7 @@ const NavBar = () => {
             ) : (
               <>
                 {enableSSO ? (
-                  <span onClick={() => onClick(callbackUrl, integrationId)}>
+                  <span styleName="sso-login-button" onClick={() => onClick(callbackUrl, integrationId)}>
                     <SvgIconHandler type="user-icon" width="18" height="20" viewBox="0 0 18 20" />
                   </span>
                 ) : (
