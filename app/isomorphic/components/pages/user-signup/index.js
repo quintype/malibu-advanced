@@ -1,11 +1,14 @@
 import { get } from "lodash";
 import React, { useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import wretch from "wretch";
+
+import { MEMBER_UPDATED } from "../../store/actions";
 
 import { getCookie, getQueryParam } from "../../utils";
 
 export const UserSignupPage = () => {
+  const dispatch = useDispatch();
   const member = useSelector(state => get(state, ["member"], null));
 
   useEffect(() => {
@@ -17,7 +20,16 @@ export const UserSignupPage = () => {
         .res(res => {
           Promise.resolve(res);
         })
-        .catch(ex => Promise.reject(ex));
+        .catch(ex => Promise.reject(ex))
+        .finally(async () => {
+          const { currentUser } = await import("@quintype/bridgekeeper-js");
+          try {
+            const currentUserResp = await currentUser();
+            dispatch({ type: MEMBER_UPDATED, member: get(currentUserResp, ["user"], null) });
+          } catch (err) {
+            console.log("error--------", err);
+          }
+        });
     };
 
     getUserStatus();

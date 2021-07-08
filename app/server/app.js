@@ -15,11 +15,7 @@ import { SEO } from "@quintype/seo";
 import { Collection } from "@quintype/framework/server/api-client";
 import publisher from "@quintype/framework/server/publisher-config";
 import { get } from "lodash";
-import axios from "axios";
 const bodyParser = require("body-parser");
-const fetch = require("node-fetch");
-
-// import wretch from "wretch";
 
 export const app = createApp();
 
@@ -71,24 +67,7 @@ const getAccessToken = async (authCode, brkeConfig) => {
   form.append("grant_type", "authorization_code");
   form.append("code", authCode);
 
-  // const { generateAccessToken } = await import("@quintype/bridgekeeper-js");
-
-  const tokenUrl = `${bridgekeeperHost}/api/auth/v1/oauth/token`;
-
-  const generateAccessToken = async (bridgekeeperHost, body, bridgekeeperApiKey) => {
-    const tokenUrl = `${bridgekeeperHost}/api/auth/v1/oauth/token`;
-    try {
-      const tokenResponse = await axios.post(tokenUrl, body, {
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-          "X-BK-AUTH": bridgekeeperApiKey
-        }
-      });
-      return tokenResponse;
-    } catch (err) {
-      return await Promise.reject(err);
-    }
-  };
+  const { generateAccessToken } = await import("@quintype/bridgekeeper-js");
 
   // try {
   //   const requestTokenResponse = await axios.post(tokenUrl, form, {

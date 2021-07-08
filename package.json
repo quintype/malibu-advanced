@@ -10,7 +10,7 @@
     "@loadable/component": "^5.14.1",
     "@loadable/server": "^5.14.2",
     "@quintype/arrow": "^1.4.3",
-    "@quintype/bridgekeeper-js": "^2.3.4-sso-social-login.5",
+    "@quintype/bridgekeeper-js": "^2.3.4-sso-social-login.6",
     "@quintype/components": "^2.28.0",
     "@quintype/framework": "^4.15.4",
     "@quintype/seo": "^1.38.29",
