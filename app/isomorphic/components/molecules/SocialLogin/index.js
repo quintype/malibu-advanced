@@ -31,8 +31,13 @@ export const SocialLoginBase = () => {
       emailMandatory: true,
       redirectUrl: currentLocation
     });
+
+    const signInUrl = enableSSO
+      ? `${serverSideLoginPath}/?post-login-redirect-uri=${redirectUriHost}`
+      : serverSideLoginPath;
+
     return (
-      <Button color="#3b5998" flat href={serverSideLoginPath} socialButton>
+      <Button color="#3b5998" flat href={signInUrl} socialButton>
         <span styleName="icon">
           <SvgIconHandler type="facebook" iconStyle={{ color: "#3b5998" }} width="9" height="15" viewBox="0 0 12 21" />
         </span>{" "}
@@ -63,8 +68,13 @@ export const SocialLoginBase = () => {
 
   const AppleLogin = () => {
     const { serverSideLoginPath } = withAppleLogin(currentLocation);
+
+    const signInUrl = enableSSO
+      ? `${serverSideLoginPath}/?post-login-redirect-uri=${redirectUriHost}`
+      : serverSideLoginPath;
+
     return (
-      <Button color="#dd4b39" flat href={serverSideLoginPath} socialButton>
+      <Button color="#dd4b39" flat href={signInUrl} socialButton>
         <SvgIconHandler type="apple" height="44" width="44" iconStyle={{ color: "#000" }} /> Apple
       </Button>
     );
