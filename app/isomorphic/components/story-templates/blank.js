@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect } from "react";
 import PT from "prop-types";
 import { useSelector } from "react-redux";
-import { get } from "lodash";
+import get from "lodash/get";
 import { WithLazy, ResponsiveImage, StoryElement } from "@quintype/components";
 
 import { getAdSlots } from "../ads/utils";
