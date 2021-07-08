@@ -15,7 +15,6 @@ export const SocialLoginBase = () => {
   const [redirectUriHost, setRedirectUriHost] = useState(null);
   const [currentLocation, setCurrentLocation] = useState("/");
   const enableSSO = useSelector(state => get(state, ["qt", "config", "publisher-attributes", "enable_sso"]));
-  const ssoHost = useSelector(state => get(state, ["qt", "config", "publisher-attributes", "sso_host"]));
 
   useEffect(() => {
     const location = new URL(window.location.href);
@@ -50,7 +49,7 @@ export const SocialLoginBase = () => {
     const { serverSideLoginPath } = withGoogleLogin({
       scope: "email",
       emailMandatory: true,
-      redirectUrl: enableSSO ? `${ssoHost}/user-login` : currentLocation
+      redirectUrl: currentLocation
     });
 
     const signInUrl = enableSSO
