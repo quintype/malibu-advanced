@@ -44,4 +44,5 @@
 
 .my-account {
   font-size: var(--medium);
+  padding: 0 16px;
 }
