@@ -26,6 +26,7 @@ const lhciConfig = {
         "no-document-write": "warn", // Avoid `document.write()`
         "link-name": "warn",
         "image-size-responsive": "warn",
+        "image-aspect-ratio": "warn",
         "button-name": "warn", // It suggests that the button should have inner text content or an aria-label or aria-labelledBy.
         "categories:performance": ["error", { minScore: 0.7 }],
         "image-alt": "warn",
