@@ -27,7 +27,7 @@ const lhciConfig = {
         "image-size-responsive": "warn",
         "image-aspect-ratio": "warn",
         "button-name": "warn", // It suggests that the button should have inner text content or an aria-label or aria-labelledBy.
-        "categories:performance": ["error", { minScore: 0.7 }],
+        "categories:performance": ["error", { minScore: 0.9 }],
         "image-alt": "warn",
         "link-text": "warn"
       }
