@@ -3,7 +3,10 @@ import { FourColGrid } from "@quintype/arrow";
 import { object } from "prop-types";
 
 export const ArrowFourColGrid = ({ collection }) => {
-  return <FourColGrid collection={collection} />;
+  const config = {
+    buttonText: `${collection.name} News`
+  };
+  return <FourColGrid collection={collection} config={config} />;
 };
 
 ArrowFourColGrid.propTypes = {
