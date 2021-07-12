@@ -7,7 +7,8 @@ const lhciConfig = {
       headful: false, // Run with a headful Chrome
       url: JSON.parse(process.env.LHCI_SITES), // A URL to run Lighthouse on
       settings: {
-        emulatedFormFactor: "mobile"
+        emulatedFormFactor: "mobile",
+        throttlingMethod: "devtools"
       }
     },
     assert: {
@@ -27,7 +28,7 @@ const lhciConfig = {
         "image-size-responsive": "warn",
         "image-aspect-ratio": "warn",
         "button-name": "warn", // It suggests that the button should have inner text content or an aria-label or aria-labelledBy.
-        "categories:performance": ["error", { minScore: 0.9 }],
+        "categories:performance": ["error", { minScore: 0.7 }],
         "image-alt": "warn",
         "link-text": "warn"
       }
