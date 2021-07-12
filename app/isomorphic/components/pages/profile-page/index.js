@@ -18,7 +18,6 @@ function signImage(fileName, mimeType) {
 const uploadS3ToTemp = async (res, formdata) => {
   const requestOptions = {
     method: "POST",
-    headers: { "Content-Type": "multipart/form-data" },
     body: formdata,
     redirect: "follow"
   };
@@ -35,23 +34,23 @@ const EditProfile = ({ setIsEditing, isEditing }) => {
   const [name, setName] = useState("");
   const dispatch = useDispatch();
 
-  const prepareFormData = (keys, formdata, imageList, res) => {
-    return keys.map(key => {
+  const prepareFormData = (keys, imageList, res) => {
+    // eslint-disable-next-line no-undef
+    const formdata = new FormData();
+    for (let index = 0; index < keys.length; index++) {
+      const key = keys[index];
       if (key === "file") {
-        return formdata.append(key, imageList[0].name);
+        formdata.append(key, imageList[0].name);
       } else {
-        return formdata.append(key, res[key]);
+        formdata.append(key, res[key]);
       }
-    });
+    }
+    return formdata;
   };
 
   const onProfileChange = event => {
     const imageList = event.target.files;
     signImage(imageList[0].name, imageList[0].type).then(res => {
-      // eslint-disable-next-line no-undef
-      const formdata = new FormData();
-      formdata.append("name", "phani");
-
       const keys = [
         "key",
         "Content-Type",
@@ -63,13 +62,14 @@ const EditProfile = ({ setIsEditing, isEditing }) => {
         "file"
       ];
 
-      prepareFormData(keys, formdata, imageList, res);
-      console.log("FormData is --------", formdata);
+      const formdata = prepareFormData(keys, imageList, res);
 
       uploadS3ToTemp(res, formdata).then(response => {
         if (response.status === 201) {
+          console.log(res.key);
           updateUserProfile({ "temp-s3-key": res.key })
             .then(resp => {
+              console.log(res.key);
               if (!resp) {
                 return;
               }
