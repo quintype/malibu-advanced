@@ -71,14 +71,14 @@ jobs:
       - run: |
           export LHCI_SITES="[\"https://malibu-advanced-web.quintype.io/\"]"
           npx @lhci/cli@0.6.x autorun
-perf_prod_lighthouse_task:
-  docker:
-    - image: circleci/node:10.16-browsers
-  steps:
-    - checkout
-    - run: |
-        export LHCI_SITES="[\"https://malibu-perfadvanced.quintype.io/\"]"
-        npx @lhci/cli@0.6.x autorun
+  perf_prod_lighthouse_task:
+    docker:
+      - image: circleci/node:10.16-browsers
+    steps:
+      - checkout
+      - run: |
+          export LHCI_SITES="[\"https://malibu-perfadvanced.quintype.io/\"]"
+          npx @lhci/cli@0.6.x autorun
 
 
 workflows:
@@ -105,22 +105,22 @@ workflows:
           requires:
             - deploy_staging
 
-perf_prod_lighthouse_test:
-  jobs:
-    - build:
-        context: quay-login
-    - hold_perf_prod:
-        type: approval
-        requires:
-          - build
-    - deploy_perf_production:
-        context: quay-login
-        requires:
-          - hold_perf_prod
-    - perf_prod_lighthouse_task:
-        context: quay-login
-        requires:
-          - deploy_perf_production
+  perf_prod_lighthouse_test:
+    jobs:
+      - build:
+          context: quay-login
+      - hold_perf_prod:
+          type: approval
+          requires:
+            - build
+      - deploy_perf_production:
+          context: quay-login
+          requires:
+            - hold_perf_prod
+      - perf_prod_lighthouse_task:
+          context: quay-login
+          requires:
+            - deploy_perf_production
 
   lighthouse_test:
     jobs:
