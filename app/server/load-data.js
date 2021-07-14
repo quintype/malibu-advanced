@@ -3,6 +3,7 @@ import pick from "lodash/pick";
 import get from "lodash/get";
 import publisher from "@quintype/framework/server/publisher-config";
 import { catalogDataLoader } from "@quintype/framework/server/data-loader-helpers";
+import { assetFiles as getAssetFiles } from "@quintype/framework/server/asset-helper";
 
 import { loadHomePageData } from "./data-loaders/home-page-data";
 import { loadStoryPageData, loadStoryPublicPreviewPageData } from "./data-loaders/story-page-data";
@@ -29,6 +30,8 @@ const WHITELIST_CONFIG_KEYS = [
   "publisher-settings"
 ];
 
+const svgSpritePath = Array.from(getAssetFiles()).find(asset => asset.includes("sprite"));
+
 export function getPublisherAttributes(publisherYml = publisher) {
   const publisherAttributes = get(publisherYml, ["publisher"], {});
   return publisherAttributes;
@@ -43,7 +46,8 @@ export function loadErrorData(error, config) {
     },
     config: Object.assign(pick(config.asJson(), WHITELIST_CONFIG_KEYS), {
       "publisher-attributes": publisherAttributes,
-      "ads-config": ads
+      "ads-config": ads,
+      svgSpritePath
     }),
     pageType: errorComponents[error.httpStatusCode],
     httpStatusCode: error.httpStatusCode || 500
@@ -56,7 +60,7 @@ export function loadData(pageType, params, config, client, { host, next, domainS
   function _loadData() {
     switch (pageType) {
       case PAGE_TYPE.HOME_PAGE:
-        return loadHomePageData(client, config, params.collectionSlug, publisherAttributes.collectionParams);
+        return loadHomePageData(client, config, params.collectionSlug);
       case PAGE_TYPE.HOME_PREVIEW:
         return loadHomePageData(client, config);
       case PAGE_TYPE.SECTION_PAGE:
@@ -78,7 +82,7 @@ export function loadData(pageType, params, config, client, { host, next, domainS
       case PAGE_TYPE.FORM_PAGE:
         return loadFormPageData(client, params.formSlug, next);
       case PAGE_TYPE.AUTHOR_PAGE:
-        return loadAuthorPageData(client, params.authorSlug, config);
+        return loadAuthorPageData(client, params.authorSlug, config, next);
       default:
         return Promise.resolve({ error: { message: "No Loader" } });
     }
@@ -95,7 +99,8 @@ export function loadData(pageType, params, config, client, { host, next, domainS
       config: Object.assign(pick(config.asJson(), WHITELIST_CONFIG_KEYS), {
         "publisher-attributes": publisherAttributes,
         "image-cdn-format": "gumlet",
-        "ads-config": ads
+        "ads-config": ads,
+        svgSpritePath
       })
     };
   });

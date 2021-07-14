@@ -1,4 +1,4 @@
-import { get } from "lodash";
+import get from "lodash/get";
 
 const getSectionSlug = (state, pageType) => {
   if (pageType === "story-page") {
