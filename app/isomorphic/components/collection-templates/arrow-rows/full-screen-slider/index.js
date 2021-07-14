@@ -4,7 +4,8 @@ import { object } from "prop-types";
 
 export const ArrowFullScreenSlider = ({ collection }) => {
   const contextConfig = {
-    numberOfStoriesToShow: 5
+    numberOfStoriesToShow: 5,
+    buttonText: `${collection.name} News`
   };
 
   return <FullScreenSlider collection={collection} config={contextConfig} />;

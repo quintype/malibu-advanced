@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { get } from "lodash";
+import get from "lodash/get";
 import { string, object } from "prop-types";
 
 if (require.context) {
