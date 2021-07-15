@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { object, func, bool } from "prop-types";
 import get from "lodash/get";
 
-import { updateUserProfile, currentUser } from "@quintype/bridgekeeper-js";
+import { updateUserProfile } from "@quintype/bridgekeeper-js";
 
 import { SvgIconHandler } from "../../atoms/svg-icon-hadler";
 import { MEMBER_UPDATED } from "../../store/actions";
@@ -40,7 +40,7 @@ const EditProfile = ({ setIsEditing, isEditing }) => {
     for (let index = 0; index < keys.length; index++) {
       const key = keys[index];
       if (key === "file") {
-        formdata.append(key, imageList[0].name);
+        formdata.append(key, imageList[0]);
       } else {
         formdata.append(key, res[key]);
       }
@@ -66,36 +66,17 @@ const EditProfile = ({ setIsEditing, isEditing }) => {
 
       uploadS3ToTemp(res, formdata).then(response => {
         if (response.status === 201) {
-          console.log(res.key);
-          updateUserProfile({ "temp-s3-key": res.key })
-            .then(resp => {
-              console.log(res.key);
-              if (!resp) {
-                return;
-              }
-              setTempImageObj(resp);
-            })
-            .catch(err => {
-              console.log(err);
-            });
+          setTempImageObj(res.key);
         }
       });
     });
   };
 
-  const getCurrentUser = async () => {
-    try {
-      const currentUserResp = await currentUser();
-      dispatch({ type: MEMBER_UPDATED, member: get(currentUserResp, ["user"], null) });
-    } catch (err) {
-      console.log("error--------", err);
-    }
-  };
-
   const onSubmitHandler = e => {
     e.preventDefault();
-    updateUserProfile({ name, "avatar-url": tempImageObj })
-      .then(getCurrentUser)
+
+    updateUserProfile({ name, "temp-s3-key": tempImageObj })
+      .then(currentUserResp => dispatch({ type: MEMBER_UPDATED, member: get(currentUserResp, ["user"], null) }))
       .then(() => setIsEditing(!isEditing))
       .catch(err => console.error(err));
   };
