@@ -66,6 +66,13 @@ jobs:
       - run: |
           export LHCI_SITES="[\"https://malibu-advanced-web.quintype.io/\"]"
           npx @lhci/cli@0.6.x autorun
+  coverage:
+    docker:
+      - image: circleci/node:8.11
+    steps:
+      - run : sdtt --url https://malibu-advanced-web.quintype.io/
+      - run : sdtt --url https://malibu-advanced-web.quintype.io/technology/automobiles/lamborghini-the-ferrari-killer -i
+
 
 workflows:
   version: 2
@@ -73,6 +80,17 @@ workflows:
     jobs:
       - lint_js
       - lint_css
+  nightly:
+    triggers:
+      - schedule:
+          cron: "0 8 * * *"
+          filters:
+            branches:
+              only:
+                - master
+    jobs:
+      - coverage
+
 
   stg_lighthouse_test:
     jobs:
