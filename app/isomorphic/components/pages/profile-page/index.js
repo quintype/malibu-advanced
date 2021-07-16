@@ -30,7 +30,6 @@ const uploadS3ToTemp = async (res, formdata) => {
 };
 
 const EditProfile = ({ setIsEditing, isEditing }) => {
-  const [tempImageObj, setTempImageObj] = useState(null);
   const [name, setName] = useState("");
   const dispatch = useDispatch();
 
@@ -66,7 +65,9 @@ const EditProfile = ({ setIsEditing, isEditing }) => {
 
       uploadS3ToTemp(res, formdata).then(response => {
         if (response.status === 201) {
-          setTempImageObj(res.key);
+          updateUserProfile({ "temp-s3-key": res.key })
+            .then(currentUserResp => dispatch({ type: MEMBER_UPDATED, member: get(currentUserResp, ["user"], null) }))
+            .catch(err => console.error(err));
         }
       });
     });
@@ -74,8 +75,12 @@ const EditProfile = ({ setIsEditing, isEditing }) => {
 
   const onSubmitHandler = e => {
     e.preventDefault();
+    if (name === "") {
+      setIsEditing(!isEditing);
+      return;
+    }
 
-    updateUserProfile({ name, "temp-s3-key": tempImageObj })
+    updateUserProfile({ name })
       .then(currentUserResp => dispatch({ type: MEMBER_UPDATED, member: get(currentUserResp, ["user"], null) }))
       .then(() => setIsEditing(!isEditing))
       .catch(err => console.error(err));
@@ -87,13 +92,18 @@ const EditProfile = ({ setIsEditing, isEditing }) => {
 
   return (
     <div styleName="profile-card">
-      <form styleName="profile-information" onSubmit={onSubmitHandler}>
-        <div styleName="fields">
+      <form onSubmit={onSubmitHandler}>
+        <div styleName="fields-container">
           <label>Name: </label>
-          <input name="Name" type="text" value={name} onChange={handleChange} />
+          <input styleName="text-input" name="Name" type="text" value={name} onChange={handleChange} />
           <input name="File" type="file" onChange={onProfileChange} />
         </div>
-        <input type="submit" value="Submit" />
+        <div styleName="buttons-container">
+          <button styleName="button" onClick={() => setIsEditing(!isEditing)}>
+            Cancel
+          </button>
+          <input styleName="button" type="submit" value="Submit" />
+        </div>
       </form>
     </div>
   );
@@ -101,7 +111,7 @@ const EditProfile = ({ setIsEditing, isEditing }) => {
 
 const ProfileCard = ({ member }) => {
   return (
-    <div styleName="profile-information">
+    <div styleName="fields-container">
       <p styleName="fields">
         <strong>Name: </strong>
         {member.name}
@@ -138,7 +148,11 @@ const ProfilePage = () => {
         ) : (
           <div>
             <ProfileCard member={member} />
-            <button onClick={() => setIsEditing(!isEditing)}>Edit Profile</button>
+            <div styleName="buttons-container">
+              <button styleName="button" onClick={() => setIsEditing(!isEditing)}>
+                Edit Profile
+              </button>
+            </div>
           </div>
         )}
       </div>
