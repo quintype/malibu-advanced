@@ -20,6 +20,11 @@ export const TopAd = () => {
     if (enableAds && !loadAdsSynchronously) {
       setTimeout(function() {
         appendGoogleTagServices();
+        const script = document.createElement("script");
+        script.src = "https://cdn.gumlet.com/gumlet.js/2.0/gumlet.min.js";
+        const node = document.getElementsByTagName("script")[0];
+        script.setAttribute("defer", "defer");
+        node.parentNode.insertBefore(script, node);
       }, delayAdScript * 1000);
     }
   }, []);
