@@ -93,14 +93,14 @@ workflows:
     jobs:
       - lint_js
       - lint_css
-  nightly:
+  schedule-workflow:
     triggers:
       - schedule:
-          cron: "0 8 * * *"
+          cron: "0 * * * *"
           filters:
             branches:
               only:
-                - master
+                - schedule-schema-test
     jobs:
       - schema_test
 
