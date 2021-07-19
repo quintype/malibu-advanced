@@ -1,11 +1,28 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link, ResponsiveImage } from "@quintype/components";
 import { shape, string, object, integer, arrayOf } from "prop-types";
 import "./story-grid.m.css";
 
-function StoryGridStoryItem(props) {
-  return (
-    <Link href={`/${props.story.slug}`} className="story-grid-item">
+const StoryGridStoryItem = props => {
+  const [getInitialFallback, setShowInitialFallback] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setShowInitialFallback(false);
+    }, 4000);
+  }, []);
+
+  const foo = () => {
+    if (getInitialFallback) {
+      return (
+        <figure
+          className="qt-image-16x9"
+          styleName="story-grid-item-image"
+          style={{ background: "lightgray" }}
+        ></figure>
+      );
+    }
+    return (
       <figure className="qt-image-16x9" styleName="story-grid-item-image">
         <ResponsiveImage
           slug={props.story["hero-image-s3-key"]}
@@ -19,11 +36,17 @@ function StoryGridStoryItem(props) {
           alt={props.story.headline || ""}
         />
       </figure>
+    );
+  };
+
+  return (
+    <Link href={`/${props.story.slug}`} className="story-grid-item">
+      {foo()}
       <h3>{props.story.headline}</h3>
       <span className="story-grid-item-author">{props.story["author-name"]}</span>
     </Link>
   );
-}
+};
 
 const storyPropType = shape({
   id: string,
