@@ -75,7 +75,9 @@ jobs:
     docker:
       - image: circleci/node:8.11
     steps:
-      - run: npm install structured-data-testing-tool
+      - node/with-cache:
+          steps:
+            - run: npm install structured-data-testing-tool
       - run : sdtt --url https://malibu-advanced-web.quintype.io/
       - run : sdtt --url https://malibu-advanced-web.quintype.io/technology/automobiles/lamborghini-the-ferrari-killer -i
 
