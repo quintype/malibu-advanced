@@ -97,13 +97,13 @@ workflows:
       - lint_js
       - lint_css
   schedule-workflow:
-    triggers:
-      - schedule:
-          cron: "0 * * * *"
-          filters:
-            branches:
-              only:
-                - schedule-schema-test
+    # triggers:
+    #   - schedule:
+    #       cron: "0 * * * *"
+    #       filters:
+    #         branches:
+    #           only:
+    #             - schedule-schema-test
     jobs:
       - schema_test
 
