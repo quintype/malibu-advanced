@@ -1,11 +1,13 @@
 import React, { useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import get from "lodash/get";
 
 import { DfpComponent } from "./dfp-component";
 import { appendGoogleTagServices } from "./utils";
+import { SHOW_PLACEHOLDER } from "../store/actions";
 
 export const TopAd = () => {
+  const isPlaceholder = useSelector(state => get(state, ["isPlaceHolder"]));
   const qtState = useSelector(state => get(state, ["qt"], {}));
   const adsConfig = get(qtState, ["config", "ads-config", "dfp_ads"], {});
   const enableAds = get(adsConfig, ["enable_ads"], null);
@@ -16,24 +18,36 @@ export const TopAd = () => {
   const topAdConfig = get(qtState, ["config", "ads-config", "slots", "top_ad"], {});
   const delayAdScript = get(adsConfig, ["delay_ad_script"], 3);
   const cdnImage = get(qtState, ["config", "cdn-image"], "");
+  const dispatch = useDispatch();
+
+  const foo = value => {
+    dispatch({
+      type: SHOW_PLACEHOLDER,
+      isPlaceHolder: value
+    });
+  };
 
   useEffect(() => {
     if (enableAds && !loadAdsSynchronously) {
       setTimeout(function() {
         appendGoogleTagServices();
-        window.GUMLET_CONFIG = {
-          hosts: [{ current: cdnImage, gumlet: cdnImage }],
-          lazy_load: true,
-          auto_webp: true
-        };
-
-        const script = document.createElement("script");
-        script.src = "https://cdn.gumlet.com/gumlet.js/2.0/gumlet.min.js";
-        const node = document.getElementsByTagName("script")[0];
-        script.setAttribute("defer", "defer");
-        node.parentNode.insertBefore(script, node);
       }, delayAdScript * 1000);
     }
+
+    setTimeout(function() {
+      foo(false);
+      window.GUMLET_CONFIG = {
+        hosts: [{ current: cdnImage, gumlet: cdnImage }],
+        lazy_load: true,
+        auto_webp: true
+      };
+
+      const script = document.createElement("script");
+      script.src = "https://cdn.gumlet.com/gumlet.js/2.0/gumlet.min.js";
+      const node = document.getElementsByTagName("script")[0];
+      script.setAttribute("defer", "defer");
+      node.parentNode.insertBefore(script, node);
+    }, delayAdScript * 1000);
   }, []);
 
   useEffect(() => {
@@ -47,6 +61,8 @@ export const TopAd = () => {
       });
     }
   }, [currentPath]);
+
+  console.log("fooooo", isPlaceholder);
 
   return (
     <DfpComponent

@@ -1,4 +1,4 @@
-import { OPEN_HAMBURGER_MENU, OPEN_SEARCHBAR, MEMBER_UPDATED, IS_OPEN_LOGIN_FORM } from "./actions";
+import { OPEN_HAMBURGER_MENU, OPEN_SEARCHBAR, MEMBER_UPDATED, IS_OPEN_LOGIN_FORM, SHOW_PLACEHOLDER } from "./actions";
 
 function hamburgerMenuReducer(state = false, action) {
   switch (action.type) {
@@ -13,6 +13,15 @@ function searchBarReducer(state = false, action) {
   switch (action.type) {
     case OPEN_SEARCHBAR:
       return action.isSearchBarOpen;
+    default:
+      return state;
+  }
+}
+
+function placeHolderReducer(state = true, action) {
+  switch (action.type) {
+    case SHOW_PLACEHOLDER:
+      return action.isPlaceHolder;
     default:
       return state;
   }
@@ -41,5 +50,6 @@ export const REDUCERS = {
   isHamburgerMenuOpen: hamburgerMenuReducer,
   isSearchBarOpen: searchBarReducer,
   member: memberReducer,
-  isLoginOpen: loginReducer
+  isLoginOpen: loginReducer,
+  isPlaceHolder: placeHolderReducer
 };
