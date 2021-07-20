@@ -74,7 +74,7 @@ jobs:
   schema_test:
     docker:
       - image: circleci/node:8.11
-    working_directory: "~/malibu-advanced/package.json"
+    working_directory: "~/malibu-advanced"
     steps:
       - run : npm i structured-data-testing-tool && sdtt --url https://malibu-advanced-web.quintype.io/
       - run : npm i structured-data-testing-tool && sdtt --url https://malibu-advanced-web.quintype.io/technology/automobiles/lamborghini-the-ferrari-killer -i
