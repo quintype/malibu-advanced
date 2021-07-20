@@ -75,8 +75,8 @@ jobs:
     docker:
       - image: circleci/node:8.11
     steps:
-      - run : npm i -g structured-data-testing-tool && sdtt --url https://malibu-advanced-web.quintype.io/
-      - run : npm i -g structured-data-testing-tool && sdtt --url https://malibu-advanced-web.quintype.io/technology/automobiles/lamborghini-the-ferrari-killer -i
+      - run : sudo npm i -g structured-data-testing-tool && sdtt --url https://malibu-advanced-web.quintype.io/
+      - run : sudo npm i -g structured-data-testing-tool && sdtt --url https://malibu-advanced-web.quintype.io/technology/automobiles/lamborghini-the-ferrari-killer -i
 
   perf_prod_lighthouse_task:
     docker:
