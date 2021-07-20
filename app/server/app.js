@@ -25,37 +25,6 @@ export const app = createApp();
 
 upstreamQuintypeRoutes(app, { forwardAmp: true });
 
-const STATIC_TAGS = {
-  "twitter:site": "Quintype",
-  "twitter:app:name:ipad": undefined,
-  "twitter:app:name:googleplay": undefined,
-  "twitter:app:id:googleplay": undefined,
-  "twitter:app:name:iphone": undefined,
-  "twitter:app:id:iphone": undefined,
-  "apple-itunes-app": undefined,
-  "google-play-app": undefined,
-  "fb:app_id": undefined,
-  "fb:pages": undefined,
-  "og:site_name": "Quintype"
-};
-
-const STRUCTURED_DATA = {
-  organization: {
-    name: "Quintype",
-    url: "http://www.quintype.com/",
-    logo: "https://quintype.com/logo.png",
-    sameAs: [
-      "https://www.facebook.com/quintype",
-      "https://twitter.com/quintype_in",
-      "https://plus.google.com/+quintype",
-      "https://www.youtube.com/user/Quintype"
-    ]
-  },
-  enableLiveBlog: true,
-  enableVideo: true,
-  enableNewsArticle: true
-};
-
 const redirectCollectionHandler = () => async (req, res, next, { client, config }) => {
   const response = await Collection.getCollectionBySlug(client, req.params.collectionSlug, { limit: 20 }, { depth: 2 });
   if (!response) {
@@ -85,12 +54,13 @@ function generateSeo(config, pageType) {
     staticTags: Object.assign(generateStaticData(config)),
     structuredData: Object.assign(generateStructuredData(config), {
       enableLiveBlog: true,
-      enableVideo: true
+      enableVideo: true,
+      enableNewsArticle: true
     }),
     enableTwitterCards: true,
     enableOgTags: true,
     enableNews: true,
-    ampStoryPages: true,
+    enableFbApplink: true,
     generators: [TextTags, StaticTags, StructuredDataTags, StoryAmpTags]
   });
 }
