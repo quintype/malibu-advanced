@@ -34,6 +34,11 @@ jobs:
     environment:
       BK_ENVIRONMENT: production 222
 
+  deploy_perf_production:
+    <<: *deploy_task
+    environment:
+      BK_ENVIRONMENT: production 231
+
   lint_js:
     docker:
       - image: circleci/node:8.11
@@ -66,6 +71,14 @@ jobs:
       - run: |
           export LHCI_SITES="[\"https://malibu-advanced-web.quintype.io/\"]"
           npx @lhci/cli@0.6.x autorun
+  perf_prod_lighthouse_task:
+    docker:
+      - image: circleci/node:10.16-browsers
+    steps:
+      - checkout
+      - run: |
+          export LHCI_SITES="[\"https://malibu-perfadvanced.quintype.io/\"]"
+          npx @lhci/cli@0.6.x autorun
 
 workflows:
   version: 2
@@ -90,7 +103,22 @@ workflows:
           context: quay-login
           requires:
             - deploy_staging
-
+  perf_prod_lighthouse_test:
+    jobs:
+      - build:
+          context: quay-login
+      - hold_perf_prod:
+          type: approval
+          requires:
+            - build
+      - deploy_perf_production:
+          context: quay-login
+          requires:
+            - hold_perf_prod
+      - perf_prod_lighthouse_task:
+          context: quay-login
+          requires:
+            - deploy_perf_production
   lighthouse_test:
     jobs:
       - build:
