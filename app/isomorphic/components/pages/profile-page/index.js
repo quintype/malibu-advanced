@@ -29,13 +29,16 @@ const uploadS3ToTemp = async (res, formdata) => {
     .catch(err => console.error(err));
 };
 
-const EditProfile = ({ setIsEditing, isEditing }) => {
-  const [name, setName] = useState("");
+const EditProfile = ({ member, setIsEditing, isEditing }) => {
+  const [tempImageKey, setTempImageKey] = useState(null);
+  const [name, setName] = useState(member.name);
+  const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
 
   const prepareFormData = (keys, imageList, res) => {
     // eslint-disable-next-line no-undef
     const formdata = new FormData();
+
     for (let index = 0; index < keys.length; index++) {
       const key = keys[index];
       if (key === "file") {
@@ -44,11 +47,14 @@ const EditProfile = ({ setIsEditing, isEditing }) => {
         formdata.append(key, res[key]);
       }
     }
+
     return formdata;
   };
 
   const onProfileChange = event => {
+    setIsLoading(true);
     const imageList = event.target.files;
+
     signImage(imageList[0].name, imageList[0].type).then(res => {
       const keys = [
         "key",
@@ -65,9 +71,8 @@ const EditProfile = ({ setIsEditing, isEditing }) => {
 
       uploadS3ToTemp(res, formdata).then(response => {
         if (response.status === 201) {
-          updateUserProfile({ "temp-s3-key": res.key })
-            .then(currentUserResp => dispatch({ type: MEMBER_UPDATED, member: get(currentUserResp, ["user"], null) }))
-            .catch(err => console.error(err));
+          setTempImageKey(res.key);
+          setIsLoading(false);
         }
       });
     });
@@ -75,12 +80,13 @@ const EditProfile = ({ setIsEditing, isEditing }) => {
 
   const onSubmitHandler = e => {
     e.preventDefault();
-    if (name === "") {
-      setIsEditing(!isEditing);
-      return;
+    const body = { name };
+
+    if (tempImageKey !== null) {
+      body["temp-s3-key"] = tempImageKey;
     }
 
-    updateUserProfile({ name })
+    updateUserProfile(body)
       .then(currentUserResp => dispatch({ type: MEMBER_UPDATED, member: get(currentUserResp, ["user"], null) }))
       .then(() => setIsEditing(!isEditing))
       .catch(err => console.error(err));
@@ -92,19 +98,22 @@ const EditProfile = ({ setIsEditing, isEditing }) => {
 
   return (
     <div styleName="profile-card">
-      <form onSubmit={onSubmitHandler}>
+      <div>
         <div styleName="fields-container">
           <label>Name: </label>
           <input styleName="text-input" name="Name" type="text" value={name} onChange={handleChange} />
           <input name="File" type="file" onChange={onProfileChange} />
         </div>
+        {isLoading && <div>Loading...</div>}
         <div styleName="buttons-container">
           <button styleName="button" onClick={() => setIsEditing(!isEditing)}>
             Cancel
           </button>
-          <input styleName="button" type="submit" value="Submit" />
+          <button styleName="button" onClick={onSubmitHandler}>
+            Submit
+          </button>
         </div>
-      </form>
+      </div>
     </div>
   );
 };
@@ -161,6 +170,7 @@ const ProfilePage = () => {
 };
 
 EditProfile.propTypes = {
+  member: object,
   isEditing: bool,
   setIsEditing: func
 };
