@@ -74,7 +74,6 @@ jobs:
   schema_test:
     docker:
       - image: circleci/node:8.11
-    executor: node/default
     steps:
       - node/install-packages:
           cache-path: ~/MALIBU-ADVANCED/node_modules
