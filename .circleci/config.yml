@@ -81,7 +81,7 @@ jobs:
       - run : echo "Text story page schema test"
       - run : sdtt --url https://malibu-advanced-web.quintype.io/travel/the-golden-age-of-travel-was-also-the-golden-age-of-inflight-meals --schemas "jsonld:BreadcrumbList,jsonld:NewsArticle" -i
       - run : echo "Video story page schema test"
-      - run : sdtt --url https://malibu-advanced-web.quintype.io/travel/the-golden-age-of-travel-was-also-the-golden-age-of-inflight-meals --schemas "jsonld:BreadcrumbList,jsonld:NewsArticle" -i
+      - run : sdtt --url https://malibu-advanced-web.quintype.io/travel/the-golden-age-of-travel-was-also-the-golden-age-of-inflight-meals --schemas "jsonld:BreadcrumbList,jsonld:NewsArticle, jsonld:VideoObject" -i
       - run : echo "Photo story page schema test"
       - run : sdtt --url https://malibu-advanced-web.quintype.io/travel/the-golden-age-of-travel-was-also-the-golden-age-of-inflight-meals --schemas "jsonld:BreadcrumbList,jsonld:NewsArticle" -i
       - run : echo "Listicle story page schema test"
