@@ -77,7 +77,7 @@ jobs:
     steps:
       - run : sudo npm i -g structured-data-testing-tool
       - run : echo "Home page schema test"
-      - run : sdtt --url https://malibu-advanced-web.qtstage.io/ --presets Google,SocialMedia -i Tests
+      - run : sdtt --url https://malibu-advanced-web.qtstage.io/ --presets Google -i Tests
       - run : echo "Text story page schema test"
       - run : sdtt --url https://malibu-advanced-web.qtstage.io/technology/automobiles/how-to-analyse-data --presets Google,SocialMedia -i Tests
       - run : echo "Video story page schema test"
