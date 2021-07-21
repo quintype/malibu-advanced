@@ -3,31 +3,12 @@ import { useSelector, useDispatch } from "react-redux";
 import { object, func, bool } from "prop-types";
 import get from "lodash/get";
 
-import { updateUserProfile } from "@quintype/bridgekeeper-js";
+import { updateUserProfile, signImage, uploadS3ToTemp } from "@quintype/bridgekeeper-js";
 
 import { SvgIconHandler } from "../../atoms/svg-icon-hadler";
 import { MEMBER_UPDATED } from "../../store/actions";
 
 import "./profile-page.m.css";
-
-function signImage(fileName, mimeType) {
-  const url = `/api/sign?file-name=${fileName}&mime-type=${mimeType}`;
-  return fetch(url).then(res => res.json());
-}
-
-const uploadS3ToTemp = async (res, formdata) => {
-  const requestOptions = {
-    method: "POST",
-    body: formdata,
-    redirect: "follow"
-  };
-
-  return fetch(`${res.action}`, requestOptions)
-    .then(response => {
-      return response;
-    })
-    .catch(err => console.error(err));
-};
 
 const EditProfile = ({ member, setIsEditing, isEditing }) => {
   const [tempImageKey, setTempImageKey] = useState(null);
@@ -69,7 +50,7 @@ const EditProfile = ({ member, setIsEditing, isEditing }) => {
 
       const formdata = prepareFormData(keys, imageList, res);
 
-      uploadS3ToTemp(res, formdata).then(response => {
+      uploadS3ToTemp(res.action, formdata).then(response => {
         if (response.status === 201) {
           setTempImageKey(res.key);
           setIsLoading(false);
