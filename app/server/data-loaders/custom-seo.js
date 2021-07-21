@@ -11,6 +11,8 @@ export function loadCustomSeoMetadata(data) {
     twitterTitle: metaTitle,
     twitterDescription: metaDescription,
     ogImage: get(data, ["story", "alternative", "home", "default", "hero-image", "hero-image-s3-key"], ""),
-    twitterImage: get(data, ["story", "alternative", "home", "default", "hero-image", "hero-image-s3-key"], "")
+    twitterImage: get(data, ["story", "alternative", "home", "default", "hero-image", "hero-image-s3-key"], ""),
+    ogImageAlt: get(data, ["story", "alternative", "home", "default", "hero-image", "hero-image-attribution"], ""),
+    twitterImageAlt: get(data, ["story", "alternative", "home", "default", "hero-image", "hero-image-attribution"], "")
   };
 }

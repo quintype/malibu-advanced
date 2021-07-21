@@ -13,7 +13,7 @@
     "@quintype/bridgekeeper-js": "^2.3.3",
     "@quintype/components": "^2.31.2",
     "@quintype/framework": "^4.16.10",
-    "@quintype/seo": "^1.38.29",
+    "@quintype/seo": "file:../quintype-node-seo/quintype-seo-1.38.37-2.tgz",
     "fontfaceobserver": "^2.1.0",
     "formiojs": "^4.12.0",
     "lodash": "^4.17.15",
@@ -23,6 +23,7 @@
     "react-modal": "^3.12.1",
     "react-redux": "^7.0.3",
     "redux": "^4.0.1",
+    "structured-data-testing-tool": "^4.5.0",
     "wretch": "^1.4.1"
   },
   "devDependencies": {
