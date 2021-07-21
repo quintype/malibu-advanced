@@ -14,6 +14,7 @@ import { pickComponent } from "../isomorphic/pick-component";
 import {
   generateStaticData,
   generateStructuredData,
+  ImageTags,
   SEO,
   StaticTags,
   StoryAmpTags,
@@ -61,7 +62,7 @@ function generateSeo(config, pageType) {
     enableOgTags: true,
     enableNews: true,
     enableFbApplink: true,
-    generators: [TextTags, StaticTags, StructuredDataTags, StoryAmpTags]
+    generators: [ImageTags, TextTags, StaticTags, StructuredDataTags, StoryAmpTags]
   });
 }
 
