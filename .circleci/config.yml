@@ -77,23 +77,23 @@ jobs:
     steps:
       - run : sudo npm i -g structured-data-testing-tool
       - run : echo "Home page schema test"
-      - run : sdtt --url https://malibu-advanced-web.quintype.io/ --schemas "jsonld:WebSite,jsonld:BreadcrumbList,jsonld:Organization" -i
+      - run : sdtt --url https://malibu-advanced-web.qtstage.io/ --schemas "jsonld:WebSite,jsonld:BreadcrumbList,jsonld:Organization" -i
       - run : echo "Text story page schema test"
-      - run : sdtt --url https://malibu-advanced-web.quintype.io/travel/the-golden-age-of-travel-was-also-the-golden-age-of-inflight-meals --schemas "jsonld:BreadcrumbList,jsonld:NewsArticle" -i
+      - run : sdtt --url https://malibu-advanced-web.qtstage.io/technology/automobiles/how-to-analyse-data --schemas "jsonld:BreadcrumbList,jsonld:NewsArticle" -i
       - run : echo "Video story page schema test"
-      - run : sdtt --url https://malibu-advanced-web.quintype.io/travel/the-golden-age-of-travel-was-also-the-golden-age-of-inflight-meals --schemas "jsonld:BreadcrumbList,jsonld:NewsArticle, jsonld:VideoObject" -i
+      - run : sdtt --url https://malibu-advanced-web.qtstage.io/automated-collection-1/video-story-with-videos --schemas "jsonld:BreadcrumbList,jsonld:NewsArticle, jsonld:VideoObject" -i
       - run : echo "Photo story page schema test"
-      - run : sdtt --url https://malibu-advanced-web.quintype.io/travel/the-golden-age-of-travel-was-also-the-golden-age-of-inflight-meals --schemas "jsonld:BreadcrumbList,jsonld:NewsArticle" -i
+      - run : sdtt --url https://malibu-advanced-web.qtstage.io/entertainment/photo-story --schemas "jsonld:BreadcrumbList,jsonld:NewsArticle" -i
       - run : echo "Listicle story page schema test"
-      - run : sdtt --url https://malibu-advanced-web.quintype.io/travel/the-golden-age-of-travel-was-also-the-golden-age-of-inflight-meals --schemas "jsonld:BreadcrumbList,jsonld:NewsArticle" -i
+      - run : sdtt --url https://malibu-advanced-web.qtstage.io/technology/listicle-story-test --schemas "jsonld:BreadcrumbList,jsonld:NewsArticle" -i
       - run: echo "Live blog page schema test"
-      - run : sdtt --url https://malibu-advanced-web.quintype.io/travel/the-golden-age-of-travel-was-also-the-golden-age-of-inflight-meals --schemas "jsonld:BreadcrumbList,jsonld:NewsArticle, jsonld:LiveBlogPosting" -i
+      - run : sdtt --url https://malibu-advanced-web.qtstage.io/politics/live-blog-story --schemas "jsonld:BreadcrumbList,jsonld:NewsArticle, jsonld:LiveBlogPosting" -i
       - run: echo "Section page schema test"
-      - run : sdtt --url https://malibu-advanced-web.quintype.io/politics --schemas "jsonld:BreadcrumbList" -i
+      - run : sdtt --url https://malibu-advanced-web.qtstage.io/sports --schemas "jsonld:BreadcrumbList" -i
       - run: echo "Search page schema test"
-      - run : sdtt --url https://malibu-advanced-web.quintype.io/search?q=science --schemas "jsonld:BreadcrumbList" -i
+      - run : sdtt --url https://malibu-advanced-web.qtstage.io/search?q=science --schemas "jsonld:BreadcrumbList" -i
       - run: echo "Author page schema test"
-      - run : sdtt --url https://malibu-advanced-web.quintype.io/author/deo-kumar --schemas "jsonld:BreadcrumbList,jsonld:NewsArticle" -i
+      - run : sdtt --url https://malibu-advanced-web.qtstage.io/author/deo-kumar-2 --schemas "jsonld:BreadcrumbList,jsonld:NewsArticle" -i
 
 
   perf_prod_lighthouse_task:
