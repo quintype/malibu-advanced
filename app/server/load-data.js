@@ -14,6 +14,7 @@ import { loadFormPageData } from "./data-loaders/form-page-data";
 import { getNavigationMenuArray } from "./data-loaders/menu-data";
 import { loadCollectionPageData } from "./data-loaders/collection-page-data";
 import { loadAuthorPageData } from "./data-loaders/author-page-data";
+import { loadCustomSeoMetadata } from "./data-loaders/custom-seo";
 import { PAGE_TYPE } from "../isomorphic/constants";
 
 const { ads } = require("@quintype/framework/server/static-configuration");
@@ -94,7 +95,8 @@ export function loadData(pageType, params, config, client, { host, next, domainS
       pageType: data.pageType || pageType,
       data: Object.assign({}, data, {
         navigationMenu: getNavigationMenuArray(config.layout.menu, config.sections),
-        timezone: publisherAttributes.timezone || null
+        timezone: publisherAttributes.timezone || null,
+        customSeo: loadCustomSeoMetadata(data)
       }),
       config: Object.assign(pick(config.asJson(), WHITELIST_CONFIG_KEYS), {
         "publisher-attributes": publisherAttributes,
