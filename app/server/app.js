@@ -11,16 +11,7 @@ import { generateRoutes, STATIC_ROUTES } from "./routes";
 import { renderLayout } from "./handlers/render-layout";
 import { loadData, loadErrorData } from "./load-data";
 import { pickComponent } from "../isomorphic/pick-component";
-import {
-  generateStaticData,
-  generateStructuredData,
-  ImageTags,
-  SEO,
-  StaticTags,
-  StoryAmpTags,
-  StructuredDataTags,
-  TextTags
-} from "@quintype/seo";
+import { generateStaticData, generateStructuredData, SEO } from "@quintype/seo";
 import { Collection } from "@quintype/framework/server/api-client";
 export const app = createApp();
 
@@ -60,9 +51,7 @@ function generateSeo(config, pageType) {
     }),
     enableTwitterCards: true,
     enableOgTags: true,
-    enableNews: true,
-    enableFbApplink: true,
-    generators: [ImageTags, TextTags, StaticTags, StructuredDataTags, StoryAmpTags]
+    enableNews: true
   });
 }
 
