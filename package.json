@@ -12,7 +12,7 @@
     "@quintype/arrow": "^2.0.0",
     "@quintype/bridgekeeper-js": "^2.3.3",
     "@quintype/components": "^2.31.2",
-    "@quintype/framework": "^4.16.10",
+    "@quintype/framework": "^4.16.15",
     "@quintype/seo": "^1.38.29",
     "fontfaceobserver": "^2.1.0",
     "formiojs": "^4.12.0",
