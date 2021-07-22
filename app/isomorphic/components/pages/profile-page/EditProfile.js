@@ -28,9 +28,6 @@ const EditProfile = ({ member = {}, setIsEditing, isEditing }) => {
   const onProfileChange = async event => {
     setIsLoading(true);
     const imageList = event.target.files;
-    if (!imageList || imageList.length === 0) {
-      return;
-    }
 
     const signedImage = await signImage(imageList[0].name, imageList[0].type);
 
@@ -80,9 +77,9 @@ const EditProfile = ({ member = {}, setIsEditing, isEditing }) => {
     <div styleName="profile-card">
       <div>
         <div styleName="fields-container">
-          <label>Name: </label>
+          <b>Name: </b>
           <input styleName="text-input" name="Name" type="text" value={name} onChange={e => setName(e.target.value)} />
-          <label>Profile Pic: </label>
+          <b>Profile Pic: </b>
           <input styleName="file-input" name="File" type="file" onChange={onProfileChange} />
           {isLoading ? <div styleName="loading">Loading Image...</div> : <div styleName="loading"></div>}
         </div>
