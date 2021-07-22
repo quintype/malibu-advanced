@@ -5,6 +5,7 @@ import {
   upstreamQuintypeRoutes,
   isomorphicRoutes,
   staticRoutes,
+  ampRoutes,
   getWithConfig
 } from "@quintype/framework/server/routes";
 import { generateRoutes, STATIC_ROUTES } from "./routes";
@@ -15,7 +16,7 @@ import { generateStaticData, generateStructuredData, SEO } from "@quintype/seo";
 import { Collection } from "@quintype/framework/server/api-client";
 export const app = createApp();
 
-upstreamQuintypeRoutes(app, { forwardAmp: true });
+upstreamQuintypeRoutes(app, {});
 
 const redirectCollectionHandler = () => async (req, res, next, { client, config }) => {
   const response = await Collection.getCollectionBySlug(client, req.params.collectionSlug, { limit: 20 }, { depth: 2 });
@@ -54,6 +55,10 @@ function generateSeo(config, pageType) {
     enableNews: true
   });
 }
+
+ampRoutes(app, {
+  seo: generateSeo
+});
 
 isomorphicRoutes(app, {
   appVersion: require("../isomorphic/app-version"),
