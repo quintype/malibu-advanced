@@ -41,14 +41,14 @@ jobs:
 
   lint_js:
     docker:
-      - image: circleci/node:8.11
+      - image: circleci/node:12.13.0
     steps:
       - checkout
       - run: npm install
       - run: npm run lint:js:ci
   lint_css:
     docker:
-      - image: circleci/node:8.11
+      - image: circleci/node:12.13.0
     steps:
       - checkout
       - run: npm install
@@ -57,7 +57,7 @@ jobs:
 
   stg_lighthouse_task:
     docker:
-      - image: circleci/node:10.16-browsers
+      - image: circleci/node:12.13.0-browsers
     steps:
       - checkout
       - run: |
@@ -65,7 +65,7 @@ jobs:
           npx @lhci/cli@0.6.x autorun
   prod_lighthouse_task:
     docker:
-      - image: circleci/node:10.16-browsers
+      - image: circleci/node:12.13.0-browsers
     steps:
       - checkout
       - run: |
@@ -98,7 +98,7 @@ jobs:
 
   perf_prod_lighthouse_task:
     docker:
-      - image: circleci/node:10.16-browsers
+      - image: circleci/node:12.13.0-browsers
     steps:
       - checkout
       - run: |
