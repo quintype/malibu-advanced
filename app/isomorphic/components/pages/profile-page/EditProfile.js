@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import { object, func, bool } from "prop-types";
 import { useDispatch } from "react-redux";
+import get from "lodash/get";
 import { updateUserProfile, signImage, uploadS3ToTemp } from "@quintype/bridgekeeper-js";
 import { MEMBER_UPDATED } from "../../store/actions";
-import get from "lodash/get";
+
 import "./profile-page.m.css";
 
 let tempImageKey = null;
 
-const EditProfile = ({ member, setIsEditing, isEditing }) => {
-  // const [tempImageKey, setTempImageKey] = useState(null);
+const EditProfile = ({ member = {}, setIsEditing, isEditing }) => {
   const [name, setName] = useState(member.name);
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
@@ -19,11 +19,7 @@ const EditProfile = ({ member, setIsEditing, isEditing }) => {
     const formdata = new FormData();
 
     keys.forEach(key => {
-      if (key === "file") {
-        formdata.append(key, imageList[0]);
-      } else {
-        formdata.append(key, res[key]);
-      }
+      key === "file" ? formdata.append(key, imageList[0]) : formdata.append(key, res[key]);
     });
 
     return formdata;
@@ -32,6 +28,9 @@ const EditProfile = ({ member, setIsEditing, isEditing }) => {
   const onProfileChange = async event => {
     setIsLoading(true);
     const imageList = event.target.files;
+    if (!imageList || imageList.length === 0) {
+      return;
+    }
 
     const signedImage = await signImage(imageList[0].name, imageList[0].type);
 
@@ -83,9 +82,10 @@ const EditProfile = ({ member, setIsEditing, isEditing }) => {
         <div styleName="fields-container">
           <label>Name: </label>
           <input styleName="text-input" name="Name" type="text" value={name} onChange={e => setName(e.target.value)} />
-          <input name="File" type="file" onChange={onProfileChange} />
+          <label>Profile Pic: </label>
+          <input styleName="file-input" name="File" type="file" onChange={onProfileChange} />
+          {isLoading ? <div styleName="loading">Loading Image...</div> : <div styleName="loading"></div>}
         </div>
-        {isLoading && <div>Loading...</div>}
         <div styleName="buttons-container">
           <button styleName="button" onClick={() => setIsEditing(!isEditing)}>
             Cancel
