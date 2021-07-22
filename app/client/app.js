@@ -28,5 +28,6 @@ if (window.OneSignal) {
 }
 
 global.wretch = wretch;
+global.showPlaceholder = true;
 
 startApp(renderApplication, REDUCERS, opts).then(enableHotReload);
