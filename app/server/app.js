@@ -12,42 +12,11 @@ import { generateRoutes, STATIC_ROUTES } from "./routes";
 import { renderLayout } from "./handlers/render-layout";
 import { loadData, loadErrorData } from "./load-data";
 import { pickComponent } from "../isomorphic/pick-component";
-import { SEO } from "@quintype/seo";
+import { generateStaticData, generateStructuredData, SEO } from "@quintype/seo";
 import { Collection } from "@quintype/framework/server/api-client";
 export const app = createApp();
 
 upstreamQuintypeRoutes(app, {});
-
-const STATIC_TAGS = {
-  "twitter:site": "Quintype",
-  "twitter:app:name:ipad": undefined,
-  "twitter:app:name:googleplay": undefined,
-  "twitter:app:id:googleplay": undefined,
-  "twitter:app:name:iphone": undefined,
-  "twitter:app:id:iphone": undefined,
-  "apple-itunes-app": undefined,
-  "google-play-app": undefined,
-  "fb:app_id": undefined,
-  "fb:pages": undefined,
-  "og:site_name": "Quintype"
-};
-
-const STRUCTURED_DATA = {
-  organization: {
-    name: "Quintype",
-    url: "http://www.quintype.com/",
-    logo: "https://quintype.com/logo.png",
-    sameAs: [
-      "https://www.facebook.com/quintype",
-      "https://twitter.com/quintype_in",
-      "https://plus.google.com/+quintype",
-      "https://www.youtube.com/user/Quintype"
-    ]
-  },
-  enableLiveBlog: true,
-  enableVideo: true,
-  enableNewsArticle: true
-};
 
 const redirectCollectionHandler = () => async (req, res, next, { client, config }) => {
   const response = await Collection.getCollectionBySlug(client, req.params.collectionSlug, { limit: 20 }, { depth: 2 });
@@ -73,14 +42,22 @@ getWithConfig(app, "/collection/:collectionSlug", redirectCollectionHandler(), {
   logError
 });
 
-ampRoutes(app, {
-  seo: new SEO({
-    staticTags: STATIC_TAGS,
+function generateSeo(config, pageType) {
+  return new SEO({
+    staticTags: Object.assign(generateStaticData(config)),
+    structuredData: Object.assign(generateStructuredData(config), {
+      enableLiveBlog: true,
+      enableVideo: true,
+      enableNewsArticle: true
+    }),
     enableTwitterCards: true,
     enableOgTags: true,
-    enableNews: true,
-    structuredData: STRUCTURED_DATA
-  })
+    enableNews: true
+  });
+}
+
+ampRoutes(app, {
+  seo: generateSeo
 });
 
 isomorphicRoutes(app, {
@@ -93,13 +70,7 @@ isomorphicRoutes(app, {
   templateOptions: true,
   loadErrorData: loadErrorData,
   staticRoutes: STATIC_ROUTES,
-  seo: new SEO({
-    staticTags: STATIC_TAGS,
-    enableTwitterCards: true,
-    enableOgTags: true,
-    enableNews: true,
-    structuredData: STRUCTURED_DATA
-  }),
+  seo: generateSeo,
   preloadJs: true,
   oneSignalServiceWorkers: true,
   prerenderServiceUrl: "https://prerender.quintype.io"
