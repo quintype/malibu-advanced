@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { string, array } from "prop-types";
 import { useSelector } from "react-redux";
-import { get } from "lodash";
+import get from "lodash/get";
 
 import { getAdSlots } from "../utils";
 

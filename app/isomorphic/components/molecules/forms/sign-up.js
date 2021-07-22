@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { func, string } from "prop-types";
 import { register, sendVerificationLink } from "@quintype/bridgekeeper-js";
-import { get } from "lodash";
+import get from "lodash/get";
 import { connect } from "react-redux";
 
 import { InputField } from "../../atoms/InputField";
