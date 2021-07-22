@@ -66,7 +66,9 @@
     <div class="page-wrapper">
       <div><%- topbar %></div>
       <header id="nav-bar" class="sticky-header"><%- navbar %></header>
-      <div id='breaking-news-container'><%- breakingNews -%></div>
+      <% if(enableBreakingNews) {%>
+        <div id='breaking-news-container'><%- breakingNews -%></div>
+      <% } %>
       <%_ if(enableAds) { _%>
         <div id='top-ad'><%- topad -%></div>
       <%_ } _%>

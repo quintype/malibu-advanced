@@ -1,12 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
-
 import { SvgIconHandler } from "../../atoms/svg-icon-hadler";
-
+import { ProfileCard } from "./ProfileCard";
+import { EditProfile } from "./EditProfile";
 import "./profile-page.m.css";
 
 const ProfilePage = () => {
+  const [isEditing, setIsEditing] = useState(false);
   const member = useSelector(state => state.member || null);
+
   if (!member) {
     return <div styleName="not-logged-in">Please Login</div>;
   }
@@ -22,16 +24,18 @@ const ProfilePage = () => {
             <SvgIconHandler type="user" styleName="user-icon" />
           )}
         </div>
-        <div styleName="profile-information">
-          <p styleName="fields">
-            <strong>Name: </strong>
-            {member.name}
-          </p>
-          <p styleName="fields">
-            <strong>Email: </strong>
-            {member.email}
-          </p>
-        </div>
+        {isEditing ? (
+          <EditProfile member={member} setIsEditing={setIsEditing} isEditing={isEditing} />
+        ) : (
+          <div>
+            <ProfileCard member={member} />
+            <div styleName="buttons-container">
+              <button styleName="button" onClick={() => setIsEditing(!isEditing)}>
+                Edit Profile
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

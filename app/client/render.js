@@ -21,15 +21,19 @@ export function preRenderApplication(store) {
   global.qtLoadedFromShell && renderComponent(Footer, "footer", store, hydrate);
   renderComponent(NavbarSearch, "search-bar", store, hydrate);
   renderComponent(NavBar, "nav-bar", store, hydrate);
+
+  const pageType = get(store.getState(), ["qt", "pageType"], null);
   breakingNewsConfig.is_enable &&
+    pageType !== "profile-page" &&
     renderBreakingNews("breaking-news-container", store, BreakingNewsView, breakingNewsbaseProps);
 }
 
 // This is a separate file as everything from here on is hot reloaded when the app changes
 export function renderApplication(store) {
   const enableAds = get(store.getState(), ["qt", "config", "ads-config", "dfp_ads", "enable_ads"]);
+  const pageType = get(store.getState(), ["qt", "pageType"], null);
 
-  enableAds && renderComponent(TopAd, "top-ad", store);
+  enableAds && pageType !== "profile-page" && renderComponent(TopAd, "top-ad", store);
   renderIsomorphicComponent("container", store, pickComponent, {
     hydrate: !global.qtLoadedFromShell
   });
