@@ -40,15 +40,19 @@
 
 .button {
   padding: 4px 40px;
-  border: 1px solid var(--brand-primary);
-  background: var(--white);
-  color: var(--brand-primary-dark);
+  --border-color: var(--brand-primary);
+  border: 1px solid var(--border-color);
+  background: var(--background-color);
+  --text-color: var(--brand-primary-dark);
+  color: var(--text-color);
   border-radius: 4px;
 }
 
 .button:hover {
-  background: var(--brand-primary);
-  color: var(--white);
+  --background-color: var(--brand-primary);
+  background: var(--background-color);
+  --text-color: var(--white);
+  color: var(--text-color);
 }
 
 .buttons-container {

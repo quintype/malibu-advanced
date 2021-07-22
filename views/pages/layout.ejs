@@ -66,10 +66,10 @@
     <div class="page-wrapper">
       <div><%- topbar %></div>
       <header id="nav-bar" class="sticky-header"><%- navbar %></header>
-      <% if(pageType !== "profile-page") {%>
+      <% if(enableBreakingNews) {%>
         <div id='breaking-news-container'><%- breakingNews -%></div>
       <% } %>
-      <%_ if(enableAds && pageType !== "profile-page") { _%>
+      <%_ if(enableAds) { _%>
         <div id='top-ad'><%- topad -%></div>
       <%_ } _%>
       <div id="container"><%_ if(contentTemplate) { _%><%- include(contentTemplate) -%><%_ }else { _%><%- content %><%_ } _%></div>
