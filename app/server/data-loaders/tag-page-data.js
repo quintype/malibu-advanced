@@ -1,4 +1,4 @@
-import { get } from "lodash";
+import get from "lodash/get";
 import { Story } from "@quintype/framework/server/api-client";
 import { storyToCacheKey } from "@quintype/framework/server/caching";
 import { TAG_PAGE_URL_PREFIX } from "../../isomorphic/constants";
