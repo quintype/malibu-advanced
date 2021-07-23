@@ -13,7 +13,7 @@
     "@quintype/bridgekeeper-js": "^2.3.3",
     "@quintype/components": "^2.31.2",
     "@quintype/framework": "^4.16.15",
-    "@quintype/seo": "^1.38.37-image-alt-tag.0",
+    "@quintype/seo": "^1.38.37-image-alt-tag.1",
     "fontfaceobserver": "^2.1.0",
     "formiojs": "^4.12.0",
     "lodash": "^4.17.15",
