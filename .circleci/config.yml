@@ -111,10 +111,10 @@ workflows:
     jobs:
       - lint_js
       - lint_css
-  schedule-workflow:
+  nightly:
     triggers:
       - schedule:
-          cron: "0 * * * *" #cron job for every hour
+          cron: "0 20 * * *" # cron job for every night 8pm
           filters:
             branches:
               only:
