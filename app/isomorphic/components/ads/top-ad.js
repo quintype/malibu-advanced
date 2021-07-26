@@ -15,7 +15,6 @@ export const TopAd = () => {
   const collectionSlug = get(qtState, ["data", "collection", "slug"], null);
   const topAdConfig = get(qtState, ["config", "ads-config", "slots", "top_ad"], {});
   const delayAdScript = get(adsConfig, ["delay_ad_script"], 3);
-  const cdnImage = get(qtState, ["config", "cdn-image"], "");
 
   useEffect(() => {
     if (enableAds && !loadAdsSynchronously) {
@@ -23,20 +22,6 @@ export const TopAd = () => {
         appendGoogleTagServices();
       }, delayAdScript * 1000);
     }
-
-    setTimeout(function() {
-      window.GUMLET_CONFIG = {
-        hosts: [{ current: cdnImage, gumlet: cdnImage }],
-        lazy_load: true,
-        auto_webp: true
-      };
-
-      const script = document.createElement("script");
-      script.src = "https://cdn.gumlet.com/gumlet.js/2.0/gumlet.min.js";
-      const node = document.getElementsByTagName("script")[0];
-      script.setAttribute("defer", "defer");
-      node.parentNode.insertBefore(script, node);
-    }, 4000);
   }, []);
 
   useEffect(() => {
