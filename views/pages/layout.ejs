@@ -10,18 +10,6 @@
     <link rel="preconnect" href="https://prod-analytics.qlitics.com" crossorigin />
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />
 
-    <script type="text/javascript">
-      window.GUMLET_CONFIG = {
-        hosts: [{ current:  "<%= cdnImage %>" , gumlet: "<%= cdnImage %>"}],
-        lazy_load: true,
-        auto_webp: true
-      }
-    </script>
-
-    <%_ if(!enablePlaceholder) { _%>
-      <script src="https://cdn.gumlet.com/gumlet.js/2.0/gumlet.min.js" type="text/javascript" defer="defer"></script>
-    <%_ } _%>
-
     <%_ if(enableAds && loadAdsSynchronously) { _%>
       <script async="async" src="https://www.googletagservices.com/tag/js/gpt.js"></script>
     <%_ } _%>
@@ -33,6 +21,13 @@
       </script>
     <%_ } _%>
 
+    <script type="text/javascript">
+      window.GUMLET_CONFIG = {
+        hosts: [{ current: "<%= cdnImage %>", gumlet: "<%= cdnImage %>" }],
+        lazy_load: true,
+        auto_webp: true
+      }
+    </script>
     <%# load any CSS fonts just below this, curl -vH "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:27.0) Gecko/20100101 Firefox/27.0" 'https://fonts.googleapis.com/css?family=Lato:400,700|Roboto:400,700' | curl -X POST -s --data-urlencode 'input@-' https://cssminifier.com/raw %>
     <style>
       @font-face{font-display:swap;font-family:Lato;font-style:normal;font-weight:400;src:local('Lato Regular'),local('Lato-Regular'),url(https://fonts.gstatic.com/s/lato/v14/S6uyw4BMUTPHjx4wWA.woff) format('woff')}@font-face{font-display:swap;font-family:Lato;font-style:normal;font-weight:700;src:local('Lato Bold'),local('Lato-Bold'),url(https://fonts.gstatic.com/s/lato/v14/S6u9w4BMUTPHh6UVSwiPHw.woff) format('woff')}@font-face{font-display:swap;font-family:Roboto;font-style:normal;font-weight:400;src:local('Roboto'),local('Roboto-Regular'),url(https://fonts.gstatic.com/s/roboto/v18/KFOmCnqEu92Fr1Mu4mxM.woff) format('woff')}@font-face{font-display:swap;font-family:Roboto;font-style:normal;font-weight:700;src:local('Roboto Bold'),local('Roboto-Bold'),url(https://fonts.gstatic.com/s/roboto/v18/KFOlCnqEu92Fr1MmWUlfBBc-.woff) format('woff')}
@@ -41,7 +36,6 @@
       :root { <%_ Object.entries(fontFace.fontSettings).map(([cssVar, {fallback}]) => { _%> --<%= cssVar %>: <%- fallback _%>;<%_ }) _%> }
       body.fonts-loaded { <%_ Object.entries(fontFace.fontSettings).map(([cssVar, {value}]) => { _%> --<%= cssVar %>: <%- value _%>;<%_ }) _%> }
     </style>
-
     <style>
       <%- cssContent %>
     </style>
@@ -63,16 +57,21 @@
       <%- oneSignalScript -%>
     <%_ } _%>
   </head>
-
   <body>
-    <div id='placeholder-generator'></div>
+    <%_ if(!placeholderDelay) { _%>
+      <script src="https://cdn.gumlet.com/gumlet.js/2.0/gumlet.min.js" type="text/javascript" defer="defer"></script>
+    <% } else { %>
+      <div id='gumlet-script-generator'></div>
+    <% } %>
     <% if (isGtmEnable) { %>
       <%- include ./partials/noscriptgtm -%>
     <% } %>
     <div class="page-wrapper">
       <div><%- topbar %></div>
       <header id="nav-bar" class="sticky-header"><%- navbar %></header>
-      <div id='breaking-news-container'><%- breakingNews -%></div>
+      <% if(enableBreakingNews) {%>
+        <div id='breaking-news-container'><%- breakingNews -%></div>
+      <% } %>
       <%_ if(enableAds) { _%>
         <div id='top-ad'><%- topad -%></div>
       <%_ } _%>
@@ -90,7 +89,6 @@
         document.getElementsByTagName('head')[0].appendChild(s);
       }
     </script>
-
     <script type="text/javascript">
       <%- fontJsContent %>
       window.loadFonts(<%- serialize(fontFace.preloadFonts, {isJSON: true}) %>, 'fonts-loaded');

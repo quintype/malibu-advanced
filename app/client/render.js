@@ -7,7 +7,7 @@ import { Footer } from "../isomorphic/components/layouts/footer";
 import { NavbarSearch } from "../isomorphic/components/layouts/header/navbar-search";
 import { NavBar } from "../isomorphic/components/layouts/header/nav-bar";
 import { TopAd } from "../isomorphic/components/ads/top-ad";
-import { PlaceholderGenerator } from "../isomorphic/components/placeholder-generator";
+import { gumletScriptGenerator } from "../isomorphic/components/gumlet-script-generator";
 
 export function preRenderApplication(store) {
   const hydrate = { hydrate: !global.qtLoadedFromShell };
@@ -29,10 +29,10 @@ export function preRenderApplication(store) {
 // This is a separate file as everything from here on is hot reloaded when the app changes
 export function renderApplication(store) {
   const enableAds = get(store.getState(), ["qt", "config", "ads-config", "dfp_ads", "enable_ads"]);
-  const enablePlaceholder = get(store.getState(), ["qt", "config", "publisher-attributes", "enable_placeholder"]);
+  const placeholderDelay = get(store.getState(), ["qt", "config", "publisher-attributes", "placeholder_delay"]);
 
   enableAds && renderComponent(TopAd, "top-ad", store);
-  enablePlaceholder && renderComponent(PlaceholderGenerator, "placeholder-generator", store);
+  placeholderDelay && renderComponent(gumletScriptGenerator, "gumlet-script-generator", store);
   renderIsomorphicComponent("container", store, pickComponent, {
     hydrate: !global.qtLoadedFromShell
   });

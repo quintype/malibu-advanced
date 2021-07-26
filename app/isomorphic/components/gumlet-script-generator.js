@@ -2,7 +2,7 @@ import get from "lodash.get";
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 
-export const PlaceholderGenerator = () => {
+export const gumletScriptGenerator = () => {
   const placeholderDelay = useSelector(state =>
     get(state, ["qt", "config", "publisher-attributes", "placeholder_delay"], {})
   );

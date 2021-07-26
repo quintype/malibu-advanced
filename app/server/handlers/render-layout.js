@@ -31,12 +31,7 @@ export async function renderLayout(res, params) {
   const criticalCss = await getCriticalCss();
   const arrowCss = await getArrowCss(params.store.getState());
 
-  const enablePlaceholder = get(params.store.getState(), [
-    "qt",
-    "config",
-    "publisher-attributes",
-    "enable_placeholder"
-  ]);
+  const placeholderDelay = get(params.store.getState(), ["qt", "config", "publisher-attributes", "placeholder_delay"]);
 
   res.render(
     "pages/layout",
@@ -74,7 +69,7 @@ export async function renderLayout(res, params) {
         oneSignalScript: params.oneSignalScript,
         enableAds,
         loadAdsSynchronously,
-        enablePlaceholder
+        placeholderDelay
       },
       params
     )
