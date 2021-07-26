@@ -36,6 +36,7 @@
       :root { <%_ Object.entries(fontFace.fontSettings).map(([cssVar, {fallback}]) => { _%> --<%= cssVar %>: <%- fallback _%>;<%_ }) _%> }
       body.fonts-loaded { <%_ Object.entries(fontFace.fontSettings).map(([cssVar, {value}]) => { _%> --<%= cssVar %>: <%- value _%>;<%_ }) _%> }
     </style>
+
     <style>
       <%- cssContent %>
     </style>
@@ -57,6 +58,7 @@
       <%- oneSignalScript -%>
     <%_ } _%>
   </head>
+
   <body>
     <%_ if(!placeholderDelay) { _%>
       <script src="https://cdn.gumlet.com/gumlet.js/2.0/gumlet.min.js" type="text/javascript" defer="defer"></script>
@@ -69,9 +71,7 @@
     <div class="page-wrapper">
       <div><%- topbar %></div>
       <header id="nav-bar" class="sticky-header"><%- navbar %></header>
-      <% if(enableBreakingNews) {%>
-        <div id='breaking-news-container'><%- breakingNews -%></div>
-      <% } %>
+      <div id='breaking-news-container'><%- breakingNews -%></div>
       <%_ if(enableAds) { _%>
         <div id='top-ad'><%- topad -%></div>
       <%_ } _%>
