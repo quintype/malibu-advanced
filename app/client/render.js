@@ -30,7 +30,7 @@ export function preRenderApplication(store) {
 export function renderApplication(store) {
   const enableAds = get(store.getState(), ["qt", "config", "ads-config", "dfp_ads", "enable_ads"]);
   const enablePlaceholder = get(store.getState(), ["qt", "config", "publisher-attributes", "enable_placeholder"]);
-  global.showPlaceholder = enablePlaceholder;
+  // global.showPlaceholder = enablePlaceholder;
 
   enableAds && renderComponent(TopAd, "top-ad", store);
   enablePlaceholder && renderComponent(PlaceholderGenerator, "placeholder-generator", store);
