@@ -11,7 +11,7 @@
     "@loadable/server": "^5.14.2",
     "@quintype/arrow": "^2.0.0",
     "@quintype/bridgekeeper-js": "^2.3.3",
-    "@quintype/components": "^2.31.2",
+    "@quintype/components": "2.32.0-image-perf-issue.0",
     "@quintype/framework": "^4.16.15",
     "@quintype/seo": "^1.38.29",
     "fontfaceobserver": "^2.1.0",
