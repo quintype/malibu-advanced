@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
-import { get } from "lodash";
+import get from "lodash/get";
 
 import { DfpComponent } from "./dfp-component";
 import { appendGoogleTagServices } from "./utils";

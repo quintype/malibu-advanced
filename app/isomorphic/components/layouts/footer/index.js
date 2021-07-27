@@ -11,15 +11,17 @@ import "./footer.m.css";
 const MenuGroup = ({ menus }) => {
   return menus.map(
     ({ title, children }, id) =>
+      children &&
       children.length > 0 && (
         <div styleName="menu-group" key={id}>
           <h6 styleName="title">{title}</h6>
           <ul>
-            {children.map((item, id) => (
-              <li styleName="list-item" key={id}>
-                <MenuItem item={item} menuStyle="menu-items-footer" />
-              </li>
-            ))}
+            {children &&
+              children.map((item, id) => (
+                <li styleName="list-item" key={id}>
+                  <MenuItem item={item} menuStyle="menu-items-footer" />
+                </li>
+              ))}
           </ul>
         </div>
       )
@@ -28,7 +30,6 @@ const MenuGroup = ({ menus }) => {
 
 const FooterBase = ({ menu }) => {
   const placeholderMenus = menu.filter(item => (item["item-type"] = "placeholder"));
-
   return (
     <div className="container">
       <div styleName="footer">

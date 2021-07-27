@@ -3,7 +3,7 @@
 import React from "react";
 import { array, object } from "prop-types";
 import { useSelector } from "react-redux";
-import { get } from "lodash";
+import get from "lodash/get";
 
 import { StoryGrid } from "../../story-grid";
 
@@ -35,3 +35,4 @@ FourColGrid.propTypes = {
 };
 
 FourColGrid.storyLimit = 8;
+FourColGrid.nestedCollectionLimit = [1, 2];

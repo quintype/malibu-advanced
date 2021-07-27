@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { func, string } from "prop-types";
 import { register, sendVerificationLink } from "@quintype/bridgekeeper-js";
-import { get } from "lodash";
+import get from "lodash/get";
 import { connect } from "react-redux";
 
 import { InputField } from "../../atoms/InputField";
@@ -122,7 +122,9 @@ const SignUpBase = ({ onSignup, onLogin, isVerificationLinkflow }) => {
         <>
           <p styleName="message-text">
             {verficationSuccessMessage} If you have not received a email, click{" "}
-            <button onClick={onResendVerification}>resend</button>{" "}
+            <button aria-label="button-resend" onClick={onResendVerification}>
+              resend
+            </button>{" "}
           </p>
         </>
       )}
