@@ -59,7 +59,11 @@ const BlankStoryTemplate = props => {
       <div styleName="wrapper">
         <WithLazy margin="20px">
           {() => (
-            <figure className="blank-story-image" styleName="qt-image-16x9">
+            <figure
+              className="blank-story-image"
+              styleName="qt-image-16x9"
+              style={{ background: global.showPlaceholder ? "lightgray" : "transparent" }}
+            >
               <ResponsiveImage
                 slug={props.story["hero-image-s3-key"]}
                 metadata={props.story["hero-image-metadata"]}
