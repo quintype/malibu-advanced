@@ -57,7 +57,6 @@ export function loadErrorData(error, config) {
 // FIXME: Convert this to async/await
 export function loadData(pageType, params, config, client, { host, next, domainSlug }) {
   const publisherAttributes = getPublisherAttributes();
-  global.showPlaceholder = publisherAttributes.enable_placeholder;
 
   function _loadData() {
     switch (pageType) {
@@ -102,7 +101,8 @@ export function loadData(pageType, params, config, client, { host, next, domainS
         "publisher-attributes": publisherAttributes,
         "image-cdn-format": "gumlet",
         "ads-config": ads,
-        svgSpritePath
+        svgSpritePath,
+        showPlaceholder: publisherAttributes.enable_placeholder
       })
     };
   });
