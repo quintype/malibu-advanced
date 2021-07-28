@@ -8,13 +8,11 @@ import "./story-grid.m.css";
 
 function StoryGridStoryItem(props) {
   const showImagePlaceholder = useSelector(state => get(state, ["qt", "config", "showPlaceholder"]));
+  const getPlaceholderStyleName = showImagePlaceholder ? "placeholder" : "";
 
   return (
     <Link href={`/${props.story.slug}`} className="story-grid-item">
-      <figure
-        className="qt-image-16x9"
-        styleName={`story-grid-item-image ${showImagePlaceholder ? "placeholder" : ""}`}
-      >
+      <figure className="qt-image-16x9" styleName={`story-grid-item-image ${getPlaceholderStyleName}`}>
         <ResponsiveImage
           slug={props.story["hero-image-s3-key"]}
           metadata={props.story["hero-image-metadata"]}

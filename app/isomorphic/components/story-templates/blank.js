@@ -38,6 +38,7 @@ const BlankStoryTemplate = props => {
   const loadAdsSynchronously = get(adsConfig, ["dfp_ads", "load_ads_synchronously"], null);
 
   const showImagePlaceholder = useSelector(state => get(state, ["qt", "config", "showPlaceholder"]));
+  const getPlaceholderStyleName = showImagePlaceholder ? "placeholder" : "";
 
   useEffect(() => {
     if (enableAds) {
@@ -61,10 +62,7 @@ const BlankStoryTemplate = props => {
       <div styleName="wrapper">
         <WithLazy margin="20px">
           {() => (
-            <figure
-              className="blank-story-image"
-              styleName={`qt-image-16x9 ${showImagePlaceholder ? "placeholder" : ""}`}
-            >
+            <figure className="blank-story-image" styleName={`qt-image-16x9 ${getPlaceholderStyleName}`}>
               <ResponsiveImage
                 slug={props.story["hero-image-s3-key"]}
                 metadata={props.story["hero-image-metadata"]}
