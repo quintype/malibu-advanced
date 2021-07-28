@@ -37,7 +37,7 @@ export function getPublisherAttributes(publisherYml = publisher) {
   return publisherAttributes;
 }
 
-export function loadErrorData(error, config) {
+export function loadErrorData(error, config, client, { cookies }) {
   const publisherAttributes = getPublisherAttributes();
   const errorComponents = { 404: "not-found" };
   return Promise.resolve({
@@ -55,7 +55,7 @@ export function loadErrorData(error, config) {
 }
 
 // FIXME: Convert this to async/await
-export function loadData(pageType, params, config, client, { host, next, domainSlug }) {
+export function loadData(pageType, params, config, client, { host, next, domainSlug, cookies }) {
   const publisherAttributes = getPublisherAttributes();
   function _loadData() {
     switch (pageType) {

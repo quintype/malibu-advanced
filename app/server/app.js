@@ -14,10 +14,12 @@ import { loadData, loadErrorData } from "./load-data";
 import { pickComponent } from "../isomorphic/pick-component";
 import { generateStaticData, generateStructuredData, SEO } from "@quintype/seo";
 import { Collection } from "@quintype/framework/server/api-client";
+var cookieParser = require("cookie-parser");
+
 export const app = createApp();
 
 upstreamQuintypeRoutes(app, {});
-
+app.use(cookieParser());
 const redirectCollectionHandler = () => async (req, res, next, { client, config }) => {
   const response = await Collection.getCollectionBySlug(client, req.params.collectionSlug, { limit: 20 }, { depth: 2 });
   if (!response) {
