@@ -37,19 +37,9 @@ function loginReducer(state = false, action) {
   }
 }
 
-function placeHolderReducer(state = true, action) {
-  switch (action.type) {
-    case "SHOW_PLACEHOLDER":
-      return action.isPlaceHolder;
-    default:
-      return state;
-  }
-}
-
 export const REDUCERS = {
   isHamburgerMenuOpen: hamburgerMenuReducer,
   isSearchBarOpen: searchBarReducer,
   member: memberReducer,
-  isLoginOpen: loginReducer,
-  isPlaceHolder: placeHolderReducer
+  isLoginOpen: loginReducer
 };

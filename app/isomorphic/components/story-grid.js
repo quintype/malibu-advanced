@@ -1,15 +1,19 @@
 import React from "react";
+import { useSelector } from "react-redux";
+import get from "lodash.get";
 import { Link, ResponsiveImage } from "@quintype/components";
 import { shape, string, object, integer, arrayOf } from "prop-types";
+
 import "./story-grid.m.css";
 
 function StoryGridStoryItem(props) {
+  const showImagePlaceholder = useSelector(state => get(state, ["qt", "config", "showPlaceholder"]));
+
   return (
     <Link href={`/${props.story.slug}`} className="story-grid-item">
       <figure
         className="qt-image-16x9"
-        styleName="story-grid-item-image"
-        style={{ background: global.showPlaceholder ? "lightgray" : "transparent" }}
+        styleName={`story-grid-item-image ${showImagePlaceholder ? "placeholder" : ""}`}
       >
         <ResponsiveImage
           slug={props.story["hero-image-s3-key"]}

@@ -6,7 +6,8 @@ import "./style.m.css";
 
 export const ArrowThreeColGrid = ({ collection }) => {
   const config = {
-    buttonText: `${collection.name} News`
+    buttonText: `${collection.name} News`,
+    showImagePlaceholder: true
   };
   return <ThreeColGrid collection={collection} config={config} />;
 };

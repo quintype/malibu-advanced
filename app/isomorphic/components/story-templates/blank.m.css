@@ -316,6 +316,11 @@
     }
   }
 }
+
+.placeholder {
+  background-color: lightgray;
+}
+
 .ad-slot {
   display: flex;
   justify-content: center; /* For other ads, where width isn't specified */

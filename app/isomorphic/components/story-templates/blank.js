@@ -37,6 +37,8 @@ const BlankStoryTemplate = props => {
   const adConfig = get(adsConfig, ["slots", "story_page_ads"], {});
   const loadAdsSynchronously = get(adsConfig, ["dfp_ads", "load_ads_synchronously"], null);
 
+  const showImagePlaceholder = useSelector(state => get(state, ["qt", "config", "showPlaceholder"]));
+
   useEffect(() => {
     if (enableAds) {
       const sectionSlug = get(props, ["story", "sections", 0, "slug"], "NA");
@@ -61,8 +63,7 @@ const BlankStoryTemplate = props => {
           {() => (
             <figure
               className="blank-story-image"
-              styleName="qt-image-16x9"
-              style={{ background: global.showPlaceholder ? "lightgray" : "transparent" }}
+              styleName={`qt-image-16x9 ${showImagePlaceholder ? "placeholder" : ""}`}
             >
               <ResponsiveImage
                 slug={props.story["hero-image-s3-key"]}
