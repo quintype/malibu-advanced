@@ -7,7 +7,7 @@ function StoryGridStoryItem(props) {
   return (
     <Link href={`/${props.story.slug}`} className="story-grid-item">
       <figure className="qt-image-16x9" styleName="story-grid-item-image">
-        <ResponsiveImage
+        {/* <ResponsiveImage
           slug={props.story["hero-image-s3-key"]}
           metadata={props.story["hero-image-metadata"]}
           aspectRatio={[16, 9]}
@@ -17,7 +17,11 @@ function StoryGridStoryItem(props) {
           imgParams={{ auto: ["format", "compress"] }}
           eager={props.position < 2 ? "above-fold" : "below-fold"}
           alt={props.story.headline || ""}
-        />
+        /> */}
+        <img
+          srcSet="https://qtstage-01.gumlet.io/malibu%2F2021-03%2Ff940123c-c081-4857-b056-268ae10981d0%2F60.jpeg?rect=0%2C0%2C750%2C422&auto=format%2Ccompress&fit=max&format=webp&w=400 400w, https://qtstage-01.gumlet.io/malibu%2F2021-03%2Ff940123c-c081-4857-b056-268ae10981d0%2F60.jpeg?rect=0%2C0%2C750%2C422&auto=format%2Ccompress&fit=max&format=webp&w=800 800w, https://qtstage-01.gumlet.io/malibu%2F2021-03%2Ff940123c-c081-4857-b056-268ae10981d0%2F60.jpeg?rect=0%2C0%2C750%2C422&auto=format%2Ccompress&fit=max&format=webp&w=1200 1200w"
+          style={{ width: "100%" }}
+        ></img>
       </figure>
       <h3>{props.story.headline}</h3>
       <span className="story-grid-item-author">{props.story["author-name"]}</span>

@@ -36,14 +36,14 @@ function wrapEager(f) {
 }
 
 export default {
-  FourColGrid: wrapEager(wrapCollectionLayout(FourColGrid)),
-  ArrowFourColTwelveStories: wrapEager(wrapCollectionLayout(ArrowFourColTwelveStories)),
-  ArrowThreeColGrid: wrapEager(wrapCollectionLayout(ArrowThreeColGrid)),
-  ArrowFourColGrid: wrapEager(wrapCollectionLayout(ArrowFourColGrid)),
-  ArrowElevenStories: wrapEager(wrapCollectionLayout(ArrowElevenStories)),
-  ArrowTwoColFourStories: wrapEager(wrapCollectionLayout(ArrowTwoColFourStories)),
-  ArrowFullScreenSlider: wrapEager(wrapCollectionLayout(ArrowFullScreenSlider)),
-  ArrowOneColStoryList: wrapEager(wrapCollectionLayout(ArrowOneColStoryList)),
-  ArrowThreeColSevenStories: wrapEager(wrapCollectionLayout(ArrowThreeColSevenStories)),
+  // FourColGrid: wrapEager(wrapCollectionLayout(FourColGrid)),
+  // ArrowFourColTwelveStories: wrapEager(wrapCollectionLayout(ArrowFourColTwelveStories)),
+  // ArrowThreeColGrid: wrapEager(wrapCollectionLayout(ArrowThreeColGrid)),
+  // ArrowFourColGrid: wrapEager(wrapCollectionLayout(ArrowFourColGrid)),
+  // ArrowElevenStories: wrapEager(wrapCollectionLayout(ArrowElevenStories)),
+  // ArrowTwoColFourStories: wrapEager(wrapCollectionLayout(ArrowTwoColFourStories)),
+  // ArrowFullScreenSlider: wrapEager(wrapCollectionLayout(ArrowFullScreenSlider)),
+  // ArrowOneColStoryList: wrapEager(wrapCollectionLayout(ArrowOneColStoryList)),
+  // ArrowThreeColSevenStories: wrapEager(wrapCollectionLayout(ArrowThreeColSevenStories)),
   defaultTemplate: wrapEager(wrapCollectionLayout(FourColGrid))
 };
