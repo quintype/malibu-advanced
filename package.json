@@ -10,7 +10,7 @@
     "@loadable/component": "^5.14.1",
     "@loadable/server": "^5.14.2",
     "@quintype/arrow": "^2.0.0",
-    "@quintype/bridgekeeper-js": "2.3.7",
+    "@quintype/bridgekeeper-js": "2.4.0",
     "@quintype/components": "^2.31.2",
     "@quintype/framework": "^5.0.2",
     "@quintype/seo": "^1.38.39",
