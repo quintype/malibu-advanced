@@ -67,9 +67,10 @@ export async function renderLayout(res, params) {
         isGaEnable,
         isOnesignalEnable,
         oneSignalScript: params.oneSignalScript,
-        enableAds,
+        enableAds: enableAds && params.pageType !== "profile-page",
         loadAdsSynchronously,
-        placeholderDelay
+        placeholderDelay,
+        enableBreakingNews: params.pageType !== "profile-page"
       },
       params
     )
