@@ -4,13 +4,16 @@ import { LazyCollection, LazyLoadImages, replaceAllStoriesInCollection, WithPrev
 
 import { getCollectionTemplate } from "../get-collection-template";
 
-export const HomePage = props => (
-  <div className="container">
-    <LazyLoadImages>
-      <LazyCollection collection={props.data.collection} collectionTemplates={getCollectionTemplate} lazyAfter={2} />
-    </LazyLoadImages>
-  </div>
-);
+export const HomePage = props => {
+  console.log("-------------HomePage------------");
+  return (
+    <div className="container">
+      <LazyLoadImages>
+        <LazyCollection collection={props.data.collection} collectionTemplates={getCollectionTemplate} lazyAfter={2} />
+      </LazyLoadImages>
+    </div>
+  );
+};
 
 HomePage.propTypes = {
   data: shape({
