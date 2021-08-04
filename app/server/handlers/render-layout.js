@@ -31,7 +31,9 @@ export async function renderLayout(res, params) {
   const criticalCss = await getCriticalCss();
   const arrowCss = await getArrowCss(params.store.getState());
 
-  const placeholderDelay = get(params.store.getState(), ["qt", "config", "publisher-attributes", "placeholder_delay"]);
+  const placeholderDelay = parseInt(
+    get(params.store.getState(), ["qt", "config", "publisher-attributes", "placeholder_delay"])
+  );
 
   res.render(
     "pages/layout",

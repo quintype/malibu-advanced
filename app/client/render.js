@@ -33,7 +33,9 @@ export function preRenderApplication(store) {
 export function renderApplication(store) {
   const enableAds = get(store.getState(), ["qt", "config", "ads-config", "dfp_ads", "enable_ads"]);
   const pageType = get(store.getState(), ["qt", "pageType"], null);
-  const placeholderDelay = get(store.getState(), ["qt", "config", "publisher-attributes", "placeholder_delay"]);
+  const placeholderDelay = parseInt(
+    get(store.getState(), ["qt", "config", "publisher-attributes", "placeholder_delay"])
+  );
 
   enableAds && pageType !== "profile-page" && renderComponent(TopAd, "top-ad", store);
   placeholderDelay && renderComponent(gumletScriptGenerator, "gumlet-script-generator", store);
