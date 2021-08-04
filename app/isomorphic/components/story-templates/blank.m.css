@@ -317,7 +317,7 @@
 }
 
 .placeholder {
-  background-color: lightgray;
+  background-color: var(--background-color);
 }
 
 .ad-slot {
