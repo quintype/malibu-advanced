@@ -26,6 +26,8 @@ publisher:
   google_app_id: ""
   facebook_app_id: ""
   is_verification_link_flow: true
+  enable_placeholder: true
+  placeholder_delay: 3
   collectionParams:
     depth: 2
     storyLimits:

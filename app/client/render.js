@@ -7,6 +7,7 @@ import { Footer } from "../isomorphic/components/layouts/footer";
 import { NavbarSearch } from "../isomorphic/components/layouts/header/navbar-search";
 import { NavBar } from "../isomorphic/components/layouts/header/nav-bar";
 import { TopAd } from "../isomorphic/components/ads/top-ad";
+import { gumletScriptGenerator } from "../isomorphic/components/gumlet-script-generator";
 
 export function preRenderApplication(store) {
   const hydrate = { hydrate: !global.qtLoadedFromShell };
@@ -32,8 +33,12 @@ export function preRenderApplication(store) {
 export function renderApplication(store) {
   const enableAds = get(store.getState(), ["qt", "config", "ads-config", "dfp_ads", "enable_ads"]);
   const pageType = get(store.getState(), ["qt", "pageType"], null);
+  const placeholderDelay = parseInt(
+    get(store.getState(), ["qt", "config", "publisher-attributes", "placeholder_delay"])
+  );
 
   enableAds && pageType !== "profile-page" && renderComponent(TopAd, "top-ad", store);
+  placeholderDelay && renderComponent(gumletScriptGenerator, "gumlet-script-generator", store);
   renderIsomorphicComponent("container", store, pickComponent, {
     hydrate: !global.qtLoadedFromShell
   });
