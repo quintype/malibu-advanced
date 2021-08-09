@@ -66,7 +66,7 @@ const BlankStoryTemplate = props => {
                 aspectRatio={[16, 9]}
                 defaultWidth={480}
                 widths={[250, 480, 640]}
-                sizes="( max-width: 120px ) 98%, ( max-width: 768px ) 48%, 23%"
+                sizes="(max-width: 500px) 88vw, (max-width: 768px) 46vw, 18vw"
                 imgParams={{ auto: ["format", "compress"], fmt: "webp" }}
               />
             </figure>
