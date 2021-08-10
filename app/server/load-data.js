@@ -93,6 +93,7 @@ export function loadData(pageType, params, config, client, { host, next, domainS
     return {
       httpStatusCode: data.httpStatusCode || 200,
       pageType: data.pageType || pageType,
+      subPageType: data.story && data.story["story-template"],
       data: Object.assign({}, data, {
         navigationMenu: getNavigationMenuArray(config.layout.menu, config.sections),
         timezone: publisherAttributes.timezone || null

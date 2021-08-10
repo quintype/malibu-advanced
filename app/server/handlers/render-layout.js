@@ -9,7 +9,7 @@ import { Footer } from "../../isomorphic/components/layouts/footer";
 import fontFace from "../font";
 import { BreakingNewsView } from "../../isomorphic/components/breaking-news-view";
 import { TopAd } from "../../isomorphic/components/ads/top-ad";
-import { getConfig, extractor, getCriticalCss, getArrowCss } from "../helpers";
+import { getConfig, extractor, getCriticalCss, getCriticalCSSChunksForCurrentPage } from "../helpers";
 import get from "lodash.get";
 
 const cssContent = assetPath("app.css") ? readAsset("app.css") : "";
@@ -29,11 +29,17 @@ export async function renderLayout(res, params) {
   } = getConfig(params.store.getState());
   const chunk = params.shell ? null : allChunks[getChunkName(params.pageType)];
   const criticalCss = await getCriticalCss();
-  const arrowCss = await getArrowCss(params.store.getState());
+  // const arrowCss = await getArrowCss(params.store.getState());
+  const pageChunk = params.pageType === "home-page" ? { ...chunk, jsPaths: [] } : chunk;
+  const chunksList = [pageChunk, allChunks[`${params.subPageType}-story-template-chunk`]];
 
   const placeholderDelay = parseInt(
     get(params.store.getState(), ["qt", "config", "publisher-attributes", "placeholder_delay"])
   );
+  const criticalCSSChunks = getCriticalCSSChunksForCurrentPage(params.pageType);
+
+  console.log("criticalCSSChunks !!", criticalCSSChunks);
+  console.log("criticalCss !!!", criticalCss);
 
   res.render(
     "pages/layout",
@@ -42,8 +48,8 @@ export async function renderLayout(res, params) {
         assetPath: assetPath,
         content: params.content || "",
         cssContent: cssContent,
-        criticalCss: criticalCss,
-        arrowCss,
+        criticalCSSChunks: criticalCSSChunks,
+        pageChunks: chunksList,
         fontJsContent: fontJsContent,
         fontFace: fontFace,
         contentTemplate: null,

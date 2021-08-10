@@ -1,6 +1,5 @@
+import { withStoryPageContent } from "./component-bundles/bundling-util";
 import { PAGE_TYPE } from "./constants";
-import { pickComponentHelper } from "@quintype/framework/server/pick-component-helper";
-
 const { pickComponent, getChunkName } = pickComponentHelper(
   {
     [PAGE_TYPE.HOME_PAGE]: { chunk: "home", component: "HomePage" },
@@ -23,7 +22,33 @@ const { pickComponent, getChunkName } = pickComponentHelper(
     home: () => import(/* webpackChunkName: "home" */ "./component-bundles/home.js"),
     list: () => import(/* webpackChunkName: "list" */ "./component-bundles/list.js"),
     story: () => import(/* webpackChunkName: "story" */ "./component-bundles/story.js")
+  },
+  {
+    story: withStoryPageContent
   }
 );
 
+function pickComponentHelper(components, loadChunk, chunkComponentWrapperFns) {
+  return {
+    pickComponent,
+    getChunkName
+  };
+
+  function pickComponent(pageType, subPageType) {
+    const { chunk, component } = components[pageType] || components.default;
+    return loadChunk[chunk]()
+      .then(bundle => {
+        if (chunkComponentWrapperFns[chunk]) {
+          return chunkComponentWrapperFns[chunk](bundle[component], subPageType);
+        }
+        return bundle[component];
+      })
+      .then(comp => comp);
+  }
+
+  function getChunkName(pageType) {
+    const { chunk } = components[pageType] || components.default;
+    return chunk;
+  }
+}
 export { pickComponent, getChunkName };

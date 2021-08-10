@@ -40,20 +40,20 @@
     <style>
       <%- cssContent %>
     </style>
-    <style>
-      <%- criticalCss %>
-    </style>
-    <style data-info="arrow-styles">
-      <%- arrowCss %>
-    </style>
+
+    <%_ criticalCSSChunks.map(function(styleChunk) { _%>
+      <style id="critical-css"><%- styleChunk %></style>
+  <%_ }) _%>
+  <%_ pageChunks.map(function(pageChunk) { _%>
     <%_ if(pageChunk) { _%>
-    <%_ pageChunk.cssFiles.map(cssFile => {_%>
-      <style data-href="<%= cssFile.path %>"><%- cssFile.content %></style>
+    <%_ pageChunk.cssFiles.map(cssFile => { _%>
+        <style data-href="<%= cssFile.path %>"><%- cssFile.content %></style>
     <%_ }) _%>
-    <%_ pageChunk.jsPaths.map(jsPath => {_%>
-      <link rel="preload" href="<%= jsPath %>" as="script">
+    <%_ pageChunk.jsPaths.map(jsPath => { _%>
+        <link rel="preload" href="<%= jsPath %>" as="script">
     <%_ }) _%>
     <%_ } _%>
+    <%_ }) _%>
     <%_ if(isOnesignalEnable) { _%>
       <%- oneSignalScript -%>
     <%_ } _%>

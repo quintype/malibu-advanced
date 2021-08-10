@@ -1,6 +1,23 @@
 import path from "path";
 import get from "lodash/get";
 import { ChunkExtractor } from "@loadable/server";
+import { assetPath, readAsset } from "@quintype/framework/server/asset-helper";
+
+export const getArrowCSSChunk = chunkEntryPointIdentifier => {
+  const assetFilename = `${chunkEntryPointIdentifier}.css`;
+  if (assetPath(assetFilename)) {
+    return readAsset(assetFilename);
+  } else {
+    console.warn(
+      `Could not read critical CSS chunk file ${assetFilename}. Make sure you have defined an entry point for it in quintype-build.config.js`
+    );
+    return "";
+  }
+};
+
+export const getArrowCSSRowChunk = rowChunkPrefix => {
+  return getArrowCSSChunk(`${rowChunkPrefix}Chunk`);
+};
 
 const statsFile = path.resolve("stats.json");
 
@@ -66,4 +83,32 @@ export const extractor = new ChunkExtractor({ statsFile, entrypoints: ["topbar",
 export const getCriticalCss = async () => {
   const criticalCss = await extractor.getCssString();
   return criticalCss.trim();
+};
+
+export const getCriticalCSSChunksForCurrentPage = pageType => {
+  let criticalCSSChunks = [];
+
+  if (pageType === "home-page") {
+    const criticalCSSEntries = [
+      "ArrowElevenStories",
+      "ArrowFourColGrid",
+      "ArrowFourColTwelveStories",
+      "ArrowFullScreenSlider",
+      "ArrowOneColStoryList",
+      "ArrowThreeColGrid",
+      "ArrowThreeColSevenStories",
+      "ArrowTwoColFourStories"
+    ];
+    // Distinct collection names so that we don't
+    // bundle the css for the same collection twice
+    criticalCSSChunks = [...new Set(criticalCSSEntries)]
+      .map(entry => getArrowCSSRowChunk(entry))
+      .filter(chunk => {
+        if (chunk) {
+          return true;
+        }
+        return false;
+      });
+  }
+  return criticalCSSChunks;
 };
