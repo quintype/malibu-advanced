@@ -12,7 +12,7 @@
     "@quintype/arrow": "^2.0.0",
     "@quintype/bridgekeeper-js": "2.4.0",
     "@quintype/components": "^2.31.2",
-    "@quintype/framework": "^5.0.3",
+    "@quintype/framework": "^5.0.3-onesignal-sw.3",
     "@quintype/seo": "^1.38.39",
     "fontfaceobserver": "^2.1.0",
     "formiojs": "^4.12.0",
