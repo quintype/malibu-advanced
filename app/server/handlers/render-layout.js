@@ -36,7 +36,7 @@ export async function renderLayout(res, params) {
     get(params.store.getState(), ["qt", "config", "publisher-attributes", "placeholder_delay"])
   );
 
-  console.log("criticalCss !!!", criticalCss);
+  console.log("pageChunk !!!", pageChunk);
 
   res.render(
     "pages/layout",
