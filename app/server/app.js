@@ -16,7 +16,7 @@ import { generateStaticData, generateStructuredData, SEO } from "@quintype/seo";
 import { Collection } from "@quintype/framework/server/api-client";
 export const app = createApp();
 
-upstreamQuintypeRoutes(app, {});
+upstreamQuintypeRoutes(app, {sMaxAge: 890});
 
 const redirectCollectionHandler = () => async (req, res, next, { client, config }) => {
   const response = await Collection.getCollectionBySlug(client, req.params.collectionSlug, { limit: 20 }, { depth: 2 });
