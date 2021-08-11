@@ -7,6 +7,8 @@ import { InputField } from "../../atoms/InputField";
 import { login, sendOtp, currentUser } from "@quintype/bridgekeeper-js";
 import { IS_OPEN_LOGIN_FORM, MEMBER_UPDATED } from "../../store/actions";
 
+import { oauthAuthorize } from "../../layouts/header/nav-bar/api";
+
 import "./forms.m.css";
 
 const LoginBase = ({ onLogin, forgotPassword, manageLoginForm }) => {
@@ -60,6 +62,11 @@ const LoginBase = ({ onLogin, forgotPassword, manageLoginForm }) => {
           await getCurrentUser();
           await manageLoginForm(false);
           console.log("loged in successfully");
+          const oauthResponse = await oauthAuthorize(
+            51,
+            "https://malibu-advanced-web.qtstage.io/api/auth/v1/oauth/token"
+          );
+          console.log("oauthResponse--------- login", oauthResponse);
         } else {
           // User needs to validate the email account so send out an email to verify
           return sendOtp(user.email)

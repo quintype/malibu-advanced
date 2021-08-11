@@ -9,6 +9,7 @@ import HamburgerMenu from "../../../atoms/hamburger-menu";
 import MessageWrapper from "../../../molecules/forms/message-wrapper";
 
 import { SvgIconHandler } from "../../../atoms/svg-icon-hadler";
+import { oauthAuthorize } from "./api";
 
 import "./navbar.m.css";
 
@@ -72,9 +73,10 @@ const NavBar = () => {
       });
   };
 
-  const userBtnClick = () => {
+  const userBtnClick = async () => {
     // setShowAccountModal(true);
-
+    const oauthResponse = await oauthAuthorize(51, "https://malibu-advanced-web.qtstage.io/api/auth/v1/oauth/token");
+    console.log("oauthResponse---------", oauthResponse);
     dispatch({
       type: OPEN_SEARCHBAR,
       isSearchBarOpen: false

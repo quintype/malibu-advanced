@@ -1,12 +1,10 @@
+import wretch from "wretch";
 export function oauthAuthorize(integrationId, redirectUrl, callbackUrl) {
   return wretch()
     .options({ credentials: "include" })
-    .url(`${authHost}/sso-login`)
-    .query({
-      "callback-url": callbackUrl,
-      "redirect-url": redirectUrl
-    })
-    .post(body)
+    .url(`/api/auth/v1/oauth/authorize`)
+    .query({ client_id: integrationId, redirect_uri: redirectUrl, response_type: "code" })
+    .get()
     .json(res => {
       return res;
     })
