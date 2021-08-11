@@ -73,7 +73,8 @@ const NavBar = () => {
   };
 
   const userBtnClick = () => {
-    setShowAccountModal(true);
+    // setShowAccountModal(true);
+
     dispatch({
       type: OPEN_SEARCHBAR,
       isSearchBarOpen: false
