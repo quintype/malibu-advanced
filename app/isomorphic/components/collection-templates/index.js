@@ -1,15 +1,15 @@
 import React from "react";
 import { wrapCollectionLayout, EagerLoadImages } from "@quintype/components";
-// import { FourColGrid } from "./four-col-grid";
+import { FourColGrid } from "./four-col-grid";
 import {
-  // ArrowElevenStories,
-  // ArrowFourColGrid,
-  // ArrowFourColTwelveStories,
-  // ArrowFullScreenSlider,
-  // ArrowOneColStoryList,
-  ArrowThreeColGrid
-  // ArrowThreeColSevenStories,
-  // ArrowTwoColFourStories
+  ArrowElevenStories,
+  ArrowFourColGrid,
+  ArrowFourColTwelveStories,
+  ArrowFullScreenSlider,
+  ArrowOneColStoryList,
+  ArrowThreeColGrid,
+  ArrowThreeColSevenStories,
+  ArrowTwoColFourStories
 } from "./arrow-rows";
 
 // This should not be needed anymore as we are using Gumlet
@@ -36,14 +36,14 @@ function wrapEager(f) {
 }
 
 export default {
-  // FourColGrid: wrapEager(wrapCollectionLayout(FourColGrid)),
-  // ArrowFourColTwelveStories: wrapEager(wrapCollectionLayout(ArrowFourColTwelveStories)),
+  FourColGrid: wrapEager(wrapCollectionLayout(FourColGrid)),
+  ArrowFourColTwelveStories: wrapEager(wrapCollectionLayout(ArrowFourColTwelveStories)),
   ArrowThreeColGrid: wrapEager(wrapCollectionLayout(ArrowThreeColGrid)),
-  // ArrowFourColGrid: wrapEager(wrapCollectionLayout(ArrowFourColGrid)),
-  // ArrowElevenStories: wrapEager(wrapCollectionLayout(ArrowElevenStories)),
-  // ArrowTwoColFourStories: wrapEager(wrapCollectionLayout(ArrowTwoColFourStories)),
-  // ArrowFullScreenSlider: wrapEager(wrapCollectionLayout(ArrowFullScreenSlider)),
-  // ArrowOneColStoryList: wrapEager(wrapCollectionLayout(ArrowOneColStoryList)),
-  // ArrowThreeColSevenStories: wrapEager(wrapCollectionLayout(ArrowThreeColSevenStories)),
-  defaultTemplate: wrapEager(wrapCollectionLayout(ArrowThreeColGrid))
+  ArrowFourColGrid: wrapEager(wrapCollectionLayout(ArrowFourColGrid)),
+  ArrowElevenStories: wrapEager(wrapCollectionLayout(ArrowElevenStories)),
+  ArrowTwoColFourStories: wrapEager(wrapCollectionLayout(ArrowTwoColFourStories)),
+  ArrowFullScreenSlider: wrapEager(wrapCollectionLayout(ArrowFullScreenSlider)),
+  ArrowOneColStoryList: wrapEager(wrapCollectionLayout(ArrowOneColStoryList)),
+  ArrowThreeColSevenStories: wrapEager(wrapCollectionLayout(ArrowThreeColSevenStories)),
+  defaultTemplate: wrapEager(wrapCollectionLayout(FourColGrid))
 };
