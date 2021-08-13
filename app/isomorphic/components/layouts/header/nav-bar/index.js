@@ -77,6 +77,7 @@ const NavBar = () => {
     // setShowAccountModal(true);
     const oauthResponse = await oauthAuthorize(51, "https://malibu-advanced-web.qtstage.io/api/auth/v1/oauth/token");
     console.log("oauthResponse---------", oauthResponse);
+    if (oauthResponse.redirect_uri) window.location.href = oauthResponse.redirect_uri;
     dispatch({
       type: OPEN_SEARCHBAR,
       isSearchBarOpen: false
