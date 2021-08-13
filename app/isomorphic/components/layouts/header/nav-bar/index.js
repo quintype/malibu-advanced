@@ -24,6 +24,11 @@ const NavBar = () => {
   const isHamburgerMenuOpen = useSelector(state => get(state, ["isHamburgerMenuOpen"], false));
   const menu = useSelector(state => get(state, ["qt", "data", "navigationMenu", "homeMenu"], []));
   const hamburgerMenu = useSelector(state => get(state, ["qt", "data", "navigationMenu", "hamburgerMenu"], []));
+  const domainSlug = useSelector(state => get(state, ["qt", "config", "domainSlug"], ""));
+  console.log("domainSlug-------------", domainSlug);
+  const redirectUrl = domainSlug
+    ? "https://malibu-voices-advanced-web.qtstage.io/api/auth/v1/oauth/token"
+    : "https://malibu-advanced-web.qtstage.io/api/auth/v1/oauth/token";
 
   const displayStyle = isHamburgerMenuOpen ? "flex" : "none";
 
@@ -75,7 +80,8 @@ const NavBar = () => {
 
   const userBtnClick = async () => {
     // setShowAccountModal(true);
-    const oauthResponse = await oauthAuthorize(51, "https://malibu-advanced-web.qtstage.io/api/auth/v1/oauth/token");
+
+    const oauthResponse = await oauthAuthorize(51, redirectUrl);
     console.log("oauthResponse---------", oauthResponse);
     if (oauthResponse.redirect_uri) window.location.href = oauthResponse.redirect_uri;
     dispatch({
