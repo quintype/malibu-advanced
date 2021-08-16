@@ -59,12 +59,14 @@ const NavBar = () => {
     const { currentUser } = await import("@quintype/bridgekeeper-js");
     try {
       const currentUserResp = await currentUser();
-      if (currentUserResp) {
+      console.log("currentUserResp---------", currentUserResp);
+      const getMember = get(currentUserResp, ["user"], null);
+      if (getMember) {
         const oauthResponse = await oauthAuthorize(51, redirectUrl, callbackUrl);
         if (oauthResponse.redirect_uri) window.location.href = oauthResponse.redirect_uri;
       }
 
-      dispatch({ type: MEMBER_UPDATED, member: get(currentUserResp, ["user"], null) });
+      dispatch({ type: MEMBER_UPDATED, member: getMember });
     } catch (err) {
       console.log("error--------", err);
     }
