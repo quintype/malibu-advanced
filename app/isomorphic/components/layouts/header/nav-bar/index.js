@@ -29,6 +29,9 @@ const NavBar = () => {
   const redirectUrl = domainSlug
     ? "https://malibu-voices-advanced-web.qtstage.io/api/auth/v1/oauth/token"
     : "https://malibu-advanced-web.qtstage.io/api/auth/v1/oauth/token";
+  const callbackUrl = domainSlug
+    ? "https://malibu-voices-advanced-web.qtstage.io"
+    : "https://malibu-advanced-web.qtstage.io";
 
   const displayStyle = isHamburgerMenuOpen ? "flex" : "none";
 
@@ -81,7 +84,7 @@ const NavBar = () => {
   const userBtnClick = async () => {
     // setShowAccountModal(true);
 
-    const oauthResponse = await oauthAuthorize(51, redirectUrl);
+    const oauthResponse = await oauthAuthorize(51, redirectUrl, callbackUrl);
     console.log("oauthResponse---------", oauthResponse);
     if (oauthResponse.redirect_uri) window.location.href = oauthResponse.redirect_uri;
     dispatch({
