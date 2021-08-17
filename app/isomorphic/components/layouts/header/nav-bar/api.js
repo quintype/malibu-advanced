@@ -7,8 +7,7 @@ export function oauthAuthorize(integrationId, redirectUrl, callbackUrl) {
       client_id: integrationId,
       redirect_uri: redirectUrl,
       callback_uri: callbackUrl,
-      response_type: "code",
-      allow_ajax: true
+      response_type: "code"
     })
     .get()
     .json(res => {
