@@ -63,7 +63,7 @@ const NavBar = () => {
       const getMember = get(currentUserResp, ["user"], null);
       if (getMember) {
         const oauthResponse = await oauthAuthorize(51, redirectUrl, callbackUrl);
-        if (oauthResponse.redirect_uri) window.location.href = oauthResponse.redirect_uri;
+        console.log("oauthResponse---------- inside getCurrentUser", oauthResponse);
       }
 
       dispatch({ type: MEMBER_UPDATED, member: getMember });
