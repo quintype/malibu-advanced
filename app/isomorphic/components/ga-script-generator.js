@@ -13,7 +13,7 @@ export const gaScriptGenerator = () => {
     const node = document.getElementsByTagName("script")[0];
     node.parentNode.insertBefore(script, node);
 
-    const ga =
+    window.ga =
       window.ga ||
       function() {
         (ga.q = ga.q || []).push(arguments);
