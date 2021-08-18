@@ -65,7 +65,9 @@
     <% } else { %>
       <div id='gumlet-script-generator'></div>
     <% } %>
-
+    <% if (isGtmEnable ) { %>
+      <%- include ./partials/noscriptgtm -%>
+    <% } %>
     <div class="page-wrapper">
       <div><%- topbar %></div>
       <header id="nav-bar" class="sticky-header"><%- navbar %></header>
@@ -98,6 +100,20 @@
       <% } else { %>
       <script type="application/json" id="static-page"><%- serialize(store.getState(), {isJSON: true}) -%></script>
       <% } %>
+    <% if (isGtmEnable) { %>
+      <% if (loadGTMSynchronously) { %>
+        <%- include ./partials/gtm -%>
+      <% } else { %>
+        <div id='gtm-script-generator'></div>
+      <% } %>
+    <% } %>
+    <% if (isGaEnable) { %>
+      <% if (loadGASynchronously) { %>
+        <%- include ./partials/ga -%>
+      <% } else { %>
+        <div id='ga-script-generator'></div>
+      <% } %>
+    <% } %>
     <script type="text/javascript" src="<%= assetPath("app.js") %>" id="app-js" async></script>
    </body>
 </html>

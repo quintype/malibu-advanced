@@ -8,6 +8,8 @@ import { NavbarSearch } from "../isomorphic/components/layouts/header/navbar-sea
 import { NavBar } from "../isomorphic/components/layouts/header/nav-bar";
 import { TopAd } from "../isomorphic/components/ads/top-ad";
 import { gumletScriptGenerator } from "../isomorphic/components/gumlet-script-generator";
+import { gtmScriptGenerator } from "../isomorphic/components/gtm-script-generator";
+import { gaScriptGenerator } from "../isomorphic/components/ga-script-generator";
 
 export function preRenderApplication(store) {
   const hydrate = { hydrate: !global.qtLoadedFromShell };
@@ -36,9 +38,17 @@ export function renderApplication(store) {
   const placeholderDelay = parseInt(
     get(store.getState(), ["qt", "config", "publisher-attributes", "placeholder_delay"])
   );
+  const gtmScriptDelay = parseInt(
+    get(store.getState(), ["qt", "config", "publisher-attributes", "google_tag_manager", "script_delay"])
+  );
+  const gaScriptDelay = parseInt(
+    get(store.getState(), ["qt", "config", "publisher-attributes", "google_analytics", "script_delay"])
+  );
 
   enableAds && pageType !== "profile-page" && renderComponent(TopAd, "top-ad", store);
   placeholderDelay && renderComponent(gumletScriptGenerator, "gumlet-script-generator", store);
+  gtmScriptDelay && renderComponent(gtmScriptGenerator, "gtm-script-generator", store);
+  gaScriptDelay && renderComponent(gaScriptGenerator, "ga-script-generator", store);
   renderIsomorphicComponent("container", store, pickComponent, {
     hydrate: !global.qtLoadedFromShell
   });

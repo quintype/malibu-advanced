@@ -58,7 +58,17 @@ export const getConfig = state => {
     isOnesignalEnable: get(state, ["qt", "config", "publisher-attributes", "onesignal", "is_enable"], false),
     enableAds: get(state, ["qt", "config", "ads-config", "dfp_ads", "enable_ads"]),
     loadAdsSynchronously: get(state, ["qt", "config", "ads-config", "dfp_ads", "load_ads_synchronously"]),
-    pageType: get(state, ["qt", "pageType"], "")
+    pageType: get(state, ["qt", "pageType"], ""),
+    loadGTMSynchronously: get(
+      state,
+      ["qt", "config", "publisher-attributes", "google_analytics", "load_gtm_synchronously"],
+      false
+    ),
+    loadGASynchronously: get(
+      state,
+      ["qt", "config", "publisher-attributes", "google_tag_manager", "load_ga_synchronously"],
+      false
+    )
   };
 };
 
