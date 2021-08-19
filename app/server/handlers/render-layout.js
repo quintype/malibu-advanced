@@ -26,8 +26,8 @@ export async function renderLayout(res, params) {
     isGaEnable,
     enableAds,
     loadAdsSynchronously,
-    loadGTMSynchronously,
-    loadGASynchronously
+    loadGTMAsynchronously,
+    loadGAAsynchronously
   } = getConfig(params.store.getState());
   const chunk = params.shell ? null : allChunks[getChunkName(params.pageType)];
   const criticalCss = await getCriticalCss();
@@ -75,8 +75,8 @@ export async function renderLayout(res, params) {
         loadAdsSynchronously,
         placeholderDelay,
         enableBreakingNews: params.pageType !== "profile-page",
-        loadGTMSynchronously,
-        loadGASynchronously
+        loadGTMAsynchronously,
+        loadGAAsynchronously
       },
       params
     )
