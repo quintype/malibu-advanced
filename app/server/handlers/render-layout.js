@@ -35,6 +35,8 @@ export async function renderLayout(res, params) {
     get(params.store.getState(), ["qt", "config", "publisher-attributes", "placeholder_delay"])
   );
 
+  const configVersion = get(params.store.getState(), ["qt", "config", "theme-attributes", "cache-burst"], 0);
+
   res.render(
     "pages/layout",
     Object.assign(
@@ -60,6 +62,7 @@ export async function renderLayout(res, params) {
         gtmId,
         gaId,
         cdnImage,
+        configVersion,
         metaTags: params.seoTags ? params.seoTags.toString() : "",
         pageChunk: chunk,
         store: params.store,
