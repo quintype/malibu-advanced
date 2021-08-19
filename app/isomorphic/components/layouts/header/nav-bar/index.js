@@ -61,11 +61,6 @@ const NavBar = () => {
       const currentUserResp = await currentUser();
       console.log("currentUserResp---------", currentUserResp);
       const getMember = get(currentUserResp, ["user"], null);
-      if (!getMember) {
-        const oauthResponse = await oauthAuthorize(51, redirectUrl, callbackUrl);
-        console.log("oauthResponse---------- inside getCurrentUser", oauthResponse);
-      }
-
       dispatch({ type: MEMBER_UPDATED, member: getMember });
     } catch (err) {
       console.log("error--------", err);
@@ -91,8 +86,8 @@ const NavBar = () => {
   const userBtnClick = async () => {
     // setShowAccountModal(true);
 
-    const oauthResponse = await oauthAuthorize(51, redirectUrl, callbackUrl);
-    console.log("oauthResponse---------", oauthResponse);
+    // const oauthResponse = await oauthAuthorize(51, redirectUrl, callbackUrl);
+    // console.log("oauthResponse---------", oauthResponse);
 
     dispatch({
       type: OPEN_SEARCHBAR,
@@ -206,6 +201,7 @@ const NavBar = () => {
                   />
                 ) : (
                   <span styleName="member-img" onClick={userAccountHandler}>
+
                     <SvgIconHandler
                       type="user"
                       width="24px"
@@ -214,6 +210,7 @@ const NavBar = () => {
                       iconStyle={{ borderRadius: "50%" }}
                       onClick={userAccountHandler}
                     />
+
                   </span>
                 )}
                 {showUserHandler && (
@@ -236,9 +233,9 @@ const NavBar = () => {
               </>
             ) : (
               <>
-                <button aria-label="User Login Button" styleName="user-btn" onClick={() => userBtnClick()}>
-                  <SvgIconHandler type="user-icon" width="18" height="20" viewBox="0 0 18 20" />
-                </button>
+                {/* <button aria-label="User Login Button" styleName="user-btn" onClick={() => userBtnClick()}> */}
+                <a styleName="user-btn" href={`/api/auth/v1/oauth/authorize?client_id=51&redirect_uri=${redirectUrl}&callback_uri=${callbackUrl}&response_type=code`}><SvgIconHandler type="user-icon" width="18" height="20" viewBox="0 0 18 20" /></a>
+                {/* </button> */}
                 {showAccountModal && (
                   <Suspense fallback={<div></div>}>
                     <AccountModal onClose={() => setShowAccountModal(false)} />
