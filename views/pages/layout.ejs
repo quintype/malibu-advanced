@@ -101,10 +101,18 @@
       <script type="application/json" id="static-page"><%- serialize(store.getState(), {isJSON: true}) -%></script>
       <% } %>
     <% if (isGtmEnable) { %>
-      <%- include ./partials/gtm -%>
+      <% if (!loadGTMAsynchronously) { %>
+        <%- include ./partials/gtm -%>
+      <% } else { %>
+        <div id='gtm-script-generator'></div>
+      <% } %>
     <% } %>
     <% if (isGaEnable) { %>
-      <%- include ./partials/ga -%>
+      <% if (!loadGAAsynchronously) { %>
+        <%- include ./partials/ga -%>
+      <% } else { %>
+        <div id='ga-script-generator'></div>
+      <% } %>
     <% } %>
     <script type="text/javascript" src="<%= assetPath("app.js") %>" id="app-js" async></script>
    </body>
