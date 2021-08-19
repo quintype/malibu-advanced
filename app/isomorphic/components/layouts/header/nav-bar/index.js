@@ -61,7 +61,7 @@ const NavBar = () => {
       const currentUserResp = await currentUser();
       console.log("currentUserResp---------", currentUserResp);
       const getMember = get(currentUserResp, ["user"], null);
-      if (getMember) {
+      if (!getMember) {
         const oauthResponse = await oauthAuthorize(51, redirectUrl, callbackUrl);
         console.log("oauthResponse---------- inside getCurrentUser", oauthResponse);
       }
