@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import get from "lodash/get";
 import { connect, useDispatch, useSelector } from "react-redux";
 import { func, bool } from "prop-types";
+import { parseUrl } from "query-string";
+
 import { SocialLogin } from "../SocialLogin";
 import { InputField } from "../../atoms/InputField";
 import { login, sendOtp, currentUser } from "@quintype/bridgekeeper-js";
@@ -17,14 +19,7 @@ const LoginBase = ({ onLogin, forgotPassword, manageLoginForm }) => {
     password: ""
   });
 
-  const domainSlug = useSelector(state => get(state, ["qt", "config", "domainSlug"], ""));
-  console.log("domainSlug-------------", domainSlug);
-  const redirectUrl = domainSlug
-    ? "https://malibu-voices-advanced-web.qtstage.io/api/auth/v1/oauth/token"
-    : "https://malibu-advanced-web.qtstage.io/api/auth/v1/oauth/token";
-  const callbackUrl = domainSlug
-    ? "https://malibu-voices-advanced-web.qtstage.io/opinion/sajad-lone-quits-gupkar-alliance-is-this-the-full-story"
-    : "https://malibu-advanced-web.qtstage.io/food/dosa/dailymotion-video";
+  const publisherAttributes =  useSelector(state => get(state, ["qt", "config", "publisher-attributes"], {}));
 
   const dispatch = useDispatch();
 
@@ -71,9 +66,12 @@ const LoginBase = ({ onLogin, forgotPassword, manageLoginForm }) => {
           await getCurrentUser();
           await manageLoginForm(false);
           console.log("loged in successfully");
-          // const params = parseUrl(this.props.currentPath);
-          // console.log("params-------------", params);
-          // const redirectUrl =  get(params, ["query", "callback-url"], global.location && global.location.origin);
+          const currentPath =  useSelector(state => get(state, ["qt", "currentPath"], ""));
+          const params = parseUrl(currentPath);
+          const callbackUrl = get(params, ["query", "callback_uri"], global.location && global.location.origin);
+          const redirectUrl = get(params, ["query", "redirect_uri"]) || get(publisherAttributes, ["sso_login", "redirect_Url"], "");
+          console.log("redirectUrl -------------- 22222", redirectUrl);
+          console.log("callbackUrl-----------222222", callbackUrl);
           const oauthResponse = await oauthAuthorize(51, redirectUrl, callbackUrl);
           console.log("oauthResponse--------- login", oauthResponse);
           if (oauthResponse.redirect_uri) window.location.href = oauthResponse.redirect_uri;

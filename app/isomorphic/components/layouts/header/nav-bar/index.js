@@ -18,23 +18,20 @@ const NavBar = () => {
   const AccountModal = lazy(() => import("../../../login/AccountModal"));
   const [showAccountModal, setShowAccountModal] = useState(false);
   const [message, setMessage] = useState(null);
+  const [callbackUrl, setCallbackUrl] = useState("");
   const dispatch = useDispatch();
   const [showUserHandler, setUserHandler] = useState(false);
-  const enableLogin = useSelector(state => get(state, ["qt", "config", "publisher-attributes", "enableLogin"], true));
+  const publisherAttributes =  useSelector(state => get(state, ["qt", "config", "publisher-attributes"], {}));
+  const enableLogin =  get(publisherAttributes, ["enableLogin"], true);
   const isHamburgerMenuOpen = useSelector(state => get(state, ["isHamburgerMenuOpen"], false));
   const menu = useSelector(state => get(state, ["qt", "data", "navigationMenu", "homeMenu"], []));
   const hamburgerMenu = useSelector(state => get(state, ["qt", "data", "navigationMenu", "hamburgerMenu"], []));
   const domainSlug = useSelector(state => get(state, ["qt", "config", "domainSlug"], ""));
-  console.log("domainSlug-------------", domainSlug);
-  const redirectUrl = domainSlug
-    ? "https://malibu-voices-advanced-web.qtstage.io/api/auth/v1/oauth/token"
-    : "https://malibu-advanced-web.qtstage.io/api/auth/v1/oauth/token";
-  const callbackUrl = domainSlug
-    ? "https://malibu-voices-advanced-web.qtstage.io"
-    : "https://malibu-advanced-web.qtstage.io";
+  const clientId = get(publisherAttributes, ["sso_login", "client_id"], "");
+  const redirectUrl = domainSlug ? get(publisherAttributes, ["sso_login", "subdomain", "redirect_Url"], ""):  get(publisherAttributes, ["sso_login", "redirect_Url"], "");
+
 
   const displayStyle = isHamburgerMenuOpen ? "flex" : "none";
-
   const toggleHandler = () => {
     dispatch({
       type: OPEN_HAMBURGER_MENU,
@@ -60,7 +57,6 @@ const NavBar = () => {
     try {
       const currentUserResp = await currentUser();
       console.log("currentUserResp---------", currentUserResp);
-      const getMember = get(currentUserResp, ["user"], null);
       dispatch({ type: MEMBER_UPDATED, member: getMember });
     } catch (err) {
       console.log("error--------", err);
@@ -145,6 +141,8 @@ const NavBar = () => {
   const imageUrl = member && member["avatar-url"];
 
   useEffect(() => {
+
+    setCallbackUrl (global && global.location && global.location.href ||  get(publisherAttributes, ["sso_login", "callback_Url"], ""))
     getCurrentUser();
 
     switch (global.location.hash) {
@@ -172,6 +170,7 @@ const NavBar = () => {
       </Suspense>
     );
   };
+  console.log("callbackUrl-----------111111", callbackUrl);
 
   return (
     <div styleName="main-wrapper" id="sticky-navbar">
@@ -234,7 +233,7 @@ const NavBar = () => {
             ) : (
               <>
                 {/* <button aria-label="User Login Button" styleName="user-btn" onClick={() => userBtnClick()}> */}
-                <a styleName="user-btn" href={`/api/auth/v1/oauth/authorize?client_id=51&redirect_uri=${redirectUrl}&callback_uri=${callbackUrl}&response_type=code`}><SvgIconHandler type="user-icon" width="18" height="20" viewBox="0 0 18 20" /></a>
+                <a styleName="user-btn" href={`/api/auth/v1/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUrl}&callback_uri=${callbackUrl}&response_type=code`}><SvgIconHandler type="user-icon" width="18" height="20" viewBox="0 0 18 20" /></a>
                 {/* </button> */}
                 {showAccountModal && (
                   <Suspense fallback={<div></div>}>

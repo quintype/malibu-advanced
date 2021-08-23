@@ -22,6 +22,13 @@ publisher:
     item_display: 1
     open_in_new_tab: false
     pages: [home-page, section-page, tag-page, search-page, story-page, catalog-page, static-page, form-page]
+  sso_login:
+    redirect_Url: "http://malibu.lvh.me:3000/api/auth/v1/oauth/token"
+    callback_Url: "https://malibu-advanced-web.qtstage.io"
+    client_id : 51
+    subdomain:
+      redirect_Url: "https://malibu-voices-advanced-web.qtstage.io/api/auth/v1/oauth/token"
+      callback_Url: "https://malibu-voices-advanced-web.qtstage.io"
   should_use_collection: true
   google_app_id: ""
   facebook_app_id: ""
