@@ -49,8 +49,7 @@ function generateSeo(config, pageType) {
       enableLiveBlog: true,
       enableVideo: true,
       enableNewsArticle: true,
-      isSubscriptionsEnabled: true,
-      isShowcaseProduct: true
+      isSubscriptionsEnabled: true
     }),
     enableTwitterCards: true,
     enableOgTags: true,
