@@ -48,7 +48,8 @@ function generateSeo(config, pageType) {
     structuredData: Object.assign(generateStructuredData(config), {
       enableLiveBlog: true,
       enableVideo: true,
-      enableNewsArticle: true
+      enableNewsArticle: true,
+      isSubscriptionsEnabled: true
     }),
     enableTwitterCards: true,
     enableOgTags: true,
