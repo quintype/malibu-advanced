@@ -20,8 +20,8 @@ const LoginBase = ({ onLogin, forgotPassword, manageLoginForm }) => {
   const domainSlug = useSelector(state => get(state, ["qt", "config", "domainSlug"], ""));
   console.log("domainSlug-------------", domainSlug);
   const redirectUrl = domainSlug
-    ? "https://malibu-web.qtstage.io/food/dosa/dailymotion-video/api/auth/v1/oauth/token"
-    : "https://malibu-voices-advanced-web.qtstage.io/opinion/sajad-lone-quits-gupkar-alliance-is-this-the-full-story/auth/v1/oauth/token";
+    ? "https://malibu-voices-advanced-web.qtstage.io/opinion/sajad-lone-quits-gupkar-alliance-is-this-the-full-story/auth/v1/oauth/token"
+    : "https://malibu-web.qtstage.io/food/dosa/dailymotion-video/api/auth/v1/oauth/token";
   const callbackUrl = domainSlug
     ? "https://malibu-voices-advanced-web.qtstage.io"
     : "https://malibu-advanced-web.qtstage.io";
