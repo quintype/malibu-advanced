@@ -71,8 +71,8 @@ const LoginBase = ({ onLogin, forgotPassword, manageLoginForm }) => {
           await getCurrentUser();
           await manageLoginForm(false);
           console.log("loged in successfully");
-          const params = parseUrl(this.props.currentPath);
-          console.log("params-------------", params);
+          // const params = parseUrl(this.props.currentPath);
+          // console.log("params-------------", params);
           // const redirectUrl =  get(params, ["query", "callback-url"], global.location && global.location.origin);
           const oauthResponse = await oauthAuthorize(51, redirectUrl, callbackUrl);
           console.log("oauthResponse--------- login", oauthResponse);
