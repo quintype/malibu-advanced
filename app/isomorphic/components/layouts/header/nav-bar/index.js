@@ -28,7 +28,7 @@ const NavBar = () => {
   const domainSlug = useSelector(state => get(state, ["qt", "config", "domainSlug"], ""));
   const clientId = get(publisherAttributes, ["sso_login", "client_id"], "");
   const redirectUrl = domainSlug
-    ? get(publisherAttributes, ["sso_login", "subdomain", `${domainSlug}`, "redirect_Url"], "")
+    ? get(publisherAttributes, ["sso_login", "subdomain", domainSlug, "redirect_Url"], "")
     : get(publisherAttributes, ["sso_login", "redirect_Url"], "");
   const currentPath = useSelector(state => get(state, ["qt", "currentPath"], ""));
   const callbackUrl = `${global && global.location && global.location.origin}${currentPath}`;
