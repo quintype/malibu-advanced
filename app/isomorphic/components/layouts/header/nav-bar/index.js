@@ -29,12 +29,9 @@ const NavBar = () => {
   const clientId = get(publisherAttributes, ["sso_login", "client_id"], "");
   const redirectUrl = domainSlug ? get(publisherAttributes, ["sso_login", "subdomain", "redirect_Url"], ""):  get(publisherAttributes, ["sso_login", "redirect_Url"], "");
 
-  const currentHostUrl = useSelector(state => get(state, ["qt", "currentHostUrl"], ""));
   const currentPath =  useSelector(state => get(state, ["qt", "currentPath"], ""));
 
-  console.log("current path-------", currentPath);
   const callbackUrl = `${global && global.location && global.location.origin}${currentPath}`;
-  console.log("a-------------------",  callbackUrl);
 
   const displayStyle = isHamburgerMenuOpen ? "flex" : "none";
   const toggleHandler = () => {
@@ -173,7 +170,6 @@ const NavBar = () => {
       </Suspense>
     );
   };
-  console.log("callbackUrl-----------111111", callbackUrl);
 
   return (
     <div styleName="main-wrapper" id="sticky-navbar">
