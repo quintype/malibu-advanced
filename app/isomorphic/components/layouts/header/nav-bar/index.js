@@ -19,12 +19,20 @@ const NavBar = () => {
   const [message, setMessage] = useState(null);
   const dispatch = useDispatch();
   const [showUserHandler, setUserHandler] = useState(false);
-  const enableLogin = useSelector(state => get(state, ["qt", "config", "publisher-attributes", "enableLogin"], true));
+  const publisherAttributes = useSelector(state => get(state, ["qt", "config", "publisher-attributes"], {}));
+  const enableLogin = get(publisherAttributes, ["enableLogin"], true);
   const isHamburgerMenuOpen = useSelector(state => get(state, ["isHamburgerMenuOpen"], false));
   const menu = useSelector(state => get(state, ["qt", "data", "navigationMenu", "homeMenu"], []));
   const hamburgerMenu = useSelector(state => get(state, ["qt", "data", "navigationMenu", "hamburgerMenu"], []));
-
   const displayStyle = isHamburgerMenuOpen ? "flex" : "none";
+  const domainSlug = useSelector(state => get(state, ["qt", "config", "domainSlug"], ""));
+  const clientId = get(publisherAttributes, ["sso_login", "client_id"], "");
+  const redirectUrl = domainSlug
+    ? get(publisherAttributes, ["sso_login", "subdomain", "redirect_Url"], "")
+    : get(publisherAttributes, ["sso_login", "redirect_Url"], "");
+  const currentPath = useSelector(state => get(state, ["qt", "currentPath"], ""));
+  const callbackUrl = `${global && global.location && global.location.origin}${currentPath}`;
+  const ssoLoginIsEnable = get(publisherAttributes, ["sso_login", "is_enable"], false);
 
   const toggleHandler = () => {
     dispatch({
@@ -216,9 +224,18 @@ const NavBar = () => {
               </>
             ) : (
               <>
-                <button aria-label="User Login Button" styleName="user-btn" onClick={() => userBtnClick()}>
-                  <SvgIconHandler type="user-icon" width="18" height="20" viewBox="0 0 18 20" />
-                </button>
+                {!ssoLoginIsEnable ? (
+                  <button aria-label="User Login Button" styleName="user-btn" onClick={() => userBtnClick()}>
+                    <SvgIconHandler type="user-icon" width="18" height="20" viewBox="0 0 18 20" />
+                  </button>
+                ) : (
+                  <a
+                    styleName="user-btn"
+                    href={`/api/auth/v1/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUrl}&callback_uri=${callbackUrl}&response_type=code`}
+                  >
+                    <SvgIconHandler type="user-icon" width="18" height="20" viewBox="0 0 18 20" />
+                  </a>
+                )}
                 {showAccountModal && (
                   <Suspense fallback={<div></div>}>
                     <AccountModal onClose={() => setShowAccountModal(false)} />

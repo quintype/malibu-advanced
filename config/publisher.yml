@@ -6,9 +6,17 @@ host_to_automatic_api_host:
   - "-web"
   - ".malibu"
 domain_mapping:
-  subdomain.lvh.me: subdomain
+  subdomain.lvh.me: voices
   malibu.lvh.me: localhost:3000
 publisher:
+  sso_login:
+    is_enable: true
+    redirect_Url: "http://malibu.lvh.me:3000/api/auth/v1/oauth/token"
+    callback_Url: "https://malibu-advanced-web.qtstage.io"
+    client_id : 51
+    subdomain:
+      redirect_Url: "https://malibu-voices-advanced-web.qtstage.io/api/auth/v1/oauth/token"
+      callback_Url: "https://malibu-voices-advanced-web.qtstage.io"
   timezone: "Asia/Baku"
   google_tag_manager:
     id: "gtm-id"
