@@ -19,6 +19,7 @@ const LoginBase = ({ onLogin, forgotPassword, manageLoginForm }) => {
 
   const publisherAttributes = useSelector(state => get(state, ["qt", "config", "publisher-attributes"], {}));
   const currentPath = useSelector(state => get(state, ["qt", "currentPath"], ""));
+  const clientId = get(publisherAttributes, ["sso_login", "client_id"], "");
 
   const dispatch = useDispatch();
 
@@ -70,7 +71,7 @@ const LoginBase = ({ onLogin, forgotPassword, manageLoginForm }) => {
           const redirectUrl =
             get(params, ["query", "redirect_uri"]) || get(publisherAttributes, ["sso_login", "redirect_Url"], "");
           const allowAjax = true;
-          const oauthResponse = await oauthAuthorize(51, redirectUrl, callbackUrl, allowAjax);
+          const oauthResponse = await oauthAuthorize(clientId, redirectUrl, callbackUrl, allowAjax);
           console.log("oauthResponse---------", oauthResponse);
           if (oauthResponse.redirect_uri) window.location.href = oauthResponse.redirect_uri;
         } else {
