@@ -70,6 +70,7 @@ const LoginBase = ({ onLogin, forgotPassword, manageLoginForm }) => {
           const callbackUrl = get(params, ["query", "callback_uri"], global.location && global.location.origin);
           const redirectUrl = get(params, ["query", "redirect_uri"]) || get(publisherAttributes, ["sso_login", "redirect_Url"], "");
           const oauthResponse = await oauthAuthorize(51, redirectUrl, callbackUrl);
+          console.log("oauthResponse -----------------", oauthResponse);
           if (oauthResponse.redirect_uri) window.location.href = oauthResponse.redirect_uri;
         } else {
           // User needs to validate the email account so send out an email to verify
