@@ -56,7 +56,7 @@ const NavBar = () => {
     const { currentUser } = await import("@quintype/bridgekeeper-js");
     try {
       const currentUserResp = await currentUser();
-      console.log("currentUserResp---------", currentUserResp);
+      const getMember = get(currentUserResp, ["user"], null);
       dispatch({ type: MEMBER_UPDATED, member: getMember });
     } catch (err) {
       console.log("error--------", err);

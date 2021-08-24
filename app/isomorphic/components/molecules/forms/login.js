@@ -67,7 +67,9 @@ const LoginBase = ({ onLogin, forgotPassword, manageLoginForm }) => {
           await manageLoginForm(false);
           console.log("loged in successfully");
           const currentPath =  useSelector(state => get(state, ["qt", "currentPath"], ""));
+          console.log("currentPath ----------", currentPath );
           const params = parseUrl(currentPath);
+          console.log("params-----------",)
           const callbackUrl = get(params, ["query", "callback_uri"], global.location && global.location.origin);
           const redirectUrl = get(params, ["query", "redirect_uri"]) || get(publisherAttributes, ["sso_login", "redirect_Url"], "");
           console.log("redirectUrl -------------- 22222", redirectUrl);
