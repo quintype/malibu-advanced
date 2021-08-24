@@ -33,7 +33,7 @@ const NavBar = () => {
   const currentPath =  useSelector(state => get(state, ["qt", "currentPath"], ""));
 
   console.log("current path-------", currentPath);
-  const callbackUrl = `${currentHostUrl}${currentPath}`;
+  const callbackUrl = `${global && global.location && global.location.origin}${currentPath}`;
   console.log("a-------------------",  callbackUrl);
 
   const displayStyle = isHamburgerMenuOpen ? "flex" : "none";
