@@ -61,6 +61,11 @@
   </head>
 
   <body>
+    <%_ if(!placeholderDelay) { _%>
+      <script src="https://cdn.gumlet.com/gumlet.js/2.0/gumlet.min.js" type="text/javascript" defer="defer"></script>
+    <% } else { %>
+      <div id='gumlet-script-generator'></div>
+    <% } %>
     <% if (isGtmEnable) { %>
       <%- include ./partials/noscriptgtm -%>
     <% } %>
@@ -87,7 +92,6 @@
         document.getElementsByTagName('head')[0].appendChild(s);
       }
     </script>
-    <script src="https://cdn.gumlet.com/gumlet.js/2.0/gumlet.min.js" type="text/javascript" defer="defer"></script>
     <script type="text/javascript">
       <%- fontJsContent %>
       window.loadFonts(<%- serialize(fontFace.preloadFonts, {isJSON: true}) %>, 'fonts-loaded');

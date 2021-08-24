@@ -19,7 +19,6 @@
       top: 0;
       left: 0;
       bottom: 0;
-      object-fit: contain;
       height: 100%;
       width: 100%;
     }
@@ -316,6 +315,11 @@
     }
   }
 }
+
+.placeholder {
+  background-color: var(--background-color);
+}
+
 .ad-slot {
   display: flex;
   justify-content: center; /* For other ads, where width isn't specified */
