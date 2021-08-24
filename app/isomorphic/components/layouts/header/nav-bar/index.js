@@ -18,7 +18,6 @@ const NavBar = () => {
   const AccountModal = lazy(() => import("../../../login/AccountModal"));
   const [showAccountModal, setShowAccountModal] = useState(false);
   const [message, setMessage] = useState(null);
-  const [callbackUrl, setCallbackUrl] = useState("");
   const dispatch = useDispatch();
   const [showUserHandler, setUserHandler] = useState(false);
   const publisherAttributes =  useSelector(state => get(state, ["qt", "config", "publisher-attributes"], {}));
@@ -30,6 +29,12 @@ const NavBar = () => {
   const clientId = get(publisherAttributes, ["sso_login", "client_id"], "");
   const redirectUrl = domainSlug ? get(publisherAttributes, ["sso_login", "subdomain", "redirect_Url"], ""):  get(publisherAttributes, ["sso_login", "redirect_Url"], "");
 
+  const currentHostUrl = useSelector(state => get(state, ["qt", "currentHostUrl"], ""));
+  const currentPath =  useSelector(state => get(state, ["qt", "currentPath"], ""));
+
+  console.log("current path-------", currentPath);
+  const callbackUrl = `${currentHostUrl}${currentPath}`;
+  console.log("a-------------------",  callbackUrl);
 
   const displayStyle = isHamburgerMenuOpen ? "flex" : "none";
   const toggleHandler = () => {
@@ -141,8 +146,6 @@ const NavBar = () => {
   const imageUrl = member && member["avatar-url"];
 
   useEffect(() => {
-
-    setCallbackUrl (global && global.location && global.location.href ||  get(publisherAttributes, ["sso_login", "callback_Url"], ""))
     getCurrentUser();
 
     switch (global.location.hash) {
