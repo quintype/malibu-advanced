@@ -20,6 +20,7 @@ const LoginBase = ({ onLogin, forgotPassword, manageLoginForm }) => {
   });
 
   const publisherAttributes =  useSelector(state => get(state, ["qt", "config", "publisher-attributes"], {}));
+  const currentPath =  useSelector(state => get(state, ["qt", "currentPath"], ""));
 
   const dispatch = useDispatch();
 
@@ -66,10 +67,9 @@ const LoginBase = ({ onLogin, forgotPassword, manageLoginForm }) => {
           await getCurrentUser();
           await manageLoginForm(false);
           console.log("loged in successfully");
-          const currentPath =  useSelector(state => get(state, ["qt", "currentPath"], ""));
-          console.log("currentPath ----------", currentPath );
+          console.log("currentPath ----------111", currentPath );
           const params = parseUrl(currentPath);
-          console.log("params-----------",)
+          console.log("params-----------111", params)
           const callbackUrl = get(params, ["query", "callback_uri"], global.location && global.location.origin);
           const redirectUrl = get(params, ["query", "redirect_uri"]) || get(publisherAttributes, ["sso_login", "redirect_Url"], "");
           console.log("redirectUrl -------------- 22222", redirectUrl);
