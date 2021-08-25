@@ -30,8 +30,7 @@ const NavBar = () => {
   const redirectUrl = domainSlug
     ? get(publisherAttributes, ["sso_login", "subdomain", domainSlug, "redirect_Url"], "")
     : get(publisherAttributes, ["sso_login", "redirect_Url"], "");
-  const currentPath = useSelector(state => get(state, ["qt", "currentPath"], ""));
-  const callbackUrl = `${global && global.location && global.location.origin}${currentPath}`;
+
   const ssoLoginIsEnable = get(publisherAttributes, ["sso_login", "is_enable"], false);
 
   const toggleHandler = () => {
@@ -154,6 +153,11 @@ const NavBar = () => {
     }
   }, []);
 
+  const userLogin = () => {
+    if (global)
+      global.location.href = `/api/auth/v1/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUrl}&callback_uri=${global.location.href}&response_type=code`;
+  };
+
   const messageModal = message => {
     // Import modal on message
     const Modal = lazy(() => import("../../../login/modal"));
@@ -229,10 +233,7 @@ const NavBar = () => {
                     <SvgIconHandler type="user-icon" width="18" height="20" viewBox="0 0 18 20" />
                   </button>
                 ) : (
-                  <a
-                    styleName="user-btn"
-                    href={`/api/auth/v1/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUrl}&callback_uri=${callbackUrl}&response_type=code`}
-                  >
+                  <a styleName="user-btn" onClick={() => userLogin()}>
                     <SvgIconHandler type="user-icon" width="18" height="20" viewBox="0 0 18 20" />
                   </a>
                 )}
