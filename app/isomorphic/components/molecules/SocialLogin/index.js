@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { func, string } from "prop-types";
 import { withFacebookLogin, withGoogleLogin, withAppleLogin } from "@quintype/bridgekeeper-js";
-import { connect } from "react-redux";
+import { connect, useSelector } from "react-redux";
+import { parseUrl } from "query-string";
 import get from "lodash/get";
 
 import Button from "../../atoms/Button";
@@ -10,19 +11,27 @@ import { SvgIconHandler } from "../../atoms/svg-icon-hadler";
 import "./social-login.m.css";
 
 export const SocialLoginBase = ({ googleAppId, facebookAppId }) => {
-  const [currentLocation, setCurrentLocation] = useState("/");
+  const [redirectUrl, setRedirectUrl] = useState("/");
+  const publisherAttributes = useSelector(state => get(state, ["qt", "config", "publisher-attributes"], {}));
+  const currentPath = useSelector(state => get(state, ["qt", "currentPath"], ""));
+  const ssoLoginIsEnable = get(publisherAttributes, ["sso_login", "is_enable"], false);
+  const clientId = get(publisherAttributes, ["sso_login", "client_id"], "");
 
   useEffect(() => {
+    const params = parseUrl(currentPath);
+    const getCallbackUrl = get(params, ["query", "callback_uri"], global.location && global.location.origin);
+    const getRedirectUrl =
+      get(params, ["query", "redirect_uri"]) || get(publisherAttributes, ["sso_login", "redirect_Url"], "");
     const location = new URL(window.location.href);
-    const redirectUrl = `${location.origin}${location.pathname}`;
-    location && setCurrentLocation(redirectUrl);
+    const oauthAuthorize = `/api/auth/v1/oauth/authorize?client_id=${clientId}&redirect_uri=${getRedirectUrl}&callback_uri=${getCallbackUrl}&response_type=code`;
+    setRedirectUrl(ssoLoginIsEnable ? oauthAuthorize : `${location.origin}${location.pathname}`);
   }, []);
 
   const FaceBookLogin = () => {
     const { serverSideLoginPath } = withFacebookLogin({
       scope: "email",
       emailMandatory: true,
-      redirectUrl: currentLocation
+      redirectUrl: redirectUrl
     });
     return (
       <Button color="#3b5998" flat href={serverSideLoginPath} socialButton>
@@ -35,10 +44,11 @@ export const SocialLoginBase = ({ googleAppId, facebookAppId }) => {
   };
 
   const GoogleLogin = () => {
+    console.log("redirectUrl------------", redirectUrl);
     const { serverSideLoginPath } = withGoogleLogin({
       scope: "email",
       emailMandatory: true,
-      redirectUrl: currentLocation
+      redirectUrl: redirectUrl
     });
     return (
       <Button color="#dd4b39" flat href={serverSideLoginPath} socialButton>
@@ -51,7 +61,7 @@ export const SocialLoginBase = ({ googleAppId, facebookAppId }) => {
   };
 
   const AppleLogin = () => {
-    const { serverSideLoginPath } = withAppleLogin(currentLocation);
+    const { serverSideLoginPath } = withAppleLogin(redirectUrl);
     return (
       <Button color="#dd4b39" flat href={serverSideLoginPath} socialButton>
         <SvgIconHandler type="apple" height="44" width="44" iconStyle={{ color: "#000" }} /> Apple
