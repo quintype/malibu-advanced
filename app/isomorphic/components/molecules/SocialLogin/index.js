@@ -23,7 +23,7 @@ export const SocialLoginBase = ({ googleAppId, facebookAppId }) => {
     const getRedirectUrl =
       get(params, ["query", "redirect_uri"]) || get(publisherAttributes, ["sso_login", "redirect_Url"], "");
     const location = new URL(window.location.href);
-    const oauthAuthorize = `/api/auth/v1/oauth/authorize?client_id=${clientId}&redirect_uri=${getRedirectUrl}&callback_uri=${getCallbackUrl}&response_type=code`;
+    const oauthAuthorize = `api/auth/v1/oauth/authorize?client_id=${clientId}&redirect_uri=${getRedirectUrl}&callback_uri=${getCallbackUrl}&response_type=code`;
     setRedirectUrl(ssoLoginIsEnable ? oauthAuthorize : `${location.origin}${location.pathname}`);
   }, []);
 
