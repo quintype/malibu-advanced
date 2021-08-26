@@ -155,8 +155,10 @@ const NavBar = () => {
   }, []);
 
   const userLogin = () => {
-    if (global)
-      global.location.href = `/api/auth/v1/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUrl}&callback_uri=${global.location.href}&response_type=code`;
+    if (window)
+      window.location.replace(
+        `/api/auth/v1/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUrl}&callback_uri=${window.location.href}&response_type=code`
+      );
   };
 
   const messageModal = message => {
