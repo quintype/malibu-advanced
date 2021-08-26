@@ -49,7 +49,7 @@ export const SocialLoginBase = ({ googleAppId, facebookAppId }) => {
     const { serverSideLoginPath } = withGoogleLogin({
       scope: "email",
       emailMandatory: true,
-      redirectUrl: redirectUrl
+      redirectUrl: "https://malibu-advanced-web.qtstage.io/food/dosa/exploring-bold"
     });
     return (
       <Button color="#dd4b39" flat href={serverSideLoginPath} socialButton>
