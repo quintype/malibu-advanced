@@ -19,15 +19,6 @@ const SignUpBase = ({ onSignup, onLogin, isVerificationLinkflow }) => {
   const [userExists, setUserExists] = useState(false);
   const [currentLocation, setCurrentLocation] = useState("/");
 
-  // const sendEmail = user => {
-  //   const data = {
-  //     event: "signup",
-  //     mail: user.email,
-  //     name: user.name
-  //   };
-  //   wretch("/send-email").post(data);
-  // };
-
   const signUpHandler = async e => {
     e.preventDefault();
     e.stopPropagation();
