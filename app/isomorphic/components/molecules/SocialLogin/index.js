@@ -49,7 +49,7 @@ export const SocialLoginBase = ({ googleAppId, facebookAppId }) => {
     const { serverSideLoginPath } = withGoogleLogin({
       scope: "email",
       emailMandatory: true,
-      redirectUrl: redirectUrl
+      redirectUrl: encodeURIComponent(redirectUrl)
     });
     console.log("serverSideLoginPath--------", serverSideLoginPath);
     return (
