@@ -24,7 +24,6 @@ export const SocialLoginBase = ({ googleAppId, facebookAppId }) => {
       get(params, ["query", "redirect_uri"]) || get(publisherAttributes, ["sso_login", "redirect_Url"], "");
     const location = new URL(window.location.href);
     const oauthAuthorize = `${location.origin}/api/auth/v1/oauth/authorize?redirect_uri=${getRedirectUrl}&client_id=${clientId}&callback_uri=${getCallbackUrl}&response_type=code`;
-    console.log("oauthAuthorize-----------sociallogin", oauthAuthorize);
     setRedirectUrl(ssoLoginIsEnable ? oauthAuthorize : `${location.origin}${location.pathname}`);
   }, []);
 
@@ -32,7 +31,7 @@ export const SocialLoginBase = ({ googleAppId, facebookAppId }) => {
     const { serverSideLoginPath } = withFacebookLogin({
       scope: "email",
       emailMandatory: true,
-      redirectUrl: redirectUrl
+      redirectUrl: encodeURIComponent(redirectUrl)
     });
     return (
       <Button color="#3b5998" flat href={serverSideLoginPath} socialButton>
@@ -45,13 +44,11 @@ export const SocialLoginBase = ({ googleAppId, facebookAppId }) => {
   };
 
   const GoogleLogin = () => {
-    console.log("redirectUrl------------", redirectUrl);
     const { serverSideLoginPath } = withGoogleLogin({
       scope: "email",
       emailMandatory: true,
       redirectUrl: encodeURIComponent(redirectUrl)
     });
-    console.log("serverSideLoginPath--------", serverSideLoginPath);
     return (
       <Button color="#dd4b39" flat href={serverSideLoginPath} socialButton>
         <span styleName="icon">
