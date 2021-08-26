@@ -60,7 +60,7 @@ export const SocialLoginBase = ({ googleAppId, facebookAppId }) => {
   };
 
   const AppleLogin = () => {
-    const { serverSideLoginPath } = withAppleLogin(redirectUrl);
+    const { serverSideLoginPath } = withAppleLogin(encodeURIComponent(redirectUrl));
     return (
       <Button color="#dd4b39" flat href={serverSideLoginPath} socialButton>
         <SvgIconHandler type="apple" height="44" width="44" iconStyle={{ color: "#000" }} /> Apple
