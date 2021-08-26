@@ -19,13 +19,14 @@ const NavBar = () => {
   const [message, setMessage] = useState(null);
   const dispatch = useDispatch();
   const [showUserHandler, setUserHandler] = useState(false);
-  const publisherAttributes = useSelector(state => get(state, ["qt", "config", "publisher-attributes"], {}));
+  const getState = useSelector(state => state);
+  const publisherAttributes = get(getState, ["qt", "config", "publisher-attributes"], {});
   const enableLogin = get(publisherAttributes, ["enableLogin"], true);
-  const isHamburgerMenuOpen = useSelector(state => get(state, ["isHamburgerMenuOpen"], false));
-  const menu = useSelector(state => get(state, ["qt", "data", "navigationMenu", "homeMenu"], []));
-  const hamburgerMenu = useSelector(state => get(state, ["qt", "data", "navigationMenu", "hamburgerMenu"], []));
+  const isHamburgerMenuOpen = get(getState, ["isHamburgerMenuOpen"], false);
+  const menu = get(getState, ["qt", "data", "navigationMenu", "homeMenu"], []);
+  const hamburgerMenu = get(getState, ["qt", "data", "navigationMenu", "hamburgerMenu"], []);
   const displayStyle = isHamburgerMenuOpen ? "flex" : "none";
-  const domainSlug = useSelector(state => get(state, ["qt", "config", "domainSlug"], ""));
+  const domainSlug = get(getState, ["qt", "config", "domainSlug"], "");
   const clientId = get(publisherAttributes, ["sso_login", "client_id"], "");
   const redirectUrl = domainSlug
     ? get(publisherAttributes, ["sso_login", "subdomain", domainSlug, "redirect_Url"], "")

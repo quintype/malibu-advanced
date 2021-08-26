@@ -1,39 +1,42 @@
 import React, { useState } from "react";
 import PT from "prop-types";
-import get from "lodash/get";
-import { connect, useDispatch } from "react-redux";
-import { sendOtp, updateWithOtp, currentUser } from "@quintype/bridgekeeper-js";
+import { sendOtp, updateWithOtp } from "@quintype/bridgekeeper-js";
 
 import { InputField } from "../../atoms/InputField";
-import { IS_OPEN_LOGIN_FORM, MEMBER_UPDATED } from "../../store/actions";
 
 import "./forms.m.css";
 
-const OTPBase = ({ member, manageLoginForm }) => {
+const OTP = ({ member }) => {
   const [otp, setOTP] = useState("");
   const [error, setError] = useState(false);
   const [successMsg, setSuccessMsg] = useState("");
 
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
-  const getCurrentUser = async () => {
-    try {
-      const currentUserResp = await currentUser();
-      dispatch({ type: MEMBER_UPDATED, member: get(currentUserResp, ["user"], null) });
-    } catch (err) {
-      console.log("error--------", err);
-    }
-  };
+  // const getCurrentUser = async () => {
+  //   try {
+  //     const currentUserResp = await currentUser();
+  //     dispatch({ type: MEMBER_UPDATED, member: get(currentUserResp, ["user"], null) });
+  //   } catch (err) {
+  //     console.log("error--------", err);
+  //   }
+  // };
 
   const otpHandler = async e => {
     e.preventDefault();
     e.stopPropagation();
 
     try {
-      await updateWithOtp(otp);
-      await getCurrentUser();
-      manageLoginForm(false);
-      console.log("successfully login");
+      const response = await updateWithOtp(otp);
+
+      if (response.status === 200) {
+        setSuccessMsg("Verification successful. Please login");
+      } else {
+        setSuccessMsg("Error while processing OTP. Please try again!");
+      }
+      // await getCurrentUser();
+      // manageLoginForm(false);
+      // console.log("successfully login");
     } catch (err) {
       setError(true);
       console.warn("error", error);
@@ -75,27 +78,8 @@ const OTPBase = ({ member, manageLoginForm }) => {
   );
 };
 
-OTPBase.propTypes = {
-  onSubmit: PT.func,
-  member: PT.object,
-  manageLoginForm: PT.func,
-  isLoginOpen: PT.bool
+OTP.propTypes = {
+  member: PT.object
 };
 
-function mapStateToProps(state) {
-  return {
-    isLoginOpen: get(state, ["isLoginOpen"], false)
-  };
-}
-
-const mapDispatchToProps = dispatch => ({
-  manageLoginForm: function(payload) {
-    dispatch({
-      type: IS_OPEN_LOGIN_FORM,
-      payload: payload
-    });
-  }
-});
-
-const OTP = connect(mapStateToProps, mapDispatchToProps)(OTPBase);
 export { OTP };

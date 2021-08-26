@@ -17,8 +17,9 @@ const LoginBase = ({ onLogin, forgotPassword, manageLoginForm }) => {
     password: ""
   });
 
-  const publisherAttributes = useSelector(state => get(state, ["qt", "config", "publisher-attributes"], {}));
-  const currentPath = useSelector(state => get(state, ["qt", "currentPath"], ""));
+  const qtConfig = useSelector(state => get(state, ["qt"], {}));
+  const publisherAttributes = get(qtConfig, ["config", "publisher-attributes"], {});
+  const currentPath = get(qtConfig, ["currentPath"], "");
   const clientId = get(publisherAttributes, ["sso_login", "client_id"], "");
   const ssoLoginIsEnable = get(publisherAttributes, ["sso_login", "is_enable"], false);
 
@@ -68,7 +69,8 @@ const LoginBase = ({ onLogin, forgotPassword, manageLoginForm }) => {
           await manageLoginForm(false);
           console.log("loged in successfully");
           const params = parseUrl(currentPath);
-          const callbackUrl = get(params, ["query", "callback_uri"], global.location && global.location.origin);
+          const callbackUrl =
+            get(params, ["query", "callback_uri"]) || get(publisherAttributes, ["sso_login", "callback_Url"], "");
           const redirectUrl =
             get(params, ["query", "redirect_uri"]) || get(publisherAttributes, ["sso_login", "redirect_Url"], "");
           const allowAjax = true;
