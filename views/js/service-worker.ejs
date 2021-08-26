@@ -5,16 +5,17 @@ const REQUIRED_ASSETS = [
   "<%= x %>",
   <%_ }) _%>
   // Put fonts here
-  {url: '/shell.html', revision: '<%= assetHash("app.js") %>'}
+  "/shell.html?revision=<%= assetHash("app.js") %>"
 ];
 
-const workbox = initializeQServiceWorker(self, {
+initializeQServiceWorker({
   routes: <%- JSON.stringify(routes) %>,
   assets: REQUIRED_ASSETS,
+  shell: "/shell.html?revision=<%= assetHash("app.js") %>"
   hostname: <%- JSON.stringify(hostname) %>
 });
 
-workbox.router.registerRoute('/route-data.json', workbox.strategies.networkFirst());
+workbox.routing.registerRoute(new RegExp('/route-data.json*'), new workbox.strategies.NetworkFirst());
 
 if("<%= config["public-integrations"]["one-signal"] &&  config["public-integrations"]["one-signal"]["app-id"] %>") {
   importScripts('https://cdn.onesignal.com/sdks/OneSignalSDKWorker.js');
