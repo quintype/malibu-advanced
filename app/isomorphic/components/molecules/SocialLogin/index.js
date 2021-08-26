@@ -51,6 +51,7 @@ export const SocialLoginBase = ({ googleAppId, facebookAppId }) => {
       emailMandatory: true,
       redirectUrl: encodeURI(redirectUrl)
     });
+    console.log("serverSideLoginPath--------", serverSideLoginPath);
     return (
       <Button color="#dd4b39" flat href={serverSideLoginPath} socialButton>
         <span styleName="icon">
