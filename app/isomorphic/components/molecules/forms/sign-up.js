@@ -51,7 +51,7 @@ const SignUpBase = ({ onSignup, onLogin, isVerificationLinkflow }) => {
       email: userInfo.email,
       username: userInfo.email,
       password: userInfo.password,
-      "dont-login": false
+      "dont-login": true
     };
 
     try {
