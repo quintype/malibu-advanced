@@ -11,17 +11,6 @@ const OTP = ({ member }) => {
   const [error, setError] = useState(false);
   const [successMsg, setSuccessMsg] = useState("");
 
-  // const dispatch = useDispatch();
-
-  // const getCurrentUser = async () => {
-  //   try {
-  //     const currentUserResp = await currentUser();
-  //     dispatch({ type: MEMBER_UPDATED, member: get(currentUserResp, ["user"], null) });
-  //   } catch (err) {
-  //     console.log("error--------", err);
-  //   }
-  // };
-
   const otpHandler = async e => {
     e.preventDefault();
     e.stopPropagation();
@@ -34,9 +23,6 @@ const OTP = ({ member }) => {
       } else {
         setSuccessMsg("Error while processing OTP. Please try again!");
       }
-      // await getCurrentUser();
-      // manageLoginForm(false);
-      // console.log("successfully login");
     } catch (err) {
       setError(true);
       console.warn("error", error);
