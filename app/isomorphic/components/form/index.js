@@ -4,10 +4,9 @@ import { string, bool } from "prop-types";
 const Form = ({ formioUrl, disabled }) => {
   const [Formio, setFormComponent] = useState({});
   useEffect(() => {
-    // SSR is not supported by formio/react
+    // SSR is not supported by @formio/react
     import(/* webpackChunkName: "qtc-formio-react" */ "@formio/react")
       .then(Formio => {
-        console.log("here come form ", Form);
         setFormComponent({ component: Formio.Form });
       })
       .catch(error => console.error("Error loading formio component", error));
