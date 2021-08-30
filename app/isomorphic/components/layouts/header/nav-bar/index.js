@@ -17,6 +17,7 @@ const NavBar = () => {
   const AccountModal = lazy(() => import("../../../login/AccountModal"));
   const [showAccountModal, setShowAccountModal] = useState(false);
   const [message, setMessage] = useState(null);
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const [showUserHandler, setUserHandler] = useState(false);
   const getState = useSelector(state => state);
@@ -154,7 +155,8 @@ const NavBar = () => {
     }
   }, []);
 
-  const userLogin = () => {
+  const userLogin = loading => {
+    setLoading(loading);
     if (window)
       window.location.replace(
         `/api/auth/v1/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUrl}&callback_uri=${window.location.href}&response_type=code`
@@ -235,11 +237,14 @@ const NavBar = () => {
                   <button aria-label="User Login Button" styleName="user-btn" onClick={() => userBtnClick()}>
                     <SvgIconHandler type="user-icon" width="18" height="20" viewBox="0 0 18 20" />
                   </button>
-                ) : (
-                  <a styleName="user-btn" onClick={() => userLogin()}>
+                ) : !loading ? (
+                  <a styleName="user-btn" onClick={() => userLogin(true)}>
                     <SvgIconHandler type="user-icon" width="18" height="20" viewBox="0 0 18 20" />
                   </a>
+                ) : (
+                  <span>Loding...</span>
                 )}
+
                 {showAccountModal && (
                   <Suspense fallback={<div></div>}>
                     <AccountModal onClose={() => setShowAccountModal(false)} />
