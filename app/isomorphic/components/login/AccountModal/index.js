@@ -98,7 +98,7 @@ const AccountModal = ({ onClose, isPopup = true }) => {
     </Modal>
   ) : (
     <div styleName="account-modal">
-      <div styleName="form-wrapper">
+      <div styleName="form-wrapper" className="form-wrapper">
         {getActiveTabHeading()}
         <div className="forms">{getScreen()}</div>
       </div>
