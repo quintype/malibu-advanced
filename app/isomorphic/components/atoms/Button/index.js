@@ -13,7 +13,7 @@ const Button = ({ href, children, socialButton = false, ...props }) => {
     );
   }
   return href ? (
-    <Link href={href} styleName="btn">
+    <Link href={href} styleName="btn" aria-label="button">
       {children}
     </Link>
   ) : (
