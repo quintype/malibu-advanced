@@ -79,6 +79,7 @@
       <%_ } _%>
       <div id="container"><%_ if(contentTemplate) { _%><%- include(contentTemplate) -%><%_ }else { _%><%- content %><%_ } _%></div>
       <footer id="footer" class="footer-wrapper"><%- footer %></footer>
+      <div id="loading-indicator"></div>
     </div>
     <%_ if(disableAjaxNavigation) { _%>
       <script type="text/javascript">window.disableAjaxNavigation = true;</script>

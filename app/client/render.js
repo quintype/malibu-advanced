@@ -8,6 +8,7 @@ import { NavbarSearch } from "../isomorphic/components/layouts/header/navbar-sea
 import { NavBar } from "../isomorphic/components/layouts/header/nav-bar";
 import { TopAd } from "../isomorphic/components/ads/top-ad";
 import { gumletScriptGenerator } from "../isomorphic/components/gumlet-script-generator";
+import LoadingIndicatorComponent from "../isomorphic/components/atoms/loading-indicator";
 
 export function preRenderApplication(store) {
   const hydrate = { hydrate: !global.qtLoadedFromShell };
@@ -22,6 +23,7 @@ export function preRenderApplication(store) {
   global.qtLoadedFromShell && renderComponent(Footer, "footer", store, hydrate);
   renderComponent(NavbarSearch, "search-bar", store, hydrate);
   renderComponent(NavBar, "nav-bar", store, hydrate);
+  renderComponent(LoadingIndicatorComponent, "loading-indicator", store);
 
   const pageType = get(store.getState(), ["qt", "pageType"], null);
   breakingNewsConfig.is_enable &&
