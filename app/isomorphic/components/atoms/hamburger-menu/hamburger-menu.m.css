@@ -5,6 +5,8 @@
   cursor: pointer;
   padding: 0;
   margin: 12px 0;
+  height: 48px;
+  width: 48px;
 }
 
 .hamburger:focus {

@@ -13,7 +13,7 @@
   right: 0;
   bottom: 0;
   background: rgba(var(--rgb-black), 0.5);
-  z-index: var( --zlevel3);
+  z-index: var(--zlevel3);
 }
 
 .modal-content {
@@ -30,6 +30,7 @@
     .close-button {
       top: 20px;
       right: 20px;
+      padding: 13px 15px;
     }
   }
 }

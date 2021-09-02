@@ -1,4 +1,6 @@
 .btn {
   display: flex;
   align-items: center;
+  height: 48px;
+  width: 48px;
 }

@@ -3,6 +3,7 @@
   display: flex;
   align-items: center;
   color: var(--brand-secondary);
+  height: 48px;
 }
 
 .menu-link:hover {
