@@ -11,13 +11,13 @@ domain_mapping:
 publisher:
   sso_login:
     is_enable: true
-    redirect_Url: "https://malibu-advanced-web.qtstage.io/auth/v1/oauth/token"
-    callback_Url: "https://malibu-advanced-web.qtstage.io"
-    client_id : 51
+    redirect_Url: "<Domain>/auth/v1/oauth/token"
+    callback_Url: "Callback Url"
+    client_id : "Integration-id (number)"
     subdomain:
       voices:
-        redirect_Url: "https://malibu-voices-advanced-web.qtstage.io/api/auth/v1/oauth/token"
-        callback_Url: "https://malibu-voices-advanced-web.qtstage.io"
+        redirect_Url: "<Domain>/api/auth/v1/oauth/token"
+        callback_Url: "Callback Url"
   timezone: "Asia/Baku"
   google_tag_manager:
     id: "gtm-id"
