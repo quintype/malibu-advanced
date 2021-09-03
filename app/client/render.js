@@ -8,6 +8,7 @@ import { NavbarSearch } from "../isomorphic/components/layouts/header/navbar-sea
 import { NavBar } from "../isomorphic/components/layouts/header/nav-bar";
 import { TopAd } from "../isomorphic/components/ads/top-ad";
 import { gumletScriptGenerator } from "../isomorphic/components/gumlet-script-generator";
+import LoadingIndicatorComponent from "../isomorphic/components/atoms/loading-indicator";
 
 export function preRenderApplication(store) {
   const hydrate = { hydrate: !global.qtLoadedFromShell };
@@ -28,6 +29,7 @@ export function preRenderApplication(store) {
       pageType !== "profile-page" &&
       renderBreakingNews("breaking-news-container", store, BreakingNewsView, breakingNewsbaseProps);
   }
+  renderComponent(LoadingIndicatorComponent, "loading-indicator", store);
 }
 
 // This is a separate file as everything from here on is hot reloaded when the app changes
