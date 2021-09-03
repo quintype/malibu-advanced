@@ -102,6 +102,7 @@ export function loadData(pageType, params, config, client, { host, next, domainS
         "image-cdn-format": "gumlet",
         "ads-config": ads,
         svgSpritePath,
+        domainSlug,
         showPlaceholder: publisherAttributes.enable_placeholder
       })
     };

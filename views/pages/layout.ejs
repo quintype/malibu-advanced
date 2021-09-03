@@ -69,16 +69,22 @@
       <%- include ./partials/noscriptgtm -%>
     <% } %>
     <div class="page-wrapper">
-      <div><%- topbar %></div>
-      <header id="nav-bar" class="sticky-header"><%- navbar %></header>
-      <% if(enableBreakingNews) {%>
+      <%_ if(pageType !== 'user-login') {%>
+        <div><%- topbar %></div>
+        <header id="nav-bar" class="sticky-header"><%- navbar %></header>
+      <% } %>
+
+      <% if(enableBreakingNews && pageType !== 'user-login') {%>
         <div id='breaking-news-container'><%- breakingNews -%></div>
       <% } %>
-      <%_ if(enableAds) { _%>
+      <%_ if(enableAds && pageType !== 'user-login') { _%>
         <div id='top-ad'><%- topad -%></div>
       <%_ } _%>
-      <div id="container"><%_ if(contentTemplate) { _%><%- include(contentTemplate) -%><%_ }else { _%><%- content %><%_ } _%></div>
-      <footer id="footer" class="footer-wrapper"><%- footer %></footer>
+      <div id="container"><%_ if(contentTemplate) { _%><%- include(contentTemplate) -%><%_ }else { _%><%- content %><%_ } _%>
+        </div>
+      <%_ if(pageType !== 'user-login') {%>
+        <footer id="footer" class="footer-wrapper"><%- footer %></footer>
+      <% } %>
       <div id="loading-indicator"></div>
     </div>
     <%_ if(disableAjaxNavigation) { _%>

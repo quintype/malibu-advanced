@@ -1,5 +1,6 @@
 /* eslint-disable no-console, no-unused-vars, import/extensions, object-shorthand, global-require */
 import createApp from "@quintype/framework/server/create-app";
+import { getClient, Collection } from "@quintype/framework/server/api-client";
 import logger from "@quintype/framework/server/logger";
 import {
   upstreamQuintypeRoutes,
@@ -13,7 +14,7 @@ import { renderLayout } from "./handlers/render-layout";
 import { loadData, loadErrorData } from "./load-data";
 import { pickComponent } from "../isomorphic/pick-component";
 import { generateStaticData, generateStructuredData, SEO } from "@quintype/seo";
-import { Collection } from "@quintype/framework/server/api-client";
+
 export const app = createApp();
 
 upstreamQuintypeRoutes(app, {});
@@ -40,6 +41,29 @@ const logError = error => logger.error(error);
 
 getWithConfig(app, "/collection/:collectionSlug", redirectCollectionHandler(), {
   logError
+});
+
+function returnConfig(req) {
+  return getClient(req.hostname)
+    .getConfig()
+    .then(res => res.config || []);
+}
+
+app.get("*", (req, res, next) => {
+  if (req.hostname.includes("auth")) {
+    const whitelistedUrls = ["user-login", "route-data.json", "manifest.json"];
+    const isPathPresent = element => req.params[0].includes(element);
+    if (whitelistedUrls.some(isPathPresent)) {
+      return next();
+    } else {
+      returnConfig(req).then(response => {
+        const sketchesHost = response["sketches-host"];
+        res.redirect(301, sketchesHost);
+      });
+    }
+  } else {
+    return next();
+  }
 });
 
 function generateSeo(config, pageType) {
