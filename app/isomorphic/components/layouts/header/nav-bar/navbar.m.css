@@ -94,12 +94,15 @@
 
 .user-profile {
   flex-shrink: 0;
+  width: 100px;
+  text-align: right;
 }
 
 .user-btn {
   background-color: transparent;
   border: none;
   padding: 0;
+  cursor: pointer;
 }
 
 .member-img {
