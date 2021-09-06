@@ -60,21 +60,23 @@ const BlankStoryTemplate = props => {
   return (
     <div className="container">
       <div styleName="wrapper">
-        <WithLazy margin="20px">
-          {() => (
-            <figure className="blank-story-image" styleName={`qt-image-16x9 ${getPlaceholderStyleName}`}>
-              <ResponsiveImage
-                slug={props.story["hero-image-s3-key"]}
-                metadata={props.story["hero-image-metadata"]}
-                aspectRatio={[16, 9]}
-                defaultWidth={480}
-                widths={[250, 480, 640]}
-                sizes="( max-width: 120px ) 98%, ( max-width: 768px ) 48%, 23%"
-                imgParams={{ auto: ["format", "compress"], fmt: "webp" }}
-              />
-            </figure>
-          )}
-        </WithLazy>
+        {props.story["hero-image-s3-key"] && (
+          <WithLazy margin="20px">
+            {() => (
+              <figure className="blank-story-image" styleName={`qt-image-16x9 ${getPlaceholderStyleName}`}>
+                <ResponsiveImage
+                  slug={props.story["hero-image-s3-key"]}
+                  metadata={props.story["hero-image-metadata"]}
+                  aspectRatio={[16, 9]}
+                  defaultWidth={480}
+                  widths={[250, 480, 640]}
+                  sizes="( max-width: 120px ) 98%, ( max-width: 768px ) 48%, 23%"
+                  imgParams={{ auto: ["format", "compress"], fmt: "webp" }}
+                />
+              </figure>
+            )}
+          </WithLazy>
+        )}
         <h1 styleName="headline">{props.story.headline}</h1>
         <div styleName="author"> By {props.story["author-name"]}</div>
         {props.story.cards &&
