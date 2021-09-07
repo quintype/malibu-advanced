@@ -24,7 +24,7 @@ const MenuItem = ({ item, toggleHandler, menuStyle = "menu-link" }) => {
     return (
       <Link
         styleName={menuStyle}
-        aria-label={item.title}
+        aria-label="menu-item"
         callback={toggleHandler}
         className={menuStyle}
         href={item.completeUrl || "/"}
