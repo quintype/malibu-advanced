@@ -22,13 +22,7 @@ const MenuItem = ({ item, toggleHandler, menuStyle = "menu-link" }) => {
     );
   } else {
     return (
-      <Link
-        styleName={menuStyle}
-        aria-label="menu-item"
-        callback={toggleHandler}
-        className={menuStyle}
-        href={item.completeUrl || "/"}
-      >
+      <Link styleName={menuStyle} callback={toggleHandler} className={menuStyle} href={item.completeUrl || "/"}>
         {item.title}
       </Link>
     );
