@@ -221,6 +221,7 @@ const NavBar = () => {
                         styleName="user-account-item"
                         callback={() => setUserHandler(!showUserHandler)}
                         href="/profile"
+                        aria-label="user-account-item"
                       >
                         Profile
                       </Link>

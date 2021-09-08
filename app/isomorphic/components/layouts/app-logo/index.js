@@ -8,8 +8,8 @@ import { SvgIconHandler } from "../../atoms/svg-icon-hadler/index";
 
 const AppLogo = ({ width = "178" }) => {
   return (
-    <Link href="/">
-      <SvgIconHandler type="logo" width={width} height="36" viewBox="0 0 997.64 195.19" />
+    <Link href="/" aria-label="app-logo">
+      <SvgIconHandler type="logo" width="178" height="36" viewBox="0 0 997.64 195.19" />
     </Link>
   );
 };
