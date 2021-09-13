@@ -243,7 +243,7 @@ const NavBar = () => {
                     <SvgIconHandler type="user-icon" width="18" height="20" viewBox="0 0 18 20" />
                   </a>
                 ) : (
-                  <span>Loding...</span>
+                  <span>Loading...</span>
                 )}
 
                 {showAccountModal && (
