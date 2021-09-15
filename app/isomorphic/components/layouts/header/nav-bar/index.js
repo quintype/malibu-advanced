@@ -17,14 +17,23 @@ const NavBar = () => {
   const AccountModal = lazy(() => import("../../../login/AccountModal"));
   const [showAccountModal, setShowAccountModal] = useState(false);
   const [message, setMessage] = useState(null);
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const [showUserHandler, setUserHandler] = useState(false);
-  const enableLogin = useSelector(state => get(state, ["qt", "config", "publisher-attributes", "enableLogin"], true));
-  const isHamburgerMenuOpen = useSelector(state => get(state, ["isHamburgerMenuOpen"], false));
-  const menu = useSelector(state => get(state, ["qt", "data", "navigationMenu", "homeMenu"], []));
-  const hamburgerMenu = useSelector(state => get(state, ["qt", "data", "navigationMenu", "hamburgerMenu"], []));
-
+  const getState = useSelector(state => state);
+  const publisherAttributes = get(getState, ["qt", "config", "publisher-attributes"], {});
+  const enableLogin = get(publisherAttributes, ["enableLogin"], true);
+  const isHamburgerMenuOpen = get(getState, ["isHamburgerMenuOpen"], false);
+  const menu = get(getState, ["qt", "data", "navigationMenu", "homeMenu"], []);
+  const hamburgerMenu = get(getState, ["qt", "data", "navigationMenu", "hamburgerMenu"], []);
   const displayStyle = isHamburgerMenuOpen ? "flex" : "none";
+  const domainSlug = get(getState, ["qt", "config", "domainSlug"], "");
+  const clientId = get(publisherAttributes, ["sso_login", "client_id"], "");
+  const redirectUrl = domainSlug
+    ? get(publisherAttributes, ["sso_login", "subdomain", domainSlug, "redirect_Url"], "")
+    : get(publisherAttributes, ["sso_login", "redirect_Url"], "");
+
+  const ssoLoginIsEnable = get(publisherAttributes, ["sso_login", "is_enable"], false);
 
   const toggleHandler = () => {
     dispatch({
@@ -146,6 +155,14 @@ const NavBar = () => {
     }
   }, []);
 
+  const userLogin = loading => {
+    setLoading(loading);
+    if (window)
+      window.location.replace(
+        `/api/auth/v1/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUrl}&callback_uri=${window.location.href}&response_type=code`
+      );
+  };
+
   const messageModal = message => {
     // Import modal on message
     const Modal = lazy(() => import("../../../login/modal"));
@@ -204,6 +221,7 @@ const NavBar = () => {
                         styleName="user-account-item"
                         callback={() => setUserHandler(!showUserHandler)}
                         href="/profile"
+                        aria-label="user-account-item"
                       >
                         Profile
                       </Link>
@@ -216,9 +234,18 @@ const NavBar = () => {
               </>
             ) : (
               <>
-                <button aria-label="User Login Button" styleName="user-btn" onClick={() => userBtnClick()}>
-                  <SvgIconHandler type="user-icon" width="18" height="20" viewBox="0 0 18 20" />
-                </button>
+                {!ssoLoginIsEnable ? (
+                  <button aria-label="User Login Button" styleName="user-btn" onClick={() => userBtnClick()}>
+                    <SvgIconHandler type="user-icon" width="18" height="20" viewBox="0 0 18 20" />
+                  </button>
+                ) : !loading ? (
+                  <a styleName="user-btn" onClick={() => userLogin(true)}>
+                    <SvgIconHandler type="user-icon" width="18" height="20" viewBox="0 0 18 20" />
+                  </a>
+                ) : (
+                  <span>Loading...</span>
+                )}
+
                 {showAccountModal && (
                   <Suspense fallback={<div></div>}>
                     <AccountModal onClose={() => setShowAccountModal(false)} />

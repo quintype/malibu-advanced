@@ -11,7 +11,7 @@ function StoryGridStoryItem(props) {
   const getPlaceholderStyleName = showImagePlaceholder ? "placeholder" : "";
 
   return (
-    <Link href={`/${props.story.slug}`} className="story-grid-item">
+    <Link href={`/${props.story.slug}`} className="story-grid-item" aria-label="story-grid-item">
       <figure className="qt-image-16x9" styleName={`story-grid-item-image ${getPlaceholderStyleName}`}>
         <ResponsiveImage
           slug={props.story["hero-image-s3-key"]}
