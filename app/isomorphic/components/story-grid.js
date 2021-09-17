@@ -11,7 +11,7 @@ function StoryGridStoryItem(props) {
   const getPlaceholderStyleName = showImagePlaceholder ? "placeholder" : "";
 
   return (
-    <Link href={`/${props.story.slug}`} className="story-grid-item">
+    <Link href={`/${props.story.slug}`} className="story-grid-item" aria-label="story-grid-item">
       <figure className="qt-image-16x9" styleName={`story-grid-item-image ${getPlaceholderStyleName}`}>
         <ResponsiveImage
           slug={props.story["hero-image-s3-key"]}
@@ -19,7 +19,6 @@ function StoryGridStoryItem(props) {
           aspectRatio={[16, 9]}
           defaultWidth={480}
           widths={[250, 480, 640]}
-          sizes="( max-width: 500px ) 98vw, ( max-width: 768px ) 48vw, 23vw"
           imgParams={{ auto: ["format", "compress"] }}
           eager={props.position < 2 ? "above-fold" : "below-fold"}
           alt={props.story.headline || ""}

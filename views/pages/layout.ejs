@@ -25,7 +25,8 @@
       window.GUMLET_CONFIG = {
         hosts: [{ current: "<%= cdnImage %>", gumlet: "<%= cdnImage %>" }],
         lazy_load: true,
-        auto_webp: true
+        auto_webp: true,
+        srcset: true
       }
     </script>
     <%# load any CSS fonts just below this, curl -vH "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:27.0) Gecko/20100101 Firefox/27.0" 'https://fonts.googleapis.com/css?family=Lato:400,700|Roboto:400,700' | curl -X POST -s --data-urlencode 'input@-' https://cssminifier.com/raw %>
@@ -69,16 +70,23 @@
       <%- include ./partials/noscriptgtm -%>
     <% } %>
     <div class="page-wrapper">
-      <div><%- topbar %></div>
-      <header id="nav-bar" class="sticky-header"><%- navbar %></header>
-      <% if(enableBreakingNews) {%>
+      <%_ if(pageType !== 'user-login') {%>
+        <div><%- topbar %></div>
+        <header id="nav-bar" class="sticky-header"><%- navbar %></header>
+      <% } %>
+
+      <% if(enableBreakingNews && pageType !== 'user-login') {%>
         <div id='breaking-news-container'><%- breakingNews -%></div>
       <% } %>
-      <%_ if(enableAds) { _%>
+      <%_ if(enableAds && pageType !== 'user-login') { _%>
         <div id='top-ad'><%- topad -%></div>
       <%_ } _%>
-      <div id="container"><%_ if(contentTemplate) { _%><%- include(contentTemplate) -%><%_ }else { _%><%- content %><%_ } _%></div>
-      <footer id="footer" class="footer-wrapper"><%- footer %></footer>
+      <div id="container"><%_ if(contentTemplate) { _%><%- include(contentTemplate) -%><%_ }else { _%><%- content %><%_ } _%>
+        </div>
+      <%_ if(pageType !== 'user-login') {%>
+        <footer id="footer" class="footer-wrapper"><%- footer %></footer>
+      <% } %>
+      <div id="loading-indicator"></div>
     </div>
     <%_ if(disableAjaxNavigation) { _%>
       <script type="text/javascript">window.disableAjaxNavigation = true;</script>
