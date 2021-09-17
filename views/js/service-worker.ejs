@@ -1,6 +1,6 @@
 <%- serviceWorkerHelper %>;
 
-cosnt shellUrl = "/shell.html?revision=<%= assetHash("app.js") %>-<%= configVersion %>";
+const shellUrl = "/shell.html?revision=<%= assetHash("app.js") %>-<%= configVersion %>";
 
 const REQUIRED_ASSETS = [
   <%_ getFilesForChunks("app", "list", "story").map(x => { _%>
