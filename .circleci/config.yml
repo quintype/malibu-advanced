@@ -105,9 +105,9 @@ workflows:
   perf_prod_lighthouse_test:
     jobs:
       - build:
-          type: approval
           context: quay-login
       - hold_perf_prod:
+          type: approval
           requires:
             - build
       - deploy_perf_production:
