@@ -54,15 +54,14 @@ jobs:
       - run: npm install
       - run: npm run lint:css:ci
 
-
-  stg_lighthouse_task:
-    docker:
-      - image: circleci/node:12.13.0-browsers
-    steps:
-      - checkout
-      - run: |
-          export LHCI_SITES="[\"https://malibu-advanced-web.qtstage.io/\"]"
-          npx @lhci/cli@0.6.x autorun
+  # stg_lighthouse_task:
+  #   docker:
+  #     - image: circleci/node:12.13.0-browsers
+  #   steps:
+  #     - checkout
+  #     - run: |
+  #         export LHCI_SITES="[\"https://malibu-advanced-web.qtstage.io/\"]"
+  #         npx @lhci/cli@0.6.x autorun
   prod_lighthouse_task:
     docker:
       - image: circleci/node:12.13.0-browsers
@@ -87,22 +86,22 @@ workflows:
       - lint_js
       - lint_css
 
-  stg_lighthouse_test:
-    jobs:
-      - build:
-          context: quay-login
-      - hold_staging:
-          type: approval
-          requires:
-            - build
-      - deploy_staging:
-          context: quay-login
-          requires:
-            - hold_staging
-      - stg_lighthouse_task:
-          context: quay-login
-          requires:
-            - deploy_staging
+  # stg_lighthouse_test:
+  #   jobs:
+  #     - build:
+  #         context: quay-login
+  #     - hold_staging:
+  #         type: approval
+  #         requires:
+  #           - build
+  #     - deploy_staging:
+  #         context: quay-login
+  #         requires:
+  #           - hold_staging
+  #     - stg_lighthouse_task:
+  #         context: quay-login
+  #         requires:
+  #           - deploy_staging
   perf_prod_lighthouse_test:
     jobs:
       - build:
@@ -119,29 +118,31 @@ workflows:
           context: quay-login
           requires:
             - deploy_perf_production
-  lighthouse_test:
-    jobs:
-      - build:
-          context: quay-login
-      - hold_production:
-          type: approval
-          requires:
-            - build
-          filters:
-            branches:
-              only:
-                - master
-                - master-clone
-      - deploy_production:
-          context: quay-login
-          requires:
-            - hold_production
-          filters:
-              branches:
-                only:
-                  - master
-                  - master-clone
-      - prod_lighthouse_task:
-          context: quay-login
-          requires:
-            - deploy_production
+  # lighthouse_test:
+  #   jobs:
+  #     - build:
+  #         context: quay-login
+  #         filters:
+  #           branches:
+  #             only:
+  #               - master
+  #     - hold_production:
+  #         type: approval
+  #         requires:
+  #           - build
+  #         filters:
+  #           branches:
+  #             only:
+  #               - master
+  #     - deploy_production:
+  #         context: quay-login
+  #         requires:
+  #           - hold_production
+  #         filters:
+  #           branches:
+  #             only:
+  #               - master
+  #     - prod_lighthouse_task:
+  #         context: quay-login
+  #         requires:
+  #           - deploy_production
