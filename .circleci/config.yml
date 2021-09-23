@@ -90,6 +90,10 @@ workflows:
     jobs:
       - build:
           context: quay-login
+          filters:
+            branches:
+              ignore:
+                - master
       - hold_staging:
           type: approval
           requires:
@@ -106,6 +110,10 @@ workflows:
     jobs:
       - build:
           context: quay-login
+          filters:
+            branches:
+              ignore:
+                - master
       - hold_perf_prod:
           type: approval
           requires:
@@ -130,18 +138,10 @@ workflows:
           type: approval
           requires:
             - build
-          filters:
-            branches:
-              only:
-                - master
       - deploy_production:
           context: quay-login
           requires:
             - hold_production
-          filters:
-            branches:
-              only:
-                - master
       - prod_lighthouse_task:
           context: quay-login
           requires:
