@@ -22,7 +22,7 @@ export function preRenderApplication(store) {
   };
 
   if (pageType !== "user-login") {
-    global.qtLoadedFromShell && renderComponent(Footer, "footer", store, hydrate);
+    global.qtLoadedFromShell && renderComponent(Footer, "footer", store);
     renderComponent(NavbarSearch, "search-bar", store, hydrate);
     renderComponent(NavBar, "nav-bar", store, hydrate);
     breakingNewsConfig.is_enable &&
