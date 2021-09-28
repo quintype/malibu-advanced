@@ -30,7 +30,8 @@ const lhciConfig = {
         "button-name": "warn", // It suggests that the button should have inner text content or an aria-label or aria-labelledBy.
         "categories:performance": ["error", { minScore: 0.6 }], // this should be 0.7. Change to 0.7 once perf fixes are done
         "image-alt": "warn",
-        "link-text": "warn"
+        "link-text": "warn",
+        "unsized-images": "warn"
       }
     },
     upload: {
