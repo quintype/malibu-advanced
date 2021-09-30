@@ -8,35 +8,56 @@ host_to_automatic_api_host:
 domain_mapping:
   subdomain.lvh.me: voices
   malibu.lvh.me: localhost:3000
+fcm:
+  message_sender_id: "246938023912"
+  serverKey: "AAAAOX6nN-g:APA91bFs_L_NGjqZmCc7ZTyOteh5iMrwTaBkZ3xbM6R-JGmhTyM4czqQoB_D8olxFh1Hy_8g-1BRhaB5g7d-x6v2V-FvgAQh8z8N6I0RKRWse4hFW8CksNYQAB_8Jlv8KXfjXUXGmqr8"
+  is_enable: false
 publisher:
   sso_login:
     is_enable: true
-    redirect_Url: "<Domain>/auth/v1/oauth/token"
-    callback_Url: "Callback Url"
-    client_id : "Integration-id (number)"
+    redirect_Url: "https://malibu-advanced-web.qtstage.io/api/auth/v1/oauth/token"
+    callback_Url: "https://malibu-advanced-web.qtstage.io"
+    client_id: 51
     subdomain:
       voices:
-        redirect_Url: "<Domain>/api/auth/v1/oauth/token"
-        callback_Url: "Callback Url"
-  timezone: "Asia/Baku"
+        redirect_Url: "https://malibu-voices-advanced-web.qtstage.io/api/auth/v1/oauth/token"
+        callback_Url: "https://malibu-voices-advanced-web.qtstage.io"
+  upstreamRoutesSmaxage: 980
+  isomorphicRoutesSmaxage: 500
+  timezone: "Europe/Paris"
   google_tag_manager:
-    id: "gtm-id"
+    id: "GTM-M2JPDF4"
     is_enable: true
+    load_gtm_synchronously: false
+    script_delay: 5
   google_analytics:
-    id: "ga-id"
+    id: "UA-139937241-1"
     is_enable: true
+    load_ga_synchronously: false
+    script_delay: 5
+  onesignal:
+    safari_web_id: "web.onesignal.auto.01d22b73-bccb-4a84-9633-69c73285f3f4"
+    is_enable: true
+    time_out: 5000
+  enableLogin: true
+  enable_sso: true
+  sso_host: "https://malibu-advanced-web-auth.qtstage.io"
+  should_use_collection: true
   breaking_news:
     is_enable: true
     interval: 120
-    item_display: 1
-    open_in_new_tab: false
+    item_display: 222
+    open_in_new_tab: true
     pages: [home-page, section-page, tag-page, search-page, story-page, catalog-page, static-page, form-page]
-  should_use_collection: true
-  google_app_id: ""
-  facebook_app_id: ""
-  is_verification_link_flow: true
+  is_verification_link_flow: false
+  google_app_id: "996100625065-em0i4hcjolhsu8b7eij50m8i0g8etpb4.apps.googleusercontent.com"
+  facebook_app_id: "248865019954260"
+  bk_integration_id: 51
+  bk_integration_secret: "kcRFrsf89as8fHkfhHihbg3LMHjii8"
+  bk_host: "http://bridgekeeper.alb.staging.quinpress.internal"
+  bk_api_key: "mxdnwJFPrZUQDPuV"
   enable_placeholder: true
-  placeholder_delay: 3
+  placeholder_delay: 4
   collectionParams:
     depth: 2
     storyLimits:
