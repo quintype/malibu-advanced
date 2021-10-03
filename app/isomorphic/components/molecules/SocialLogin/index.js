@@ -56,7 +56,7 @@ export const SocialLoginBase = ({ googleAppId, facebookAppId }) => {
       redirectUrl: encodeURIComponent(redirectUrl)
     });
     return (
-      <Button color="#3b5998" flat onClick={e => socialLogin(e, login)} socialButton>
+      <Button color="#3b5998" flat onClick={e => socialLogin(e, login)}>
         <span styleName="icon">
           <SvgIconHandler type="linkedin" iconStyle={{ color: "#3b5998" }} width="9" height="15" viewBox="0 0 12 21" />
         </span>{" "}
