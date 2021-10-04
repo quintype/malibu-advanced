@@ -27,20 +27,15 @@ export const SocialLoginBase = ({ googleAppId, facebookAppId }) => {
     setRedirectUrl(ssoLoginIsEnable ? oauthAuthorize : `${location.origin}${location.pathname}`);
   }, []);
 
-  function socialLogin(e, login) {
-    e.preventDefault();
-    login().then(() => console.log("successfully login")); // Can also make an API call to /api/v1/members/me
-  }
-
   const FaceBookLogin = () => {
-    const { login } = withFacebookLogin({
+    const { serverSideLoginPath } = withFacebookLogin({
       appId: facebookAppId,
       scope: "email",
       emailMandatory: true,
       redirectUrl: encodeURIComponent(redirectUrl)
     });
     return (
-      <Button color="#3b5998" flat onClick={e => socialLogin(e, login)}>
+      <Button color="#dd4b39" flat href={serverSideLoginPath} socialButton>
         <span styleName="icon">
           <SvgIconHandler type="facebook" iconStyle={{ color: "#3b5998" }} width="9" height="15" viewBox="0 0 12 21" />
         </span>{" "}
@@ -50,14 +45,14 @@ export const SocialLoginBase = ({ googleAppId, facebookAppId }) => {
   };
 
   const LinkedinLogin = () => {
-    const { login } = withLinkedinLogin({
+    const { serverSideLoginPath } = withLinkedinLogin({
       clientKey: "86gxdsjlhqokuk",
       scope: "email",
       emailMandatory: true,
       redirectUrl: encodeURIComponent(redirectUrl)
     });
     return (
-      <Button color="#3b5998" flat onClick={e => socialLogin(e, login)}>
+      <Button color="#dd4b39" flat href={serverSideLoginPath} socialButton>
         <span styleName="icon">
           <SvgIconHandler type="linkedin" iconStyle={{ color: "#3b5998" }} width="9" height="15" viewBox="0 0 12 21" />
         </span>{" "}
