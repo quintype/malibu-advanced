@@ -15,7 +15,6 @@
     flex-wrap: wrap;
   }
   .button {
-    min-width: 110px;
     display: flex;
     font-weight: bold;
     justify-content: center;

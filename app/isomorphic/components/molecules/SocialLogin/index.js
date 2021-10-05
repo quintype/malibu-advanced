@@ -54,7 +54,7 @@ export const SocialLoginBase = ({ googleAppId, facebookAppId }) => {
     return (
       <Button color="#dd4b39" flat href={serverSideLoginPath} socialButton>
         <span styleName="icon">
-          <SvgIconHandler type="linkedin" iconStyle={{ color: "#3b5998" }} width="9" height="15" viewBox="0 0 12 21" />
+          <SvgIconHandler type="linkedin" iconStyle={{ color: "#3b5998" }} width="30" height="30" viewBox="0 0 15 20" />
         </span>{" "}
         LinkedIn
       </Button>
@@ -90,18 +90,18 @@ export const SocialLoginBase = ({ googleAppId, facebookAppId }) => {
     <div styleName="social-login">
       <h3 styleName="title">Or login with</h3>
       <ul styleName="buttons">
-        <li styleName="button">
+        <span styleName="button">
           <FaceBookLogin />
-        </li>
-        <li styleName="button">
+        </span>
+        <span styleName="button">
           <GoogleLogin />
-        </li>
-        <li styleName="button">
+        </span>
+        <span styleName="button">
           <AppleLogin />
-        </li>
-        <li styleName="button">
+        </span>
+        <span styleName="button">
           <LinkedinLogin />
-        </li>
+        </span>
       </ul>
     </div>
   );
