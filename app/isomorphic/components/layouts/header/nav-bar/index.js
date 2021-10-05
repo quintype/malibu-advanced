@@ -59,6 +59,7 @@ const NavBar = () => {
     const { currentUser } = await import("@quintype/bridgekeeper-js");
     try {
       const currentUserResp = await currentUser();
+      console.log("----Current user resp----", currentUserResp);
       dispatch({ type: MEMBER_UPDATED, member: get(currentUserResp, ["user"], null) });
     } catch (err) {
       console.log("error--------", err);
@@ -137,7 +138,7 @@ const NavBar = () => {
 
   const member = useSelector(state => get(state, ["member"], null));
   const imageUrl = member && member["avatar-url"];
-
+  console.log("imageUrl", imageUrl);
   useEffect(() => {
     getCurrentUser();
 
