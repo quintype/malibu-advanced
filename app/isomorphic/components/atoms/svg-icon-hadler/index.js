@@ -17,7 +17,7 @@ export const SvgIconHandler = ({
   viewBox = "0 0 16 16"
 }) => {
   const svgSpritePath = useSelector(state => get(state, ["qt", "config", "svgSpritePath"], ""));
-  console.log(`${svgSpritePath}#${String(type).toLowerCase()}`);
+
   return (
     <svg className={className} style={iconStyle} width={width} height={height} viewBox={viewBox}>
       <use href={`${svgSpritePath}#${String(type).toLowerCase()}`} />
