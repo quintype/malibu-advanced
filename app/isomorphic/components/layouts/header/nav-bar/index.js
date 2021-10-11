@@ -60,6 +60,7 @@ const NavBar = () => {
     try {
       const currentUserResp = await currentUser();
       dispatch({ type: MEMBER_UPDATED, member: get(currentUserResp, ["user"], null) });
+      return currentUserResp;
     } catch (err) {
       console.log("error--------", err);
     }
@@ -109,6 +110,9 @@ const NavBar = () => {
               </li>
             );
           })}
+        <li styleName="dropdown">
+          <a href="https://malibu-voices-advanced-web.qtstage.io/">Sub Domain</a>
+        </li>
       </ul>
     );
   };
@@ -139,7 +143,9 @@ const NavBar = () => {
   const imageUrl = member && member["avatar-url"];
 
   useEffect(() => {
-    getCurrentUser();
+    getCurrentUser().then(userObj => {
+      console.log(userObj);
+    });
 
     switch (global.location.hash) {
       case "#email-verified":
