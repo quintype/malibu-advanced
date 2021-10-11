@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { func, string } from "prop-types";
-import { withFacebookLogin, withGoogleLogin, withAppleLogin } from "@quintype/bridgekeeper-js";
+import { withFacebookLogin, withGoogleLogin, withAppleLogin, withLinkedinLogin } from "@quintype/bridgekeeper-js";
 import { connect, useSelector } from "react-redux";
 import { parseUrl } from "query-string";
 import get from "lodash/get";
@@ -37,8 +37,24 @@ export const SocialLoginBase = ({ googleAppId, facebookAppId }) => {
       <Button color="#3b5998" flat href={serverSideLoginPath} socialButton>
         <span styleName="icon">
           <SvgIconHandler type="facebook" iconStyle={{ color: "#3b5998" }} width="9" height="15" viewBox="0 0 12 21" />
-        </span>{" "}
+        </span>
         Facebook
+      </Button>
+    );
+  };
+
+  const LinkedinLogin = () => {
+    const { serverSideLoginPath } = withLinkedinLogin({
+      scope: "email",
+      emailMandatory: true,
+      redirectUrl: encodeURIComponent(redirectUrl)
+    });
+    return (
+      <Button color="#dd4b39" flat href={serverSideLoginPath} socialButton>
+        <span styleName="icon">
+          <SvgIconHandler type="linkedin" iconStyle={{ color: "#3b5998" }} width="30" height="30" viewBox="0 0 15 20" />
+        </span>{" "}
+        LinkedIn
       </Button>
     );
   };
@@ -80,6 +96,9 @@ export const SocialLoginBase = ({ googleAppId, facebookAppId }) => {
         </li>
         <li styleName="button">
           <AppleLogin />
+        </li>
+        <li styleName="button">
+          <LinkedinLogin />
         </li>
       </ul>
     </div>

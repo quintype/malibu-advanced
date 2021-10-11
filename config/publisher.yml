@@ -13,7 +13,7 @@ publisher:
     is_enable: true
     redirect_Url: "<Domain>/auth/v1/oauth/token"
     callback_Url: "Callback Url"
-    client_id : "Integration-id (number)"
+    client_id: "Integration-id (number)"
     subdomain:
       voices:
         redirect_Url: "<Domain>/api/auth/v1/oauth/token"
