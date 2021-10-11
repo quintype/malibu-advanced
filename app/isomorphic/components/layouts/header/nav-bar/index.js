@@ -20,7 +20,7 @@ const NavBar = () => {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const [showUserHandler, setUserHandler] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
   const getState = useSelector(state => state);
   const publisherAttributes = get(getState, ["qt", "config", "publisher-attributes"], {});
   const enableLogin = get(publisherAttributes, ["enableLogin"], true);
@@ -147,8 +147,9 @@ const NavBar = () => {
     getCurrentUser().then(userObj => {
       if (userObj.user && isLoggedIn) {
         const { autoSSO } = import("@quintype/bridgekeeper-js");
-        const isLoggedIn = autoSSO(clientId, redirectUrl, window.location.href);
-        setIsLoggedIn(isLoggedIn);
+        const isUserLoggedIn = autoSSO(clientId, redirectUrl, window.location.href);
+        setIsLoggedIn(isUserLoggedIn);
+        console.log({ isUserLoggedIn, isLoggedIn, "userObj.user": userObj.user });
       }
     });
 
