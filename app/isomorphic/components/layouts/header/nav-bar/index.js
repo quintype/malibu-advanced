@@ -143,15 +143,21 @@ const NavBar = () => {
   const member = useSelector(state => get(state, ["member"], null));
   const imageUrl = member && member["avatar-url"];
 
-  useEffect(() => {
-    getCurrentUser().then(userObj => {
-      if (userObj.user && isLoggedIn) {
-        const { autoSSO } = import("@quintype/bridgekeeper-js");
-        const isUserLoggedIn = autoSSO(clientId, redirectUrl, window.location.href);
-        setIsLoggedIn(isUserLoggedIn);
-        console.log({ isUserLoggedIn, isLoggedIn, "userObj.user": userObj.user });
-      }
+  const getAutoSSO = async () => {
+    const callbackUrl = window.location.href;
+    const { autoSSO } = await import("@quintype/bridgekeeper-js");
+    autoSSO(clientId, redirectUrl, callbackUrl).then(res => {
+      console.log("--isUserLoggedIn--", res);
+      setIsLoggedIn(false);
     });
+  };
+
+  useEffect(() => {
+    getCurrentUser();
+
+    if (isLoggedIn) {
+      getAutoSSO();
+    }
 
     switch (global.location.hash) {
       case "#email-verified":
