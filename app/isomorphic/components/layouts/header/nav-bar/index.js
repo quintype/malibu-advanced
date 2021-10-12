@@ -146,12 +146,10 @@ const NavBar = () => {
   const getAutoSSO = async () => {
     const callbackUrl = window.location.href;
     const { autoSSO } = await import("@quintype/bridgekeeper-js");
-    autoSSO(clientId, redirectUrl, callbackUrl)
-      .then(res => res.json())
-      .then(res => {
-        console.log("--isUserLoggedIn--", res);
-        setIsLoggedIn(false);
-      });
+    autoSSO(clientId, redirectUrl, callbackUrl).then(res => {
+      console.log("--isUserLoggedIn--", res);
+      setIsLoggedIn(false);
+    });
   };
 
   useEffect(() => {
