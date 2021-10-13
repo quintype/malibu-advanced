@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import get from "lodash/get";
 import { Link } from "@quintype/components";
 
-import { OPEN_HAMBURGER_MENU, OPEN_SEARCHBAR, MEMBER_UPDATED } from "../../../store/actions";
+import { OPEN_HAMBURGER_MENU, OPEN_SEARCHBAR, MEMBER_UPDATED, IS_USER_LOGGED_IN } from "../../../store/actions";
 import { MenuItem } from "../../menu-item";
 import HamburgerMenu from "../../../atoms/hamburger-menu";
 import MessageWrapper from "../../../molecules/forms/message-wrapper";
@@ -20,11 +20,11 @@ const NavBar = () => {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const [showUserHandler, setUserHandler] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
   const getState = useSelector(state => state);
   const publisherAttributes = get(getState, ["qt", "config", "publisher-attributes"], {});
   const enableLogin = get(publisherAttributes, ["enableLogin"], true);
   const isHamburgerMenuOpen = get(getState, ["isHamburgerMenuOpen"], false);
+  const isLoggedIn = get(getState, ["isUserLoggedIn"], true);
   const menu = get(getState, ["qt", "data", "navigationMenu", "homeMenu"], []);
   const hamburgerMenu = get(getState, ["qt", "data", "navigationMenu", "hamburgerMenu"], []);
   const displayStyle = isHamburgerMenuOpen ? "flex" : "none";
@@ -143,20 +143,24 @@ const NavBar = () => {
   const member = useSelector(state => get(state, ["member"], null));
   const imageUrl = member && member["avatar-url"];
 
-  const getAutoSSO = async () => {
-    const callbackUrl = window.location.href;
-    const { autoSSO } = await import("@quintype/bridgekeeper-js");
-    autoSSO(clientId, redirectUrl, callbackUrl).then(res => {
-      console.log("--isUserLoggedIn--", res);
-      setIsLoggedIn(false);
+  const updateLogin = loggedIn => {
+    return dispatch({
+      type: IS_USER_LOGGED_IN,
+      isUserLoggedIn: loggedIn
     });
   };
 
   useEffect(() => {
     getCurrentUser();
 
-    if (isLoggedIn) {
-      getAutoSSO();
+    const queryParams = new URLSearchParams(window.location.search);
+    const loggedIn = !queryParams.has("logged_in");
+    updateLogin(loggedIn);
+    console.log("loggedIn", loggedIn);
+    if (window && isLoggedIn) {
+      window.location.replace(
+        `/api/auth/v1/oauth/auto-sso/authorize?client_id=${clientId}&redirect_uri=${redirectUrl}&callback_uri=${window.location.href}&response_type=code`
+      );
     }
 
     switch (global.location.hash) {
