@@ -143,13 +143,12 @@ const NavBar = () => {
   const imageUrl = member && member["avatar-url"];
 
   useEffect(() => {
-    const callbackUrl = window.location.href.replace("?logged_in=false", "");
     const queryParams = new URLSearchParams(window.location.search);
     const queryParamExists = queryParams.has("logged_in");
 
-    getCurrentUser().then(({ user, error }) => {
-      console.log("--------------------------------", user);
-      if (window && error && !queryParamExists) {
+    getCurrentUser().then(({ user }) => {
+      if (window && !user && !queryParamExists) {
+        const callbackUrl = window.location.href.replace("?logged_in=false", "");
         window.location.replace(
           `/api/auth/v1/oauth/auto-sso/authorize?client_id=${clientId}&redirect_uri=${redirectUrl}&callback_uri=${callbackUrl}&response_type=code`
         );
@@ -172,10 +171,12 @@ const NavBar = () => {
 
   const userLogin = loading => {
     setLoading(loading);
-    if (window)
+    if (window) {
+      const callbackUrl = window.location.href.replace("?logged_in=false", "");
       window.location.replace(
-        `/api/auth/v1/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUrl}&callback_uri=${window.location.href}&response_type=code`
+        `/api/auth/v1/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUrl}&callback_uri=${callbackUrl}&response_type=code`
       );
+    }
   };
 
   const messageModal = message => {
