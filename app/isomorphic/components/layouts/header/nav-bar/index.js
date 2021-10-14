@@ -143,16 +143,18 @@ const NavBar = () => {
   const imageUrl = member && member["avatar-url"];
 
   useEffect(() => {
-    getCurrentUser();
-
     const callbackUrl = window.location.href.replace("?logged_in=false", "");
     const queryParams = new URLSearchParams(window.location.search);
     const queryParamExists = queryParams.has("logged_in");
-    if (window && !member && !queryParamExists) {
-      window.location.replace(
-        `/api/auth/v1/oauth/auto-sso/authorize?client_id=${clientId}&redirect_uri=${redirectUrl}&callback_uri=${callbackUrl}&response_type=code`
-      );
-    }
+
+    getCurrentUser().then(({ user, error }) => {
+      console.log("--------------------------------", user);
+      if (window && error && !queryParamExists) {
+        window.location.replace(
+          `/api/auth/v1/oauth/auto-sso/authorize?client_id=${clientId}&redirect_uri=${redirectUrl}&callback_uri=${callbackUrl}&response_type=code`
+        );
+      }
+    });
 
     switch (global.location.hash) {
       case "#email-verified":
