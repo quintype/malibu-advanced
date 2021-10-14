@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { func, string } from "prop-types";
+import { connect } from "react-redux";
+import { func, string, object } from "prop-types";
 import { register, sendVerificationLink } from "@quintype/bridgekeeper-js";
 import get from "lodash/get";
-import { connect } from "react-redux";
+import { parseUrl } from "query-string";
 
 import { InputField } from "../../atoms/InputField";
 
 import "./forms.m.css";
 
-const SignUpBase = ({ onSignup, onLogin, isVerificationLinkflow }) => {
+const SignUpBase = ({ onSignup, onLogin, qtConfig, currentPath }) => {
   const [userInfo, setUserInfo] = useState({
     name: "",
     email: "",
@@ -18,6 +19,8 @@ const SignUpBase = ({ onSignup, onLogin, isVerificationLinkflow }) => {
   const [verficationSuccessMessage, setSuccessMessage] = useState("");
   const [userExists, setUserExists] = useState(false);
   const [currentLocation, setCurrentLocation] = useState("/");
+  const isVerificationLinkflow = get(qtConfig, ["publisher-attributes", "is_verification_link_flow"], true);
+  const ssoLoginIsEnable = get(qtConfig, ["publisher-attributes", "sso_login", "is_enable"], false);
 
   const signUpHandler = async e => {
     e.preventDefault();
@@ -52,7 +55,12 @@ const SignUpBase = ({ onSignup, onLogin, isVerificationLinkflow }) => {
       }
 
       if (isVerificationLinkflow) {
-        sendVerificationLink(userInfo.email, currentLocation);
+        const params = parseUrl(currentPath);
+        const callbackUrl = ssoLoginIsEnable
+          ? get(params, ["query", "callback_uri"]) ||
+            get(qtConfig, ["publisher-attributes", "sso_login", "callback_Url"], "")
+          : currentLocation;
+        sendVerificationLink(userInfo.email, callbackUrl);
         !userExists &&
           setSuccessMessage(
             `We have sent an activation email to you at ${userInfo.email}. Please check your email inbox.`
@@ -127,11 +135,13 @@ SignUpBase.propTypes = {
   onSignup: func,
   setMember: func,
   onLogin: func,
-  isVerificationLinkflow: string
+  qtConfig: object,
+  currentPath: string
 };
 
 const mapStateToProps = state => ({
-  isVerificationLinkflow: get(state, ["qt", "config", "publisher-attributes", "is_verification_link_flow"], true)
+  qtConfig: get(state, ["qt", "config"], {}),
+  currentPath: get(state, ["qt", "currentPath"], "")
 });
 
 export const SignUp = connect(mapStateToProps, null)(SignUpBase);
