@@ -146,9 +146,9 @@ const NavBar = () => {
     getCurrentUser();
 
     const queryParams = new URLSearchParams(window.location.search);
-    const loggedIn = queryParams.get("logged_in") === null ? "true" : "false";
+    const queryParamExists = queryParams.has("logged_in");
 
-    if (window && loggedIn === "true") {
+    if (window && !queryParamExists) {
       window.location.replace(
         `/api/auth/v1/oauth/auto-sso/authorize?client_id=${clientId}&redirect_uri=${redirectUrl}&callback_uri=${window.location.href}&response_type=code`
       );
