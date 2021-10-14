@@ -145,12 +145,13 @@ const NavBar = () => {
   useEffect(() => {
     getCurrentUser();
 
+    const callbackUrl = window.location.href;
     const queryParams = new URLSearchParams(window.location.search);
     const queryParamExists = queryParams.has("logged_in");
 
     if (window && !queryParamExists) {
       window.location.replace(
-        `/api/auth/v1/oauth/auto-sso/authorize?client_id=${clientId}&redirect_uri=${redirectUrl}&callback_uri=${window.location.href}&response_type=code`
+        `/api/auth/v1/oauth/auto-sso/authorize?client_id=${clientId}&redirect_uri=${redirectUrl}&callback_uri=${callbackUrl}&response_type=code`
       );
     }
 
@@ -166,7 +167,7 @@ const NavBar = () => {
       default:
         return setMessage(null);
     }
-  }, []);
+  }, [window.location.href]);
 
   const userLogin = loading => {
     setLoading(loading);
