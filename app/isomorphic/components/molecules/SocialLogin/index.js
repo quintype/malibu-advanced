@@ -4,9 +4,6 @@ import { withFacebookLogin, withGoogleLogin, withAppleLogin, withLinkedinLogin }
 import { connect, useSelector } from "react-redux";
 import { parseUrl } from "query-string";
 import get from "lodash/get";
-
-import { FbIcon } from "../../atoms/icons/fb-icon";
-import { Google } from "../../atoms/icons/google";
 import { Apple } from "../../atoms/icons/apple";
 import Button from "../../atoms/Button";
 
