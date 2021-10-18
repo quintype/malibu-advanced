@@ -110,9 +110,6 @@ const NavBar = () => {
               </li>
             );
           })}
-        <li styleName="dropdown">
-          <a href="https://malibu-voices-advanced-web.qtstage.io/">Sub Domain</a>
-        </li>
       </ul>
     );
   };
