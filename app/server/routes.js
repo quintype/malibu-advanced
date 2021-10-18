@@ -54,6 +54,16 @@ const ISOMORPHIC_ROUTES = [
     path: "/auth/reset-password",
     pageType: PAGE_TYPE.RESET_PASSWORD_PAGE,
     exact: true
+  },
+  {
+    path: "/profile",
+    pageType: PAGE_TYPE.PROFILE_PAGE,
+    exact: true
+  },
+  {
+    path: "/user-login",
+    pageType: PAGE_TYPE.USER_LOGIN,
+    exact: true
   }
 ];
 

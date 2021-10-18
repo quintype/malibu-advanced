@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { func, string } from "prop-types";
-import { withFacebookLogin, withGoogleLogin } from "@quintype/bridgekeeper-js";
-import { connect } from "react-redux";
+import { withFacebookLogin, withGoogleLogin, withAppleLogin, withLinkedinLogin } from "@quintype/bridgekeeper-js";
+import { connect, useSelector } from "react-redux";
+import { parseUrl } from "query-string";
 import get from "lodash/get";
 
 import { FbIcon } from "../../atoms/icons/fb-icon";
@@ -9,15 +10,24 @@ import { Google } from "../../atoms/icons/google";
 import { Apple } from "../../atoms/icons/apple";
 import Button from "../../atoms/Button";
 
+import { SvgIconHandler } from "../../atoms/svg-icon-hadler";
 import "./social-login.m.css";
 
-export const SocialLoginBase = ({ checkForMemberUpdated, googleAppId, facebookAppId }) => {
-  const [error, setError] = useState("");
-  const [currentLocation, setCurrentLocation] = useState("/");
+export const SocialLoginBase = ({ googleAppId, facebookAppId }) => {
+  const [redirectUrl, setRedirectUrl] = useState("/");
+  const publisherAttributes = useSelector(state => get(state, ["qt", "config", "publisher-attributes"], {}));
+  const currentPath = useSelector(state => get(state, ["qt", "currentPath"], ""));
+  const ssoLoginIsEnable = get(publisherAttributes, ["sso_login", "is_enable"], false);
+  const clientId = get(publisherAttributes, ["sso_login", "client_id"], "");
 
   useEffect(() => {
-    const location = window.location.href;
-    location && setCurrentLocation(location);
+    const params = parseUrl(currentPath);
+    const getCallbackUrl = get(params, ["query", "callback_uri"], global.location && global.location.origin);
+    const getRedirectUrl =
+      get(params, ["query", "redirect_uri"]) || get(publisherAttributes, ["sso_login", "redirect_Url"], "");
+    const location = new URL(window.location.href);
+    const oauthAuthorize = `${location.origin}/api/auth/v1/oauth/authorize?redirect_uri=${getRedirectUrl}&client_id=${clientId}&callback_uri=${getCallbackUrl}&response_type=code`;
+    setRedirectUrl(ssoLoginIsEnable ? oauthAuthorize : `${location.origin}${location.pathname}`);
   }, []);
 
   const socialLogin = (e, login) => {
@@ -47,30 +57,32 @@ export const SocialLoginBase = ({ checkForMemberUpdated, googleAppId, facebookAp
     window.location.href = serverSideLoginPath;
   };
 
-  const FaceBookLogin = () => {
-    const { login, serverSideLoginPath } = withFacebookLogin(facebookAppId, "email", true, currentLocation);
+  const LinkedinLogin = () => {
+    const { serverSideLoginPath } = withLinkedinLogin({
+      scope: "email",
+      emailMandatory: true,
+      redirectUrl: encodeURIComponent(redirectUrl)
+    });
     return (
-      <Button color="#3b5998" flat href={serverSideLoginPath} onClick={e => socialLogin(e, login)} socialButton>
+      <Button color="#dd4b39" flat href={serverSideLoginPath} socialButton>
         <span styleName="icon">
-          <FbIcon color="#3b5998" width={9} height={15} />
+          <SvgIconHandler type="linkedin" iconStyle={{ color: "#3b5998" }} width="30" height="30" viewBox="0 0 15 20" />
         </span>{" "}
-        Facebook
+        LinkedIn
       </Button>
     );
   };
 
   const GoogleLogin = () => {
-    const { serverSideLoginPath } = withGoogleLogin(googleAppId, "email", true, currentLocation);
+    const { serverSideLoginPath } = withGoogleLogin({
+      scope: "email",
+      emailMandatory: true,
+      redirectUrl: encodeURIComponent(redirectUrl)
+    });
     return (
-      <Button
-        color="#dd4b39"
-        flat
-        href={serverSideLoginPath}
-        onClick={e => googleOnClick(e, serverSideLoginPath)}
-        socialButton
-      >
+      <Button color="#dd4b39" flat href={serverSideLoginPath} socialButton>
         <span styleName="icon">
-          <Google />
+          <SvgIconHandler type="google" width="13" height="13" viewBox="0 0 13 13" />
         </span>{" "}
         Google
       </Button>
@@ -100,6 +112,12 @@ export const SocialLoginBase = ({ checkForMemberUpdated, googleAppId, facebookAp
         <li styleName="button">
           <GoogleLogin />
         </li>
+        <li styleName="button">
+          <AppleLogin />
+        </li>
+        <li styleName="button">
+          <LinkedinLogin />
+        </li>
       </ul>
       <ul>
         <li styleName="button">
@@ -112,7 +130,7 @@ export const SocialLoginBase = ({ checkForMemberUpdated, googleAppId, facebookAp
 };
 
 SocialLoginBase.propTypes = {
-  checkForMemberUpdated: func,
+  getCurrentUser: func,
   googleAppId: string,
   facebookAppId: string
 };

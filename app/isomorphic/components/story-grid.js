@@ -1,19 +1,24 @@
 import React from "react";
+import { useSelector } from "react-redux";
+import get from "lodash.get";
 import { Link, ResponsiveImage } from "@quintype/components";
 import { shape, string, object, integer, arrayOf } from "prop-types";
+
 import "./story-grid.m.css";
 
 function StoryGridStoryItem(props) {
+  const showImagePlaceholder = useSelector(state => get(state, ["qt", "config", "showPlaceholder"]));
+  const getPlaceholderStyleName = showImagePlaceholder ? "placeholder" : "";
+
   return (
-    <Link href={`/${props.story.slug}`} className="story-grid-item">
-      <figure className="qt-image-16x9" styleName="story-grid-item-image">
+    <Link href={`/${props.story.slug}`} className="story-grid-item" aria-label="story-grid-item">
+      <figure className="qt-image-16x9" styleName={`story-grid-item-image ${getPlaceholderStyleName}`}>
         <ResponsiveImage
           slug={props.story["hero-image-s3-key"]}
           metadata={props.story["hero-image-metadata"]}
           aspectRatio={[16, 9]}
           defaultWidth={480}
           widths={[250, 480, 640]}
-          sizes="( max-width: 500px ) 98vw, ( max-width: 768px ) 48vw, 23vw"
           imgParams={{ auto: ["format", "compress"] }}
           eager={props.position < 2 ? "above-fold" : "below-fold"}
           alt={props.story.headline || ""}

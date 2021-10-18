@@ -1,14 +1,14 @@
 import React, { Fragment, useEffect, useState, Suspense, lazy } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import get from "lodash/get";
-import assetify from "@quintype/framework/assetify";
+import { Link } from "@quintype/components";
 
 import { OPEN_HAMBURGER_MENU, OPEN_SEARCHBAR, MEMBER_UPDATED } from "../../../store/actions";
 import { MenuItem } from "../../menu-item";
 import HamburgerMenu from "../../../atoms/hamburger-menu";
 import MessageWrapper from "../../../molecules/forms/message-wrapper";
-import UserIcon from "../../../../../assets/images/user-icon.svg";
-import User from "../../../../../assets/images/user.svg";
+
+import { SvgIconHandler } from "../../../atoms/svg-icon-hadler";
 
 import "./navbar.m.css";
 
@@ -17,14 +17,23 @@ const NavBar = () => {
   const AccountModal = lazy(() => import("../../../login/AccountModal"));
   const [showAccountModal, setShowAccountModal] = useState(false);
   const [message, setMessage] = useState(null);
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const [showUserHandler, setUserHandler] = useState(false);
-  const enableLogin = useSelector(state => get(state, ["qt", "config", "publisher-attributes", "enableLogin"], true));
-  const isHamburgerMenuOpen = useSelector(state => get(state, ["isHamburgerMenuOpen"], false));
-  const menu = useSelector(state => get(state, ["qt", "data", "navigationMenu", "homeMenu"], []));
-  const hamburgerMenu = useSelector(state => get(state, ["qt", "data", "navigationMenu", "hamburgerMenu"], []));
-
+  const getState = useSelector(state => state);
+  const publisherAttributes = get(getState, ["qt", "config", "publisher-attributes"], {});
+  const enableLogin = get(publisherAttributes, ["enableLogin"], true);
+  const isHamburgerMenuOpen = get(getState, ["isHamburgerMenuOpen"], false);
+  const menu = get(getState, ["qt", "data", "navigationMenu", "homeMenu"], []);
+  const hamburgerMenu = get(getState, ["qt", "data", "navigationMenu", "hamburgerMenu"], []);
   const displayStyle = isHamburgerMenuOpen ? "flex" : "none";
+  const domainSlug = get(getState, ["qt", "config", "domainSlug"], "");
+  const clientId = get(publisherAttributes, ["sso_login", "client_id"], "");
+  const redirectUrl = domainSlug
+    ? get(publisherAttributes, ["sso_login", "subdomain", domainSlug, "redirect_Url"], "")
+    : get(publisherAttributes, ["sso_login", "redirect_Url"], "");
+
+  const ssoLoginIsEnable = get(publisherAttributes, ["sso_login", "is_enable"], false);
 
   const toggleHandler = () => {
     dispatch({
@@ -127,7 +136,7 @@ const NavBar = () => {
   };
 
   const member = useSelector(state => get(state, ["member"], null));
-  const imageUrl = member && member["avatar-url"] ? member["avatar-url"] : assetify(User);
+  const imageUrl = member && member["avatar-url"];
 
   useEffect(() => {
     getCurrentUser();
@@ -145,6 +154,14 @@ const NavBar = () => {
         return setMessage(null);
     }
   }, []);
+
+  const userLogin = loading => {
+    setLoading(loading);
+    if (window)
+      window.location.replace(
+        `/api/auth/v1/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUrl}&callback_uri=${window.location.href}&response_type=code`
+      );
+  };
 
   const messageModal = message => {
     // Import modal on message
@@ -175,18 +192,39 @@ const NavBar = () => {
           <div styleName="user-profile">
             {member && member["verification-status"] ? (
               <>
-                <img
-                  width="24"
-                  height="24"
-                  alt="user"
-                  src={imageUrl}
-                  styleName="member-img"
-                  onClick={userAccountHandler}
-                />
+                {imageUrl ? (
+                  <img
+                    width="24"
+                    height="24"
+                    alt="user"
+                    src={imageUrl}
+                    styleName="member-img"
+                    onClick={userAccountHandler}
+                  />
+                ) : (
+                  <span styleName="member-img" onClick={userAccountHandler}>
+                    <SvgIconHandler
+                      type="user"
+                      width="24px"
+                      height="24px"
+                      viewBox="0 0 24 24"
+                      iconStyle={{ borderRadius: "50%" }}
+                      onClick={userAccountHandler}
+                    />
+                  </span>
+                )}
                 {showUserHandler && (
                   <Fragment>
                     <div styleName="overlay" onClick={userAccountHandler}></div>
                     <ul styleName="dropdown-content user-account">
+                      <Link
+                        styleName="user-account-item"
+                        callback={() => setUserHandler(!showUserHandler)}
+                        href="/profile"
+                        aria-label="user-account-item"
+                      >
+                        Profile
+                      </Link>
                       <li styleName="user-account-item" onClick={logoutHandler}>
                         Logout
                       </li>
@@ -196,9 +234,18 @@ const NavBar = () => {
               </>
             ) : (
               <>
-                <button styleName="user-btn" onClick={() => userBtnClick()}>
-                  <img width="18" height="20" src={assetify(UserIcon)} alt="user-icon" />
-                </button>
+                {!ssoLoginIsEnable ? (
+                  <button aria-label="User Login Button" styleName="user-btn" onClick={() => userBtnClick()}>
+                    <SvgIconHandler type="user-icon" width="18" height="20" viewBox="0 0 18 20" />
+                  </button>
+                ) : !loading ? (
+                  <a styleName="user-btn" onClick={() => userLogin(true)}>
+                    <SvgIconHandler type="user-icon" width="18" height="20" viewBox="0 0 18 20" />
+                  </a>
+                ) : (
+                  <span>Loading...</span>
+                )}
+
                 {showAccountModal && (
                   <Suspense fallback={<div></div>}>
                     <AccountModal onClose={() => setShowAccountModal(false)} />

@@ -3,7 +3,10 @@ import { TwoColFourStories } from "@quintype/arrow";
 import { object } from "prop-types";
 
 export const ArrowTwoColFourStories = ({ collection }) => {
-  return <TwoColFourStories collection={collection} />;
+  const config = {
+    buttonText: `${collection.name} News`
+  };
+  return <TwoColFourStories collection={collection} config={config} />;
 };
 
 ArrowTwoColFourStories.propTypes = {

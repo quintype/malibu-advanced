@@ -4,7 +4,7 @@ import { Link } from "@quintype/components";
 
 import "./button.m.css";
 
-const Button = ({ href, children, color, flat, socialButton = false, onClick, ...props }) => {
+const Button = ({ href, children, socialButton = false, ...props }) => {
   if (socialButton) {
     return (
       <a href={href} styleName="btn">
@@ -13,11 +13,11 @@ const Button = ({ href, children, color, flat, socialButton = false, onClick, ..
     );
   }
   return href ? (
-    <Link href={href} styleName="btn">
+    <Link href={href} styleName="btn" aria-label="button">
       {children}
     </Link>
   ) : (
-    <button {...props} styleName="btn">
+    <button {...props} styleName="btn" aria-label="button">
       {children}
     </button>
   );

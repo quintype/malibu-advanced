@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { func, string } from "prop-types";
-import { register, sendVerificationLink } from "@quintype/bridgekeeper-js";
-import { get } from "lodash";
 import { connect } from "react-redux";
+import { func, string, object } from "prop-types";
+import { register, sendVerificationLink } from "@quintype/bridgekeeper-js";
+import get from "lodash/get";
+import { parseUrl } from "query-string";
 
 import { InputField } from "../../atoms/InputField";
 
 import "./forms.m.css";
 
-const SignUpBase = ({ onSignup, onLogin, isVerificationLinkflow }) => {
+const SignUpBase = ({ onSignup, onLogin, qtConfig, currentPath }) => {
   const [userInfo, setUserInfo] = useState({
     name: "",
     email: "",
@@ -18,15 +19,8 @@ const SignUpBase = ({ onSignup, onLogin, isVerificationLinkflow }) => {
   const [verficationSuccessMessage, setSuccessMessage] = useState("");
   const [userExists, setUserExists] = useState(false);
   const [currentLocation, setCurrentLocation] = useState("/");
-
-  // const sendEmail = user => {
-  //   const data = {
-  //     event: "signup",
-  //     mail: user.email,
-  //     name: user.name
-  //   };
-  //   wretch("/send-email").post(data);
-  // };
+  const isVerificationLinkflow = get(qtConfig, ["publisher-attributes", "is_verification_link_flow"], true);
+  const ssoLoginIsEnable = get(qtConfig, ["publisher-attributes", "sso_login", "is_enable"], false);
 
   const signUpHandler = async e => {
     e.preventDefault();
@@ -51,7 +45,7 @@ const SignUpBase = ({ onSignup, onLogin, isVerificationLinkflow }) => {
       email: userInfo.email,
       username: userInfo.email,
       password: userInfo.password,
-      "dont-login": false
+      "dont-login": true
     };
 
     try {
@@ -61,7 +55,12 @@ const SignUpBase = ({ onSignup, onLogin, isVerificationLinkflow }) => {
       }
 
       if (isVerificationLinkflow) {
-        sendVerificationLink(userInfo.email, currentLocation);
+        const params = parseUrl(currentPath);
+        const callbackUrl = ssoLoginIsEnable
+          ? get(params, ["query", "callback_uri"]) ||
+            get(qtConfig, ["publisher-attributes", "sso_login", "callback_Url"], "")
+          : currentLocation;
+        sendVerificationLink(userInfo.email, callbackUrl);
         !userExists &&
           setSuccessMessage(
             `We have sent an activation email to you at ${userInfo.email}. Please check your email inbox.`
@@ -122,7 +121,9 @@ const SignUpBase = ({ onSignup, onLogin, isVerificationLinkflow }) => {
         <>
           <p styleName="message-text">
             {verficationSuccessMessage} If you have not received a email, click{" "}
-            <button onClick={onResendVerification}>resend</button>{" "}
+            <button aria-label="button-resend" onClick={onResendVerification}>
+              resend
+            </button>{" "}
           </p>
         </>
       )}
@@ -134,11 +135,13 @@ SignUpBase.propTypes = {
   onSignup: func,
   setMember: func,
   onLogin: func,
-  isVerificationLinkflow: string
+  qtConfig: object,
+  currentPath: string
 };
 
 const mapStateToProps = state => ({
-  isVerificationLinkflow: get(state, ["qt", "config", "publisher-attributes", "is_verification_link_flow"], true)
+  qtConfig: get(state, ["qt", "config"], {}),
+  currentPath: get(state, ["qt", "currentPath"], "")
 });
 
 export const SignUp = connect(mapStateToProps, null)(SignUpBase);

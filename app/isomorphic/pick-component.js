@@ -16,6 +16,8 @@ const { pickComponent, getChunkName } = pickComponentHelper(
     [PAGE_TYPE.AUTHOR_PAGE]: { chunk: "list", component: "AuthorPage" },
     [PAGE_TYPE.HOME_PREVIEW]: { chunk: "home", component: "HomePagePreview" },
     [PAGE_TYPE.RESET_PASSWORD_PAGE]: { chunk: "list", component: "ResetPasswordPage" },
+    [PAGE_TYPE.PROFILE_PAGE]: { chunk: "list", component: "ProfilePage" },
+    [PAGE_TYPE.USER_LOGIN]: { chunk: "list", component: "UserLoginPage" },
     default: { chunk: "list", component: "NotFoundPage" }
   },
   {

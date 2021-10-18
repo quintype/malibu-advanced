@@ -12,7 +12,9 @@ export const PAGE_TYPE = Object.freeze({
   STATIC_PAGE: "static-page",
   FORM_PAGE: "form-page",
   AUTHOR_PAGE: "author-page",
-  RESET_PASSWORD_PAGE: "reset-password-page"
+  RESET_PASSWORD_PAGE: "reset-password-page",
+  PROFILE_PAGE: "profile-page",
+  USER_LOGIN: "user-login"
 });
 export const TAG_PAGE_URL_PREFIX = "/topic/";
 export const storyFields =

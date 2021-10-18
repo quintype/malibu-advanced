@@ -10,6 +10,7 @@ import fontFace from "../font";
 import { BreakingNewsView } from "../../isomorphic/components/breaking-news-view";
 import { TopAd } from "../../isomorphic/components/ads/top-ad";
 import { getConfig, extractor, getCriticalCss, getArrowCss } from "../helpers";
+import get from "lodash.get";
 
 const cssContent = assetPath("app.css") ? readAsset("app.css") : "";
 const fontJsContent = assetPath("font.js") ? readAsset("font.js") : "";
@@ -24,11 +25,16 @@ export async function renderLayout(res, params) {
     isGtmEnable,
     isGaEnable,
     enableAds,
-    loadAdsSynchronously
+    loadAdsSynchronously,
+    pageType
   } = getConfig(params.store.getState());
   const chunk = params.shell ? null : allChunks[getChunkName(params.pageType)];
   const criticalCss = await getCriticalCss();
   const arrowCss = await getArrowCss(params.store.getState());
+
+  const placeholderDelay = parseInt(
+    get(params.store.getState(), ["qt", "config", "publisher-attributes", "placeholder_delay"])
+  );
 
   res.render(
     "pages/layout",
@@ -64,8 +70,11 @@ export async function renderLayout(res, params) {
         isGaEnable,
         isOnesignalEnable,
         oneSignalScript: params.oneSignalScript,
-        enableAds,
-        loadAdsSynchronously
+        enableAds: enableAds && params.pageType !== "profile-page",
+        loadAdsSynchronously,
+        placeholderDelay,
+        pageType,
+        enableBreakingNews: params.pageType !== "profile-page"
       },
       params
     )
