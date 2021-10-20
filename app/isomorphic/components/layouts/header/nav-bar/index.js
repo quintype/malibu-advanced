@@ -8,6 +8,7 @@ import { MenuItem } from "../../menu-item";
 import HamburgerMenu from "../../../atoms/hamburger-menu";
 import MessageWrapper from "../../../molecules/forms/message-wrapper";
 
+import { getOauthAuthorizeUrl } from "@quintype/bridgekeeper-js";
 import { SvgIconHandler } from "../../../atoms/svg-icon-hadler";
 
 import "./navbar.m.css";
@@ -157,10 +158,10 @@ const NavBar = () => {
 
   const userLogin = loading => {
     setLoading(loading);
-    if (window)
-      window.location.replace(
-        `/api/auth/v1/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUrl}&callback_uri=${window.location.href}&response_type=code`
-      );
+    if (window) {
+      const oauthAuthorizeUrl = getOauthAuthorizeUrl(clientId, redirectUrl, window.location.href);
+      window.location.replace(oauthAuthorizeUrl);
+    }
   };
 
   const messageModal = message => {
