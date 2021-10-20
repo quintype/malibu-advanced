@@ -7,7 +7,7 @@ import { OPEN_HAMBURGER_MENU, OPEN_SEARCHBAR, MEMBER_UPDATED } from "../../../st
 import { MenuItem } from "../../menu-item";
 import HamburgerMenu from "../../../atoms/hamburger-menu";
 import MessageWrapper from "../../../molecules/forms/message-wrapper";
-import { autoSSO } from "@quintype/bridgekeeper-js";
+import { getAutoSSOUrl } from "@quintype/bridgekeeper-js";
 import { SvgIconHandler } from "../../../atoms/svg-icon-hadler";
 
 import "./navbar.m.css";
@@ -146,7 +146,8 @@ const NavBar = () => {
 
     getCurrentUser().then(({ user }) => {
       if (isAutoSSOEnabled && !user && !queryParamExists) {
-        autoSSO(clientId, redirectUrl, window.location.href);
+        const autoSsoUrl = getAutoSSOUrl(clientId, redirectUrl, window.location.href);
+        window.location.replace(autoSsoUrl);
       }
     });
 
