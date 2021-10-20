@@ -34,6 +34,7 @@ const NavBar = () => {
     : get(publisherAttributes, ["sso_login", "redirect_Url"], "");
 
   const ssoLoginIsEnable = get(publisherAttributes, ["sso_login", "is_enable"], false);
+  const isAutoSSOEnabled = get(publisherAttributes, ["auto_sso", "is_enable"], false);
 
   const toggleHandler = () => {
     dispatch({
@@ -144,7 +145,7 @@ const NavBar = () => {
     const queryParamExists = queryParams.has("logged_in");
 
     getCurrentUser().then(({ user }) => {
-      if (window && !user && !queryParamExists) {
+      if (isAutoSSOEnabled && !user && !queryParamExists) {
         autoSSO(clientId, redirectUrl, window.location.href);
       }
     });
