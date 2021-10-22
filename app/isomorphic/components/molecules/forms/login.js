@@ -73,10 +73,12 @@ const LoginBase = ({ onLogin, forgotPassword, manageLoginForm }) => {
             get(params, ["query", "callback_uri"]) || get(publisherAttributes, ["sso_login", "callback_Url"], "");
           const redirectUrl =
             get(params, ["query", "redirect_uri"]) || get(publisherAttributes, ["sso_login", "redirect_Url"], "");
+          console.log("----Callback URL", callbackUrl, "---R", redirectUrl);
           const allowAjax = true;
           const oauthResponse =
             ssoLoginIsEnable && (await oauthAuthorize(clientId, redirectUrl, callbackUrl, allowAjax));
-          if (oauthResponse.redirect_uri) window.location.href = oauthResponse.redirect_uri;
+          console.log("----", oauthResponse);
+          window.location.href = oauthResponse.redirect_uri || "/";
         } else {
           // User needs to validate the email account so send out an email to verify
           return sendOtp(user.email)
