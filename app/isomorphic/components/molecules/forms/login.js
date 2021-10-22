@@ -78,7 +78,7 @@ const LoginBase = ({ onLogin, forgotPassword, manageLoginForm }) => {
           const oauthResponse =
             ssoLoginIsEnable && (await oauthAuthorize(clientId, redirectUrl, callbackUrl, allowAjax));
           console.log("----", oauthResponse);
-          window.location.href = oauthResponse.redirect_uri || "/";
+          if (oauthResponse.redirect_uri) window.location.href = oauthResponse.redirect_uri;
         } else {
           // User needs to validate the email account so send out an email to verify
           return sendOtp(user.email)
