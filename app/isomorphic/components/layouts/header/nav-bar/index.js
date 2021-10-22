@@ -187,6 +187,7 @@ const NavBar = () => {
     );
   };
 
+  console.log("---fooo");
   return (
     <div styleName="main-wrapper" id="sticky-navbar">
       <nav className="container" styleName="wrapper">
