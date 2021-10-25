@@ -7,7 +7,7 @@ import { OPEN_HAMBURGER_MENU, OPEN_SEARCHBAR, MEMBER_UPDATED } from "../../../st
 import { MenuItem } from "../../menu-item";
 import HamburgerMenu from "../../../atoms/hamburger-menu";
 import MessageWrapper from "../../../molecules/forms/message-wrapper";
-
+import { getAutoSSOUrl } from "@quintype/bridgekeeper-js";
 import { SvgIconHandler } from "../../../atoms/svg-icon-hadler";
 
 import "./navbar.m.css";
@@ -34,6 +34,7 @@ const NavBar = () => {
     : get(publisherAttributes, ["sso_login", "redirect_Url"], "");
 
   const ssoLoginIsEnable = get(publisherAttributes, ["sso_login", "is_enable"], false);
+  const isAutoSSOEnabled = get(publisherAttributes, ["auto_sso", "is_enable"], false);
 
   const toggleHandler = () => {
     dispatch({
@@ -60,6 +61,7 @@ const NavBar = () => {
     try {
       const currentUserResp = await currentUser();
       dispatch({ type: MEMBER_UPDATED, member: get(currentUserResp, ["user"], null) });
+      return currentUserResp;
     } catch (err) {
       console.log("error--------", err);
     }
@@ -139,7 +141,15 @@ const NavBar = () => {
   const imageUrl = member && member["avatar-url"];
 
   useEffect(() => {
-    getCurrentUser();
+    const queryParams = new URLSearchParams(window.location.search);
+    const queryParamExists = queryParams.has("logged_in");
+
+    getCurrentUser().then(({ user }) => {
+      if (isAutoSSOEnabled && !user && !queryParamExists) {
+        const autoSsoUrl = getAutoSSOUrl(clientId, redirectUrl, window.location.href);
+        window.location.replace(autoSsoUrl);
+      }
+    });
 
     switch (global.location.hash) {
       case "#email-verified":
@@ -157,10 +167,12 @@ const NavBar = () => {
 
   const userLogin = loading => {
     setLoading(loading);
-    if (window)
+    if (window) {
+      const callbackUrl = window.location.href.replace("?logged_in=false", "");
       window.location.replace(
-        `/api/auth/v1/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUrl}&callback_uri=${window.location.href}&response_type=code`
+        `/api/auth/v1/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUrl}&callback_uri=${callbackUrl}&response_type=code`
       );
+    }
   };
 
   const messageModal = message => {
