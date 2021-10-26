@@ -67,7 +67,7 @@
       <div id='gumlet-script-generator'></div>
     <% } %>
     <% if (isGtmEnable) { %>
-      <%- include ./partials/noscriptgtm -%>
+      <%- include ('./partials/noscriptgtm') -%>
     <% } %>
     <div class="page-wrapper">
       <%_ if(pageType !== 'user-login') {%>
@@ -109,10 +109,10 @@
       <script type="application/json" id="static-page"><%- serialize(store.getState(), {isJSON: true}) -%></script>
       <% } %>
     <% if (isGtmEnable) { %>
-      <%- include ./partials/gtm -%>
+      <%- include ('./partials/gtm') -%>
     <% } %>
     <% if (isGaEnable) { %>
-      <%- include ./partials/ga -%>
+      <%- include ('./partials/ga') -%>
     <% } %>
     <script type="text/javascript" src="<%= assetPath("app.js") %>" id="app-js" async></script>
    </body>
