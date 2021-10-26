@@ -1,7 +1,6 @@
 const SpriteLoaderPlugin = require("svg-sprite-loader/plugin");
 const path = require("path");
 const webpackConfig = require("@quintype/build/config/webpack");
-const { WebpackManifestPlugin } = require("webpack-manifest-plugin");
 
 const resolveConfig = {
   resolve: {
@@ -63,5 +62,5 @@ module.exports = {
   module: { ...webpackModule, ...{ rules: enhancedRules } },
   output: customOutput,
   externals,
-  plugins: enhancedPlugins.filter(plugin => !(plugin instanceof WebpackManifestPlugin))
+  plugins: enhancedPlugins
 };
