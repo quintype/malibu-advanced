@@ -15,23 +15,23 @@ const spriteRule = {
       options: {
         extract: true,
         spriteFilename: process.env.NODE_ENV === "production" ? "svg-sprite-[hash].svg" : "svg-sprite.svg",
-        esModule: false
-      }
+        esModule: false,
+      },
     },
     "svg-transform-loader",
-    "svgo-loader"
-  ]
+    "svgo-loader",
+  ],
 };
 
 const enhancedRules = insertIntoIndex(webpackModule.rules, 5, spriteRule);
 enhancedRules[8] = {
   test: /\.(jpe?g|gif|png|woff|woff2|eot|ttf|wav|mp3|ico|mp4)$/,
   loader: "file-loader",
-  options: { context: "./app/assets", name: "[name].[ext]" }
+  options: { context: "./app/assets", name: "[name].[ext]" },
 };
 
 module.exports = {
   ...webpackConfig,
   module: { ...webpackModule, ...{ rules: enhancedRules } },
-  plugins: enhancedPlugins
+  plugins: enhancedPlugins,
 };
