@@ -78,7 +78,6 @@ jobs:
       - run: |
           export LHCI_SITES="[\"https://malibu-perfadvanced.quintype.io/\"]"
           npx @lhci/cli@0.6.x autorun
-
 workflows:
   version: 2
   build_and_test:

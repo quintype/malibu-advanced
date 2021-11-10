@@ -19,6 +19,8 @@ publisher:
         redirect_Url: "<Domain>/api/auth/v1/oauth/token"
         callback_Url: "Callback Url"
   timezone: "Asia/Baku"
+  auto_sso:
+    is_enable: false
   google_tag_manager:
     id: "gtm-id"
     is_enable: true
