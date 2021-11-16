@@ -9,6 +9,7 @@
   "dependencies": {
     "@loadable/component": "^5.14.1",
     "@loadable/server": "^5.14.2",
+    "@quintype/amp": "^2.4.15-rtl-2.0",
     "@quintype/arrow": "^2.9.9",
     "@quintype/bridgekeeper-js": "^2.8.1",
     "@quintype/components": "^2.31.7",
