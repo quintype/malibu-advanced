@@ -9,10 +9,10 @@
   "dependencies": {
     "@loadable/component": "^5.14.1",
     "@loadable/server": "^5.14.2",
-    "@quintype/arrow": "^2.9.11-webpack5.8",
+    "@quintype/arrow": "^2.9.11-webpack5.10",
     "@quintype/bridgekeeper-js": "^2.8.1",
     "@quintype/components": "^2.31.8-webpack5.2",
-    "@quintype/framework": "^6.1.5-webpack5.6",
+    "@quintype/framework": "^6.1.5-webpack5.7",
     "@quintype/seo": "^1.39.0",
     "fontfaceobserver": "^2.1.0",
     "lodash": "^4.17.21",
