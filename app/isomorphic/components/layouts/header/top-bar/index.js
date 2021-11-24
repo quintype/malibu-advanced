@@ -8,7 +8,6 @@ const TopBar = () => (
     <div className="container topbar-wrapper">
       <h1>
         <AppLogo />
-        heee
       </h1>
       <div id="search-bar"></div>
     </div>
