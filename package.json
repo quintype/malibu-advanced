@@ -12,7 +12,7 @@
     "@quintype/arrow": "^2.9.9",
     "@quintype/bridgekeeper-js": "^2.8.1",
     "@quintype/components": "^2.31.7",
-    "@quintype/framework": "^6.3.0",
+    "@quintype/framework": "^6.3.1",
     "@quintype/seo": "^1.38.39",
     "fontfaceobserver": "^2.1.0",
     "lodash": "^4.17.15",
