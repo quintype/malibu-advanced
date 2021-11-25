@@ -14,6 +14,7 @@
     "@quintype/components": "^2.31.8-webpack5.2",
     "@quintype/framework": "^6.1.5-webpack5.7",
     "@quintype/seo": "^1.39.0",
+    "axios": "^0.24.0",
     "fontfaceobserver": "^2.1.0",
     "lodash": "^4.17.21",
     "query-string": "^7.0.1",

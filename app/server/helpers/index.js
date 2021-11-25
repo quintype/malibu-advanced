@@ -1,6 +1,7 @@
 import path from "path";
 import get from "lodash/get";
 import { ChunkExtractor } from "@loadable/server";
+import axios from "axios";
 
 const statsFile = path.resolve("stats.json");
 
@@ -43,9 +44,22 @@ export async function getArrowCss(state, { qtAssetHelpers = require("@quintype/f
   }
 }
 
-function getAsset(asset, qtAssetHelpers) {
+async function getAsset(asset, qtAssetHelpers) {
   const { assetPath, readAsset } = qtAssetHelpers;
-  return assetPath(asset) ? readAsset(asset) : "";
+  const assetAbsolutePath = assetPath(asset);
+
+  if (process.env.NODE_ENV === "development") {
+    try {
+      const { data } = await axios.get(assetAbsolutePath);
+      return data;
+    } catch (error) {
+      console.warn("HMR chunk rendering failure");
+      console.warn(error);
+      return "";
+    }
+  }
+
+  return assetAbsolutePath ? readAsset(asset) : "";
 }
 
 export const getConfig = state => {
