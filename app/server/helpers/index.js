@@ -14,7 +14,7 @@ const statsFile = path.resolve("stats.json");
 export async function getArrowCss(state, { qtAssetHelpers = require("@quintype/framework/server/asset-helper") } = {}) {
   const layout = get(state, ["qt", "data", "collection", "items", 0, "associated-metadata", "layout"], null);
   const pageType = get(state, ["qt", "pageType"], "");
-  const extractor = entryPoint => {
+  const extractor = (entryPoint) => {
     const getExtractor = new ChunkExtractor({ statsFile, entrypoints: [entryPoint] });
     return getExtractor.getCssString();
   };
@@ -62,7 +62,7 @@ async function getAsset(asset, qtAssetHelpers) {
   return assetAbsolutePath ? readAsset(asset) : "";
 }
 
-export const getConfig = state => {
+export const getConfig = (state) => {
   return {
     gtmId: get(state, ["qt", "config", "publisher-attributes", "google_tag_manager", "id"], ""),
     isGtmEnable: get(state, ["qt", "config", "publisher-attributes", "google_tag_manager", "is_enable"], false),
@@ -72,7 +72,7 @@ export const getConfig = state => {
     isOnesignalEnable: get(state, ["qt", "config", "publisher-attributes", "onesignal", "is_enable"], false),
     enableAds: get(state, ["qt", "config", "ads-config", "dfp_ads", "enable_ads"]),
     loadAdsSynchronously: get(state, ["qt", "config", "ads-config", "dfp_ads", "load_ads_synchronously"]),
-    pageType: get(state, ["qt", "pageType"], "")
+    pageType: get(state, ["qt", "pageType"], ""),
   };
 };
 
