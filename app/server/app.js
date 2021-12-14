@@ -66,6 +66,18 @@ app.get("*", (req, res, next) => {
   }
 });
 
+// const getAuthorWithUrl = (story, config) => {
+//   return story.authors.map((author)=>{
+//     return {
+//       name: author.name,
+//       url: `${config['sketches-host']}/author/${author.id}`
+//     }
+//   })
+// }
+
+// "authorSchema" : (story)=> getAuthorWithUrl(story, config)
+
+
 function generateSeo(config, pageType) {
   return new SEO({
     staticTags: Object.assign(generateStaticData(config)),
