@@ -66,16 +66,16 @@ app.get("*", (req, res, next) => {
   }
 });
 
-// const getAuthorWithUrl = (story, config) => {
-//   return story.authors.map((author)=>{
-//     return {
-//       name: author.name,
-//       url: `${config['sketches-host']}/author/${author.id}`
-//     }
-//   })
-// }
+const getAuthorWithUrl = (story, config) => {
+  return story.authors.map((author)=>{
+    return {
+      name: author.name,
+      url: `${config['sketches-host']}/author/${author.id}`
+    }
+  })
+}
 
-// "authorSchema" : (story)=> getAuthorWithUrl(story, config)
+
 
 
 function generateSeo(config, pageType) {
@@ -84,7 +84,8 @@ function generateSeo(config, pageType) {
     structuredData: Object.assign(generateStructuredData(config), {
       enableLiveBlog: true,
       enableVideo: true,
-      enableNewsArticle: true
+      enableNewsArticle: true,
+      "authorSchema" : (story)=> getAuthorWithUrl(story, config)
     }),
     enableTwitterCards: true,
     enableOgTags: true,
