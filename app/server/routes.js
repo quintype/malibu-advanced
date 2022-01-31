@@ -21,6 +21,11 @@ export const STATIC_ROUTES = [
     exact: true,
     renderParams: { contentTemplate: "./story-preview" },
     disableIsomorphicComponent: false
+  },
+  {
+    path: "/ampstories/*",
+    pageType: PAGE_TYPE.VISUAL_STORY,
+    exact: true
   }
 ];
 

@@ -3,9 +3,8 @@
       height="64px"
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 100 100"
-      preserveAspectRatio="xMidYMid"
       className="lds-ellipsis"
-      style={{ background: "none" }}
+      style= 'background: "none"'
     >
       <circle cx="84" cy="50" r="0" fill="#000">
         <animate
