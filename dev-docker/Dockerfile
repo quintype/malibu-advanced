@@ -1,5 +1,10 @@
 FROM node:16-alpine
 # the node version here should match with node version in the main DockerFile
+# python 3 needs to be installed on your local machine
+RUN apk --no-cache --virtual build-dependencies add \
+    python3 \
+    make \
+    g++
 
 RUN apk update && \
     apk add bash tini && \
