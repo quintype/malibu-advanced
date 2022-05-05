@@ -13,16 +13,10 @@ import { DfpComponent } from "../../ads/dfp-component";
 export function FourColGrid({ collection, stories }) {
   const adConfig = useSelector((state) => get(state, ["qt", "config", "ads-config", "slots", "listing_page_ads"], {}));
   const pageType = useSelector((state) => get(state, ["qt", "pageType"], null));
-  const event = new Date(Date.UTC(2012, 11, 20, 3, 0, 0));
 
   return (
     <div>
       <h2 styleName="heading">{collection.name}</h2>
-      <div>
-        tolocalestring example
-        {event.toLocaleDateString("ar-SA")}
-        {event.toLocaleDateString("en-GB")}
-      </div>
       <StoryGrid stories={stories} />
       <DfpComponent
         adStyleName="ad-slot-size-300x250"

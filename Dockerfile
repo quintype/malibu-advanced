@@ -7,6 +7,10 @@ RUN mkdir /app
 WORKDIR /app
 
 COPY package.json package-lock.json /app/
+RUN apk --no-cache --virtual build-dependencies add \
+    python3 \
+    make \
+    g++
 RUN npm install --no-optional
 
 # Environment variables for compile phase here
