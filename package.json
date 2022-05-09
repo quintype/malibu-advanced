@@ -11,7 +11,7 @@
     "@loadable/server": "^5.14.2",
     "@quintype/arrow": "^3.0.1",
     "@quintype/bridgekeeper-js": "^2.8.1",
-    "@quintype/components": "^3.0.0",
+    "@quintype/components": "^3.0.1-newslaundry-image-format.0",
     "@quintype/framework": "^7.0.0",
     "@quintype/seo": "^1.39.0",
     "axios": "^0.24.0",
@@ -57,11 +57,11 @@
     "stylelint-scss": "^4.0.0",
     "svg-sprite-loader": "^6.0.10",
     "svg-transform-loader": "^2.0.13",
+    "svgo-loader": "^3.0.0",
     "webpack": "^5.59.1",
     "webpack-bundle-analyzer": "^4.5.0",
     "webpack-cli": "4.9.1",
-    "webpack-dev-server": "^4.3.1",
-    "svgo-loader": "^3.0.0"
+    "webpack-dev-server": "^4.3.1"
   },
   "babel": {
     "env": {
