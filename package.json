@@ -6,13 +6,17 @@
   "repository": "git@github.com:quintype/malibu.git",
   "author": "Tejas Dinkar <tejas@gja.in>",
   "license": "MIT",
+  "engines": {
+    "node": "^16.14.2",
+    "npm": "^8.5.0"
+  },
   "dependencies": {
     "@loadable/component": "^5.14.1",
     "@loadable/server": "^5.14.2",
     "@quintype/arrow": "^3.0.1",
     "@quintype/bridgekeeper-js": "^2.8.1",
     "@quintype/components": "^3.0.0",
-    "@quintype/framework": "^7.0.0",
+    "@quintype/framework": "^7.4.0-update-build.0",
     "@quintype/seo": "^1.39.0",
     "axios": "^0.24.0",
     "fontfaceobserver": "^2.1.0",
@@ -24,6 +28,7 @@
     "react-modal": "^3.12.1",
     "react-redux": "^7.2.5",
     "redux": "^4.0.1",
+    "serialize-javascript": "^6.0.0",
     "wretch": "^1.4.1"
   },
   "devDependencies": {
@@ -57,11 +62,11 @@
     "stylelint-scss": "^4.0.0",
     "svg-sprite-loader": "^6.0.10",
     "svg-transform-loader": "^2.0.13",
+    "svgo-loader": "^3.0.0",
     "webpack": "^5.59.1",
     "webpack-bundle-analyzer": "^4.5.0",
     "webpack-cli": "4.9.1",
-    "webpack-dev-server": "^4.3.1",
-    "svgo-loader": "^3.0.0"
+    "webpack-dev-server": "^4.3.1"
   },
   "babel": {
     "env": {
