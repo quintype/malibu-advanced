@@ -4,7 +4,7 @@ import { withFacebookLogin, withGoogleLogin, withAppleLogin, withLinkedinLogin }
 import { connect, useSelector } from "react-redux";
 import { parseUrl } from "query-string";
 import get from "lodash/get";
-
+import { Apple } from "../../atoms/icons/apple";
 import Button from "../../atoms/Button";
 
 import { SvgIconHandler } from "../../atoms/svg-icon-hadler";
@@ -27,20 +27,31 @@ export const SocialLoginBase = ({ googleAppId, facebookAppId }) => {
     setRedirectUrl(ssoLoginIsEnable ? oauthAuthorize : `${location.origin}${location.pathname}`);
   }, []);
 
-  const FaceBookLogin = () => {
-    const { serverSideLoginPath } = withFacebookLogin({
-      scope: "email",
-      emailMandatory: true,
-      redirectUrl: encodeURIComponent(redirectUrl)
-    });
-    return (
-      <Button color="#3b5998" flat href={serverSideLoginPath} socialButton>
-        <span styleName="icon">
-          <SvgIconHandler type="facebook" iconStyle={{ color: "#3b5998" }} width="9" height="15" viewBox="0 0 12 21" />
-        </span>
-        Facebook
-      </Button>
-    );
+  const socialLogin = (e, login) => {
+    e.preventDefault();
+
+    login()
+      .then(() => {
+        checkForMemberUpdated().then(res => {
+          console.log("successfully logged in");
+        });
+      })
+      .catch(error => {
+        console.log("error", error);
+        if (error === "NO_EMAIL") {
+          setError("The account you are using does not have an email id. Please try with another account.");
+        } else if (error === "NOT_LOADED") {
+          setError("");
+        } else if (error === "NOT_GRANTED") {
+          setError("There seems to be an error with social logins. Please do a manual email/password login.");
+        } else {
+          setError("Oops! Something went wrong. Please try again later.");
+        }
+      }); // Can also make an API call to /api/v1/members/me
+  };
+
+  const googleOnClick = (e, serverSideLoginPath) => {
+    window.location.href = serverSideLoginPath;
   };
 
   const LinkedinLogin = () => {
@@ -75,11 +86,15 @@ export const SocialLoginBase = ({ googleAppId, facebookAppId }) => {
     );
   };
 
+  const appleOnClick = (e, serverSideLoginPath) => {
+    window.location.href = serverSideLoginPath;
+  };
+
   const AppleLogin = () => {
-    const { serverSideLoginPath } = withAppleLogin(encodeURIComponent(redirectUrl));
+    const appleLoginPath = `/api/auth/v1/login?auth-provider=apple&redirect-url=${currentLocation}`;
     return (
-      <Button color="#dd4b39" flat href={serverSideLoginPath} socialButton>
-        <SvgIconHandler type="apple" height="44" width="44" iconStyle={{ color: "#000" }} /> Apple
+      <Button color="#dd4b39" flat href={appleLoginPath} onClick={e => appleOnClick(e, appleLoginPath)} socialButton>
+        <Apple /> Apple
       </Button>
     );
   };
@@ -101,6 +116,12 @@ export const SocialLoginBase = ({ googleAppId, facebookAppId }) => {
           <LinkedinLogin />
         </li>
       </ul>
+      <ul>
+        <li styleName="button">
+          <AppleLogin />
+        </li>
+      </ul>
+      <p styleName="error">{error}</p>
     </div>
   );
 };
