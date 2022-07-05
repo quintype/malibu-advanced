@@ -6,6 +6,7 @@ const lhciConfig = {
       additive: false, // Skips clearing of previous collect data
       headful: false, // Run with a headful Chrome
       url: JSON.parse(process.env.LHCI_SITES), // A URL to run Lighthouse on
+      allowOverwriteOfLatestBranchBuild: true,
       settings: {
         emulatedFormFactor: "mobile",
         throttlingMethod: "devtools"
