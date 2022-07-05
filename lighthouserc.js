@@ -1,5 +1,4 @@
-const url =
- `https://${process.env.LH_USER}:${process.env.LH_PASSWORD}@lighthouse-ci.staging.quinpress.com/`;
+const url = `https://${process.env.LH_USER}:${process.env.LH_PASSWORD}@lighthouse-ci.staging.quinpress.com/`;
 const lhciConfig = {
   ci: {
     collect: {
@@ -9,8 +8,8 @@ const lhciConfig = {
       url: JSON.parse(process.env.LHCI_SITES), // A URL to run Lighthouse on
       settings: {
         emulatedFormFactor: "mobile",
-        throttlingMethod: "devtools"
-      }
+        throttlingMethod: "devtools",
+      },
     },
     assert: {
       preset: "lighthouse:no-pwa",
@@ -37,15 +36,15 @@ const lhciConfig = {
         "categories:performance": ["error", { minScore: 0.6 }],
         "image-alt": "warn",
         "link-text": "warn",
-        "unsized-images": "warn"
-      }
+        "unsized-images": "warn",
+      },
     },
     upload: {
       target: "lhci",
       serverBaseUrl: url,
-      token: `${process.env.LH_BUILD_TOKEN}`
-    }
-  }
+      token: `${process.env.LH_BUILD_TOKEN}`,
+    },
+  },
 };
 
 module.exports = lhciConfig;
