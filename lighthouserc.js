@@ -1,12 +1,12 @@
-const url = `https://${process.env.LH_USER}:${process.env.LH_PASSWORD}@lighthouse-ci.staging.quinpress.com/`;
+const url =
+ `https://${process.env.LH_USER}:${process.env.LH_PASSWORD}@lighthouse-ci.staging.quinpress.com/`;
 const lhciConfig = {
   ci: {
     collect: {
       numberOfRuns: 5,
-      additive: false, // Skips clearing of previous collect data
+      additive: true, // Skips clearing of previous collect data
       headful: false, // Run with a headful Chrome
       url: JSON.parse(process.env.LHCI_SITES), // A URL to run Lighthouse on
-      allowOverwriteOfLatestBranchBuild: true,
       settings: {
         emulatedFormFactor: "mobile",
         throttlingMethod: "devtools"
@@ -18,7 +18,9 @@ const lhciConfig = {
         "unused-javascript": "warn",
         "heading-order": "off", // Heading elements are not in a sequentially-descending order
         "is-crawlable": "warn",
-        "tap-targets": "warn", // Tap targets are the areas of a web page that users on touch devices can interact with. Buttons, links, and form elements all have tap targets.
+        // Tap targets are the areas of a web page that users on touch devices can interact with.
+        // Buttons, links, and form elements all have tap targets.
+        "tap-targets": "warn",
         "uses-responsive-images": "warn",
         "errors-in-console": "warn", // Browser errors were logged to the console
         "uses-text-compression": "warn",
@@ -28,8 +30,11 @@ const lhciConfig = {
         "link-name": "warn",
         "image-size-responsive": "warn",
         "image-aspect-ratio": "warn",
-        "button-name": "warn", // It suggests that the button should have inner text content or an aria-label or aria-labelledBy.
-        "categories:performance": ["error", { minScore: 0.6 }], // this should be 0.7. Change to 0.7 once perf fixes are done
+        // It suggests that the button should have inner text content
+        // or an aria-label or aria-labelledBy.
+        "button-name": "warn",
+        // this should be 0.7. Change to 0.7 once perf fixes are done
+        "categories:performance": ["error", { minScore: 0.6 }],
         "image-alt": "warn",
         "link-text": "warn",
         "unsized-images": "warn"
