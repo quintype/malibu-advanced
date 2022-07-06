@@ -3,7 +3,7 @@ const lhciConfig = {
   ci: {
     collect: {
       numberOfRuns: 5,
-      additive: true, // Skips clearing of previous collect data
+      additive: false, // Skips clearing of previous collect data
       headful: false, // Run with a headful Chrome
       url: JSON.parse(process.env.LHCI_SITES), // A URL to run Lighthouse on
       settings: {
