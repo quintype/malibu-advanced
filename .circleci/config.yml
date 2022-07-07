@@ -56,28 +56,28 @@ jobs:
 
   stg_lighthouse_task:
     docker:
-      - image: circleci/node:16.14.2-browsers
+      - image: circleci/node:12.13.0-browsers
     steps:
       - checkout
       - run: |
           export LHCI_SITES="[\"https://malibu-advanced-web.qtstage.io/\"]"
-          npx @lhci/cli@0.8.x autorun
+          npx @lhci/cli@0.9.x autorun
   prod_lighthouse_task:
     docker:
-      - image: circleci/node:16.14.2-browsers
+      - image: circleci/node:12.13.0-browsers
     steps:
       - checkout
       - run: |
           export LHCI_SITES="[\"https://malibu-advanced-web.quintype.io/\"]"
-          npx @lhci/cli@0.8.x autorun
+          npx @lhci/cli@0.9.x autorun
   perf_prod_lighthouse_task:
     docker:
-      - image: circleci/node:16.14.2-browsers
+      - image: circleci/node:12.13.0-browsers
     steps:
       - checkout
       - run: |
           export LHCI_SITES="[\"https://malibu-perfadvanced.quintype.io/\"]"
-          npx @lhci/cli@0.8.x autorun
+          npx @lhci/cli@0.9.x autorun
 workflows:
   version: 2
   build_and_test:
