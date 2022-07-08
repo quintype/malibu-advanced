@@ -37,6 +37,9 @@ const lhciConfig = {
         "image-alt": "warn",
         "link-text": "warn",
         "unsized-images": "warn",
+        "crawlable-anchors": "warn",
+        "csp-xss": "warn",
+        "lcp-lazy-loaded": "warn"
       },
     },
     upload: {
