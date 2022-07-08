@@ -1,6 +1,4 @@
-version: 2.1
-orbs:
-  browser-tools: circleci/browser-tools@1.1.0
+version: 2
 jobs:
   build:
     docker:
@@ -60,11 +58,8 @@ jobs:
     docker:
       - image: cimg/node:16.14.0-browsers
     steps:
-      - browser-tools/install-browser-tools
       - checkout
       - run: |
-          node --version
-          google-chrome --version
           export LHCI_SITES="[\"https://malibu-advanced-web.qtstage.io/\"]"
           npx @lhci/cli@0.9.x autorun
   prod_lighthouse_task:
