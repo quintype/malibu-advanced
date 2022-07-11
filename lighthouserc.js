@@ -7,7 +7,7 @@ const lhciConfig = {
       headful: false, // Run with a headful Chrome
       url: JSON.parse(process.env.LHCI_SITES), // A URL to run Lighthouse on
       settings: {
-        formFactor: "mobile",
+        emulatedFormFactor: "mobile",
         throttlingMethod: "devtools",
       },
     },
