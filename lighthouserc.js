@@ -8,8 +8,7 @@ const lhciConfig = {
       url: JSON.parse(process.env.LHCI_SITES), // A URL to run Lighthouse on
       settings: {
         emulatedFormFactor: "mobile",
-        throttlingMethod: "devtools"
-      }
+      },
     },
     assert: {
       preset: "lighthouse:no-pwa",
@@ -31,15 +30,15 @@ const lhciConfig = {
         "categories:performance": ["error", { minScore: 0.6 }], // this should be 0.7. Change to 0.7 once perf fixes are done
         "image-alt": "warn",
         "link-text": "warn",
-        "unsized-images": "warn"
-      }
+        "unsized-images": "warn",
+      },
     },
     upload: {
       target: "lhci",
       serverBaseUrl: url,
-      token: `${process.env.LH_BUILD_TOKEN}`
-    }
-  }
+      token: `${process.env.LH_BUILD_TOKEN}`,
+    },
+  },
 };
 
 module.exports = lhciConfig;
