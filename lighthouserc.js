@@ -8,7 +8,7 @@ const lhciConfig = {
       url: JSON.parse(process.env.LHCI_SITES), // A URL to run Lighthouse on
       settings: {
         emulatedFormFactor: "mobile",
-      }
+      },
     },
     assert: {
       preset: "lighthouse:no-pwa",
