@@ -1,14 +1,48 @@
 /* eslint-disable no-unused-vars, no-console, react/jsx-indent-props,react/jsx-wrap-multilines, no-undef, react/jsx-closing-bracket-location */
 
 import React from "react";
+import loadable from "@loadable/component"
 import { InfiniteStoryBase, WithPreview } from "@quintype/components";
 import { number, object, shape, any } from "prop-types";
+import BlankStory from "../story-templates/blank";
+import TextStory from "../story-templates/text-story";
 
-import { BlankStory } from "../story-templates/blank";
+const templateConfig = {
+  templateType: "default",
+  imageRender: "fullBleed",
+  sort: "headline-first"
+};
 
-function StoryPageBase({ index, story, otherProp }) {
-  // Can switch to a different template based story-template, or only show a spoiler if index > 0
-  return <BlankStory story={story} />;
+  const lazyLoadComponent = (storyTemplate) => {
+    return loadable(() => import(`../story-templates/${storyTemplate}-story`));
+  }
+  function StoryPageBase({ index, story, otherProp }) {
+    const storyTemplate = story["story-template"];
+
+    switch(storyTemplate) {
+      case "text":
+        const TextComponent = lazyLoadComponent(storyTemplate);
+        return <TextComponent story={story} templateConfig={templateConfig} />
+
+      case "photo":
+        const PhotoComponent = lazyLoadComponent(storyTemplate);
+        return <PhotoComponent story={story} templateConfig={templateConfig} />
+
+      case "listicle":
+        const ListicleComponent = lazyLoadComponent(storyTemplate);
+        return <ListicleComponent story={story} templateConfig={templateConfig} />
+
+      case "video":
+        const VideoComponent = lazyLoadComponent(storyTemplate);
+        return <VideoComponent story={story} templateConfig={templateConfig} />
+
+      case "live-blog":
+        const LiveBlogComponent = lazyLoadComponent(storyTemplate);
+        return <LiveBlogComponent story={story} templateConfig={templateConfig} />
+
+      default:
+        return <BlankStory story={story} />;
+    }
 }
 
 StoryPageBase.propTypes = {
