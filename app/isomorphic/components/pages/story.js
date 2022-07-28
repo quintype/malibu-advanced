@@ -1,48 +1,40 @@
 /* eslint-disable no-unused-vars, no-console, react/jsx-indent-props,react/jsx-wrap-multilines, no-undef, react/jsx-closing-bracket-location */
 
 import React from "react";
-import loadable from "@loadable/component"
 import { InfiniteStoryBase, WithPreview } from "@quintype/components";
 import { number, object, shape, any } from "prop-types";
-import BlankStory from "../story-templates/blank";
-import TextStory from "../story-templates/text-story";
+import loadable from "@loadable/component";
+import { BlankStory } from "../story-templates/blank";
 
-const templateConfig = {
-  templateType: "default",
-  imageRender: "fullBleed",
-  sort: "headline-first"
-};
+function StoryPageBase({ index, story, otherProp }) {
+  const storyTemplate = story["story-template"];
 
-  const lazyLoadComponent = (storyTemplate) => {
-    return loadable(() => import(`../story-templates/${storyTemplate}-story`));
+  const lazyLoadComponent = ( storyTemplate) => loadable(() => import(`../story-templates/${storyTemplate}-story`));
+
+  switch(storyTemplate) {
+    case "text":
+      const  TextStory = lazyLoadComponent(storyTemplate);
+      return <TextStory story={story} />
+
+    case "video":
+      const  VideoStory = lazyLoadComponent(storyTemplate);
+      return <VideoStory story={story} />
+
+    case "live-blog":
+      const  LiveBlog = lazyLoadComponent(storyTemplate);
+      return <LiveBlog story={story} />
+
+    case "listicle":
+      const  ListicleStory = lazyLoadComponent(storyTemplate);
+      return <ListicleStory story={story} />
+
+    case "photo":
+      const  PhotoStory = lazyLoadComponent(storyTemplate);
+      return <PhotoStory story={story} />
+
+    default:
+      return <BlankStory story={story} />
   }
-  function StoryPageBase({ index, story, otherProp }) {
-    const storyTemplate = story["story-template"];
-
-    switch(storyTemplate) {
-      case "text":
-        const TextComponent = lazyLoadComponent(storyTemplate);
-        return <TextComponent story={story} templateConfig={templateConfig} />
-
-      case "photo":
-        const PhotoComponent = lazyLoadComponent(storyTemplate);
-        return <PhotoComponent story={story} templateConfig={templateConfig} />
-
-      case "listicle":
-        const ListicleComponent = lazyLoadComponent(storyTemplate);
-        return <ListicleComponent story={story} templateConfig={templateConfig} />
-
-      case "video":
-        const VideoComponent = lazyLoadComponent(storyTemplate);
-        return <VideoComponent story={story} templateConfig={templateConfig} />
-
-      case "live-blog":
-        const LiveBlogComponent = lazyLoadComponent(storyTemplate);
-        return <LiveBlogComponent story={story} templateConfig={templateConfig} />
-
-      default:
-        return <BlankStory story={story} />;
-    }
 }
 
 StoryPageBase.propTypes = {
@@ -62,20 +54,22 @@ function storyPageLoadItems(pageNumber) {
       offset: 5 * pageNumber
     })
     .get()
-    .json(response => response.stories.map(story => ({ story, otherProp: "value" })));
+    .json(response =>  response.stories.map(story => ({ story, otherProp: "value" })));
 }
 
 export function StoryPage(props) {
   return (
-    <InfiniteStoryBase
-      {...props}
-      render={StoryPageBase}
-      loadItems={storyPageLoadItems}
-      onInitialItemFocus={item =>
-        app.registerPageView({ pageType: "story-page", data: { story: item.story } }, `/${item.story.slug}`)
-      }
-      onItemFocus={item => console.log(`Story In View: ${item.story.headline}`)}
-    />
+    <div className="container">
+      <InfiniteStoryBase
+        {...props}
+        render={StoryPageBase}
+        loadItems={storyPageLoadItems}
+        onInitialItemFocus={item =>
+          app.registerPageView({ pageType: "story-page", data: { story: item.story } }, `/${item.story.slug}`)
+        }
+        onItemFocus={item => console.log(`Story In View: ${item.story.headline}`)}
+      />
+    </div>
   );
 }
 

@@ -14,7 +14,12 @@ const loadableConfigObj = {
       arrowThreeColGridCssChunk: "@quintype/arrow/ThreeColGrid/styles.arrow.css",
       arrowThreeColSevenStoryCssChunk: "@quintype/arrow/ThreeColSevenStory/styles.arrow.css",
       arrowTwoColFourStoriesCssChunk: "@quintype/arrow/TwoColFourStories/styles.arrow.css",
-      authorPage: "./app/isomorphic/components/pages/author-page/index.js"
+      authorPage: "./app/isomorphic/components/pages/author-page/index.js",
+      arrowTextStoryChunk: "@quintype/arrow/TextStoryTemplate/styles.arrow.css",
+      arrowPhotoStoryChunk: "@quintype/arrow/PhotoStoryTemplate/styles.arrow.css",
+      arrowVideoStoryChunk: "@quintype/arrow/VideoStoryTemplate/styles.arrow.css",
+      arrowLiveBlogStoryChunk: "@quintype/arrow/LiveBlogStoryTemplate/styles.arrow.css",
+      arrowListicleStoryChunk: "@quintype/arrow/ListicleStoryTemplate/styles.arrow.css",
     }
   }
 };
