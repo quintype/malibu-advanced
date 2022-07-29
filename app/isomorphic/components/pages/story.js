@@ -9,38 +9,38 @@ import { BlankStory } from "../story-templates/blank";
 function StoryPageBase({ index, story, otherProp }) {
   const storyTemplate = story["story-template"];
 
-  const lazyLoadComponent = ( storyTemplate) => loadable(() => import(`../story-templates/${storyTemplate}-story`));
+  const lazyLoadComponent = (storyTemplate) => loadable(() => import(`../story-templates/${storyTemplate}-story`));
 
-  switch(storyTemplate) {
-    case "text":
-      const  TextStory = lazyLoadComponent(storyTemplate);
-      return <TextStory story={story} />
-
-    case "video":
-      const  VideoStory = lazyLoadComponent(storyTemplate);
-      return <VideoStory story={story} />
-
-    case "live-blog":
-      const  LiveBlog = lazyLoadComponent(storyTemplate);
-      return <LiveBlog story={story} />
-
-    case "listicle":
-      const  ListicleStory = lazyLoadComponent(storyTemplate);
-      return <ListicleStory story={story} />
-
-    case "photo":
-      const  PhotoStory = lazyLoadComponent(storyTemplate);
-      return <PhotoStory story={story} />
-
+  switch (storyTemplate) {
+    case "text": {
+      const TextStory = lazyLoadComponent(storyTemplate);
+      return <TextStory story={story} />;
+    }
+    case "video": {
+      const VideoStory = lazyLoadComponent(storyTemplate);
+      return <VideoStory story={story} />;
+    }
+    case "live-blog": {
+      const LiveBlog = lazyLoadComponent(storyTemplate);
+      return <LiveBlog story={story} />;
+    }
+    case "listicle": {
+      const ListicleStory = lazyLoadComponent(storyTemplate);
+      return <ListicleStory story={story} />;
+    }
+    case "photo": {
+      const PhotoStory = lazyLoadComponent(storyTemplate);
+      return <PhotoStory story={story} />;
+    }
     default:
-      return <BlankStory story={story} />
+      return <BlankStory story={story} />;
   }
 }
 
 StoryPageBase.propTypes = {
   index: number,
   story: object,
-  otherProp: any
+  otherProp: any,
 };
 
 const FIELDS =
@@ -51,10 +51,10 @@ function storyPageLoadItems(pageNumber) {
     .query({
       fields: FIELDS,
       limit: 5,
-      offset: 5 * pageNumber
+      offset: 5 * pageNumber,
     })
     .get()
-    .json(response =>  response.stories.map(story => ({ story, otherProp: "value" })));
+    .json((response) =>  response.stories.map((story) => ({ story, otherProp: "value" })));
 }
 
 export function StoryPage(props) {
@@ -64,10 +64,10 @@ export function StoryPage(props) {
         {...props}
         render={StoryPageBase}
         loadItems={storyPageLoadItems}
-        onInitialItemFocus={item =>
+        onInitialItemFocus={(item) =>
           app.registerPageView({ pageType: "story-page", data: { story: item.story } }, `/${item.story.slug}`)
         }
-        onItemFocus={item => console.log(`Story In View: ${item.story.headline}`)}
+        onItemFocus={(item) => console.log(`Story In View: ${item.story.headline}`)}
       />
     </div>
   );
@@ -75,13 +75,13 @@ export function StoryPage(props) {
 
 StoryPage.propTypes = {
   data: shape({
-    story: object
-  })
+    story: object,
+  }),
 };
 
 export const StoryPagePreview = WithPreview(StoryPage, (data, story) =>
   Object.assign({}, data, {
     story,
-    relatedStories: Array(5).fill(story)
+    relatedStories: Array(5).fill(story),
   })
 );
