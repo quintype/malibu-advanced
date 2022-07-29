@@ -15,8 +15,8 @@ const loadableConfigObj = {
       arrowThreeColSevenStoryCssChunk: "@quintype/arrow/ThreeColSevenStory/styles.arrow.css",
       arrowTwoColFourStoriesCssChunk: "@quintype/arrow/TwoColFourStories/styles.arrow.css",
       authorPage: "./app/isomorphic/components/pages/author-page/index.js",
-    }
-  }
+    },
+  },
 };
 const modifiedBuildConfig = { ...quintypeBuildConfig, ...loadableConfigObj };
 
