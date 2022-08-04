@@ -8,7 +8,7 @@ import {
   VideoStoryTemplate,
   LiveBlogStoryTemplate,
   ListicleStoryTemplate,
-  PhotoStoryTemplates
+  PhotoStoryTemplates,
 } from "@quintype/arrow";
 
 function StoryPageBase({ index, story, otherProp }) {
