@@ -3,27 +3,27 @@ import React from "react";
 import { InfiniteStoryBase, WithPreview } from "@quintype/components";
 import { number, object, shape, any } from "prop-types";
 import { BlankStory } from "../story-templates/blank";
-import { TextStoryTemplate, VideoStoryTemplate, LiveBlogStoryTemplate, ListicleStoryTemplate,
-  PhotoStoryTemplates } from "@quintype/arrow";
+import {
+  TextStoryTemplate,
+  VideoStoryTemplate,
+  LiveBlogStoryTemplate,
+  ListicleStoryTemplate,
+  PhotoStoryTemplates
+} from "@quintype/arrow";
 
- function StoryPageBase({ index, story, otherProp }) {
+function StoryPageBase({ index, story, otherProp }) {
   const storyTemplate = story["story-template"];
   switch (storyTemplate) {
-    case "text": {
+    case "text":
       return <TextStoryTemplate story={story} />;
-    };
-    case "video": {
+    case "video":
       return <VideoStoryTemplate story={story} />;
-    };
-    case "live-blog": {
+    case "live-blog":
       return <LiveBlogStoryTemplate story={story} />;
-    };
-    case "listicle": {
+    case "listicle":
       return <ListicleStoryTemplate story={story} />;
-    };
-    case "photo": {
+    case "photo":
       return <PhotoStoryTemplates story={story} />;
-    };
     default:
       return <BlankStory story={story} />;
   }
