@@ -1,37 +1,29 @@
 /* eslint-disable no-unused-vars, no-console, react/jsx-indent-props,react/jsx-wrap-multilines, no-undef, react/jsx-closing-bracket-location */
-
 import React from "react";
 import { InfiniteStoryBase, WithPreview } from "@quintype/components";
 import { number, object, shape, any } from "prop-types";
-import loadable from "@loadable/component";
 import { BlankStory } from "../story-templates/blank";
+import { TextStoryTemplate, VideoStoryTemplate, LiveBlogStoryTemplate, ListicleStoryTemplate,
+  PhotoStoryTemplates } from "@quintype/arrow";
 
-function StoryPageBase({ index, story, otherProp }) {
+ function StoryPageBase({ index, story, otherProp }) {
   const storyTemplate = story["story-template"];
-
-  const lazyLoadComponent = (storyTemplate) => loadable(() => import(`../story-templates/${storyTemplate}-story`));
-
   switch (storyTemplate) {
     case "text": {
-      const TextStory = lazyLoadComponent(storyTemplate);
-      return <TextStory story={story} />;
-    }
+      return <TextStoryTemplate story={story} />;
+    };
     case "video": {
-      const VideoStory = lazyLoadComponent(storyTemplate);
-      return <VideoStory story={story} />;
-    }
+      return <VideoStoryTemplate story={story} />;
+    };
     case "live-blog": {
-      const LiveBlog = lazyLoadComponent(storyTemplate);
-      return <LiveBlog story={story} />;
-    }
+      return <LiveBlogStoryTemplate story={story} />;
+    };
     case "listicle": {
-      const ListicleStory = lazyLoadComponent(storyTemplate);
-      return <ListicleStory story={story} />;
-    }
+      return <ListicleStoryTemplate story={story} />;
+    };
     case "photo": {
-      const PhotoStory = lazyLoadComponent(storyTemplate);
-      return <PhotoStory story={story} />;
-    }
+      return <PhotoStoryTemplates story={story} />;
+    };
     default:
       return <BlankStory story={story} />;
   }
