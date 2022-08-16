@@ -4,6 +4,11 @@
     "stylelint-config-css-modules"
   ],
   "rules": {
-    "at-rule-no-unknown": null
+    "scss/at-rule-no-unknown": null,
+    "at-rule-no-unknown": null,
+    "scss/at-import-partial-extension": null,
+    "no-descending-specificity": null,
+    "no-duplicate-selectors": null,
+    "scss/operator-no-unspaced": null
   }
 }
