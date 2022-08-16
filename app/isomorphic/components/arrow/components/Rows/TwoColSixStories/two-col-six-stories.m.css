@@ -1,4 +1,4 @@
-/* eslint-disable scss/at-rule-no-unknown, no-duplicate-selectors */
+/* eslint-disable at-rule-no-unknown, no-duplicate-selectors */
 @value viewports: "../../../../../../assets/stylesheets/viewports.m.css";
 @value mobile from viewports;
 @value desktop from viewports;
