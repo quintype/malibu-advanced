@@ -11,11 +11,12 @@ import "./author.m.css";
 const AuthorBase = ({ story, hideAuthorImage, isBottom, prefix = "", config = {} }) => {
   const configData = useStateValue() || {};
   const isAuthor = get(configData, ["showAuthor"], true);
-  const { "avatar-url": avatarUrl, "avatar-s3-key": avatarS3Key, name: authorName, slug } = get(
-    story,
-    ["authors", "0"],
-    ""
-  );
+  const {
+     "avatar-url": avatarUrl,
+     "avatar-s3-key": avatarS3Key,
+     name: authorName,
+     slug,
+   } = get(story,["authors", "0"],"");
   const isBottomClasses = isBottom ? "bottom-fix" : "";
   const textColor = getTextColor(configData.theme);
   const mountAt = get(config, ["mountAt"], "");
@@ -59,7 +60,8 @@ const AuthorBase = ({ story, hideAuthorImage, isBottom, prefix = "", config = {}
           className="author-name arr-author-name arrow-component"
           href={`${mountAt}/author/` + slug}
           styleName={`author ${isBottomClasses}`}
-          aria-label="author-name">
+          aria-label="author-name"
+        >
           {isPrefix("ltr")}
           <div className="author-name" styleName={`author-name ${textColor}`} data-test-id="author-name">
             {authorName || story["author-name"]}
@@ -73,7 +75,7 @@ const AuthorBase = ({ story, hideAuthorImage, isBottom, prefix = "", config = {}
 
 function mapStateToProps(state) {
   return {
-    config: get(state, ["qt", "config"], {})
+    config: get(state, ["qt", "config"], {}),
   };
 }
 
@@ -88,11 +90,11 @@ AuthorBase.propTypes = {
   isBottom: PropTypes.bool,
   // fix prefix before the author name
   prefix: PropTypes.string,
-  config: PropTypes.object
+  config: PropTypes.object,
 };
 
 AuthorBase.defaultProps = {
   hideAuthorImage: false,
   isBottom: false,
-  prefix: ""
+  prefix: "",
 };

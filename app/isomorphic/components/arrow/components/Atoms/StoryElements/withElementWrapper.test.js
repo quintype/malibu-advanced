@@ -8,7 +8,7 @@ describe("Story Element Wrapper", () => {
     description: "",
     type: "text",
     metadata: {},
-    text: "<p>Coronavirus in India News Live Updates</p>"
+    text: "<p>Coronavirus in India News Live Updates</p>",
   };
   const StoryElement = ({ element }) => <div dangerouslySetInnerHTML={{ __html: element.text }} />;
   const Component = withElementWrapper(StoryElement);

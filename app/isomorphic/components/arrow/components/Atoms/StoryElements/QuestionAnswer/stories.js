@@ -8,14 +8,14 @@ import { color, boolean } from "@storybook/addon-knobs";
 
 const templateStyle = {
   Default: "default",
-  "With Author Image": "withAuthorImage"
+  "With Author Image": "withAuthorImage",
 };
 const qaElement = generateStoryElementData("q-and-a");
 const qElement = generateStoryElementData("question");
 const aElement = generateStoryElementData("answer");
 const iconType = {
   edge: "edge",
-  curve: "curve"
+  curve: "curve",
 };
 
 withStore("Atoms/Story Elements/Question Answer", {}, Readme)
@@ -26,10 +26,10 @@ withStore("Atoms/Story Elements/Question Answer", {}, Readme)
       opts={{
         type: "q-and-a",
         defaultIconType: optionalSelect("Icon Type", iconType),
-        isExternalLink: boolean("External Link", true)
+        isExternalLink: boolean("External Link", true),
       }}
       css={{
-        iconColor: color("Icon Color", "#ff214b")
+        iconColor: color("Icon Color", "#ff214b"),
       }}
     />
   ))
@@ -46,10 +46,10 @@ withStore("Atoms/Story Elements/Question", {}, Readme)
       opts={{
         type: "question",
         defaultIconType: optionalSelect("Icon Type", iconType),
-        isExternalLink: boolean("External Link", true)
+        isExternalLink: boolean("External Link", true),
       }}
       css={{
-        iconColor: color("Icon Color", "#ff214b")
+        iconColor: color("Icon Color", "#ff214b"),
       }}
     />
   ))
@@ -66,10 +66,10 @@ withStore("Atoms/Story Elements/Answer", {}, Readme)
       opts={{
         type: "answer",
         defaultIconType: optionalSelect("Icon Type", iconType),
-        isExternalLink: boolean("External Link", true)
+        isExternalLink: boolean("External Link", true),
       }}
       css={{
-        iconColor: color("Icon Color", "#ff214b")
+        iconColor: color("Icon Color", "#ff214b"),
       }}
     />
   ))

@@ -10,7 +10,7 @@ describe("Social Share Template", () => {
       linkedinUrl: "https://twitter.com/",
       whatsappUrl: "https://twitter.com/",
       theme: "#ffff",
-      iconType: "plain-svg"
+      iconType: "plain-svg",
     };
     const wrapper = shallow(<SocialShareTemplate {...data} />);
     expect(wrapper).toMatchSnapshot();
@@ -24,7 +24,7 @@ describe("Social Share Template", () => {
       whatsappUrl: "https://twitter.com/",
       theme: "#ffff",
       iconType: "plain-svg",
-      vertical: true
+      vertical: true,
     };
     const wrapper = shallow(<SocialShareTemplate {...data} />);
     expect(wrapper).toMatchSnapshot();
@@ -38,7 +38,7 @@ describe("Social Share Template", () => {
       whatsappUrl: "",
       theme: "#ffff",
       iconType: "plain-svg",
-      vertical: true
+      vertical: true,
     };
     const wrapper = shallow(<SocialShareTemplate {...data} />);
     expect(wrapper).toMatchSnapshot();
@@ -52,7 +52,7 @@ describe("Social Share Template", () => {
       whatsappUrl: "https://twitter.com/",
       theme: "#ffff",
       iconType: "plain-svg",
-      vertical: true
+      vertical: true,
     };
     const wrapper = shallow(<SocialShareTemplate {...data} />);
     expect(wrapper).toMatchSnapshot();
@@ -66,7 +66,7 @@ describe("Social Share Template", () => {
       whatsappUrl: "https://twitter.com/",
       theme: "#ffff",
       iconType: "plain-svg",
-      vertical: true
+      vertical: true,
     };
     const wrapper = shallow(<SocialShareTemplate {...data} />);
     expect(wrapper).toMatchSnapshot();
@@ -80,7 +80,7 @@ describe("Social Share Template", () => {
       whatsappUrl: "",
       theme: "#ffff",
       iconType: "plain-svg",
-      vertical: true
+      vertical: true,
     };
     const wrapper = shallow(<SocialShareTemplate {...data} />);
     expect(wrapper).toMatchSnapshot();
@@ -94,7 +94,7 @@ describe("Social Share Template", () => {
       whatsappUrl: "https://twitter.com/",
       theme: "#ffff",
       iconType: "plain-svg",
-      vertical: true
+      vertical: true,
     };
     const wrapper = shallow(<SocialShareTemplate {...data} />);
     expect(wrapper).toMatchSnapshot();
@@ -108,7 +108,7 @@ describe("Social Share Template", () => {
       whatsappUrl: "https://twitter.com/",
       theme: "",
       iconType: "plain-svg",
-      vertical: true
+      vertical: true,
     };
     const wrapper = shallow(<SocialShareTemplate {...data} />);
     expect(wrapper).toMatchSnapshot();

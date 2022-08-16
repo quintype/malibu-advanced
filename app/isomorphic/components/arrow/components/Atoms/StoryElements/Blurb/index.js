@@ -23,7 +23,7 @@ const BlurbBase = ({ element, template = "", opts = {}, css = {}, story = {}, co
   }, []);
 
   const { isExternalLink = true } = opts;
-  let text = (isExternalLink && updateContentLinks(content)) || content;
+  const text = (isExternalLink && updateContentLinks(content)) || content;
   const templateStyle = template ? `blurb-${template}` : "blurb";
   const configData = useStateValue() || {};
   const textInvertColor = getTextColor(configData.theme);
@@ -47,7 +47,7 @@ BlurbBase.propTypes = {
   story: shapeStory,
   config: shapeConfig,
   render: PropTypes.func,
-  css: PropTypes.object
+  css: PropTypes.object,
 };
 
 export const Blurb = withElementWrapper(BlurbBase);

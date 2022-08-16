@@ -23,6 +23,7 @@ module.exports = {
   },
   rules: {
     "max-len": ["warn", { code: 120 }],
+    "prettier/prettier": 0,
   },
   settings: {
     react: {

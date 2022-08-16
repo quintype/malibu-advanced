@@ -45,7 +45,8 @@ export const AuthorCard = ({ story = {}, template = "leftAligned", clazzName = "
     <div
       data-test-id={`author-card-${kebabCase(template)}`}
       className={clazzName}
-      styleName={`author-card-wrapper ${template}`}>
+      styleName={`author-card-wrapper ${template}`}
+    >
       {authors.map((author, index) => {
         return (
           <React.Fragment key={author.id}>
@@ -55,7 +56,8 @@ export const AuthorCard = ({ story = {}, template = "leftAligned", clazzName = "
                   <div
                     styleName={`author-image ${!index ? "first-author-image" : ""} ${
                       !isSingleAuthor ? "multi-author-image" : ""
-                    }`}>
+                    }`}
+                  >
                     {authorImage(author)}
                   </div>
                 </Link>
@@ -104,14 +106,14 @@ export const AuthorCard = ({ story = {}, template = "leftAligned", clazzName = "
 
 AuthorCard.propTypes = {
   story: PropTypes.shape({
-    authors: PropTypes.array
+    authors: PropTypes.array,
   }),
   template: PropTypes.string,
   opts: PropTypes.shape({
     showImage: PropTypes.bool,
     showBio: PropTypes.bool,
-    showName: PropTypes.bool
+    showName: PropTypes.bool,
   }),
   mountAt: PropTypes.string,
-  clazzName: PropTypes.string
+  clazzName: PropTypes.string,
 };

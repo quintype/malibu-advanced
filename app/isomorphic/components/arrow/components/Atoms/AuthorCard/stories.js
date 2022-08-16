@@ -9,7 +9,7 @@ const authorTemplate = {
   "No value": "",
   default: "default",
   leftAligned: "leftAligned",
-  centerAligned: "centerAligned"
+  centerAligned: "centerAligned",
 };
 
 const story = generateStory();
@@ -24,21 +24,20 @@ const singleAuthorStory = {
       social: {
         twitter: {
           url: "https://www.twitter.com/sabqorg",
-          handle: "elonmusk"
-        }
+          handle: "elonmusk",
+        },
       },
       "avatar-url":
         "https://lh5.googleusercontent.com/-NhNrHEp1w4M/AAAAAAAAAAI/AAAAAAAAAAs/lzYwVY1BQdQ/photo.jpg?sz=50",
       "avatar-s3-key": null,
       "twitter-handle": "quintype_inc",
-      bio:
-        "William Shakespeare was an English poet, playwright, and actor, widely regarded as the greatest writer in the English language and the world’s greatest dramatist. He is often called England’s national poet and the “Bard of Avon”",
+      bio: "William Shakespeare was an English poet, playwright, and actor, widely regarded as the greatest writer in the English language and the world’s greatest dramatist. He is often called England’s national poet and the “Bard of Avon”",
       "contributor-role": {
         id: 873,
-        name: "Author"
-      }
-    }
-  ]
+        name: "Author",
+      },
+    },
+  ],
 };
 
 withStore(
@@ -46,9 +45,9 @@ withStore(
   {
     qt: {
       config: {
-        "cdn-image": "thumbor-stg.assettype.com"
-      }
-    }
+        "cdn-image": "thumbor-stg.assettype.com",
+      },
+    },
   },
   Readme
 )
@@ -59,7 +58,7 @@ withStore(
       template={optionalSelect("Template Options", authorTemplate)}
       opts={{
         showBio: boolean("bio", false),
-        showImage: boolean("image", true)
+        showImage: boolean("image", true),
       }}
     />
   ))
@@ -69,7 +68,7 @@ withStore(
       template={optionalSelect("Template Options", authorTemplate)}
       opts={{
         showBio: boolean("bio", true),
-        showImage: boolean("image", true)
+        showImage: boolean("image", true),
       }}
     />
   ));

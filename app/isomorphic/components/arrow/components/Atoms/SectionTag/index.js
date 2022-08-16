@@ -32,15 +32,17 @@ export const SectionTag = ({ story, template = "", borderColor = "", isLightThem
         className="section-tag arrow-component"
         styleName={`${textColor} ${templateStyle}`}
         style={{
-          backgroundColor: templateStyle.includes("section-solid") ? sectionTagBorderColor : ""
-        }}>
+          backgroundColor: templateStyle.includes("section-solid") ? sectionTagBorderColor : "",
+        }}
+      >
         {templateStyle.includes("section-borderLeft") && (
           <span styleName="border-left" style={{ color: sectionTagBorderColor }}></span>
         )}
-        {section["display-name"] || section["name"]}
+        {section["display-name"] || section.name}
         <div
           styleName="border-bottom"
-          style={{ backgroundColor: `${template === "solid" ? "" : sectionTagBorderColor}` }}></div>
+          style={{ backgroundColor: `${template === "solid" ? "" : sectionTagBorderColor}` }}
+        ></div>
       </div>
     </Link>
   );
@@ -52,10 +54,10 @@ SectionTag.propTypes = {
   template: PropTypes.oneOf(["", "borderBottomSml", "borderLeft", "solid"]),
   borderColor: PropTypes.string,
   solidBorderColor: PropTypes.string,
-  isLightTheme: PropTypes.bool
+  isLightTheme: PropTypes.bool,
 };
 
 SectionTag.defaultProps = {
   template: "",
-  isLightTheme: false
+  isLightTheme: false,
 };

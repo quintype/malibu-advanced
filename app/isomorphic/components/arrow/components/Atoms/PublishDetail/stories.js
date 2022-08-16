@@ -16,7 +16,7 @@ withStore("Atoms/Publish Details", {}, Readme).add("Default", () => (
       enablePublishedTime: boolean("Enable Published Time", true),
       localizedPublishedOn: text("Localise Published On", "ಪ್ರಕಟಿಸಲಾಗಿದೆ"),
       localizedUpdatedOn: text("Localise Updated On", "ನವೀಕರಿಸಲಾಗಿದೆ"),
-      timeFormat: "12hours"
+      timeFormat: "12hours",
     }}
   />
 ));

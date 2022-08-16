@@ -54,13 +54,13 @@ PublishDetails.propTypes = {
     "first-published-at": PropTypes.number,
     "last-published-at": PropTypes.number,
     "read-time": PropTypes.number,
-    "updated-at": PropTypes.number
+    "updated-at": PropTypes.number,
   }),
   timezone: PropTypes.string,
   template: PropTypes.string,
   opts: PropTypes.shape({
     showReadTime: PropTypes.bool,
     enableUpdatedTime: PropTypes.bool,
-    enablePublishedTime: PropTypes.bool
-  })
+    enablePublishedTime: PropTypes.bool,
+  }),
 };

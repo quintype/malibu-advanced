@@ -15,7 +15,7 @@ export const Headline = ({ story, headerLevel, premiumStoryIconConfig = {}, isLi
     iconColor = "#F7B500",
     iconStyle = "star",
     enablePremiumStoryIcon = false,
-    showLiveIcon = false
+    showLiveIcon = false,
   } = premiumStoryIconConfig;
   const alternateHeadline = get(story, ["alternative", "home", "default", "headline"]);
   const premiumStory = enablePremiumStoryIcon && get(story, ["access"]) === "subscription";
@@ -80,12 +80,12 @@ Headline.propTypes = {
   premiumStoryIconConfig: PropTypes.shape({
     iconColor: PropTypes.string,
     iconType: PropTypes.string,
-    enablePremiumStoryIcon: PropTypes.bool
+    enablePremiumStoryIcon: PropTypes.bool,
   }),
-  isLink: PropTypes.bool
+  isLink: PropTypes.bool,
 };
 
 Headline.defaultProps = {
   headerLevel: "6",
-  isLink: true
+  isLink: true,
 };

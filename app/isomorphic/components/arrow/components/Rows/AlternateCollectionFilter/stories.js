@@ -5,7 +5,7 @@ import {
   optionalSelect,
   sectionTagTemplates,
   collectionNameTemplates,
-  footerButton
+  footerButton,
 } from "../../../../storybook";
 import AlternateCollectionFilter from "./index";
 import { AdPlaceholder } from "../../Atoms/AdPlaceholder";

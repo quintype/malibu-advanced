@@ -16,7 +16,7 @@ export const StorycardContent = ({
   isHorizontalMobile,
   headerLevel,
   borderColor,
-  config
+  config,
 }) => {
   const textColor = getTextColor(theme);
   const borderOptions = ["full"];
@@ -28,7 +28,8 @@ export const StorycardContent = ({
       className="arr--content-wrapper"
       data-test-id="story-card-content"
       styleName={`wrapper ${borderTemplate} ${horizontalCard}`}
-      style={{ backgroundColor: theme, color: textColor }}>
+      style={{ backgroundColor: theme, color: textColor }}
+    >
       {children || (
         <DefaultStoryCardContent
           story={story}
@@ -61,7 +62,7 @@ DefaultStoryCardContent.propTypes = {
   isHorizontalMobile: PropTypes.bool,
   headerLevel: PropTypes.string,
   borderColor: PropTypes.string,
-  config: PropTypes.object
+  config: PropTypes.object,
 };
 
 StorycardContent.propTypes = {
@@ -72,5 +73,5 @@ StorycardContent.propTypes = {
   isHorizontalMobile: PropTypes.bool,
   headerLevel: PropTypes.string,
   borderColor: PropTypes.string,
-  config: PropTypes.object
+  config: PropTypes.object,
 };

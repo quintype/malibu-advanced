@@ -28,7 +28,8 @@ export const ReadTime = ({ story, opts = {}, isLightTheme = false }) => {
       <div
         className="arrow-component arr--read-time"
         styleName={`read-time-wrapper ${textColor}`}
-        data-test-id="read-time">
+        data-test-id="read-time"
+      >
         <span styleName="dot-indicator" className="read-time-indicator">
           <Dot color={textColor} />
         </span>
@@ -42,11 +43,11 @@ export const ReadTime = ({ story, opts = {}, isLightTheme = false }) => {
 
 ReadTime.propTypes = {
   story: PropTypes.shape({
-    "read-time": PropTypes.number
+    "read-time": PropTypes.number,
   }),
   opts: PropTypes.shape({
-    showReadTime: PropTypes.bool
+    showReadTime: PropTypes.bool,
   }),
   isLightTheme: PropTypes.bool,
-  languageCode: PropTypes.string
+  languageCode: PropTypes.string,
 };

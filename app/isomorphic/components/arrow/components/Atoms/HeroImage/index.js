@@ -20,7 +20,7 @@ export const HeroImage = ({
   isHorizontalWithImageLast,
   defaultFallback,
   isStoryPageImage,
-  config
+  config,
 }) => {
   const { fallbackImageUrl = "" } = useStateValue() || {};
   const { StoryTemplateIcon = () => null } = config;
@@ -65,8 +65,9 @@ export const HeroImage = ({
             styleName={`image ${getPlaceholderStyleName}`}
             className="arr--responsive-hero-image"
             style={{
-              paddingTop: imagePadding + `%`
-            }}>
+              paddingTop: imagePadding + `%`,
+            }}
+          >
             <img className="qt-image" data-src={`${fallbackImageUrl}`} alt="image-fallback"></img>
           </figure>
         );
@@ -80,8 +81,9 @@ export const HeroImage = ({
               className="arr--fallback-hero-image"
               data-test-id="arr--fallback-hero-image"
               style={{
-                paddingTop: imagePadding + `%`
-              }}>
+                paddingTop: imagePadding + `%`,
+              }}
+            >
               <StoryTemplateIcon storyTemplate={story["story-template"]} />
               <FallbackImage />
             </div>
@@ -94,7 +96,8 @@ export const HeroImage = ({
         <figure
           styleName={`image ${getPlaceholderStyleName}`}
           className="arr--responsive-hero-image"
-          style={{ paddingTop: imagePadding + `%` }}>
+          style={{ paddingTop: imagePadding + `%` }}
+        >
           <StoryTemplateIcon storyTemplate={story["story-template"]} />
           <ResponsiveHeroImage
             story={story}
@@ -116,7 +119,8 @@ export const HeroImage = ({
       <div
         className="arr--hero-image"
         data-test-id="arr--hero-image"
-        styleName={`${heroImageClass} ${fullBleed} ${heroImageMobClasses}`}>
+        styleName={`${heroImageClass} ${fullBleed} ${heroImageMobClasses}`}
+      >
         {fallbackImage()}
       </div>
     ) : (
@@ -126,7 +130,8 @@ export const HeroImage = ({
         href={getStoryUrl(story, `/${story.slug}`)}
         externalLink={isExternalStory(story)}
         styleName={`${heroImageClass} ${fullBleed} ${heroImageMobClasses}`}
-        aria-label="fallback-hero-image">
+        aria-label="fallback-hero-image"
+      >
         {fallbackImage()}
       </Link>
     ))
@@ -154,12 +159,15 @@ HeroImage.propTypes = {
   defaultFallback: PropTypes.bool,
   isHorizontalWithImageLast: PropTypes.bool,
   isStoryPageImage: PropTypes.bool,
-  config: PropTypes.object
+  config: PropTypes.object,
 };
 
 HeroImage.defaultProps = {
   FullBleed: true,
-  aspectRatio: [[1, 1], [16, 9]],
+  aspectRatio: [
+            [1, 1],
+            [16, 9]
+      ],
   defaultWidth: 480,
   widths: [250, 480, 640],
   isHorizontal: false,
@@ -167,5 +175,5 @@ HeroImage.defaultProps = {
   defaultFallback: true,
   isStoryPageImage: false,
   isHorizontalWithImageLast: false,
-  config: {}
+  config: {},
 };

@@ -29,7 +29,8 @@ export const SliderArrow = ({ selectedIndex, previousClick, nextClick, noOfItems
         <button
           onClick={previousClick}
           styleName={`arrow left-arrow-${textColor} ${getLeftArrowClassName}`}
-          className={`left-arrow ${getLeftArrowClassName}`}>
+          className={`left-arrow ${getLeftArrowClassName}`}
+        >
           <LeftArrow color={textColor === "dark" ? "#fff" : "#333"} />
         </button>
       ) : null}
@@ -38,7 +39,8 @@ export const SliderArrow = ({ selectedIndex, previousClick, nextClick, noOfItems
         <button
           onClick={nextClick}
           styleName={`arrow right-arrow-${textColor} ${getRightArrowClassName}`}
-          className={`right-arrow ${getRightArrowClassName}`}>
+          className={`right-arrow ${getRightArrowClassName}`}
+        >
           <RightArrow color={textColor === "dark" ? "#fff" : "#333"} />
         </button>
       ) : null}
@@ -53,5 +55,5 @@ SliderArrow.propTypes = {
   previousClick: func,
   nextClick: func,
   selectedIndex: number,
-  languageDirection: string
+  languageDirection: string,
 };

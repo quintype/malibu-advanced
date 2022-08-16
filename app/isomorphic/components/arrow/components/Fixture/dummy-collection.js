@@ -21,8 +21,8 @@ export const dummyCollection = {
         seo: {
           "meta-description": "Meta description",
           "claim-reviews": {
-            story: null
-          }
+            story: null,
+          },
         },
         "assignee-id": 299252,
         "author-name": "Ashwini Mohan",
@@ -32,8 +32,8 @@ export const dummyCollection = {
             name: "news",
             "meta-description": null,
             slug: "news",
-            "tag-type": "Tag"
-          }
+            "tag-type": "Tag",
+          },
         ],
         headline: "Untitled Sep 20, 2019 04:30 PM",
         "storyline-id": null,
@@ -55,10 +55,10 @@ export const dummyCollection = {
             collection: {
               slug: "business1",
               name: "Business News",
-              id: 2729
+              id: 2729,
             },
-            data: null
-          }
+            data: null,
+          },
         ],
         "story-audio": {
           "s3-key":
@@ -73,7 +73,7 @@ export const dummyCollection = {
         "hero-image-metadata": {
           width: 1024,
           height: 576,
-          "focus-point": [676, 312]
+          "focus-point": [676, 312],
         },
         comments: null,
         entities: {},
@@ -106,7 +106,7 @@ export const dummyCollection = {
                 url: "https://www.youtube.com/watch?v=OY9Oq3hp0YU&feature=youtu.be",
                 "embed-url": "https://www.youtube.com/embed/OY9Oq3hp0YU",
                 metadata: {},
-                subtype: null
+                subtype: null,
               },
               {
                 id: "00000000-0000-0000-0000-000000000000",
@@ -116,9 +116,9 @@ export const dummyCollection = {
                 type: "text",
                 text: '<p>text <a href="https://ace-web.qtstage.io/">promotional</a> message</p>',
                 metadata: {
-                  "promotional-message": true
-                }
-              }
+                  "promotional-message": true,
+                },
+              },
             ],
             "card-updated-at": 1568977881112,
             "content-version-id": "1cd5ea42-6751-4ec6-a161-395f3326ce00",
@@ -133,21 +133,20 @@ export const dummyCollection = {
                 title: "Untitled Sep 20, 2019 04:30 PM",
                 message: "Social Description",
                 image: {
-                  key:
-                    "ace/2019-06/3999bc52-1280-49aa-b542-20cd9e06dd34/The_Secret_to_a_Good_Quality_Sleep_Memory_Foam.jpg",
+                  key: "ace/2019-06/3999bc52-1280-49aa-b542-20cd9e06dd34/The_Secret_to_a_Good_Quality_Sleep_Memory_Foam.jpg",
                   url: null,
                   attribution: "attribution",
                   caption: "caption",
                   metadata: {
                     width: 1024,
                     height: 576,
-                    "focus-point": [676, 312]
-                  }
-                }
+                    "focus-point": [676, 312],
+                  },
+                },
               },
-              attributes: {}
-            }
-          }
+              attributes: {},
+            },
+          },
         ],
         url: "https://ace-web.qtstage.io/recent-stories/news/business/untitled-sep-20-2019-0430-pm",
         "story-version-id": "a64fe8b4-c0aa-4bd5-93a2-6e428332e5b2",
@@ -176,18 +175,18 @@ export const dummyCollection = {
             bio: null,
             "contributor-role": {
               id: 873,
-              name: "Author"
-            }
-          }
+              name: "Author",
+            },
+          },
         ],
         metadata: {
           "card-share": {
-            shareable: false
-          }
+            shareable: false,
+          },
         },
         "publish-at": null,
-        "assignee-name": "Ashwini Mohan"
-      }
+        "assignee-name": "Ashwini Mohan",
+      },
     },
     {
       id: "b4f33f98-8814-4675-97f0-75e447e43ab8",
@@ -198,8 +197,8 @@ export const dummyCollection = {
         seo: {
           "meta-description": "Meta description",
           "claim-reviews": {
-            story: null
-          }
+            story: null,
+          },
         },
         "assignee-id": 299252,
         "author-name": "Ashwini Mohan",
@@ -209,8 +208,8 @@ export const dummyCollection = {
             name: "news",
             "meta-description": null,
             slug: "news",
-            "tag-type": "Tag"
-          }
+            "tag-type": "Tag",
+          },
         ],
         headline: "Untitled Sep 20, 2019 04:30 PM",
         "storyline-id": null,
@@ -232,9 +231,9 @@ export const dummyCollection = {
             collection: {
               slug: "business1",
               name: "Business News",
-              id: 2729
+              id: 2729,
             },
-            data: null
+            data: null,
           }
         ],
         "story-audio": {
@@ -250,7 +249,7 @@ export const dummyCollection = {
         "hero-image-metadata": {
           width: 1024,
           height: 576,
-          "focus-point": [676, 312]
+          "focus-point": [676, 312],
         },
         comments: null,
         entities: {},
@@ -283,7 +282,7 @@ export const dummyCollection = {
                 url: "https://www.youtube.com/watch?v=OY9Oq3hp0YU&feature=youtu.be",
                 "embed-url": "https://www.youtube.com/embed/OY9Oq3hp0YU",
                 metadata: {},
-                subtype: null
+                subtype: null,
               },
               {
                 id: "00000000-0000-0000-0000-000000000000",
@@ -293,9 +292,9 @@ export const dummyCollection = {
                 type: "text",
                 text: '<p>text <a href="https://ace-web.qtstage.io/">promotional</a> message</p>',
                 metadata: {
-                  "promotional-message": true
-                }
-              }
+                  "promotional-message": true,
+                },
+              },
             ],
             "card-updated-at": 1568977881112,
             "content-version-id": "1cd5ea42-6751-4ec6-a161-395f3326ce00",
@@ -310,21 +309,20 @@ export const dummyCollection = {
                 title: "Untitled Sep 20, 2019 04:30 PM",
                 message: "Social Description",
                 image: {
-                  key:
-                    "ace/2019-06/3999bc52-1280-49aa-b542-20cd9e06dd34/The_Secret_to_a_Good_Quality_Sleep_Memory_Foam.jpg",
+                  key: "ace/2019-06/3999bc52-1280-49aa-b542-20cd9e06dd34/The_Secret_to_a_Good_Quality_Sleep_Memory_Foam.jpg",
                   url: null,
                   attribution: "attribution",
                   caption: "caption",
                   metadata: {
                     width: 1024,
                     height: 576,
-                    "focus-point": [676, 312]
-                  }
-                }
+                    "focus-point": [676, 312],
+                  },
+                },
               },
-              attributes: {}
-            }
-          }
+              attributes: {},
+            },
+          },
         ],
         url: "https://ace-web.qtstage.io/recent-stories/news/business/untitled-sep-20-2019-0430-pm",
         "story-version-id": "a64fe8b4-c0aa-4bd5-93a2-6e428332e5b2",
@@ -353,18 +351,18 @@ export const dummyCollection = {
             bio: null,
             "contributor-role": {
               id: 873,
-              name: "Author"
-            }
-          }
+              name: "Author",
+            },
+          },
         ],
         metadata: {
           "card-share": {
-            shareable: false
-          }
+            shareable: false,
+          },
         },
         "publish-at": null,
-        "assignee-name": "Ashwini Mohan"
-      }
+        "assignee-name": "Ashwini Mohan",
+      },
     },
     {
       id: "b4f33f98-8814-4675-97f0-75e447e43ab8",
@@ -375,8 +373,8 @@ export const dummyCollection = {
         seo: {
           "meta-description": "Meta description",
           "claim-reviews": {
-            story: null
-          }
+            story: null,
+          },
         },
         "assignee-id": 299252,
         "author-name": "Ashwini Mohan",
@@ -386,8 +384,8 @@ export const dummyCollection = {
             name: "news",
             "meta-description": null,
             slug: "news",
-            "tag-type": "Tag"
-          }
+            "tag-type": "Tag",
+          },
         ],
         headline: "Untitled Sep 20, 2019 04:30 PM",
         "storyline-id": null,
@@ -409,10 +407,10 @@ export const dummyCollection = {
             collection: {
               slug: "business1",
               name: "Business News",
-              id: 2729
+              id: 2729,
             },
-            data: null
-          }
+            data: null,
+          },
         ],
         "story-audio": {
           "s3-key":
@@ -427,7 +425,7 @@ export const dummyCollection = {
         "hero-image-metadata": {
           width: 1024,
           height: 576,
-          "focus-point": [676, 312]
+          "focus-point": [676, 312],
         },
         comments: null,
         entities: {},
@@ -460,7 +458,7 @@ export const dummyCollection = {
                 url: "https://www.youtube.com/watch?v=OY9Oq3hp0YU&feature=youtu.be",
                 "embed-url": "https://www.youtube.com/embed/OY9Oq3hp0YU",
                 metadata: {},
-                subtype: null
+                subtype: null,
               },
               {
                 id: "00000000-0000-0000-0000-000000000000",
@@ -470,9 +468,9 @@ export const dummyCollection = {
                 type: "text",
                 text: '<p>text <a href="https://ace-web.qtstage.io/">promotional</a> message</p>',
                 metadata: {
-                  "promotional-message": true
-                }
-              }
+                  "promotional-message": true,
+                },
+              },
             ],
             "card-updated-at": 1568977881112,
             "content-version-id": "1cd5ea42-6751-4ec6-a161-395f3326ce00",
@@ -487,21 +485,20 @@ export const dummyCollection = {
                 title: "Untitled Sep 20, 2019 04:30 PM",
                 message: "Social Description",
                 image: {
-                  key:
-                    "ace/2019-06/3999bc52-1280-49aa-b542-20cd9e06dd34/The_Secret_to_a_Good_Quality_Sleep_Memory_Foam.jpg",
+                  key: "ace/2019-06/3999bc52-1280-49aa-b542-20cd9e06dd34/The_Secret_to_a_Good_Quality_Sleep_Memory_Foam.jpg",
                   url: null,
                   attribution: "attribution",
                   caption: "caption",
                   metadata: {
                     width: 1024,
                     height: 576,
-                    "focus-point": [676, 312]
-                  }
-                }
+                    "focus-point": [676, 312],
+                  },
+                },
               },
-              attributes: {}
-            }
-          }
+              attributes: {},
+            },
+          },
         ],
         url: "https://ace-web.qtstage.io/recent-stories/news/business/untitled-sep-20-2019-0430-pm",
         "story-version-id": "a64fe8b4-c0aa-4bd5-93a2-6e428332e5b2",
@@ -530,18 +527,18 @@ export const dummyCollection = {
             bio: null,
             "contributor-role": {
               id: 873,
-              name: "Author"
-            }
-          }
+              name: "Author",
+            },
+          },
         ],
         metadata: {
           "card-share": {
-            shareable: false
-          }
+            shareable: false,
+          },
         },
         "publish-at": null,
-        "assignee-name": "Ashwini Mohan"
-      }
+        "assignee-name": "Ashwini Mohan",
+      },
     },
     {
       id: "b4f33f98-8814-4675-97f0-75e447e43ab8",
@@ -552,8 +549,8 @@ export const dummyCollection = {
         seo: {
           "meta-description": "Meta description",
           "claim-reviews": {
-            story: null
-          }
+            story: null,
+          },
         },
         "assignee-id": 299252,
         "author-name": "Ashwini Mohan",
@@ -563,8 +560,8 @@ export const dummyCollection = {
             name: "news",
             "meta-description": null,
             slug: "news",
-            "tag-type": "Tag"
-          }
+            "tag-type": "Tag",
+          },
         ],
         headline: "Untitled Sep 20, 2019 04:30 PM",
         "storyline-id": null,
@@ -586,10 +583,10 @@ export const dummyCollection = {
             collection: {
               slug: "business1",
               name: "Business News",
-              id: 2729
+              id: 2729,
             },
-            data: null
-          }
+            data: null,
+          },
         ],
         "story-audio": {
           "s3-key":
@@ -604,7 +601,7 @@ export const dummyCollection = {
         "hero-image-metadata": {
           width: 1024,
           height: 576,
-          "focus-point": [676, 312]
+          "focus-point": [676, 312],
         },
         comments: null,
         entities: {},
@@ -637,7 +634,7 @@ export const dummyCollection = {
                 url: "https://www.youtube.com/watch?v=OY9Oq3hp0YU&feature=youtu.be",
                 "embed-url": "https://www.youtube.com/embed/OY9Oq3hp0YU",
                 metadata: {},
-                subtype: null
+                subtype: null,
               },
               {
                 id: "00000000-0000-0000-0000-000000000000",
@@ -647,9 +644,9 @@ export const dummyCollection = {
                 type: "text",
                 text: '<p>text <a href="https://ace-web.qtstage.io/">promotional</a> message</p>',
                 metadata: {
-                  "promotional-message": true
-                }
-              }
+                  "promotional-message": true,
+                },
+              },
             ],
             "card-updated-at": 1568977881112,
             "content-version-id": "1cd5ea42-6751-4ec6-a161-395f3326ce00",
@@ -664,21 +661,20 @@ export const dummyCollection = {
                 title: "Untitled Sep 20, 2019 04:30 PM",
                 message: "Social Description",
                 image: {
-                  key:
-                    "ace/2019-06/3999bc52-1280-49aa-b542-20cd9e06dd34/The_Secret_to_a_Good_Quality_Sleep_Memory_Foam.jpg",
+                  key: "ace/2019-06/3999bc52-1280-49aa-b542-20cd9e06dd34/The_Secret_to_a_Good_Quality_Sleep_Memory_Foam.jpg",
                   url: null,
                   attribution: "attribution",
                   caption: "caption",
                   metadata: {
                     width: 1024,
                     height: 576,
-                    "focus-point": [676, 312]
-                  }
-                }
+                    "focus-point": [676, 312],
+                  },
+                },
               },
-              attributes: {}
-            }
-          }
+              attributes: {},
+            },
+          },
         ],
         url: "https://ace-web.qtstage.io/recent-stories/news/business/untitled-sep-20-2019-0430-pm",
         "story-version-id": "a64fe8b4-c0aa-4bd5-93a2-6e428332e5b2",
@@ -707,18 +703,18 @@ export const dummyCollection = {
             bio: null,
             "contributor-role": {
               id: 873,
-              name: "Author"
-            }
-          }
+              name: "Author",
+            },
+          },
         ],
         metadata: {
           "card-share": {
-            shareable: false
-          }
+            shareable: false,
+          },
         },
         "publish-at": null,
-        "assignee-name": "Ashwini Mohan"
-      }
+        "assignee-name": "Ashwini Mohan",
+      },
     },
     {
       id: "b4f33f98-8814-4675-97f0-75e447e43ab8",
@@ -729,8 +725,8 @@ export const dummyCollection = {
         seo: {
           "meta-description": "Meta description",
           "claim-reviews": {
-            story: null
-          }
+            story: null,
+          },
         },
         "assignee-id": 299252,
         "author-name": "Ashwini Mohan",
@@ -740,8 +736,8 @@ export const dummyCollection = {
             name: "news",
             "meta-description": null,
             slug: "news",
-            "tag-type": "Tag"
-          }
+            "tag-type": "Tag",
+          },
         ],
         headline: "Untitled Sep 20, 2019 04:30 PM",
         "storyline-id": null,
@@ -763,10 +759,10 @@ export const dummyCollection = {
             collection: {
               slug: "business1",
               name: "Business News",
-              id: 2729
+              id: 2729,
             },
-            data: null
-          }
+            data: null,
+          },
         ],
         "story-audio": {
           "s3-key":
@@ -781,7 +777,7 @@ export const dummyCollection = {
         "hero-image-metadata": {
           width: 1024,
           height: 576,
-          "focus-point": [676, 312]
+          "focus-point": [676, 312],
         },
         comments: null,
         entities: {},
@@ -814,7 +810,7 @@ export const dummyCollection = {
                 url: "https://www.youtube.com/watch?v=OY9Oq3hp0YU&feature=youtu.be",
                 "embed-url": "https://www.youtube.com/embed/OY9Oq3hp0YU",
                 metadata: {},
-                subtype: null
+                subtype: null,
               },
               {
                 id: "00000000-0000-0000-0000-000000000000",
@@ -824,9 +820,9 @@ export const dummyCollection = {
                 type: "text",
                 text: '<p>text <a href="https://ace-web.qtstage.io/">promotional</a> message</p>',
                 metadata: {
-                  "promotional-message": true
-                }
-              }
+                  "promotional-message": true,
+                },
+              },
             ],
             "card-updated-at": 1568977881112,
             "content-version-id": "1cd5ea42-6751-4ec6-a161-395f3326ce00",
@@ -841,21 +837,20 @@ export const dummyCollection = {
                 title: "Untitled Sep 20, 2019 04:30 PM",
                 message: "Social Description",
                 image: {
-                  key:
-                    "ace/2019-06/3999bc52-1280-49aa-b542-20cd9e06dd34/The_Secret_to_a_Good_Quality_Sleep_Memory_Foam.jpg",
+                  key: "ace/2019-06/3999bc52-1280-49aa-b542-20cd9e06dd34/The_Secret_to_a_Good_Quality_Sleep_Memory_Foam.jpg",
                   url: null,
                   attribution: "attribution",
                   caption: "caption",
                   metadata: {
                     width: 1024,
                     height: 576,
-                    "focus-point": [676, 312]
-                  }
-                }
+                    "focus-point": [676, 312],
+                  },
+                },
               },
-              attributes: {}
-            }
-          }
+              attributes: {},
+            },
+          },
         ],
         url: "https://ace-web.qtstage.io/recent-stories/news/business/untitled-sep-20-2019-0430-pm",
         "story-version-id": "a64fe8b4-c0aa-4bd5-93a2-6e428332e5b2",
@@ -884,18 +879,18 @@ export const dummyCollection = {
             bio: null,
             "contributor-role": {
               id: 873,
-              name: "Author"
-            }
-          }
+              name: "Author",
+            },
+          },
         ],
         metadata: {
           "card-share": {
-            shareable: false
-          }
+            shareable: false,
+          },
         },
         "publish-at": null,
-        "assignee-name": "Ashwini Mohan"
-      }
+        "assignee-name": "Ashwini Mohan",
+      },
     },
     {
       id: "b4f33f98-8814-4675-97f0-75e447e43ab8",
@@ -906,7 +901,7 @@ export const dummyCollection = {
         seo: {
           "meta-description": "Meta description",
           "claim-reviews": {
-            story: null
+            story: null,
           }
         },
         "assignee-id": 299252,
@@ -917,8 +912,8 @@ export const dummyCollection = {
             name: "news",
             "meta-description": null,
             slug: "news",
-            "tag-type": "Tag"
-          }
+            "tag-type": "Tag",
+          },
         ],
         headline: "Untitled Sep 20, 2019 04:30 PM",
         "storyline-id": null,
@@ -940,10 +935,10 @@ export const dummyCollection = {
             collection: {
               slug: "business1",
               name: "Business News",
-              id: 2729
+              id: 2729,
             },
-            data: null
-          }
+            data: null,
+          },
         ],
         "story-audio": {
           "s3-key":
@@ -958,7 +953,7 @@ export const dummyCollection = {
         "hero-image-metadata": {
           width: 1024,
           height: 576,
-          "focus-point": [676, 312]
+          "focus-point": [676, 312],
         },
         comments: null,
         entities: {},
@@ -991,7 +986,7 @@ export const dummyCollection = {
                 url: "https://www.youtube.com/watch?v=OY9Oq3hp0YU&feature=youtu.be",
                 "embed-url": "https://www.youtube.com/embed/OY9Oq3hp0YU",
                 metadata: {},
-                subtype: null
+                subtype: null,
               },
               {
                 id: "00000000-0000-0000-0000-000000000000",
@@ -1001,9 +996,9 @@ export const dummyCollection = {
                 type: "text",
                 text: '<p>text <a href="https://ace-web.qtstage.io/">promotional</a> message</p>',
                 metadata: {
-                  "promotional-message": true
-                }
-              }
+                  "promotional-message": true,
+                },
+              },
             ],
             "card-updated-at": 1568977881112,
             "content-version-id": "1cd5ea42-6751-4ec6-a161-395f3326ce00",
@@ -1018,21 +1013,20 @@ export const dummyCollection = {
                 title: "Untitled Sep 20, 2019 04:30 PM",
                 message: "Social Description",
                 image: {
-                  key:
-                    "ace/2019-06/3999bc52-1280-49aa-b542-20cd9e06dd34/The_Secret_to_a_Good_Quality_Sleep_Memory_Foam.jpg",
+                  key: "ace/2019-06/3999bc52-1280-49aa-b542-20cd9e06dd34/The_Secret_to_a_Good_Quality_Sleep_Memory_Foam.jpg",
                   url: null,
                   attribution: "attribution",
                   caption: "caption",
                   metadata: {
                     width: 1024,
                     height: 576,
-                    "focus-point": [676, 312]
-                  }
-                }
+                    "focus-point": [676, 312],
+                  },
+                },
               },
-              attributes: {}
-            }
-          }
+              attributes: {},
+            },
+          },
         ],
         url: "https://ace-web.qtstage.io/recent-stories/news/business/untitled-sep-20-2019-0430-pm",
         "story-version-id": "a64fe8b4-c0aa-4bd5-93a2-6e428332e5b2",
@@ -1061,18 +1055,18 @@ export const dummyCollection = {
             bio: null,
             "contributor-role": {
               id: 873,
-              name: "Author"
-            }
-          }
+              name: "Author",
+            },
+          },
         ],
         metadata: {
           "card-share": {
-            shareable: false
-          }
+            shareable: false,
+          },
         },
         "publish-at": null,
-        "assignee-name": "Ashwini Mohan"
-      }
+        "assignee-name": "Ashwini Mohan",
+      },
     },
     {
       id: 40827,
@@ -1082,9 +1076,9 @@ export const dummyCollection = {
       slug: "col02",
       template: "default",
       metadata: {
-        "cover-image": {}
+        "cover-image": {},
       },
-      "collection-date": null
+      "collection-date": null,
     },
     {
       id: "b4f33f98-8814-4675-97f0-75e447e43ab8",
@@ -1095,7 +1089,7 @@ export const dummyCollection = {
         seo: {
           "meta-description": "Meta description",
           "claim-reviews": {
-            story: null
+            story: null,
           }
         },
         "assignee-id": 299252,
@@ -1106,8 +1100,8 @@ export const dummyCollection = {
             name: "news",
             "meta-description": null,
             slug: "news",
-            "tag-type": "Tag"
-          }
+            "tag-type": "Tag",
+          },
         ],
         headline: "Untitled Sep 20, 2019 04:30 PM",
         "storyline-id": null,
@@ -1129,9 +1123,9 @@ export const dummyCollection = {
             collection: {
               slug: "business1",
               name: "Business News",
-              id: 2729
+              id: 2729,
             },
-            data: null
+            data: null,
           }
         ],
         "story-audio": {
@@ -1147,7 +1141,7 @@ export const dummyCollection = {
         "hero-image-metadata": {
           width: 1024,
           height: 576,
-          "focus-point": [676, 312]
+          "focus-point": [676, 312],
         },
         comments: null,
         entities: {},
@@ -1190,9 +1184,9 @@ export const dummyCollection = {
                 type: "text",
                 text: '<p>text <a href="https://ace-web.qtstage.io/">promotional</a> message</p>',
                 metadata: {
-                  "promotional-message": true
-                }
-              }
+                  "promotional-message": true,
+                },
+              },
             ],
             "card-updated-at": 1568977881112,
             "content-version-id": "1cd5ea42-6751-4ec6-a161-395f3326ce00",
@@ -1207,21 +1201,20 @@ export const dummyCollection = {
                 title: "Untitled Sep 20, 2019 04:30 PM",
                 message: "Social Description",
                 image: {
-                  key:
-                    "ace/2019-06/3999bc52-1280-49aa-b542-20cd9e06dd34/The_Secret_to_a_Good_Quality_Sleep_Memory_Foam.jpg",
+                  key: "ace/2019-06/3999bc52-1280-49aa-b542-20cd9e06dd34/The_Secret_to_a_Good_Quality_Sleep_Memory_Foam.jpg",
                   url: null,
                   attribution: "attribution",
                   caption: "caption",
                   metadata: {
                     width: 1024,
                     height: 576,
-                    "focus-point": [676, 312]
-                  }
-                }
+                    "focus-point": [676, 312],
+                  },
+                },
               },
-              attributes: {}
-            }
-          }
+              attributes: {},
+            },
+          },
         ],
         url: "https://ace-web.qtstage.io/recent-stories/news/business/untitled-sep-20-2019-0430-pm",
         "story-version-id": "a64fe8b4-c0aa-4bd5-93a2-6e428332e5b2",
@@ -1250,18 +1243,18 @@ export const dummyCollection = {
             bio: null,
             "contributor-role": {
               id: 873,
-              name: "Author"
-            }
-          }
+              name: "Author",
+            },
+          },
         ],
         metadata: {
           "card-share": {
-            shareable: false
-          }
+            shareable: false,
+          },
         },
         "publish-at": null,
         "assignee-name": "Ashwini Mohan"
-      }
+      },
     },
     {
       id: "b4f33f98-8814-4675-97f0-75e447e43ab8",
@@ -1272,8 +1265,8 @@ export const dummyCollection = {
         seo: {
           "meta-description": "Meta description",
           "claim-reviews": {
-            story: null
-          }
+            story: null,
+          },
         },
         "assignee-id": 299252,
         "author-name": "Ashwini Mohan",
@@ -1283,8 +1276,8 @@ export const dummyCollection = {
             name: "news",
             "meta-description": null,
             slug: "news",
-            "tag-type": "Tag"
-          }
+            "tag-type": "Tag",
+          },
         ],
         headline: "Untitled Sep 20, 2019 04:30 PM",
         "storyline-id": null,
@@ -1306,10 +1299,10 @@ export const dummyCollection = {
             collection: {
               slug: "business1",
               name: "Business News",
-              id: 2729
+              id: 2729,
             },
-            data: null
-          }
+            data: null,
+          },
         ],
         "story-audio": {
           "s3-key":
@@ -1324,7 +1317,7 @@ export const dummyCollection = {
         "hero-image-metadata": {
           width: 1024,
           height: 576,
-          "focus-point": [676, 312]
+          "focus-point": [676, 312],
         },
         comments: null,
         entities: {},
@@ -1357,7 +1350,7 @@ export const dummyCollection = {
                 url: "https://www.youtube.com/watch?v=OY9Oq3hp0YU&feature=youtu.be",
                 "embed-url": "https://www.youtube.com/embed/OY9Oq3hp0YU",
                 metadata: {},
-                subtype: null
+                subtype: null,
               },
               {
                 id: "00000000-0000-0000-0000-000000000000",
@@ -1367,9 +1360,9 @@ export const dummyCollection = {
                 type: "text",
                 text: '<p>text <a href="https://ace-web.qtstage.io/">promotional</a> message</p>',
                 metadata: {
-                  "promotional-message": true
-                }
-              }
+                  "promotional-message": true,
+                },
+              },
             ],
             "card-updated-at": 1568977881112,
             "content-version-id": "1cd5ea42-6751-4ec6-a161-395f3326ce00",
@@ -1384,21 +1377,20 @@ export const dummyCollection = {
                 title: "Untitled Sep 20, 2019 04:30 PM",
                 message: "Social Description",
                 image: {
-                  key:
-                    "ace/2019-06/3999bc52-1280-49aa-b542-20cd9e06dd34/The_Secret_to_a_Good_Quality_Sleep_Memory_Foam.jpg",
+                  key: "ace/2019-06/3999bc52-1280-49aa-b542-20cd9e06dd34/The_Secret_to_a_Good_Quality_Sleep_Memory_Foam.jpg",
                   url: null,
                   attribution: "attribution",
                   caption: "caption",
                   metadata: {
                     width: 1024,
                     height: 576,
-                    "focus-point": [676, 312]
-                  }
-                }
+                    "focus-point": [676, 312],
+                  },
+                },
               },
-              attributes: {}
-            }
-          }
+              attributes: {},
+            },
+          },
         ],
         url: "https://ace-web.qtstage.io/recent-stories/news/business/untitled-sep-20-2019-0430-pm",
         "story-version-id": "a64fe8b4-c0aa-4bd5-93a2-6e428332e5b2",
@@ -1427,18 +1419,18 @@ export const dummyCollection = {
             bio: null,
             "contributor-role": {
               id: 873,
-              name: "Author"
-            }
-          }
+              name: "Author",
+            },
+          },
         ],
         metadata: {
           "card-share": {
-            shareable: false
-          }
+            shareable: false,
+          },
         },
         "publish-at": null,
-        "assignee-name": "Ashwini Mohan"
-      }
+        "assignee-name": "Ashwini Mohan",
+      },
     },
     {
       id: 42230,
@@ -1455,13 +1447,13 @@ export const dummyCollection = {
             width: 720,
             "mime-type": "image/jpeg",
             height: 1080,
-            "focus-point": [350, 648]
+            "focus-point": [350, 648],
           },
           "cover-image-s3-key": "ace/2018-10/7caece74-bdc3-4f1e-bcc7-80d7129d770c/trailer.jpeg",
-          caption: "thugs of hindustan"
-        }
+          caption: "thugs of hindustan",
+        },
       },
-      "collection-date": null
+      "collection-date": null,
     },
     {
       id: 67979,
@@ -1471,9 +1463,9 @@ export const dummyCollection = {
       slug: "collectiontest",
       template: "default",
       metadata: {
-        "cover-image": null
+        "cover-image": null,
       },
-      "collection-date": null
+      "collection-date": null,
     },
     {
       id: 68415,
@@ -1483,9 +1475,9 @@ export const dummyCollection = {
       slug: "foo",
       template: "default",
       metadata: {
-        "cover-image": null
+        "cover-image": null,
       },
-      "collection-date": null
+      "collection-date": null,
     },
     {
       id: "7afda60c-1360-4320-bbe2-d6e29a8bcb1d",
@@ -1495,8 +1487,8 @@ export const dummyCollection = {
         "updated-at": 1570786673740,
         seo: {
           "claim-reviews": {
-            story: null
-          }
+            story: null,
+          },
         },
         "assignee-id": 187245,
         "author-name": "Shreya Shukla",
@@ -1517,14 +1509,14 @@ export const dummyCollection = {
                 id: 6449,
                 name: "Current Affairs",
                 slug: "current-affairs",
-                data: null
-              }
+                data: null,
+              },
             ],
             "hero-image-metadata": {
               width: 960,
               "mime-type": "image/png",
               height: 603,
-              "focus-point": [535, 225]
+              "focus-point": [535, 225],
             },
             "hero-image-s3-key": "ace/2018-12/d65b8758-9130-417f-bd97-c181661d6701/cat_1285634_960_720.png",
             url: "https://ace-web.qtstage.io/current-affairs/new-summary-test",
@@ -1542,10 +1534,10 @@ export const dummyCollection = {
                 bio: null,
                 "contributor-role": {
                   id: 873,
-                  name: "Author"
-                }
-              }
-            ]
+                  name: "Author",
+                },
+              },
+            ],
           }
         },
         "last-published-at": 1570786676787,
@@ -1564,10 +1556,10 @@ export const dummyCollection = {
             collection: {
               slug: "health",
               name: "Health",
-              id: 15603
+              id: 15603,
             },
-            data: null
-          }
+            data: null,
+          },
         ],
         "story-audio": {
           "s3-key":
@@ -1581,7 +1573,7 @@ export const dummyCollection = {
         "publisher-id": 97,
         "hero-image-metadata": {
           width: 266,
-          height: 190
+          height: 190,
         },
         comments: null,
         entities: {},
@@ -1612,8 +1604,7 @@ export const dummyCollection = {
                 id: "14890d2e-936a-459e-aed5-dd8e330c38d3",
                 metadata: {},
                 subtype: "summary",
-                text:
-                  "<p>time stamp testtime stamp testtime stamp testtime stamp testtime stamp testtime stamp testtime stamp testtime stamp testtime stamp testtime stamp testtime stamp testtime stamp testtime stamp testtime stamp testtime stamp testtime stamp testtime stamp testtime stamp testtime stamp testtime stamp testtime stamp testtime stamp testtime stamp test</p>"
+                text: "<p>time stamp testtime stamp testtime stamp testtime stamp testtime stamp testtime stamp testtime stamp testtime stamp testtime stamp testtime stamp testtime stamp testtime stamp testtime stamp testtime stamp testtime stamp testtime stamp testtime stamp testtime stamp testtime stamp testtime stamp testtime stamp testtime stamp testtime stamp test</p>"
               }
             ],
             "card-updated-at": 1569910964026,
@@ -1635,12 +1626,12 @@ export const dummyCollection = {
                   caption: "test image caption ",
                   metadata: {
                     width: 266,
-                    height: 190
-                  }
-                }
+                    height: 190,
+                  },
+                },
               },
-              attributes: {}
-            }
+              attributes: {},
+            },
           },
           {
             "story-elements": [
@@ -1662,7 +1653,7 @@ export const dummyCollection = {
                   "linked-story-id": "39b60649-aa6f-49f6-8365-0981b799b3b7"
                 },
                 subtype: "also-read",
-                text: "New Summary test"
+                text: "New Summary test",
               },
               {
                 description: "",
@@ -1673,8 +1664,7 @@ export const dummyCollection = {
                 id: "927048d7-7410-4c11-83df-12ddcc6e0705",
                 metadata: {},
                 subtype: null,
-                text:
-                  "<p>n literary theory, a text is any object that can be “read”, whether this object is a work of literature, a street sign, an arrangement of buildings on a city block, or styles of clothing. It is a coherent set of signs that transmits some kind of informative message.n literary theory, a text is any object that can be “read”, whether this object is</p> "
+                text: "<p>n literary theory, a text is any object that can be “read”, whether this object is a work of literature, a street sign, an arrangement of buildings on a city block, or styles of clothing. It is a coherent set of signs that transmits some kind of informative message.n literary theory, a text is any object that can be “read”, whether this object is</p> ",
               },
               {
                 description: "",
@@ -1685,9 +1675,8 @@ export const dummyCollection = {
                 id: "1b742dc6-b708-40f4-a365-03340bf111bf",
                 metadata: {},
                 subtype: null,
-                text:
-                  "<p>a work of literature, a street sign, an arrangement of buildings on a city block, or styles of clothing. It is a coherent set of signs that transmits some kind of informative message.n literary theory, a text is any object that can be “read”, whether this object is a work of literature, a street sign, an arrangement of buildings on a city block, or styles of clothing. It is a coherent set of signs that transmits some kind of informative message.</p>"
-              }
+                text: "<p>a work of literature, a street sign, an arrangement of buildings on a city block, or styles of clothing. It is a coherent set of signs that transmits some kind of informative message.n literary theory, a text is any object that can be “read”, whether this object is a work of literature, a street sign, an arrangement of buildings on a city block, or styles of clothing. It is a coherent set of signs that transmits some kind of informative message.</p>",
+              },
             ],
             "card-updated-at": 1569910964026,
             "content-version-id": "21fc3ac1-304d-46fe-a467-e114cca94ef7",
@@ -1708,11 +1697,11 @@ export const dummyCollection = {
                   caption: "test image caption ",
                   metadata: {
                     width: 266,
-                    height: 190
-                  }
-                }
-              }
-            }
+                    height: 190,
+                  },
+                },
+              },
+            },
           },
           {
             "story-elements": [
@@ -1725,9 +1714,8 @@ export const dummyCollection = {
                 id: "6afe8b08-59af-4886-8d55-92bbf5fbebeb",
                 metadata: {},
                 subtype: null,
-                text:
-                  "<p>a work of literature, a street sign, an arrangement of buildings on a city block, or styles of clothing. It is a coherent set of signs that transmits some kind of informative message.n literary theory, a text is any object that can be “read”, whether this object is a work of literature, a street sign, an arrangement of buildings on a city block, or styles of clothing. It is a coherent set of signs that transmits some kind of informative message.a work of literature, a street sign, an arrangement of buildings on a city block, or styles of clothing. It is a coherent set of signs that transmits some kind of informative message.n literary theory, a text is any object that can be “read”, whether this object is a work of literature, a street sign, an arrangement of buildings on a city block, or styles of clothing. It is a coherent set of signs that transmits some kind of informative message.</p>"
-              }
+                text: "<p>a work of literature, a street sign, an arrangement of buildings on a city block, or styles of clothing. It is a coherent set of signs that transmits some kind of informative message.n literary theory, a text is any object that can be “read”, whether this object is a work of literature, a street sign, an arrangement of buildings on a city block, or styles of clothing. It is a coherent set of signs that transmits some kind of informative message.a work of literature, a street sign, an arrangement of buildings on a city block, or styles of clothing. It is a coherent set of signs that transmits some kind of informative message.n literary theory, a text is any object that can be “read”, whether this object is a work of literature, a street sign, an arrangement of buildings on a city block, or styles of clothing. It is a coherent set of signs that transmits some kind of informative message.</p>",
+              },
             ],
             "card-updated-at": 1570786670702,
             "content-version-id": "68b4c7d6-489c-42c3-b61a-83b159168dc3",
@@ -1748,12 +1736,12 @@ export const dummyCollection = {
                   caption: "test image caption ",
                   metadata: {
                     width: 266,
-                    height: 190
-                  }
-                }
+                    height: 190,
+                  },
+                },
               },
-              attributes: {}
-            }
+              attributes: {},
+            },
           },
           {
             "story-elements": [
@@ -1766,8 +1754,7 @@ export const dummyCollection = {
                 id: "10d364a0-ddf3-433b-ab07-235f29e21041",
                 metadata: {},
                 subtype: null,
-                text:
-                  "<p>a work of literature, a street sign, an arrangement of buildings on a city block, or styles of clothing. It is a coherent set of signs that transmits some kind of informative message.n literary theory, a text is any object that can be “read”, whether this object is a work of literature, a street sign, an arrangement of buildings on a city block, or styles of clothing. It is a coherent set of signs that transmits some kind of informative message.</p>"
+                text: "<p>a work of literature, a street sign, an arrangement of buildings on a city block, or styles of clothing. It is a coherent set of signs that transmits some kind of informative message.n literary theory, a text is any object that can be “read”, whether this object is a work of literature, a street sign, an arrangement of buildings on a city block, or styles of clothing. It is a coherent set of signs that transmits some kind of informative message.</p>",
               },
               {
                 id: "00000000-0000-0000-0000-000000000000",
@@ -1777,9 +1764,9 @@ export const dummyCollection = {
                 type: "text",
                 text: '<p>text <a href="https://ace-web.qtstage.io/">promotional</a> message</p>',
                 metadata: {
-                  "promotional-message": true
-                }
-              }
+                  "promotional-message": true,
+                },
+              },
             ],
             "card-updated-at": 1570786670702,
             "content-version-id": "c3a31b91-b606-4524-a36b-a35fbd174585",
@@ -1800,13 +1787,13 @@ export const dummyCollection = {
                   caption: "test image caption ",
                   metadata: {
                     width: 266,
-                    height: 190
-                  }
-                }
+                    height: 190,
+                  },
+                },
               },
-              attributes: {}
-            }
-          }
+              attributes: {},
+            },
+          },
         ],
         url: "https://ace-web.qtstage.io/health/time-stamp-test",
         "story-version-id": "fd873d9b-5f08-4d8e-ac03-eb3f30eaf619",
@@ -1836,14 +1823,14 @@ export const dummyCollection = {
             bio: null,
             "contributor-role": {
               id: 873,
-              name: "Author"
-            }
-          }
+              name: "Author",
+            },
+          },
         ],
         metadata: {
           "card-share": {
-            shareable: false
-          }
+            shareable: false,
+          },
         },
         "publish-at": null,
         "assignee-name": "Shreya Shukla"
@@ -1857,7 +1844,7 @@ export const dummyCollection = {
         "updated-at": 1570794627091,
         seo: {
           "claim-reviews": {
-            story: null
+            story: null,
           }
         },
         "assignee-id": 187245,
@@ -1874,7 +1861,7 @@ export const dummyCollection = {
           home: {
             default: {
               headline: "alternate story",
-              "hero-image": null
+              "hero-image": null,
             }
           }
         },
@@ -1890,9 +1877,9 @@ export const dummyCollection = {
             collection: {
               slug: "child-sec-parent-sec",
               name: "child-sec (parent-sec)",
-              id: 17115
+              id: 17115,
             },
-            data: null
+            data: null,
           }
         ],
         "story-audio": {
@@ -1909,7 +1896,7 @@ export const dummyCollection = {
           width: 760,
           "mime-type": "image/jpeg",
           height: 506,
-          "focus-point": [439, 232]
+          "focus-point": [439, 232],
         },
         comments: null,
         entities: {},
@@ -1940,7 +1927,7 @@ export const dummyCollection = {
                 id: "9c89611d-b826-48f4-9a26-bab2ddc0eb88",
                 metadata: {},
                 subtype: "summary",
-                text: "<p>We're experiencing a problem here, our developers are on the case. Please try it later.</p>"
+                text: "<p>We're experiencing a problem here, our developers are on the case. Please try it later.</p>",
               }
             ],
             "card-updated-at": 1569826764243,
@@ -1964,12 +1951,12 @@ export const dummyCollection = {
                     width: 760,
                     "mime-type": "image/jpeg",
                     height: 506,
-                    "focus-point": [439, 232]
-                  }
-                }
+                    "focus-point": [439, 232],
+                  },
+                },
               },
-              attributes: {}
-            }
+              attributes: {},
+            },
           },
           {
             "story-elements": [
@@ -1982,8 +1969,8 @@ export const dummyCollection = {
                 id: "c7686ef5-2969-44b2-b1a8-6ad7935450e5",
                 metadata: {},
                 subtype: null,
-                text: "<p>Card2</p>"
-              }
+                text: "<p>Card2</p>",
+              },
             ],
             "card-updated-at": 1570794624997,
             "content-version-id": "51549b8a-6773-4566-8b94-7bde39b8a750",
@@ -2006,12 +1993,12 @@ export const dummyCollection = {
                     width: 760,
                     "mime-type": "image/jpeg",
                     height: 506,
-                    "focus-point": [439, 232]
-                  }
-                }
+                    "focus-point": [439, 232],
+                  },
+                },
               },
-              attributes: {}
-            }
+              attributes: {},
+            },
           },
           {
             "story-elements": [
@@ -2024,7 +2011,7 @@ export const dummyCollection = {
                 id: "2ec760e4-9194-4ea2-86a0-6ab0070cb0dd",
                 metadata: {},
                 subtype: null,
-                text: "<p>card 3</p>"
+                text: "<p>card 3</p>",
               },
               {
                 id: "00000000-0000-0000-0000-000000000000",
@@ -2034,9 +2021,9 @@ export const dummyCollection = {
                 type: "text",
                 text: '<p>text <a href="https://ace-web.qtstage.io/">promotional</a> message</p>',
                 metadata: {
-                  "promotional-message": true
-                }
-              }
+                  "promotional-message": true,
+                },
+              },
             ],
             "card-updated-at": 1570794624997,
             "content-version-id": "6ae26343-7c87-484f-a5a7-b4f41855b50c",
@@ -2059,11 +2046,11 @@ export const dummyCollection = {
                     width: 760,
                     "mime-type": "image/jpeg",
                     height: 506,
-                    "focus-point": [439, 232]
-                  }
-                }
+                    "focus-point": [439, 232],
+                  },
+                },
               },
-              attributes: {}
+              attributes: {},
             }
           }
         ],
@@ -2095,18 +2082,18 @@ export const dummyCollection = {
             bio: null,
             "contributor-role": {
               id: 873,
-              name: "Author"
-            }
-          }
+              name: "Author",
+            },
+          },
         ],
         metadata: {
           "card-share": {
-            shareable: false
-          }
+            shareable: false,
+          },
         },
         "publish-at": null,
-        "assignee-name": "Shreya Shukla"
-      }
+        "assignee-name": "Shreya Shukla",
+      },
     },
     {
       id: "8ed73f9f-ac4e-453b-8508-1b5fbd99e71d",
@@ -2116,8 +2103,8 @@ export const dummyCollection = {
         "updated-at": 1571032556498,
         seo: {
           "claim-reviews": {
-            story: null
-          }
+            story: null,
+          },
         },
         "assignee-id": 187245,
         "author-name": "Shreya Shukla",
@@ -2142,14 +2129,13 @@ export const dummyCollection = {
             collection: {
               slug: "lifestyle-updated-slug",
               name: "sports",
-              id: 2728
+              id: 2728,
             },
-            data: null
+            data: null,
           }
         ],
         "story-audio": {
-          "s3-key":
-            "ace/story-audio/2019-10/8ed73f9f-ac4e-453b-8508-1b5fbd99e71d/.f6427b6a-1695-4718-9ced-9c1eab9303e8.mp3"
+          "s3-key": "ace/story-audio/2019-10/8ed73f9f-ac4e-453b-8508-1b5fbd99e71d/.f6427b6a-1695-4718-9ced-9c1eab9303e8.mp3"
         },
         "access-level-value": 100,
         "content-created-at": 1559584761098,
@@ -2159,7 +2145,7 @@ export const dummyCollection = {
         "publisher-id": 97,
         "hero-image-metadata": {
           width: 528,
-          height: 350
+          height: 350,
         },
         comments: null,
         entities: {},
@@ -2192,9 +2178,8 @@ export const dummyCollection = {
                 id: "f4e0e915-046b-485f-99a2-b6627d2952c7",
                 metadata: {},
                 subtype: null,
-                text:
-                  "<p>Digital publishers often face margin squeeze on ads, and struggle with unproven revenue models, audience leakage to competition and rapidly changing technology. Overcome these problems effortlessly.Digital publishers often face margin squeeze on ads, and struggle with unproven revenue models, audience leakage to competition and rapidly changing technology. Overcome these problems effortlessly.</p>"
-              }
+                text: "<p>Digital publishers often face margin squeeze on ads, and struggle with unproven revenue models, audience leakage to competition and rapidly changing technology. Overcome these problems effortlessly.Digital publishers often face margin squeeze on ads, and struggle with unproven revenue models, audience leakage to competition and rapidly changing technology. Overcome these problems effortlessly.</p>",
+              },
             ],
             "card-updated-at": 1564139386962,
             "content-version-id": "7d8792eb-5e65-461b-b956-44ded3f0d24b",
@@ -2217,12 +2202,12 @@ export const dummyCollection = {
                     "imagecaptiontestattributionimagecaptiontestattributionimagecaptiontestattributionimagecaptiontestattributionimagecaptiontesta",
                   metadata: {
                     width: 528,
-                    height: 350
-                  }
-                }
+                    height: 350,
+                  },
+                },
               },
-              attributes: {}
-            }
+              attributes: {},
+            },
           },
           {
             "story-elements": [
@@ -2235,7 +2220,7 @@ export const dummyCollection = {
                 id: "5368bde6-ccb6-4982-8d55-11847b9f3154",
                 metadata: {},
                 subtype: null,
-                text: "hello i am  first carddfghjkljhgfdfghj"
+                text: "hello i am  first carddfghjkljhgfdfghj",
               },
               {
                 description: "",
@@ -2246,8 +2231,7 @@ export const dummyCollection = {
                 id: "772acc11-18a5-4708-9bbf-358e49cd74ce",
                 metadata: {},
                 subtype: null,
-                text:
-                  "<p>Digital publishers often face margin squeeze on ads, and struggle with unproven revenue models, audience leakage to competition and rapidly changing technology. Overcome these problems effortlessly.Digital publishers often face margin squeeze on ads, and struggle with unproven revenue models, audience leakage to competition and rapidly changing technology. Overcome these problems effortlessly.</p>"
+                text: "<p>Digital publishers often face margin squeeze on ads, and struggle with unproven revenue models, audience leakage to competition and rapidly changing technology. Overcome these problems effortlessly.Digital publishers often face margin squeeze on ads, and struggle with unproven revenue models, audience leakage to competition and rapidly changing technology. Overcome these problems effortlessly.</p>",
               },
               {
                 description: "",
@@ -2258,8 +2242,8 @@ export const dummyCollection = {
                 id: "1c9a67ee-4dd9-46ef-9302-d1e8287761f0",
                 metadata: {},
                 subtype: null,
-                text: "<p>hello</p>"
-              }
+                text: "<p>hello</p>",
+              },
             ],
             "card-updated-at": 1571032554331,
             "content-version-id": "1ed6c4b7-bcc0-4a86-827d-35dc78d60ecb",
@@ -2276,18 +2260,16 @@ export const dummyCollection = {
                 image: {
                   key: "ace/2018-12/c19f080d-024d-4080-8bb0-13a2d85242a2/rose_blue_flower_rose_blooms_67636.jpeg",
                   url: null,
-                  attribution:
-                    "imagecaptiontestattributionimagecaptiontestattributionimagecaptiontestattributionimagecaptiontestattributionimagecaptiontestatt",
-                  caption:
-                    "imagecaptiontestattributionimagecaptiontestattributionimagecaptiontestattributionimagecaptiontestattributionimagecaptiontesta",
+                  attribution: "imagecaptiontestattributionimagecaptiontestattributionimagecaptiontestattributionimagecaptiontestattributionimagecaptiontestatt",
+                  caption: "imagecaptiontestattributionimagecaptiontestattributionimagecaptiontestattributionimagecaptiontestattributionimagecaptiontesta",
                   metadata: {
                     width: 528,
-                    height: 350
-                  }
-                }
+                    height: 350,
+                  },
+                },
               },
-              attributes: {}
-            }
+              attributes: {},
+            },
           },
           {
             "story-elements": [
@@ -2300,7 +2282,7 @@ export const dummyCollection = {
                 id: "8295725e-fc67-45ad-8a97-5df01700b9c5",
                 metadata: {},
                 subtype: null,
-                text: "hello i am  second card "
+                text: "hello i am  second card ",
               },
               {
                 description: "",
@@ -2311,8 +2293,7 @@ export const dummyCollection = {
                 id: "27475841-6f66-49c8-a90a-1f03cd4b96a6",
                 metadata: {},
                 subtype: null,
-                text:
-                  "<p>Digital publishers often face margin squeeze on ads, and struggle with unproven revenue models, audience leakage to competition and rapidly changing technology. Overcome these problems effortlessly.Digital publishers often face margin squeeze on ads, and struggle with unproven revenue models, audience leakage to competition and rapidly changing technology. Overcome these problems effortlessly.</p>"
+                text: "<p>Digital publishers often face margin squeeze on ads, and struggle with unproven revenue models, audience leakage to competition and rapidly changing technology. Overcome these problems effortlessly.Digital publishers often face margin squeeze on ads, and struggle with unproven revenue models, audience leakage to competition and rapidly changing technology. Overcome these problems effortlessly.</p>",
               },
               {
                 description: "",
@@ -2323,9 +2304,8 @@ export const dummyCollection = {
                 id: "d6aaf29f-5009-4855-af3f-97db32afd742",
                 metadata: {},
                 subtype: "summary",
-                text:
-                  "<p>Digital publishers often face margin squeeze on ads, and struggle with unproven revenue models, audience leakage to competition and rapidly changing technology. Overcome these problems effortlessly.</p>"
-              }
+                text: "<p>Digital publishers often face margin squeeze on ads, and struggle with unproven revenue models, audience leakage to competition and rapidly changing technology. Overcome these problems effortlessly.</p>",
+              },
             ],
             "card-updated-at": 1559584934935,
             "content-version-id": "879d8715-b71a-439c-a222-cb568e0a9870",
@@ -2342,17 +2322,15 @@ export const dummyCollection = {
                 image: {
                   key: "ace/2018-12/c19f080d-024d-4080-8bb0-13a2d85242a2/rose_blue_flower_rose_blooms_67636.jpeg",
                   url: null,
-                  attribution:
-                    "imagecaptiontestattributionimagecaptiontestattributionimagecaptiontestattributionimagecaptiontestattributionimagecaptiontestatt",
-                  caption:
-                    "imagecaptiontestattributionimagecaptiontestattributionimagecaptiontestattributionimagecaptiontestattributionimagecaptiontesta",
+                  attribution: "imagecaptiontestattributionimagecaptiontestattributionimagecaptiontestattributionimagecaptiontestattributionimagecaptiontestatt",
+                  caption: "imagecaptiontestattributionimagecaptiontestattributionimagecaptiontestattributionimagecaptiontestattributionimagecaptiontesta",
                   metadata: {
                     width: 528,
-                    height: 350
-                  }
-                }
-              }
-            }
+                    height: 350,
+                  },
+                },
+              },
+            },
           },
           {
             "story-elements": [
@@ -2365,7 +2343,7 @@ export const dummyCollection = {
                 id: "52f3c740-4060-4151-962a-fbe6cba30e4f",
                 metadata: {},
                 subtype: null,
-                text: "hello i am  third card "
+                text: "hello i am  third card ",
               },
               {
                 description: "",
@@ -2375,13 +2353,11 @@ export const dummyCollection = {
                 title: "",
                 id: "6e3384be-dd15-4e1d-b4cc-2c6c9de35750",
                 metadata: {
-                  content:
-                    "Digital publishers often face margin squeeze on ads, and struggle with unproven revenue models, audience leakage to competition and rapidly changing technology. Overcome these problems effortlessly.",
-                  attribution: "someone"
+                  content: "Digital publishers often face margin squeeze on ads, and struggle with unproven revenue models, audience leakage to competition and rapidly changing technology. Overcome these problems effortlessly.",
+                  attribution: "someone",
                 },
                 subtype: "blockquote",
-                text:
-                  '<div><blockquote>Digital publishers often face margin squeeze on ads, and struggle with unproven revenue models, audience leakage to competition and rapidly changing technology. Overcome these problems effortlessly.</blockquote><span class="attribution">someone</span></div>'
+                text: '<div><blockquote>Digital publishers often face margin squeeze on ads, and struggle with unproven revenue models, audience leakage to competition and rapidly changing technology. Overcome these problems effortlessly.</blockquote><span class="attribution">someone</span></div>',
               },
               {
                 description: "",
@@ -2392,9 +2368,8 @@ export const dummyCollection = {
                 id: "f62b1a72-ee36-4eed-a730-e484d82e3678",
                 metadata: {},
                 subtype: null,
-                text:
-                  "<p>Digital publishers often face margin squeeze on ads, and struggle with unproven revenue models, audience leakage to competition and rapidly changing technology. Overcome these problems effortlessly.Digital publishers often face margin squeeze on ads, and struggle with unproven revenue models, audience leakage to competition and rapidly changing technology. Overcome these problems effortlessly.Digital publishers often face margin squeeze on ads, and struggle with unproven revenue models, audience leakage to competition and rapidly changing technology. Overcome these problems effortlessly.Digital publishers often face margin squeeze on ads, and struggle with unproven revenue models, audience leakage to competition and rapidly changing technology. Overcome these problems effortlessly.Digital publishers often face margin squeeze on ads, and struggle with unproven revenue models, audience leakage to competition and rapidly changing technology. Overcome these problems effortlessly.Digital publishers often face margin squeeze on ads, and struggle with unproven revenue models, audience leakage to competition and rapidly changing technology. Overcome these problems effortlessly.Digital publishers often face margin squeeze on ads, and struggle with unproven revenue models, audience leakage to competition and rapidly changing technology. Overcome these problems effortlessly.</p>"
-              }
+                text: "<p>Digital publishers often face margin squeeze on ads, and struggle with unproven revenue models, audience leakage to competition and rapidly changing technology. Overcome these problems effortlessly.Digital publishers often face margin squeeze on ads, and struggle with unproven revenue models, audience leakage to competition and rapidly changing technology. Overcome these problems effortlessly.Digital publishers often face margin squeeze on ads, and struggle with unproven revenue models, audience leakage to competition and rapidly changing technology. Overcome these problems effortlessly.Digital publishers often face margin squeeze on ads, and struggle with unproven revenue models, audience leakage to competition and rapidly changing technology. Overcome these problems effortlessly.Digital publishers often face margin squeeze on ads, and struggle with unproven revenue models, audience leakage to competition and rapidly changing technology. Overcome these problems effortlessly.Digital publishers often face margin squeeze on ads, and struggle with unproven revenue models, audience leakage to competition and rapidly changing technology. Overcome these problems effortlessly.Digital publishers often face margin squeeze on ads, and struggle with unproven revenue models, audience leakage to competition and rapidly changing technology. Overcome these problems effortlessly.</p>",
+              },
             ],
             "card-updated-at": 1559584934935,
             "content-version-id": "d65bf540-af25-47ab-b438-2cad006de1ac",
@@ -2417,11 +2392,11 @@ export const dummyCollection = {
                     "imagecaptiontestattributionimagecaptiontestattributionimagecaptiontestattributionimagecaptiontestattributionimagecaptiontesta",
                   metadata: {
                     width: 528,
-                    height: 350
-                  }
-                }
-              }
-            }
+                    height: 350,
+                  },
+                },
+              },
+            },
           },
           {
             "story-elements": [
@@ -2434,7 +2409,7 @@ export const dummyCollection = {
                 id: "b50cd4c2-8e64-40f1-8825-05888179be4f",
                 metadata: {},
                 subtype: null,
-                text: "This is 4th card"
+                text: "This is 4th card",
               },
               {
                 description: "",
@@ -2452,8 +2427,8 @@ export const dummyCollection = {
                 "image-s3-key": "ace/2019-02/45734b07-c503-4e8a-b7f3-017aed5ba1d7/images.jpeg",
                 metadata: {},
                 subtype: null,
-                hyperlink: "https://www.google.com/"
-              }
+                hyperlink: "https://www.google.com/",
+              },
             ],
             "card-updated-at": 1561458187551,
             "content-version-id": "1380eb36-9c21-4879-be8c-3e6e3ed8d6da",
@@ -2475,12 +2450,12 @@ export const dummyCollection = {
                   metadata: {
                     "mime-type": "image/jpeg",
                     width: 276,
-                    height: 182
-                  }
-                }
+                    height: 182,
+                  },
+                },
               },
-              attributes: {}
-            }
+              attributes: {},
+            },
           },
           {
             "story-elements": [
@@ -2493,14 +2468,14 @@ export const dummyCollection = {
                 id: "5d399d4b-4194-4deb-b2df-97d8b49d3323",
                 metadata: {},
                 subtype: null,
-                text: "This is  fifth card"
+                text: "This is  fifth card",
               },
               {
                 description: "",
                 "image-metadata": {
                   width: 1024,
                   "mime-type": "image/jpeg",
-                  height: 768
+                  height: 768,
                 },
                 "page-url": "/story/8ed73f9f-ac4e-453b-8508-1b5fbd99e71d/element/717d2b94-43dd-42a0-af5c-840c8d4e22fb",
                 type: "image",
@@ -2511,7 +2486,7 @@ export const dummyCollection = {
                 "image-s3-key": "ace/2019-02/45b42adb-8eb6-4f96-8fde-2138e319a39f/jpeg_43.jpg",
                 metadata: {},
                 subtype: null,
-                hyperlink: "https://www.google.com/"
+                hyperlink: "https://www.google.com/",
               },
               {
                 id: "00000000-0000-0000-0000-000000000000",
@@ -2521,9 +2496,9 @@ export const dummyCollection = {
                 type: "text",
                 text: '<p>text <a href="https://ace-web.qtstage.io/">promotional</a> message</p>',
                 metadata: {
-                  "promotional-message": true
-                }
-              }
+                  "promotional-message": true,
+                },
+              },
             ],
             "card-updated-at": 1561458187551,
             "content-version-id": "f9574387-5fbe-4c45-b918-86f2d72736e9",
@@ -2545,13 +2520,13 @@ export const dummyCollection = {
                   metadata: {
                     width: 1024,
                     "mime-type": "image/jpeg",
-                    height: 768
-                  }
-                }
+                    height: 768,
+                  },
+                },
               },
-              attributes: {}
-            }
-          }
+              attributes: {},
+            },
+          },
         ],
         url: "https://ace-web.qtstage.io/lifestyle/listicle-with-reverse-count",
         "story-version-id": "de2bbceb-432e-4c1b-ad47-3ee517cd3c61",
@@ -2582,18 +2557,18 @@ export const dummyCollection = {
             bio: null,
             "contributor-role": {
               id: 873,
-              name: "Author"
-            }
-          }
+              name: "Author",
+            },
+          },
         ],
         metadata: {
           "card-share": {
-            shareable: false
-          }
+            shareable: false,
+          },
         },
         "publish-at": null,
-        "assignee-name": "Shreya Shukla"
-      }
+        "assignee-name": "Shreya Shukla",
+      },
     },
     {
       id: "f8803324-6cdf-434c-b9a7-b89cc5309ed7",
@@ -2603,8 +2578,8 @@ export const dummyCollection = {
         "updated-at": 1571034606062,
         seo: {
           "claim-reviews": {
-            story: null
-          }
+            story: null,
+          },
         },
         "assignee-id": 331449,
         "author-name": "Ekta Patnaik",
@@ -2629,15 +2604,15 @@ export const dummyCollection = {
             collection: {
               slug: "elections-2018",
               name: "Elections 2018",
-              id: 23928
+              id: 23928,
             },
             data: {
-              color: "#7b4f4f"
-            }
-          }
+              color: "#7b4f4f",
+            },
+          },
         ],
         "story-audio": {
-          "s3-key": null
+          "s3-key": null,
         },
         "access-level-value": null,
         "content-created-at": 1569328762732,
@@ -2647,7 +2622,7 @@ export const dummyCollection = {
         "publisher-id": 97,
         "hero-image-metadata": {
           width: 586,
-          height: 781
+          height: 781,
         },
         comments: null,
         entities: {},
@@ -2688,7 +2663,7 @@ export const dummyCollection = {
                 "image-s3-key": "ace/2019-09/8c6a7163-a978-42ef-8796-ef10d47a6f22/Taz_332.jpg",
                 metadata: {},
                 subtype: null,
-                hyperlink: "https://www.google.com/"
+                hyperlink: "https://www.google.com/",
               },
               {
                 id: "00000000-0000-0000-0000-000000000000",
@@ -2698,9 +2673,9 @@ export const dummyCollection = {
                 type: "text",
                 text: '<p>text <a href="https://ace-web.qtstage.io/">promotional</a> message</p>',
                 metadata: {
-                  "promotional-message": true
-                }
-              }
+                  "promotional-message": true,
+                },
+              },
             ],
             "card-updated-at": 1569328777159,
             "content-version-id": "1793fbc8-a4eb-4681-8688-538a34206d0f",
@@ -2721,13 +2696,13 @@ export const dummyCollection = {
                   caption: null,
                   metadata: {
                     width: 586,
-                    height: 781
-                  }
-                }
+                    height: 781,
+                  },
+                },
               },
-              attributes: {}
-            }
-          }
+              attributes: {},
+            },
+          },
         ],
         url: "https://ace-web.qtstage.io/elections-2018/live-blog-test-hero-image",
         "story-version-id": "a97d774a-eca5-4fab-8fb8-722c11dafa21",
@@ -2757,21 +2732,21 @@ export const dummyCollection = {
             bio: null,
             "contributor-role": {
               id: 873,
-              name: "Author"
-            }
-          }
+              name: "Author",
+            },
+          },
         ],
         metadata: {
           "card-share": {
-            shareable: false
-          }
+            shareable: false,
+          },
         },
         "hero-image-url":
           "https://thumbor-stg.assettype.com/ace/2019-09/8c6a7163-a978-42ef-8796-ef10d47a6f22/Taz_332.jpg",
         "publish-at": null,
-        "assignee-name": "Ekta Patnaik"
-      }
-    }
+        "assignee-name": "Ekta Patnaik",
+      },
+    },
   ],
   "created-at": 1571041151571,
   metadata: {
@@ -2780,11 +2755,11 @@ export const dummyCollection = {
       "cover-image-metadata": {
         width: 586,
         height: 781,
-        "focus-point": [293, 391]
+        "focus-point": [293, 391],
       },
       caption: "",
       "cover-image-url":
         "https://thumbor-stg.assettype.com/ace/2019-09/8c6a7163-a978-42ef-8796-ef10d47a6f22/Taz_332.jpg"
-    }
-  }
+    },
+  },
 };

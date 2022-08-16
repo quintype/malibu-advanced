@@ -15,7 +15,7 @@ export const CollectionNameBase = ({
   collectionNameTemplate,
   headerLevel,
   customCollectionName = "",
-  navigate = true
+  navigate = true,
 }) => {
   const collectionTitle = useStateValue() || {};
   const showRowTitle = get(collectionTitle, ["showRowTitle"], true);
@@ -39,8 +39,9 @@ export const CollectionNameBase = ({
       <div
         styleName="border-bottom"
         style={{
-          borderBottom: `4px solid ${CollectionNameBorderColor}`
-        }}></div>
+          borderBottom: `4px solid ${CollectionNameBorderColor}`,
+        }}
+      ></div>
     ) : (
       ""
     );
@@ -91,14 +92,16 @@ export const CollectionNameBase = ({
           className={`arr--collection-name arrow-component ${templateStyle}`}
           styleName={`collection ${textColor} ${templateStyle}`}
           style={{
-            borderBottom: borderBottomFullStyle
+            borderBottom: borderBottomFullStyle,
           }}
-          data-test-id="collection-name">
+          data-test-id="collection-name"
+        >
           {templateStyle.includes("collection-borderLeft") && (
             <span
               styleName="border-left"
               className="arr-collection-name-border-left"
-              style={{ color: CollectionNameBorderColor, fontSize: getBorderHeight() }}></span>
+              style={{ color: CollectionNameBorderColor, fontSize: getBorderHeight() }}
+            ></span>
           )}
           {slug && !slug.includes(undefined) ? (
             <Link href={slug} aria-label="collection-name">
@@ -126,17 +129,17 @@ CollectionNameBase.propTypes = {
   /** Header tags ranging h1-h6, where h[headerLevel] */
   headerLevel: PropTypes.string,
   customCollectionName: PropTypes.string,
-  navigate: PropTypes.bool
+  navigate: PropTypes.bool,
 };
 
 CollectionNameBase.defaultProps = {
   collectionNameTemplate: "",
-  headerLevel: "3"
+  headerLevel: "3",
 };
 
 function mapStateToProps(state) {
   return {
-    config: get(state, ["qt", "config"], {})
+    config: get(state, ["qt", "config"], {}),
   };
 }
 

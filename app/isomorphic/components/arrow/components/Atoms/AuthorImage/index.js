@@ -15,7 +15,10 @@ const authorWithImage = (author, templateStyle) => {
             alt={name}
             defaultWidth={250}
             widths={[250, 480]}
-            aspectRatio={[[1, 1], [1, 1]]}
+            aspectRatio={[
+              [1, 1],
+              [1, 1]
+            ]}
             sizes={"98vw"}
             imgParams={{ auto: ["format", "compress"] }}
           />
@@ -47,9 +50,10 @@ AuthorImage.propTypes = {
     "avatar-url": PropTypes.string,
     "avatar-s3-key": PropTypes.string,
     name: PropTypes.string,
-    slug: PropTypes.string
+    slug: PropTypes.string,
   }),
-  template: PropTypes.string
+  template: PropTypes.string,
+  config: PropTypes.object,
 };
 
 export default AuthorImage;
