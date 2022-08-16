@@ -1,3 +1,4 @@
+/* eslint-disable jest/valid-title */
 import { updateContentLinks, isEmpty, sharePageUrl, getAuthorTwitterUrl } from "./utils";
 
 describe("updateContentLinks", () => {

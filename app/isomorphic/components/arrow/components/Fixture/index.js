@@ -1,4 +1,4 @@
-/* eslint-disable no-undef: 0 */
+/* eslint-disable no-undef */
 import configJSON from "./config.json";
 import { dummyStory, dummyPhotoStory, dummyLiveBlogStory, dummyListicleStory } from "./dummyStory";
 import get from "lodash.get";
