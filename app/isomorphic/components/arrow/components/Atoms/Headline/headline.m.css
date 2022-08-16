@@ -1,0 +1,26 @@
+@custom-media --viewport-medium (width >= 768px);
+
+.wrapper {
+  margin-bottom: 6px;
+}
+
+.headline {
+  margin-bottom: var(--arrow-spacing-xxs);
+  color: var(--arrow-c-mono2);
+  font-weight: var(--arrow-fw-semi-bold);
+  @media (--viewport-medium) {
+    margin-bottom: var(--arrow-spacing-xs);
+  }
+}
+
+.wrapper .headline {
+  display: inline;
+  margin-bottom: var(--arrow-spacing-xs);
+}
+
+.dark {
+  color: var(--arrow-c-mono2);
+}
+.light {
+  color: var(--arrow-c-invert-mono2);
+}

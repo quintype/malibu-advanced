@@ -1,0 +1,11 @@
+@custom-media --viewport-medium (width >= 768px);
+
+.wrapper {
+  display: grid;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  @media (--viewport-medium) {
+    display: flex;
+  }
+}

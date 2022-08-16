@@ -1,6 +1,6 @@
 import React from "react";
-import { FourColGrid } from "@quintype/arrow";
 import { object } from "prop-types";
+import FourColGrid  from "../../../arrow/components/Rows/FourColGrid";
 
 export const ArrowFourColGrid = ({ collection }) => {
   const config = {

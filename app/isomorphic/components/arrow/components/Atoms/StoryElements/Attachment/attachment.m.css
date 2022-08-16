@@ -1,0 +1,125 @@
+@value viewports: "../../../../../../../assets/stylesheets/viewports.m.css";
+@value mobile from viewports;
+@value tablet from viewports;
+
+.headline {
+  font-size: var(--arrow-fs-s);
+  font-weight: var(--arrow-fw-bold);
+  line-height: var(--arrow-lh-3);
+  padding-bottom: var(--arrow-spacing-xs);
+  @media (min-width: mobile) {
+    font-size: var(--arrow-fs-l);
+    padding-bottom: var(--arrow-spacing-s);
+    @media (min-width: tablet) {
+      padding-bottom: var(--arrow-spacing-m);
+    }
+  }
+}
+
+.button-wrapper {
+  border-radius: 3px;
+  font-size: var(--arrow-fs-tiny);
+  line-height: var(--arrow-lh-4);
+  text-align: center;
+  padding: 6px var(--arrow-spacing-m);
+  @media (min-width: tablet) {
+    margin-left: var(--arrow-spacing-m);
+  }
+}
+
+.file-name {
+  font-size: var(--arrow-fs-s);
+  line-height: var(--arrow-lh-5);
+  margin-bottom: var(--arrow-spacing-m);
+  word-break: break-word;
+  @media (min-width: mobile) {
+    font-size: var(--arrow-fs-m);
+    line-height: var(--arrow-lh-3);
+    @media (min-width: tablet) {
+      margin-bottom: unset;
+    }
+  }
+}
+
+.dark .headline,
+.dark .file-name,
+.dark .button-wrapper {
+  color: var(--arrow-c-mono2);
+}
+
+.light .headline,
+.light .file-name,
+.light .button-wrapper {
+  color: var(--arrow-c-invert-mono2);
+}
+
+.pdf {
+  width: 35px;
+  height: 35px;
+  font-size: var(--arrow-fs-tiny);
+  font-weight: var(--arrow-fw-bold);
+  color: var(--arrow-c-light);
+  border-radius: 6px;
+  background-color: #db5449;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: var(--arrow-spacing-m);
+  @media (min-width: mobile) {
+    width: 45px;
+    height: 45px;
+    border-radius: var(--arrow-spacing-xs);
+  }
+}
+.doc {
+  composes: pdf;
+  background-color: #007bd8;
+}
+
+.wrapper {
+  display: flex;
+  padding: var(--arrow-spacing-m);
+  border-radius: var(--arrow-spacing-xxs);
+  @media (min-width: tablet) {
+    padding: var(--arrow-spacing-l);
+  }
+}
+
+.dark .wrapper {
+  border: solid 1px var(--arrow-c-mono7);
+  background-color: var(--arrow-c-mono7);
+}
+
+.light .wrapper {
+  border: solid 1px var(--arrow-c-invert-mono7);
+  background-color: var(--arrow-c-invert-mono7);
+}
+
+.dark .button-wrapper {
+  border: solid 1px var(--arrow-c-mono2);
+}
+
+.light .button-wrapper {
+  border: solid 1px var(--arrow-c-invert-mono2);
+}
+
+.content-wrapper {
+  @media (min-width: tablet) {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+html[dir="rtl"] {
+  .doc,
+  .pdf,
+  .headline {
+    margin-right: 0;
+  }
+
+  .content-wrapper {
+    margin-right: var(--arrow-spacing-m);
+  }
+}

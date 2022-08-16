@@ -3,27 +3,35 @@ import React from "react";
 import { InfiniteStoryBase, WithPreview } from "@quintype/components";
 import { number, object, shape, any } from "prop-types";
 import { BlankStory } from "../story-templates/blank";
-import {
-  TextStoryTemplate,
-  VideoStoryTemplate,
-  LiveBlogStoryTemplate,
-  ListicleStoryTemplate,
-  PhotoStoryTemplates,
-} from "@quintype/arrow";
-
+import loadable from "@loadable/component";
 function StoryPageBase({ index, story, otherProp }) {
   const storyTemplate = story["story-template"];
   switch (storyTemplate) {
-    case "text":
-      return <TextStoryTemplate story={story} />;
     case "video":
-      return <VideoStoryTemplate story={story} />;
+      const VideoStory = loadable(() => import(
+        /* webpackChunkName: "video-story-template-chunk" */ `../arrow/components/Rows/StoryTemplates/VideoStoryTemplates`
+      ));
+      return <VideoStory story={story} />;
     case "live-blog":
-      return <LiveBlogStoryTemplate story={story} />;
+      const LiveBlog = loadable(() => import(
+        /* webpackChunkName: "live-blog-story-template-chunk" */ `../arrow/components/Rows/StoryTemplates/LiveBlogStoryTemplates`
+      ));
+      return <LiveBlog story={story} />;
     case "listicle":
-      return <ListicleStoryTemplate story={story} />;
+      const ListicleStory = loadable(() => import(
+        /* webpackChunkName: "listicle-story-template-chunk" */ `../arrow/components/Rows/StoryTemplates/ListicleStoryTemplates`
+      ));
+      return <ListicleStory story={story} />;
+    case "text":
+      const TextStory = loadable(() => import(
+        /* webpackChunkName: "text-story-template-chunk" */ `../arrow/components/Rows/StoryTemplates/TextStoryTemplates`
+      ));
+      return <TextStory story={story} />;
     case "photo":
-      return <PhotoStoryTemplates story={story} />;
+      const PhotoStory = loadable(() => import(
+        /* webpackChunkName: "photo-story-template-chunk" */ `../arrow/components/Rows/StoryTemplates/PhotoStoryTemplates`
+      ));
+      return <PhotoStory story={story} />;
     default:
       return <BlankStory story={story} />;
   }

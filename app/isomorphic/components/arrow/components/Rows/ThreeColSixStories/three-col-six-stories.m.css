@@ -1,0 +1,32 @@
+@custom-media --viewport-medium (width >= 768px);
+
+.wrapper {
+  padding: 0 var(--arrow-spacing-s);
+  @media (--viewport-medium) {
+    padding: 0;
+  }
+}
+.storycards-row-two {
+  @media (--viewport-medium) {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-column-gap: var(--arrow-spacing-l);
+  }
+}
+.storycards-row-one {
+  @media (--viewport-medium) {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    grid-column-gap: var(--arrow-spacing-l);
+  }
+}
+.card {
+  margin-bottom: var(--arrow-spacing-m);
+  @media (--viewport-medium) {
+    margin-bottom: var(--arrow-spacing-l);
+  }
+}
+
+.wrapper :global(.arr--button) {
+  margin: 0 auto var(--arrow-spacing-xs) auto;
+}

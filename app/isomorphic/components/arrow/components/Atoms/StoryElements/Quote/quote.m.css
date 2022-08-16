@@ -1,0 +1,111 @@
+@value viewports: "../../../../../../../assets/stylesheets/viewports.m.css";
+@value mobile from viewports;
+
+.quote .text,
+.quote-borderNone .text,
+.quote-borderTopSmall .text,
+.quote-borderLeft .text,
+.dark {
+  font-weight: var(--arrow-fw-semi-bold);
+  color: var(--arrow-c-mono2);
+  line-height: var(--arrow-lh-5);
+  font-size: var(--arrow-fs-m);
+  @media (min-width: mobile) {
+    font-size: var(--arrow-fs-l);
+  }
+}
+
+.quote .text.light,
+.quote-borderNone .text.light,
+.quote-borderTopSmall .text.light,
+.quote-borderLeft .text.light {
+  color: var(--arrow-c-invert-mono2);
+}
+
+.quote .text,
+.quote-borderNone .text {
+  font-style: italic;
+}
+
+.quote-borderLeft .text {
+  border-left: 4px solid var(--arrow-c-brand1);
+  padding-left: var(--arrow-spacing-l);
+}
+
+.quote .attribution,
+.quote-borderNone .attribution,
+.quote-borderLeft .attribution,
+.quote-borderTopSmall .attribution,
+.dark {
+  font-size: var(--arrow-fs-s);
+  font-weight: var(--arrow-fw-semi-bold);
+  font-family: var(--arrow-typeface-secondary);
+  color: var(--arrow-c-mono4);
+  font-style: italic;
+  display: flex;
+  margin-top: var(--arrow-spacing-s);
+  @media (min-width: mobile) {
+    font-size: var(--arrow-fs-m);
+    margin-top: var(--arrow-spacing-m);
+  }
+}
+.quote .attribution.light,
+.quote-borderNone .attribution.light,
+.quote-borderLeft .attribution.light,
+.quote-borderTopSmall .attribution.light {
+  color: var(--arrow-c-invert-mono4);
+}
+
+.quote-borderLeft .attribution {
+  margin-left: var(--arrow-spacing-l);
+}
+
+.quote .attribution,
+.quote-borderNone .attribution {
+  justify-content: flex-end;
+}
+
+.quote-borderLeft .attribution,
+.quote-borderTopSmall .attribution {
+  justify-content: flex-start;
+}
+
+.quote .attribution:before,
+.quote-borderNone .attribution:before {
+  content: " ";
+  width: 12px;
+  height: 2px;
+  background-color: var(--arrow-c-mono4);
+  margin: var(--arrow-spacing-s) var(--arrow-spacing-xs) 0 0;
+}
+
+.quote .attribution.light:before,
+.quote-borderNone .attribution.light:before {
+  background-color: var(--arrow-c-invert-mono4);
+}
+
+html[dir="rtl"] {
+  .quote .attribution,
+  .quote-borderNone .attribution {
+    &::before {
+      content: none;
+    }
+    &::after {
+      content: " ";
+      width: 12px;
+      height: 2px;
+      background-color: var(--arrow-c-mono4);
+      margin: var(--arrow-spacing-s) var(--arrow-spacing-xs) 0 0;
+    }
+  }
+}
+
+.quote-borderTopSmall .line {
+  width: 32px;
+  height: 4px;
+  background-color: var(--arrow-c-brand1);
+  margin-bottom: var(--arrow-spacing-xs);
+  @media (min-width: mobile) {
+    margin-bottom: var(--arrow-spacing-s);
+  }
+}

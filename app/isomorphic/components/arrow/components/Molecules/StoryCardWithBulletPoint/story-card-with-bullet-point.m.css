@@ -1,0 +1,7 @@
+.card-with-bullet-wrapper {
+  display: flex;
+}
+
+.card-with-bullet-wrapper :global(.arrow-component.arr--headline h6) {
+  font-weight: normal;
+}

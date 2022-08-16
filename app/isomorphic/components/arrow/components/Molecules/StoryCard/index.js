@@ -1,0 +1,184 @@
+import React from "react";
+import { Headline } from "../../Atoms/Headline/index";
+import { Subheadline } from "../../Atoms/Subheadline/index";
+import { AuthorWithTime } from "../../Atoms/AuthorWithTimestamp";
+import { HeroImage } from "../../Atoms/HeroImage/index";
+import { SectionTag } from "../../Atoms/SectionTag/index";
+import { getTextColor, isEmpty, rgbToHex } from "../../../utils/utils";
+import { StateProvider } from "../../SharedContext";
+
+import PropTypes from "prop-types";
+
+import "./storycard.m.css";
+
+const StoryCardBase = ({
+  story,
+  children,
+  isHorizontal,
+  aspectRatio,
+  border,
+  useImageAsBackground,
+  bgImgContentOverlap,
+  theme,
+  borderColor,
+  isHorizontalMobile,
+  centerAlign,
+  headerLevel,
+  hideAuthorImage,
+  prefix,
+  config,
+  isHorizontalWithImageLast
+}) => {
+  if (!story || isEmpty(story)) return <div />;
+  const borderOptions = ["default", "full", "bottom", "boxShadow"];
+  const borderTemplate = borderOptions.includes(border) ? `border-${border}` : "";
+  // TODO optimize conditions
+
+  let horizontalCardStyle = "default-card";
+  if (isHorizontal) horizontalCardStyle = "horizontal-card";
+  else if (isHorizontalWithImageLast) horizontalCardStyle = "horizontal-image-last";
+
+  const bgImageClasses = useImageAsBackground ? "backgroung-img" : "";
+  const bgImgContentOverlapClass = bgImgContentOverlap ? "content-overlap" : "";
+  const textColor = getTextColor(theme);
+  const horizontalMobileClasses = isHorizontalMobile ? "horizontal-mob" : "";
+
+  const defaultStorycard = (
+    <DefaultStoryCard
+      story={story}
+      aspectRatio={aspectRatio}
+      border={border}
+      isHorizontalMobile={isHorizontalMobile}
+      isHorizontal={isHorizontal}
+      centerAlign={centerAlign}
+      headerLevel={headerLevel}
+      borderColor={borderColor}
+      hideAuthorImage={hideAuthorImage}
+      prefix={prefix}
+      config={config}
+      isHorizontalWithImageLast={isHorizontalWithImageLast}
+    />
+  );
+  return (
+    <div
+      className="arr--story-card"
+      data-test-id="story-card"
+      style={{ backgroundColor: theme, color: textColor }}
+      styleName={`card ${horizontalCardStyle} ${borderTemplate} ${textColor} ${bgImageClasses} ${bgImgContentOverlapClass} ${horizontalMobileClasses}`}>
+      {children || defaultStorycard}
+    </div>
+  );
+};
+
+const DefaultStoryCard = ({
+  story,
+  border,
+  isHorizontal,
+  aspectRatio,
+  headerLevel,
+  isHorizontalMobile = false,
+  centerAlign = false,
+  borderColor,
+  hideAuthorImage,
+  prefix,
+  isHorizontalWithImageLast,
+  config
+}) => {
+  const alignment = centerAlign ? "center-align" : "";
+  const SectionTagborderColor = rgbToHex(borderColor);
+  const { localizationConfig = {} } = config;
+
+  return (
+    <>
+      {isHorizontal ? (
+        <HeroImage
+          config={config}
+          story={story}
+          isHorizontal
+          isHorizontalMobile={isHorizontalMobile}
+          aspectRatio={aspectRatio}
+        />
+      ) : isHorizontalWithImageLast ? (
+        <HeroImage
+          config={config}
+          story={story}
+          isHorizontalWithImageLast
+          isHorizontalMobile={isHorizontalMobile}
+          aspectRatio={aspectRatio}
+        />
+      ) : (
+        <HeroImage story={story} config={config} isHorizontalMobile={isHorizontalMobile} aspectRatio={aspectRatio} />
+      )}
+      <div className="arr--story-content" styleName={`content ${alignment}`}>
+        <SectionTag story={story} borderColor={SectionTagborderColor} />
+        <Headline story={story} headerLevel={headerLevel} premiumStoryIconConfig={config} />
+        <AuthorWithTime
+          config={localizationConfig}
+          story={story}
+          isBottom
+          prefix={prefix}
+          hideAuthorImage={hideAuthorImage}
+        />
+        <Subheadline story={story} />
+      </div>
+    </>
+  );
+};
+
+DefaultStoryCard.propTypes = {
+  story: PropTypes.object.isRequired,
+  border: PropTypes.oneOfType([PropTypes.string]),
+  isBottom: PropTypes.bool,
+  isHorizontal: PropTypes.bool,
+  aspectRatio: PropTypes.oneOfType([PropTypes.array]),
+  isHorizontalMobile: PropTypes.bool,
+  centerAlign: PropTypes.bool,
+  headerLevel: PropTypes.string,
+  borderColor: PropTypes.string,
+  hideAuthorImage: PropTypes.bool,
+  prefix: PropTypes.string,
+  config: PropTypes.object,
+  isHorizontalWithImageLast: PropTypes.bool
+};
+
+StoryCardBase.propTypes = {
+  /** The Story Object from the API response */
+  story: PropTypes.object.isRequired,
+  children: PropTypes.node,
+  /** Flip the Story Card to Horizonal mode */
+  isHorizontal: PropTypes.bool,
+  /** Add border to the Story Card  */
+  border: PropTypes.oneOfType([PropTypes.string]),
+  // story card with background image
+  useImageAsBackground: PropTypes.bool,
+  // story card  content overlap with image
+  bgImgContentOverlap: PropTypes.bool,
+  /** add aspect ratio for hero image  */
+  aspectRatio: PropTypes.oneOfType([PropTypes.array]),
+  /** add theme(dark /light/custom color) for storycard  */
+  theme: PropTypes.string,
+  /** flip the story card mobile design horizontal */
+  isHorizontalMobile: PropTypes.bool,
+  // make content center align in desktop and left align in mobile
+  centerAlign: PropTypes.bool,
+  headerLevel: PropTypes.string,
+  borderColor: PropTypes.string,
+  // handle author image through storycard
+  hideAuthorImage: PropTypes.bool,
+  // handle author prefix through storycard
+  prefix: PropTypes.string,
+  config: PropTypes.object,
+  isHorizontalWithImageLast: PropTypes.bool
+};
+
+StoryCardBase.defaultProps = {
+  isHorizontal: false,
+  isHorizontalMobile: false,
+  border: "default",
+  theme: "",
+  centerAlign: false,
+  borderColor: "",
+  isHorizontalWithImageLast: false
+};
+
+export const StoryCard = StateProvider(StoryCardBase);

@@ -1,0 +1,21 @@
+@custom-media --viewport-medium (width >= 768px);
+
+.wrapper {
+  flex-basis: 70%;
+  @media (--viewport-medium) {
+    flex-basis: 100%;
+  }
+}
+.horizontal-content-wrapper.border-full {
+  padding: 16px 16px 16px 0;
+  @media (--viewport-medium) {
+    padding: 0 16px 16px 16px;
+  }
+}
+
+.border-full {
+  padding: 12px 0 0 0;
+  @media (--viewport-medium) {
+    padding: 0 16px 16px 16px;
+  }
+}

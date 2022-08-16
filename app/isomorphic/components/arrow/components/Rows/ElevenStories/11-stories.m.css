@@ -1,0 +1,85 @@
+@custom-media --viewport-medium (width >= 768px);
+@custom-media --viewport-small (width < 768px);
+
+.eleven-stories {
+  padding: 0 var(--arrow-spacing-s);
+  @media (--viewport-medium) {
+    padding: 0;
+  }
+}
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  @media (--viewport-medium) {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    grid-gap: var(--arrow-spacing-l);
+  }
+}
+.wrapper-with-divider {
+  display: flex;
+  flex-direction: column;
+  margin: var(--arrow-spacing-xs) 0;
+  @media (--viewport-medium) {
+    display: grid;
+    grid-template-columns: 1fr 1px 2fr 1px 1fr;
+    grid-gap: var(--arrow-spacing-l);
+    margin: var(--arrow-spacing-m) 0;
+  }
+}
+.divider.dark {
+  border-left: 1px solid var(--dark-border);
+}
+.divider.light {
+  border-left: 1px solid var(--light-border);
+}
+.column-one {
+  border-bottom: 1px solid var(--arrow-c-mono5);
+  margin-bottom: var(--arrow-spacing-s);
+  @media (--viewport-medium) {
+    border-bottom: unset;
+    margin-bottom: unset;
+    padding-bottom: unset;
+  }
+}
+
+.column-two {
+  order: -1;
+  border-bottom: 1px solid var(--arrow-c-mono5);
+  margin-bottom: var(--arrow-spacing-s);
+  @media (--viewport-medium) {
+    order: 0;
+    border-bottom: unset;
+    margin-bottom: unset;
+    padding-bottom: unset;
+  }
+}
+.wrapper .column-one {
+  border-bottom: unset;
+}
+.wrapper .column-two {
+  border-bottom: unset;
+}
+
+.story-card {
+  margin-bottom: var(--arrow-spacing-s);
+}
+.first-story-card {
+  margin-bottom: var(--arrow-spacing-s);
+}
+.eleven-stories .child-collection-wrapper :global(.arr-collection-name-border-left) {
+  font-size: var(--arrow-fs-s);
+}
+
+.eleven-stories .child-collection-wrapper :global(.arr--collection-name) {
+  margin-bottom: var(--arrow-spacing-xs);
+  font-size: var(--arrow-fs-s);
+}
+
+.column-one > :first-child :global(.arr--sub-headline),
+.column-two > :last-child :global(.arr--sub-headline),
+.column-three > :first-child :global(.arr--sub-headline) {
+  @media (--viewport-small) {
+    display: none;
+  }
+}

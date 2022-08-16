@@ -1,0 +1,42 @@
+@custom-media --viewport-medium (width >= 768px);
+
+.author-time-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  color: var(--arrow-c-mono2);
+}
+
+.author-image {
+  border-radius: 100%;
+  width: var(--arrow-spacing-l);
+  height: var(--arrow-spacing-l);
+  margin-right: var(--arrow-spacing-xs);
+}
+
+.dot {
+  position: relative;
+  margin-right: var(--arrow-spacing-xs);
+  top: -6px;
+}
+.bottom-fix {
+  margin-top: auto;
+}
+.dash {
+  position: relative;
+  margin-right: var(--arrow-spacing-xs);
+  top: -1px;
+  @media (--viewport-medium) {
+    top: -3px;
+  }
+}
+
+html[dir="rtl"] {
+  .dot {
+    margin-left: var(--arrow-spacing-xs);
+  }
+
+  .dash {
+    padding-left: var(--arrow-spacing-xs);
+  }
+}

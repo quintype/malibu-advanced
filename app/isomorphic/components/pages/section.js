@@ -3,7 +3,7 @@ import { string, shape, object } from "prop-types";
 import get from "lodash/get";
 import { collectionToStories, LazyCollection } from "@quintype/components";
 import { useSelector } from "react-redux";
-import { OneColStoryList } from "@quintype/arrow";
+import OneColStoryList from "../arrow/components/Rows/OneColStoryList";
 
 import { getCollectionTemplate } from "../get-collection-template";
 import { DfpComponent } from "../ads/dfp-component";
@@ -58,7 +58,7 @@ const SectionPage = props => {
 
   return (
     <div className="container">
-      <h1>{pageTitle}</h1>
+      <h1>{pageTitle} - VEENA 1</h1>
       <OneColStoryList
         collection={collection}
         config={{ buttonText: "Load More", footerButton: "SubsequentLoadCount" }}

@@ -1,6 +1,6 @@
 import React from "react";
-import { OneColStoryList } from "@quintype/arrow";
 import { object } from "prop-types";
+import OneColStoryList  from "../../../arrow/components/Rows/OneColStoryList";
 
 export const ArrowOneColStoryList = ({ collection }) => {
   const config = {

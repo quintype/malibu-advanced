@@ -1,0 +1,45 @@
+.arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  background-color: var(--arrow-c-light);
+  opacity: 0.8;
+  padding: var(--arrow-spacing-l) var(--arrow-spacing-s);
+  border: none;
+  border-radius: 0;
+  @media only screen and (max-width: 767px) {
+    top: calc(25% + 40px);
+  }
+}
+
+.left-arrow-dark,
+.right-arrow-dark {
+  background-color: var(--arrow-c-dark);
+}
+.left-arrow-light,
+.right-arrow-light {
+  background-color: var(--arrow-c-light);
+}
+
+.left-arrow-ltr {
+  left: 0;
+}
+
+.right-arrow-ltr {
+  right: 0;
+}
+
+.left-arrow-rtl {
+  right: 0;
+  left: unset;
+}
+.left-arrow-rtl svg,
+.right-arrow-rtl svg {
+  transform: rotate(180deg);
+}
+
+.right-arrow-rtl {
+  left: 0;
+  right: unset;
+}

@@ -1,6 +1,6 @@
 import React from "react";
-import { ThreeColSevenStory } from "@quintype/arrow";
 import { object } from "prop-types";
+import ThreeColSevenStory  from "../../../arrow/components/Rows/ThreeColSevenStory";
 
 export const ArrowThreeColSevenStories = ({ collection }) => {
   const config = {

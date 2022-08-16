@@ -1,6 +1,7 @@
 import templates from "./collection-templates";
 
 export function getCollectionTemplate(designTemplate, index) {
+  console.log("How designTemplate Picked:", designTemplate, index);
   return templates[designTemplate] || templates.defaultTemplate;
 }
 

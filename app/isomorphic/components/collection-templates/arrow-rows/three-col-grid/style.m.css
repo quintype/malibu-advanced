@@ -2,9 +2,11 @@
   :global .arr--content-wrapper .arr--headline,
   :global .arr--content-wrapper .arr--section-name {
     margin-bottom: 8px;
+    border: 10px solid purple;
   }
 
   :global .arr--content-wrapper .arr--section-name {
     display: block;
+    border: 10px solid red;
   }
 }

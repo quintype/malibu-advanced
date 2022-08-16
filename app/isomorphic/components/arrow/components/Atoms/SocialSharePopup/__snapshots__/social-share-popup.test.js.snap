@@ -1,0 +1,653 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Social Share Template Should not render facebook icon if url not passed 1`] = `
+<div
+  className="social-share-popup-m_share-popup-wrapper__GEJqD social-share-popup-m_dark__26Igp"
+>
+  <div
+    className="social-share-popup-m_share-popup__QRt3l social-share-popup-m_share-popup-wrapper__GEJqD"
+  >
+    <div
+      className="social-share-popup-m_top-bar__174Um"
+    >
+      <span
+        className="social-share-popup-m_share-text__19E-F"
+      >
+        Share via
+      </span>
+      <span
+        className="social-share-popup-m_close__3k-Hj"
+        onClick=""
+      >
+        <CloseIcon
+          color="#000000"
+        />
+      </span>
+    </div>
+    <ul
+      className="social-share-popup-m_wrapper__3Ytce"
+    >
+      <li
+        className="social-share-popup-m_social-icon-wrapper__36jyV"
+        data-testid="Twitter"
+        key="popup-item-#1db7eb"
+      >
+        <a
+          aria-label="social-icon"
+          className="social-share-popup-m_social-wrapper__1lPzr"
+          href="https://twitter.com/"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <Twitter
+            color="#000000"
+            key="plain-svg"
+          />
+          <span
+            className="social-share-popup-m_social-text__1QPXb"
+          >
+            Twitter
+          </span>
+        </a>
+      </li>
+      <li
+        className="social-share-popup-m_social-icon-wrapper__36jyV"
+        data-testid="LinkedIn"
+        key="popup-item-#0077B5"
+      >
+        <a
+          aria-label="social-icon"
+          className="social-share-popup-m_social-wrapper__1lPzr"
+          href="https://twitter.com/"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <LinkedIn
+            color="#000000"
+            key="plain-svg"
+          />
+          <span
+            className="social-share-popup-m_social-text__1QPXb"
+          >
+            LinkedIn
+          </span>
+        </a>
+      </li>
+      <li
+        className="social-share-popup-m_social-icon-wrapper__36jyV"
+        data-testid="Whatsapp"
+        key="popup-item-#25d366"
+      >
+        <a
+          aria-label="social-icon"
+          className="social-share-popup-m_social-wrapper__1lPzr"
+          href="https://twitter.com/"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <WhatsApp
+            color="#000000"
+            key="plain-svg"
+          />
+          <span
+            className="social-share-popup-m_social-text__1QPXb"
+          >
+            Whatsapp
+          </span>
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>
+`;
+
+exports[`Social Share Template Should not render linkedin icon if url not passed 1`] = `
+<div
+  className="social-share-popup-m_share-popup-wrapper__GEJqD social-share-popup-m_dark__26Igp"
+>
+  <div
+    className="social-share-popup-m_share-popup__QRt3l social-share-popup-m_share-popup-wrapper__GEJqD"
+  >
+    <div
+      className="social-share-popup-m_top-bar__174Um"
+    >
+      <span
+        className="social-share-popup-m_share-text__19E-F"
+      >
+        Share via
+      </span>
+      <span
+        className="social-share-popup-m_close__3k-Hj"
+        onClick=""
+      >
+        <CloseIcon
+          color="#000000"
+        />
+      </span>
+    </div>
+    <ul
+      className="social-share-popup-m_wrapper__3Ytce"
+    >
+      <li
+        className="social-share-popup-m_social-icon-wrapper__36jyV"
+        data-testid="Facebook"
+        key="popup-item-#4e71a8"
+      >
+        <a
+          aria-label="social-icon"
+          className="social-share-popup-m_social-wrapper__1lPzr"
+          href="https://twitter.com/"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <Facebook
+            color="#000000"
+            key="plain-svg"
+          />
+          <span
+            className="social-share-popup-m_social-text__1QPXb"
+          >
+            Facebook
+          </span>
+        </a>
+      </li>
+      <li
+        className="social-share-popup-m_social-icon-wrapper__36jyV"
+        data-testid="Twitter"
+        key="popup-item-#1db7eb"
+      >
+        <a
+          aria-label="social-icon"
+          className="social-share-popup-m_social-wrapper__1lPzr"
+          href="https://twitter.com/"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <Twitter
+            color="#000000"
+            key="plain-svg"
+          />
+          <span
+            className="social-share-popup-m_social-text__1QPXb"
+          >
+            Twitter
+          </span>
+        </a>
+      </li>
+      <li
+        className="social-share-popup-m_social-icon-wrapper__36jyV"
+        data-testid="Whatsapp"
+        key="popup-item-#25d366"
+      >
+        <a
+          aria-label="social-icon"
+          className="social-share-popup-m_social-wrapper__1lPzr"
+          href="https://twitter.com/"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <WhatsApp
+            color="#000000"
+            key="plain-svg"
+          />
+          <span
+            className="social-share-popup-m_social-text__1QPXb"
+          >
+            Whatsapp
+          </span>
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>
+`;
+
+exports[`Social Share Template Should not render twitter icon if url not passed 1`] = `
+<div
+  className="social-share-popup-m_share-popup-wrapper__GEJqD social-share-popup-m_dark__26Igp"
+>
+  <div
+    className="social-share-popup-m_share-popup__QRt3l social-share-popup-m_share-popup-wrapper__GEJqD"
+  >
+    <div
+      className="social-share-popup-m_top-bar__174Um"
+    >
+      <span
+        className="social-share-popup-m_share-text__19E-F"
+      >
+        Share via
+      </span>
+      <span
+        className="social-share-popup-m_close__3k-Hj"
+        onClick=""
+      >
+        <CloseIcon
+          color="#000000"
+        />
+      </span>
+    </div>
+    <ul
+      className="social-share-popup-m_wrapper__3Ytce"
+    >
+      <li
+        className="social-share-popup-m_social-icon-wrapper__36jyV"
+        data-testid="Facebook"
+        key="popup-item-#4e71a8"
+      >
+        <a
+          aria-label="social-icon"
+          className="social-share-popup-m_social-wrapper__1lPzr"
+          href="https://twitter.com/"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <Facebook
+            color="#000000"
+            key="plain-svg"
+          />
+          <span
+            className="social-share-popup-m_social-text__1QPXb"
+          >
+            Facebook
+          </span>
+        </a>
+      </li>
+      <li
+        className="social-share-popup-m_social-icon-wrapper__36jyV"
+        data-testid="LinkedIn"
+        key="popup-item-#0077B5"
+      >
+        <a
+          aria-label="social-icon"
+          className="social-share-popup-m_social-wrapper__1lPzr"
+          href="https://twitter.com/"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <LinkedIn
+            color="#000000"
+            key="plain-svg"
+          />
+          <span
+            className="social-share-popup-m_social-text__1QPXb"
+          >
+            LinkedIn
+          </span>
+        </a>
+      </li>
+      <li
+        className="social-share-popup-m_social-icon-wrapper__36jyV"
+        data-testid="Whatsapp"
+        key="popup-item-#25d366"
+      >
+        <a
+          aria-label="social-icon"
+          className="social-share-popup-m_social-wrapper__1lPzr"
+          href="https://twitter.com/"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <WhatsApp
+            color="#000000"
+            key="plain-svg"
+          />
+          <span
+            className="social-share-popup-m_social-text__1QPXb"
+          >
+            Whatsapp
+          </span>
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>
+`;
+
+exports[`Social Share Template Should not render whatsapp icon if url not passed 1`] = `
+<div
+  className="social-share-popup-m_share-popup-wrapper__GEJqD social-share-popup-m_dark__26Igp"
+>
+  <div
+    className="social-share-popup-m_share-popup__QRt3l social-share-popup-m_share-popup-wrapper__GEJqD"
+  >
+    <div
+      className="social-share-popup-m_top-bar__174Um"
+    >
+      <span
+        className="social-share-popup-m_share-text__19E-F"
+      >
+        Share via
+      </span>
+      <span
+        className="social-share-popup-m_close__3k-Hj"
+        onClick=""
+      >
+        <CloseIcon
+          color="#000000"
+        />
+      </span>
+    </div>
+    <ul
+      className="social-share-popup-m_wrapper__3Ytce"
+    >
+      <li
+        className="social-share-popup-m_social-icon-wrapper__36jyV"
+        data-testid="Facebook"
+        key="popup-item-#4e71a8"
+      >
+        <a
+          aria-label="social-icon"
+          className="social-share-popup-m_social-wrapper__1lPzr"
+          href="https://twitter.com/"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <Facebook
+            color="#000000"
+            key="plain-svg"
+          />
+          <span
+            className="social-share-popup-m_social-text__1QPXb"
+          >
+            Facebook
+          </span>
+        </a>
+      </li>
+      <li
+        className="social-share-popup-m_social-icon-wrapper__36jyV"
+        data-testid="Twitter"
+        key="popup-item-#1db7eb"
+      >
+        <a
+          aria-label="social-icon"
+          className="social-share-popup-m_social-wrapper__1lPzr"
+          href="https://twitter.com/"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <Twitter
+            color="#000000"
+            key="plain-svg"
+          />
+          <span
+            className="social-share-popup-m_social-text__1QPXb"
+          >
+            Twitter
+          </span>
+        </a>
+      </li>
+      <li
+        className="social-share-popup-m_social-icon-wrapper__36jyV"
+        data-testid="LinkedIn"
+        key="popup-item-#0077B5"
+      >
+        <a
+          aria-label="social-icon"
+          className="social-share-popup-m_social-wrapper__1lPzr"
+          href="https://twitter.com/"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <LinkedIn
+            color="#000000"
+            key="plain-svg"
+          />
+          <span
+            className="social-share-popup-m_social-text__1QPXb"
+          >
+            LinkedIn
+          </span>
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>
+`;
+
+exports[`Social Share Template Should render social share popup 1`] = `
+<div
+  className="social-share-popup-m_share-popup-wrapper__GEJqD social-share-popup-m_dark__26Igp"
+>
+  <div
+    className="social-share-popup-m_share-popup__QRt3l social-share-popup-m_share-popup-wrapper__GEJqD"
+  >
+    <div
+      className="social-share-popup-m_top-bar__174Um"
+    >
+      <span
+        className="social-share-popup-m_share-text__19E-F"
+      >
+        Share via
+      </span>
+      <span
+        className="social-share-popup-m_close__3k-Hj"
+        onClick=""
+      >
+        <CloseIcon
+          color="#000000"
+        />
+      </span>
+    </div>
+    <ul
+      className="social-share-popup-m_wrapper__3Ytce"
+    >
+      <li
+        className="social-share-popup-m_social-icon-wrapper__36jyV"
+        data-testid="Facebook"
+        key="popup-item-#4e71a8"
+      >
+        <a
+          aria-label="social-icon"
+          className="social-share-popup-m_social-wrapper__1lPzr"
+          href="https://www.facebook.com"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <Facebook
+            color="#000000"
+            key="plain-svg"
+          />
+          <span
+            className="social-share-popup-m_social-text__1QPXb"
+          >
+            Facebook
+          </span>
+        </a>
+      </li>
+      <li
+        className="social-share-popup-m_social-icon-wrapper__36jyV"
+        data-testid="Twitter"
+        key="popup-item-#1db7eb"
+      >
+        <a
+          aria-label="social-icon"
+          className="social-share-popup-m_social-wrapper__1lPzr"
+          href="https://twitter.com/"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <Twitter
+            color="#000000"
+            key="plain-svg"
+          />
+          <span
+            className="social-share-popup-m_social-text__1QPXb"
+          >
+            Twitter
+          </span>
+        </a>
+      </li>
+      <li
+        className="social-share-popup-m_social-icon-wrapper__36jyV"
+        data-testid="LinkedIn"
+        key="popup-item-#0077B5"
+      >
+        <a
+          aria-label="social-icon"
+          className="social-share-popup-m_social-wrapper__1lPzr"
+          href="https://twitter.com/"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <LinkedIn
+            color="#000000"
+            key="plain-svg"
+          />
+          <span
+            className="social-share-popup-m_social-text__1QPXb"
+          >
+            LinkedIn
+          </span>
+        </a>
+      </li>
+      <li
+        className="social-share-popup-m_social-icon-wrapper__36jyV"
+        data-testid="Whatsapp"
+        key="popup-item-#25d366"
+      >
+        <a
+          aria-label="social-icon"
+          className="social-share-popup-m_social-wrapper__1lPzr"
+          href="https://twitter.com/"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <WhatsApp
+            color="#000000"
+            key="plain-svg"
+          />
+          <span
+            className="social-share-popup-m_social-text__1QPXb"
+          >
+            Whatsapp
+          </span>
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>
+`;
+
+exports[`Social Share Template Should render template if theme and icon is not passed 1`] = `
+<div
+  className="social-share-popup-m_share-popup-wrapper__GEJqD social-share-popup-m_dark__26Igp"
+>
+  <div
+    className="social-share-popup-m_share-popup__QRt3l social-share-popup-m_share-popup-wrapper__GEJqD"
+  >
+    <div
+      className="social-share-popup-m_top-bar__174Um"
+    >
+      <span
+        className="social-share-popup-m_share-text__19E-F"
+      >
+        Share via
+      </span>
+      <span
+        className="social-share-popup-m_close__3k-Hj"
+        onClick=""
+      >
+        <CloseIcon
+          color="#000000"
+        />
+      </span>
+    </div>
+    <ul
+      className="social-share-popup-m_wrapper__3Ytce"
+    >
+      <li
+        className="social-share-popup-m_social-icon-wrapper__36jyV"
+        data-testid="Facebook"
+        key="popup-item-#4e71a8"
+      >
+        <a
+          aria-label="social-icon"
+          className="social-share-popup-m_social-wrapper__1lPzr"
+          href="https://twitter.com/"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <Facebook
+            color="#000000"
+            key="plain-svg"
+          />
+          <span
+            className="social-share-popup-m_social-text__1QPXb"
+          >
+            Facebook
+          </span>
+        </a>
+      </li>
+      <li
+        className="social-share-popup-m_social-icon-wrapper__36jyV"
+        data-testid="Twitter"
+        key="popup-item-#1db7eb"
+      >
+        <a
+          aria-label="social-icon"
+          className="social-share-popup-m_social-wrapper__1lPzr"
+          href="https://twitter.com/"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <Twitter
+            color="#000000"
+            key="plain-svg"
+          />
+          <span
+            className="social-share-popup-m_social-text__1QPXb"
+          >
+            Twitter
+          </span>
+        </a>
+      </li>
+      <li
+        className="social-share-popup-m_social-icon-wrapper__36jyV"
+        data-testid="LinkedIn"
+        key="popup-item-#0077B5"
+      >
+        <a
+          aria-label="social-icon"
+          className="social-share-popup-m_social-wrapper__1lPzr"
+          href="https://twitter.com/"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <LinkedIn
+            color="#000000"
+            key="plain-svg"
+          />
+          <span
+            className="social-share-popup-m_social-text__1QPXb"
+          >
+            LinkedIn
+          </span>
+        </a>
+      </li>
+      <li
+        className="social-share-popup-m_social-icon-wrapper__36jyV"
+        data-testid="Whatsapp"
+        key="popup-item-#25d366"
+      >
+        <a
+          aria-label="social-icon"
+          className="social-share-popup-m_social-wrapper__1lPzr"
+          href="https://twitter.com/"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <WhatsApp
+            color="#000000"
+            key="plain-svg"
+          />
+          <span
+            className="social-share-popup-m_social-text__1QPXb"
+          >
+            Whatsapp
+          </span>
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>
+`;

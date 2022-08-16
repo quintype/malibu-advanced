@@ -1,0 +1,78 @@
+@value viewports: "../../../../../../../assets/stylesheets/viewports.m.css";
+@value mobile from viewports;
+
+.promotionalMessage p {
+  font-size: var(--arrow-fs-tiny);
+  padding-bottom: var(--arrow-spacing-xxs);
+  @media (min-width: mobile) {
+    font-size: var(--arrow-fs-xs);
+    padding-bottom: var(--arrow-spacing-xs);
+  }
+}
+
+.textElement p,
+.dark {
+  line-height: var(--arrow-lh-5);
+  font-size: var(--arrow-fs-s);
+  @media (min-width: mobile) {
+    font-size: var(--arrow-fs-m);
+  }
+}
+
+.promotionalMessage a,
+.textElement a {
+  color: var(--textElementHyperlinkColor);
+}
+
+.textElement a:hover {
+  border-bottom: 1px solid var(--textElementHyperlinkColor);
+  transition: border 0.3s ease;
+}
+
+.textElement.light p {
+  color: var(--arrow-c-invert-mono2);
+}
+
+.promotionalMessage a:hover {
+  color: var(--arrow-c-brand1);
+  border-bottom: 1px solid;
+  padding-bottom: 3px;
+  transition: all 0.3s ease 0s;
+}
+
+.promotionalMessage.dark p {
+  color: var(--arrow-c-mono4);
+}
+.promotionalMessage.light p {
+  color: var(--arrow-c-invert-mono4);
+}
+
+.textElement ul,
+.textElement ol {
+  list-style: initial;
+  padding: var(--arrow-spacing-m) 0 0 var(--arrow-spacing-l);
+  @media (min-width: mobile) {
+    padding: var(--arrow-spacing-m) 0 0 var(--arrow-spacing-xl);
+  }
+}
+
+.textElement ol {
+  list-style: auto;
+}
+
+.textElement :global .cta-anchor {
+  background-color: var(--arrow-c-brand1);
+  color: var(--arrow-c-light);
+  border-radius: var(--arrow-spacing-xxs);
+  box-shadow: 0 var(--arrow-spacing-xxs) var(-arrow-spacing-xs) 0 var(--arrow-c-mono6);
+  font-size: var(--arrow-fs-s);
+  padding: var(--arrow-spacing-s) var(--arrow-spacing-m);
+  display: block;
+  text-align: center;
+
+  @media (min-width: mobile) {
+    display: inline-block;
+    font-size: var(--arrow-fs-m);
+    padding: var(--arrow-spacing-m) var(--arrow-spacing-l);
+  }
+}

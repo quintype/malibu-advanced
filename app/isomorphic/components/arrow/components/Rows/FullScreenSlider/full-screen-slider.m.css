@@ -1,0 +1,155 @@
+@custom-media --viewport-small (width < 768px);
+@custom-media --viewport-medium (width >= 768px);
+
+.full-screen-slider.container-width {
+  padding: 0 12px;
+  @media (--viewport-medium) {
+    padding: unset;
+  }
+}
+.full-width :global(.arr--story-content) {
+  padding: 0 12px;
+  @media (--viewport-medium) {
+    padding: unset;
+  }
+}
+
+.full-screen-slider-wrapper:global(.arrow-component.full-width-with-padding.full-width) {
+  padding: unset;
+}
+
+.container-width,
+.container-width :global(.arr--collection-name) {
+  max-width: 1140px;
+  margin: 0 auto;
+}
+.wrapper {
+  position: relative;
+  margin: var(--arrow-spacing-xs) 0;
+  @media (--viewport-medium) {
+    margin: var(--arrow-spacing-m) 0;
+  }
+}
+
+.full-screen-slider :global(.arr--section-name) div,
+.full-screen-slider :global(.arr--headline) h1,
+.full-screen-slider :global(.arr-author-name),
+.full-screen-slider :global(.arr--publish-time),
+.full-screen-slider :global(.arr--sub-headline),
+.full-screen-slider :global(.author-name),
+.full-screen-slider :global(.arr-separator),
+.full-screen-slider :global(.arr-author-prefix),
+.full-screen-slider :global(.arr--read-time) {
+  @media (--viewport-medium) {
+    color: var(--arrow-c-light);
+    fill: var(--arrow-c-light);
+  }
+}
+.content-align :global(.arr--author-time) {
+  justify-content: center;
+}
+
+.content-align {
+  text-align: center;
+}
+
+.full-screen-slider :global(.arr--headline) h2 {
+  font-size: var(--arrow-fs-l);
+  @media (--viewport-medium) {
+    font-size: var(--arrow-fs-huge);
+  }
+}
+
+.full-screen-slider {
+  :global .left-arrow {
+    @media (--viewport-medium) {
+      background-color: var(--arrow-c-light);
+    }
+  }
+
+  @media (--viewport-medium) {
+    :global .right-arrow-rtl,
+    :global .left-arrow-ltr {
+      transform: translate(125px, -50%);
+    }
+    :global .left-arrow-rtl,
+    :global .right-arrow-ltr {
+      transform: translate(-125px, -50%);
+    }
+  }
+
+  @media (--viewport-small) {
+    :global .scroll-snap-container .arr--responsive-hero-image .story-icon,
+    :global .scroll-snap-container .arr--fallback-hero-image .story-icon {
+      height: 24px;
+      width: 24px;
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      z-index: var(--z-index-1);
+    }
+  }
+
+  @media (--viewport-medium) {
+    :global .scroll-snap-container .arr--responsive-hero-image .story-icon,
+    :global .scroll-snap-container .arr--fallback-hero-image .story-icon {
+      height: 64px;
+      width: 64px;
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      z-index: var(--z-index-1);
+    }
+  }
+  :global .live-icon {
+    animation: blink 1.5s linear infinite;
+    vertical-align: middle;
+    height: 24px;
+    width: 24px;
+  }
+
+  @keyframes blink {
+    0% {
+      opacity: 0;
+    }
+
+    50% {
+      opacity: 1;
+    }
+
+    100% {
+      opacity: 0;
+    }
+  }
+
+  :global .right-arrow {
+    @media (--viewport-medium) {
+      background-color: var(--arrow-c-light);
+    }
+  }
+
+  @media (--viewport-medium) {
+    :global .left-arrow path,
+    :global .right-arrow path {
+      stroke: var(--arrow-c-dark);
+    }
+    :global .slider-indicators {
+      position: absolute;
+      bottom: var(--arrow-spacing-m);
+    }
+    :global .indicator-dots {
+      background-color: var(--arrow-c-light);
+      border-color: var(--arrow-c-light);
+    }
+
+    :global .indicator-dots[aria-pressed="true"],
+    :global .indicator-dashes [aria-pressed="true"] {
+      background-color: var(--arrow-c-light);
+      border-color: var(--arrow-c-light);
+    }
+
+    :global .indicator-dashes {
+      background-color: var(--arrow-c-light);
+    }
+  }
+}

@@ -24,6 +24,7 @@ function StoryGridStoryItem(props) {
           alt={props.story.headline || ""}
         />
       </figure>
+      <h2>ViNAA</h2>
       <h3>{props.story.headline}</h3>
       <span className="story-grid-item-author">{props.story["author-name"]}</span>
     </Link>

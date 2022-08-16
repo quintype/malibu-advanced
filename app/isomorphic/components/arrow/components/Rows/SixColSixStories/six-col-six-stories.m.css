@@ -1,0 +1,75 @@
+@value viewports: "../../../../../../assets/stylesheets/viewports.m.css";
+@value mobile from viewports;
+@value desktop from viewports;
+
+.wrapper {
+  padding: 0 var(--arrow-spacing-s);
+  @media (min-width: desktop) {
+    padding: 0;
+  }
+}
+
+.row-wrapper {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-column-gap: var(--arrow-spacing-l);
+  @media (min-width: mobile) {
+    grid-template-columns: repeat(3, 1fr);
+    grid-column-gap: var(--arrow-spacing-28);
+  }
+  @media (min-width: desktop) {
+    grid-template-columns: repeat(6, 1fr);
+    grid-column-gap: var(--arrow-spacing-28);
+  }
+}
+
+.card-wrapper {
+  margin-bottom: var(--arrow-spacing-m);
+}
+
+.card-wrapper.vertical-border {
+  position: relative;
+}
+
+.card-wrapper.vertical-border::after {
+  content: "";
+  width: 1px;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  right: -13px;
+}
+
+.card-wrapper.vertical-border.light::after {
+  background-color: var(--light-border);
+}
+
+.card-wrapper.vertical-border.dark::after {
+  background-color: var(--dark-border);
+}
+
+.card-wrapper.vertical-border:nth-child(2n)::after {
+  content: none;
+  @media (min-width: mobile) {
+    content: "";
+  }
+}
+
+.card-wrapper.vertical-border:nth-child(3n)::after {
+  @media (min-width: mobile) {
+    content: none;
+  }
+  @media (min-width: desktop) {
+    content: "";
+  }
+}
+
+.card-wrapper.vertical-border:nth-child(6n)::after {
+  @media (min-width: desktop) {
+    content: none;
+  }
+}
+
+.content-wrapper {
+  height: 100%;
+}
