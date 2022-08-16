@@ -1,3 +1,4 @@
+/* eslint-disable eslint/no-unused-vars */
 import React from "react";
 import PropTypes from "prop-types";
 import { ResponsiveImage } from "@quintype/components";
@@ -20,7 +21,6 @@ const ImageGalleryBase = ({ element, template = "", opts = {}, story = {}, confi
   const classes = template === "template-2" ? "template-2" : "";
   const hyperlinkClass = (hyperlink) => (hyperlink ? "hyperlink-gallery-image" : "");
 
-/* eslint-disable eslint/no-unused-vars */
   const LeftImages = () => {
     const imageCountDesktop = imageBaseOnTemp > 6 && imageArr.length - 6;
     const imageCountMobile = imageBaseOnTemp > 4 && imageArr.length - 4;

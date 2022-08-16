@@ -25,18 +25,18 @@ describe("getAuthorTwitterUrl", () => {
       }
     }
   };
-  it(" should return empty string when the author object doesn't have 'social' key ", () => {
+  it("should return empty string when the author object doesn't have 'social' key ", () => {
     const authorTwitterLink = getAuthorTwitterUrl(author);
     expect(authorTwitterLink).toBe("");
   });
 
-  it(" should return twitter url when both url and handle are present  ", () => {
+  it("should return twitter url when both url and handle are present  ", () => {
     const modifiedAuthor = Object.assign({}, author, socialData);
     const authorTwitterLink = getAuthorTwitterUrl(modifiedAuthor);
     expect(authorTwitterLink).toBe("https://www.twitter.com/sabqorg");
   });
 
-  it(" should return twitter handle link when url is not present  ", () => {
+  it("should return twitter handle link when url is not present  ", () => {
     const socialData = {
       social: {
         twitter: {
@@ -50,7 +50,7 @@ describe("getAuthorTwitterUrl", () => {
     expect(authorTwitterLink).toBe("https://www.twitter.com/elonmusk");
   });
 
-  it(" should strip @ in  twitter handle  and construct link", () => {
+  it("should strip @ in  twitter handle  and construct link", () => {
     const socialData = {
       social: {
         twitter: {
@@ -103,6 +103,6 @@ describe("isEmpty", () => {
 
   it("should return window if the page url is defined", () => {
     const result = sharePageUrl;
-    expect(result).toBe(window.location["href"]);
+    expect(result).toBe(window.location/href);
   });
 });

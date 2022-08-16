@@ -1,4 +1,4 @@
-/* eslint-disable no-undef */
+/* eslint-disable no-undef: 0 */
 import configJSON from "./config.json";
 import { dummyStory, dummyPhotoStory, dummyLiveBlogStory, dummyListicleStory } from "./dummyStory";
 import get from "lodash.get";
@@ -20,12 +20,12 @@ export const generateStory = (storyType, data = {}) => {
 };
 
 export const generateCollection = ({ stories = 0, subCollections = [], itemMeta = {} } = {}) => {
-  let items = subCollections;
+  const items = subCollections;
   Array(stories)
     .fill({ type: "story", ...itemMeta })
     .forEach((item, index) => {
       const story = generateStory();
-      let itm = Object.assign({}, item, { id: story.id, story });
+      const itm = Object.assign({}, item, { id: story.id, story });
       items.push(itm);
     });
   return {
@@ -58,7 +58,7 @@ export const generateCollection = ({ stories = 0, subCollections = [], itemMeta 
 };
 
 export const generateCollections = (count = 0) => {
-  let collections = [];
+  const collections = [];
   Array(count)
     .fill(0)
     .forEach(() => {
@@ -92,10 +92,10 @@ export const generateCollections = (count = 0) => {
 };
 
 export const generateCollectionsWithStories = (count = 0) => {
-  let items = generateCollection({ stories: 12 });
-  let collec = generateCollections(2);
-  let collections = [];
-  let merged = items.items.concat(collec.items);
+  const items = generateCollection({ stories: 12 });
+  const collec = generateCollections(2);
+  const collections = [];
+  const merged = items.items.concat(collec.items);
 
   Array(count)
     .fill(0)

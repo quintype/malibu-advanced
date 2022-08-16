@@ -26,7 +26,7 @@ module.exports = {
     "prettier/prettier": 0,
     "at-rule-no-unknown": 0,
     "scss/at-rule-no-unknown": 0,
-    "scss/at-import-partial-extension":0,
+    "scss/at-import-partial-extension": 0,
   },
   settings: {
     react: {

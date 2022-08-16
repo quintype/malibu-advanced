@@ -116,7 +116,7 @@ export const getLuminanceOfColor = (hex) => {
 };
 
 export const rgbToHex = (color = "rgba(255, 255, 255, 0)") => {
-  let rgba = color.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
+  const rgba = color.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
   return rgba && rgba.length === 4
     ? "#" +
         ("0" + parseInt(rgba[1], 10).toString(16)).slice(-2) +

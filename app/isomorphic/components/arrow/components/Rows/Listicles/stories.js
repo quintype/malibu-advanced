@@ -1,3 +1,4 @@
+/* eslint prefer-regex-literals: 0 */
 import React from "react";
 import { color, boolean } from "@storybook/addon-knobs";
 import { withStore, optionalSelect, collectionNameTemplates } from "../../../../storybook";
