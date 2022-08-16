@@ -1,4 +1,5 @@
 /* eslint-disable eslint/no-unused-vars */
+
 import React from "react";
 import PropTypes from "prop-types";
 import { ResponsiveImage } from "@quintype/components";

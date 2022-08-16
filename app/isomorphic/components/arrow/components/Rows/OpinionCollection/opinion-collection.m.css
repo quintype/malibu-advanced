@@ -1,3 +1,4 @@
+/* eslint-disable scss/at-rule-no-unknown, no-descending-specificity */
 @value viewports: "../../../../../../assets/stylesheets/viewports.m.css";
 @value mobile from viewports;
 @value desktop from viewports;

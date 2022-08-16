@@ -103,6 +103,6 @@ describe("isEmpty", () => {
 
   it("should return window if the page url is defined", () => {
     const result = sharePageUrl;
-    expect(result).toBe(window.location/href);
+    expect(result).toBe(window.location.href);
   });
 });

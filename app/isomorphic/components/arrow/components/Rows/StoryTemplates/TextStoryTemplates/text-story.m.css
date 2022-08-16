@@ -1,3 +1,4 @@
+/* eslint-disable scss/at-import-partial-extension, no-descending-specificity */
 @import "../../../../../../../assets/stylesheets/mixins.scss";
 .header-details {
   margin: var(--arrow-spacing-m) 0 var(--arrow-spacing-xs) 0;

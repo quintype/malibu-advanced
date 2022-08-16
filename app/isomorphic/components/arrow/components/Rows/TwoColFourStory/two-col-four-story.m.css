@@ -1,3 +1,4 @@
+/* eslint-disable no-duplicate-selectors */
 @custom-media --viewport-medium (width >= 768px);
 .two-col-four-story {
   padding: 0 var(--arrow-spacing-s);

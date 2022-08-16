@@ -1,4 +1,4 @@
-/* eslint-disable no-case-declarations: 0 */
+/* eslint-disable no-case-declarations */
 import React from "react";
 import get from "lodash.get";
 import { Text } from "../../Atoms/StoryElements/Text";

@@ -1,3 +1,4 @@
+/* eslint-disable no-descending-specificity */
 @custom-media --viewport-medium (width >= 992px);
 @custom-media --viewport-tab (width >= 768px);
 

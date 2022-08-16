@@ -1,4 +1,4 @@
-/* eslint-disable no-unused-vars, no-console, react/jsx-indent-props,react/jsx-wrap-multilines, no-undef, react/jsx-closing-bracket-location */
+/* eslint-disable no-case-declarations, no-unused-vars, no-console, react/jsx-indent-props,react/jsx-wrap-multilines, no-undef, react/jsx-closing-bracket-location */
 import React from "react";
 import { InfiniteStoryBase, WithPreview } from "@quintype/components";
 import { number, object, shape, any } from "prop-types";

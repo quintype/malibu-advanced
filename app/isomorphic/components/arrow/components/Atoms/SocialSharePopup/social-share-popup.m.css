@@ -1,3 +1,4 @@
+/* eslint-disable scss/at-import-partial-extension */
 @import "../../../../../../assets/stylesheets/mixins.scss";
 .share-popup-wrapper {
   z-index: var(--zIndex-social-popup);

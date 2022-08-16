@@ -1,3 +1,4 @@
+/* eslint-disable no-duplicate-selectors */
 @custom-media --viewport-small (width < 768px);
 @custom-media --viewport-medium (width >= 768px);
 @custom-media --viewport-desktop (width >= 1024px);

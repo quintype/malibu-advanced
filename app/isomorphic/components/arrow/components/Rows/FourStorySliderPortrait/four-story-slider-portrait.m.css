@@ -1,3 +1,4 @@
+/* eslint-disable scss/operator-no-unspaced */
 @custom-media --viewport-medium (width >=768px);
 @custom-media --viewport-desktop (width >=992px);
 @custom-media --viewport-mobile (width >=400px);
