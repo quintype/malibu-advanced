@@ -5,10 +5,8 @@ import { LazyCollection, LazyLoadImages, replaceAllStoriesInCollection, WithPrev
 import { getCollectionTemplate } from "../get-collection-template";
 
 export const HomePage = props => {
-  console.log("HOME COLLECTION:", props.data.collection);
   return(
   <div className="container">
-    <h1> VEENA 2</h1>
     <LazyLoadImages>
       <LazyCollection collection={props.data.collection} collectionTemplates={getCollectionTemplate} lazyAfter={2} />
     </LazyLoadImages>

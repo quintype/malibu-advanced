@@ -13,7 +13,6 @@
   "dependencies": {
     "@loadable/component": "^5.14.1",
     "@loadable/server": "^5.14.2",
-    "@quintype/arrow": "^3.19.8",
     "@quintype/bridgekeeper-js": "^2.8.1",
     "@quintype/components": "^3.0.0",
     "@quintype/framework": "^7.7.7",
@@ -21,7 +20,9 @@
     "axios": "^0.24.0",
     "babel-loader": "^8.2.5",
     "fontfaceobserver": "^2.1.0",
+    "intersection-observer": "^0.12.2",
     "lodash": "^4.17.21",
+    "lodash.kebabcase": "^4.1.1",
     "query-string": "^7.0.1",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
@@ -29,6 +30,7 @@
     "react-image-lightbox": "^5.1.4",
     "react-modal": "^3.12.1",
     "react-redux": "^7.2.5",
+    "react-timeago": "^4.4.0",
     "redux": "^4.0.1",
     "serialize-javascript": "^6.0.0",
     "wretch": "^1.4.1"
