@@ -1,0 +1,113 @@
+/* eslint-disable scss/at-rule-no-unknown, no-duplicate-selectors, no-descending-specificity */
+@value viewports: "../../../../../assets/stylesheets/viewports.m.css";
+@value mobile from viewports;
+@value desktop from viewports;
+
+.four-col-five-stories {
+  padding: 0 var(--arrow-spacing-s);
+  @media (min-width: desktop) {
+    padding: 0;
+  }
+}
+.wrapper {
+  margin: var(--arrow-spacing-xs) 0;
+  @media (min-width: desktop) {
+    margin: var(--arrow-spacing-m) 0;
+  }
+}
+
+.first-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--arrow-spacing-xs);
+  margin-bottom: var(--arrow-spacing-m);
+  @media (min-width: mobile) {
+    :global(.arrow-component) h6 {
+      font-size: var(--arrow-spacing-l);
+    }
+    margin-bottom: var(--arrow-spacing-l);
+  }
+  @media (min-width: desktop) {
+    flex-direction: row;
+    align-items: center;
+    gap: var(--arrow-spacing-l);
+    margin-bottom: var(--arrow-spacing-l);
+  }
+}
+
+.first-card {
+  :global .arr--responsive-hero-image .story-icon,
+  :global .arr--fallback-hero-image .story-icon {
+    height: 64px;
+    width: 64px;
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    z-index: var(--z-index-1);
+    @media (--viewport-small) {
+      height: 24px;
+      width: 24px;
+    }
+
+    :global .live-icon {
+      animation: blink 1.5s linear infinite;
+      vertical-align: middle;
+      height: 24px;
+      width: 24px;
+    }
+  }
+}
+
+.other-cards {
+  :global .arr--responsive-hero-image .story-icon,
+  :global .arr--fallback-hero-image .story-icon {
+    height: 24px;
+    width: 24px;
+    position: absolute;
+    bottom: var(--arrow-spacing-xs);
+    left: var(--arrow-spacing-xs);
+    z-index: var(--z-index-1);
+  }
+
+  :global .live-icon {
+    animation: blink 1.5s linear infinite;
+    vertical-align: middle;
+    height: 24px;
+    width: 24px;
+  }
+}
+
+@keyframes blink {
+  0% {
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+.first-card > * {
+  flex: 1;
+}
+
+.other-cards {
+  display: grid;
+  grid-row-gap: var(--arrow-spacing-m);
+  @media (min-width: mobile) {
+    grid-template-columns: repeat(2, 1fr);
+    grid-column-gap: var(--arrow-spacing-l);
+    grid-row-gap: var(--arrow-spacing-l);
+  }
+  @media (min-width: desktop) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.card > div > :last-child {
+  margin-top: var(--arrow-spacing-xs);
+}

@@ -2,39 +2,29 @@
 import React from "react";
 import { InfiniteStoryBase, WithPreview } from "@quintype/components";
 import { number, object, shape, any } from "prop-types";
-import { BlankStory } from "../story-templates/blank";
-import loadable from "@loadable/component";
+import TextStory from "../story-templates/text-story";
+import ListicleStory from "../story-templates/listicle-story";
+import PhotoStory from "../story-templates/photo-story";
+import LiveBlogStory from "../story-templates/live-blog";
+import VideoStory from "../story-templates/video-story";
+
 function StoryPageBase({ index, story, otherProp }) {
   const storyTemplate = story["story-template"];
   switch (storyTemplate) {
-    case "video":
-      const VideoStory = loadable(() => import(
-        /* webpackChunkName: "video-story-template-chunk" */ `../arrow/components/Rows/StoryTemplates/VideoStoryTemplates`
-      ));
-      return <VideoStory story={story} />;
-    case "live-blog":
-      const LiveBlog = loadable(() => import(
-        /* webpackChunkName: "live-blog-story-template-chunk" */ `../arrow/components/Rows/StoryTemplates/LiveBlogStoryTemplates`
-      ));
-      return <LiveBlog story={story} />;
-    case "listicle":
-      const ListicleStory = loadable(() => import(
-        /* webpackChunkName: "listicle-story-template-chunk" */ `../arrow/components/Rows/StoryTemplates/ListicleStoryTemplates`
-      ));
-      return <ListicleStory story={story} />;
     case "text":
-      const TextStory = loadable(() => import(
-        /* webpackChunkName: "text-story-template-chunk" */ `../arrow/components/Rows/StoryTemplates/TextStoryTemplates`
-      ));
       return <TextStory story={story} />;
+    case "video":
+      return <VideoStory story={story} />;
     case "photo":
-      const PhotoStory = loadable(() => import(
-        /* webpackChunkName: "photo-story-template-chunk" */ `../arrow/components/Rows/StoryTemplates/PhotoStoryTemplates`
-      ));
       return <PhotoStory story={story} />;
+    case "listicle":
+      return <ListicleStory story={story} />;
+    case "live-blog":
+      return <LiveBlogStory story={story} />;
     default:
-      return <BlankStory story={story} />;
+      return <TextStory story={story} />;
   }
+
 }
 
 StoryPageBase.propTypes = {

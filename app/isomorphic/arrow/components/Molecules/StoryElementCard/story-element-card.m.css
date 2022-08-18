@@ -1,0 +1,79 @@
+/* eslint-disable scss/at-import-partial-extension */
+@import "../../../../../assets/stylesheets/mixins.scss";
+
+.element-container {
+  margin: var(--arrow-spacing-l) 0;
+  @include tablet {
+    margin: var(--arrow-spacing-xl) 0;
+  }
+}
+
+.live-blog {
+  margin: var(--arrow-spacing-m) 0 var(--arrow-spacing-l);
+  @include tablet {
+    margin: var(--arrow-spacing-m) 0 var(--arrow-spacing-xl);
+  }
+}
+
+.image-share {
+  display: flex;
+  justify-content: space-between;
+  padding: var(--arrow-spacing-xs) 0 var(--arrow-spacing-l);
+}
+.image-share :global(.arr--caption-attribution) {
+  margin: unset;
+}
+
+.image-share :global(.desktop-share-wrapper) {
+  @include desktop {
+    max-width: 42px;
+  }
+}
+
+.story-card {
+  border-bottom: 1px solid var(--arrow-c-mono5);
+  margin-bottom: var(--arrow-spacing-xl);
+}
+
+.element-container :global(.story-element-jsembed) iframe {
+  max-width: 100%;
+}
+
+.element-container :global(.story-element-jsembed) img {
+  width: fit-content;
+}
+
+.element-container :global(.story-element-jsembed-dailymotion-video) iframe {
+  width: 100%;
+  height: 100%;
+}
+
+:global(.story-element-jsembed.story-element-jsembed-facebook-post *) {
+  @include mobile {
+    max-width: 100%;
+    position: relative;
+  }
+}
+
+:global(.story-element-jsembed.story-element-jsembed-facebook-post) {
+  @include mobile {
+    max-width: calc(100vw - var(--arrow-spacing-l));
+  }
+}
+
+.table :global(.story-element-data-table) {
+  max-width: calc(100vw - 24px);
+  @include tablet {
+    max-width: calc(calc(calc(1024px / 12) * 8) - 24px);
+    @include desktop {
+      max-width: calc(calc(calc(1025px / 12) * 8) - 24px);
+    }
+  }
+}
+
+.dark {
+  color: var(--arrow-c-mono2);
+}
+.light {
+  color: var(--arrow-c-invert-mono2);
+}

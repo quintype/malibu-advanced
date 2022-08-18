@@ -1,0 +1,53 @@
+/* eslint-disable scss/at-rule-no-unknown */
+@value viewports: "../../../../../assets/stylesheets/viewports.m.css";
+@value mobile from viewports;
+@value desktop from viewports;
+
+.component-wrapper {
+  padding: 0 var(--arrow-spacing-s);
+  @media (min-width: desktop) {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    grid-column-gap: var(--arrow-spacing-l);
+    padding: 0;
+  }
+}
+
+.collection-wrapper {
+  padding: 0 var(--arrow-spacing-s);
+  @media (min-width: desktop) {
+    padding: 0;
+  }
+}
+
+.sidebar-collection-wrapper {
+  padding: 0 var(--arrow-spacing-s);
+  @media (min-width: desktop) {
+    padding: 0;
+    padding-left: var(--arrow-spacing-m);
+  }
+}
+
+.sidebar-cards-container {
+  @media (min-width: mobile) {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-column-gap: var(--arrow-spacing-l);
+    margin: var(--arrow-spacing-l) 0;
+  }
+  @media (min-width: desktop) {
+    display: block;
+  }
+}
+
+.story-cards > .card,
+.story-cards > .first-card {
+  margin-bottom: var(--arrow-spacing-s);
+  @media (min-width: mobile) {
+    margin-bottom: var(--arrow-spacing-m);
+  }
+}
+
+.sidebar-cards-container .card {
+  margin-bottom: var(--arrow-spacing-m);
+}

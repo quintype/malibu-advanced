@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { object, shape } from "prop-types";
 import { useSelector } from "react-redux";
 import get from "lodash/get";
-import AuthorIntroductionCard from "../../arrow/components/Rows/AuthorIntroductionCard";
-import ThreeColGrid from "../../arrow/components/Rows/ThreeColGrid";
+import AuthorIntroductionCard from "../../../arrow/components/Rows/AuthorIntroductionCard";
+import ThreeColGrid from "../../../arrow/components/Rows/ThreeColGrid";
 import { getLoadMoreStories } from "../../utils";
 
 import { DfpComponent } from "../../ads/dfp-component";
@@ -40,7 +40,6 @@ export const AuthorPage = props => {
 
   return (
     <div className="container">
-       <h1> VEENA 3</h1>
       <AuthorIntroductionCard data={props.data.author} config={authorIntrCardConfig} />
       {authorCollectionStories.items.length > 0 ? (
         <ThreeColGrid

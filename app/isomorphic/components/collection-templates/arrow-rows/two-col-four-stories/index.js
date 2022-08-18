@@ -1,6 +1,6 @@
 import React from "react";
 import { object } from "prop-types";
-import TwoColFourStories  from "../../../arrow/components/Rows/TwoColFourStory";
+import TwoColFourStories  from "../../.././../arrow/components/Rows/TwoColFourStory";
 
 export const ArrowTwoColFourStories = ({ collection }) => {
   const config = {

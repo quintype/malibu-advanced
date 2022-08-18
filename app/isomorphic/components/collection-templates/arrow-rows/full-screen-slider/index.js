@@ -1,6 +1,6 @@
 import React from "react";
 import { object } from "prop-types";
-import FullScreenSlider  from "../../../arrow/components/Rows/FullScreenSlider";
+import FullScreenSlider  from "../../.././../arrow/components/Rows/FullScreenSlider";
 
 export const ArrowFullScreenSlider = ({ collection }) => {
   const contextConfig = {

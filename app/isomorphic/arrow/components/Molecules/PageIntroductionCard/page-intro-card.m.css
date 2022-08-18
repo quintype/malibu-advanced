@@ -1,0 +1,62 @@
+/* eslint-disable scss/at-rule-no-unknown */
+@value viewports: "../../../../../assets/stylesheets/viewports.m.css";
+@value mobile from viewports;
+@value tablet from viewports;
+
+.author-page-wrapper:global(.full-width-with-padding) {
+  text-align: center;
+  padding-top: 40px;
+  padding-bottom: 32px;
+  @media (min-width: mobile) {
+    padding-top: 48px;
+    padding-bottom: 48px;
+    @media (min-width: tablet) {
+      padding-right: 302px;
+      padding-left: 301px;
+      padding-top: 60px;
+    }
+  }
+}
+
+.pageTitle {
+  font-size: var(--arrow-fs-l);
+  color: var(--arrow-c-mono2);
+  padding-bottom: var(--arrow-spacing-xs);
+  @media (min-width: mobile) {
+    font-size: var(--arrow-fs-huge);
+  }
+}
+
+.borderBottom {
+  position: relative;
+  text-align: center;
+  padding-bottom: 34px;
+}
+
+.borderBottom:after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  width: 52px;
+  margin: 0 0 0 -26px;
+  bottom: 24px;
+  border-bottom: 5px solid;
+}
+
+.pageDescription {
+  margin: 0 auto var(--arrow-spacing-l) 0;
+  font-size: var(--arrow-fs-xs);
+  line-height: var(--arrow-lh-5);
+  color: var(--arrow-c-mono2);
+  @media (min-width: mobile) {
+    font-size: var(--arrow-fs-s);
+  }
+}
+
+.dark {
+  color: var(--arrow-c-mono2);
+}
+
+.light {
+  color: var(--arrow-c-invert-mono2);
+}
