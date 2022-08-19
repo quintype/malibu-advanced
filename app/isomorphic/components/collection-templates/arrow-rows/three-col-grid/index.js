@@ -7,13 +7,13 @@ import "./style.m.css";
 export const ArrowThreeColGrid = ({ collection }) => {
   const config = {
     buttonText: `${collection.name} News`,
-    showImagePlaceholder: true
+    showImagePlaceholder: true,
   };
   return <ThreeColGrid collection={collection} config={config} />;
 };
 
 ArrowThreeColGrid.propTypes = {
-  collection: object
+  collection: object,
 };
 
 ArrowThreeColGrid.storyLimit = 6;

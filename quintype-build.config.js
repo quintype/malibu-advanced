@@ -8,15 +8,17 @@ const loadableConfigObj = {
       footer: "./app/isomorphic/components/layouts/footer",
       arrowElevenStoriesCssChunk: "./app/isomorphic/arrow/components/Rows/ElevenStories/11-stories.m.css",
       arrowFourColGridCssChunk: "./app/isomorphic/arrow/components/Rows/FourColGrid/four-col.m.css",
-      arrowFourColTwelveStoriesCssChunk: "./app/isomorphic/arrow/components/Rows/FourColTwelveStory/four-col-twelve-story.m.css",
+      arrowFourColTwelveStoriesCssChunk:
+         "./app/isomorphic/arrow/components/Rows/FourColTwelveStory/four-col-twelve-story.m.css",
       arrowFullScreenSliderCssChunk: "./app/isomorphic/arrow/components/Rows/FullScreenSlider/full-screen-slider.m.css",
       arrowOneColStoryListCssChunk: "./app/isomorphic/arrow/components/Rows/OneColStoryList/one-col-story-list.m.css",
       arrowThreeColGridCssChunk: "./app/isomorphic/arrow/components/Rows/ThreeColGrid/three-col.m.css",
-      arrowThreeColSevenStoryCssChunk: "./app/isomorphic/arrow/components/Rows/ThreeColSevenStory/three-col-seven-story.m.css",
+      arrowThreeColSevenStoryCssChunk:
+         "./app/isomorphic/arrow/components/Rows/ThreeColSevenStory/three-col-seven-story.m.css",
       arrowTwoColFourStoriesCssChunk: "./app/isomorphic/arrow/components/Rows/TwoColFourStory/two-col-four-story.m.css",
-      authorPage: "./app/isomorphic/components/pages/author-page/index.js"
-    }
-  }
+      authorPage: "./app/isomorphic/components/pages/author-page/index.js",
+    },
+  },
 };
 const modifiedBuildConfig = { ...quintypeBuildConfig, ...loadableConfigObj };
 

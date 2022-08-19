@@ -29,7 +29,7 @@ export const TwoColTenStoriesSidebar = ({ collection, config = {} }) => {
     collectionNameBorderColor = "",
     theme = "",
     slotConfig = [],
-    collectionNameTemplate = ""
+    collectionNameTemplate = "",
   } = config;
   const textColor = getTextColor(theme);
   const dispatch = useDispatch();
@@ -60,9 +60,19 @@ export const TwoColTenStoriesSidebar = ({ collection, config = {} }) => {
               theme={theme}
               headerLevel="3"
               bgImgContentOverlap
-              aspectRatio={[[16, 9], [16, 9]]}
-              config={config}>
-              <HeroImage story={firstCollectionStories[0]} aspectRatio={[[16, 9], [16, 9]]} />
+              aspectRatio={[
+                [16, 9],
+                [16, 9]
+              ]}
+              config={config}
+            >
+              <HeroImage
+                story={firstCollectionStories[0]}
+                aspectRatio={[
+                  [16, 9],
+                  [16, 9]
+                ]}
+              />
               <StorycardContent
                 styleName={firstCardBorderStyle}
                 story={firstCollectionStories[0]}
@@ -85,7 +95,14 @@ export const TwoColTenStoriesSidebar = ({ collection, config = {} }) => {
                   border={border}
                   aspectRatio={[[16, 9], [16, 9]]}
                   config={config}>
-                  <HeroImage story={story} isHorizontal aspectRatio={[[16, 9], [16, 9]]} />
+                  <HeroImage
+                    story={story}
+                    isHorizontal
+                    aspectRatio={[
+                      [16, 9],
+                      [16, 9]
+                    ]}
+                  />
                   <StorycardContent
                     theme={theme}
                     story={story}
@@ -163,6 +180,6 @@ TwoColTenStoriesSidebar.propTypes = {
     slotConfig: PropTypes.array,
     collectionNameBorderColor: PropTypes.string,
     borderColor: PropTypes.string,
-    localizationConfig: PropTypes.object
-  })
+    localizationConfig: PropTypes.object,
+  }),
 };

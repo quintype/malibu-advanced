@@ -4,13 +4,13 @@ import { object } from "prop-types";
 
 export const ArrowTwoColFourStories = ({ collection }) => {
   const config = {
-    buttonText: `${collection.name} News`
+    buttonText: `${collection.name} News`,
   };
   return <TwoColFourStories collection={collection} config={config} />;
 };
 
 ArrowTwoColFourStories.propTypes = {
-  collection: object
+  collection: object,
 };
 
 ArrowTwoColFourStories.storyLimit = 4;

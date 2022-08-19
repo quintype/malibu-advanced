@@ -8,13 +8,13 @@ export const slotData = [
     pageType: "story",
     widgetCode: "V2lkZ2V0JTIwMQ==",
     config: {
-      customCode: "V2lkZ2V0JTIwMQ=="
-    }
+      customCode: "V2lkZ2V0JTIwMQ==",
+    },
   },
   {
     type: "collection",
     collectionSlug: "",
-    title: ""
+    title: "",
   },
   {
     type: "widget",
@@ -23,7 +23,7 @@ export const slotData = [
     pageType: "story",
     widgetCode: "V2lkZ2V0JTIwMg==",
     config: {
-      customCode: "V2lkZ2V0JTIwMg=="
-    }
-  }
+      customCode: "V2lkZ2V0JTIwMg==",
+    },
+  },
 ];

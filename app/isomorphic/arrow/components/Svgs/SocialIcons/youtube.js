@@ -13,5 +13,5 @@ export const Youtube = ({ color = "#F61C0D" }) => {
   );
 };
 Youtube.propTypes = {
-  color: PropTypes.string
+  color: PropTypes.string,
 };

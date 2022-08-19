@@ -7,14 +7,14 @@ import OneColStoryList from "../../arrow/components/Rows/OneColStoryList";
 import { DfpComponent } from "../ads/dfp-component";
 import { getLoadMoreStories } from "../utils";
 
-const SearchPage = props => {
+const SearchPage = (props) => {
   // will be getting initially 9 stories, but showing only 8 for loadmore functionality
-  const adConfig = useSelector(state => get(state, ["qt", "config", "ads-config", "slots", "listing_page_ads"], {}));
+  const adConfig = useSelector((state) => get(state, ["qt", "config", "ads-config", "slots", "listing_page_ads"], {}));
   const [storiesToRender, setStoriesToRender] = useState(8);
   const [stories, setStories] = useState(props.data.stories);
 
   const collection = {
-    items: stories.slice(0, storiesToRender)
+    items: stories.slice(0, storiesToRender),
   };
 
   const getMoreStories = async (offset, limit) => {
@@ -26,7 +26,7 @@ const SearchPage = props => {
       setStories: setStories,
       storiesToRender: storiesToRender,
       setStoriesToRender: setStoriesToRender,
-      stories: stories
+      stories: stories,
     });
   };
 
@@ -53,7 +53,7 @@ const SearchPage = props => {
 };
 
 SearchPage.propTypes = {
-  data: PropTypes.object
+  data: PropTypes.object,
 };
 
 export { SearchPage };

@@ -23,7 +23,7 @@ export const TwoColThreeStories = ({ collection, config = {} }) => {
     theme = "",
     collectionNameTemplate = "",
     footerSlotConfig = {},
-    footerButton = ""
+    footerButton = "",
   } = config;
   const { footerSlot } = footerSlotConfig;
 
@@ -41,7 +41,8 @@ export const TwoColThreeStories = ({ collection, config = {} }) => {
     <div
       className="full-width-with-padding arrow-component"
       data-test-id="two-col-three-stories"
-      style={{ backgroundColor: theme, color: textColor }}>
+      style={{ backgroundColor: theme, color: textColor }}
+    >
       <div styleName="two-col-three-story">
         <CollectionName
           collection={collection}
@@ -56,8 +57,12 @@ export const TwoColThreeStories = ({ collection, config = {} }) => {
               border={border}
               bgImgContentOverlap
               headerLevel="2"
-              aspectRatio={[[16, 9], [16, 9]]}
-              config={config}>
+              aspectRatio={[
+                [16, 9],
+                [16, 9]
+              ]}
+              config={config}
+            >
               <HeroImage story={items[0]} aspectRatio={[[16, 9], [16, 9]]} />
               <StorycardContent
                 story={items[0]}
@@ -132,6 +137,6 @@ TwoColThreeStories.propTypes = {
     border: PropTypes.string,
     footerButton: PropTypes.string,
     collectionNameTemplate: PropTypes.string,
-    collectionNameBorderColor: PropTypes.string
-  })
+    collectionNameBorderColor: PropTypes.string,
+  }),
 };

@@ -26,7 +26,7 @@ const TwoColSixStories = ({ collection, config = {} }) => {
     collectionNameTemplate = "",
     border = "fullBorder",
     borderColor = "",
-    localizationConfig = {}
+    localizationConfig = {},
   } = config;
   const { type = "story", component } = get(slotConfig, [0], {});
   const textColor = getTextColor(theme);
@@ -55,7 +55,8 @@ const TwoColSixStories = ({ collection, config = {} }) => {
     <div
       className="full-width-with-padding arrow-component"
       data-test-id="two-col-six-stories"
-      style={{ backgroundColor: theme, color: textColor }}>
+      style={{ backgroundColor: theme, color: textColor }}
+    >
       <div styleName="two-col-six-stories" style={{ backgroundColor: theme, color: textColor }}>
         <CollectionName
           collection={collection}
@@ -111,7 +112,7 @@ const TwoColSixStories = ({ collection, config = {} }) => {
 
 TwoColSixStories.propTypes = {
   collection: PropTypes.object,
-  config: PropTypes.object
+  config: PropTypes.object,
 };
 
 export default StateProvider(TwoColSixStories);
