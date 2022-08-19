@@ -19,6 +19,7 @@
     "@quintype/seo": "^1.40.10",
     "axios": "^0.24.0",
     "fontfaceobserver": "^2.1.0",
+    "intersection-observer": "^0.12.2",
     "lodash": "^4.17.21",
     "query-string": "^7.0.1",
     "react": "^16.14.0",
@@ -27,6 +28,7 @@
     "react-image-lightbox": "^5.1.4",
     "react-modal": "^3.12.1",
     "react-redux": "^7.2.5",
+    "react-timeago": "^7.1.0",
     "redux": "^4.0.1",
     "serialize-javascript": "^6.0.0",
     "wretch": "^1.4.1"

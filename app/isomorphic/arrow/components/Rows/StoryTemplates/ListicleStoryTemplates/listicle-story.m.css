@@ -1,4 +1,4 @@
-@import "../../../../../assets/stylesheets/mixins.scss";
+@import "../../../../../../assets/arrow/stylesheets/mixins.scss";
 :root {
   --grid-container-width: 1140px;
   --fluid-grid-container-width: 1440px;

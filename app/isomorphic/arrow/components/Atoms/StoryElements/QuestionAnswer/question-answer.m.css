@@ -1,4 +1,4 @@
-@value viewports: "../../../../../assets/stylesheets/viewports.m.css";
+@value viewports: "../../../../../assets/arrow/stylesheets/viewports.m.css";
 @value mobile from viewports;
 
 .qa-withAuthorImage:global(.arrow-component) .a-element p,

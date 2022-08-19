@@ -1,5 +1,5 @@
 import React from "react";
-import TwoColFourStories from "../../.././../arrow/components/Rows/TwoColFourStories";
+import TwoColFourStories from "../../.././../arrow/components/Rows/TwoColFourStory";
 import { object } from "prop-types";
 
 export const ArrowTwoColFourStories = ({ collection }) => {

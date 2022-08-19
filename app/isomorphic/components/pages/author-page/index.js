@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { object, shape } from "prop-types";
 import { useSelector } from "react-redux";
 import get from "lodash/get";
-import { AuthorIntroductionCard, ThreeColGrid } from "@quintype/arrow";
+import AuthorIntroductionCard from "../../../arrow/components/Rows/AuthorIntroductionCard";
+import ThreeColGrid from "../../../arrow/components/Rows/ThreeColGrid";
 import { getLoadMoreStories } from "../../utils";
 
 import { DfpComponent } from "../../ads/dfp-component";

@@ -1,6 +1,7 @@
-@value viewports: "../../../../assets/stylesheets/viewports.m.css";
-@value mobile from viewports;
-@value tablet from viewports;
+/* eslint-disable scss/at-rule-no-unknown */
+@value mobile: 768px;
+@value tablet: 992px;
+@value desktop: 1025px;
 
 .connect {
   font-size: var(--arrow-spacing-m);

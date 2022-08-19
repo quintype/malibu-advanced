@@ -2,7 +2,7 @@ import get from "lodash/get";
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
-import { OneColStoryList } from "@quintype/arrow";
+import OneColStoryList from "../../arrow/components/Rows/OneColStoryList";
 
 import { DfpComponent } from "../ads/dfp-component";
 import { getLoadMoreStories } from "../utils";
