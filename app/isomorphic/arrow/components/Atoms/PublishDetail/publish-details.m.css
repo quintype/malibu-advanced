@@ -1,4 +1,5 @@
-@value viewports: "../../../../assets/arrow/stylesheets/viewports.m.css";
+/* eslint-disable scss/at-rule-no-unknown */
+@value viewports: "../../../../../assets/arrow/stylesheets/viewports.m.css";
 @value mobile from viewports;
 
 .timeStamp {
