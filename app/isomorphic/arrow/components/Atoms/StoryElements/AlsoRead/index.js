@@ -54,7 +54,7 @@ const AlsoReadBase = ({
   css = {},
   config = {},
   render,
-  ...restProps,
+  ...restProps
 }) => {
   const content = element.text;
   if (!content) return null;

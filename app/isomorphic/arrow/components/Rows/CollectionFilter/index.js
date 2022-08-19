@@ -53,7 +53,7 @@ const CollectionFilter = ({ collection, config = {} }) => {
     try {
       let data = {};
       if (!(id in cachedStories)) {
-        let res = await axios.get(`/api/v1/collections/${id}`);
+        const res = await axios.get(`/api/v1/collections/${id}`);
         data = res.data;
       } else data = cachedStories[id];
       memoizeStories(id, data);
@@ -81,7 +81,7 @@ const CollectionFilter = ({ collection, config = {} }) => {
   const openChildCollectionItems = (event, index, slug) => {
     event.stopPropagation();
     fetchSubCollectionData(slug);
-    let activeIndex = active === index ? 0 : index;
+    const activeIndex = active === index ? 0 : index;
     handleActive(activeIndex);
   };
 
