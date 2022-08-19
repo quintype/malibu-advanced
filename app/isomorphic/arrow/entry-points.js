@@ -140,7 +140,7 @@ function atomsEntryPoints() {
     },
     {
       name: "ScrollSnap",
-      path: `${basePath}/ScrollSnap,`
+      path: `${basePath}/ScrollSnap`,
     }
   ];
 }
@@ -170,7 +170,7 @@ function moleculesEntryPoints() {
     },
     {
       name: "PageIntroductionCard",
-      path: `${basePath}/PageIntroductionCard,`
+      path: `${basePath}/PageIntroductionCard`,
     }
   ];
 }
@@ -314,7 +314,7 @@ function rowsEntryPoints() {
       name: "TwoColFourStoryHighlight",
       path: `${basePath}/TwoColFourStoryHighlight`,
     },
-    { name: "OpinionCollection", path: `${basePath}/OpinionCollection` },,
+    { name: "OpinionCollection", path: `${basePath}/OpinionCollection`},
     {
       name: "ThreeColFlexStories",
       path: `${basePath}/ThreeColFlexStories`,

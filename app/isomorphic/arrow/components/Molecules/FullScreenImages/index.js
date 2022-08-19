@@ -10,8 +10,8 @@ const Lightbox = lazy(() => import("react-image-lightbox"));
 
 export const FullScreenImages = ({ imageSlug = "", template, element = {}, props }) => {
   const cdnImage = useSelector((state) => get(state, ["qt", "config", "cdn-image"]));
-  let [photoIndex, handleImage] = useState(0);
-  let [isOpen, handleOpen] = useState(false);
+  const [photoIndex, handleImage] = useState(0);
+  const [isOpen, handleOpen] = useState(false);
   const deviceWidth = get(global, ["innerWidth"], 0);
 
   const hyperlinks = get(element, ["story-elements"], []).map((image) => image.hyperlink);

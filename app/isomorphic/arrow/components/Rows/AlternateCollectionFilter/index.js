@@ -53,7 +53,7 @@ const AlternateCollectionFilter = ({ collection, config = {} }) => {
     try {
       let data = {};
       if (!(id in cachedStories)) {
-        let res = await axios.get(`/api/v1/collections/${id}?limit=7`);
+        const res = await axios.get(`/api/v1/collections/${id}?limit=7`);
         data = res.data;
       } else data = cachedStories[id];
       memoizeStories(id, data);
@@ -81,7 +81,7 @@ const AlternateCollectionFilter = ({ collection, config = {} }) => {
   const openChildCollectionItems = (event, index, slug) => {
     event.stopPropagation();
     fetchSubCollectionData(slug);
-    let activeIndex = active === index ? 0 : index;
+    const activeIndex = active === index ? 0 : index;
     handleActive(activeIndex);
   };
 
@@ -168,12 +168,12 @@ AlternateCollectionFilter.propTypes = {
     collectionNameTemplate: PropTypes.string,
     footerSlotConfig: PropTypes.object,
     footerButton: PropTypes.string,
-    collectionNameBorderColor: PropTypes.string
-  })
+    collectionNameBorderColor: PropTypes.string,
+  }),
 };
 
 AlternateCollectionFilter.defaultProps = {
   theme: "#ffffff",
   slotConfig: "story",
-  border: ""
+  border: "",
 };

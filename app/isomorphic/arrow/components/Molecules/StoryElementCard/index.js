@@ -1,3 +1,4 @@
+/* eslint-disable no-case-declarations */
 import React from "react";
 import get from "lodash.get";
 import { Text } from "../../Atoms/StoryElements/Text";
@@ -22,7 +23,7 @@ import { SocialShareTemplate } from "../../Molecules/SocialShareTemplate";
 import { facebookMobileVideoResizeFix, getTextColor } from "../../../utils/utils";
 import { ImageSlideshow } from "../../Atoms/StoryElements/ImageSlideshow";
 
-const getElementType = (element) => element["subtype"] || element["type"] || "";
+const getElementType = (element) => element.subtype || element.type || "";
 const getElement = (story, element, config = {}, AdComponent, WidgetComp, index, cardId) => {
   const {
     text = {},
@@ -40,7 +41,7 @@ const getElement = (story, element, config = {}, AdComponent, WidgetComp, index,
   let elementType = getElementType(element);
 
   if (elementType === "image-gallery") {
-    elementType = element.metadata["type"];
+    elementType = element.metadata.type;
   }
 
   const storyElementId = get(element, ["id"]);

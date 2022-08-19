@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React from "react";
 import PropTypes from "prop-types";
 import { ResponsiveImage } from "@quintype/components";
@@ -29,7 +30,7 @@ const ImageGalleryBase = ({ element, template = "", opts = {}, story = {}, confi
 
   const ImageGalleryImagesTemplate = ({ onClickHandler }) => {
     const images = renderImage.map((image, index) => (
-      <div key={index} styleName={hyperlinkClass(image["hyperlink"])}>
+      <div key={index} styleName={hyperlinkClass(image.hyperlink)}>
         <figure
           key={index}
           data-text-id={`image-${index}`}
@@ -38,13 +39,13 @@ const ImageGalleryBase = ({ element, template = "", opts = {}, story = {}, confi
           <ResponsiveImage
             slug={image["image-s3-key"]}
             metadata={image["image-metadata"]}
-            alt={image["title"]}
+            alt={image.title}
             aspectRatio={[1, 1]}
             defaultWidth={640}
             imgParams={{ auto: ["format", "compress"] }}
           />
         </figure>
-        {image["hyperlink"] && <HyperLink hyperLink={image["hyperlink"]} />}
+        {image.hyperlink && <HyperLink hyperLink={image.hyperlink} />}
       </div>
     ));
 

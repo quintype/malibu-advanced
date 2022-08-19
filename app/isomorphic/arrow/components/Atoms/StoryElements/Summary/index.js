@@ -23,7 +23,7 @@ const SummaryBase = ({
 
   const { headerBgColor } = css;
   const { isExternalLink = true, headline = "Summary", hideHeadline = false } = opts;
-  let text = (isExternalLink && updateContentLinks(content)) || content;
+  consy text = (isExternalLink && updateContentLinks(content)) || content;
 
   const supportedTemplates = ["header", "border"];
   const templateStyle = supportedTemplates.includes(template) ? `summary-${template}` : "summary";

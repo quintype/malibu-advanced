@@ -58,7 +58,7 @@ export const generateCollection = ({ stories = 0, subCollections = [], itemMeta 
 };
 
 export const generateCollections = (count = 0) => {
-  let collections = [];
+  const collections = [];
   Array(count)
     .fill(0)
     .forEach(() => {

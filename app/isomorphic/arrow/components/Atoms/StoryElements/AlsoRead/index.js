@@ -13,7 +13,7 @@ const DisplayImage = ({ story, linkedImage, template, isRightAlign }) => {
   const isMobile = clientWidth("mobile");
   const rightAlignAspectRatio = isRightAlign && isMobile ? [4, 3] : [16, 9];
   const imageAspectRatio = isLeftAlign ? [16, 9] : rightAlignAspectRatio;
-  const alternateText = story["hero-image-caption"] || story["headline"];
+  const alternateText = story["hero-image-caption"] || story.headline;
 
   return (
     <div styleName="card-image-wrapper">
@@ -43,7 +43,7 @@ DisplayImage.propTypes = {
   story: PropTypes.shape({ "hero-image-caption": PropTypes.string, headline: PropTypes.string }),
   linkedImage: PropTypes.string,
   template: PropTypes.string,
-  isRightAlign: PropTypes.bool
+  isRightAlign: PropTypes.bool,
 };
 
 const AlsoReadBase = ({
@@ -54,7 +54,7 @@ const AlsoReadBase = ({
   css = {},
   config = {},
   render,
-  ...restProps
+  ...restProps,
 }) => {
   const content = element.text;
   if (!content) return null;
@@ -105,13 +105,13 @@ AlsoReadBase.propTypes = {
   element: PropTypes.shape({
     text: PropTypes.string,
     metadata: PropTypes.shape({
-      linkedStoryId: PropTypes.shape({ url: PropTypes.string, "hero-image-s3-key": PropTypes.string })
-    })
+      linkedStoryId: PropTypes.shape({ url: PropTypes.string, "hero-image-s3-key": PropTypes.string }),
+    }),
   }),
   opts: PropTypes.shape({ title: PropTypes.string }),
   config: shapeConfig,
   render: PropTypes.func,
-  css: PropTypes.object
+  css: PropTypes.object,
 };
 
 export const AlsoRead = withElementWrapper(AlsoReadBase);

@@ -20,14 +20,14 @@ const ImageBase = ({ element, opts = {}, story = {}, config = {}, caption = true
         <ResponsiveImage
           slug={element["image-s3-key"]}
           metadata={element["image-metadata"]}
-          alt={element["title"]}
+          alt={element.title}
           aspectRatio={null}
           defaultWidth={640}
           widths={opts.imageWidths || [360, 640, 1200]}
           imgParams={{ auto: ["format", "compress"] }}
         />
       </figure>
-      {element["hyperlink"] && <HyperLink hyperLink={element["hyperlink"]} />}
+      {element.hyperlink && <HyperLink hyperLink={element.hyperlink} />}
     </div>
   );
 

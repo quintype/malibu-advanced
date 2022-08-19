@@ -49,7 +49,8 @@ AuthorImage.propTypes = {
     name: PropTypes.string,
     slug: PropTypes.string
   }),
-  template: PropTypes.string
+  template: PropTypes.string,
+  config: PropTypes.object
 };
 
 export default AuthorImage;

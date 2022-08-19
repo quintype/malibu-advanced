@@ -31,7 +31,7 @@ export const socialShareData = ({ fbUrl, twitterUrl, linkedinUrl, whatsappUrl, i
       {
         name: "facebook",
         url: fbUrl,
-        icon: socialIcons["facebook"],
+        icon: socialIcons.facebook,
         text: "Facebook",
         bgColor: "#4e71a8",
         alt: "fb icon"
@@ -39,7 +39,7 @@ export const socialShareData = ({ fbUrl, twitterUrl, linkedinUrl, whatsappUrl, i
       {
         name: "twitter",
         url: twitterUrl,
-        icon: socialIcons["twitter"],
+        icon: socialIcons.twitter,
         text: "Twitter",
         bgColor: "#1db7eb",
         alt: "twitter icon"
@@ -47,7 +47,7 @@ export const socialShareData = ({ fbUrl, twitterUrl, linkedinUrl, whatsappUrl, i
       {
         name: "linkedin",
         url: linkedinUrl,
-        icon: socialIcons["linkedin"],
+        icon: socialIcons.linkedin,
         text: "LinkedIn",
         bgColor: "#0077B5",
         alt: "linkedin icon"
@@ -55,7 +55,7 @@ export const socialShareData = ({ fbUrl, twitterUrl, linkedinUrl, whatsappUrl, i
       {
         name: "whatsapp",
         url: whatsappUrl,
-        icon: socialIcons["whatsapp"],
+        icon: socialIcons.whatsapp,
         text: "Whatsapp",
         bgColor: "#25d366",
         alt: "whatsapp share"

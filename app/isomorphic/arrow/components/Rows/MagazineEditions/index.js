@@ -20,7 +20,7 @@ const MagazineEditions = ({ collection = [], config = {}, onClick, limit, showLo
     template = "NavigateToPage"
   } = config;
   const textColor = getTextColor(theme);
-  let issues = collection.map((issue) => issue.collection) || [];
+  const issues = collection.map((issue) => issue.collection) || [];
   const qtConfig = useSelector((state) => get(state, ["qt", "config"], {}));
   const dispatch = useDispatch();
   const url = generateNavigateSlug(collection, { ...qtConfig, ...config });
