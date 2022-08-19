@@ -1,5 +1,5 @@
 import React from "react";
-import { ThreeColGrid } from "@quintype/arrow";
+import ThreeColGrid from "../../.././../arrow/components/Rows/ThreeColGrid";
 import { object } from "prop-types";
 
 import "./style.m.css";

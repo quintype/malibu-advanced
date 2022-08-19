@@ -1,0 +1,78 @@
+@custom-media --viewport-small (width < 768px);
+@custom-media --viewport-medium (width >= 768px);
+
+.four-story-slider-wrapper {
+  padding: 0 var(--arrow-spacing-s);
+  @media (--viewport-medium) {
+    padding: 0;
+  }
+
+  :global .scroll-snap-container .arr--responsive-hero-image .story-icon,
+  :global .scroll-snap-container .arr--fallback-hero-image .story-icon {
+    height: 24px;
+    width: 24px;
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    z-index: var(--z-index-1);
+  }
+
+  :global .live-icon {
+    animation: blink 1.5s linear infinite;
+    vertical-align: middle;
+    height: 24px;
+    width: 24px;
+  }
+
+  @keyframes blink {
+    0% {
+      opacity: 0;
+    }
+
+    50% {
+      opacity: 1;
+    }
+
+    100% {
+      opacity: 0;
+    }
+  }
+
+  .story-grid {
+    :global .arr--story-card {
+      margin-bottom: var(--arrow-fs-xs);
+    }
+  }
+
+  @media (--viewport-medium) {
+    .story-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-gap: var(--arrow-fs-xs);
+    }
+  }
+
+  @media (--viewport-medium) {
+    :global .scroll-snap-carousel {
+      > div {
+        width: 33%;
+        margin: 0 1%;
+      }
+    }
+
+    :global .scroll-snap-carousel:nth-child(1) {
+      > div {
+        margin-left: 0;
+      }
+    }
+  }
+
+  @media (min-width: 992px) {
+    :global .scroll-snap-carousel {
+      > div {
+        width: 24%;
+        margin: 0 2%;
+      }
+    }
+  }
+}

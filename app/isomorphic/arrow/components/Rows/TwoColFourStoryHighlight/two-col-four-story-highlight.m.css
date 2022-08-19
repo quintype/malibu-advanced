@@ -1,0 +1,116 @@
+@value viewports: "../../../../assets/stylesheets/viewports.m.css";
+@value mobile from viewports;
+@value desktop from viewports;
+
+.componentWrapper:global(.arrow-component.full-width-with-padding) {
+  display: flex;
+  flex-direction: column-reverse;
+  @media (min-width: mobile) {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-column-gap: var(--arrow-spacing-l);
+  }
+  @media (min-width: mobile) and (max-width: desktop) {
+    padding: var(--arrow-spacing-m) var(--arrow-spacing-s) var(--arrow-spacing-xs) var(--arrow-spacing-s);
+  }
+}
+
+.bulletCardWrapper {
+  display: flex;
+  margin-bottom: var(--arrow-spacing-m);
+}
+
+.componentWrapper :global(.arr--button) {
+  margin: var(--arrow-spacing-m) 0 var(--arrow-spacing-xs);
+}
+
+.bullet {
+  position: relative;
+  width: var(--arrow-spacing-s);
+  margin-right: var(--arrow-spacing-s);
+  margin-left: 0;
+}
+
+.bullet:before,
+.bullet.dark:before {
+  content: "";
+  border-style: solid;
+  border-width: var(--arrow-spacing-xxs) var(--arrow-spacing-xxs) var(--arrow-spacing-xxs) var(--arrow-spacing-xs);
+  border-color: transparent transparent transparent var(--arrow-c-mono2);
+  position: absolute;
+  top: var(--arrow-spacing-xxs);
+}
+
+.bullet.light:before {
+  border-color: transparent transparent transparent var(--arrow-c-invert-mono2);
+}
+
+.bullet:before {
+  border-color: transparent transparent transparent currentColor;
+}
+
+.bulletStyle :global(.arr--button) {
+  margin: var(--arrow-spacing-m) 0 var(--arrow-spacing-xs) 22px;
+}
+
+.highlightWrapper :global(.arr--collection-name) {
+  @media (max-width: mobile) {
+    display: none;
+  }
+}
+
+.coverCardWrapper :global(.arr--collection-name) {
+  @media (min-width: mobile) {
+    display: none;
+  }
+
+  @media (max-width: mobile) {
+    padding: 0 var(--arrow-spacing-s);
+  }
+}
+
+.coverCardWrapper {
+  @media (max-width: mobile) {
+    margin-bottom: var(--arrow-spacing-l);
+  }
+}
+
+.storyHighlightWrapper :global(.arr--story-card) {
+  width: 100%;
+}
+
+.highlightWrapper{
+  @media (max-width: mobile) {
+    padding: 0 var(--arrow-spacing-s) var(--arrow-spacing-m) var(--arrow-spacing-s);
+  }
+}
+
+.coverCardWrapper :global(.arr--story-card) > :nth-child(2) {
+  @media (max-width: mobile) {
+    padding: var(--arrow-spacing-m) var(--arrow-spacing-s);
+  }
+}
+
+.storyHighlightWrapper > :last-child :global(.arr--story-card) {
+  border-bottom: none;
+  @media (min-width: mobile) {
+    padding-bottom: var(--arrow-spacing-xs);
+  }
+}
+
+html[dir="rtl"] {
+  .bullet {
+    transform: rotate(180deg);
+    margin-left: var(--arrow-spacing-s);
+    margin-right: 0;
+  }
+
+  .bullet::before {
+    top: unset;
+    bottom: var(--arrow-spacing-xxs);
+  }
+
+  .bulletStyle :global(.arr--button) {
+    margin: var(--arrow-spacing-m) 22px var(--arrow-spacing-xs) 0;
+  }
+}

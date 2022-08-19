@@ -1,0 +1,10 @@
+.hyperlink-button {
+  position: absolute;
+  right: var(--arrow-spacing-xxs);
+  bottom: var(--arrow-spacing-xxs);
+  z-index: 10;
+}
+
+.hyperlink-button svg rect {
+  fill: var(--arrow-c-brand1);
+}

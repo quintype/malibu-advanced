@@ -1,0 +1,71 @@
+.indicators {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  list-style: none;
+  font-family: var(--arrow-typeface-secondary);
+  cursor: pointer;
+  line-height: 0;
+}
+
+.indicator {
+  margin: var(--arrow-spacing-xs) 0;
+  padding: 4px;
+}
+
+.indicator-button {
+  background: none;
+  border: none;
+  overflow: hidden;
+  padding: var(--arrow-spacing-s) var(--arrow-spacing-xxs);
+  cursor: pointer;
+}
+
+.indicator-dots {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--arrow-c-dark);
+  border: 1px solid var(--arrow-c-dark);
+  padding: 0;
+  opacity: 0.25;
+}
+
+.indicator-dots-dark[aria-pressed="true"] {
+  background-color: var(--arrow-c-dark);
+  opacity: 1;
+}
+
+.indicator-dots-light {
+  background-color: var(--arrow-c-light);
+  border-color: var(--arrow-c-light);
+}
+
+.indicator-dots-light[aria-pressed="true"] {
+  background-color: var(--arrow-c-light);
+  opacity: 1;
+}
+
+.indicator-dashes {
+  display: inline-block;
+  width: var(--arrow-spacing-s);
+  height: 2px;
+  padding: 0;
+}
+.indicator-dashes-dark {
+  opacity: 0.25;
+  background-color: var(--arrow-c-dark);
+}
+.indicator-dashes-light {
+  opacity: 0.25;
+  background-color: var(--arrow-c-light);
+}
+
+.indicator-dashes-dark[aria-pressed="true"] {
+  background-color: var(--arrow-c-dark);
+  opacity: 1;
+}
+.indicator-dashes-light[aria-pressed="true"] {
+  background-color: var(--arrow-c-light);
+  opacity: 1;
+}

@@ -1,0 +1,21 @@
+.element {
+  position: relative;
+}
+
+.loading {
+  position: fixed;
+  left: 0;
+  width: 100%;
+  top: 0;
+  height: 100%;
+  /* To match it with lightbox overlay, hardcoding this value */
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  color: var(--arrow-c-light);
+  justify-content: center;
+  align-items: center;
+}
+
+.image-template {
+  position: relative;
+}

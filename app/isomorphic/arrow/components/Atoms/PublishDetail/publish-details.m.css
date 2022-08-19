@@ -1,0 +1,47 @@
+@value viewports: "../../../../assets/stylesheets/viewports.m.css";
+@value mobile from viewports;
+
+.timeStamp {
+  font-size: var(--arrow-fs-tiny);
+  @media (min-width: mobile) {
+    font-size: var(--arrow-fs-xs);
+  }
+}
+
+.timeStamp.dark {
+  color: var(--arrow-c-mono4);
+}
+
+.timeStamp.light {
+  color: var(--arrow-c-invert-mono4);
+}
+
+.publish-details {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+}
+
+.update-details {
+  display: flex;
+  margin-top: var(--arrow-spacing-xs);
+}
+.dot-indicator {
+  display: flex;
+  align-items: center;
+  padding: 0 var(--arrow-spacing-xs);
+}
+
+.timeStamp :global(.arr--read-time) {
+  font-size: var(--arrow-fs-tiny);
+  @media (min-width: mobile) {
+    font-size: var(--arrow-fs-xs);
+  }
+}
+
+.date.dark {
+  color: var(--arrow-c-mono2);
+}
+.date.light {
+  color: var(--arrow-c-invert-mono2);
+}

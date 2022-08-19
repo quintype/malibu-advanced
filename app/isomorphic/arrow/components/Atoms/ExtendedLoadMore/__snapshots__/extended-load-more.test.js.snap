@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Extended Load more button Should render extended load more button 1`] = `
+<div
+  className="arr--button load-more-m_button__1mmf1 load-more-m_dark__3dfzb load-more-m_default__2_k4V"
+  onClick={[Function]}
+  style={Object {}}
+>
+  Read More
+</div>
+`;

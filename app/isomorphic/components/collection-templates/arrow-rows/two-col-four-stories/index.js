@@ -1,5 +1,5 @@
 import React from "react";
-import { TwoColFourStories } from "@quintype/arrow";
+import TwoColFourStories from "../../.././../arrow/components/Rows/TwoColFourStories";
 import { object } from "prop-types";
 
 export const ArrowTwoColFourStories = ({ collection }) => {

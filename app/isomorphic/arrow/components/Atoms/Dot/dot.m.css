@@ -1,0 +1,6 @@
+.dark {
+  fill: var(--arrow-c-mono4);
+}
+.light {
+  fill: var(--arrow-c-invert-mono4);
+}

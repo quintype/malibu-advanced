@@ -1,0 +1,141 @@
+@value viewports: "../../../../assets/stylesheets/viewports.m.css";
+@value mobile from viewports;
+@value desktop from viewports;
+
+.componentWrapper {
+  @media (min-width: mobile) {
+    display: grid;
+    grid-column-gap: 25px;
+    grid-template-columns: repeat(2, 1fr);
+    @media (min-width: desktop) {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+}
+
+.cardWrapper {
+  @media (min-width: mobile) {
+    flex: auto;
+  }
+}
+
+.storyCardWrapper :global(.arr--story-card) {
+  padding: var(--arrow-spacing-xs) 0;
+}
+
+.storyCardWrapper > :first-child {
+  padding: 0 0 var(--arrow-spacing-xs);
+}
+
+.storyCardWrapper.storyCardWrapper > :last-child {
+  border-bottom: unset;
+}
+
+.separator {
+  @media (min-width: mobile) {
+    position: relative;
+  }
+}
+
+.separator::after {
+  @media (min-width: mobile) {
+    content: "";
+    width: 1px;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    right: -13px;
+  }
+}
+
+.light .separator::after {
+  @media (min-width: mobile) {
+    background-color: var(--light-border);
+  }
+}
+
+.dark .separator::after {
+  @media (min-width: mobile) {
+    background-color: var(--dark-border);
+  }
+}
+
+.componentWrapper > :last-child .separator::after {
+  @media (min-width: mobile) {
+    content: none;
+  }
+}
+
+.componentWrapper > :nth-child(2) .separator::after {
+  @media (min-width: mobile) {
+    content: none;
+    @media (min-width: desktop) {
+      content: "";
+    }
+  }
+}
+
+.contentWrapper {
+  @media (min-width: mobile) {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.componentWrapper:global(.arrow-component.full-width-with-padding) {
+  @media (max-width: desktop) {
+    padding-left: var(--arrow-spacing-s);
+    padding-right: var(--arrow-spacing-s);
+  }
+}
+
+.componentWrapper > :nth-child(1) :global(.arr--button),
+.componentWrapper > :nth-child(2) :global(.arr--button) {
+  @media (max-width: desktop) {
+    margin-bottom: var(--arrow-spacing-m);
+  }
+}
+
+.componentWrapper > :nth-child(3) :global(.arr--button) {
+  margin-bottom: var(--arrow-spacing-m);
+  @media (min-width: mobile) {
+    margin-bottom: var(--arrow-spacing-xs);
+  }
+}
+
+.storyCardWrapper {
+  :global .arr--responsive-hero-image .story-icon,
+  :global .arr--fallback-hero-image .story-icon {
+    height: 24px;
+    width: 24px;
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    z-index: var(--z-index-1);
+    @media (--viewport-small) {
+      height: 24px;
+      width: 24px;
+    }
+  }
+
+  :global .live-icon {
+    animation: blink 1.5s linear infinite;
+    vertical-align: middle;
+    height: 24px;
+    width: 24px;
+  }
+}
+
+@keyframes blink {
+  0% {
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}

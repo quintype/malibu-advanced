@@ -1,0 +1,106 @@
+@value viewports: "../../../../assets/stylesheets/viewports.m.css";
+@value mobile from viewports;
+@value tablet from viewports;
+
+.magazine-header {
+  display: grid;
+  grid-gap: var(--arrow-fs-l);
+  margin: 0 var(--arrow-fs-xs);
+  @media (min-width: mobile) {
+    grid-template-columns: 1fr 3fr;
+  }
+  @media (min-width: tablet) {
+    margin: 0 0 var(--arrow-spacing-xs);
+    grid-row-gap: 0;
+    grid-column-gap: 48px;
+  }
+}
+
+.content {
+  text-align: center;
+  @media (min-width: mobile) {
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+}
+
+.time {
+  font-size: var(--arrow-fs-xs);
+  font-weight: var(--arrow-fw-bold);
+  line-height: var(--arrow-lh-1);
+}
+
+.magazine-header :global(.arr--collection-name) {
+  margin: var(--arrow-spacing-xs) 0;
+}
+
+.story-cards {
+  display: grid;
+  grid-gap: var(--arrow-fs-xs);
+  grid-template-columns: 1fr;
+  @media (min-width: mobile) {
+    grid-template-columns: 1fr 1fr;
+    grid-gap: var(--arrow-spacing-l);
+  }
+  :global(.arr--story-card) {
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+  }
+}
+
+.widget {
+  margin-top: var(--arrow-spacing-xl);
+  @media (min-width: mobile) {
+    grid-column: 1/3;
+    margin-top: var(--arrow-spacing-l);
+  }
+}
+
+.intro-button :global(.arr--button) {
+  @media (min-width: mobile) {
+    margin: var(--arrow-spacing-l) 0 0;
+  }
+}
+
+.widget-button :global(.arr--button) {
+  @media (min-width: tablet) {
+    margin: var(--arrow-spacing-l) 0 0;
+  }
+}
+
+.summary {
+  font-size: var(--arrow-fs-xs);
+  @media (min-width: mobile) {
+    font-size: var(--arrow-fs-s);
+  }
+}
+
+.summary.dark {
+  color: var(--arrow-c-mono4);
+}
+
+.summary.light {
+  color: var(--arrow-c-invert-mono4);
+}
+
+.dark {
+  color: var(--arrow-c-mono2);
+}
+.light {
+  color: var(--arrow-c-invert-mono2);
+}
+
+html[dir="rtl"] {
+  .time {
+    direction: ltr;
+    text-align: right;
+  }
+
+  .intro-button :global(.arr--button) {
+    @media (min-width: mobile) {
+      margin: var(--arrow-spacing-l) 0 0;
+    }
+  }
+}

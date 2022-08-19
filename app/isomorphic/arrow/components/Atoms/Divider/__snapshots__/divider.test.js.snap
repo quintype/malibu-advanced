@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Divider should render 1`] = `
+<div
+  className="divider-m_light__w-7sy"
+>
+  <svg
+    height="10"
+    width="1"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M0 0h1v10H0z"
+      fill="inherit"
+    />
+  </svg>
+</div>
+`;

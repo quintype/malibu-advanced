@@ -1,0 +1,42 @@
+@value viewports: "../../../../../assets/stylesheets/viewports.m.css";
+@value mobile from viewports;
+@value tablet from viewports;
+
+.wrapper {
+  border-radius: var(--arrow-spacing-xxs);
+  padding: var(--arrow-spacing-m);
+  margin-bottom: var(--arrow-spacing-l);
+  @media (min-width: tablet) {
+    padding: var(--arrow-spacing-l);
+  }
+}
+
+.name {
+  font-size: var(--arrow-fs-m);
+  font-weight: var(--arrow-fw-bold);
+  line-height: var(--arrow-lh-3);
+  margin-bottom: var(--arrow-spacing-m);
+  @media (min-width: mobile) {
+    font-size: var(--arrow-fs-l);
+  }
+}
+
+.description {
+  font-size: var(--arrow-fs-s);
+  line-height: var(--arrow-lh-5);
+  @media (min-width: mobile) {
+    font-size: var(--arrow-fs-m);
+  }
+}
+
+.dark {
+  background-color: var(--arrow-c-mono7);
+  border: solid 1px var(--arrow-c-mono7);
+  color: var(--arrow-c-mono2);
+}
+
+.light {
+  background-color: var(--arrow-c-invert-mono7);
+  border: solid 1px var(--arrow-c-invert-mono7);
+  color: var(--arrow-c-invert-mono2);
+}

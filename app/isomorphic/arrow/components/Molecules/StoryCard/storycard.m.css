@@ -1,0 +1,158 @@
+@custom-media --viewport-medium (width >= 768px);
+
+.author-timestamp-wrapper {
+  display: flex;
+  align-items: center;
+}
+.default-card {
+  display: flex;
+  flex-direction: column;
+}
+.horizontal-card {
+  display: flex;
+  flex-direction: row;
+}
+
+.backgroung-img > a > figure::after {
+  @media (--viewport-medium) {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.7), transparent 50%, transparent);
+  }
+}
+.backgroung-img > div:nth-child(2) {
+  @media (--viewport-medium) {
+    padding: var(--arrow-spacing-m) var(--arrow-spacing-m) 48px;
+    position: absolute;
+    bottom: 0;
+    left: 15%;
+    right: 15%;
+  }
+}
+.backgroung-img img {
+  position: absolute;
+  bottom: 0;
+}
+
+.content-overlap > div:nth-child(2) {
+  @media (--viewport-medium) {
+    margin: 0 var(--arrow-spacing-m);
+    width: calc(100% - 32px);
+    background-color: var(--arrow-c-light);
+    padding: var(--arrow-spacing-m);
+    position: absolute;
+    bottom: 0;
+  }
+}
+.content-overlap img {
+  @media (--viewport-medium) {
+    position: absolute;
+    bottom: 0;
+  }
+}
+
+/* TODO: Refactor targetting of child  */
+.horizontal-card > div:first-child {
+  flex-basis: 30%;
+}
+
+.horizontal-card > div:nth-child(2) {
+  flex-basis: 70%;
+}
+
+.border-full.light {
+  border: 1px solid var(--light-border);
+}
+
+.border-full.dark {
+  border: 1px solid var(--dark-border);
+}
+
+.border-bottom.light {
+  border-bottom: 1px solid var(--light-border);
+  padding-bottom: var(--arrow-spacing-m);
+}
+
+.border-bottom.dark {
+  border-bottom: 1px solid var(--dark-border);
+  padding-bottom: var(--arrow-spacing-m);
+}
+
+.border-boxShadow {
+  box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.1);
+}
+.center-align {
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  @media (--viewport-medium) {
+    align-items: center;
+    text-align: center;
+  }
+}
+
+.content-bottom {
+  /* padding: 0 0 0 8px; */
+}
+.content-full,
+.content-boxShadow {
+  padding: var(--arrow-spacing-xs) var(--arrow-spacing-m);
+}
+.backgroung-img,
+.content-overlap {
+  position: relative;
+}
+
+.hero-image {
+  margin-bottom: var(--arrow-spacing-xs);
+  padding-right: 0;
+}
+.right-padding {
+  padding-bottom: 0;
+  padding-right: var(--arrow-spacing-xs);
+}
+
+.horizontal-mob {
+  display: flex;
+  flex-direction: row;
+  @media (--viewport-medium) {
+    flex-direction: column;
+  }
+}
+.horizontal-mob .hero-image {
+  flex-basis: 30%;
+  @media (--viewport-medium) {
+    flex-basis: 100%;
+  }
+}
+.horizontal-mob .content {
+  flex-basis: 70%;
+  @media (--viewport-medium) {
+    flex-basis: 100%;
+  }
+}
+
+.border-default {
+  border: none;
+  height: 100%;
+}
+.card {
+  height: 100%;
+}
+
+.horizontal-image-last {
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+.horizontal-image-last > div:first-child {
+  flex-basis: 30%;
+}
+
+.horizontal-image-last > div:nth-child(2) {
+  flex-basis: 70%;
+}

@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Load more button Should render button and load items subsequently with SubsequentLoadCount as template property. 1`] = `
+<div
+  className="arr--button load-more-m_button__1mmf1 load-more-m_dark__3dfzb load-more-m_default__2_k4V"
+  data-test-id="load-more"
+>
+  Read More
+</div>
+`;
+
+exports[`Load more button Should render button and navigate to the corresponding url with NavigateToPage as template property. 1`] = `
+<a
+  aria-label="load-more"
+  data-test-id="load-more"
+  href="/"
+  onClick={[Function]}
+>
+  <div
+    className="arr--button load-more-m_button__1mmf1 load-more-m_dark__3dfzb load-more-m_default__2_k4V"
+  >
+    Read More
+  </div>
+</a>
+`;

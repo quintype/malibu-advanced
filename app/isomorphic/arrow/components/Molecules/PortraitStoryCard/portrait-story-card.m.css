@@ -1,0 +1,38 @@
+@custom-media --viewport-medium (width >= 768px);
+
+.wrapper {
+  :global {
+    .arr--story-card > div:nth-child(2) {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: var(--arrow-spacing-xs);
+
+      @media (--viewport-medium) {
+        padding: var(--arrow-spacing-m);
+      }
+    }
+    .arr--headline > a > h6,
+    .author-name,
+    .arr--content-wrapper time,
+    .arr--read-time,
+    .section-tag {
+      color: var(--arrow-c-light);
+    }
+
+    .arr--hero-image {
+      margin-bottom: 0;
+    }
+
+    .arr--hero-image figure::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      background: linear-gradient(0deg, var(--arrow-c-mono3), transparent 70%, transparent);
+    }
+  }
+}

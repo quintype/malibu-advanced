@@ -1,0 +1,41 @@
+@value viewports: "../../../../../assets/stylesheets/viewports.m.css";
+@value mobile from viewports;
+
+.bigfact-element {
+  border-bottom: 1px solid var(--arrow-c-mono5);
+  border-top: 1px solid var(--arrow-c-mono5);
+}
+
+.bigfact-element.light {
+  border-bottom: 1px solid var(--arrow-c-invert-mono5);
+  border-top: 1px solid var(--arrow-c-invert-mono5);
+}
+
+.content {
+  font-size: var(--arrow-fs-huge);
+  font-weight: var(--arrow-fw-bold);
+  color: var(--arrow-c-brand1);
+  padding: var(--arrow-spacing-m) 0 var(--arrow-spacing-xxs) 0;
+  @media (min-width: mobile) {
+    font-size: 48px;
+    padding: var(--arrow-spacing-m) 0 var(--arrow-spacing-xs) 0;
+    line-height: var(--arrow-lh-3);
+  }
+}
+
+.attribution {
+  font-size: var(--arrow-fs-s);
+  font-style: italic;
+  line-height: var(--arrow-lh-5);
+  padding-bottom: var(--arrow-spacing-m);
+  @media (min-width: mobile) {
+    font-size: var(--arrow-fs-m);
+  }
+}
+
+.dark {
+  color: var(--arrow-c-mono1);
+}
+.light {
+  color: var(--arrow-c-invert-mono1);
+}
