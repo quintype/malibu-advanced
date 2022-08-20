@@ -1,5 +1,5 @@
 import React from "react";
-import FourColGrid from "../../.././../arrow/components/Rows/FourColGrid";
+import FourColGrid from "../../../../arrow/components/Rows/FourColGrid";
 import { object } from "prop-types";
 
 export const ArrowFourColGrid = ({ collection }) => {

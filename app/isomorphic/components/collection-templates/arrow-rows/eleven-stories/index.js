@@ -1,5 +1,5 @@
 import React from "react";
-import ElevenStories from "../../.././../arrow/components/Rows/ElevenStories";
+import ElevenStories from "../../../../arrow/components/Rows/ElevenStories";
 import { object } from "prop-types";
 
 export const ArrowElevenStories = ({ collection }) => {
