@@ -7,5 +7,9 @@
     "at-rule-no-unknown": null,
     "scss/at-rule-no-unknown": null,
     "scss/at-import-partial-extension": null,
+    "no-descending-specificity": null,
+    "no-duplicate-selectors": null,
+    "scss/operator-no-unspaced": null,
+    "no-invalid-position-at-import-rule": null
   }
 }
