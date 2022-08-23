@@ -24,6 +24,8 @@ function StoryPageBase({ index, story, otherProp }) {
       return <ListicleStory story={story} />;
     case "live-blog":
       return <LiveBlogStory story={story} />;
+    default:
+      return <TextStory story={story} />;
   }
 }
 

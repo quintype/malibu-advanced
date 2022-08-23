@@ -48,9 +48,6 @@
       <%- arrowCss %>
     </style>
     <%_ if(pageChunk) { _%>
-    <%_ pageChunk.cssFiles.map(cssFile => {_%>
-      <style data-href="<%= cssFile.path %>"><%- cssFile.content %></style>
-    <%_ }) _%>
     <%_ pageChunk.jsPaths.map(jsPath => {_%>
       <link rel="preload" href="<%= jsPath %>" as="script">
     <%_ }) _%>
