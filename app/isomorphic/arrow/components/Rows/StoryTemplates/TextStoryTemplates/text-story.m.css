@@ -1,3 +1,4 @@
+/*eslint-disable no-descending-specificity */
 @import "../../../../../../assets/arrow/stylesheets/mixins.scss";
 
 .header-details {
