@@ -83,7 +83,7 @@
     }
   },
   "scripts": {
-    "analyze-stats": "NODE_ENV=production ANALYZE_STATS=true BABEL_TARGET=browser webpack --profile --mode=production -p",
+    "analyze-stats": "NODE_ENV=production ANALYZE_STATS=true BABEL_TARGET=browser webpack --profile --mode=production",
     "asset-server": "BABEL_TARGET=browser webpack-dev-server --hot",
     "compile": "BABEL_TARGET=browser webpack",
     "windows-asset-server": "webpack-dev-server --hot",

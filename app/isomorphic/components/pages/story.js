@@ -4,11 +4,27 @@ import React from "react";
 import { InfiniteStoryBase, WithPreview } from "@quintype/components";
 import { number, object, shape, any } from "prop-types";
 
-import { BlankStory } from "../story-templates/blank";
-
+import TextStory from "../story-templates/text-story";
+import ListicleStory from "../story-templates/listicle-story";
+import PhotoStory from "../story-templates/photo-story";
+import LiveBlogStory from "../story-templates/live-blog";
+import VideoStory from "../story-templates/video-story";
 function StoryPageBase({ index, story, otherProp }) {
   // Can switch to a different template based story-template, or only show a spoiler if index > 0
-  return <BlankStory story={story} />;
+  const storyTemplate = story["story-template"];
+
+  switch (storyTemplate) {
+    case "text":
+      return <TextStory story={story} />;
+    case "video":
+      return <VideoStory story={story} />;
+    case "photo":
+      return <PhotoStory story={story} />;
+    case "listicle":
+      return <ListicleStory story={story} />;
+    case "live-blog":
+      return <LiveBlogStory story={story} />;
+  }
 }
 
 StoryPageBase.propTypes = {
@@ -33,27 +49,29 @@ function storyPageLoadItems(pageNumber) {
 
 export function StoryPage(props) {
   return (
-    <InfiniteStoryBase
-      {...props}
-      render={StoryPageBase}
-      loadItems={storyPageLoadItems}
-      onInitialItemFocus={item =>
-        app.registerPageView({ pageType: "story-page", data: { story: item.story } }, `/${item.story.slug}`)
-      }
-      onItemFocus={item => console.log(`Story In View: ${item.story.headline}`)}
-    />
+    <div className="container">
+      <InfiniteStoryBase
+        {...props}
+        render={StoryPageBase}
+        loadItems={storyPageLoadItems}
+        onInitialItemFocus={item =>
+          app.registerPageView({ pageType: "story-page", data: { story: item.story } }, `/${item.story.slug}`)
+        }
+        onItemFocus={item => console.log(`Story In View: ${item.story.headline}`)}
+      />
+    </div>
   );
 }
 
 StoryPage.propTypes = {
   data: shape({
-    story: object
-  })
+    story: object,
+  }),
 };
 
 export const StoryPagePreview = WithPreview(StoryPage, (data, story) =>
   Object.assign({}, data, {
     story,
-    relatedStories: Array(5).fill(story)
-  })
+    relatedStories: Array(5).fill(story),
+  }),
 );

@@ -14,14 +14,39 @@ const statsFile = path.resolve("stats.json");
 export async function getArrowCss(state, { qtAssetHelpers = require("@quintype/framework/server/asset-helper") } = {}) {
   const layout = get(state, ["qt", "data", "collection", "items", 0, "associated-metadata", "layout"], null);
   const pageType = get(state, ["qt", "pageType"], "");
+  const storyTemplate = get(state, ["qt", "data", "story", "story-template"], "");
+
+  const storyTemplateTypes = {
+    text: "TextStory",
+    photo: "PhotoStory",
+    video: "VideoStory",
+    "live-blog": "LiveBlogStory",
+    listicle: "ListicleStory",
+  };
+
   const extractor = (entryPoint) => {
     const getExtractor = new ChunkExtractor({ statsFile, entrypoints: [entryPoint] });
     return getExtractor.getCssString();
   };
+
   switch (pageType) {
     case "author-page":
       return await extractor("authorPage");
   }
+
+  switch (storyTemplateTypes[storyTemplate]) {
+    case "TextStory":
+      return getAsset("arrowTextStoryCssChunk.css", qtAssetHelpers);
+    case "ListicleStory":
+      return getAsset("arrowListicleStoryCssChunk.css", qtAssetHelpers);
+    case "LiveBlogStory":
+      return getAsset("arrowLiveBlogStoryCssChunk.css", qtAssetHelpers);
+    case "PhotoStory":
+      return getAsset("arrowPhotoStoryCssChunk.css", qtAssetHelpers);
+    case "VideoStory":
+      return getAsset("arrowVideoStoryCssChunk.css", qtAssetHelpers);
+  }
+
   switch (layout) {
     case "ArrowElevenStories":
       return getAsset("arrowElevenStoriesCssChunk.css", qtAssetHelpers);
