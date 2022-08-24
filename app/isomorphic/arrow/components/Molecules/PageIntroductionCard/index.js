@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import upperCase from "lodash/upperCase";
 import { useDispatch, useSelector } from "react-redux";
-import get from "lodash.get";
+import get from "lodash/get";
 import { getTextColor, navigateTo, generateNavigateSlug } from "../../../utils/utils";
 import "./page-intro-card.m.css";
 import { LoadmoreButton } from "../../Atoms/Loadmore";

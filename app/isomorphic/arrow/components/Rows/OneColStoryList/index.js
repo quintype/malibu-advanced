@@ -1,5 +1,5 @@
 import { collectionToStories } from "@quintype/components";
-import get from "lodash.get";
+import get from "lodash/get";
 import PropTypes from "prop-types";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";

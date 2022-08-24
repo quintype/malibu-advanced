@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect, useState } from "react";
 import axios from "axios";
 import PropTypes from "prop-types";
-import get from "lodash.get";
+import get from "lodash/get";
 import { CollectionName } from "../../Atoms/CollectionName";
 import { LoadmoreButton } from "../../Atoms/Loadmore";
 import { StoryCard } from "../../Molecules/StoryCard";

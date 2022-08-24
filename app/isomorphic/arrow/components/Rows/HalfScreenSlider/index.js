@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { useDispatch, useSelector } from "react-redux";
-import get from "lodash.get";
+import get from "lodash/get";
 
 import { collectionToStories } from "@quintype/components";
 import { CollectionName } from "../../Atoms/CollectionName";

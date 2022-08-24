@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import get from "lodash.get";
+import get from "lodash/get";
 import { StoryCard } from "../../Molecules/StoryCard";
 import { HeroImage } from "../../Atoms/HeroImage";
 import { StorycardContent } from "../../Molecules/StorycardContent";

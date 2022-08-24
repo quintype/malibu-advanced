@@ -1,6 +1,6 @@
 /* eslint-disable no-case-declarations */
 import React from "react";
-import get from "lodash.get";
+import get from "lodash/get";
 import { Text } from "../../Atoms/StoryElements/Text";
 import { Blurb } from "../../Atoms/StoryElements/Blurb";
 import "./story-element-card.m.css";

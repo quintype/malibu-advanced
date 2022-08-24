@@ -1,7 +1,7 @@
 /* eslint-disable no-case-declarations */
 import React from "react";
 import PropTypes from "prop-types";
-import get from "lodash.get";
+import get from "lodash/get";
 import { shapeConfig, shapeStory, updateContentLinks, getTextColor } from "../../../../utils/utils";
 import { withElementWrapper } from "../withElementWrapper";
 import "./question-answer.m.css";

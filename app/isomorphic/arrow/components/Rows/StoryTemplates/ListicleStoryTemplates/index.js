@@ -1,7 +1,7 @@
 import { SocialShare } from "@quintype/components";
 import React from "react";
 import { useSelector } from "react-redux";
-import get from "lodash.get";
+import get from "lodash/get";
 import PropTypes from "prop-types";
 import { AuthorCard } from "../../../Atoms/AuthorCard";
 import { CaptionAttribution } from "../../../Atoms/CaptionAttribution";

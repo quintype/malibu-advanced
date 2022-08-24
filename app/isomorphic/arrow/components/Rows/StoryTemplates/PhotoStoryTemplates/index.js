@@ -1,9 +1,9 @@
 import { SocialShare } from "@quintype/components";
 import PropTypes from "prop-types";
 import React from "react";
-import get from "lodash.get";
+import get from "lodash/get";
 import { useSelector } from "react-redux";
-import kebabCase from "lodash.kebabcase";
+import kebabCase from "lodash/kebabcase";
 import { AuthorCard } from "../../../Atoms/AuthorCard";
 import { CaptionAttribution } from "../../../Atoms/CaptionAttribution";
 import { SocialShareTemplate } from "../../../Molecules/SocialShareTemplate";

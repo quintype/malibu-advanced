@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Link } from "@quintype/components";
 import { useStateValue } from "../../SharedContext";
-import get from "lodash.get";
+import get from "lodash/get";
 import { getTextColor, isExternalStory, getStoryUrl } from "../../../utils/utils";
 import { PremiumStoryIcon } from "../PremiumStoryIcon";
 import LiveIcon from "../../Svgs/liveicon";

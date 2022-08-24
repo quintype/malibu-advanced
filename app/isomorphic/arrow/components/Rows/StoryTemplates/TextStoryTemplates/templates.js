@@ -1,5 +1,5 @@
 import React from "react";
-import get from "lodash.get";
+import get from "lodash/get";
 import PropTypes from "prop-types";
 import { SocialShareTemplate } from "../../../Molecules/SocialShareTemplate";
 import { SocialShare } from "@quintype/components";

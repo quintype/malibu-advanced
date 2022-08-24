@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 import configJSON from "./config.json";
 import { dummyStory, dummyPhotoStory, dummyLiveBlogStory, dummyListicleStory } from "./dummyStory";
-import get from "lodash.get";
+import get from "lodash/get";
 import { createStore } from "redux";
 
 export const generateConfig = () => configJSON;

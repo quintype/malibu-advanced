@@ -14,7 +14,7 @@ import "./list-component.m.css";
 import { Subheadline } from "../../Atoms/Subheadline";
 import { LoadmoreButton } from "../../Atoms/Loadmore";
 import { useDispatch, useSelector } from "react-redux";
-import get from "lodash.get";
+import get from "lodash/get";
 
 const ListComponent = ({ collection, config = {}, getMoreStories, limit, hideButton, authorPrefix = "By" }) => {
   const storyItems = collectionToStories(collection);

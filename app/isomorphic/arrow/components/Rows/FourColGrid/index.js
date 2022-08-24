@@ -2,7 +2,7 @@ import React, { Fragment } from "react";
 import { StoryCard } from "../../Molecules/StoryCard";
 import { StorycardContent } from "../../Molecules/StorycardContent";
 import { HeroImage } from "../../Atoms/HeroImage";
-import get from "lodash.get";
+import get from "lodash/get";
 import { CollectionName } from "../../Atoms/CollectionName";
 import { LoadmoreButton } from "../../Atoms/Loadmore";
 import { generateNavigateSlug, getTextColor, navigateTo } from "../../../utils/utils";

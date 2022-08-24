@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import get from "lodash.get";
+import get from "lodash/get";
 import { collectionToStories, Link } from "@quintype/components";
 import { HeroImage } from "../../Atoms/HeroImage";
 import { SectionTag } from "../../Atoms/SectionTag";

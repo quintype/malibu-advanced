@@ -1,5 +1,5 @@
 import React from "react";
-import get from "lodash.get";
+import get from "lodash/get";
 import { LazyLoadImages, Link, ResponsiveImage } from "@quintype/components";
 import { withElementWrapper } from "../withElementWrapper";
 import PropTypes from "prop-types";

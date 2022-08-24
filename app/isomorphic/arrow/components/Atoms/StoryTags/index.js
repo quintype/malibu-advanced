@@ -1,5 +1,5 @@
 import React from "react";
-import get from "lodash.get";
+import get from "lodash/get";
 import PropTypes, { string } from "prop-types";
 import { useStateValue } from "../../SharedContext";
 import { Link } from "@quintype/components";

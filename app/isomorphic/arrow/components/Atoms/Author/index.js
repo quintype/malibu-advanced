@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import get from "lodash.get";
+import get from "lodash/get";
 import { useStateValue } from "../../SharedContext";
 import { ResponsiveImage, Link } from "@quintype/components";
 import { getTextColor } from "../../../utils/utils";

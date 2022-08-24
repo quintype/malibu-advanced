@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import get from "lodash.get";
+import get from "lodash/get";
 import { withElementWrapper } from "../withElementWrapper";
 import { updateContentLinks, shapeStory, shapeConfig, getTextColor } from "../../../../utils/utils";
 import "./text.m.css";

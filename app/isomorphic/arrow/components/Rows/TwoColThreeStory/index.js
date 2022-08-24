@@ -12,7 +12,7 @@ import { LoadmoreButton } from "../../Atoms/Loadmore";
 
 import "./two-col-three-story.m.css";
 import { useDispatch, useSelector } from "react-redux";
-import get from "lodash.get";
+import get from "lodash/get";
 
 export const TwoColThreeStories = ({ collection, config = {} }) => {
   const items = collectionToStories(collection);

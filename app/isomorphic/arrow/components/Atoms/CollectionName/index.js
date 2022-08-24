@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { PropTypes } from "prop-types";
 import { Link } from "@quintype/components";
 import { useStateValue } from "../../SharedContext";
-import get from "lodash.get";
+import get from "lodash/get";
 import { getTextColor, getSlug, rgbToHex, clientWidth } from "../../../utils/utils";
 
 import "./collection-name.m.css";

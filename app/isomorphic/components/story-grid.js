@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import get from "lodash.get";
+import get from "lodash/get";
 import { Link, ResponsiveImage } from "@quintype/components";
 import { shape, string, object, integer, arrayOf } from "prop-types";
 

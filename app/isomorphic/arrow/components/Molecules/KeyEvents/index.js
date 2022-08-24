@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import get from "lodash.get";
+import get from "lodash/get";
 import PropTypes from "prop-types";
 import { ClockIcon } from "../../Svgs/clock-icon";
 import { getTextColor, getTimeStamp, timestampToFormat } from "../../../utils/utils";

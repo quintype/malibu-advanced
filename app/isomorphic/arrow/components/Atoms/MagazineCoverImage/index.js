@@ -1,7 +1,7 @@
 import React from "react";
 import { LazyLoadImages, ResponsiveImage, Link } from "@quintype/components";
 import PropTypes from "prop-types";
-import get from "lodash.get";
+import get from "lodash/get";
 import { getSlug } from "../../../utils/utils";
 import "./magazine-cover-image.m.css";
 import { FallbackImage } from "../FallbackImage";

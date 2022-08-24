@@ -1,5 +1,5 @@
 import React from "react";
-import get from "lodash.get";
+import get from "lodash/get";
 import { collectionToStories } from "@quintype/components";
 import { getTextColor, getSlot, generateNavigateSlug, navigateTo } from "../../../utils/utils";
 import { CollectionName } from "../../Atoms/CollectionName";

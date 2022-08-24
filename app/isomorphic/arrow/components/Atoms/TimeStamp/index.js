@@ -1,5 +1,5 @@
 import React from "react";
-import get from "lodash.get";
+import get from "lodash/get";
 import { useSelector } from "react-redux";
 import { useStateValue } from "../../SharedContext";
 import { formatter, getTextColor, getTimeStamp } from "../../../utils/utils";

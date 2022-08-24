@@ -7,7 +7,7 @@ import AuthorIntroductionCard from "../AuthorIntroductionCard";
 import { StateProvider } from "../../SharedContext";
 import "./authors-list.m.css";
 import { useSelector } from "react-redux";
-import get from "lodash.get";
+import get from "lodash/get";
 
 const AuthorsList = ({ data = [], config = {}, getMoreData, hideLoadmore = false, limit }) => {
   if (data.length < 1) return null;

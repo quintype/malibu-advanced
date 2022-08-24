@@ -1,4 +1,4 @@
-import get from "lodash.get";
+import get from "lodash/get";
 import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
 import { isEmpty, getCollectionData } from "../../../utils/utils";

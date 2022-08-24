@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import PropTypes from "prop-types";
-import get from "lodash.get";
+import get from "lodash/get";
 import { useDispatch, useSelector } from "react-redux";
 import { collectionToStories } from "@quintype/components";
 

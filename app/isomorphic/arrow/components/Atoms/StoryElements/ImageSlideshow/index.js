@@ -1,5 +1,5 @@
 import { LazyLoadImages, ResponsiveImage } from "@quintype/components";
-import get from "lodash.get";
+import get from "lodash/get";
 import PropTypes from "prop-types";
 import React from "react";
 import { shapeStory } from "../../../../utils/utils";

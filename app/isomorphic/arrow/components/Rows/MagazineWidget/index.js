@@ -19,7 +19,7 @@ import { Headline } from "../../Atoms/Headline";
 import { AuthorWithTime } from "../../Atoms/AuthorWithTimestamp";
 import { MagazineCoverImageCard } from "../../Atoms/MagazineCoverImage";
 import { useDispatch, useSelector } from "react-redux";
-import get from "lodash.get";
+import get from "lodash/get";
 
 const MagazineWidget = ({ collection = {}, config = {} }) => {
   const { "created-at": createdAt, "collection-date": issueDate, summary, items, metadata = {} } = collection;

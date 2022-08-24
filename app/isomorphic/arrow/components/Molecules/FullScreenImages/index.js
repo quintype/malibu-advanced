@@ -1,6 +1,6 @@
 import React, { useState, Suspense, lazy } from "react";
 import { useSelector } from "react-redux";
-import get from "lodash.get";
+import get from "lodash/get";
 import PropTypes from "prop-types";
 import "./fullscreenimages.scss";
 import { Loading } from "../../Svgs/Loading/loading";

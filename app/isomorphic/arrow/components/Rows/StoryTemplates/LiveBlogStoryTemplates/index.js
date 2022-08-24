@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
-import get from "lodash.get";
+import get from "lodash/get";
 import { LiveBlogStoryTemplates } from "./templates";
 import { StateProvider } from "../../../SharedContext";
 import "./live-blog.m.css";

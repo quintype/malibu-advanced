@@ -1,6 +1,6 @@
 import React, { Fragment } from "react";
 import PropTypes from "prop-types";
-import get from "lodash.get";
+import get from "lodash/get";
 import { collectionToStories } from "@quintype/components";
 import { StoryCard } from "../../Molecules/StoryCard";
 import { Headline } from "../../Atoms/Headline";
