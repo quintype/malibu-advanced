@@ -6,7 +6,7 @@ import "./social-share-template.m.css";
 import { CloseIcon } from "../../Svgs/close-icon";
 import { ShareIcon } from "../../Svgs/share-icon";
 import { getTextColor } from "../../../utils/utils";
-import camelcase from "lodash/camelcase";
+import camelcase from "lodash/camelCase";
 
 const ShareItem = ({ name, url, icon, dataTestId }) => {
   return url ? (
