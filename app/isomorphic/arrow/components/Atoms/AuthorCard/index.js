@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import kebabCase from "lodash.kebabcase";
+import kebabCase from "lodash/kebabCase";
 import { Dot } from "../Dot/dot";
 import { ResponsiveImage, Link } from "@quintype/components";
 import { Twitter } from "../../Svgs/SocialIcons/twitter";
