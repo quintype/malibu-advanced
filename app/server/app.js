@@ -21,7 +21,7 @@ upstreamQuintypeRoutes(app, {});
 
 const redirectCollectionHandler =
   () =>
-   async (req, res, next, { client, config }) => {
+  async (req, res, next, { client, config }) => {
     const response = await Collection.getCollectionBySlug(
       client,
       req.params.collectionSlug,
@@ -60,7 +60,7 @@ const getCustomStoryList = async ({ offset = 0, limit = 10, type }) => {
   const customList = await axios.get(
     `https://1711-49-206-132-134.in.ngrok.io/customApi?offset=${offset}&limit=${limit}`
   );
-  if(type === "remoteConfig"){
+  if(type === "remoteConfig") {
     return JSON.stringify({ pages: customList.data });
   }
   return JSON.stringify(customList.data);
@@ -107,7 +107,7 @@ function generateSeo(config, pageType) {
  * if source is empty (or infiniteScroll not passed ), then infinteScroll is powered by amp-infinite-scroll collection
  * if source is relatedStoriesApi, then infinteScroll is powered by relatedStoriesApi &
  * if source is custom , then we need to provide an async function for inlineConfig and Remote endpoint & handler
-*/
+ */
 ampRoutes(app, {
   seo: generateSeo,
   featureConfig: {
