@@ -60,7 +60,7 @@ const getCustomStoryList = async ({ offset = 0, limit = 10, type }) => {
   const customList = await axios.get(
     `https://1711-49-206-132-134.in.ngrok.io/customApi?offset=${offset}&limit=${limit}`
   );
-  if(type === "remoteConfig") {
+  if (type === "remoteConfig") {
     return JSON.stringify({ pages: customList.data });
   }
   return JSON.stringify(customList.data);
