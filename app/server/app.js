@@ -21,7 +21,7 @@ upstreamQuintypeRoutes(app, {});
 
 const redirectCollectionHandler =
   () =>
-   async (req, res, next, { client, config }) => {
+    async (req, res, next, { client, config }) => {
     const response = await Collection.getCollectionBySlug(
       client,
       req.params.collectionSlug,
@@ -40,7 +40,7 @@ const redirectCollectionHandler =
 
     if (collection.template === "author") {
       return res.redirect(301, `/author/${req.params.collectionSlug}`);
-      }
+    }
     return next();
   };
 
@@ -58,8 +58,8 @@ function returnConfig(req) {
 
 const getCustomStoryList = async ({ offset = 0, limit = 10, type }) => {
   const customList = await axios.get(
-        `https://1711-49-206-132-134.in.ngrok.io/customApi?offset=${offset}&limit=${limit}`
-      );
+     `https://1711-49-206-132-134.in.ngrok.io/customApi?offset=${offset}&limit=${limit}`
+  );
   if(type === 'remoteConfig'){
     return JSON.stringify({ pages: customList.data });
   }
@@ -67,7 +67,7 @@ const getCustomStoryList = async ({ offset = 0, limit = 10, type }) => {
 };
 
 app.get("/amp/api/infinite-scroll", async (req, res, next) => {
-  const response = await getCustomStoryList({ offset: 5, limit: 10, type: 'remoteConfig' });
+  const response = await getCustomStoryList({ offset: 5, limit: 10, type: "remoteConfig" });
   if (!response) {
     return next();
   }
@@ -103,11 +103,11 @@ function generateSeo(config, pageType) {
     enableNews: true,
   });
 }
- /**
-    * if source is empty (or infiniteScroll not passed ), then infinteScroll is powered by amp-infinite-scroll collection
-    * if source is relatedStoriesApi, then infinteScroll is powered by relatedStoriesApi &
-    * if source is custom , then we need to provide an async function for inlineConfig and Remote endpoint & handler
- */
+/**
+* if source is empty (or infiniteScroll not passed ), then infinteScroll is powered by amp-infinite-scroll collection
+* if source is relatedStoriesApi, then infinteScroll is powered by relatedStoriesApi &
+* if source is custom , then we need to provide an async function for inlineConfig and Remote endpoint & handler
+*/
 ampRoutes(app, {
   seo: generateSeo,
   featureConfig: {
