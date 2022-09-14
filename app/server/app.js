@@ -14,7 +14,7 @@ import { renderLayout } from "./handlers/render-layout";
 import { loadData, loadErrorData } from "./load-data";
 import { pickComponent } from "../isomorphic/pick-component";
 import { generateStaticData, generateStructuredData, SEO } from "@quintype/seo";
-
+import axios from "axios";
 export const app = createApp();
 
 upstreamQuintypeRoutes(app, {});
@@ -49,6 +49,21 @@ function returnConfig(req) {
     .then(res => res.config || []);
 }
 
+const getCustomStoryList = async ({ offset = 0, limit = 10, type }) => {
+  const customList = await axios.get(`https://1711-49-206-132-134.in.ngrok.io/customApi?offset=${offset}&limit=${limit}`);
+  if(type === 'remoteConfig'){
+    return JSON.stringify({ pages: customList.data })
+  }
+  return JSON.stringify(customList.data);
+}
+
+app.get("/amp/api/infinite-scroll", async (req, res, next) => {
+  const response =  await getCustomStoryList({ offset: 5, limit: 10, type: 'remoteConfig' });
+  if (!response) {
+    return next();
+  }
+  res.send(response);
+})
 app.get("*", (req, res, next) => {
   if (req.hostname.includes("auth")) {
     const whitelistedUrls = ["user-login", "route-data.json", "manifest.json"];
@@ -79,9 +94,21 @@ function generateSeo(config, pageType) {
     enableNews: true
   });
 }
-
+/**
+  * if source is empty (or infiniteScroll not passed ), then infinteScroll is powered by amp-infinite-scroll collection
+  * if source is relatedStoriesApi, then infinteScroll is powered by relatedStoriesApi &
+  * if source is custom , then we need to provide an async function for inlineConfig and Remote endpoint & handler
+*/
 ampRoutes(app, {
-  seo: generateSeo
+  seo: generateSeo,
+  featureConfig: {
+    infiniteScroll: {
+      // source : "relatedStoriesApi",
+      source: "custom",
+      inlineConfig: getCustomStoryList,
+      remoteConfigEndpoint: "/amp/api/infinite-scroll",
+    }
+  }
 });
 
 isomorphicRoutes(app, {
