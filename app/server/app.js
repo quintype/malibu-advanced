@@ -109,7 +109,7 @@ ampRoutes(app, {
   seo: generateSeo,
   featureConfig: {
     infiniteScroll: {
-      source : "relatedStoriesApi",
+      source: "relatedStoriesApi",
       // source: "custom",
       // inlineConfig: getCustomStoryList,
       // remoteConfigEndpoint: "/amp/api/infinite-scroll",
