@@ -55,7 +55,7 @@ export const FullScreenImages = ({ imageSlug = "", template, element = {}, props
   const lightboxProps = imageSlug
     ? {
         mainSrc: `//${cdnImage}/${imageSlug}?w=${deviceWidth}`,
-        toolbarButtons: [getHyperLink()]
+        toolbarButtons: [getHyperLink()],
       }
     : {
         mainSrc: imageUrlList[photoIndex],
@@ -63,7 +63,7 @@ export const FullScreenImages = ({ imageSlug = "", template, element = {}, props
         prevSrc: imageUrlList[(photoIndex + imageUrlListLength - 1) % imageUrlListLength],
         onMoveNextRequest: () => onMoveNext(imageUrlListLength),
         onMovePrevRequest: () => onMovePrev(imageUrlListLength),
-        toolbarButtons: [getHyperLink()]
+        toolbarButtons: [getHyperLink()],
       };
 
   const LoadingScreen = () => {
@@ -78,7 +78,7 @@ export const FullScreenImages = ({ imageSlug = "", template, element = {}, props
     <div>
       {React.createElement(template, {
         [onClickKey]: onClickHandler,
-        ...props
+        ...props,
       })}
       {isOpen ? (
         <Suspense fallback={<LoadingScreen />}>
@@ -92,7 +92,7 @@ FullScreenImages.propTypes = {
   imageSlug: PropTypes.string,
   template: PropTypes.func,
   element: PropTypes.shape({
-    "story-elements": PropTypes.array
+    "story-elements": PropTypes.array,
   }),
-  props: PropTypes.object
+  props: PropTypes.object,
 };

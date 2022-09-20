@@ -91,14 +91,19 @@ const AstrologyCollection = ({ collection, config = {} }) => {
     <div
       className="full-width-with-padding arrow-component"
       data-test-id="astrology-collection"
-      style={{ backgroundColor: theme, color: textColor }}>
+      style={{ backgroundColor: theme, color: textColor }}
+    >
       <div styleName="wrapper">
         <CollectionName
           collection={collection}
           collectionNameTemplate={collectionNameTemplate}
           collectionNameBorderColor={collectionNameBorderColor}
         />
-        {collection.summary && <div styleName={`collection-summary ${textColor}`} data-test-id="astrology-collection-summary">{collection.summary}</div>}
+        {collection.summary && (
+          <div styleName={`collection-summary ${textColor}`} data-test-id="astrology-collection-summary">
+            {collection.summary}
+          </div>
+        )}
         <div styleName="tab" data-test-id="collection-tab">
           <ul styleName="child-collections">
             {getFilteredCollection.map((subCollections, index) => {
@@ -107,7 +112,8 @@ const AstrologyCollection = ({ collection, config = {} }) => {
                   key={`tab-${index}`}
                   styleName={`child-collection ${textColor} ${index === active ? "open-subchild" : ""}`}
                   onClick={(event) => openChildCollectionItems(event, index, subCollections.id)}
-                  data-test-id={subCollections.name}>
+                  data-test-id={subCollections.name}
+                >
                   {subCollections.name}
                 </li>
               );

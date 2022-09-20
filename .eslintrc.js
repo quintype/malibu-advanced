@@ -23,9 +23,6 @@ module.exports = {
   },
   rules: {
     "max-len": ["warn", { code: 120 }],
-    "prettier/prettier": 0,
-    "scss/at-rule-no-unknown": 0,
-    "at-import-partial-extension": 0,
   },
   settings: {
     react: {

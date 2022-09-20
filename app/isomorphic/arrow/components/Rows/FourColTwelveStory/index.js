@@ -19,8 +19,9 @@ function OtherNewsLinkComp({ slug, textColor, Icon, text }) {
         <div
           styleName="other-news-text"
           style={{
-            color: textColor
-          }}>
+            color: textColor,
+          }}
+        >
           {text}
         </div>
         <div styleName="arrow-icon">
@@ -61,7 +62,13 @@ const SingleCol3Story = ({ collection, border, collectionNameTemplate, otherText
       </div>
       <div className="first-card">
         <StoryCard story={firstStory} border={border} theme={theme} config={config}>
-          <HeroImage story={firstStory} aspectRatio={[[16, 9], [16, 9]]} />
+          <HeroImage
+            story={firstStory}
+            aspectRatio={[
+              [16, 9],
+              [16, 9]
+            ]}
+          />
           <SectionTag story={firstStory} />
           <Headline story={firstStory} headerLevel="4" premiumStoryIconConfig={config} />
           <AuthorWithTime config={localizationConfig} story={firstStory} />
@@ -72,7 +79,13 @@ const SingleCol3Story = ({ collection, border, collectionNameTemplate, otherText
         {rest.slice(0, 2).map((story, index) => {
           return (
             <StoryCard key={index} story={story} isHorizontal theme={theme} border={border}>
-              <HeroImage story={story} aspectRatio={[[4, 3], [4, 3]]} />
+              <HeroImage
+                story={story}
+                aspectRatio={[
+                  [4, 3],
+                  [4, 3],
+                ]}
+              />
               <div styleName="small-card-content-container" className="small-card-container">
                 <Headline story={story} premiumStoryIconConfig={config} />
                 <AuthorWithTime config={localizationConfig} story={story} />
@@ -108,7 +121,8 @@ const FourColTwelveStory = ({ collection = {}, publisherConfig = {}, config = {}
     <div
       className="full-width-with-padding arrow-component"
       data-test-id="four-col-twelve-stories"
-      style={{ backgroundColor: theme, color: textColor }}>
+      style={{ backgroundColor: theme, color: textColor }}
+    >
       <div styleName="columns-container">
         {getFilteredCollection.slice(0, 4).map((collection, index) => {
           const slugName = getSlug(collection, publisherConfig);
@@ -136,7 +150,7 @@ FourColTwelveStory.propTypes = {
   otherTextData: PropTypes.shape({
     text: PropTypes.string,
     Icon: PropTypes.func,
-    textColor: PropTypes.string
+    textColor: PropTypes.string,
   }),
   config: PropTypes.shape({
     theme: PropTypes.string,
@@ -146,8 +160,8 @@ FourColTwelveStory.propTypes = {
     showAuthor: PropTypes.bool,
     showTime: PropTypes.bool,
     showRowTitle: PropTypes.bool,
-    collectionNameTemplate: PropTypes.string
-  })
+    collectionNameTemplate: PropTypes.string,
+  }),
 };
 
 SingleCol3Story.propTypes = {
@@ -161,16 +175,16 @@ SingleCol3Story.propTypes = {
     Icon: PropTypes.func,
     textColor: PropTypes.string,
     // can be either 'top' or 'bottom'
-    contentPosition: PropTypes.string
+    contentPosition: PropTypes.string,
   }),
-  config: PropTypes.object
+  config: PropTypes.object,
 };
 
 OtherNewsLinkComp.propTypes = {
   slug: PropTypes.string,
   textColor: PropTypes.string,
   Icon: PropTypes.func,
-  text: PropTypes.string
+  text: PropTypes.string,
 };
 
 export default StateProvider(FourColTwelveStory);

@@ -28,7 +28,7 @@ const ThreeColSevenStory = ({ collection, config = {} }) => {
     footerSlotConfig = {},
     footerButton = "",
     customCollectionName,
-    navigate = true
+    navigate = true,
   } = config;
   const { footerSlot } = footerSlotConfig;
   const { type = "story", component } = get(slotConfig, [0], {});
@@ -41,7 +41,14 @@ const ThreeColSevenStory = ({ collection, config = {} }) => {
   const storyCardComponent = (story) => {
     return (
       <StoryCard story={story} theme={theme} border={border} isHorizontal config={config}>
-        <HeroImage story={story} isHorizontal aspectRatio={[[16, 9], [16, 9]]} />
+        <HeroImage
+          story={story}
+          isHorizontal
+          aspectRatio={[
+            [16, 9],
+            [16, 9]
+          ]}
+        />
         <StorycardContent theme={theme} border={border} story={story} borderColor={borderColor} config={config} />
       </StoryCard>
     );
@@ -165,8 +172,8 @@ ThreeColSevenStory.propTypes = {
     slotConfig: PropTypes.array,
     footerButton: PropTypes.string,
     collectionNameTemplate: PropTypes.string,
-    collectionNameBorderColor: PropTypes.string
-  })
+    collectionNameBorderColor: PropTypes.string,
+  }),
 };
 
 export default StateProvider(ThreeColSevenStory);

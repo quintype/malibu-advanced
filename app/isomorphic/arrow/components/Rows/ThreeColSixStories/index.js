@@ -25,7 +25,7 @@ const ThreeColSixStories = ({ collection = {}, config = {} }) => {
     slotConfig = [],
     collectionNameTemplate = "",
     footerSlotConfig = {},
-    footerButton = ""
+    footerButton = "",
   } = config;
   const { type = "story", component } = get(slotConfig, [0], {});
   const { footerSlot } = footerSlotConfig;
@@ -64,7 +64,8 @@ const ThreeColSixStories = ({ collection = {}, config = {} }) => {
     <div
       className="full-width-with-padding arrow-component"
       data-test-id="three-col-six-stories"
-      style={{ backgroundColor: theme, color: textColor }}>
+      style={{ backgroundColor: theme, color: textColor }}
+    >
       <div styleName="wrapper">
         <CollectionName
           collection={collection}
@@ -78,9 +79,19 @@ const ThreeColSixStories = ({ collection = {}, config = {} }) => {
               headerLevel="2"
               theme={theme}
               border={border}
-              aspectRatio={[[16, 9], [16, 9]]}
-              config={config}>
-              <HeroImage story={items[0]} aspectRatio={[[16, 9], [16, 9]]} />
+              aspectRatio={[
+                [16, 9],
+                [16, 9],
+              ]}
+              config={config}
+            >
+              <HeroImage
+                story={items[0]}
+                aspectRatio={[
+                  [16, 9],
+                  [16, 9],
+                ]}
+              />
               <StorycardContent
                 story={items[0]}
                 headerLevel="2"
@@ -156,6 +167,6 @@ ThreeColSixStories.propTypes = {
     slotConfig: PropTypes.array,
     footerButton: PropTypes.string,
     collectionNameTemplate: PropTypes.string,
-    collectionNameBorderColor: PropTypes.string
-  })
+    collectionNameBorderColor: PropTypes.string,
+  }),
 };

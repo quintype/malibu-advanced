@@ -6,7 +6,7 @@ import {
   optionalSelect,
   sectionTagTemplates,
   collectionNameTemplates,
-  footerButton
+  footerButton,
 } from "../../../../storybook";
 import TwoColSixStories from "./index";
 import { AdPlaceholder } from "../../Atoms/AdPlaceholder";
@@ -30,7 +30,7 @@ const configurableSlot = () => {
 
 const border = {
   default: "fullBorder",
-  noBorder: "noBorder"
+  noBorder: "noBorder",
 };
 
 withStore(
@@ -38,9 +38,9 @@ withStore(
   {
     qt: {
       config: {
-        "cdn-image": "thumbor-stg.assettype.com"
-      }
-    }
+        "cdn-image": "thumbor-stg.assettype.com",
+      },
+    },
   },
   Readme
 )
@@ -61,7 +61,7 @@ withStore(
       buttonText: text("Button text", "Read More"),
       showRowTitle: boolean("Row title", true),
       showReadTime: boolean("Read time", true),
-      border: optionalSelect("Border settings", border)
+      border: optionalSelect("Border settings", border),
     };
     return <TwoColSixStories collection={collection} config={contextConfig} />;
   });

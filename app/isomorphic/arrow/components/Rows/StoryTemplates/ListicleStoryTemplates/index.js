@@ -24,7 +24,7 @@ const ListicleStoryTemplate = ({
   adComponent,
   widgetComp = () => {},
   firstChild,
-  secondChild
+  secondChild,
 }) => {
   const {
     theme = "",
@@ -32,12 +32,12 @@ const ListicleStoryTemplate = ({
     publishedDetails = {},
     templateType = "",
     authorDetails = {
-      template: "default"
+      template: "default",
     },
     asideCollection = {},
     showSection,
     sectionTagSettings,
-    premiumStoryIconConfig = {}
+    premiumStoryIconConfig = {},
   } = config;
   const visibledCards = noOfVisibleCards < 0 ? story.cards : story.cards.slice(0, noOfVisibleCards);
   const { "bullet-type": storyBulletType = "" } = story;
@@ -139,7 +139,12 @@ const ListicleStoryTemplate = ({
   // Templates
   const DefaultTemplate = () => (
     <>
-      <HeroImageBlock aspectRatio={[[16, 9], [16, 6]]} />
+      <HeroImageBlock
+        aspectRatio={[
+          [16, 9],
+          [16, 6],
+        ]}
+      />
       <div styleName="grid-container">
         <div styleName="full-grid">
           <CaptionAttributionBlock />
@@ -214,7 +219,12 @@ const ListicleStoryTemplate = ({
               <HeadlineBlock />
             </div>
           </div>
-          <HeroImageBlock aspectRatio={[[2, 3], [16, 9]]} />
+          <HeroImageBlock
+            aspectRatio={[
+              [2, 3],
+              [16, 9],
+            ]}
+          />
         </div>
       </div>
       <div styleName="grid-container">
@@ -233,7 +243,12 @@ const ListicleStoryTemplate = ({
           <HeadlineBlock />
         </div>
         <div styleName="sideway-hero">
-          <HeroImageBlock aspectRatio={[[16, 9], [4, 3]]} />
+          <HeroImageBlock
+            aspectRatio={[
+              [16, 9],
+              [4, 3],
+            ]}
+          />
           <CaptionAttributionBlock />
         </div>
       </div>
@@ -267,7 +282,8 @@ const ListicleStoryTemplate = ({
     <div
       data-test-id={dataTestId}
       className="arrow-component arr--content-wrapper arr--listicle-story-template-wrapper"
-      style={{ backgroundColor: theme }}>
+      style={{ backgroundColor: theme }}
+    >
       {renderTemplate()}
     </div>
   );
@@ -278,14 +294,14 @@ ListicleStoryTemplate.propTypes = {
   config: PropTypes.shape({
     templateType: PropTypes.string,
     authorCard: PropTypes.object,
-    asideCollection: PropTypes.object
+    asideCollection: PropTypes.object,
   }),
   firstChild: PropTypes.node,
   secondChild: PropTypes.node,
   storyElementsConfig: PropTypes.object,
   adComponent: PropTypes.func,
   widgetComp: PropTypes.func,
-  premiumStoryIconConfig: PropTypes.object
+  premiumStoryIconConfig: PropTypes.object,
 };
 
 export default StateProvider(ListicleStoryTemplate);

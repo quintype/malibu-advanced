@@ -31,7 +31,7 @@ const OneColStoryList = ({
   getMoreStories,
   isLoadMoreVisible,
   isLoading,
-  isolatedLoadMore
+  isolatedLoadMore,
 }) => {
   const storyItems = collectionToStories(collection);
   if (!storyItems.length) return null;
@@ -45,7 +45,7 @@ const OneColStoryList = ({
     footerSlotConfig = {},
     footerButton = "",
     localizationConfig = {},
-    subsequentLoadCount = 8
+    subsequentLoadCount = 8,
   } = config;
 
   const { footerSlot } = footerSlotConfig;
@@ -93,7 +93,10 @@ const OneColStoryList = ({
               headerLevel="4"
               isHorizontal
               border={border}
-              aspectRatio={[[1, 1], [4, 3]]}
+              aspectRatio={[
+                [1, 1],
+                [4, 3],
+              ]}
               borderColor={borderColor}
               prefix="By"
               config={config}
@@ -104,7 +107,14 @@ const OneColStoryList = ({
         return (
           <div styleName="one-col-border-full">
             <StoryCard story={story} border={border} theme={theme} isHorizontal borderColor={borderColor}>
-              <HeroImage story={story} isHorizontal aspectRatio={[[1, 1], [4, 3]]} />
+              <HeroImage
+                story={story}
+                isHorizontal
+                aspectRatio={[
+                  [1, 1],
+                  [4, 3],
+                ]}
+              />
               <div styleName="story-card-content-wrapper">
                 <StorycardContent story={story} borderColor={borderColor} config={config}>
                   <SectionTag story={story} />
@@ -125,7 +135,10 @@ const OneColStoryList = ({
               headerLevel="4"
               isHorizontal
               border={border}
-              aspectRatio={[[1, 1], [4, 3]]}
+              aspectRatio={[
+                [1, 1],
+                [4, 3],
+              ]}
               borderColor={borderColor}
               prefix="By"
               config={config}
@@ -140,7 +153,8 @@ const OneColStoryList = ({
     <div
       className="full-width-with-padding arrow-component"
       data-test-id="one-col-story-list"
-      style={{ backgroundColor: theme, color: textColor }}>
+      style={{ backgroundColor: theme, color: textColor }}
+    >
       <div styleName="one-col-story-list-wrapper ">
         <CollectionName
           collection={collection}
@@ -158,7 +172,14 @@ const OneColStoryList = ({
               return <div key={`default-${index}`}>{borderHandler(story)}</div>;
             })}
           </div>
-          <div styleName="one-col-ads">{getSlot(type, component, () => null, () => null)}</div>
+          <div styleName="one-col-ads">
+            {getSlot(
+              type,
+              component,
+              () => null,
+              () => null
+            )}
+          </div>
         </div>
         <div styleName="footer-ad-wrapper">
           {getLoadMore({ isLoading, storyItems, getMoreStories, subsequentLoadCount })}
@@ -181,18 +202,18 @@ OneColStoryList.propTypes = {
     collectionNameTemplate: PropTypes.string,
     // row title style colour
     collectionNameBorderColor: PropTypes.string,
-    subsequentLoadCount: PropTypes.number
+    subsequentLoadCount: PropTypes.number,
   }),
   getMoreStories: PropTypes.func,
   isLoadMoreVisible: PropTypes.bool,
   isLoading: PropTypes.bool,
-  isolatedLoadMore: PropTypes.bool
+  isolatedLoadMore: PropTypes.bool,
 };
 
 OneColStoryList.defaultProps = {
   getMoreStories: () => {},
   isLoadMoreVisible: true,
-  isLoading: false
+  isLoading: false,
 };
 
 export default StateProvider(OneColStoryList);

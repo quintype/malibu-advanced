@@ -24,7 +24,7 @@ export const TwoColFourStories = ({ collection, config = {} }) => {
     theme = "",
     collectionNameTemplate = "",
     footerSlotConfig = {},
-    footerButton = ""
+    footerButton = "",
   } = config;
   const { footerSlot } = footerSlotConfig;
   const borderStyle = border === "bottom" ? "border-box" : "";
@@ -44,7 +44,8 @@ export const TwoColFourStories = ({ collection, config = {} }) => {
     <div
       className="full-width-with-padding arrow-component"
       data-test-id="two-col-four-stories"
-      style={{ backgroundColor: theme, color: textColor }}>
+      style={{ backgroundColor: theme, color: textColor }}
+    >
       <div styleName="two-col-four-story" style={{ backgroundColor: theme, color: textColor }}>
         <CollectionName
           collection={collection}
@@ -58,9 +59,19 @@ export const TwoColFourStories = ({ collection, config = {} }) => {
               theme={theme}
               headerLevel="3"
               bgImgContentOverlap
-              aspectRatio={[[16, 9], [16, 9]]}
-              config={config}>
-              <HeroImage story={items[0]} aspectRatio={[[16, 9], [16, 9]]} />
+              aspectRatio={[
+                [16, 9],
+                [16, 9],
+              ]}
+              config={config}
+            >
+              <HeroImage
+                story={items[0]}
+                aspectRatio={[
+                  [16, 9],
+                  [16, 9],
+                ]}
+              />
               <StorycardContent
                 styleName={firstCardBorderStyle}
                 story={items[0]}
@@ -83,9 +94,19 @@ export const TwoColFourStories = ({ collection, config = {} }) => {
                       theme={theme}
                       headerLevel="4"
                       isHorizontal
-                      aspectRatio={[[16, 9], [16, 9]]}
+                      aspectRatio={[
+                        [16, 9],
+                        [16, 9],
+                      ]}
                       config={config}>
-                      <HeroImage story={story} isHorizontal aspectRatio={[[16, 9], [16, 9]]} />
+                      <HeroImage
+                        story={story}
+                        isHorizontal
+                        aspectRatio={[
+                            [16, 9],
+                            [16, 9],
+                          ]}
+                        />
                       <StorycardContent
                         theme={theme}
                         story={story}
@@ -105,9 +126,19 @@ export const TwoColFourStories = ({ collection, config = {} }) => {
                     headerLevel="4"
                     isHorizontal
                     border={border}
-                    aspectRatio={[[16, 9], [16, 9]]}
+                    aspectRatio={[
+                      [16, 9],
+                      [16, 9],
+                    ]}
                     config={config}>
-                    <HeroImage story={story} isHorizontal aspectRatio={[[16, 9], [16, 9]]} />
+                    <HeroImage
+                      story={story}
+                      isHorizontal
+                      aspectRatio={[
+                        [16, 9],
+                        [16, 9],
+                      ]}
+                    />
                     <StorycardContent
                       theme={theme}
                       story={story}
@@ -146,6 +177,6 @@ TwoColFourStories.propTypes = {
     border: PropTypes.string,
     footerButton: PropTypes.string,
     collectionNameTemplate: PropTypes.string,
-    collectionNameBorderColor: PropTypes.string
-  })
+    collectionNameBorderColor: PropTypes.string,
+  }),
 };

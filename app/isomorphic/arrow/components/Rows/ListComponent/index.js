@@ -28,7 +28,7 @@ const ListComponent = ({ collection, config = {}, getMoreStories, limit, hideBut
     border = "",
     collectionNameTemplate = "",
     footerButton = "",
-    localizationConfig = {}
+    localizationConfig = {},
   } = config;
 
   const dispatch = useDispatch();
@@ -62,7 +62,8 @@ const ListComponent = ({ collection, config = {}, getMoreStories, limit, hideBut
               theme={theme}
               isHorizontal
               borderColor={borderColor}
-              config={config}>
+              config={config}
+            >
               <HeroImage story={story} isHorizontal aspectRatio={[[16, 9]]} />
               <div styleName="story-card-content-wrapper">
                 <StorycardContent story={story} borderColor={borderColor} config={config}>
@@ -140,12 +141,12 @@ ListComponent.propTypes = {
     // row title style
     collectionNameTemplate: PropTypes.string,
     // row title style colour
-    collectionNameBorderColor: PropTypes.string
+    collectionNameBorderColor: PropTypes.string,
   }),
   getMoreStories: PropTypes.object.isRequired,
   limit: PropTypes.number,
   hideButton: PropTypes.bool,
-  authorPrefix: PropTypes.string
+  authorPrefix: PropTypes.string,
 };
 
 export default StateProvider(ListComponent);

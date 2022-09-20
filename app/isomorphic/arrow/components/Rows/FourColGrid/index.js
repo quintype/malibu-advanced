@@ -32,7 +32,7 @@ const FourColGrid = ({ collection, config = {}, getMoreStories, isLoadMoreVisibl
     footerButton = "",
     customCollectionName,
     navigate = true,
-    subsequentLoadCount = 4
+    subsequentLoadCount = 4,
   } = config;
   const storyItems = collectionToStories(collection);
 
@@ -78,7 +78,8 @@ const FourColGrid = ({ collection, config = {}, getMoreStories, isLoadMoreVisibl
     <div
       className="full-width-with-padding arrow-component"
       data-test-id="four-col-grid"
-      style={{ backgroundColor: theme, color: textColor }}>
+      style={{ backgroundColor: theme, color: textColor }}
+    >
       <div styleName="four-col-grid">
         <CollectionName
           collection={collection}
@@ -127,18 +128,18 @@ FourColGrid.propTypes = {
     collectionNameTemplate: PropTypes.string,
     footerButton: PropTypes.string,
     collectionNameBorderColor: PropTypes.string,
-    subsequentLoadCount: PropTypes.number
+    subsequentLoadCount: PropTypes.number,
   }),
   getMoreStories: PropTypes.func,
   isLoadMoreVisible: PropTypes.bool,
   isLoading: PropTypes.bool,
-  isolatedLoadMore: PropTypes.bool
+  isolatedLoadMore: PropTypes.bool,
 };
 
 FourColGrid.defaultProps = {
   getMoreStories: () => {},
   isLoadMoreVisible: true,
-  isLoading: false
+  isLoading: false,
 };
 
 export default StateProvider(FourColGrid);

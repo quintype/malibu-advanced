@@ -18,7 +18,7 @@ const Listicles = ({ collection, config = {} }) => {
     theme = "",
     collectionNameTemplate = "",
     slotConfig = null,
-    localizedNumbers = null
+    localizedNumbers = null,
   } = config;
 
   const [subCollectionStories, handleApiData] = useState([]);
@@ -109,7 +109,8 @@ const Listicles = ({ collection, config = {} }) => {
     <div
       className="full-width-with-padding arrow-component"
       data-test-id="collection-filter"
-      style={{ backgroundColor: theme, color: textColor }}>
+      style={{ backgroundColor: theme, color: textColor }}
+    >
       <div styleName={`wrapper ${getCustomStyleName}`}>
         <CollectionName
           collection={collection}
@@ -122,10 +123,12 @@ const Listicles = ({ collection, config = {} }) => {
               <div
                 key={index}
                 className={index === active ? "open-subchild" : ""}
-                styleName={`child-collection-wrapper ${index === active ? "open-subchild" : ""}`}>
+                styleName={`child-collection-wrapper ${index === active ? "open-subchild" : ""}`}
+              >
                 <div
                   styleName={`child-collection ${textColor}`}
-                  onClick={(event) => openChildCollectionItems(event, index, subCollections.id)}>
+                  onClick={(event) => openChildCollectionItems(event, index, subCollections.id)}
+                >
                   {subCollections.name}
                 </div>
               </div>
@@ -151,12 +154,12 @@ Listicles.propTypes = {
     // configure ad slot widget and story
     slotConfig: PropTypes.func,
     collectionNameTemplate: PropTypes.string,
-    collectionNameBorderColor: PropTypes.string
-  })
+    collectionNameBorderColor: PropTypes.string,
+  }),
 };
 
 Listicles.defaultProps = {
   theme: "#ffffff",
   slotConfig: "story",
-  border: ""
+  border: "",
 };

@@ -5,7 +5,7 @@ import {
   optionalSelect,
   sectionTagTemplates,
   collectionNameTemplates,
-  footerButton
+  footerButton,
 } from "../../../../storybook";
 import FourTabbedBigStorySlider from "./index";
 import Readme from "./README.md";
@@ -33,9 +33,9 @@ withStore(
   {
     qt: {
       config: {
-        "cdn-image": "thumbor-stg.assettype.com"
-      }
-    }
+        "cdn-image": "thumbor-stg.assettype.com",
+      },
+    },
   },
   Readme
 )
@@ -56,7 +56,7 @@ withStore(
       footerSlotConfig: { footerSlot: footerSlot },
       showButton: boolean("Show button", true),
       showReadTime: boolean("Read time", true),
-      showSubheadline: boolean("Show subheadline", true)
+      showSubheadline: boolean("Show subheadline", true),
     };
 
     return <FourTabbedBigStorySlider collection={collection} config={contextConfig} />;

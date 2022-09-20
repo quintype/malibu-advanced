@@ -31,7 +31,7 @@ const SixColSixStories = ({
   getMoreStories,
   isLoadMoreVisible,
   isLoading,
-  isolatedLoadMore
+  isolatedLoadMore,
 }) => {
   const stories = collectionToStories(collection);
   if (!stories.length) return null;
@@ -44,7 +44,7 @@ const SixColSixStories = ({
     footerButton = "",
     border = "",
     localizationConfig = {},
-    subsequentLoadCount = 6
+    subsequentLoadCount = 6,
   } = config;
 
   const textColor = getTextColor(theme);
@@ -85,7 +85,8 @@ const SixColSixStories = ({
     <div
       className="full-width-with-padding arrow-component"
       data-test-id="six-col-six-stories"
-      style={{ backgroundColor: theme, color: textColor }}>
+      style={{ backgroundColor: theme, color: textColor }}
+    >
       <div styleName="wrapper">
         <CollectionName
           collection={collection}
@@ -97,7 +98,13 @@ const SixColSixStories = ({
           {stories.map((story, index) => (
             <div key={`six-col-six-stories-${index}`} styleName={`card-wrapper ${borderStyle} ${textColor}`}>
               <StoryCard story={story} theme={theme} config={config}>
-                <HeroImage story={story} aspectRatio={[[16, 9], [16, 9]]} />
+                <HeroImage
+                  story={story}
+                  aspectRatio={[
+                    [16, 9],
+                    [16, 9],
+                  ]}
+                />
                 <div styleName="content-wrapper">
                   <SectionTag story={story} borderColor={borderColor} />
                   <Headline story={story} headerLevel="6" premiumStoryIconConfig={config} />
@@ -126,16 +133,16 @@ SixColSixStories.propTypes = {
     footerButton: PropTypes.string,
     collectionNameTemplate: PropTypes.string,
     collectionNameBorderColor: PropTypes.string,
-    subsequentLoadCount: PropTypes.number
+    subsequentLoadCount: PropTypes.number,
   }),
   getMoreStories: PropTypes.func,
   isLoadMoreVisible: PropTypes.bool,
   isLoading: PropTypes.bool,
-  isolatedLoadMore: PropTypes.bool
+  isolatedLoadMore: PropTypes.bool,
 };
 
 SixColSixStories.defaultProps = {
   getMoreStories: () => {},
   isLoadMoreVisible: true,
-  isLoading: false
+  isLoading: false,
 };

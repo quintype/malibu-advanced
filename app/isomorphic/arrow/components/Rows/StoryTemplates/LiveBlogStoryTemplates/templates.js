@@ -27,7 +27,7 @@ export const LiveBlogStoryTemplates = ({
   widgetComp,
   firstChild,
   secondChild,
-  timezone
+  timezone,
 }) => {
   const {
     theme = "",
@@ -38,9 +38,9 @@ export const LiveBlogStoryTemplates = ({
     verticalShare = "",
     shareIconType = "plain-color-svg",
     authorDetails = {
-      template: "default"
+      template: "default",
     },
-    premiumStoryIconConfig = {}
+    premiumStoryIconConfig = {},
   } = config;
 
   const visibleCards = noOfVisibleCards < 0 ? story.cards : story.cards.slice(0, noOfVisibleCards);
@@ -166,7 +166,14 @@ export const LiveBlogStoryTemplates = ({
     return (
       <>
         <div data-test-id="hero-image" styleName="grid-col-full index-2">
-          <HeroImage story={story} aspectRatio={[[16, 9], [8, 3]]} isStoryPageImage />
+          <HeroImage
+            story={story}
+            aspectRatio={[
+                [16, 9],
+                [8, 3]
+              ]}
+            isStoryPageImage
+          />
         </div>
         <div styleName="header-wrapper">
           <CaptionAttribution story={story} config={config} />
@@ -195,8 +202,15 @@ export const LiveBlogStoryTemplates = ({
   const HeroOverlay = (story) => {
     return (
       <>
-        <div styleName="overlay-hero  index-2">
-          <HeroImage story={story} aspectRatio={[[1, 2], [16, 9]]} isStoryPageImage />
+        <div styleName="overlay-hero index-2">
+          <HeroImage
+            story={story}
+            aspectRatio={[
+              [1, 2],
+              [16, 9],
+            ]}
+            isStoryPageImage
+          />
         </div>
         <div styleName="overlay-grid">
           <HeaderCard />
@@ -367,12 +381,12 @@ LiveBlogStoryTemplates.propTypes = {
   config: PropTypes.shape({
     templateType: PropTypes.string,
     authorCard: PropTypes.object,
-    asideCollection: PropTypes.object
+    asideCollection: PropTypes.object,
   }),
   timezone: PropTypes.string,
   firstChild: PropTypes.node,
   secondChild: PropTypes.node,
   storyElementsConfig: PropTypes.object,
   adComponent: PropTypes.func,
-  widgetComp: PropTypes.func
+  widgetComp: PropTypes.func,
 };

@@ -10,12 +10,12 @@ const defaultvalue = "#ffffff";
 const data = {
   tagName: "News",
   tagDescription:
-    "At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi "
+    "At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi ",
 };
 
 withStore("Rows/Tag Introduction Card", Readme).add("Default", () => {
   const contextConfig = {
-    theme: color(label, defaultvalue)
+    theme: color(label, defaultvalue),
   };
   return <TagIntroductionCard data={data} config={contextConfig} />;
 });

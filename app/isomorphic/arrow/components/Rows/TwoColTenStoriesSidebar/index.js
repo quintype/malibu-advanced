@@ -45,7 +45,8 @@ export const TwoColTenStoriesSidebar = ({ collection, config = {} }) => {
       className="full-width-with-padding arrow-component"
       data-test-id="two-col-ten-stories-sidebar"
       style={{ backgroundColor: theme, color: textColor }}
-      styleName="component-wrapper">
+      styleName="component-wrapper"
+    >
       <div styleName="collection-wrapper">
         <CollectionName
           collection={childCollections[0]}
@@ -62,7 +63,7 @@ export const TwoColTenStoriesSidebar = ({ collection, config = {} }) => {
               bgImgContentOverlap
               aspectRatio={[
                 [16, 9],
-                [16, 9]
+                [16, 9],
               ]}
               config={config}
             >
@@ -70,7 +71,7 @@ export const TwoColTenStoriesSidebar = ({ collection, config = {} }) => {
                 story={firstCollectionStories[0]}
                 aspectRatio={[
                   [16, 9],
-                  [16, 9]
+                  [16, 9],
                 ]}
               />
               <StorycardContent
@@ -93,14 +94,18 @@ export const TwoColTenStoriesSidebar = ({ collection, config = {} }) => {
                   headerLevel="4"
                   isHorizontal
                   border={border}
-                  aspectRatio={[[16, 9], [16, 9]]}
-                  config={config}>
+                  aspectRatio={[
+                    [16, 9],
+                    [16, 9],
+                  ]}
+                  config={config}
+                >
                   <HeroImage
                     story={story}
                     isHorizontal
                     aspectRatio={[
                       [16, 9],
-                      [16, 9]
+                      [16, 9],
                     ]}
                   />
                   <StorycardContent

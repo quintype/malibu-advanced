@@ -26,7 +26,7 @@ const sectionTagDefaultvalue = "#ff5858";
 
 const borderTemplate = {
   default: "",
-  border: "bottom"
+  border: "bottom",
 };
 
 const footerSlot = () => {
@@ -42,9 +42,9 @@ withStore(
   {
     qt: {
       config: {
-        "cdn-image": "thumbor-stg.assettype.com"
-      }
-    }
+        "cdn-image": "thumbor-stg.assettype.com",
+      },
+    },
   },
   Readme
 )
@@ -66,7 +66,7 @@ withStore(
       showRowTitle: boolean("Row title", true),
       footerSlotConfig: { footerSlot: footerSlot },
       showButton: boolean("Show button", true),
-      showReadTime: boolean("Read time", true)
+      showReadTime: boolean("Read time", true),
     };
 
     return <ThreeColFlexStories collection={collection} config={contextConfig} />;

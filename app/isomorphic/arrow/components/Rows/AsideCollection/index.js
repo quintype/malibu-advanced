@@ -78,7 +78,7 @@ StoryCollection.propTypes = {
   config: PropTypes.object,
   horizontal: PropTypes.bool,
   slotData: PropTypes.object,
-  opts: PropTypes.object
+  opts: PropTypes.object,
 };
 
 const AsideCollection = ({
@@ -92,7 +92,7 @@ const AsideCollection = ({
   adComponent,
   widgetComp,
   storyId,
-  opts = {}
+  opts = {},
 }) => {
   if (isEmpty(data)) return null;
 
@@ -106,7 +106,8 @@ const AsideCollection = ({
         styleName={`wrapper ${isHorizontal}`}
         style={{ backgroundColor: theme }}
         data-test-id="aside-collection"
-        id={`aside-collection-${storyId}`}>
+        id={`aside-collection-${storyId}`}
+      >
         <StoryCollection data={data} horizontal={horizontal} config={config} opts={opts} />
       </div>
     );
@@ -141,7 +142,8 @@ const AsideCollection = ({
       className="arrow-component arr--aside-collection"
       styleName={["wrapper", isHorizontal, isSticky].join(" ")}
       style={{ backgroundColor: theme }}
-      data-test-id="aside-collection">
+      data-test-id="aside-collection"
+    >
       {enableKeyEvents && (
         <KeyEvents
           story={keyEventsData.story}
@@ -167,10 +169,10 @@ AsideCollection.propTypes = {
   keyEventsData: PropTypes.shape({
     story: PropTypes.object,
     config: PropTypes.object,
-    showLoadMore: PropTypes.boolean
+    showLoadMore: PropTypes.boolean,
   }),
   enableKeyEvents: PropTypes.boolean,
-  storyId: PropTypes.string
+  storyId: PropTypes.string,
 };
 
 export default StateProvider(AsideCollection);

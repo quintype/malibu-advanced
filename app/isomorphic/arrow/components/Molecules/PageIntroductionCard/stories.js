@@ -10,7 +10,7 @@ withStore("Molecules/Page Intro Card", Readme).add("Default", () => {
     pageDescription: "This is the page description",
     theme: color("Color", "#131922"),
     enableBorder: true,
-    showButton: true
+    showButton: true,
   };
   return <PageIntroductionCard config={config} />;
 });

@@ -122,7 +122,7 @@ export const generateCollectionsWithStories = (count = 0) => {
         "cover-image-s3-key": "vikatan/2019-01/f0b702ac-bfd1-4dd6-8e33-52cbb0bb3153/143203_thumb.jpg",
         caption: "Some Politician",
       },
-      section: [{ id: 11181, name: "Health", "parent-id": null, "tree-ids": [11181] }]
+      section: [{ id: 11181, name: "Health", "parent-id": null, "tree-ids": [11181] }],
     },
     summary: "This is a collection concerned with politics",
     items: merged,
@@ -218,8 +218,7 @@ export const authorData = {
       handle: "Pinterest",
     },
   },
-  bio:
-    "Lucy Douglas is a freelance journalist based in London. She has a particular interest in small business, startups and the founders behind them and, in a previous life, was an assistant-editor at Professional Beauty magazine, where she road-tested spas up and down the country and checked out the latest advances.",
+  bio: "Lucy Douglas is a freelance journalist based in London. She has a particular interest in small business, startups and the founders behind them and, in a previous life, was an assistant-editor at Professional Beauty magazine, where she road-tested spas up and down the country and checked out the latest advances.",
   id: 94985,
   "avatar-url": "https://thumbor-stg.assettype.com/ace/2019-08/145ab200-429f-44ac-8618-00c6e4643e31/cat.jpeg",
   "avatar-s3-key": "ace/2019-08/145ab200-429f-44ac-8618-00c6e4643e31/cat.jpeg",
@@ -249,8 +248,7 @@ export const generateMagazineIssues = () => {
         metadata: {
           "cover-image": {
             success: true,
-            url:
-              "https://stg-quintype-dropbox.s3-accelerate.amazonaws.com/ace.staging.quintype.com/2020-09-09/874/aleksandra_tanasienko_oQi_UdQDkzw_unsplash.jpg",
+            url: "https://stg-quintype-dropbox.s3-accelerate.amazonaws.com/ace.staging.quintype.com/2020-09-09/874/aleksandra_tanasienko_oQi_UdQDkzw_unsplash.jpg",
             metadata: {
               width: 4000,
               height: 6000,
@@ -294,8 +292,7 @@ export const generateMagazineIssues = () => {
         metadata: {
           "cover-image": {
             success: true,
-            url:
-              "https://stg-quintype-dropbox.s3-accelerate.amazonaws.com/ace.staging.quintype.com/2020-09-28/294/da90b29ce035b5a3a134da39e94d654c.jpg",
+            url: "https://stg-quintype-dropbox.s3-accelerate.amazonaws.com/ace.staging.quintype.com/2020-09-28/294/da90b29ce035b5a3a134da39e94d654c.jpg",
             metadata: {
               width: 474,
               height: 581,
@@ -339,8 +336,7 @@ export const generateMagazineIssues = () => {
         metadata: {
           "cover-image": {
             success: true,
-            url:
-              "https://stg-quintype-dropbox.s3-accelerate.amazonaws.com/ace.staging.quintype.com/2020-09-09/1200/alexis_zacharko_07rXq3YroVM_unsplash.jpg",
+            url: "https://stg-quintype-dropbox.s3-accelerate.amazonaws.com/ace.staging.quintype.com/2020-09-09/1200/alexis_zacharko_07rXq3YroVM_unsplash.jpg",
             metadata: {
               width: 3456,
               height: 5184,

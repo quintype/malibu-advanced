@@ -66,15 +66,16 @@ export const TwoColSevenStories = ({ collection, config = {} }) => {
               headerLevel="2"
               aspectRatio={[
                 [16, 9],
-                [16, 9]
+                [16, 9],
               ]}
-              config={config}>
+              config={config}
+            >
               <HeroImage
                 config={config}
                 story={items[0]}
                 aspectRatio={[
                   [16, 9],
-                  [16, 9]
+                  [16, 9],
                 ]}
               />
               <StorycardContent story={items[0]} headerLevel="3" config={config}>
@@ -92,12 +93,13 @@ export const TwoColSevenStories = ({ collection, config = {} }) => {
                 <div key={index}>
                   <StoryCard story={story} border={border} theme={theme} config={config}>
                     <HeroImage
-                     config={config}
-                     story={story}
-                     aspectRatio={[
-                       [16, 9],
-                       [16, 9]
-                      ]} />
+                      config={config}
+                      story={story}
+                      aspectRatio={[
+                        [16, 9],
+                        [16, 9],
+                      ]}
+                    />
                     <StorycardContent
                       theme={theme}
                       border={border}

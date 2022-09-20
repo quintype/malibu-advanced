@@ -13,13 +13,13 @@ const collectionNameBorderColorLabel = "Aside Collection Name Border Color";
 
 const imageTypeOptions = {
   "Full Bleed": "fullBleed",
-  "With In Container": "container"
+  "With In Container": "container",
 };
 
 const templates = {
   "Hero Priority Left": "default",
   "Hero Priority Center": "hero-priority-center",
-  "Headline Priority": "headline-priority"
+  "Headline Priority": "headline-priority",
 };
 
 const iconTypeOptions = {
@@ -27,7 +27,7 @@ const iconTypeOptions = {
   "Circular Plain Svg": "circular-plain-svg",
   "Plain Svg": "plain-svg",
   "Plain Color Svg": "plain-color-svg",
-  "Square Svg": "square-svg"
+  "Square Svg": "square-svg",
 };
 
 const storyElementsConfig = {
@@ -38,7 +38,7 @@ const storyElementsConfig = {
   "also-read": {},
   "q-and-a": {},
   question: {},
-  answer: {}
+  answer: {},
 };
 
 const label = "BG Color";
@@ -47,12 +47,12 @@ const defaultvalue = "#ffffff";
 const authorTemplate = {
   default: "default",
   leftAligned: "leftAligned",
-  centerAligned: "centerAligned"
+  centerAligned: "centerAligned",
 };
 
 const shareType = {
   "Vertical Share": "sticky",
-  "Horizontal Share": ""
+  "Horizontal Share": "",
 };
 
 const configurableSlot = () => {
@@ -63,9 +63,9 @@ withStore("Rows/Story Templates/Photo Story Template", {
   qt: {
     config: {
       "cdn-image": "thumbor-stg.assettype.com",
-      mountAt: "/sub-directory"
-    }
-  }
+      mountAt: "/sub-directory",
+    },
+  },
 }).add("Default", () => {
   const templateConfig = {
     shareIconType: optionalSelect("Social Share Icon Type", iconTypeOptions),
@@ -78,20 +78,20 @@ withStore("Rows/Story Templates/Photo Story Template", {
     publishedDetails: {
       enablePublishedTime: boolean("Show Published Time", true),
       enableUpdatedTime: boolean("Show Updated Time", false),
-      showReadTime: boolean("Read time", true)
+      showReadTime: boolean("Read time", true),
     },
     authorDetails: {
       template: optionalSelect("temp", authorTemplate),
       opts: {
         showBio: boolean("bio", true),
         showImage: boolean("image", true),
-        showName: boolean("Author Name", true)
-      }
+        showName: boolean("Author Name", true),
+      },
     },
     premiumStoryIconConfig: {
       iconColor: "#F7B500",
       iconType: "star",
-      enablePremiumStoryIcon: true
+      enablePremiumStoryIcon: true,
     },
     asideCollection: {
       data: collection,
@@ -101,10 +101,10 @@ withStore("Rows/Story Templates/Photo Story Template", {
         theme: color(label, defaultvalue),
         adSlot: [{ type: "ad", component: configurableSlot }],
         showAuthor: boolean("Author", true),
-        showTime: boolean("Timestamp", true)
+        showTime: boolean("Timestamp", true),
       },
-      slots: slotData
-    }
+      slots: slotData,
+    },
   };
 
   return (

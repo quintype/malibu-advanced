@@ -9,7 +9,7 @@ const magazineCollection = generateMagazineIssues();
 
 const footerButton = {
   SubsequentLoadCount: "SubsequentLoadCount",
-  CustomUrlPath: "CustomUrlPath"
+  CustomUrlPath: "CustomUrlPath",
 };
 
 const collectionNameDefaultValue = "#3a9fdd";
@@ -21,9 +21,9 @@ withStore(
     qt: {
       config: {
         "cdn-image": "thumbor-stg.assettype.com",
-        mountAt: "/sub-directory"
-      }
-    }
+        mountAt: "/sub-directory",
+      },
+    },
   },
   Readme
 ).add("Magazine Editions", () => {
@@ -39,7 +39,7 @@ withStore(
     enableEditionsTitle: boolean("Show Editions Title", true),
     editionsTitle: text("Editions Title", "Magazine Title"),
     showButton: boolean("Show Button", true),
-    initialLoadCount: text("Initial Load Count", 4)
+    initialLoadCount: text("Initial Load Count", 4),
   };
   return <MagazineEditions collection={magazineCollection} config={contextConfig} showLoadmore={true} />;
 });

@@ -17,7 +17,7 @@ const MagazineEditions = ({ collection = [], config = {}, onClick, limit, showLo
     showRowTitle = true,
     rowTitle = "Other Issues",
     editionNameFormat = "magazineDate",
-    template = "NavigateToPage"
+    template = "NavigateToPage",
   } = config;
   const textColor = getTextColor(theme);
   const issues = collection.map((issue) => issue.collection) || [];
@@ -29,7 +29,8 @@ const MagazineEditions = ({ collection = [], config = {}, onClick, limit, showLo
     <div
       className="full-width-with-padding arrow-component arr-magazine-issues"
       style={{ backgroundColor: theme, color: textColor }}
-      data-test-id="editions">
+      data-test-id="editions"
+    >
       <div styleName={`container ${textColor}`}>
         {showRowTitle && (
           <CollectionName
@@ -45,7 +46,7 @@ const MagazineEditions = ({ collection = [], config = {}, onClick, limit, showLo
             const date = issueDate || createdAt;
             const timeStampConfig = {
               isUpperCase: true,
-              disableMeridiem: true
+              disableMeridiem: true,
             };
             return (
               <div key={index} data-test-id={`current-issue-${index}`}>
@@ -81,11 +82,11 @@ MagazineEditions.propTypes = {
     collectionNameBorderColor: PropTypes.string,
     theme: PropTypes.string,
     editionNameFormat: PropTypes.string,
-    showRowTitle: PropTypes.bool
+    showRowTitle: PropTypes.bool,
   }),
   onClick: PropTypes.func,
   limit: PropTypes.number,
-  showLoadmore: PropTypes.bool
+  showLoadmore: PropTypes.bool,
 };
 
 export default StateProvider(MagazineEditions);

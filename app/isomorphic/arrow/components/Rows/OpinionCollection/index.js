@@ -32,7 +32,7 @@ const OpinionCollection = ({ collection, config, getMoreStories, isLoadMoreVisib
     collectionNameTemplate = "",
     slotConfig = [],
     subsequentLoadCount = 3,
-    localizationConfig = {}
+    localizationConfig = {},
   } = config;
   const { type = "story", component = null } = get(slotConfig, [0], {});
 
@@ -97,7 +97,8 @@ const OpinionCollection = ({ collection, config, getMoreStories, isLoadMoreVisib
     <div
       className="full-width-with-padding arrow-component"
       data-test-id="opinion-collection"
-      style={{ backgroundColor: theme, color: textColor }}>
+      style={{ backgroundColor: theme, color: textColor }}
+    >
       <div styleName="opinion-collection" style={{ backgroundColor: theme, color: textColor }}>
         <CollectionName
           collection={collection}
@@ -107,7 +108,8 @@ const OpinionCollection = ({ collection, config, getMoreStories, isLoadMoreVisib
         />
         <div
           styleName={`content-wrapper ${borderStyle} ${textColor} ${adStyle}`}
-          className={`content-wrapper ${borderStyle} ${textColor}`}>
+          className={`content-wrapper ${borderStyle} ${textColor}`}
+        >
           {slot ? (
             <>
               <div className="wrapper-with-ads" styleName={`wrapper-with-ads ${countStyleName}`}>
@@ -135,12 +137,12 @@ OpinionCollection.propTypes = {
     border: PropTypes.string,
     slotConfig: PropTypes.array,
     subsequentLoadCount: PropTypes.number,
-    localizationConfig: PropTypes.object
+    localizationConfig: PropTypes.object,
   }),
   getMoreStories: PropTypes.func,
   isLoading: PropTypes.bool,
   isLoadMoreVisible: PropTypes.bool,
-  isolatedLoadMore: PropTypes.bool
+  isolatedLoadMore: PropTypes.bool,
 };
 
 OpinionCollection.defaultProps = {
@@ -149,7 +151,7 @@ OpinionCollection.defaultProps = {
   isLoading: false,
   collection: {},
   config: {},
-  hideFirstCard: false
+  hideFirstCard: false,
 };
 
 export default StateProvider(OpinionCollection);

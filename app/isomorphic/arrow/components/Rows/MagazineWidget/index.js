@@ -8,7 +8,7 @@ import {
   clientWidth,
   generateNavigateSlug,
   navigateTo,
-  timestampToFormat
+  timestampToFormat,
 } from "../../../utils/utils";
 import "../MagazineHeaderCard/magazine-cards.m.css";
 import { StateProvider } from "../../SharedContext";
@@ -34,13 +34,13 @@ const MagazineWidget = ({ collection = {}, config = {} }) => {
 
   const url = generateNavigateSlug(collection, {
     ...qtConfig,
-    ...updatedConfig
+    ...updatedConfig,
   });
   const sliceValue = 4;
   const isTablet = clientWidth("tablet");
   const timeStampConfig = {
     isUpperCase: true,
-    disableMeridiem: true
+    disableMeridiem: true,
   };
   const date = issueDate || createdAt;
 
@@ -96,7 +96,8 @@ const MagazineWidget = ({ collection = {}, config = {} }) => {
     <div
       className="full-width-with-padding arrow-component"
       style={{ backgroundColor: theme }}
-      data-test-id="magazine-widget">
+      data-test-id="magazine-widget"
+    >
       <div className="arr-magazine-widget" styleName="magazine-header widget-button">
         <MagazineCoverImageCard collection={collection} config={updatedConfig} />
         <div styleName="content">
@@ -119,7 +120,7 @@ MagazineWidget.propTypes = {
   collection: PropTypes.shape({
     "created-at": PropTypes.number,
     summary: PropTypes.string,
-    items: PropTypes.array
+    items: PropTypes.array,
   }),
   config: PropTypes.shape({ theme: PropTypes.string, footerButton: PropTypes.string, border: PropTypes.string })
 };

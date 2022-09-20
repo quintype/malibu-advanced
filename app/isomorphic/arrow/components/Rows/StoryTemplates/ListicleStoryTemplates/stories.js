@@ -22,20 +22,20 @@ const storyTemplates = {
   "Headline Priority": "headline-priority",
   "Headline Hero Priority": "headline-hero-priority",
   "Hero Overlay": "hero-overlay",
-  "Headline Sideway": "headline-sideway"
+  "Headline Sideway": "headline-sideway",
 };
 
 const sectionTagTemplates = {
   Default: "",
   "Border Bottom Small": "borderBottomSml",
   Solid: "solid",
-  "Border Left": "borderLeft"
+  "Border Left": "borderLeft",
 };
 
 const authorTemplates = {
   default: "default",
   leftAligned: "leftAligned",
-  centerAligned: "centerAligned"
+  centerAligned: "centerAligned",
 };
 
 withStore(
@@ -44,9 +44,9 @@ withStore(
     qt: {
       config: {
         "cdn-image": "thumbor-stg.assettype.com",
-        mountAt: "/sub-directory"
-      }
-    }
+        mountAt: "/sub-directory",
+      },
+    },
   },
   Readme
 ).add("Default", () => {
@@ -58,24 +58,24 @@ withStore(
     publishedDetails: {
       showReadTime: boolean("Read time", true),
       enablePublishedTime: boolean("Show Published Time", true),
-      enableUpdatedTime: boolean("Show Updated Time", false)
+      enableUpdatedTime: boolean("Show Updated Time", false),
     },
     authorDetails: {
       template: optionalSelect("Author Templates", authorTemplates) || "default",
       opts: {
         showBio: boolean("Author Bio", false),
         showImage: boolean("Author Image", true),
-        showName: boolean("Author Name", true)
-      }
+        showName: boolean("Author Name", true),
+      },
     },
     sectionTagSettings: {
       template: optionalSelect("Section Template", sectionTagTemplates) || "borderBottomSml",
-      borderColor: color("Section Tag Border Color", "#ff214b")
+      borderColor: color("Section Tag Border Color", "#ff214b"),
     },
     premiumStoryIconConfig: {
       iconColor: "#F7B500",
       iconType: "star",
-      enablePremiumStoryIcon: true
+      enablePremiumStoryIcon: true,
     },
     asideCollection: {
       data: collection,
@@ -85,10 +85,10 @@ withStore(
         theme: color(label, defaultvalue),
         adSlot: [{ type: "ad", component: configurableSlot }],
         showAuthor: boolean("Author", true),
-        showTime: boolean("Timestamp", true)
+        showTime: boolean("Timestamp", true),
       },
-      slots: slotData
-    }
+      slots: slotData,
+    },
   };
 
   const storyElementsConfig = {
@@ -100,7 +100,7 @@ withStore(
     "q-and-a": {},
     question: {},
     answer: {},
-    references: {}
+    references: {},
   };
   return (
     <ListicleStoryTemplate

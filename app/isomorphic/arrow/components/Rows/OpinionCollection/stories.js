@@ -17,7 +17,7 @@ const collectionNameBorderColorLabel = "Collection Name Border Color";
 
 const border = {
   default: "fullBorder",
-  noBorder: "noBorder"
+  noBorder: "noBorder",
 };
 
 const configurableSlot = () => {
@@ -29,9 +29,9 @@ withStore(
   {
     qt: {
       config: {
-        "cdn-image": "thumbor-stg.assettype.com"
-      }
-    }
+        "cdn-image": "thumbor-stg.assettype.com",
+      },
+    },
   },
   Readme
 )
@@ -47,7 +47,7 @@ withStore(
       buttonText: text("Button text", "Read More"),
       showRowTitle: boolean("Row title", true),
       showReadTime: boolean("Read time", true),
-      border: optionalSelect("Border settings", border)
+      border: optionalSelect("Border settings", border),
     };
     return <OpinionCollection collection={collection} config={contextConfig} />;
   });
@@ -57,9 +57,9 @@ withStore(
   {
     qt: {
       config: {
-        "cdn-image": "thumbor-stg.assettype.com"
-      }
-    }
+        "cdn-image": "thumbor-stg.assettype.com",
+      },
+    },
   },
   Readme
 )
@@ -76,7 +76,7 @@ withStore(
       showRowTitle: boolean("Row title", true),
       showReadTime: boolean("Read time", true),
       border: optionalSelect("Border settings", border),
-      slotConfig: [{ type: "ad", component: configurableSlot }]
+      slotConfig: [{ type: "ad", component: configurableSlot }],
     };
     return <OpinionCollection collection={collection} config={contextConfig} />;
   });

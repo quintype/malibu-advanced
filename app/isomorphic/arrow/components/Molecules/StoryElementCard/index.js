@@ -35,7 +35,7 @@ const getElement = (story, element, config = {}, AdComponent, WidgetComp, index,
     "q-and-a": qaElement = {},
     question: questionElement = {},
     answer: answerElement = {},
-    references = {}
+    references = {},
   } = config;
 
   let elementType = getElementType(element);
@@ -62,7 +62,7 @@ const getElement = (story, element, config = {}, AdComponent, WidgetComp, index,
       const {
         template: summaryTemplate = "",
         css: { headerBgColor = "" } = {},
-        opts: { headline = "", hideHeadline = false } = {}
+        opts: { headline = "", hideHeadline = false } = {},
       } = summary;
       return (
         <Summary
@@ -70,7 +70,7 @@ const getElement = (story, element, config = {}, AdComponent, WidgetComp, index,
           template={summaryTemplate}
           opts={{
             headline: headline || "Summary",
-            hideHeadline: hideHeadline
+            hideHeadline: hideHeadline,
           }}
           css={{ headerBgColor: headerBgColor || "" }}
         />
@@ -83,7 +83,7 @@ const getElement = (story, element, config = {}, AdComponent, WidgetComp, index,
     case "blockquote":
       const {
         template: blockQuoteTemplate = "default",
-        css: { iconType = "edgeIcon", blockQuoteColor = "#2f81cd", backgroundShade = "" } = {}
+        css: { iconType = "edgeIcon", blockQuoteColor = "#2f81cd", backgroundShade = "" } = {},
       } = blockquote;
       return (
         <BlockQuote
@@ -92,7 +92,7 @@ const getElement = (story, element, config = {}, AdComponent, WidgetComp, index,
           css={{
             iconType: iconType,
             blockQuoteColor: blockQuoteColor,
-            backgroundShade: backgroundShade
+            backgroundShade: backgroundShade,
           }}
         />
       );
@@ -108,7 +108,7 @@ const getElement = (story, element, config = {}, AdComponent, WidgetComp, index,
       const {
         template: alsoReadTemplate = "default",
         css: { textColor = "#000" } = {},
-        opts: { title = "" } = {}
+        opts: { title = "" } = {},
       } = alsoRead;
       return (
         <AlsoRead
@@ -127,18 +127,18 @@ const getElement = (story, element, config = {}, AdComponent, WidgetComp, index,
       const {
         template: qaTemplate = "default",
         css: { iconColor = "" } = {},
-        opts: { defaultIconType = "edge" } = {}
+        opts: { defaultIconType = "edge" } = {},
       } = qaElement;
       return (
         <QuestionAnswer
           element={element}
           opts={{
             type: "q-and-a",
-            defaultIconType: defaultIconType
+            defaultIconType: defaultIconType,
           }}
           template={qaTemplate}
           css={{
-            iconColor: iconColor
+            iconColor: iconColor,
           }}
         />
       );
@@ -147,18 +147,18 @@ const getElement = (story, element, config = {}, AdComponent, WidgetComp, index,
       const {
         template: questionTemplate = "default",
         css: { questionIconColor = "" } = {},
-        opts: { defaultQuestionIconType = "edge" } = {}
+        opts: { defaultQuestionIconType = "edge" } = {},
       } = questionElement;
       return (
         <QuestionAnswer
           element={element}
           opts={{
             type: "question",
-            defaultIconType: defaultQuestionIconType
+            defaultIconType: defaultQuestionIconType,
           }}
           template={questionTemplate}
           css={{
-            iconColor: questionIconColor
+            iconColor: questionIconColor,
           }}
         />
       );
@@ -167,18 +167,18 @@ const getElement = (story, element, config = {}, AdComponent, WidgetComp, index,
       const {
         template: answerTemplate = "default",
         css: { answerIconColor = "" } = {},
-        opts: { defaultAnswerIconType = "edge" } = {}
+        opts: { defaultAnswerIconType = "edge" } = {},
       } = answerElement;
       return (
         <QuestionAnswer
           element={element}
           opts={{
             type: "answer",
-            defaultIconType: defaultAnswerIconType
+            defaultIconType: defaultAnswerIconType,
           }}
           template={answerTemplate}
           css={{
-            iconColor: answerIconColor
+            iconColor: answerIconColor,
           }}
         />
       );
@@ -220,7 +220,7 @@ const getElement = (story, element, config = {}, AdComponent, WidgetComp, index,
           element={element}
           opts={{
             showHeadline: showHeadline,
-            headlineText: headlineText
+            headlineText: headlineText,
           }}
         />
       );
@@ -258,8 +258,8 @@ MainImageWrapper.propTypes = {
   config: PropTypes.object,
   children: PropTypes.node,
   card: PropTypes.shape({
-    id: PropTypes.string
-  })
+    id: PropTypes.string,
+  }),
 };
 
 export const StoryElementCard = ({
@@ -270,7 +270,7 @@ export const StoryElementCard = ({
   isLive,
   theme,
   adComponent,
-  widgetComp
+  widgetComp,
 }) => {
   const textColor = getTextColor(theme);
   const isLiveBlog = isLive ? "live-blog" : "";
@@ -290,7 +290,8 @@ export const StoryElementCard = ({
           <div
             key={element.id}
             className="arr--element-container"
-            styleName={`element-container ${isLiveBlog} ${tableStyle} ${textColor}`}>
+            styleName={`element-container ${isLiveBlog} ${tableStyle} ${textColor}`}
+          >
             {getElement(story, element, config, adComponent, widgetComp, index, cardId)}
           </div>
         );
@@ -306,7 +307,7 @@ StoryElementCard.propTypes = {
   isLive: PropTypes.bool,
   theme: PropTypes.string,
   adComponent: PropTypes.func,
-  widgetComp: PropTypes.func
+  widgetComp: PropTypes.func,
 };
 
 export const PhotoStoryElement = ({ card = {}, config, story, adComponent, widgetComp }) => {
@@ -338,7 +339,7 @@ PhotoStoryElement.propTypes = {
   card: PropTypes.object,
   config: PropTypes.object,
   adComponent: PropTypes.func,
-  widgetComp: PropTypes.func
+  widgetComp: PropTypes.func,
 };
 
 export const SlotAfterStory = ({ id = "", element = {}, AdComponent, WidgetComp }) => {
@@ -356,5 +357,5 @@ SlotAfterStory.propTypes = {
   id: PropTypes.string,
   element: PropTypes.object,
   AdComponent: PropTypes.func,
-  WidgetComp: PropTypes.func
+  WidgetComp: PropTypes.func,
 };

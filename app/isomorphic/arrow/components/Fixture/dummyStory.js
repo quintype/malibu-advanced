@@ -866,15 +866,14 @@ export const dummyStory = {
               "mime-type": "image/png",
               "file-size": 587085,
               "file-name": "ready-player-one-hd-wallpapers-70749-6537851.png",
-              "focus-point": [883, 411]
-            }
-          }
-        }
-      }
-    }
+              "focus-point": [883, 411],
+            },
+          },
+        },
+      },
+    },
   ],
-  url:
-    "https://ace-web.qtstage.io/anything/recent-stories/news/ready-player-one-review-spielberg-spins-a-dizzying-vr-yarn",
+  url: "https://ace-web.qtstage.io/anything/recent-stories/news/ready-player-one-review-spielberg-spins-a-dizzying-vr-yarn",
   "story-version-id": "28c7b47d-3b37-49f6-a0ba-2886d14182e4",
   "content-type": "story",
   "content-updated-at": 1564650017530,
@@ -896,8 +895,8 @@ export const dummyStory = {
       social: {
         twitter: {
           url: "https://www.twitter.com/sabqorg",
-          handle: "elonmusk"
-        }
+          handle: "elonmusk",
+        },
       },
       slug: "stephen-wertheim",
       "avatar-url": "https://thumbor-stg.assettype.com/ace/2019-08/145ab200-429f-44ac-8618-00c6e4643e31/cat.jpeg",
@@ -906,8 +905,8 @@ export const dummyStory = {
       bio: null,
       "contributor-role": {
         id: 873,
-        name: "Author"
-      }
+        name: "Author",
+      },
     },
     {
       id: 123981,
@@ -916,8 +915,8 @@ export const dummyStory = {
       social: {
         twitter: {
           url: "https://www.twitter.com/sabqorg",
-          handle: "elonmusk"
-        }
+          handle: "elonmusk",
+        },
       },
       "avatar-url":
         "https://lh5.googleusercontent.com/-NhNrHEp1w4M/AAAAAAAAAAI/AAAAAAAAAAs/lzYwVY1BQdQ/photo.jpg?sz=50",
@@ -926,23 +925,23 @@ export const dummyStory = {
       bio: null,
       "contributor-role": {
         id: 873,
-        name: "Author"
-      }
-    }
+        name: "Author",
+      },
+    },
   ],
   metadata: {
     "review-title": "Ready Player One",
     "review-rating": {
       label: "1",
-      value: "1"
+      value: "1",
     },
     "sponsored-by": "quint",
     "card-share": {
-      shareable: false
-    }
+      shareable: false,
+    },
   },
   "publish-at": null,
-  "assignee-name": "Ravigopal Kesari"
+  "assignee-name": "Ravigopal Kesari",
 };
 
 export const dummyPhotoStory = {
@@ -950,8 +949,8 @@ export const dummyPhotoStory = {
   "updated-at": 1599115419318,
   seo: {
     "claim-reviews": {
-      story: null
-    }
+      story: null,
+    },
   },
   "assignee-id": 187245,
   "author-name": "Shreya Shukla",
@@ -963,7 +962,7 @@ export const dummyPhotoStory = {
       "meta-description": "5th Anniversary of quintype",
       "meta-title": "5th Anniversary of qt",
       slug: "50th-anniversary",
-      "tag-type": "Tag"
+      "tag-type": "Tag",
     },
     {
       id: 1092771,
@@ -971,7 +970,7 @@ export const dummyPhotoStory = {
       "meta-description": null,
       "meta-title": null,
       slug: "newzealand",
-      "tag-type": "Tag"
+      "tag-type": "Tag",
     },
     {
       id: 1292529,
@@ -979,7 +978,7 @@ export const dummyPhotoStory = {
       "meta-description": null,
       "meta-title": null,
       slug: "50",
-      "tag-type": "Tag"
+      "tag-type": "Tag",
     },
     {
       id: 1292530,
@@ -987,14 +986,14 @@ export const dummyPhotoStory = {
       "meta-description": null,
       "meta-title": null,
       slug: "bangalore",
-      "tag-type": "Tag"
-    }
+      "tag-type": "Tag",
+    },
   ],
   customSlotAfterStory: {
     config: { targetingId: "" },
     layout: "Leaderboard",
     layoutLabel: "Leaderboard",
-    type: "ad"
+    type: "ad",
   },
   headline: "Karnataka tourism",
   "storyline-id": null,
@@ -1016,13 +1015,13 @@ export const dummyPhotoStory = {
       collection: {
         slug: "child-sec-parent-sec",
         name: "child-sec (parent-sec)",
-        id: 17115
+        id: 17115,
       },
-      data: null
+      data: null,
     }
   ],
   "story-audio": {
-    "s3-key": "ace/story-audio/2020-09/231f55c0-ba92-4da6-a2c0-697c520f860f/.0fc573c1-97de-4644-8a26-bf65c4d6f0d9.mp3"
+    "s3-key": "ace/story-audio/2020-09/231f55c0-ba92-4da6-a2c0-697c520f860f/.0fc573c1-97de-4644-8a26-bf65c4d6f0d9.mp3",
   },
   "read-time": 2,
   "access-level-value": null,
@@ -1034,7 +1033,7 @@ export const dummyPhotoStory = {
   "hero-image-metadata": {
     "original-url": "https://www.india.com/wp-content/uploads/2014/09/vikasa-soudha-245043_960_720.jpg",
     width: 625,
-    height: 470
+    height: 470,
   },
   comments: null,
   "word-count": 245,
@@ -1065,7 +1064,7 @@ export const dummyPhotoStory = {
           "image-metadata": {
             width: 1920,
             height: 1080,
-            "focus-point": [964, 507]
+            "focus-point": [964, 507],
           },
           "page-url": "/story/231f55c0-ba92-4da6-a2c0-697c520f860f/element/7798674b-46f4-429c-95ce-cb5d334277e4",
           type: "image",
@@ -1076,7 +1075,7 @@ export const dummyPhotoStory = {
           "image-s3-key": "ace/2018-12/fcdb3782-886c-47ce-a84f-0ef5e051d639/Images_9.jpg",
           metadata: {},
           subtype: null,
-          hyperlink: "https://www.google.com/"
+          hyperlink: "https://www.google.com/",
         },
         {
           description: "",
@@ -1087,7 +1086,7 @@ export const dummyPhotoStory = {
           id: "664c9d54-f0c2-4016-a80e-7c7ed1d64330",
           metadata: {},
           subtype: null,
-          text: "Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus"
+          text: "Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus",
         },
         {
           description: "",
@@ -1098,15 +1097,14 @@ export const dummyPhotoStory = {
           id: "3bd855a8-9db1-404b-b193-6b4ec7a4c6f2",
           metadata: {},
           subtype: null,
-          text:
-            "<p>Dolor sit amet lorem ipsum, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>"
+          text: "<p>Dolor sit amet lorem ipsum, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>",
         },
         {
           config: { targetingId: "" },
           layout: "Leaderboard",
           layoutLabel: "Leaderboard",
-          type: "ad"
-        }
+          type: "ad",
+        },
       ],
       "card-updated-at": 1599070341951,
       "content-version-id": "7160cfea-8a20-48a6-a67c-c5c1bf26a062",
@@ -1129,11 +1127,11 @@ export const dummyPhotoStory = {
               width: 1920,
               height: 1080,
               "focus-point": [964, 507]
-            }
-          }
+            },
+          },
         },
-        attributes: {}
-      }
+        attributes: {},
+      },
     },
     {
       "story-elements": [
@@ -1143,7 +1141,7 @@ export const dummyPhotoStory = {
             "original-url":
               "https://s.rfi.fr/media/display/ddb13a2c-e9b1-11ea-9cf1-005056bf87d6/w:1280/p:16x9/f4da51e521694ef3b14820c2fd32709e691f058e.jpg",
             width: 1280,
-            height: 720
+            height: 720,
           },
           "page-url": "/story/231f55c0-ba92-4da6-a2c0-697c520f860f/element/d33f9a51-4bc6-4205-8784-86cb11027115",
           type: "image",
@@ -1155,7 +1153,7 @@ export const dummyPhotoStory = {
             "ace/2020-08/04562266-d044-4cf3-8ff3-58ab0b084d33/f4da51e521694ef3b14820c2fd32709e691f058e.jpg",
           metadata: {},
           subtype: null,
-          hyperlink: "https://www.google.com/"
+          hyperlink: "https://www.google.com/",
         },
         {
           description: "",
@@ -1166,8 +1164,7 @@ export const dummyPhotoStory = {
           id: "530154d6-f1eb-4e12-8c87-6a49e8269cc6",
           metadata: {},
           subtype: "summary",
-          text:
-            "<p>Dolor sit amet lorem ipsum, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>"
+          text: "<p>Dolor sit amet lorem ipsum, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>",
         },
         {
           description: "",
@@ -1179,11 +1176,10 @@ export const dummyPhotoStory = {
           metadata: {
             content:
               "Dolor sit amet lorem ipsum, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-            attribution: "Quintype"
+            attribution: "Quintype",
           },
           subtype: "quote",
-          text:
-            '<div><blockquote>Dolor sit amet lorem ipsum, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</blockquote><span class="attribution">Quintype</span></div>'
+          text: '<div><blockquote>Dolor sit amet lorem ipsum, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</blockquote><span class="attribution">Quintype</span></div>',
         },
         {
           description: "",
@@ -1195,11 +1191,10 @@ export const dummyPhotoStory = {
           metadata: {
             content:
               "Dolor sit amet lorem ipsum, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-            attribution: "Quintype"
+            attribution: "Quintype",
           },
           subtype: "blockquote",
-          text:
-            '<div><blockquote>Dolor sit amet lorem ipsum, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</blockquote><span class="attribution">Quintype</span></div>'
+          text: '<div><blockquote>Dolor sit amet lorem ipsum, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</blockquote><span class="attribution">Quintype</span></div>',
         },
         {
           description: "",
@@ -1213,9 +1208,9 @@ export const dummyPhotoStory = {
           "s3-key": "ace/2020-09/d33ccb5b-a3c4-4376-8767-bedebe3e6f7c/Doker.pdf",
           "content-type": "application/pdf",
           metadata: {
-            "file-size": 28746
+            "file-size": 28746,
           },
-          subtype: "attachment"
+          subtype: "attachment",
         },
         {
           description: "",
@@ -1226,11 +1221,10 @@ export const dummyPhotoStory = {
           id: "85b7b83e-d1ac-4775-8c3c-5c48107db183",
           metadata: {
             question: "<p>Grand Central Terminal, Park Avenue, New York is the world's</p>",
-            answer: "<p>largest railway station</p>"
+            answer: "<p>largest railway station</p>",
           },
           subtype: "q-and-a",
-          text:
-            '<div><div class="question"><p>Grand Central Terminal, Park Avenue, New York is the world\'s</p></div><div class="answer"><p>largest railway station</p></div></div>'
+          text: '<div><div class="question"><p>Grand Central Terminal, Park Avenue, New York is the world\'s</p></div><div class="answer"><p>largest railway station</p></div></div>',
         },
         {
           description: "",
@@ -1241,12 +1235,11 @@ export const dummyPhotoStory = {
           id: "bb010ef2-8e67-4b72-8d4a-a525c7c4818c",
           metadata: {
             question: "<p>For which of the following disciplines is Nobel Prize awarded?</p>",
-            answer: "<p>Physics and Chemistry</p><p>Physiology or Medicine</p><p>Literature, Peace and Economics</p>"
+            answer: "<p>Physics and Chemistry</p><p>Physiology or Medicine</p><p>Literature, Peace and Economics</p>",
           },
           subtype: "q-and-a",
-          text:
-            '<div><div class="question"><p>For which of the following disciplines is Nobel Prize awarded?</p></div><div class="answer"><p>Physics and Chemistry</p><p>Physiology or Medicine</p><p>Literature, Peace and Economics</p></div></div>'
-        }
+          text: '<div><div class="question"><p>For which of the following disciplines is Nobel Prize awarded?</p></div><div class="answer"><p>Physics and Chemistry</p><p>Physiology or Medicine</p><p>Literature, Peace and Economics</p></div></div>',
+        },
       ],
       "card-updated-at": 1599070341951,
       "content-version-id": "4a3303f2-250d-4e57-9411-4e6b6ff30cd3",
@@ -1269,12 +1262,12 @@ export const dummyPhotoStory = {
               "original-url":
                 "https://s.rfi.fr/media/display/ddb13a2c-e9b1-11ea-9cf1-005056bf87d6/w:1280/p:16x9/f4da51e521694ef3b14820c2fd32709e691f058e.jpg",
               width: 1280,
-              height: 720
-            }
-          }
+              height: 720,
+            },
+          },
         },
-        attributes: {}
-      }
+        attributes: {},
+      },
     },
     {
       "story-elements": [
@@ -1287,8 +1280,7 @@ export const dummyPhotoStory = {
           id: "a22e71ed-d2e6-442c-b30c-4eaae392241e",
           metadata: {},
           subtype: null,
-          text:
-            "<p>Dolor sit amet lorem ipsum, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>"
+          text: "<p>Dolor sit amet lorem ipsum, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>",
         },
         {
           description: "",
@@ -1296,7 +1288,7 @@ export const dummyPhotoStory = {
             "original-url":
               "https://s.rfi.fr/media/display/e21e72c0-ec66-11ea-9857-005056a964fe/w:1280/p:16x9/8bfca0efa60a7b897690bea687d9cb3b991611ff_0.jpg",
             width: 1280,
-            height: 720
+            height: 720,
           },
           "page-url": "/story/231f55c0-ba92-4da6-a2c0-697c520f860f/element/613fcdb4-c551-4deb-be2f-ff50428235ec",
           type: "image",
@@ -1319,8 +1311,7 @@ export const dummyPhotoStory = {
           id: "3f57c4cb-0736-4c89-94a2-3891e6cf1dce",
           metadata: {},
           subtype: "summary",
-          text:
-            "<p>Dolor sit amet lorem ipsum, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>"
+          text: "<p>Dolor sit amet lorem ipsum, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>",
         },
         {
           id: "00000000-0000-0000-0000-000000000000",
@@ -1330,9 +1321,9 @@ export const dummyPhotoStory = {
           type: "text",
           text: ' <p>text <a href="https://ace-web.qtstage.io/">promotional</a> message</p>',
           metadata: {
-            "promotional-message": true
-          }
-        }
+            "promotional-message": true,
+          },
+        },
       ],
       "card-updated-at": 1599072759773,
       "content-version-id": "d92aae5f-7d65-4260-853f-c440373905c4",
@@ -1355,13 +1346,13 @@ export const dummyPhotoStory = {
               "original-url":
                 "https://s.rfi.fr/media/display/e21e72c0-ec66-11ea-9857-005056a964fe/w:1280/p:16x9/8bfca0efa60a7b897690bea687d9cb3b991611ff_0.jpg",
               width: 1280,
-              height: 720
-            }
-          }
+              height: 720,
+            },
+          },
         },
-        attributes: {}
-      }
-    }
+        attributes: {},
+      },
+    },
   ],
   url: "https://ace-web.qtstage.io/child-sec/2020/09/02/karnataka-tourism",
   "story-version-id": "fb04a248-7855-484c-ab2f-9b71e45fe7e7",
@@ -1383,30 +1374,29 @@ export const dummyPhotoStory = {
       slug: "shreya-shukla-2",
       social: {
         twitter: {
-          handle: "shuklashreya801"
-        }
+          handle: "shuklashreya801",
+        },
       },
       name: "Shreya Shukla",
       "contributor-role": {
         id: 873,
-        name: "Author"
+        name: "Author",
       },
       "avatar-url":
         "https://lh6.googleusercontent.com/-pBdJGAfN81c/AAAAAAAAAAI/AAAAAAAAAAA/ACHi3rfmrjS-gWdYzH3Gtmuib3KbVLdixw/photo.jpg",
-      bio:
-        "At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi ",
+      bio: "At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi ",
       id: 187245,
       "avatar-s3-key": null,
-      "twitter-handle": "shuklashreya801"
-    }
+      "twitter-handle": "shuklashreya801",
+    },
   ],
   metadata: {
     "card-share": {
-      shareable: false
-    }
+      shareable: false,
+    },
   },
   "publish-at": null,
-  "assignee-name": "Shreya Shukla"
+  "assignee-name": "Shreya Shukla",
 };
 
 export const dummyLiveBlogStory = {
@@ -1423,7 +1413,7 @@ export const dummyLiveBlogStory = {
       "meta-description": null,
       "meta-title": null,
       slug: "entertainment",
-      "tag-type": "Tag"
+      "tag-type": "Tag",
     },
     {
       id: 1209598,
@@ -1431,15 +1421,15 @@ export const dummyLiveBlogStory = {
       "meta-description": null,
       "meta-title": null,
       slug: "government",
-      "tag-type": "Tag"
+      "tag-type": "Tag",
     },
-    { id: 1409326, name: "liveblog", "meta-description": null, "meta-title": null, slug: "liveblog", "tag-type": "Tag" }
+    { id: 1409326, name: "liveblog", "meta-description": null, "meta-title": null, slug: "liveblog", "tag-type": "Tag" },
   ],
   customSlotAfterStory: {
     config: { targetingId: "" },
     layout: "Leaderboard",
     layoutLabel: "Leaderboard",
-    type: "ad"
+    type: "ad",
   },
   headline: "Live blog story ",
   "storyline-id": null,
@@ -1459,8 +1449,8 @@ export const dummyLiveBlogStory = {
       "parent-id": 38586,
       "display-name": "Entertainment",
       collection: { slug: "entertainment", name: "Entertainment", id: 3946 },
-      data: null
-    }
+      data: null,
+    },
   ],
   "story-audio": { "s3-key": null },
   "read-time": 0,
@@ -1504,7 +1494,7 @@ export const dummyLiveBlogStory = {
           id: "3a569347-2bed-4763-bf3b-b58df01ad6cc",
           metadata: {},
           subtype: null,
-          text: "Sed ut perspiciatis unde omnis iste natus error"
+          text: "Sed ut perspiciatis unde omnis iste natus error",
         },
         {
           description: "",
@@ -1515,9 +1505,8 @@ export const dummyLiveBlogStory = {
           id: "739cf8a1-26d8-48fb-8cbf-771b1161ed68",
           metadata: {},
           subtype: null,
-          text:
-            "<p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est</p>"
-        }
+          text: "<p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est</p>",
+        },
       ],
       "card-updated-at": 1601431229891,
       "content-version-id": "254fdb13-fa12-426f-a50b-8846847158a5",
@@ -1536,11 +1525,11 @@ export const dummyLiveBlogStory = {
             url: "https://thumbor-stg.assettype.com/ace/2019-03/f25cc9c1-917c-4a19-9c9a-fa498f84f17b/test.jpg",
             attribution: "Google",
             caption: "Saque ipsa quae ab illo inventore veritatis et quip",
-            metadata: { "mime-type": "image/jpeg", "focus-point": [975, 375], width: 1682, height: 820 }
-          }
+            metadata: { "mime-type": "image/jpeg", "focus-point": [975, 375], width: 1682, height: 820 },
+          },
         },
-        attributes: {}
-      }
+        attributes: {},
+      },
     },
     {
       "story-elements": [
@@ -1553,7 +1542,7 @@ export const dummyLiveBlogStory = {
           id: "8ee1c6ed-57d8-4891-8a77-e789b2d33c29",
           metadata: {},
           subtype: null,
-          text: "At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium"
+          text: "At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium",
         },
         {
           description: "",
@@ -1564,8 +1553,7 @@ export const dummyLiveBlogStory = {
           id: "78142993-d358-4c17-b610-9c80101f32b1",
           metadata: {},
           subtype: null,
-          text:
-            "<p>Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem.</p>"
+          text: "<p>Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem.</p>",
         },
         {
           description: "",
@@ -1576,7 +1564,7 @@ export const dummyLiveBlogStory = {
             "original-url":
               "https://s.rfi.fr/media/display/a1b6b938-01c2-11eb-ba87-005056a964fe/w:1280/p:16x9/3aae2ba50b3667e9f02e3674a37581fae1ebaf74_3.jpg",
             width: 1280,
-            height: 720
+            height: 720,
           },
           "uploaded-at": 1601327722596,
           "page-url": "/story/4270e6db-f238-46d4-8b6d-788ede41760e/element/bf739a18-6878-485a-adc7-d608d767f123",
@@ -1589,8 +1577,8 @@ export const dummyLiveBlogStory = {
             "ace/2020-09/55df83b2-3181-49f3-b1d9-31cc91dda1be/3aae2ba50b3667e9f02e3674a37581fae1ebaf74_3.jpg",
           metadata: {},
           subtype: null,
-          hyperlink: "https://www.google.com/"
-        }
+          hyperlink: "https://www.google.com/",
+        },
       ],
       "card-updated-at": 1601431229891,
       "content-version-id": "2640b2cd-e57e-47b8-9a09-0c9e61bec4a9",
@@ -1606,20 +1594,19 @@ export const dummyLiveBlogStory = {
           message: null,
           image: {
             key: "ace/2020-09/55df83b2-3181-49f3-b1d9-31cc91dda1be/3aae2ba50b3667e9f02e3674a37581fae1ebaf74_3.jpg",
-            url:
-              "https://thumbor-stg.assettype.com/ace/2020-09/55df83b2-3181-49f3-b1d9-31cc91dda1be/3aae2ba50b3667e9f02e3674a37581fae1ebaf74_3.jpg",
+            url: "https://thumbor-stg.assettype.com/ace/2020-09/55df83b2-3181-49f3-b1d9-31cc91dda1be/3aae2ba50b3667e9f02e3674a37581fae1ebaf74_3.jpg",
             attribution: "",
             caption: null,
             metadata: {
               "original-url":
                 "https://s.rfi.fr/media/display/a1b6b938-01c2-11eb-ba87-005056a964fe/w:1280/p:16x9/3aae2ba50b3667e9f02e3674a37581fae1ebaf74_3.jpg",
               width: 1280,
-              height: 720
-            }
-          }
+              height: 720,
+            },
+          },
         },
-        attributes: {}
-      }
+        attributes: {},
+      },
     },
     {
       "story-elements": [
@@ -1632,8 +1619,8 @@ export const dummyLiveBlogStory = {
           id: "1cef89d6-c934-4f3c-b4d1-56460eb076e4",
           metadata: {},
           subtype: null,
-          text: "Sed ut perspiciatis unde omnis iste natus error "
-        }
+          text: "Sed ut perspiciatis unde omnis iste natus error ",
+        },
       ],
       "card-updated-at": 1601431229891,
       "content-version-id": "89935f86-dba4-4f90-b7ea-f59db58554f7",
@@ -1652,11 +1639,11 @@ export const dummyLiveBlogStory = {
             url: "https://thumbor-stg.assettype.com/ace/2019-03/f25cc9c1-917c-4a19-9c9a-fa498f84f17b/test.jpg",
             attribution: "Google",
             caption: "Saque ipsa quae ab illo inventore veritatis et quip",
-            metadata: { "mime-type": "image/jpeg", "focus-point": [975, 375], width: 1682, height: 820 }
-          }
+            metadata: { "mime-type": "image/jpeg", "focus-point": [975, 375], width: 1682, height: 820 },
+          },
         },
-        attributes: { "key-event": true }
-      }
+        attributes: { "key-event": true },
+      },
     },
     {
       "story-elements": [
@@ -1669,8 +1656,8 @@ export const dummyLiveBlogStory = {
           id: "1cef89d6-c934-4f3c-b4d1-56460eb076e4",
           metadata: {},
           subtype: null,
-          text: "Sed ut perspiciatis unde omnis iste natus error "
-        }
+          text: "Sed ut perspiciatis unde omnis iste natus error ",
+        },
       ],
       "card-updated-at": 1601431229891,
       "content-version-id": "89935f86-dba4-4f90-b7ea-f59db58554f7",
@@ -1689,11 +1676,11 @@ export const dummyLiveBlogStory = {
             url: "https://thumbor-stg.assettype.com/ace/2019-03/f25cc9c1-917c-4a19-9c9a-fa498f84f17b/test.jpg",
             attribution: "Google",
             caption: "Saque ipsa quae ab illo inventore veritatis et quip",
-            metadata: { "mime-type": "image/jpeg", "focus-point": [975, 375], width: 1682, height: 820 }
-          }
+            metadata: { "mime-type": "image/jpeg", "focus-point": [975, 375], width: 1682, height: 820 },
+          },
         },
-        attributes: { "key-event": true }
-      }
+        attributes: { "key-event": true },
+      },
     },
     {
       "story-elements": [
@@ -1706,8 +1693,8 @@ export const dummyLiveBlogStory = {
           id: "1cef89d6-c934-4f3c-b4d1-56460eb076e4",
           metadata: {},
           subtype: null,
-          text: "Sed ut perspiciatis unde omnis iste natus error "
-        }
+          text: "Sed ut perspiciatis unde omnis iste natus error ",
+        },
       ],
       "card-updated-at": 1601431229891,
       "content-version-id": "89935f86-dba4-4f90-b7ea-f59db58554f7",
@@ -1726,11 +1713,11 @@ export const dummyLiveBlogStory = {
             url: "https://thumbor-stg.assettype.com/ace/2019-03/f25cc9c1-917c-4a19-9c9a-fa498f84f17b/test.jpg",
             attribution: "Google",
             caption: "Saque ipsa quae ab illo inventore veritatis et quip",
-            metadata: { "mime-type": "image/jpeg", "focus-point": [975, 375], width: 1682, height: 820 }
-          }
+            metadata: { "mime-type": "image/jpeg", "focus-point": [975, 375], width: 1682, height: 820 },
+          },
         },
-        attributes: { "key-event": true }
-      }
+        attributes: { "key-event": true },
+      },
     },
     {
       "story-elements": [
@@ -1743,8 +1730,8 @@ export const dummyLiveBlogStory = {
           id: "b62c0458-b8eb-4f3d-9f3b-86d04447a909",
           metadata: {},
           subtype: null,
-          text: "At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium"
-        }
+          text: "At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium",
+        },
       ],
       "card-updated-at": 1601277247407,
       "content-version-id": "49686375-3b2c-4f02-93a8-e47d1a063e1f",
@@ -1763,11 +1750,11 @@ export const dummyLiveBlogStory = {
             url: "https://thumbor-stg.assettype.com/ace/2019-03/f25cc9c1-917c-4a19-9c9a-fa498f84f17b/test.jpg",
             attribution: "Google",
             caption: "Saque ipsa quae ab illo inventore veritatis et quip",
-            metadata: { "mime-type": "image/jpeg", "focus-point": [975, 375], width: 1682, height: 820 }
-          }
+            metadata: { "mime-type": "image/jpeg", "focus-point": [975, 375], width: 1682, height: 820 },
+          },
         },
-        attributes: { "key-event": true }
-      }
+        attributes: { "key-event": true },
+      },
     },
     {
       "story-elements": [
@@ -1780,7 +1767,7 @@ export const dummyLiveBlogStory = {
           id: "3ca72d69-09d3-47be-8921-a993c111fd9e",
           metadata: {},
           subtype: null,
-          text: "Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus"
+          text: "Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus",
         },
         {
           id: "00000000-0000-0000-0000-000000000000",
@@ -1789,8 +1776,8 @@ export const dummyLiveBlogStory = {
           subtype: null,
           type: "text",
           text: ' <p>text <a href="https://ace-web.qtstage.io/">promotional</a> message</p>',
-          metadata: { "promotional-message": true }
-        }
+          metadata: { "promotional-message": true },
+        },
       ],
       "card-updated-at": 1601277247407,
       "content-version-id": "0acfbcb5-c770-498e-8439-a137e031dede",
@@ -1809,12 +1796,12 @@ export const dummyLiveBlogStory = {
             url: "https://thumbor-stg.assettype.com/ace/2019-03/f25cc9c1-917c-4a19-9c9a-fa498f84f17b/test.jpg",
             attribution: "Google",
             caption: "Saque ipsa quae ab illo inventore veritatis et quip",
-            metadata: { "mime-type": "image/jpeg", "focus-point": [975, 375], width: 1682, height: 820 }
-          }
+            metadata: { "mime-type": "image/jpeg", "focus-point": [975, 375], width: 1682, height: 820 },
+          },
         },
-        attributes: { "key-event": true }
-      }
-    }
+        attributes: { "key-event": true },
+      },
+    },
   ],
   url: "https://ace-web.qtstage.io/entertainment/2020/09/28/live-blog-story-3",
   "story-version-id": "dbc68251-e21d-4b1f-b8d2-e6ec972249ce",
@@ -1842,13 +1829,13 @@ export const dummyLiveBlogStory = {
       bio: "Biooo ?",
       id: 425675,
       "avatar-s3-key": null,
-      "twitter-handle": "h_bindiya"
-    }
+      "twitter-handle": "h_bindiya",
+    },
   ],
   metadata: { "is-closed": false, "card-share": { shareable: false } },
   "hero-image-url": "https://thumbor-stg.assettype.com/ace/2019-03/f25cc9c1-917c-4a19-9c9a-fa498f84f17b/test.jpg",
   "publish-at": null,
-  "assignee-name": "Bindiya H"
+  "assignee-name": "Bindiya H",
 };
 
 export const dummyListicleStory = {
@@ -1867,14 +1854,14 @@ export const dummyListicleStory = {
       "meta-description": null,
       "meta-title": null,
       slug: "workplace",
-      "tag-type": "Tag"
-    }
+      "tag-type": "Tag",
+    },
   ],
   customSlotAfterStory: {
     config: { targetingId: "" },
     layout: "Leaderboard",
     layoutLabel: "Leaderboard",
-    type: "ad"
+    type: "ad",
   },
   headline: "It pays to be kind: improving workplace culture through kindness",
   "storyline-id": null,
@@ -1894,11 +1881,11 @@ export const dummyListicleStory = {
       "parent-id": 38586,
       "display-name": "Health",
       collection: { slug: "health", name: "Health", id: 15603 },
-      data: null
-    }
+      data: null,
+    },
   ],
   "story-audio": {
-    "s3-key": "ace/story-audio/2020-10/307e5a1b-5cf0-4321-8193-827b2add174f/.0e6d9a89-3bb7-47b0-8bee-a34b5f75f5e9.mp3"
+    "s3-key": "ace/story-audio/2020-10/307e5a1b-5cf0-4321-8193-827b2add174f/.0e6d9a89-3bb7-47b0-8bee-a34b5f75f5e9.mp3",
   },
   "read-time": 2,
   "access-level-value": null,
@@ -1912,7 +1899,7 @@ export const dummyListicleStory = {
     height: 900,
     "mime-type": "image/jpeg",
     "file-size": 228062,
-    "file-name": "seo.jpg"
+    "file-name": "seo.jpg",
   },
   comments: null,
   "word-count": 232,
@@ -1947,7 +1934,7 @@ export const dummyListicleStory = {
           id: "5ffad09b-7db1-489a-8308-f7d63c745c70",
           metadata: {},
           subtype: null,
-          text: "Nemo enim ipsam voluptatem quia volup tas sit aspernatur aut odit aut fugit"
+          text: "Nemo enim ipsam voluptatem quia volup tas sit aspernatur aut odit aut fugit",
         },
         {
           description: "",
@@ -1958,9 +1945,8 @@ export const dummyListicleStory = {
           id: "f24c83a4-dd3d-47fe-8d05-90f6ada10632",
           metadata: {},
           subtype: null,
-          text:
-            "<p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est</p>"
-        }
+          text: "<p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est</p>",
+        },
       ],
       "card-updated-at": 1602234185925,
       "content-version-id": "9378abd6-2cec-4bdd-88b2-005cc6d1775f",
@@ -1984,12 +1970,12 @@ export const dummyListicleStory = {
               height: 900,
               "mime-type": "image/jpeg",
               "file-size": 228062,
-              "file-name": "seo.jpg"
-            }
-          }
+              "file-name": "seo.jpg",
+            },
+          },
         },
-        attributes: {}
-      }
+        attributes: {},
+      },
     },
     {
       "story-elements": [
@@ -2002,7 +1988,7 @@ export const dummyListicleStory = {
           id: "82244bcd-c453-41c4-a215-bb038f569375",
           metadata: {},
           subtype: null,
-          text: "Nemo enim ipsam voluptatem quia volup tas sit aspernatur aut odit aut fugit"
+          text: "Nemo enim ipsam voluptatem quia volup tas sit aspernatur aut odit aut fugit",
         },
         {
           description: "",
@@ -2013,9 +1999,8 @@ export const dummyListicleStory = {
           id: "ae7131f6-450a-4589-9995-812ba5832c58",
           metadata: {},
           subtype: null,
-          text:
-            "<p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est</p>"
-        }
+          text: "<p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est</p>",
+        },
       ],
       "card-updated-at": 1602155725655,
       "content-version-id": "43ff8777-4176-4294-95a3-5aaee8e34537",
@@ -2039,12 +2024,12 @@ export const dummyListicleStory = {
               height: 900,
               "mime-type": "image/jpeg",
               "file-size": 228062,
-              "file-name": "seo.jpg"
-            }
-          }
+              "file-name": "seo.jpg",
+            },
+          },
         },
-        attributes: {}
-      }
+        attributes: {},
+      },
     },
     {
       "story-elements": [
@@ -2057,7 +2042,7 @@ export const dummyListicleStory = {
           id: "d3cbfcce-a503-499d-80cd-52fce2215ef3",
           metadata: {},
           subtype: null,
-          text: "Nemo enim ipsam voluptatem quia volup tas sit aspernatur aut odit aut fugit"
+          text: "Nemo enim ipsam voluptatem quia volup tas sit aspernatur aut odit aut fugit",
         },
         {
           description: "",
@@ -2066,7 +2051,7 @@ export const dummyListicleStory = {
             height: 540,
             "mime-type": "image/jpeg",
             "file-size": 26544,
-            "file-name": "quintype-website_2020-01_2f2ba42d-7a45-4a60-b4af-7d4758f27f5d_Untitled_presentation.jpg"
+            "file-name": "quintype-website_2020-01_2f2ba42d-7a45-4a60-b4af-7d4758f27f5d_Untitled_presentation.jpg",
           },
           "page-url": "/story/307e5a1b-5cf0-4321-8193-827b2add174f/element/a7f79ffa-4be0-4207-a495-a035a020cac3",
           type: "image",
@@ -2078,7 +2063,7 @@ export const dummyListicleStory = {
             "ace/2020-10/920f35b9-023e-44d2-b4de-69dce8587bf7/quintype_website_2020_01_2f2ba42d_7a45_4a60_b4af_7d4758f27f5d_Untitled_presentation.jpg",
           metadata: {},
           subtype: null,
-          hyperlink: "https://www.google.com/"
+          hyperlink: "https://www.google.com/",
         },
         {
           description: "",
@@ -2089,9 +2074,8 @@ export const dummyListicleStory = {
           id: "2a248f86-3181-4456-9f96-f7e56668fbc1",
           metadata: {},
           subtype: null,
-          text:
-            "<p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est</p>"
-        }
+          text: "<p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est</p>",
+        },
       ],
       "card-updated-at": 1602156067786,
       "content-version-id": "dbfeb570-f9aa-4875-9c3d-f48bf551dd91",
@@ -2106,8 +2090,7 @@ export const dummyListicleStory = {
           title: "It pays to be kind: improving workplace culture through kindness",
           message: null,
           image: {
-            key:
-              "ace/2020-10/920f35b9-023e-44d2-b4de-69dce8587bf7/quintype_website_2020_01_2f2ba42d_7a45_4a60_b4af_7d4758f27f5d_Untitled_presentation.jpg",
+            key: "ace/2020-10/920f35b9-023e-44d2-b4de-69dce8587bf7/quintype_website_2020_01_2f2ba42d_7a45_4a60_b4af_7d4758f27f5d_Untitled_presentation.jpg",
             url: null,
             attribution: "Jon Doe",
             caption: null,
@@ -2116,12 +2099,12 @@ export const dummyListicleStory = {
               height: 540,
               "mime-type": "image/jpeg",
               "file-size": 26544,
-              "file-name": "quintype-website_2020-01_2f2ba42d-7a45-4a60-b4af-7d4758f27f5d_Untitled_presentation.jpg"
-            }
-          }
+              "file-name": "quintype-website_2020-01_2f2ba42d-7a45-4a60-b4af-7d4758f27f5d_Untitled_presentation.jpg",
+            },
+          },
         },
-        attributes: {}
-      }
+        attributes: {},
+      },
     },
     {
       "story-elements": [
@@ -2134,8 +2117,7 @@ export const dummyListicleStory = {
           id: "20db973e-4612-4933-9acd-5a6d4c3d281d",
           metadata: {},
           subtype: null,
-          text:
-            "<p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est</p>"
+          text: "<p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est</p>",
         },
         {
           id: "00000000-0000-0000-0000-000000000000",
@@ -2144,8 +2126,8 @@ export const dummyListicleStory = {
           subtype: null,
           type: "text",
           text: ' <p>text <a href="https://ace-web.qtstage.io/">promotional</a> message</p>',
-          metadata: { "promotional-message": true }
-        }
+          metadata: { "promotional-message": true },
+        },
       ],
       "card-updated-at": 1602156067786,
       "content-version-id": "dc523cfa-dcf2-41b5-ab7a-b5c3577e11f7",
@@ -2169,13 +2151,13 @@ export const dummyListicleStory = {
               height: 900,
               "mime-type": "image/jpeg",
               "file-size": 228062,
-              "file-name": "seo.jpg"
-            }
-          }
+              "file-name": "seo.jpg",
+            },
+          },
         },
-        attributes: {}
-      }
-    }
+        attributes: {},
+      },
+    },
   ],
   url: "https://ace-web.qtstage.io/health/2020/10/08/it-pays-to-be-kind-improving-workplace-culture-through-kindness",
   "story-version-id": "8768d161-6433-4f1e-b8ef-e632d180ede9",
@@ -2203,10 +2185,10 @@ export const dummyListicleStory = {
       bio: null,
       id: 927927,
       "avatar-s3-key": null,
-      "twitter-handle": null
-    }
+      "twitter-handle": null,
+    },
   ],
   metadata: { "card-share": { shareable: false } },
   "publish-at": null,
-  "assignee-name": "Pravin Atigre"
+  "assignee-name": "Pravin Atigre",
 };

@@ -31,9 +31,9 @@ withStore(
     qt: {
       config: {
         "cdn-image": "thumbor-stg.assettype.com",
-        mountAt: "/sub-directory"
-      }
-    }
+        mountAt: "/sub-directory",
+      },
+    },
   },
   Readme
 )
@@ -50,9 +50,9 @@ withStore(
       slotConfig: [
         {
           type: "ad",
-          component: () => <CustomAdOrWidget />
-        }
-      ]
+          component: () => <CustomAdOrWidget />,
+        },
+      ],
     };
 
     mock.onGet(API_REQUEST).reply(200, nestedCollection);

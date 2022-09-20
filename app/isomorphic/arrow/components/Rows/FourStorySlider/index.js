@@ -27,7 +27,7 @@ const FourStorySlider = ({ collection, config = {} }) => {
     footerSlotConfig = {},
     navigationArrows = true,
     slideIndicator = "none",
-    isInfinite = false
+    isInfinite = false,
   } = config;
   const { footerSlot } = footerSlotConfig;
   const items = collectionToStories(collection);
@@ -66,7 +66,8 @@ const FourStorySlider = ({ collection, config = {} }) => {
     <div
       className="full-width-with-padding arrow-component"
       data-test-id="four-story-slider"
-      style={{ backgroundColor: theme, color: textColor }}>
+      style={{ backgroundColor: theme, color: textColor }}
+    >
       <div styleName="four-story-slider-wrapper">
         <CollectionName
           collection={collection}
@@ -78,7 +79,8 @@ const FourStorySlider = ({ collection, config = {} }) => {
             isArrow={navigationArrows}
             perView={perView}
             slideIndicator={slideIndicator}
-            isInfinite={isInfinite}>
+            isInfinite={isInfinite}
+          >
             {getItems()}
           </ScrollSnap>
         ) : (
@@ -114,14 +116,14 @@ FourStorySlider.propTypes = {
     // speed of the slider(ms)
     numberOfStoriesToShow: PropTypes.number,
     // no of slides in slider
-    collectionNameBorderColor: PropTypes.string
-  })
+    collectionNameBorderColor: PropTypes.string,
+  }),
 };
 
 FourStorySlider.defaultProps = {
   theme: "#ffffff",
   slotConfig: "story",
-  border: ""
+  border: "",
 };
 
 export default StateProvider(FourStorySlider);

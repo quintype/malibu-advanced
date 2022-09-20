@@ -19,10 +19,10 @@ const collection = generateCollection({ stories: 10 });
 const borderOptions = {
   "No Value": "",
   bottom: "bottom",
-  full: "full"
+  full: "full",
 };
 const footerButton = {
-  SubsequentLoadCount: "SubsequentLoadCount"
+  SubsequentLoadCount: "SubsequentLoadCount",
 };
 
 const getMoreStories = () => {
@@ -34,9 +34,9 @@ withStore(
   {
     qt: {
       config: {
-        "cdn-image": "thumbor-stg.assettype.com"
-      }
-    }
+        "cdn-image": "thumbor-stg.assettype.com",
+      },
+    },
   },
   readme
 )
@@ -57,7 +57,7 @@ withStore(
       showRowTitle: boolean("Row title", true),
       initialLoadCount: text("Initial Load Count", 6),
       showButton: boolean("Show button", true),
-      showReadTime: boolean("Read time", true)
+      showReadTime: boolean("Read time", true),
     };
     return <ListComponent collection={collection} config={contextConfig} getMoreStories={getMoreStories} />;
   });

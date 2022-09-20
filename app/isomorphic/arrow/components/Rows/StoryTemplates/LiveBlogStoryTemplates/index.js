@@ -13,7 +13,7 @@ const LiveBlogStoryTemplate = ({
   adComponent,
   widgetComp,
   firstChild,
-  secondChild
+  secondChild,
 }) => {
   const { theme = "", templateType = "default", verticalShare = "" } = config;
 
@@ -25,7 +25,8 @@ const LiveBlogStoryTemplate = ({
       data-test-id={`live-blog-${templateType}`}
       className={`arrow-component arr--content-wrapper arr-story-grid arr--live-blog-story-template-wrapper ${templateType}`}
       style={{ backgroundColor: theme }}
-      styleName={`${containerClass} ${verticalShare} wrapper`}>
+      styleName={`${containerClass} ${verticalShare} wrapper`}
+    >
       <LiveBlogStoryTemplates
         templateType={templateType}
         story={story}
@@ -44,13 +45,13 @@ const LiveBlogStoryTemplate = ({
 LiveBlogStoryTemplate.propTypes = {
   story: PropTypes.object,
   config: PropTypes.shape({
-    templateType: PropTypes.string
+    templateType: PropTypes.string,
   }),
   firstChild: PropTypes.node,
   secondChild: PropTypes.node,
   storyElementsConfig: PropTypes.object,
   adComponent: PropTypes.func,
-  widgetComp: PropTypes.func
+  widgetComp: PropTypes.func,
 };
 
 export default StateProvider(LiveBlogStoryTemplate);

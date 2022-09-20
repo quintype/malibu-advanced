@@ -8,7 +8,7 @@ import {
   optionalSelect,
   sectionTagTemplates,
   collectionNameTemplates,
-  footerButton
+  footerButton,
 } from "../../../../storybook";
 
 const collection = generateCollections(4);
@@ -18,9 +18,9 @@ withStore(
   {
     qt: {
       config: {
-        "cdn-image": "thumbor-stg.assettype.com"
-      }
-    }
+        "cdn-image": "thumbor-stg.assettype.com",
+      },
+    },
   },
   Readme
 )
@@ -41,7 +41,7 @@ withStore(
       buttonText: text("Footer text", "Read More"),
       showButton: boolean("Show button", true),
       showReadTime: boolean("Read time", true),
-      numberOfStoriesToShowInEachColumn: number("Number of stories to show in each column", 4)
+      numberOfStoriesToShowInEachColumn: number("Number of stories to show in each column", 4),
     };
     return <FourColSixteenStories collection={collection} config={contextConfig} />;
   });

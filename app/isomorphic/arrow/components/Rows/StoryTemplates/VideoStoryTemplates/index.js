@@ -23,7 +23,7 @@ const VideoStoryTemplate = ({
   widgetComp,
   adComponent,
   firstChild,
-  secondChild
+  secondChild,
 }) => {
   const heroVideo =
     story.cards
@@ -42,7 +42,7 @@ const VideoStoryTemplate = ({
     publishedDetails = {},
     verticalShare = "",
     shareIconType = "plain-color-svg",
-    premiumStoryIconConfig = {}
+    premiumStoryIconConfig = {},
   } = config;
 
   const visibledCards = noOfVisibleCards < 0 ? story.cards : story.cards.slice(0, noOfVisibleCards);
@@ -214,7 +214,8 @@ const VideoStoryTemplate = ({
       data-test-id={dataTestId}
       className="arrow-component arr--content-wrapper arr-story-grid arr--video-story-template-wrapper"
       styleName={`${templateClass} ${verticalShare}`}
-      style={{ backgroundColor: theme }}>
+      style={{ backgroundColor: theme }}
+    >
       {getStoryTemplate(templateType)}
     </div>
   );
@@ -225,13 +226,13 @@ VideoStoryTemplate.propTypes = {
   config: PropTypes.shape({
     templateType: PropTypes.string,
     authorCard: PropTypes.object,
-    asideCollection: PropTypes.object
+    asideCollection: PropTypes.object,
   }),
   firstChild: PropTypes.node,
   secondChild: PropTypes.node,
   storyElementsConfig: PropTypes.object,
   adComponent: PropTypes.func,
-  widgetComp: PropTypes.func
+  widgetComp: PropTypes.func,
 };
 
 export default StateProvider(VideoStoryTemplate);

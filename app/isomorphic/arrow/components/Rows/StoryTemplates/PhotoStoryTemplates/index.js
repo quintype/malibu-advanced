@@ -25,7 +25,7 @@ const PhotoStory = ({
   widgetComp,
   adComponent,
   firstChild,
-  secondChild
+  secondChild,
 }) => {
   const {
     theme = "",
@@ -36,10 +36,10 @@ const PhotoStory = ({
     verticalShare = "",
     shareIconType = "plain-color-svg",
     authorDetails = {
-      template: "default"
+      template: "default",
     },
     imageRender = "fullBleed",
-    premiumStoryIconConfig = {}
+    premiumStoryIconConfig = {},
   } = config;
   const isFullBleed = imageRender === "fullBleed";
   const visibledCards = noOfVisibleCards < 0 ? story.cards : story.cards.slice(0, noOfVisibleCards);
@@ -122,7 +122,15 @@ const PhotoStory = ({
     return (
       <>
         <div data-test-id="hero-image" styleName={`${renderImages(imageRender)} index-2`}>
-          <HeroImage story={story} aspectRatio={[[16, 9], [8, 3]]} defaultFallback={false} isStoryPageImage />
+          <HeroImage
+            story={story}
+            aspectRatio={[
+              [16, 9],
+              [8, 3],
+              ]}
+            defaultFallback={false}
+            isStoryPageImage
+          />
         </div>
         <div styleName="grid-col-2-10 space-12">
           <CaptionAttribution story={story} config={config} />
@@ -215,11 +223,11 @@ const PhotoStory = ({
     }
   };
   PhotoStoryTemplate.propTypes = {
-    templateType: PropTypes.string
+    templateType: PropTypes.string,
   };
 
   PhotoStoryTemplate.propTypes = {
-    templateType: PropTypes.string
+    templateType: PropTypes.string,
   };
 
   return (
@@ -227,7 +235,8 @@ const PhotoStory = ({
       styleName={`${verticalShare} ${isFullBleed ? "fullBleed" : ""}`}
       data-test-id={`photo-story-${templateType}-${kebabCase(imageRender)}`}
       className={`arrow-component arr-story-grid arr--content-wrapper arr--photo-story-template-wrapper ${templateType} `}
-      style={{ backgroundColor: theme }}>
+      style={{ backgroundColor: theme }}
+    >
       <PhotoStoryTemplate templateType={templateType} />
     </div>
   );
@@ -237,13 +246,13 @@ PhotoStory.propTypes = {
   story: PropTypes.object,
   config: PropTypes.shape({
     templateType: PropTypes.string,
-    asideCollection: PropTypes.object
+    asideCollection: PropTypes.object,
   }),
   firstChild: PropTypes.node,
   secondChild: PropTypes.node,
   storyElementsConfig: PropTypes.object,
   adComponent: PropTypes.func,
-  widgetComp: PropTypes.func
+  widgetComp: PropTypes.func,
 };
 
 export default StateProvider(PhotoStory);

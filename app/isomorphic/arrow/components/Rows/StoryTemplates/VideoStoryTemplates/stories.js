@@ -14,7 +14,7 @@ const collectionNameBorderColorLabel = "Aside Collection Name Border Color";
 
 const shareType = {
   "Vertical Share": "sticky",
-  "Horizontal Share": ""
+  "Horizontal Share": "",
 };
 
 const label = "BG Color";
@@ -24,7 +24,7 @@ const iconTypeOptions = {
   "Circular Plain Svg": "circular-plain-svg",
   "Plain Svg": "plain-svg",
   "Plain Color Svg": "plain-color-svg",
-  "Square Svg": "square-svg"
+  "Square Svg": "square-svg",
 };
 
 const configurableSlot = () => {
@@ -37,9 +37,9 @@ withStore(
     qt: {
       config: {
         "cdn-image": "thumbor-stg.assettype.com",
-        mountAt: "/sub-directory"
-      }
-    }
+        mountAt: "/sub-directory",
+      },
+    },
   },
   Readme
 )
@@ -53,12 +53,12 @@ withStore(
       publishedDetails: {
         enablePublishedTime: boolean("Show Published Time", true),
         enableUpdatedTime: boolean("Show Updated Time", false),
-        showReadTime: boolean("Read time", true)
+        showReadTime: boolean("Read time", true),
       },
       premiumStoryIconConfig: {
         iconColor: "#F7B500",
         iconType: "star",
-        enablePremiumStoryIcon: true
+        enablePremiumStoryIcon: true,
       },
       asideCollection: {
         data: collection,
@@ -67,10 +67,10 @@ withStore(
           title: text("Aside Collection Title", "Trending"),
           theme: color(label, defaultvalue),
           showAuthor: boolean("Author", true),
-          showTime: boolean("Timestamp", true)
+          showTime: boolean("Timestamp", true),
         },
-        slots: slotData
-      }
+        slots: slotData,
+      },
     };
     const storyElementsConfig = {
       summary: {},
@@ -81,7 +81,7 @@ withStore(
       "q-and-a": {},
       question: {},
       answer: {},
-      references: {}
+      references: {},
     };
     return (
       <VideoStoryTemplate
@@ -106,12 +106,12 @@ withStore(
       publishedDetails: {
         enablePublishedTime: boolean("Show Published Time", true),
         enableUpdatedTime: boolean("Show Updated Time", false),
-        showReadTime: boolean("Read time", true)
+        showReadTime: boolean("Read time", true),
       },
       premiumStoryIconConfig: {
         iconColor: "#F7B500",
         iconType: "star",
-        enablePremiumStoryIcon: true
+        enablePremiumStoryIcon: true,
       },
       asideCollection: {
         data: collection,
@@ -120,10 +120,10 @@ withStore(
           title: text("Aside Collection Title", "Trending"),
           theme: color(label, defaultvalue),
           showAuthor: boolean("Author", true),
-          showTime: boolean("Timestamp", true)
+          showTime: boolean("Timestamp", true),
         },
-        slots: slotData
-      }
+        slots: slotData,
+      },
     };
     const storyElementsConfig = {
       summary: {},
@@ -134,7 +134,7 @@ withStore(
       "q-and-a": {},
       question: {},
       answer: {},
-      references: {}
+      references: {},
     };
     return (
       <VideoStoryTemplate
@@ -159,12 +159,12 @@ withStore(
       publishedDetails: {
         enablePublishedTime: boolean("Show Published Time", true),
         enableUpdatedTime: boolean("Show Updated Time", false),
-        showReadTime: boolean("Read time", true)
+        showReadTime: boolean("Read time", true),
       },
       premiumStoryIconConfig: {
         iconColor: "#F7B500",
         iconType: "star",
-        enablePremiumStoryIcon: true
+        enablePremiumStoryIcon: true,
       },
       asideCollection: {
         data: collection,
@@ -174,10 +174,10 @@ withStore(
           theme: color(label, defaultvalue),
           adSlot: [{ type: "ad", component: configurableSlot }],
           showAuthor: boolean("Author", true),
-          showTime: boolean("Timestamp", true)
+          showTime: boolean("Timestamp", true),
         },
-        slots: slotData
-      }
+        slots: slotData,
+      },
     };
     const storyElementsConfig = {
       summary: {},
@@ -188,7 +188,7 @@ withStore(
       "q-and-a": {},
       question: {},
       answer: {},
-      references: {}
+      references: {},
     };
     return (
       <VideoStoryTemplate

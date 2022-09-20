@@ -25,7 +25,7 @@ const AlternateCollectionFilter = ({ collection, config = {} }) => {
     collectionNameTemplate = "",
     footerSlotConfig = {},
     footerButton = "",
-    showButton = true
+    showButton = true,
   } = config;
   const { footerSlot } = footerSlotConfig;
 
@@ -93,7 +93,8 @@ const AlternateCollectionFilter = ({ collection, config = {} }) => {
     <div
       className="full-width-with-padding arrow-component"
       data-test-id="collection-filter"
-      style={{ backgroundColor: theme, color: textColor }}>
+      style={{ backgroundColor: theme, color: textColor }}
+    >
       <div styleName={`wrapper ${getCustomStyleName}`}>
         <CollectionName
           collection={collection}
@@ -107,10 +108,12 @@ const AlternateCollectionFilter = ({ collection, config = {} }) => {
                 <div
                   key={index}
                   className={`child-collection-wrapper ${index === active ? "open-subchild" : ""}`}
-                  styleName={`child-collection-wrapper ${index === active ? "open-subchild" : ""}`}>
+                  styleName={`child-collection-wrapper ${index === active ? "open-subchild" : ""}`}
+                >
                   <div
                     styleName={`child-collection ${textColor}`}
-                    onClick={(event) => openChildCollectionItems(event, index, subCollections.id)}>
+                    onClick={(event) => openChildCollectionItems(event, index, subCollections.id)}
+                  >
                     {subCollections.name}
                   </div>
                   <span className={`navigator ${textColor}`} styleName={`navigator ${textColor}`} />

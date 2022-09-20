@@ -27,7 +27,7 @@ const FourColFiveStories = ({
   isLoadMoreVisible,
   isLoading,
   isolatedLoadMore,
-  hideFirstCard
+  hideFirstCard,
 }) => {
   const stories = collectionToStories(collection);
   if (!stories.length) return null;
@@ -39,7 +39,7 @@ const FourColFiveStories = ({
     collectionNameTemplate = "",
     footerButton = "",
     borderColor = "",
-    subsequentLoadCount = 4
+    subsequentLoadCount = 4,
   } = config;
   const { type = "story", component } = get(slotConfig, [0], {});
   const textColor = getTextColor(theme);
@@ -105,7 +105,8 @@ const FourColFiveStories = ({
     <div
       className="full-width-with-padding arrow-component"
       data-test-id="four-col-five-stories"
-      style={{ backgroundColor: theme, color: textColor }}>
+      style={{ backgroundColor: theme, color: textColor }}
+    >
       <div styleName="four-col-five-stories">
         <CollectionName
           collection={collection}
@@ -140,13 +141,13 @@ FourColFiveStories.propTypes = {
     collectionNameTemplate: PropTypes.string,
     footerButton: PropTypes.string,
     borderColor: PropTypes.string,
-    subsequentLoadCount: PropTypes.number
+    subsequentLoadCount: PropTypes.number,
   }),
   getMoreStories: PropTypes.func,
   isLoading: PropTypes.bool,
   hideFirstCard: PropTypes.bool,
   isLoadMoreVisible: PropTypes.bool,
-  isolatedLoadMore: PropTypes.bool
+  isolatedLoadMore: PropTypes.bool,
 };
 
 FourColFiveStories.defaultProps = {
@@ -155,7 +156,7 @@ FourColFiveStories.defaultProps = {
   isLoading: false,
   collection: {},
   config: {},
-  hideFirstCard: false
+  hideFirstCard: false,
 };
 
 export default StateProvider(FourColFiveStories);

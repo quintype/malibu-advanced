@@ -14,14 +14,14 @@ const TextStoryTemplate = ({
   adComponent,
   widgetComp,
   firstChild,
-  secondChild
+  secondChild,
 }) => {
   const {
     theme = "",
     templateType = "default",
     imageRender = "fullBleed",
     sort = "headline-first",
-    verticalShare = ""
+    verticalShare = "",
   } = config;
   const sortOption = templateType === "hero-vertical-priority" ? sort : "";
 
@@ -29,7 +29,7 @@ const TextStoryTemplate = ({
     default: imageRender,
     "hero-priority-center": imageRender,
     "headline-hero-priority": imageRender,
-    "hero-vertical-priority": imageRender
+    "hero-vertical-priority": imageRender,
   };
 
   const timezone = useSelector((state) => get(state, ["qt", "data", "timezone"], null));
@@ -42,7 +42,8 @@ const TextStoryTemplate = ({
       data-test-id={dataTestId}
       className="arrow-component arr-story-grid arr--content-wrapper arr--text-story-template-wrapper"
       styleName={`${templateType} ${verticalShare} ${supportImageType[templateType] || ""} ${sortOption}`}
-      style={{ backgroundColor: theme }}>
+      style={{ backgroundColor: theme }}
+    >
       <StoryTemplate
         story={story}
         config={config}
@@ -62,13 +63,13 @@ TextStoryTemplate.propTypes = {
   config: PropTypes.shape({
     templateType: PropTypes.string,
     authorCard: PropTypes.object,
-    asideCollection: PropTypes.object
+    asideCollection: PropTypes.object,
   }),
   firstChild: PropTypes.node,
   secondChild: PropTypes.node,
   storyElementsConfig: PropTypes.object,
   adComponent: PropTypes.func,
-  widgetComp: PropTypes.func
+  widgetComp: PropTypes.func,
 };
 
 export default StateProvider(TextStoryTemplate);

@@ -23,7 +23,7 @@ export const StoryTemplate = ({
   adComponent,
   firstChild,
   secondChild,
-  timezone
+  timezone,
 }) => {
   const {
     theme = "",
@@ -34,7 +34,7 @@ export const StoryTemplate = ({
     authorDetails = {},
     verticalShare = "",
     shareIconType = "plain-color-svg",
-    premiumStoryIconConfig = {}
+    premiumStoryIconConfig = {},
   } = config;
 
   const visibledCards = noOfVisibleCards < 0 ? story.cards : story.cards.slice(0, noOfVisibleCards);
@@ -225,7 +225,15 @@ export const StoryTemplate = ({
     return (
       <>
         <div styleName="hero-image index-2" data-test-id="headline-overlay-hero-image">
-          <HeroImage story={story} FullBleed={false} aspectRatio={[[3, 4], [16, 9]]} isStoryPageImage />
+          <HeroImage
+            story={story}
+            FullBleed={false}
+            aspectRatio={[
+              [3, 4],
+              [16, 9],
+            ]}
+            isStoryPageImage
+          />
         </div>
         <HeaderCard />
         <div styleName="story-content-inner-wrapper">

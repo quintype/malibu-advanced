@@ -6,7 +6,7 @@ import {
   generateNavigateSlug,
   navigateTo,
   rgbToHex,
-  getNumberOfStoriesToShow
+  getNumberOfStoriesToShow,
 } from "../../../utils/utils";
 import { collectionToStories } from "@quintype/components";
 import { StateProvider } from "../../SharedContext";
@@ -33,7 +33,7 @@ const getChildCollectionData = (collection, config, index) => {
     footerButton = "",
     localizationConfig = {},
     collectionNameBorderColor = "",
-    numberOfStoriesToShowInEachColumn = 4
+    numberOfStoriesToShowInEachColumn = 4,
   } = config;
   const dispatch = useDispatch();
   const qtConfig = useSelector((state) => get(state, ["qt", "config"], {}));
@@ -59,8 +59,16 @@ const getChildCollectionData = (collection, config, index) => {
             border={withSeparator ? "bottom" : ""}
             theme={theme}
             config={config}
-            headerLevel="6">
-            <HeroImage config={config} story={firstStory} aspectRatio={[[16, 9], [16, 9]]} />
+            headerLevel="6"
+          >
+            <HeroImage
+              config={config}
+              story={firstStory}
+              aspectRatio={[
+                [16, 9],
+                [16, 9],
+              ]}
+            />
             <SectionTag story={firstStory} borderColor={SectionTagBorderColor} />
             <Headline story={firstStory} premiumStoryIconConfig={config} />
             <AuthorWithTime config={localizationConfig} story={firstStory} hideAuthorImage={true} />
@@ -99,7 +107,8 @@ const FourColSixteenStories = ({ collection, config = {} }) => {
       className="full-width-with-padding arrow-component arr--four-col-sixteen-stories"
       data-test-id="four-col-sixteen-stories"
       styleName={`componentWrapper ${textColor}`}
-      style={{ backgroundColor: theme, color: textColor }}>
+      style={{ backgroundColor: theme, color: textColor }}
+    >
       {childCollections.slice(0, 4).map((collection, index) => getChildCollectionData(collection, config, index))}
     </div>
   );
@@ -108,8 +117,8 @@ const FourColSixteenStories = ({ collection, config = {} }) => {
 FourColSixteenStories.propTypes = {
   collection: PropTypes.object.isRequired,
   config: PropTypes.shape({
-    theme: PropTypes.string
-  })
+    theme: PropTypes.string,
+  }),
 };
 
 export default StateProvider(FourColSixteenStories);

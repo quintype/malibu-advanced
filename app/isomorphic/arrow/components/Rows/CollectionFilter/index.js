@@ -24,7 +24,7 @@ const CollectionFilter = ({ collection, config = {} }) => {
     border = "",
     collectionNameTemplate = "",
     footerSlotConfig = {},
-    footerButton = ""
+    footerButton = "",
   } = config;
   const { type = "story", component } = get(slotConfig, [0], {});
   const { footerSlot } = footerSlotConfig;
@@ -93,7 +93,8 @@ const CollectionFilter = ({ collection, config = {} }) => {
         theme={theme}
         border={border}
         borderColor={borderColor}
-        config={config}>
+        config={config}
+      >
         <HeroImage story={story} isHorizontalMobile />
         <StorycardContent story={story} border={border} borderColor={borderColor} config={config} />
       </StoryCard>
@@ -121,7 +122,8 @@ const CollectionFilter = ({ collection, config = {} }) => {
                 theme={theme}
                 border={border}
                 borderColor={borderColor}
-                config={config}>
+                config={config}
+              >
                 <HeroImage story={story} isHorizontal aspectRatio={[[1, 1]]} />
                 <StorycardContent story={story} border={border} borderColor={borderColor} config={config} />
               </StoryCard>
@@ -137,7 +139,8 @@ const CollectionFilter = ({ collection, config = {} }) => {
     <div
       className="full-width-with-padding arrow-component"
       data-test-id="collection-filter"
-      style={{ backgroundColor: theme, color: textColor }}>
+      style={{ backgroundColor: theme, color: textColor }}
+    >
       <div styleName="wrapper">
         <CollectionName
           collection={collection}
@@ -151,7 +154,8 @@ const CollectionFilter = ({ collection, config = {} }) => {
                 <div key={index} styleName={`child-collection-wrapper ${index === active ? "open-subchild" : ""}`}>
                   <div
                     styleName={`child-collection ${textColor}`}
-                    onClick={(event) => openChildCollectionItems(event, index, subCollections.id)}>
+                    onClick={(event) => openChildCollectionItems(event, index, subCollections.id)}
+                  >
                     {subCollections.name}
                   </div>
                   <span styleName={`navigator ${textColor}`} />
@@ -221,12 +225,12 @@ CollectionFilter.propTypes = {
     collectionNameTemplate: PropTypes.string,
     footerSlotConfig: PropTypes.object,
     footerButton: PropTypes.string,
-    collectionNameBorderColor: PropTypes.string
-  })
+    collectionNameBorderColor: PropTypes.string,
+  }),
 };
 
 CollectionFilter.defaultProps = {
   theme: "#ffffff",
   slotConfig: "story",
-  border: ""
+  border: "",
 };
