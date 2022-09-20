@@ -98,15 +98,16 @@ export const TwoColFourStories = ({ collection, config = {} }) => {
                         [16, 9],
                         [16, 9],
                       ]}
-                      config={config}>
+                      config={config}
+                    >
                       <HeroImage
                         story={story}
                         isHorizontal
                         aspectRatio={[
-                            [16, 9],
-                            [16, 9],
-                          ]}
-                        />
+                          [16, 9],
+                          [16, 9],
+                        ]}
+                      />
                       <StorycardContent
                         theme={theme}
                         story={story}
@@ -130,7 +131,8 @@ export const TwoColFourStories = ({ collection, config = {} }) => {
                       [16, 9],
                       [16, 9],
                     ]}
-                    config={config}>
+                    config={config}
+                  >
                     <HeroImage
                       story={story}
                       isHorizontal

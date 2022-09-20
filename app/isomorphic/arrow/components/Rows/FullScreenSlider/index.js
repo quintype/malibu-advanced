@@ -28,7 +28,8 @@ const FullScreenSlider = ({ collection = {}, config = {} }) => {
     slideIndicator = "none",
     isInfinite = false,
     aspectRatio = [
-      [16, 9], [4, 2],
+      [16, 9],
+      [4, 2],
     ]
   } = config;
   const { footerSlot } = footerSlotConfig;

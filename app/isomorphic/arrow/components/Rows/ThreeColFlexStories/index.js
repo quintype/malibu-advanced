@@ -22,10 +22,10 @@ const FlexCard = ({ story = {}, config = {} }) => {
     <div styleName="card">
       <StoryCard story={story} isHorizontal theme={theme} border={border} borderColor={borderColor} config={config}>
         <HeroImage
-         story={story}
-         aspectRatio={[
-           [9, 5],
-           [9, 5],
+          story={story}
+          aspectRatio={[
+            [9, 5],
+            [9, 5],
           ]}
         />
         <div styleName="card-content" className="small-card-container">

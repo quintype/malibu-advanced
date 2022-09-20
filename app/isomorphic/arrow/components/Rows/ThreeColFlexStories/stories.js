@@ -5,7 +5,7 @@ import {
   optionalSelect,
   sectionTagTemplates,
   collectionNameTemplates,
-  footerButton
+  footerButton,
 } from "../../../../storybook";
 import ThreeColFlexStories from "./index";
 import Readme from "./README.md";

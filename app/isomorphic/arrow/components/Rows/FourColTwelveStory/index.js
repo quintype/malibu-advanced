@@ -66,7 +66,7 @@ const SingleCol3Story = ({ collection, border, collectionNameTemplate, otherText
             story={firstStory}
             aspectRatio={[
               [16, 9],
-              [16, 9]
+              [16, 9],
             ]}
           />
           <SectionTag story={firstStory} />

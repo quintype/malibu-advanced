@@ -26,10 +26,7 @@ export const timestampToFormat = (value, unit, suffix, timestamp, config = {}, l
   } = config;
   const monthList = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
   const dateTime = new Date(timestamp);
-  const date = dateTime
-    .getDate()
-    .toString()
-    .padStart(2, 0);
+  const date = dateTime.getDate().toString().padStart(2, 0);
 
   const month = monthList[dateTime.getMonth()];
   let localizedMonth = month;
@@ -211,13 +208,13 @@ export const isEmpty = (value) => {
 export const shapeConfig = PropTypes.shape({
   "sketches-host": PropTypes.string,
   "cdn-name": PropTypes.string,
-  "cdn-image": PropTypes.string
+  "cdn-image": PropTypes.string,
 });
 
 export const shapeStory = PropTypes.shape({
   headline: PropTypes.string,
   "last-published-at": PropTypes.number,
-  subheadline: PropTypes.string
+  subheadline: PropTypes.string,
 });
 
 export const getStoryUrl = (story, defaultValue = "") => {

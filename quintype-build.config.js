@@ -8,13 +8,11 @@ const loadableConfigObj = {
       footer: "./app/isomorphic/components/layouts/footer",
       arrowElevenStoriesCssChunk: "./app/isomorphic/arrow/components/Rows/ElevenStories",
       arrowFourColGridCssChunk: "./app/isomorphic/arrow/components/Rows/FourColGrid",
-      arrowFourColTwelveStoriesCssChunk:
-         "./app/isomorphic/arrow/components/Rows/FourColTwelveStory",
+      arrowFourColTwelveStoriesCssChunk: "./app/isomorphic/arrow/components/Rows/FourColTwelveStory",
       arrowFullScreenSliderCssChunk: "./app/isomorphic/arrow/components/Rows/FullScreenSlider",
       arrowOneColStoryListCssChunk: "./app/isomorphic/arrow/components/Rows/OneColStoryList",
       arrowThreeColGridCssChunk: "./app/isomorphic/arrow/components/Rows/ThreeColGrid",
-      arrowThreeColSevenStoryCssChunk:
-         "./app/isomorphic/arrow/components/Rows/ThreeColSevenStory",
+      arrowThreeColSevenStoryCssChunk: "./app/isomorphic/arrow/components/Rows/ThreeColSevenStory",
       arrowTwoColFourStoriesCssChunk: "./app/isomorphic/arrow/components/Rows/TwoColFourStory",
       authorPage: "./app/isomorphic/components/pages/author-page/index.js",
       arrowTextStoryCssChunk: "./app/isomorphic/arrow/components/Rows/StoryTemplates/TextStoryTemplates",

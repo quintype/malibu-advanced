@@ -1,6 +1,6 @@
 function createUUID() {
   var dt = new Date().getTime();
-  var uuid = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(c) {
+  var uuid = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function( c ) {
     var r = (dt + Math.random() * 16) % 16 | 0;
     dt = Math.floor(dt / 16);
     return (c === "x" ? r : (r & 0x3) | 0x8).toString(16);
@@ -13,8 +13,8 @@ export const dummyStory = {
   "updated-at": 1564650013782,
   seo: {
     "claim-reviews": {
-      story: null
-    }
+      story: null,
+    },
   },
   "assignee-id": 123981,
   "author-name": "Ravigopal Kesari",
@@ -24,21 +24,21 @@ export const dummyStory = {
       name: "politics",
       "meta-description": null,
       slug: "politics",
-      "tag-type": "Tag"
+      "tag-type": "Tag",
     },
     {
       id: 169510,
       name: "review",
       "meta-description": null,
       slug: "review",
-      "tag-type": "Tag"
-    }
+      "tag-type": "Tag",
+    },
   ],
   customSlotAfterStory: {
     config: { targetingId: "" },
     layout: "Leaderboard",
     layoutLabel: "Leaderboard",
-    type: "ad"
+    type: "ad",
   },
   headline: "Ready Player One review \u2013 Spielberg\u00A0",
   "storyline-id": null,
@@ -63,13 +63,13 @@ export const dummyStory = {
           collection: {
             slug: "coronavirus",
             name: "Coronavirus",
-            id: 92836
+            id: 92836,
           },
-          data: null
-        }
+          data: null,
+        },
       ],
       "hero-image-metadata": {
-        "original-url": "https://www.aljazeera.com/mritems/Images/2020/4/19/f90b71cdf10141ff9913b72bcfd29768_18.jpg"
+        "original-url": "https://www.aljazeera.com/mritems/Images/2020/4/19/f90b71cdf10141ff9913b72bcfd29768_18.jpg",
       },
       "hero-image-s3-key": "ace/2020-04/9adec2ac-d37c-496f-abcc-98309a4bb356/f90b71cdf10141ff9913b72bcfd29768_18.jpg",
       url: "https://ace-web.qtstage.io/anything/coronavirus/how-is-the-coronavirus-impacting-people-with-disabilities",
@@ -84,10 +84,10 @@ export const dummyStory = {
           "avatar-url": null,
           "avatar-s3-key": null,
           "twitter-handle": null,
-          bio: null
-        }
-      ]
-    }
+          bio: null,
+        },
+      ],
+    },
   },
   "last-published-at": 1564650017054,
   subheadline:
@@ -100,7 +100,7 @@ export const dummyStory = {
           "hero-image-metadata": {
             width: 1080,
             height: 1330,
-            "focus-point": [525, 207]
+            "focus-point": [525, 207],
           },
           "hero-image-attribution": "attribution",
           "hero-image-s3-key":
@@ -108,10 +108,10 @@ export const dummyStory = {
           "hero-image-caption": "",
           "hero-image-url":
             "https://thumbor-stg.assettype.com/ace/2018-01/7f028fc9-48fa-4e6c-b2b3-8baf1e6e8928/22520141_862918130543643_474831853139210771_o.jpg",
-          "temporary-hero-image-key": null
-        }
-      }
-    }
+          "temporary-hero-image-key": null,
+        },
+      },
+    },
   },
   sections: [
     {
@@ -127,7 +127,7 @@ export const dummyStory = {
         name: "News",
         id: 3795
       },
-      data: null
+      data: null,
     },
     {
       "domain-slug": null,
@@ -142,7 +142,7 @@ export const dummyStory = {
         name: "Recent stories",
         id: 2760
       },
-      data: null
+      data: null,
     },
     {
       "domain-slug": null,
@@ -155,10 +155,10 @@ export const dummyStory = {
       collection: {
         slug: "film-manual-collection",
         name: "Film",
-        id: 2725
+        id: 2725,
       },
-      data: null
-    }
+      data: null,
+    },
   ],
   "story-audio": {
     "s3-key": "story-audio/ace/2019-08/a3561065-11ce-4281-9d86-325934aa2146/12132634-d337-471b-9e92-1ce7b4d15bfb.mp3"
@@ -177,7 +177,7 @@ export const dummyStory = {
     "mime-type": "image/png",
     "file-size": 587085,
     "file-name": "ready-player-one-hd-wallpapers-70749-6537851.png",
-    "focus-point": [883, 411]
+    "focus-point": [883, 411],
   },
   comments: null,
   "word-count": 323,
@@ -216,11 +216,10 @@ export const dummyStory = {
             "cta-title": "CTA text button",
             "cta-url": "https://www.google.com",
             "open-in-new-tab": true,
-            "no-follow": true
+            "no-follow": true,
           },
           subtype: "cta",
-          text:
-            '<a class="cta-anchor" href="https://www.google.com" target="_blank" rel="nofollow"><span class="cta-text">CTA text button</span></a>'
+          text: '<a class="cta-anchor" href="https://www.google.com" target="_blank" rel="nofollow"><span class="cta-text">CTA text button</span></a>',
         },
         {
           description: "",
@@ -234,9 +233,9 @@ export const dummyStory = {
           metadata: {
             "video-id": "xeg4c4",
             "dailymotion-url": "https://www.dailymotion.com/video/xeg4c4",
-            provider: "dailymotion-video"
+            provider: "dailymotion-video",
           },
-          subtype: "dailymotion-video"
+          subtype: "dailymotion-video",
         },
         {
           description: "",
@@ -251,9 +250,9 @@ export const dummyStory = {
           "s3-key": "ace/2019-08/21f3a19b-1d98-46bc-95e3-a5bdc9045ae9/document__7___1_.docx",
           "content-type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
           metadata: {
-            "file-size": 8209
+            "file-size": 8209,
           },
-          subtype: "attachment"
+          subtype: "attachment",
         },
         {
           description: "",
@@ -267,9 +266,9 @@ export const dummyStory = {
           "s3-key": "ace/2019-07/6dcf2021-615b-43e6-85f3-21acb8953cea/resume_samples.pdf",
           "content-type": "application/pdf",
           metadata: {
-            "file-size": 301808
+            "file-size": 301808,
           },
-          subtype: "attachment"
+          subtype: "attachment",
         },
         {
           "page-url": "/story/ed8a181b-4750-48b9-967e-83f29416ee2a/element/e2478f89-edab-44c8-a7df-6c6c84399c82",
@@ -280,11 +279,10 @@ export const dummyStory = {
           metadata: {
             content: "The human eye can distinguish around 10 million different colors!",
             attribution:
-              "Color processing begins at a very early level in the visual system (even within the retina) through initial color opponent mechanisms."
+              "Color processing begins at a very early level in the visual system (even within the retina) through initial color opponent mechanisms.",
           },
           subtype: "bigfact",
-          text:
-            '<div><div class="bigfact-title">The human eye can distinguish around 10 million different colors!</div><div class="bigfact-description">Color processing begins at a very early level in the visual system (even within the retina) through initial color opponent mechanisms.</div></div>'
+          text: '<div><div class="bigfact-title">The human eye can distinguish around 10 million different colors!</div><div class="bigfact-description">Color processing begins at a very early level in the visual system (even within the retina) through initial color opponent mechanisms.</div></div>',
         },
         {
           description: "",
@@ -296,7 +294,7 @@ export const dummyStory = {
           url: "https://www.youtube.com/watch?v=AST2-4db4ic&feature=youtu.be",
           "embed-url": "https://www.youtube.com/embed/AST2-4db4ic",
           metadata: {},
-          subtype: null
+          subtype: null,
         },
         {
           description: "",
@@ -310,9 +308,9 @@ export const dummyStory = {
           metadata: {
             "dailymotion-url": "https://www.dailymotion.com/video/x5vla8l",
             provider: "dailymotion-video",
-            "video-id": "x5vla8l"
+            "video-id": "x5vla8l",
           },
-          subtype: "dailymotion-video"
+          subtype: "dailymotion-video",
         },
         {
           description: "",
@@ -326,9 +324,9 @@ export const dummyStory = {
           metadata: {
             "tweet-url": "https://twitter.com/atlantahumane/status/1243218832581447683",
             provider: "twitter",
-            "tweet-id": "1243218832581447683"
+            "tweet-id": "1243218832581447683",
           },
-          subtype: "tweet"
+          subtype: "tweet",
         },
         {
           description: "",
@@ -340,7 +338,7 @@ export const dummyStory = {
           title: "",
           id: "3ea4a656-e20b-4ed3-ba8f-58874b5e8715",
           metadata: {},
-          subtype: null
+          subtype: null,
         },
         {
           description: "",
@@ -351,8 +349,7 @@ export const dummyStory = {
           id: "c529557b-a4f5-4363-ba3f-7ac0eb14f299",
           metadata: {},
           subtype: null,
-          text:
-            '<p><a href="https://www.theguardian.com/technology/virtual-reality">Virtual reality</a> is the air guitar solo of modern cinema: a frenetic imagined activity in a made-up world that exists one level below the already made-up world of the story. <a href="https://www.theguardian.com/film/stevenspielberg">Steven Spielberg</a> 2019s <a href="https://www.theguardian.com/film/ready-player-one">Ready Player One</a>.</p>'
+          text: '<p><a href="https://www.theguardian.com/technology/virtual-reality">Virtual reality</a> is the air guitar solo of modern cinema: a frenetic imagined activity in a made-up world that exists one level below the already made-up world of the story. <a href="https://www.theguardian.com/film/stevenspielberg">Steven Spielberg</a> 2019s <a href="https://www.theguardian.com/film/ready-player-one">Ready Player One</a>.</p>',
         },
         {
           description: "",
@@ -360,7 +357,7 @@ export const dummyStory = {
             width: 6016,
             height: 4016,
             "mime-type": "image/jpeg",
-            "focus-point": [2741, 1930]
+            "focus-point": [2741, 1930],
           },
           "page-url": "/story/560b39d9-ae5b-44ef-acc7-04db4472b4f8/element/6c6cf4a8-6700-4829-8076-88373a1436b1",
           type: "image",
@@ -371,7 +368,7 @@ export const dummyStory = {
           "image-s3-key": "demo/2018-11/b1fa99ff-b05d-464b-97b9-83cd8f2bf65d/2072.jpg",
           metadata: {},
           subtype: null,
-          hyperlink: "https://www.google.com/"
+          hyperlink: "https://www.google.com/",
         },
         {
           description: "",
@@ -393,13 +390,13 @@ export const dummyStory = {
                 '<div><p>Ready player One review from rotten tomatoes</p><p><a href="https://www.rottentomatoes.com/m/ready_player_one/">In the year 2045, people can escape their harsh reality in the OASIS, an immersive virtual world where you can go anywhere, do anything, be anyone-the only limits are your own imagination. OASIS creator James Halliday left his immense fortune and control of the Oasis to the winner of a contest designed to find a worthy heir. When unlikely hero Wade Watts conquers the first challenge of the reality-bending treasure hunt, he and his friends-known as the High Five-are hurled into a fantastical universe of discovery and danger to save the OASIS and their world.</a></p></div>',
               id: "47afb0c6-aa50-446c-8e55-c10c604c5246",
               "family-id": "6b236f36-ce8a-4f9a-b70e-844367f13af0",
-              type: "text"
+              type: "text",
             }
           ],
           title: "",
           id: "4abd5e1d-4f02-433a-af48-2733a63682b9",
           metadata: {},
-          subtype: "references"
+          subtype: "references",
         },
         {
           description: "",
@@ -409,13 +406,11 @@ export const dummyStory = {
           title: "",
           id: "80f39709-fdf6-40b4-9d8c-a2db549ce621",
           metadata: {
-            content:
-              "After the death of James Halliday, the creator of the virtual reality world, his pre-recorded message reveals the hidden fortune, which makes Wade Watts, a teenager, embark on a quest.",
-            attribution: "Player"
+            content: "After the death of James Halliday, the creator of the virtual reality world, his pre-recorded message reveals the hidden fortune, which makes Wade Watts, a teenager, embark on a quest.",
+            attribution: "Player",
           },
           subtype: "quote",
-          text:
-            '<div><blockquote>After the death of James Halliday, the creator of the virtual reality world, his pre-recorded message reveals the hidden fortune, which makes Wade Watts, a teenager, embark on a quest.</blockquote><span class="attribution">Player</span></div>'
+          text: '<div><blockquote>After the death of James Halliday, the creator of the virtual reality world, his pre-recorded message reveals the hidden fortune, which makes Wade Watts, a teenager, embark on a quest.</blockquote><span class="attribution">Player</span></div>',
         },
         {
           description: "",
@@ -447,7 +442,7 @@ export const dummyStory = {
               "avatar-s3-key": "ace/2019-08/565bba26-4f05-4e63-b619-511a2a2bd5b7/images.jpeg",
               "twitter-handle": null,
               "created-at": 1551268188983,
-              metadata: {}
+              metadata: {},
             },
             interviewee: {
               "author-collection-id": null,
@@ -467,12 +462,11 @@ export const dummyStory = {
               "avatar-s3-key": "ace/2019-08/565bba26-4f05-4e63-b619-511a2a2bd5b7/images.jpeg",
               "twitter-handle": null,
               "created-at": 1551268188983,
-              metadata: {}
+              metadata: {},
             }
           },
           subtype: "q-and-a",
-          text:
-            '<div><div class="question"><p>Is Ready Player One book<a href="https://www.jbsimmons.com/blog/books-better-than-movies-ready-player-one"> better </a>than the movie?</p></div><div class="answer"><p><strong>Ready Player One</strong> is the latest example. I read Earnest Cline\'s <strong><a href="https://www.jbsimmons.com/blog/books-better-than-movies-ready-player-one">book</a></strong> a couple months before watching Steven Spielberg\'s <strong>movie</strong>. ... The <strong>book</strong> generally fares <strong>better</strong> with reviewers, averaging 4.6 out of 5 stars on Amazon, while the <strong>movie</strong> scores 73% on Rotten Tomatoes.</p></div></div>'
+          text: '<div><div class="question"><p>Is Ready Player One book<a href="https://www.jbsimmons.com/blog/books-better-than-movies-ready-player-one"> better </a>than the movie?</p></div><div class="answer"><p><strong>Ready Player One</strong> is the latest example. I read Earnest Cline\'s <strong><a href="https://www.jbsimmons.com/blog/books-better-than-movies-ready-player-one">book</a></strong> a couple months before watching Steven Spielberg\'s <strong>movie</strong>. ... The <strong>book</strong> generally fares <strong>better</strong> with reviewers, averaging 4.6 out of 5 stars on Amazon, while the <strong>movie</strong> scores 73% on Rotten Tomatoes.</p></div></div>',
         },
         {
           description: "",
@@ -500,12 +494,11 @@ export const dummyStory = {
               "avatar-s3-key": "ace/2019-08/565bba26-4f05-4e63-b619-511a2a2bd5b7/images.jpeg",
               "twitter-handle": null,
               "created-at": 1551268188983,
-              metadata: {}
+              metadata: {},
             }
           },
           subtype: "question",
-          text:
-            '<p>Is Ready Player One book <a href="https://www.jbsimmons.com/blog/books-better-than-movies-ready-player-one">better</a> than the movie?</p>'
+          text: '<p>Is Ready Player One book <a href="https://www.jbsimmons.com/blog/books-better-than-movies-ready-player-one">better</a> than the movie?</p>',
         },
         {
           description: "",
@@ -533,12 +526,11 @@ export const dummyStory = {
               "avatar-s3-key": "ace/2019-08/565bba26-4f05-4e63-b619-511a2a2bd5b7/images.jpeg",
               "twitter-handle": null,
               "created-at": 1551268188983,
-              metadata: {}
+              metadata: {},
             }
           },
           subtype: "answer",
-          text:
-            "<p><strong>Ready Player One</strong> is the latest example. I read Earnest Cline's <strong>book</strong> a couple months before watching Steven Spielberg's <strong>movie</strong>. ... The <strong><a href=\"https://www.jbsimmons.com/blog/books-better-than-movies-ready-player-one\">book</a></strong> generally fares <strong>better</strong> with reviewers, averaging 4.6 out of 5 stars on Amazon, while the <strong>movie</strong> scores 73% on Rotten Tomatoes.</p>"
+          text: "<p><strong>Ready Player One</strong> is the latest example. I read Earnest Cline's <strong>book</strong> a couple months before watching Steven Spielberg's <strong>movie</strong>. ... The <strong><a href=\"https://www.jbsimmons.com/blog/books-better-than-movies-ready-player-one\">book</a></strong> generally fares <strong>better</strong> with reviewers, averaging 4.6 out of 5 stars on Amazon, while the <strong>movie</strong> scores 73% on Rotten Tomatoes.</p>",
         },
         {
           id: "00000000-0000-0000-0000-000000000000",
@@ -548,7 +540,7 @@ export const dummyStory = {
           type: "text",
           text: '<p>text <a href="https://ace-web.qtstage.io/">promotional</a> message</p>',
           metadata: {
-            "promotional-message": true
+            "promotional-message": true,
           }
         },
         {
@@ -559,7 +551,7 @@ export const dummyStory = {
           type: "text",
           text: '<p>text <a href="https://ace-web.qtstage.io/">promotional</a> message</p>',
           metadata: {
-            "promotional-message": true
+            "promotional-message": true,
           }
         },
         {
@@ -571,11 +563,10 @@ export const dummyStory = {
           id: "0e1e9777-e0e6-45f9-b212-264db2d8eeb5",
           metadata: {
             content:
-              "Although the many story changes might be hard for book purists to accept, Steven Spielberg has lovingly captured the zeitgeist of '80s nostalgia in this adventure."
+              "Although the many story changes might be hard for book purists to accept, Steven Spielberg has lovingly captured the zeitgeist of '80s nostalgia in this adventure.",
           },
           subtype: "blurb",
-          text:
-            '<blockquote>Although the many story changes might be hard for book purists to accept, <a href="https://www.rottentomatoes.com/m/ready_player_one/">Steven Spielberg</a> has lovingly captured the zeitgeist of 80s nostalgia in this adventure.</blockquote>'
+          text: '<blockquote>Although the many story changes might be hard for book purists to accept, <a href="https://www.rottentomatoes.com/m/ready_player_one/">Steven Spielberg</a> has lovingly captured the zeitgeist of 80s nostalgia in this adventure.</blockquote>',
         },
         {
           description: "",
@@ -607,11 +598,11 @@ export const dummyStory = {
               "story-content-id": "2d0008f7-768f-4667-822f-cb531d9627f4",
               "highlighted-text": "",
               id: "2d0008f7-768f-4667-822f-cb531d9627f4",
-              "highlighted-headline": null
+              "highlighted-headline": null,
             }
           },
           subtype: "also-read",
-          text: "How is the coronavirus impacting people with disabilities?"
+          text: "How is the coronavirus impacting people with disabilities?",
         },
         {
           description: "",
@@ -622,8 +613,7 @@ export const dummyStory = {
           id: "373d6e0b-c5ac-4904-8d41-78e4fd5602cd",
           metadata: {},
           subtype: "summary",
-          text:
-            "<p>Lorem<em> Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries</em>, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>"
+          text: "<p>Lorem<em> Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries</em>, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>",
         },
         {
           description: "",
@@ -635,7 +625,7 @@ export const dummyStory = {
               description: "",
               "image-metadata": {
                 "original-url":
-                  "https://www.washingtonpost.com/resizer/_I2QC1BPsP-wxv7XSvBBK48bv8E=/1440x0/smart/arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/OP2ZX3T6KYI6VBGCA6JNQWIZCE.jpg"
+                  "https://www.washingtonpost.com/resizer/_I2QC1BPsP-wxv7XSvBBK48bv8E=/1440x0/smart/arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/OP2ZX3T6KYI6VBGCA6JNQWIZCE.jpg",
               },
               type: "image",
               "family-id": "0444a13c-f52a-43ff-8564-b52411ffdefc",
@@ -645,7 +635,7 @@ export const dummyStory = {
               "image-s3-key": "ace/2020-04/b6b55f73-a713-4087-849b-a7dbb04826e6/OP2ZX3T6KYI6VBGCA6JNQWIZCE.jpg",
               metadata: {},
               subtype: null,
-              hyperlink: "https://www.google.com/"
+              hyperlink: "https://www.google.com/",
             },
             {
               description: "",
@@ -662,12 +652,12 @@ export const dummyStory = {
                 "ace/2020-04/e58b991e-4a82-4fca-818d-c1f8fd6e98e6/200419_michelle_tom_cover_cs_509p_6155bfe91e67a4f93ecc2cf00530c404_nbcnews_fp_1200_630.jpg",
               metadata: {},
               subtype: null,
-              hyperlink: "https://www.google.com/"
+              hyperlink: "https://www.google.com/",
             },
             {
               description: "",
               "image-metadata": {
-                "original-url": "https://www.dw.com/image/53181437_304.jpg"
+                "original-url": "https://www.dw.com/image/53181437_304.jpg",
               },
               type: "image",
               "family-id": "5f454472-b7ed-4a18-b923-452332c16125",
@@ -677,13 +667,13 @@ export const dummyStory = {
               "image-s3-key": "ace/2020-04/ea98e4fb-f8a8-4b18-a2b0-8ec03b17820c/53181437_304.jpg",
               metadata: {},
               subtype: null,
-              hyperlink: "https://www.google.com/"
+              hyperlink: "https://www.google.com/",
             },
             {
               description: "",
               "image-metadata": {
                 "original-url":
-                  "https://www.washingtonpost.com/resizer/_f5BO1VdLp-O-jX1x-NK-GfYknU=/1440x0/smart/arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/ZE2IQNUBVAI6VBGCA6JNQWIZCE.jpg"
+                  "https://www.washingtonpost.com/resizer/_f5BO1VdLp-O-jX1x-NK-GfYknU=/1440x0/smart/arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/ZE2IQNUBVAI6VBGCA6JNQWIZCE.jpg",
               },
               type: "image",
               "family-id": "67ae55bd-3f34-417b-8951-fb525da321f2",
@@ -693,13 +683,13 @@ export const dummyStory = {
               "image-s3-key": "ace/2020-04/aef8d5e1-d2fc-4f77-968b-50ff0c4764ea/ZE2IQNUBVAI6VBGCA6JNQWIZCE.jpg",
               metadata: {},
               subtype: null,
-              hyperlink: "https://www.google.com/"
+              hyperlink: "https://www.google.com/",
             },
             {
               description: "",
               "image-metadata": {
                 "original-url":
-                  "https://www.washingtonpost.com/resizer/_f5BO1VdLp-O-jX1x-NK-GfYknU=/1440x0/smart/arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/ZE2IQNUBVAI6VBGCA6JNQWIZCE.jpg"
+                  "https://www.washingtonpost.com/resizer/_f5BO1VdLp-O-jX1x-NK-GfYknU=/1440x0/smart/arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/ZE2IQNUBVAI6VBGCA6JNQWIZCE.jpg",
               },
               type: "image",
               "family-id": "67ae55bd-3f34-417b-8951-fb525da321f2",
@@ -709,13 +699,13 @@ export const dummyStory = {
               "image-s3-key": "ace/2020-04/aef8d5e1-d2fc-4f77-968b-50ff0c4764ea/ZE2IQNUBVAI6VBGCA6JNQWIZCE.jpg",
               metadata: {},
               subtype: null,
-              hyperlink: "https://www.google.com/"
+              hyperlink: "https://www.google.com/",
             },
             {
               description: "",
               "image-metadata": {
                 "original-url":
-                  "https://www.washingtonpost.com/resizer/_f5BO1VdLp-O-jX1x-NK-GfYknU=/1440x0/smart/arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/ZE2IQNUBVAI6VBGCA6JNQWIZCE.jpg"
+                  "https://www.washingtonpost.com/resizer/_f5BO1VdLp-O-jX1x-NK-GfYknU=/1440x0/smart/arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/ZE2IQNUBVAI6VBGCA6JNQWIZCE.jpg",
               },
               type: "image",
               "family-id": "67ae55bd-3f34-417b-8951-fb525da321f2",
@@ -725,13 +715,13 @@ export const dummyStory = {
               "image-s3-key": "ace/2020-04/aef8d5e1-d2fc-4f77-968b-50ff0c4764ea/ZE2IQNUBVAI6VBGCA6JNQWIZCE.jpg",
               metadata: {},
               subtype: null,
-              hyperlink: "https://www.google.com/"
+              hyperlink: "https://www.google.com/",
             },
             {
               description: "",
               "image-metadata": {
                 "original-url":
-                  "https://www.washingtonpost.com/resizer/_f5BO1VdLp-O-jX1x-NK-GfYknU=/1440x0/smart/arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/ZE2IQNUBVAI6VBGCA6JNQWIZCE.jpg"
+                  "https://www.washingtonpost.com/resizer/_f5BO1VdLp-O-jX1x-NK-GfYknU=/1440x0/smart/arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/ZE2IQNUBVAI6VBGCA6JNQWIZCE.jpg",
               },
               type: "image",
               "family-id": "67ae55bd-3f34-417b-8951-fb525da321f2",
@@ -741,13 +731,13 @@ export const dummyStory = {
               "image-s3-key": "ace/2020-04/aef8d5e1-d2fc-4f77-968b-50ff0c4764ea/ZE2IQNUBVAI6VBGCA6JNQWIZCE.jpg",
               metadata: {},
               subtype: null,
-              hyperlink: "https://www.google.com/"
+              hyperlink: "https://www.google.com/",
             },
             {
               description: "",
               "image-metadata": {
                 "original-url":
-                  "https://www.aljazeera.com/mritems/Images/2020/4/19/e69c7b29e024420d95e519b96edfc7aa_18.jpg"
+                  "https://www.aljazeera.com/mritems/Images/2020/4/19/e69c7b29e024420d95e519b96edfc7aa_18.jpg",
               },
               type: "image",
               "family-id": "096ff456-dd70-45f8-9953-4ac78c6c332c",
@@ -775,16 +765,16 @@ export const dummyStory = {
                 "ace/2020-04/167805cc-a440-41fe-bccf-132660d4350f/55ceb4cc_e4a7_4a99_bc29_34ed175c4df2_1140x641.jpg",
               metadata: {},
               subtype: null,
-              hyperlink: "https://www.google.com/"
+              hyperlink: "https://www.google.com/",
             }
           ],
           title: "",
           id: "b35ef956-35ce-4431-a68d-018760a4ddda",
           metadata: {
-            type: "gallery"
+            type: "gallery",
           },
-          subtype: "image-gallery"
-        }
+          subtype: "image-gallery",
+        },
       ],
       "card-updated-at": 1587559563683,
       "content-version-id": "11beb6bf-bcb3-4ea2-8764-7355fc40811b",
@@ -809,11 +799,11 @@ export const dummyStory = {
               "mime-type": "image/png",
               "file-size": 587085,
               "file-name": "ready-player-one-hd-wallpapers-70749-6537851.png",
-              "focus-point": [883, 411]
-            }
-          }
+              "focus-point": [883, 411],
+            },
+          },
         },
-        attributes: {}
+        attributes: {},
       }
     },
     {
@@ -836,12 +826,11 @@ export const dummyStory = {
           title: "",
           subtype: null,
           type: "text",
-          text:
-            '<p><a href="https://www.theguardian.com/technology/virtual-reality">Virtual reality</a> is the air guitar solo of modern cinema: a frenetic imagined activity in a made-up world that exists one level below the already made-up world of the story. <a href="https://www.theguardian.com/film/stevenspielberg">Steven Spielberg</a> 2019s <a href="https://www.theguardian.com/film/ready-player-one">Ready Player One</a>.</p>',
+          text: '<p><a href="https://www.theguardian.com/technology/virtual-reality">Virtual reality</a> is the air guitar solo of modern cinema: a frenetic imagined activity in a made-up world that exists one level below the already made-up world of the story. <a href="https://www.theguardian.com/film/stevenspielberg">Steven Spielberg</a> 2019s <a href="https://www.theguardian.com/film/ready-player-one">Ready Player One</a>.</p>',
           metadata: {
-            "promotional-message": true
-          }
-        }
+            "promotional-message": true,
+          },
+        },
       ],
       "card-updated-at": 1524116209278,
       "content-version-id": "f1e7f3ea-21f2-4801-b6d7-2022ee079478",
@@ -1018,7 +1007,7 @@ export const dummyPhotoStory = {
         id: 17115,
       },
       data: null,
-    }
+    },
   ],
   "story-audio": {
     "s3-key": "ace/story-audio/2020-09/231f55c0-ba92-4da6-a2c0-697c520f860f/.0fc573c1-97de-4644-8a26-bf65c4d6f0d9.mp3",
@@ -1126,7 +1115,7 @@ export const dummyPhotoStory = {
             metadata: {
               width: 1920,
               height: 1080,
-              "focus-point": [964, 507]
+              "focus-point": [964, 507],
             },
           },
         },
@@ -1300,7 +1289,7 @@ export const dummyPhotoStory = {
             "ace/2020-09/12d48d3c-dac1-4b99-b961-a724c92c6cc2/8bfca0efa60a7b897690bea687d9cb3b991611ff_0.jpg",
           metadata: {},
           subtype: null,
-          hyperlink: "https://www.google.com/"
+          hyperlink: "https://www.google.com/",
         },
         {
           description: "",
@@ -1423,7 +1412,14 @@ export const dummyLiveBlogStory = {
       slug: "government",
       "tag-type": "Tag",
     },
-    { id: 1409326, name: "liveblog", "meta-description": null, "meta-title": null, slug: "liveblog", "tag-type": "Tag" },
+    {
+      id: 1409326,
+      name: "liveblog",
+      "meta-description": null,
+      "meta-title": null,
+      slug: "liveblog",
+      "tag-type": "Tag",
+    },
   ],
   customSlotAfterStory: {
     config: { targetingId: "" },

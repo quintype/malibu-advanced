@@ -15,7 +15,7 @@ export const HomePage = (props) => (
 HomePage.propTypes = {
   data: shape({
     collection: object,
-  })
+  }),
 };
 
 export const HomePagePreview = WithPreview(HomePage, (data, story) =>

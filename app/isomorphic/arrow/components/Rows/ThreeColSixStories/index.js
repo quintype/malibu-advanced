@@ -111,7 +111,8 @@ const ThreeColSixStories = ({ collection = {}, config = {} }) => {
                 theme={theme}
                 border={border}
                 isHorizontalMobile
-                config={config}>
+                config={config}
+              >
                 <HeroImage story={items[2]} isHorizontalMobile />
                 <StorycardContent
                   theme={theme}

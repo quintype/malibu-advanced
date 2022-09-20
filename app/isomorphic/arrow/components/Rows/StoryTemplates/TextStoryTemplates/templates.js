@@ -271,12 +271,12 @@ StoryTemplate.propTypes = {
   config: PropTypes.shape({
     templateType: PropTypes.string,
     authorDetails: PropTypes.object,
-    asideCollection: PropTypes.object
+    asideCollection: PropTypes.object,
   }),
   firstChild: PropTypes.node,
   secondChild: PropTypes.node,
   timezone: PropTypes.string,
   storyElementsConfig: PropTypes.object,
   widgetComp: PropTypes.func,
-  adComponent: PropTypes.func
+  adComponent: PropTypes.func,
 };

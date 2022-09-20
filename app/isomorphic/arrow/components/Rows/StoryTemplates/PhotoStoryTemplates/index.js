@@ -127,7 +127,7 @@ const PhotoStory = ({
             aspectRatio={[
               [16, 9],
               [8, 3],
-              ]}
+            ]}
             defaultFallback={false}
             isStoryPageImage
           />

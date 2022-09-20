@@ -46,7 +46,7 @@ const ThreeColSevenStory = ({ collection, config = {} }) => {
           isHorizontal
           aspectRatio={[
             [16, 9],
-            [16, 9]
+            [16, 9],
           ]}
         />
         <StorycardContent theme={theme} border={border} story={story} borderColor={borderColor} config={config} />
@@ -57,7 +57,14 @@ const ThreeColSevenStory = ({ collection, config = {} }) => {
   const storyCardWidthoutBorder = (story) => {
     return (
       <StoryCard story={story} theme={theme} isHorizontal config={config}>
-        <HeroImage story={story} isHorizontal aspectRatio={[[16, 9], [16, 9]]} />
+        <HeroImage
+          story={story}
+          isHorizontal
+          aspectRatio={[
+            [16, 9],
+            [16, 9],
+          ]}
+        />
         <StorycardContent theme={theme} story={story} borderColor={borderColor} config={config} />
       </StoryCard>
     );
@@ -94,7 +101,8 @@ const ThreeColSevenStory = ({ collection, config = {} }) => {
     <div
       className="full-width-with-padding arrow-component"
       data-test-id="three-col-seven-stories"
-      style={{ backgroundColor: theme, color: textColor }}>
+      style={{ backgroundColor: theme, color: textColor }}
+    >
       <div styleName="wrapper">
         <CollectionName
           collection={collection}
@@ -111,7 +119,10 @@ const ThreeColSevenStory = ({ collection, config = {} }) => {
                   <StoryCard
                     story={story}
                     theme={theme}
-                    aspectRatio={[[16, 9], [16, 9]]}
+                    aspectRatio={[
+                      [16, 9],
+                      [16, 9],
+                    ]}
                     headerLevel="5"
                     borderColor={borderColor}
                     config={config}

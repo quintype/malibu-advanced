@@ -169,9 +169,9 @@ export const LiveBlogStoryTemplates = ({
           <HeroImage
             story={story}
             aspectRatio={[
-                [16, 9],
-                [8, 3]
-              ]}
+              [16, 9],
+              [8, 3],
+            ]}
             isStoryPageImage
           />
         </div>

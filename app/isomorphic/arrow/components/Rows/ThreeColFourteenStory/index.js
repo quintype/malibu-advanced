@@ -38,16 +38,16 @@ const ThreeColFourteenStories = ({ collection = {}, config = {} }) => {
     return restOftheStories.slice(10, 13).map((item) => {
       return (
         <StoryCard
-         key={item}
-         story={item}
-         isHorizontal
-         aspectRatio={[
-           [1, 1],
-           [4, 3],
+          key={item}
+          story={item}
+          isHorizontal
+          aspectRatio={[
+            [1, 1],
+            [4, 3],
           ]}
-         border={border}
+          border={border}
         />
-      )
+      );
     });
   };
 

@@ -21,7 +21,7 @@ AuthorsData.push({
     facebook: {
       url: "https://www.facebook.com/people/Reena-Singh/100005438855189",
       handle: "Facebook",
-    }
+    },
   },
   bio: "",
   id: 94985,

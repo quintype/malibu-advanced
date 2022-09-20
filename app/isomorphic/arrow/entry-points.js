@@ -94,8 +94,8 @@ function storyElementsEntryPoints() {
     },
     {
       name: "ImageSlideshow",
-      path: `${basePath}/ImageSlideshow,`
-    }
+      path: `${basePath}/ImageSlideshow`,
+    },
   ];
 }
 
@@ -141,7 +141,7 @@ function atomsEntryPoints() {
     {
       name: "ScrollSnap",
       path: `${basePath}/ScrollSnap`,
-    }
+    },
   ];
 }
 
@@ -171,7 +171,7 @@ function moleculesEntryPoints() {
     {
       name: "PageIntroductionCard",
       path: `${basePath}/PageIntroductionCard`,
-    }
+    },
   ];
 }
 
@@ -314,7 +314,10 @@ function rowsEntryPoints() {
       name: "TwoColFourStoryHighlight",
       path: `${basePath}/TwoColFourStoryHighlight`,
     },
-    { name: "OpinionCollection", path: `${basePath}/OpinionCollection`},
+    {
+      name: "OpinionCollection",
+      path: `${basePath}/OpinionCollection`,
+    },
     {
       name: "ThreeColFlexStories",
       path: `${basePath}/ThreeColFlexStories`,

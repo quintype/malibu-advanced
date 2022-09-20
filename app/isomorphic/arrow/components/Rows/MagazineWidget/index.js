@@ -122,7 +122,7 @@ MagazineWidget.propTypes = {
     summary: PropTypes.string,
     items: PropTypes.array,
   }),
-  config: PropTypes.shape({ theme: PropTypes.string, footerButton: PropTypes.string, border: PropTypes.string })
+  config: PropTypes.shape({ theme: PropTypes.string, footerButton: PropTypes.string, border: PropTypes.string }),
 };
 
 export default StateProvider(MagazineWidget);

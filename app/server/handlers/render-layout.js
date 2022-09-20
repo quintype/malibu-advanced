@@ -26,7 +26,7 @@ export async function renderLayout(res, params) {
     isGaEnable,
     enableAds,
     loadAdsSynchronously,
-    pageType
+    pageType,
   } = getConfig(params.store.getState());
   const chunk = params.shell ? null : allChunks[getChunkName(params.pageType)];
   const criticalCss = await getCriticalCss();
@@ -55,7 +55,7 @@ export async function renderLayout(res, params) {
         topad: renderReduxComponent(TopAd, params.store),
         breakingNews: renderReduxComponent(BreakingNewsView, params.store, {
           breakingNews: [],
-          breakingNewsLoaded: false
+          breakingNewsLoaded: false,
         }),
         disableAjaxNavigation: false,
         gtmId,
@@ -74,7 +74,7 @@ export async function renderLayout(res, params) {
         loadAdsSynchronously,
         placeholderDelay,
         pageType,
-        enableBreakingNews: params.pageType !== "profile-page"
+        enableBreakingNews: params.pageType !== "profile-page",
       },
       params
     )

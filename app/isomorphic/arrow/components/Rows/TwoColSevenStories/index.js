@@ -124,10 +124,10 @@ export const TwoColSevenStories = ({ collection, config = {} }) => {
                         config={config}
                         story={story}
                         aspectRatio={[
-                          [16, 9],
-                          [16, 9]
-                          ]}
-                        />
+                         [16, 9],
+                         [16, 9],
+                        ]}
+                      />
                       <StorycardContent
                         theme={theme}
                         border={border}
