@@ -275,7 +275,7 @@ export const generateNavigateSlug = (collection = {}, config = {}, customUrlPath
 
 export const getCollectionData = async (collectionSlug, mountAtPrefix = "") => {
   try {
-    const result = await(
+    const result = await (
       await fetch(`${mountAtPrefix}/api/v1/collections/${collectionSlug}?item-type=story&limit=6`)
     ).json();
     return result;

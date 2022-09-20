@@ -50,10 +50,8 @@ export const ExtendedLoadMore = ({ config, componentName, WithArrowConfig, withS
 
     const Component = getTemplate(componentName);
 
-    const { items } = await(
-      await fetch(
-        `/api/v1/collections/${collectionSlug}?item-type=story&offset=${offset}&limit=${limit}`
-      )
+    const { items } = await (
+      await fetch(`/api/v1/collections/${collectionSlug}?item-type=story&offset=${offset}&limit=${limit}`)
     ).json();
 
     if (items.length) {
