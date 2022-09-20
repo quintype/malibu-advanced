@@ -49,5 +49,5 @@ ReadTime.propTypes = {
     showReadTime: PropTypes.bool,
   }),
   isLightTheme: PropTypes.bool,
-  languageCode: PropTypes.string,ß
+  languageCode: PropTypes.string,
 };

@@ -19,7 +19,7 @@ withStore(
   Readme
 )
   .add("Full Bleed Image", () => <HeroImage story={story} />)
-  .add("With Padding Image", () =>(
+  .add("With Padding Image", () => (
     <HeroImage
       story={story}
       FullBleed={false}
@@ -28,5 +28,4 @@ withStore(
         [16, 9],
       ]}
     />
-    )
-  );
+  ));

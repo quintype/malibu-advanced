@@ -485,185 +485,7 @@ export const dummyCollection = {
                 title: "Untitled Sep 20, 2019 04:30 PM",
                 message: "Social Description",
                 image: {
-                  key:
-                    "ace/2019-06/3999bc52-1280-49aa-b542-20cd9e06dd34/The_Secret_to_a_Good_Quality_Sleep_Memory_Foam.jpg",
-                  url: null,
-                  attribution: "attribution",
-                  caption: "caption",
-                  metadata: {
-                    width: 1024,
-                    height: 576,
-                    "focus-point": [676, 312],
-                  },
-                },
-              },
-              attributes: {},
-            },
-          },
-        ],
-        url: "https://ace-web.qtstage.io/recent-stories/news/business/untitled-sep-20-2019-0430-pm",
-        "story-version-id": "a64fe8b4-c0aa-4bd5-93a2-6e428332e5b2",
-        "content-type": "story",
-        "content-updated-at": 1568978486084,
-        "author-id": 299252,
-        "owner-id": 299252,
-        "linked-story-ids": [],
-        access: null,
-        "promotional-message": '<p>text <a href="https://ace-web.qtstage.io/">promotional</a> message</p>',
-        "asana-project-id": null,
-        "first-published-at": 1568977881440,
-        "hero-image-caption": "caption",
-        version: 7,
-        "story-template": "video",
-        "sequence-no": null,
-        "created-at": 1568978481003,
-        authors: [
-          {
-            id: 299252,
-            name: "Ashwini Mohan",
-            slug: "ashwini-mohan",
-            "avatar-url": "https://thumbor-stg.assettype.com/ace/2019-08/145ab200-429f-44ac-8618-00c6e4643e31/cat.jpeg",
-            "avatar-s3-key": "ace/2019-08/145ab200-429f-44ac-8618-00c6e4643e31/cat.jpeg",
-            "twitter-handle": null,
-            bio: null,
-            "contributor-role": {
-              id: 873,
-              name: "Author",
-            },
-          },
-        ],
-        metadata: {
-          "card-share": {
-            shareable: false,
-          },
-        },
-        "publish-at": null,
-        "assignee-name": "Ashwini Mohan",
-      },
-    },
-    {
-      id: "b4f33f98-8814-4675-97f0-75e447e43ab8",
-      "associated-metadata": {},
-      type: "story",
-      story: {
-        "updated-at": 1568978484435,
-        seo: {
-          "meta-description": "Meta description",
-          "claim-reviews": {
-            story: null,
-          },
-        },
-        "assignee-id": 299252,
-        "author-name": "Ashwini Mohan",
-        tags: [
-          {
-            id: 168475,
-            name: "news",
-            "meta-description": null,
-            slug: "news",
-            "tag-type": "Tag",
-          },
-        ],
-        headline: "Untitled Sep 20, 2019 04:30 PM",
-        "storyline-id": null,
-        votes: {},
-        "story-content-id": "b4f33f98-8814-4675-97f0-75e447e43ab8",
-        slug: "recent-stories/news/business/untitled-sep-20-2019-0430-pm",
-        "last-published-at": 1568978485926,
-        subheadline: "TESTING DESCRIPTION FIELD.",
-        alternative: {},
-        sections: [
-          {
-            "domain-slug": null,
-            slug: "business",
-            name: "Business",
-            "section-url": "https://ace-web.qtstage.io/recent-stories/news/business",
-            id: 5752,
-            "parent-id": 5670,
-            "display-name": "Business",
-            collection: {
-              slug: "business1",
-              name: "Business News",
-              id: 2729,
-            },
-            data: null,
-          },
-        ],
-        "story-audio": {
-          "s3-key":
-            "ace/story-audio/2019-09/b4f33f98-8814-4675-97f0-75e447e43ab8/.01634f09-e91b-442b-90a4-521052bdffaf.mp3",
-        },
-        "access-level-value": null,
-        "content-created-at": 1568977220927,
-        "owner-name": "Ashwini Mohan",
-        "custom-slug": null,
-        "push-notification": null,
-        "publisher-id": 97,
-        "hero-image-metadata": {
-          width: 1024,
-          height: 576,
-          "focus-point": [676, 312]
-        },
-        comments: null,
-        entities: {},
-        "published-at": 1568978485926,
-        "breaking-news-linked-story-id": null,
-        "storyline-title": null,
-        summary: "Social Description",
-        "push-notification-title": null,
-        "external-id": null,
-        "canonical-url": null,
-        autotags: [],
-        "linked-entities": [],
-        status: "published",
-        "hero-image-attribution": "attribution",
-        "bullet-type": "123",
-        id: "b4f33f98-8814-4675-97f0-75e447e43ab8",
-        "hero-image-s3-key":
-          "ace/2019-06/3999bc52-1280-49aa-b542-20cd9e06dd34/The_Secret_to_a_Good_Quality_Sleep_Memory_Foam.jpg",
-        contributors: [],
-        cards: [
-          {
-            "story-elements": [
-              {
-                description: "",
-                "page-url": "/story/b4f33f98-8814-4675-97f0-75e447e43ab8/element/212be322-baaa-46a1-ae92-7f8f79fc4107",
-                type: "youtube-video",
-                "family-id": "e6b6aecf-3bc6-451b-ac69-33aa3d79ce6b",
-                title: "",
-                id: "212be322-baaa-46a1-ae92-7f8f79fc4107",
-                url: "https://www.youtube.com/watch?v=OY9Oq3hp0YU&feature=youtu.be",
-                "embed-url": "https://www.youtube.com/embed/OY9Oq3hp0YU",
-                metadata: {},
-                subtype: null,
-              },
-              {
-                id: "00000000-0000-0000-0000-000000000000",
-                description: "",
-                title: "",
-                subtype: null,
-                type: "text",
-                text: '<p>text <a href="https://ace-web.qtstage.io/">promotional</a> message</p>',
-                metadata: {
-                  "promotional-message": true,
-                },
-              },
-            ],
-            "card-updated-at": 1568977881112,
-            "content-version-id": "1cd5ea42-6751-4ec6-a161-395f3326ce00",
-            "card-added-at": 1568977256690,
-            status: "draft",
-            id: "8db07059-5344-4859-bfbb-441148b13a02",
-            "content-id": "8db07059-5344-4859-bfbb-441148b13a02",
-            version: 4,
-            metadata: {
-              "social-share": {
-                shareable: false,
-                title: "Untitled Sep 20, 2019 04:30 PM",
-                message: "Social Description",
-                image: {
-                  key:
-                    "ace/2019-06/3999bc52-1280-49aa-b542-20cd9e06dd34/The_Secret_to_a_Good_Quality_Sleep_Memory_Foam.jpg",
+                  key: "ace/2019-06/3999bc52-1280-49aa-b542-20cd9e06dd34/The_Secret_to_a_Good_Quality_Sleep_Memory_Foam.jpg",
                   url: null,
                   attribution: "attribution",
                   caption: "caption",
@@ -839,8 +661,7 @@ export const dummyCollection = {
                 title: "Untitled Sep 20, 2019 04:30 PM",
                 message: "Social Description",
                 image: {
-                  key:
-                    "ace/2019-06/3999bc52-1280-49aa-b542-20cd9e06dd34/The_Secret_to_a_Good_Quality_Sleep_Memory_Foam.jpg",
+                  key: "ace/2019-06/3999bc52-1280-49aa-b542-20cd9e06dd34/The_Secret_to_a_Good_Quality_Sleep_Memory_Foam.jpg",
                   url: null,
                   attribution: "attribution",
                   caption: "caption",
@@ -889,7 +710,7 @@ export const dummyCollection = {
         metadata: {
           "card-share": {
             shareable: false,
-          }
+          },
         },
         "publish-at": null,
         "assignee-name": "Ashwini Mohan",
@@ -941,7 +762,7 @@ export const dummyCollection = {
               id: 2729,
             },
             data: null,
-          }
+          },
         ],
         "story-audio": {
           "s3-key":
@@ -1016,8 +837,183 @@ export const dummyCollection = {
                 title: "Untitled Sep 20, 2019 04:30 PM",
                 message: "Social Description",
                 image: {
-                  key:
-                    "ace/2019-06/3999bc52-1280-49aa-b542-20cd9e06dd34/The_Secret_to_a_Good_Quality_Sleep_Memory_Foam.jpg",
+                  key: "ace/2019-06/3999bc52-1280-49aa-b542-20cd9e06dd34/The_Secret_to_a_Good_Quality_Sleep_Memory_Foam.jpg",
+                  url: null,
+                  attribution: "attribution",
+                  caption: "caption",
+                  metadata: {
+                    width: 1024,
+                    height: 576,
+                    "focus-point": [676, 312],
+                  },
+                },
+              },
+              attributes: {},
+            },
+          },
+        ],
+        url: "https://ace-web.qtstage.io/recent-stories/news/business/untitled-sep-20-2019-0430-pm",
+        "story-version-id": "a64fe8b4-c0aa-4bd5-93a2-6e428332e5b2",
+        "content-type": "story",
+        "content-updated-at": 1568978486084,
+        "author-id": 299252,
+        "owner-id": 299252,
+        "linked-story-ids": [],
+        access: null,
+        "promotional-message": '<p>text <a href="https://ace-web.qtstage.io/">promotional</a> message</p>',
+        "asana-project-id": null,
+        "first-published-at": 1568977881440,
+        "hero-image-caption": "caption",
+        version: 7,
+        "story-template": "video",
+        "sequence-no": null,
+        "created-at": 1568978481003,
+        authors: [
+          {
+            id: 299252,
+            name: "Ashwini Mohan",
+            slug: "ashwini-mohan",
+            "avatar-url": "https://thumbor-stg.assettype.com/ace/2019-08/145ab200-429f-44ac-8618-00c6e4643e31/cat.jpeg",
+            "avatar-s3-key": "ace/2019-08/145ab200-429f-44ac-8618-00c6e4643e31/cat.jpeg",
+            "twitter-handle": null,
+            bio: null,
+            "contributor-role": {
+              id: 873,
+              name: "Author",
+            },
+          },
+        ],
+        metadata: {
+          "card-share": {
+            shareable: false,
+          },
+        },
+        "publish-at": null,
+        "assignee-name": "Ashwini Mohan",
+      },
+    },
+    {
+      id: "b4f33f98-8814-4675-97f0-75e447e43ab8",
+      "associated-metadata": {},
+      type: "story",
+      story: {
+        "updated-at": 1568978484435,
+        seo: {
+          "meta-description": "Meta description",
+          "claim-reviews": {
+            story: null,
+          },
+        },
+        "assignee-id": 299252,
+        "author-name": "Ashwini Mohan",
+        tags: [
+          {
+            id: 168475,
+            name: "news",
+            "meta-description": null,
+            slug: "news",
+            "tag-type": "Tag",
+          },
+        ],
+        headline: "Untitled Sep 20, 2019 04:30 PM",
+        "storyline-id": null,
+        votes: {},
+        "story-content-id": "b4f33f98-8814-4675-97f0-75e447e43ab8",
+        slug: "recent-stories/news/business/untitled-sep-20-2019-0430-pm",
+        "last-published-at": 1568978485926,
+        subheadline: "TESTING DESCRIPTION FIELD.",
+        alternative: {},
+        sections: [
+          {
+            "domain-slug": null,
+            slug: "business",
+            name: "Business",
+            "section-url": "https://ace-web.qtstage.io/recent-stories/news/business",
+            id: 5752,
+            "parent-id": 5670,
+            "display-name": "Business",
+            collection: {
+              slug: "business1",
+              name: "Business News",
+              id: 2729,
+            },
+            data: null,
+          },
+        ],
+        "story-audio": {
+          "s3-key":
+            "ace/story-audio/2019-09/b4f33f98-8814-4675-97f0-75e447e43ab8/.01634f09-e91b-442b-90a4-521052bdffaf.mp3",
+        },
+        "access-level-value": null,
+        "content-created-at": 1568977220927,
+        "owner-name": "Ashwini Mohan",
+        "custom-slug": null,
+        "push-notification": null,
+        "publisher-id": 97,
+        "hero-image-metadata": {
+          width: 1024,
+          height: 576,
+          "focus-point": [676, 312],
+        },
+        comments: null,
+        entities: {},
+        "published-at": 1568978485926,
+        "breaking-news-linked-story-id": null,
+        "storyline-title": null,
+        summary: "Social Description",
+        "push-notification-title": null,
+        "external-id": null,
+        "canonical-url": null,
+        autotags: [],
+        "linked-entities": [],
+        status: "published",
+        "hero-image-attribution": "attribution",
+        "bullet-type": "123",
+        id: "b4f33f98-8814-4675-97f0-75e447e43ab8",
+        "hero-image-s3-key":
+          "ace/2019-06/3999bc52-1280-49aa-b542-20cd9e06dd34/The_Secret_to_a_Good_Quality_Sleep_Memory_Foam.jpg",
+        contributors: [],
+        cards: [
+          {
+            "story-elements": [
+              {
+                description: "",
+                "page-url": "/story/b4f33f98-8814-4675-97f0-75e447e43ab8/element/212be322-baaa-46a1-ae92-7f8f79fc4107",
+                type: "youtube-video",
+                "family-id": "e6b6aecf-3bc6-451b-ac69-33aa3d79ce6b",
+                title: "",
+                id: "212be322-baaa-46a1-ae92-7f8f79fc4107",
+                url: "https://www.youtube.com/watch?v=OY9Oq3hp0YU&feature=youtu.be",
+                "embed-url": "https://www.youtube.com/embed/OY9Oq3hp0YU",
+                metadata: {},
+                subtype: null,
+              },
+              {
+                id: "00000000-0000-0000-0000-000000000000",
+                description: "",
+                title: "",
+                subtype: null,
+                type: "text",
+                text: '<p>text <a href="https://ace-web.qtstage.io/">promotional</a> message</p>',
+                metadata: {
+                  "promotional-message": true,
+                },
+              },
+            ],
+            "card-updated-at": 1568977881112,
+            "content-version-id": "1cd5ea42-6751-4ec6-a161-395f3326ce00",
+            "card-added-at": 1568977256690,
+            status: "draft",
+            id: "8db07059-5344-4859-bfbb-441148b13a02",
+            "content-id": "8db07059-5344-4859-bfbb-441148b13a02",
+            version: 4,
+            metadata: {
+              "social-share": {
+                shareable: false,
+                title: "Untitled Sep 20, 2019 04:30 PM",
+                message: "Social Description",
+                image: {
+                  key: "ace/2019-06/3999bc52-1280-49aa-b542-20cd9e06dd34/The_Secret_to_a_Good_Quality_Sleep_Memory_Foam.jpg",
                   url: null,
                   attribution: "attribution",
                   caption: "caption",
@@ -1134,7 +1130,7 @@ export const dummyCollection = {
         ],
         "story-audio": {
           "s3-key":
-            "ace/story-audio/2019-09/b4f33f98-8814-4675-97f0-75e447e43ab8/.01634f09-e91b-442b-90a4-521052bdffaf.mp3"
+            "ace/story-audio/2019-09/b4f33f98-8814-4675-97f0-75e447e43ab8/.01634f09-e91b-442b-90a4-521052bdffaf.mp3",
         },
         "access-level-value": null,
         "content-created-at": 1568977220927,
@@ -1205,8 +1201,7 @@ export const dummyCollection = {
                 title: "Untitled Sep 20, 2019 04:30 PM",
                 message: "Social Description",
                 image: {
-                  key:
-                    "ace/2019-06/3999bc52-1280-49aa-b542-20cd9e06dd34/The_Secret_to_a_Good_Quality_Sleep_Memory_Foam.jpg",
+                  key: "ace/2019-06/3999bc52-1280-49aa-b542-20cd9e06dd34/The_Secret_to_a_Good_Quality_Sleep_Memory_Foam.jpg",
                   url: null,
                   attribution: "attribution",
                   caption: "caption",
@@ -1382,8 +1377,7 @@ export const dummyCollection = {
                 title: "Untitled Sep 20, 2019 04:30 PM",
                 message: "Social Description",
                 image: {
-                  key:
-                    "ace/2019-06/3999bc52-1280-49aa-b542-20cd9e06dd34/The_Secret_to_a_Good_Quality_Sleep_Memory_Foam.jpg",
+                  key: "ace/2019-06/3999bc52-1280-49aa-b542-20cd9e06dd34/The_Secret_to_a_Good_Quality_Sleep_Memory_Foam.jpg",
                   url: null,
                   attribution: "attribution",
                   caption: "caption",
@@ -1453,7 +1447,7 @@ export const dummyCollection = {
             width: 720,
             "mime-type": "image/jpeg",
             height: 1080,
-            "focus-point": [350, 648]
+            "focus-point": [350, 648],
           },
           "cover-image-s3-key": "ace/2018-10/7caece74-bdc3-4f1e-bcc7-80d7129d770c/trailer.jpeg",
           caption: "thugs of hindustan",
@@ -1494,7 +1488,7 @@ export const dummyCollection = {
         seo: {
           "claim-reviews": {
             story: null,
-          }
+          },
         },
         "assignee-id": 187245,
         "author-name": "Shreya Shukla",
@@ -1565,11 +1559,11 @@ export const dummyCollection = {
               id: 15603,
             },
             data: null,
-          }
+          },
         ],
         "story-audio": {
           "s3-key":
-            "ace/story-audio/2019-10/7afda60c-1360-4320-bbe2-d6e29a8bcb1d/.cd246a47-5dd8-4636-8db7-d15b205ca999.mp3"
+            "ace/story-audio/2019-10/7afda60c-1360-4320-bbe2-d6e29a8bcb1d/.cd246a47-5dd8-4636-8db7-d15b205ca999.mp3",
         },
         "access-level-value": null,
         "content-created-at": 1569910912673,
@@ -1746,7 +1740,7 @@ export const dummyCollection = {
                   },
                 },
               },
-              attributes: {}
+              attributes: {},
             },
           },
           {
@@ -2366,7 +2360,7 @@ export const dummyCollection = {
                 metadata: {
                   content:
                     "Digital publishers often face margin squeeze on ads, and struggle with unproven revenue models, audience leakage to competition and rapidly changing technology. Overcome these problems effortlessly.",
-                  attribution: "someone"
+                  attribution: "someone",
                 },
                 subtype: "blockquote",
                 text: '<div><blockquote>Digital publishers often face margin squeeze on ads, and struggle with unproven revenue models, audience leakage to competition and rapidly changing technology. Overcome these problems effortlessly.</blockquote><span class="attribution">someone</span></div>',
@@ -2380,8 +2374,7 @@ export const dummyCollection = {
                 id: "f62b1a72-ee36-4eed-a730-e484d82e3678",
                 metadata: {},
                 subtype: null,
-                text:
-                  "<p>Digital publishers often face margin squeeze on ads, and struggle with unproven revenue models, audience leakage to competition and rapidly changing technology. Overcome these problems effortlessly.Digital publishers often face margin squeeze on ads, and struggle with unproven revenue models, audience leakage to competition and rapidly changing technology. Overcome these problems effortlessly.Digital publishers often face margin squeeze on ads, and struggle with unproven revenue models, audience leakage to competition and rapidly changing technology. Overcome these problems effortlessly.Digital publishers often face margin squeeze on ads, and struggle with unproven revenue models, audience leakage to competition and rapidly changing technology. Overcome these problems effortlessly.Digital publishers often face margin squeeze on ads, and struggle with unproven revenue models, audience leakage to competition and rapidly changing technology. Overcome these problems effortlessly.Digital publishers often face margin squeeze on ads, and struggle with unproven revenue models, audience leakage to competition and rapidly changing technology. Overcome these problems effortlessly.Digital publishers often face margin squeeze on ads, and struggle with unproven revenue models, audience leakage to competition and rapidly changing technology. Overcome these problems effortlessly.</p>",
+                text: "<p>Digital publishers often face margin squeeze on ads, and struggle with unproven revenue models, audience leakage to competition and rapidly changing technology. Overcome these problems effortlessly.Digital publishers often face margin squeeze on ads, and struggle with unproven revenue models, audience leakage to competition and rapidly changing technology. Overcome these problems effortlessly.Digital publishers often face margin squeeze on ads, and struggle with unproven revenue models, audience leakage to competition and rapidly changing technology. Overcome these problems effortlessly.Digital publishers often face margin squeeze on ads, and struggle with unproven revenue models, audience leakage to competition and rapidly changing technology. Overcome these problems effortlessly.Digital publishers often face margin squeeze on ads, and struggle with unproven revenue models, audience leakage to competition and rapidly changing technology. Overcome these problems effortlessly.Digital publishers often face margin squeeze on ads, and struggle with unproven revenue models, audience leakage to competition and rapidly changing technology. Overcome these problems effortlessly.Digital publishers often face margin squeeze on ads, and struggle with unproven revenue models, audience leakage to competition and rapidly changing technology. Overcome these problems effortlessly.</p>",
               },
             ],
             "card-updated-at": 1559584934935,
@@ -2468,7 +2461,7 @@ export const dummyCollection = {
                 },
               },
               attributes: {},
-            }
+            },
           },
           {
             "story-elements": [
@@ -2625,7 +2618,7 @@ export const dummyCollection = {
           },
         ],
         "story-audio": {
-          "s3-key": null
+          "s3-key": null,
         },
         "access-level-value": null,
         "content-created-at": 1569328762732,
@@ -2752,7 +2745,7 @@ export const dummyCollection = {
         metadata: {
           "card-share": {
             shareable: false,
-          }
+          },
         },
         "hero-image-url":
           "https://thumbor-stg.assettype.com/ace/2019-09/8c6a7163-a978-42ef-8796-ef10d47a6f22/Taz_332.jpg",

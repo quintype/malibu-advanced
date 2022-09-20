@@ -404,7 +404,8 @@ export const dummyStory = {
           title: "",
           id: "80f39709-fdf6-40b4-9d8c-a2db549ce621",
           metadata: {
-            content: "After the death of James Halliday, the creator of the virtual reality world, his pre-recorded message reveals the hidden fortune, which makes Wade Watts, a teenager, embark on a quest.",
+            content:
+              "After the death of James Halliday, the creator of the virtual reality world, his pre-recorded message reveals the hidden fortune, which makes Wade Watts, a teenager, embark on a quest.",
             attribution: "Player",
           },
           subtype: "quote",
@@ -579,7 +580,7 @@ export const dummyStory = {
             attribution: "Player",
           },
           subtype: "blockquote",
-          text: '<div><blockquote>After the death of James Halliday, the creator of the virtual reality world, his pre-recorded message reveals the hidden fortune, which makes Wade Watts, a teenager, embark on a quest.</blockquote><span class="attribution">Player</span></div>'
+          text: '<div><blockquote>After the death of James Halliday, the creator of the virtual reality world, his pre-recorded message reveals the hidden fortune, which makes Wade Watts, a teenager, embark on a quest.</blockquote><span class="attribution">Player</span></div>',
         },
         {
           description: "",
@@ -638,7 +639,7 @@ export const dummyStory = {
               description: "",
               "image-metadata": {
                 "original-url":
-                  "https://media3.s-nbcnews.com/j/newscms/2020_16/3314681/200419-michelle-tom-cover-cs-509p_6155bfe91e67a4f93ecc2cf00530c404.nbcnews-fp-1200-630.jpg"
+                  "https://media3.s-nbcnews.com/j/newscms/2020_16/3314681/200419-michelle-tom-cover-cs-509p_6155bfe91e67a4f93ecc2cf00530c404.nbcnews-fp-1200-630.jpg",
               },
               type: "image",
               "family-id": "5173f4e7-f94c-4e7a-ba54-806ae1a7deef",
@@ -745,13 +746,13 @@ export const dummyStory = {
                 "ace/2020-04/7cebf55c-27c1-4e73-839f-85d1399a354e/e69c7b29e024420d95e519b96edfc7aa_18.jpg",
               metadata: {},
               subtype: null,
-              hyperlink: "https://www.google.com/"
+              hyperlink: "https://www.google.com/",
             },
             {
               description: "",
               "image-metadata": {
                 "original-url":
-                  "https://media.khou.com/assets/KHOU/images/55ceb4cc-e4a7-4a99-bc29-34ed175c4df2/55ceb4cc-e4a7-4a99-bc29-34ed175c4df2_1140x641.jpg"
+                  "https://media.khou.com/assets/KHOU/images/55ceb4cc-e4a7-4a99-bc29-34ed175c4df2/55ceb4cc-e4a7-4a99-bc29-34ed175c4df2_1140x641.jpg",
               },
               type: "image",
               "family-id": "69f2fa84-f55b-4176-a48e-9cc0521b610d",

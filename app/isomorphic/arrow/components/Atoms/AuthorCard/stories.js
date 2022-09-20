@@ -9,7 +9,7 @@ const authorTemplate = {
   "No value": "",
   default: "default",
   leftAligned: "leftAligned",
-  centerAligned: "centerAligned"
+  centerAligned: "centerAligned",
 };
 
 const story = generateStory();

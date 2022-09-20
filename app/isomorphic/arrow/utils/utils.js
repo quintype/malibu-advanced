@@ -124,7 +124,7 @@ export const rgbToHex = (color = "rgba(255, 255, 255, 0)") => {
 
 const clientWidths = {
   mobile: 767,
-  tablet: 1024
+  tablet: 1024,
 };
 
 export const clientWidth = (device) => {
@@ -275,9 +275,7 @@ export const generateNavigateSlug = (collection = {}, config = {}, customUrlPath
 
 export const getCollectionData = async (collectionSlug, mountAtPrefix = "") => {
   try {
-    const result = await (await fetch(
-      `${mountAtPrefix}/api/v1/collections/${collectionSlug}?item-type=story&limit=6`
-    )).json();
+    const result = await fetch(`${mountAtPrefix}/api/v1/collections/${collectionSlug}?item-type=story&limit=6`).json();
     return result;
   } catch (err) {
     // eslint-disable-next-line no-console

@@ -30,7 +30,7 @@ const FullScreenSlider = ({ collection = {}, config = {} }) => {
     aspectRatio = [
       [16, 9],
       [4, 2],
-    ]
+    ],
   } = config;
   const { footerSlot } = footerSlotConfig;
   const items = collectionToStories(collection);

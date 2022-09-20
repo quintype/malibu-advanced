@@ -16,7 +16,7 @@ const AuthorBase = ({ story, hideAuthorImage, isBottom, prefix = "", config = {}
     "avatar-s3-key": avatarS3Key,
     name: authorName,
     slug,
-  } = get( story, ["authors", "0"], "" );
+  } = get(story, ["authors", "0"], "" );
   const isBottomClasses = isBottom ? "bottom-fix" : "";
   const textColor = getTextColor(configData.theme);
   const mountAt = get(config, ["mountAt"], "");

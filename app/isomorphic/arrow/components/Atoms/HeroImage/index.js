@@ -164,7 +164,10 @@ HeroImage.propTypes = {
 
 HeroImage.defaultProps = {
   FullBleed: true,
-  aspectRatio: [[1, 1], [16, 9]],
+  aspectRatio: [
+    [1, 1],
+    [16, 9],
+  ],
   defaultWidth: 480,
   widths: [250, 480, 640],
   isHorizontal: false,
