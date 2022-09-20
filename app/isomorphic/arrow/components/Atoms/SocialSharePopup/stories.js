@@ -14,6 +14,6 @@ const props = {
   publisherUrl: undefined,
   theme: "#ffffff",
   title: "Ready Player One review – Spielberg ",
-  twitterUrl: "https://twitter.com"
+  twitterUrl: "https://twitter.com",
 };
 withStore("Atoms/Social Share Popup", {}, Readme).add("default", () => <SocialSharePopup {...props} />);

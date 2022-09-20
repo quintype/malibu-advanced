@@ -11,7 +11,7 @@ import "./scroll-snap.m.css";
 const smoothScroll = (node, topOrLeft, horizontal) => {
   node.scrollTo({
     [horizontal ? "left" : "top"]: topOrLeft,
-    behavior: "smooth"
+    behavior: "smooth",
   });
 };
 
@@ -121,7 +121,8 @@ export const ScrollSnap = ({ children, isArrow, interval, isInfinite, pauseOnHov
         styleName="wrapper"
         className="scroll-snap-wrapper"
         onMouseEnter={pauseAutoPlay}
-        onMouseLeave={pauseAutoPlay}>
+        onMouseLeave={pauseAutoPlay}
+      >
         <div ref={scroller} styleName="carousel" className="scroll-snap-carousel">
           {children}
         </div>
@@ -155,7 +156,7 @@ ScrollSnap.defaultProps = {
   interval: 4000,
   pauseOnHover: true,
   perView: 1,
-  slideIndicator: "dots"
+  slideIndicator: "dots",
 };
 
 ScrollSnap.propTypes = {
@@ -165,5 +166,5 @@ ScrollSnap.propTypes = {
   interval: number,
   pauseOnHover: bool,
   perView: number,
-  slideIndicator: string
+  slideIndicator: string,
 };

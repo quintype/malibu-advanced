@@ -32,7 +32,7 @@ const ImageBase = ({ element, opts = {}, story = {}, config = {}, caption = true
   );
 
   ImageTemplate.propTypes = {
-    onClick: PropTypes.func
+    onClick: PropTypes.func,
   };
 
   return (
@@ -49,12 +49,12 @@ ImageBase.propTypes = {
     "image-metadata": PropTypes.object,
     "image-attribution": PropTypes.string,
     title: PropTypes.string,
-    hyperlink: PropTypes.string
+    hyperlink: PropTypes.string,
   }),
   caption: PropTypes.bool,
   opts: PropTypes.shape({ imageWidths: PropTypes.array }),
   story: shapeStory,
-  config: shapeConfig
+  config: shapeConfig,
 };
 
 export const Image = withElementWrapper(ImageBase);

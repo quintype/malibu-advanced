@@ -67,7 +67,7 @@ AuthorWithTime.propTypes = {
   // fix prefix before the author name
   prefix: PropTypes.string,
   config: PropTypes.object,
-  isLightTheme: PropTypes.bool
+  isLightTheme: PropTypes.bool,
 };
 
 AuthorWithTime.defaultProps = {
@@ -75,5 +75,5 @@ AuthorWithTime.defaultProps = {
   isBottom: false,
   hideAuthorImage: true,
   prefix: "",
-  isLightTheme: false
+  isLightTheme: false,
 };

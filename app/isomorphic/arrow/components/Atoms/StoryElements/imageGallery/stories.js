@@ -7,7 +7,7 @@ import { generateStoryElementData } from "../../../Fixture";
 const element = generateStoryElementData("image-gallery");
 const imgaeGalleryTemplate = {
   default: "",
-  template2: "template-2"
+  template2: "template-2",
 };
 
 withStore(
@@ -15,9 +15,9 @@ withStore(
   {
     qt: {
       config: {
-        "cdn-image": "thumbor-stg.assettype.com"
-      }
-    }
+        "cdn-image": "thumbor-stg.assettype.com",
+      },
+    },
   },
   Readme
 ).add("Default", () => <ImageGallery element={element} template={optionalSelect("templates", imgaeGalleryTemplate)} />);

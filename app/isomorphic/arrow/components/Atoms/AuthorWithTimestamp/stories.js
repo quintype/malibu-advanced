@@ -7,8 +7,8 @@ import Readme from "./README.md";
 const story = generateStory();
 const config = {
   localizationConfig: {
-    localizedTimeToRead: "মিনিট পড়া"
-  }
+    localizedTimeToRead: "মিনিট পড়া",
+  },
 };
 
 withStore(
@@ -16,9 +16,9 @@ withStore(
   {
     qt: {
       config: {
-        "cdn-image": "thumbor-stg.assettype.com"
-      }
-    }
+        "cdn-image": "thumbor-stg.assettype.com",
+      },
+    },
   },
   Readme
 )

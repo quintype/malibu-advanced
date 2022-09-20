@@ -23,7 +23,8 @@ export const TimeStamp = ({ story, isBottom, config = {} }) => {
         <div
           className="time arr--publish-time"
           styleName={`time  ${textColor} ${isBottomClasses}`}
-          data-test-id="publish-time">
+          data-test-id="publish-time"
+        >
           <div styleName="time-wrapper">{getTimeStamp(time, formatter, config, languageCode)}</div>
         </div>
       )}
@@ -36,5 +37,5 @@ TimeStamp.propTypes = {
   story: PropTypes.object,
   isBottom: PropTypes.bool,
   config: PropTypes.object,
-  languageCode: PropTypes.string
+  languageCode: PropTypes.string,
 };

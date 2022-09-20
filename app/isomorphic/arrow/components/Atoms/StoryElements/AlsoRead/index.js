@@ -81,7 +81,8 @@ const AlsoReadBase = ({
       data-test-id="also-read"
       href={storyUrl}
       aria-label="also-read"
-      {...restProps}>
+      {...restProps}
+    >
       {!isDefault && <div styleName={`default-text ${textInvertColor}`}>{displayTitle}</div>}
       {isDefault && (
         <DisplayImage story={story} linkedImage={linkedImage} template={template} isRightAlign={isRightAlign} />

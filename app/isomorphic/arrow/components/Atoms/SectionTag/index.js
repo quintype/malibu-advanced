@@ -32,8 +32,9 @@ export const SectionTag = ({ story, template = "", borderColor = "", isLightThem
         className="section-tag arrow-component"
         styleName={`${textColor} ${templateStyle}`}
         style={{
-          backgroundColor: templateStyle.includes("section-solid") ? sectionTagBorderColor : ""
-        }}>
+          backgroundColor: templateStyle.includes("section-solid") ? sectionTagBorderColor : "",
+        }}
+      >
         {templateStyle.includes("section-borderLeft") && (
           <span styleName="border-left" style={{ color: sectionTagBorderColor }}></span>
         )}

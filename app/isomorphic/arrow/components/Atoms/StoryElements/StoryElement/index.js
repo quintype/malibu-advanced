@@ -17,5 +17,5 @@ export const StoryElement = withElementWrapper(StoryElementBase);
 StoryElementBase.propTypes = {
   element: PropTypes.object,
   story: shapeStory,
-  config: shapeConfig
+  config: shapeConfig,
 };

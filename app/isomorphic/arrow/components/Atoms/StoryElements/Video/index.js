@@ -17,7 +17,7 @@ Videobase.propTypes = {
   element: PropTypes.object,
   story: shapeStory,
   config: shapeConfig,
-  loadIframeOnClick: PropTypes.bool
+  loadIframeOnClick: PropTypes.bool,
 };
 
 export const Video = withElementWrapper(Videobase);

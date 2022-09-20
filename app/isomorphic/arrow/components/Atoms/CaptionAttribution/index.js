@@ -35,6 +35,6 @@ CaptionAttribution.propTypes = {
   story: shapeStory,
   element: PropTypes.shape({
     "image-attribution": PropTypes.string,
-    title: PropTypes.string
-  })
+    title: PropTypes.string,
+  }),
 };

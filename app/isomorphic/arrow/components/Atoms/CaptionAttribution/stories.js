@@ -10,31 +10,31 @@ const element = generateStoryElementData("image");
 withStore("Atoms/Caption Attribution", Readme)
   .add("Hero Image", () => {
     const config = {
-      theme: color("BG Color", "#ffffff")
+      theme: color("BG Color", "#ffffff"),
     };
     return <CaptionAttribution story={story} config={config} />;
   })
   .add("Image Element", () => {
     const config = {
-      theme: color("BG Color", "#ffffff")
+      theme: color("BG Color", "#ffffff"),
     };
     return <CaptionAttribution element={element} config={config} />;
   })
   .add("Caption", () => {
     const config = {
-      theme: color("BG Color", "#ffffff")
+      theme: color("BG Color", "#ffffff"),
     };
     const data = {
-      title: "Caption"
+      title: "Caption",
     };
     return <CaptionAttribution element={data} config={config} />;
   })
   .add("Attribution", () => {
     const config = {
-      theme: color("BG Color", "#ffffff")
+      theme: color("BG Color", "#ffffff"),
     };
     const data = {
-      "image-attribution": "Attribution"
+      "image-attribution": "Attribution",
     };
     return <CaptionAttribution element={data} config={config} />;
   });

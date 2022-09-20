@@ -29,5 +29,5 @@ StoryTags.propTypes = {
   tags: PropTypes.array,
   borderColor: PropTypes.string,
   config: PropTypes.object,
-  template: string
+  template: string,
 };

@@ -1,6 +1,6 @@
 function createUUID() {
   var dt = new Date().getTime();
-  var uuid = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function( c ) {
+  var uuid = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
     var r = (dt + Math.random() * 16) % 16 | 0;
     dt = Math.floor(dt / 16);
     return (c === "x" ? r : (r & 0x3) | 0x8).toString(16);
@@ -125,7 +125,7 @@ export const dummyStory = {
       collection: {
         slug: "news",
         name: "News",
-        id: 3795
+        id: 3795,
       },
       data: null,
     },
@@ -140,7 +140,7 @@ export const dummyStory = {
       collection: {
         slug: "recent",
         name: "Recent stories",
-        id: 2760
+        id: 2760,
       },
       data: null,
     },
@@ -161,7 +161,7 @@ export const dummyStory = {
     },
   ],
   "story-audio": {
-    "s3-key": "story-audio/ace/2019-08/a3561065-11ce-4281-9d86-325934aa2146/12132634-d337-471b-9e92-1ce7b4d15bfb.mp3"
+    "s3-key": "story-audio/ace/2019-08/a3561065-11ce-4281-9d86-325934aa2146/12132634-d337-471b-9e92-1ce7b4d15bfb.mp3",
   },
   "read-time": 2,
   "access-level-value": 23,
@@ -245,8 +245,7 @@ export const dummyStory = {
           title: "",
           id: "2f648c29-ef8f-442c-903a-263f82e631dd",
           "file-name": "document__7_ (1).docx",
-          url:
-            "https://thumbor-stg.assettype.com/ace/2019-08/21f3a19b-1d98-46bc-95e3-a5bdc9045ae9/document__7___1_.docx",
+          url: "https://thumbor-stg.assettype.com/ace/2019-08/21f3a19b-1d98-46bc-95e3-a5bdc9045ae9/document__7___1_.docx",
           "s3-key": "ace/2019-08/21f3a19b-1d98-46bc-95e3-a5bdc9045ae9/document__7___1_.docx",
           "content-type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
           metadata: {
@@ -384,14 +383,13 @@ export const dummyStory = {
                 description:
                   "In the year 2045, people can escape their harsh reality in the OASIS, an immersive virtual world where you can go anywhere, do anything, be anyone-the only limits are your own imagination. OASIS creator James Halliday left his immense fortune and control of the Oasis to the winner of a contest designed to find a worthy heir. When unlikely hero Wade Watts conquers the first challenge of the reality-bending treasure hunt, he and his friends-known as the High Five-are hurled into a fantastical universe of discovery and danger to save the OASIS and their world.",
                 url: "https://www.rottentomatoes.com/m/ready_player_one/",
-                name: "Ready player One review from rotten tomatoes"
+                name: "Ready player One review from rotten tomatoes",
               },
-              text:
-                '<div><p>Ready player One review from rotten tomatoes</p><p><a href="https://www.rottentomatoes.com/m/ready_player_one/">In the year 2045, people can escape their harsh reality in the OASIS, an immersive virtual world where you can go anywhere, do anything, be anyone-the only limits are your own imagination. OASIS creator James Halliday left his immense fortune and control of the Oasis to the winner of a contest designed to find a worthy heir. When unlikely hero Wade Watts conquers the first challenge of the reality-bending treasure hunt, he and his friends-known as the High Five-are hurled into a fantastical universe of discovery and danger to save the OASIS and their world.</a></p></div>',
+              text: '<div><p>Ready player One review from rotten tomatoes</p><p><a href="https://www.rottentomatoes.com/m/ready_player_one/">In the year 2045, people can escape their harsh reality in the OASIS, an immersive virtual world where you can go anywhere, do anything, be anyone-the only limits are your own imagination. OASIS creator James Halliday left his immense fortune and control of the Oasis to the winner of a contest designed to find a worthy heir. When unlikely hero Wade Watts conquers the first challenge of the reality-bending treasure hunt, he and his friends-known as the High Five-are hurled into a fantastical universe of discovery and danger to save the OASIS and their world.</a></p></div>',
               id: "47afb0c6-aa50-446c-8e55-c10c604c5246",
               "family-id": "6b236f36-ce8a-4f9a-b70e-844367f13af0",
               type: "text",
-            }
+            },
           ],
           title: "",
           id: "4abd5e1d-4f02-433a-af48-2733a63682b9",
@@ -463,7 +461,7 @@ export const dummyStory = {
               "twitter-handle": null,
               "created-at": 1551268188983,
               metadata: {},
-            }
+            },
           },
           subtype: "q-and-a",
           text: '<div><div class="question"><p>Is Ready Player One book<a href="https://www.jbsimmons.com/blog/books-better-than-movies-ready-player-one"> better </a>than the movie?</p></div><div class="answer"><p><strong>Ready Player One</strong> is the latest example. I read Earnest Cline\'s <strong><a href="https://www.jbsimmons.com/blog/books-better-than-movies-ready-player-one">book</a></strong> a couple months before watching Steven Spielberg\'s <strong>movie</strong>. ... The <strong>book</strong> generally fares <strong>better</strong> with reviewers, averaging 4.6 out of 5 stars on Amazon, while the <strong>movie</strong> scores 73% on Rotten Tomatoes.</p></div></div>',
@@ -495,7 +493,7 @@ export const dummyStory = {
               "twitter-handle": null,
               "created-at": 1551268188983,
               metadata: {},
-            }
+            },
           },
           subtype: "question",
           text: '<p>Is Ready Player One book <a href="https://www.jbsimmons.com/blog/books-better-than-movies-ready-player-one">better</a> than the movie?</p>',
@@ -527,7 +525,7 @@ export const dummyStory = {
               "twitter-handle": null,
               "created-at": 1551268188983,
               metadata: {},
-            }
+            },
           },
           subtype: "answer",
           text: "<p><strong>Ready Player One</strong> is the latest example. I read Earnest Cline's <strong>book</strong> a couple months before watching Steven Spielberg's <strong>movie</strong>. ... The <strong><a href=\"https://www.jbsimmons.com/blog/books-better-than-movies-ready-player-one\">book</a></strong> generally fares <strong>better</strong> with reviewers, averaging 4.6 out of 5 stars on Amazon, while the <strong>movie</strong> scores 73% on Rotten Tomatoes.</p>",
@@ -541,7 +539,7 @@ export const dummyStory = {
           text: '<p>text <a href="https://ace-web.qtstage.io/">promotional</a> message</p>',
           metadata: {
             "promotional-message": true,
-          }
+          },
         },
         {
           id: "00000000-0000-0000-0000-000000000000",
@@ -552,7 +550,7 @@ export const dummyStory = {
           text: '<p>text <a href="https://ace-web.qtstage.io/">promotional</a> message</p>',
           metadata: {
             "promotional-message": true,
-          }
+          },
         },
         {
           description: "",
@@ -578,11 +576,10 @@ export const dummyStory = {
           metadata: {
             content:
               "After the death of James Halliday, the creator of the virtual reality world, his pre-recorded message reveals the hidden fortune, which makes Wade Watts, a teenager, embark on a quest.",
-            attribution: "Player"
+            attribution: "Player",
           },
           subtype: "blockquote",
-          text:
-            '<div><blockquote>After the death of James Halliday, the creator of the virtual reality world, his pre-recorded message reveals the hidden fortune, which makes Wade Watts, a teenager, embark on a quest.</blockquote><span class="attribution">Player</span></div>'
+          text: '<div><blockquote>After the death of James Halliday, the creator of the virtual reality world, his pre-recorded message reveals the hidden fortune, which makes Wade Watts, a teenager, embark on a quest.</blockquote><span class="attribution">Player</span></div>'
         },
         {
           description: "",
@@ -599,7 +596,7 @@ export const dummyStory = {
               "highlighted-text": "",
               id: "2d0008f7-768f-4667-822f-cb531d9627f4",
               "highlighted-headline": null,
-            }
+            },
           },
           subtype: "also-read",
           text: "How is the coronavirus impacting people with disabilities?",
@@ -766,7 +763,7 @@ export const dummyStory = {
               metadata: {},
               subtype: null,
               hyperlink: "https://www.google.com/",
-            }
+            },
           ],
           title: "",
           id: "b35ef956-35ce-4431-a68d-018760a4ddda",
@@ -804,7 +801,7 @@ export const dummyStory = {
           },
         },
         attributes: {},
-      }
+      },
     },
     {
       "story-elements": [
@@ -818,7 +815,7 @@ export const dummyStory = {
           url: "https://www.youtube.com/watch?v=cSp1dM2Vj48&feature=youtu.be",
           "embed-url": "https://www.youtube.com/embed/cSp1dM2Vj48",
           metadata: {},
-          subtype: null
+          subtype: null,
         },
         {
           id: "00000000-0000-0000-0000-000000000000",
