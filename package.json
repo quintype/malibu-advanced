@@ -16,7 +16,7 @@
     "@quintype/arrow": "^3.0.1",
     "@quintype/bridgekeeper-js": "^2.8.1",
     "@quintype/components": "^3.0.0",
-    "@quintype/framework": "7.9.0-custom-inifinite-scroller.2",
+    "@quintype/framework": "7.10.1-custom-infinite-scroll.0",
     "@quintype/seo": "^1.40.10",
     "axios": "^0.24.0",
     "fontfaceobserver": "^2.1.0",
