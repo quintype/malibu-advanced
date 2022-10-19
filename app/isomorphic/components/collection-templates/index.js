@@ -1,6 +1,7 @@
 import React from "react";
 import { wrapCollectionLayout, EagerLoadImages } from "@quintype/components";
 import { FourColGrid } from "./four-col-grid";
+import { FourColTenStories } from "./four-col-ten-stories";
 import {
   ArrowElevenStories,
   ArrowFourColGrid,
@@ -37,6 +38,7 @@ function wrapEager(f) {
 
 export default {
   FourColGrid: wrapEager(wrapCollectionLayout(FourColGrid)),
+  FourColTenStories: wrapEager(wrapCollectionLayout(FourColTenStories)),
   ArrowFourColTwelveStories: wrapEager(wrapCollectionLayout(ArrowFourColTwelveStories)),
   ArrowThreeColGrid: wrapEager(wrapCollectionLayout(ArrowThreeColGrid)),
   ArrowFourColGrid: wrapEager(wrapCollectionLayout(ArrowFourColGrid)),
