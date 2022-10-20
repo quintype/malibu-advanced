@@ -1,7 +1,7 @@
 import React from "react";
 import { array, object } from "prop-types";
 
-import { Headline, HeroImage, StoryCard, StorycardContent, StoryCardWithBulletPoint } from "@quintype/arrow";
+import { Headline, HeroImage, StoryCard, StoryCardWithBulletPoint } from "@quintype/arrow";
 
 import "./four-col-ten-stories.m.css";
 
@@ -14,15 +14,30 @@ export function FourColTenStories({ collection, stories }) {
   };
 
   const border = {
-    borderRadius: '20px'
-  }
+    borderRadius: "20px",
+  };
+
   return (
-    <div styleName='four-col-ten-stories'>
+    <div styleName="four-col-ten-stories">
       <h2 styleName="header">{collection.name}</h2>
       <div styleName="container">
         <div styleName="main-story">
-          <StoryCard story={stories[0]} bgImgContentOverlap aspectRatio={[[16, 9], [16, 9]]}>
-            <HeroImage story={stories[0]} aspectRatio={[[16, 9], [16, 9]]} config={border} />
+          <StoryCard
+            story={stories[0]}
+            bgImgContentOverlap
+            aspectRatio={[
+              [16, 9],
+              [16, 9],
+            ]}
+          >
+            <HeroImage
+              story={stories[0]}
+              aspectRatio={[
+                [16, 9],
+                [16, 9],
+              ]}
+              config={border}
+            />
             <Headline story={stories[0]} headerLevel="4" />
           </StoryCard>
         </div>
@@ -32,10 +47,9 @@ export function FourColTenStories({ collection, stories }) {
               <div key={id} styleName="bullet-wrapper">
                 <StoryCardWithBulletPoint story={el} bulletValue={`○`} config={config} />
               </div>
-            )
+            );
           })}
         </div>
-
       </div>
       <div styleName="container">
         {stories.slice(6).map((story, index) => {
@@ -44,18 +58,21 @@ export function FourColTenStories({ collection, stories }) {
               <StoryCard
                 story={story}
                 headerLevel="4"
-                aspectRatio={[[16, 9], [16, 9]]}
+                aspectRatio={[
+                  [16, 9],
+                  [16, 9],
+                ]}
                 isHorizontalMobile={true}
                 isHorizontalWithImageLast={true}
-                config={{}}>
+                config={{}}
+              >
                 <>
                   <div styleName="story-card-image">
                     <HeroImage story={story} />
                   </div>
                   <div styleName="story-card-headline">
-                    <Headline story={story} headerLevel='6' />
+                    <Headline story={story} headerLevel="6" />
                   </div>
-
                 </>
               </StoryCard>
             </div>
@@ -68,7 +85,7 @@ export function FourColTenStories({ collection, stories }) {
 
 FourColTenStories.propTypes = {
   collection: object,
-  stories: array
+  stories: array,
 };
 
 FourColTenStories.storyLimit = 10;
