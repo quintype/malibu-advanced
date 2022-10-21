@@ -10,4 +10,4 @@ ListicleStory.propTypes = {
   story: object,
 };
 
-export default ListicleStory;
+export default React.memo(ListicleStory);

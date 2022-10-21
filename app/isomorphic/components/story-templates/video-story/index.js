@@ -10,4 +10,4 @@ VideoStory.propTypes = {
   story: object,
 };
 
-export default VideoStory;
+export default React.memo(VideoStory);

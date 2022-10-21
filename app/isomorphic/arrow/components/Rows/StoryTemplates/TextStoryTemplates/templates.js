@@ -31,7 +31,9 @@ export const StoryTemplate = ({
     templateType = "default",
     noOfVisibleCards = -1,
     publishedDetails = {},
-    authorDetails = {},
+    authorDetails = {
+      template: "default",
+    },
     verticalShare = "",
     shareIconType = "plain-color-svg",
     premiumStoryIconConfig = {},

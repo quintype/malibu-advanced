@@ -10,4 +10,4 @@ PhotoStory.propTypes = {
   story: object,
 };
 
-export default PhotoStory;
+export default React.memo(PhotoStory);

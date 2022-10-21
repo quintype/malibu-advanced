@@ -35,7 +35,9 @@ const VideoStoryTemplate = ({
   const {
     theme = "",
     authorCard = {},
-    authorDetails = {},
+    authorDetails = {
+      template: "default",
+    },
     asideCollection = {},
     templateType = "",
     noOfVisibleCards = -1,

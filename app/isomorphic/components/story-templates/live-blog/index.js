@@ -10,4 +10,4 @@ LiveBlogStory.propTypes = {
   story: object,
 };
 
-export default LiveBlogStory;
+export default React.memo(LiveBlogStory);

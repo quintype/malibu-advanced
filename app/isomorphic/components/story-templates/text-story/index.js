@@ -10,4 +10,4 @@ TextStory.propTypes = {
   story: object,
 };
 
-export default TextStory;
+export default React.memo(TextStory);
