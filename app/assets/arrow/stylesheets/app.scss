@@ -258,10 +258,10 @@
       )
       [grid-end];
     margin: unset;
-    @media only screen and (max-width: 1025px) {
+    @media only screen and (min-width: 1025px) {
       grid-template-columns:
-        [grid-start] minmax(56px, auto) [container-start] repeat(12, minmax(auto, 73px)) [container-end] minmax(
-          56px,
+        [grid-start] minmax(48px, auto) [container-start] repeat(12, minmax(auto, 55px)) [container-end] minmax(
+          48px,
           auto
         )
         [grid-end];
