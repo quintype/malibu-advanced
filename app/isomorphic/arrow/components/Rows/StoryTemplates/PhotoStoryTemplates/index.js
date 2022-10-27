@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import { SocialShare } from "@quintype/components";
 import PropTypes from "prop-types";
 import React from "react";
