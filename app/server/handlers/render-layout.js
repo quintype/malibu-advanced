@@ -9,7 +9,7 @@ import { Footer } from "../../isomorphic/components/layouts/footer";
 import fontFace from "../font";
 import { BreakingNewsView } from "../../isomorphic/components/breaking-news-view";
 import { TopAd } from "../../isomorphic/components/ads/top-ad";
-import { getConfig, extractor, getCriticalCss, getArrowCss } from "../helpers";
+import { getConfig, extractor, getCriticalCss, getArrowCss, getStyleTags } from "../helpers";
 import get from "lodash.get";
 
 const cssContent = assetPath("app.css") ? readAsset("app.css") : "";
@@ -26,11 +26,13 @@ export async function renderLayout(res, params) {
     isGaEnable,
     enableAds,
     loadAdsSynchronously,
-    pageType
+    pageType,
   } = getConfig(params.store.getState());
   const chunk = params.shell ? null : allChunks[getChunkName(params.pageType)];
   const criticalCss = await getCriticalCss();
+  const styleTags = await getStyleTags();
   const arrowCss = await getArrowCss(params.store.getState());
+  const isProduction = process.env.NODE_ENV === "production";
 
   const placeholderDelay = parseInt(
     get(params.store.getState(), ["qt", "config", "publisher-attributes", "placeholder_delay"])
@@ -40,10 +42,12 @@ export async function renderLayout(res, params) {
     "pages/layout",
     Object.assign(
       {
+        isProduction,
         assetPath: assetPath,
         content: params.content || "",
         cssContent: cssContent,
         criticalCss: criticalCss,
+        styleTags,
         arrowCss,
         fontJsContent: fontJsContent,
         fontFace: fontFace,
@@ -55,7 +59,7 @@ export async function renderLayout(res, params) {
         topad: renderReduxComponent(TopAd, params.store),
         breakingNews: renderReduxComponent(BreakingNewsView, params.store, {
           breakingNews: [],
-          breakingNewsLoaded: false
+          breakingNewsLoaded: false,
         }),
         disableAjaxNavigation: false,
         gtmId,
@@ -74,7 +78,7 @@ export async function renderLayout(res, params) {
         loadAdsSynchronously,
         placeholderDelay,
         pageType,
-        enableBreakingNews: params.pageType !== "profile-page"
+        enableBreakingNews: params.pageType !== "profile-page",
       },
       params
     )
