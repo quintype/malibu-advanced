@@ -83,13 +83,8 @@
     }
   },
   "scripts": {
-<<<<<<< HEAD
-    "analyze-stats": "NODE_ENV=production ANALYZE_STATS=true BABEL_TARGET=browser webpack --profile --mode=production",
-    "asset-server": "BABEL_TARGET=browser webpack-dev-server --hot",
-=======
     "analyze-stats": "NODE_ENV=production ANALYZE_STATS=true BABEL_TARGET=browser webpack --profile --mode=production -p",
     "asset-server": "BABEL_TARGET=browser npx webpack serve --hot --progress --color --client-overlay-errors --no-client-overlay-warnings",
->>>>>>> 1c6e9776f3dc449a134ee921495170704c522932
     "compile": "BABEL_TARGET=browser webpack",
     "windows-asset-server": "npx webpack serve --hot --progress --color --client-overlay-errors --no-client-overlay-warnings",
     "windows-compile": "webpack",

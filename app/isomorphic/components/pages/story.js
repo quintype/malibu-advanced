@@ -36,7 +36,7 @@ StoryPageBase.propTypes = {
 };
 
 const FIELDS =
-  "id,headline,slug,url,hero-image-s3-key,hero-image-metadata,first-published-at,last-published-at,alternative,published-at,author-name,author-id,sections,story-template,cards";
+  "id,headline,slug,url,hero-image-s3-key,hero-image-metadata,first-published-at,last-published-at,alternative,published-at,author-name,author-id,sections,authors,story-template,cards";
 function storyPageLoadItems(pageNumber) {
   return global
     .wretch("/api/v1/stories")
