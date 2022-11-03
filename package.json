@@ -54,7 +54,7 @@
     "husky": "^7.0.4",
     "jest": "^27.3.1",
     "lint-staged": "^11.2.3",
-    "nodemon": "^2.0.14",
+    "nodemon": "^2.0.20",
     "postcss": "^8.3.11",
     "postcss-custom-media": "^8.0.2",
     "prettier": "2.4.1",
@@ -83,10 +83,15 @@
     }
   },
   "scripts": {
+<<<<<<< HEAD
     "analyze-stats": "NODE_ENV=production ANALYZE_STATS=true BABEL_TARGET=browser webpack --profile --mode=production",
     "asset-server": "BABEL_TARGET=browser webpack-dev-server --hot",
+=======
+    "analyze-stats": "NODE_ENV=production ANALYZE_STATS=true BABEL_TARGET=browser webpack --profile --mode=production -p",
+    "asset-server": "BABEL_TARGET=browser npx webpack serve --hot --progress --color --client-overlay-errors --no-client-overlay-warnings",
+>>>>>>> 1c6e9776f3dc449a134ee921495170704c522932
     "compile": "BABEL_TARGET=browser webpack",
-    "windows-asset-server": "webpack-dev-server --hot",
+    "windows-asset-server": "npx webpack serve --hot --progress --color --client-overlay-errors --no-client-overlay-warnings",
     "windows-compile": "webpack",
     "dev-server": "nodemon --watch app/server --watch app/isomorphic --exec 'BABEL_TARGET=node node start.js' --signal SIGHUP",
     "prune-packages": "rm -rf node_modules && npm install && npm dedupe",

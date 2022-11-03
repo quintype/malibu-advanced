@@ -106,3 +106,4 @@ export const getCriticalCss = async () => {
   const criticalCss = await extractor.getCssString();
   return criticalCss.trim();
 };
+export const getStyleTags = async () => extractor.getStyleTags();
