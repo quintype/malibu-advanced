@@ -1,0 +1,162 @@
+/* eslint-disable scss/at-rule-no-unknown */
+@value viewports: "../../../../../../assets/arrow/stylesheets/viewports.m.css";
+@value mobile from viewports;
+
+.blockquote-withBackground::before {
+  @media (min-width: mobile) {
+    content: "";
+    padding-top: 56.25%;
+  }
+}
+
+.icon {
+  width: 48px;
+  height: 48px;
+  @media (min-width: mobile) {
+    width: 64px;
+    height: 64px;
+  }
+}
+
+.icon-border {
+  display: flex;
+  margin-bottom: var(--arrow-spacing-s);
+  @media (min-width: mobile) {
+    margin-bottom: var(--arrow-spacing-m);
+  }
+}
+
+.blockquote .icon,
+.blockquote-default .icon {
+  margin-bottom: var(--arrow-spacing-s);
+  @media (min-width: mobile) {
+    margin-bottom: unset;
+    margin-right: var(--arrow-spacing-l);
+  }
+}
+
+.blockquote-withBorder .icon {
+  margin-right: var(--arrow-spacing-m);
+  @media (min-width: mobile) {
+    margin-right: var(--arrow-spacing-l);
+  }
+}
+
+.blockquote-withBackground .icon {
+  margin-bottom: var(--arrow-spacing-s);
+  @media (min-width: mobile) {
+    margin-bottom: var(--arrow-spacing-m);
+  }
+}
+
+.blockquote-withBorder .border {
+  width: 100%;
+  height: 2px;
+  background-color: var(--arrow-c-brand1);
+  margin-top: 36px;
+}
+
+.blockquote .content,
+.blockquote-default .content,
+.blockquote-withBorder .content,
+.blockquote-withBackground .content {
+  font-family: var(--arrow-typeface-primary);
+  font-size: var(--arrow-fs-l);
+  font-weight: var(--arrow-fw-bold);
+  margin-bottom: var(--arrow-spacing-s);
+  line-height: var(--arrow-lh-3);
+  @media (min-width: mobile) {
+    font-size: var(--arrow-fs-huge);
+  }
+}
+
+.blockquote .content,
+.blockquote-default .content {
+  @media (min-width: mobile) {
+    margin-bottom: var(--arrow-spacing-xs);
+  }
+}
+
+.blockquote-withBorder .content {
+  margin-bottom: var(--arrow-spacing-xs);
+}
+
+.blockquote-withBorder .wrapper {
+  border-bottom: solid 2px var(--arrow-c-brand1);
+}
+
+.blockquote .attribution,
+.blockquote-default .attribution,
+.blockquote-withBorder .attribution,
+.blockquote-withBackground .attribution {
+  font-family: var(--arrow-typeface-secondary);
+  font-size: var(--arrow-fs-m);
+  font-weight: var(--arrow-fw-bold);
+  font-style: italic;
+  line-height: var(--arrow-lh-5);
+  @media (min-width: mobile) {
+    font-size: var(--arrow-fs-l);
+  }
+}
+
+.blockquote-withBorder .attribution {
+  margin-bottom: var(--arrow-spacing-l);
+}
+
+.blockquote-withBackground .attribution {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.blockquote-withBackground {
+  background-color: var(--arrow-c-brand1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.blockquote-withBorder {
+  display: block;
+}
+
+.blockquote-withBackground .attribution::before {
+  content: "–";
+  color: inherit;
+  margin-right: var(--arrow-spacing-xs);
+  @media (min-width: mobile) {
+    margin-right: var(--arrow-spacing-s);
+  }
+}
+
+.blockquote-withBackground .quote-wrapper {
+  padding: 48px;
+  @media (min-width: mobile) {
+    padding: 96px;
+  }
+}
+
+.blockquote .quote-wrapper,
+.blockquote-default .quote-wrapper {
+  @media (min-width: mobile) {
+    display: flex;
+  }
+}
+
+html[dir="rtl"] .wrapper {
+  margin-right: var(--arrow-spacing-l);
+}
+
+.attribution.dark {
+  color: var(--arrow-c-mono4);
+}
+.attribution.light {
+  color: var(--arrow-c-invert-mono4);
+}
+
+.content.dark {
+  color: var(--arrow-c-mono2);
+}
+
+.content.light {
+  color: var(--arrow-c-invert-mono2);
+}

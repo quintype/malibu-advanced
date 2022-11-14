@@ -1,0 +1,72 @@
+@custom-media --viewport-medium (width >= 768px);
+
+.hero-image {
+  margin-bottom: var(--arrow-spacing-xs);
+  padding-right: 0;
+  flex-grow: 1;
+  position: relative;
+}
+.right-padding {
+  margin-bottom: 0;
+  padding-right: var(--arrow-spacing-s);
+  flex-grow: 1;
+}
+
+.left-padding {
+  margin-bottom: 0;
+  padding-left: var(--arrow-spacing-s);
+  flex-grow: 1;
+}
+
+.right-padding-mob {
+  margin-bottom: 0;
+  padding-right: var(--arrow-spacing-s);
+  flex-grow: 1;
+  flex-basis: 30%;
+  @media (--viewport-medium) {
+    padding-right: 0;
+    margin-bottom: var(--arrow-spacing-xs);
+  }
+}
+
+.placeholder {
+  background-color: lightgray;
+}
+
+html[dir="rtl"] {
+  .right-padding,
+  .right-padding-mob {
+    padding-right: 0;
+    padding-left: var(--arrow-spacing-s);
+  }
+
+  .right-padding-mob {
+    @media (--viewport-medium) {
+      padding-left: 0;
+    }
+  }
+}
+
+.hero-image-mob {
+  margin-bottom: var(--arrow-spacing-xs);
+  padding-right: 0;
+  flex-grow: 1;
+  @media (--viewport-medium) {
+    /* margin-bottom: 0; */
+  }
+}
+.with-padding {
+  padding: 16px 16px 0 16px;
+}
+
+.image {
+  position: relative;
+}
+.image img {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+}

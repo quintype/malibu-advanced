@@ -1,19 +1,18 @@
 import React from "react";
-import { ThreeColGrid } from "@quintype/arrow";
+import ThreeColGrid from "../../../../arrow/components/Rows/ThreeColGrid";
 import { object } from "prop-types";
-
 import "./style.m.css";
 
 export const ArrowThreeColGrid = ({ collection }) => {
   const config = {
     buttonText: `${collection.name} News`,
-    showImagePlaceholder: true
+    showImagePlaceholder: true,
   };
   return <ThreeColGrid collection={collection} config={config} />;
 };
 
 ArrowThreeColGrid.propTypes = {
-  collection: object
+  collection: object,
 };
 
 ArrowThreeColGrid.storyLimit = 6;

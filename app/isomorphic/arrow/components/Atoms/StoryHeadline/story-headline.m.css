@@ -1,0 +1,36 @@
+@custom-media --viewport-medium (width >= 768px);
+
+.wrapper {
+  display: block;
+}
+
+:global(.arrow-component.arr--story-headline h1) {
+  margin: 0;
+}
+
+.headline {
+  margin-bottom: var(--arrow-spacing-xxs);
+  color: var(--arrow-c-mono2);
+  font-weight: var(--arrow-fw-semi-bold);
+  text-transform: unset;
+  @media (--viewport-medium) {
+    margin-bottom: var(--arrow-spacing-xs);
+  }
+}
+
+.premium-wrapper .headline {
+  display: inline;
+}
+
+.dark {
+  color: var(--arrow-c-mono2);
+}
+.light {
+  color: var(--arrow-c-invert-mono2);
+}
+
+html[dir="rtl"] {
+  .headline bdi {
+    direction: rtl;
+  }
+}

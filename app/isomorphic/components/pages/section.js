@@ -3,16 +3,16 @@ import { string, shape, object } from "prop-types";
 import get from "lodash/get";
 import { collectionToStories, LazyCollection } from "@quintype/components";
 import { useSelector } from "react-redux";
-import { OneColStoryList } from "@quintype/arrow";
+import OneColStoryList from "../../arrow/components/Rows/OneColStoryList";
 
 import { getCollectionTemplate } from "../get-collection-template";
 import { DfpComponent } from "../ads/dfp-component";
 import { getLoadMoreStories } from "../utils";
 
-const SectionPage = props => {
+const SectionPage = (props) => {
   // will be getting initially 9 items, but showing only 8 for loadmore functionality
-  const adConfig = useSelector(state => get(state, ["qt", "config", "ads-config", "slots", "listing_page_ads"], {}));
-  const shouldUseCollection = useSelector(state =>
+  const adConfig = useSelector((state) => get(state, ["qt", "config", "ads-config", "slots", "listing_page_ads"], {}));
+  const shouldUseCollection = useSelector((state) =>
     get(state, ["qt", "config", "publisher-attributes", "should_use_collection"])
   );
   const [storiesToRender, setStoriesToRender] = useState(8);
@@ -29,11 +29,11 @@ const SectionPage = props => {
   }
 
   const childCollections = (get(props, ["data", "collection", "items"]) || []).filter(
-    item => item.type === "collection" && item.items.length > 0
+    (item) => item.type === "collection" && item.items.length > 0
   );
 
   const collection = {
-    items: !childCollections.length ? sectionPageStories.slice(0, storiesToRender) : props.data.collection.items
+    items: !childCollections.length ? sectionPageStories.slice(0, storiesToRender) : props.data.collection.items,
   };
 
   const getMoreStories = async (offset, limit) => {
@@ -47,7 +47,7 @@ const SectionPage = props => {
       storiesToRender: storiesToRender,
       setStoriesToRender: setStoriesToRender,
       stories: sectionPageStories,
-      isSectionPage: true
+      isSectionPage: true,
     });
   };
 
@@ -81,8 +81,8 @@ SectionPage.propTypes = {
   pageType: string,
   data: shape({
     collection: object,
-    section: string
-  })
+    section: string,
+  }),
 };
 
 export { SectionPage };

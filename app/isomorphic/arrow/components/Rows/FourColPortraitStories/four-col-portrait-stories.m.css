@@ -1,0 +1,45 @@
+@custom-media --viewport-medium (width > 1024px);
+.four-col-portrait {
+  padding: 0 var(--arrow-spacing-s);
+
+  @media (--viewport-medium) {
+    padding: 0;
+  }
+}
+
+.wrapper {
+  display: grid;
+  margin: var(--arrow-spacing-xs) 0 0;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: var(--arrow-spacing-s);
+
+  @media (--viewport-medium) {
+    grid-template-columns: repeat(4, 1fr);
+    margin: var(--arrow-spacing-m) 0;
+    grid-gap: var(--arrow-spacing-l);
+  }
+
+  :global {
+    .arr--headline > a > h6 {
+      font-size: var(--arrow-fs-tiny);
+      @media (--viewport-medium) {
+        font-size: var(--arrow-fs-xs);
+      }
+    }
+
+    .arr--content-wrapper time,
+    .arr--read-time,
+    .author-name {
+      font-size: 12px;
+      @media (--viewport-medium) {
+        font-size: var(--arrow-fs-tiny);
+      }
+    }
+  }
+
+  @media (max-width: 1024px) and (min-width: 768px) {
+    :global .arr--headline > a > h6 {
+      font-size: var(--arrow-fs-l);
+    }
+  }
+}

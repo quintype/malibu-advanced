@@ -1,0 +1,109 @@
+@import "../../../../../assets/arrow/stylesheets/mixins.scss";
+.share-popup-wrapper {
+  z-index: var(--zIndex-social-popup);
+}
+
+.light.share-popup-wrapper {
+  background-color: var(--arrow-c-dark);
+}
+
+.dark.share-popup-wrapper {
+  background-color: var(--arrow-c-light);
+}
+
+.share-popup {
+  composes: share-popup-wrapper;
+  padding: var(--arrow-spacing-l);
+}
+
+.social-wrapper {
+  display: flex;
+  flex-direction: row;
+  padding: var(--arrow-fs-tiny) 0;
+  align-items: center;
+}
+
+.dark .social-icon-wrapper {
+  border-bottom: 1px solid var(--arrow-c-mono7);
+}
+
+.light .social-icon-wrapper {
+  border-bottom: 1px solid var(--arrow-c-invert-mono7);
+}
+
+.wrapper {
+  list-style: none;
+}
+
+.dark .wrapper > :last-child,
+.light .wrapper > :last-child {
+  border-bottom: unset;
+}
+
+.light .share-popup {
+  @include tablet {
+    border: solid 1px var(--arrow-c-invert-mono7);
+  }
+}
+
+.dark .share-popup {
+  @include tablet {
+    border: solid 1px var(--arrow-c-mono7);
+  }
+}
+
+.top-bar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.share-text {
+  font-size: var(--arrow-fs-xs);
+  font-weight: var(--arrow-fw-bold);
+  line-height: var(--arrow-lh-2);
+  margin-bottom: var(--arrow-spacing-s);
+}
+
+.close {
+  position: absolute;
+  top: var(--arrow-spacing-m);
+  right: var(--arrow-spacing-m);
+}
+
+.social-icon {
+  border-radius: 50%;
+  width: var(--arrow-fs-xl);
+  height: var(--arrow-fs-xl);
+  padding: var(--arrow-spacing-xxs);
+}
+
+.social-text {
+  padding-left: var(--arrow-fs-xs);
+  font-size: var(--arrow-fs-s);
+  font-weight: var(--arrow-fw-bold);
+  line-height: var(--arrow-lh-2);
+  color: var(--arrow-c-mono2);
+}
+
+.light .social-text,
+.light .share-text {
+  color: var(--arrow-c-invert-mono2);
+}
+
+.dark .social-text,
+.dark .share-text {
+  color: var(--arrow-c-mono2);
+}
+
+html[dir="rtl"] {
+  .social-text {
+    padding-left: 0;
+    padding-right: var(--arrow-fs-xs);
+  }
+
+  .close {
+    left: var(--arrow-spacing-m);
+    right: initial;
+  }
+}

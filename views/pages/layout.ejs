@@ -68,6 +68,11 @@
     <%_ if(isOnesignalEnable) { _%>
       <%- oneSignalScript -%>
     <%_ } _%>
+    <noscript>
+      <style>
+        .qt-image { display: none }
+      </style>
+    </noscript>
 
     <!-- If not on production environment; request external css scripts -->
     <%_ if(!isProduction) { _%>

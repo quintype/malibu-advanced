@@ -1,13 +1,13 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import get from "lodash.get";
+import get from "lodash/get";
 import { Link, ResponsiveImage } from "@quintype/components";
 import { shape, string, object, integer, arrayOf } from "prop-types";
 
 import "./story-grid.m.css";
 
 function StoryGridStoryItem(props) {
-  const showImagePlaceholder = useSelector(state => get(state, ["qt", "config", "showPlaceholder"]));
+  const showImagePlaceholder = useSelector((state) => get(state, ["qt", "config", "showPlaceholder"]));
   const getPlaceholderStyleName = showImagePlaceholder ? "placeholder" : "";
 
   return (
@@ -36,12 +36,12 @@ const storyPropType = shape({
   "hero-image-s3-key": string,
   "hero-image-metadata": object,
   headline: string,
-  "author-name": string
+  "author-name": string,
 });
 
 StoryGridStoryItem.propTypes = {
   story: storyPropType,
-  position: integer
+  position: integer,
 };
 
 export function StoryGrid({ stories = [] }) {
@@ -59,5 +59,5 @@ export function StoryGrid({ stories = [] }) {
 }
 
 StoryGrid.propTypes = {
-  stories: arrayOf(storyPropType)
+  stories: arrayOf(storyPropType),
 };

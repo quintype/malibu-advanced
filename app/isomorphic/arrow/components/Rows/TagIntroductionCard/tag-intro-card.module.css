@@ -1,0 +1,26 @@
+/* eslint-disable scss/at-rule-no-unknown */
+@value viewports: "../../../../../assets/arrow/stylesheets/viewports.m.css";
+@value mobile from viewports;
+
+.description {
+  font-size: var(--arrow-fs-xs);
+  margin-top: var(--arrow-spacing-xs);
+  line-height: var(--arrow-lh-5);
+  @media (min-width: mobile) {
+    font-size: var(--arrow-fs-s);
+  }
+}
+
+.wrapper.dark {
+  border-bottom: 1px solid var(--dark-border);
+}
+.wrapper.light {
+  border-bottom: 1px solid var(--light-border);
+}
+
+.dark {
+  color: var(--arrow-c-mono2);
+}
+.light {
+  color: var(--arrow-c-invert-mono2);
+}

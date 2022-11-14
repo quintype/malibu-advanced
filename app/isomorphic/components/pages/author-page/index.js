@@ -2,26 +2,27 @@ import React, { useState } from "react";
 import { object, shape } from "prop-types";
 import { useSelector } from "react-redux";
 import get from "lodash/get";
-import { AuthorIntroductionCard, ThreeColGrid } from "@quintype/arrow";
+import AuthorIntroductionCard from "../../../arrow/components/Rows/AuthorIntroductionCard";
+import ThreeColGrid from "../../../arrow/components/Rows/ThreeColGrid";
 import { getLoadMoreStories } from "../../utils";
 
 import { DfpComponent } from "../../ads/dfp-component";
 
 import "./author.m.css";
 
-export const AuthorPage = props => {
-  const adConfig = useSelector(state => get(state, ["qt", "config", "ads-config", "slots", "listing_page_ads"], {}));
+export const AuthorPage = (props) => {
+  const adConfig = useSelector((state) => get(state, ["qt", "config", "ads-config", "slots", "listing_page_ads"], {}));
   const authorCollection = get(props, ["data", "authorCollection"], {});
   const [storiesToRender, setStoriesToRender] = useState(6);
   const [authorPageStories, setStories] = useState(authorCollection.items);
 
   const authorCollectionStories = {
-    items: authorPageStories.slice(0, storiesToRender)
+    items: authorPageStories.slice(0, storiesToRender),
   };
 
   const authorIntrCardConfig = {
     enableBio: true,
-    enableSocialLinks: true
+    enableSocialLinks: true,
   };
 
   const getMoreStories = async (offset, limit) => {
@@ -33,7 +34,7 @@ export const AuthorPage = props => {
       setStories: setStories,
       storiesToRender: storiesToRender,
       setStoriesToRender: setStoriesToRender,
-      stories: authorPageStories
+      stories: authorPageStories,
     });
   };
 
@@ -64,6 +65,6 @@ export const AuthorPage = props => {
 AuthorPage.propTypes = {
   data: shape({
     author: object,
-    authorCollection: object
-  })
+    authorCollection: object,
+  }),
 };

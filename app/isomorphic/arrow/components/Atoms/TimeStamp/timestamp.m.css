@@ -1,0 +1,22 @@
+@custom-media --viewport-medium (width >= 768px);
+
+.time {
+  display: flex;
+  margin-bottom: 2px;
+}
+
+.time-wrapper {
+  margin-bottom: var(--arrow-spacing-xxs);
+}
+
+.bottom-fix {
+  margin-top: auto;
+}
+
+.dark {
+  color: var(--arrow-c-mono4);
+}
+
+.light {
+  color: var(--arrow-c-invert-mono4);
+}

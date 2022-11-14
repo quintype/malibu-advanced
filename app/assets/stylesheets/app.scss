@@ -6,7 +6,7 @@
 @import "./base/colors";
 @import "./base/normalize";
 @import "./base/typography";
-@import "@quintype/arrow/app";
+@import "../arrow/stylesheets/app.scss";
 
 :root {
   --container-width: 1280px;
@@ -122,7 +122,6 @@ a {
     justify-content: center;
 
     .youtube-iframe-wrapper {
-      position: absolute;
       z-index: 2;
     }
 

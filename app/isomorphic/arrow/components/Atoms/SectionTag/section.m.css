@@ -1,0 +1,53 @@
+@custom-media --viewport-medium (width >= 768px);
+
+.section {
+  margin-bottom: var(--arrow-spacing-xxs);
+  @media (--viewport-medium) {
+    margin-bottom: var(--arrow-spacing-xs);
+  }
+}
+.section-borderBottomSml .border-bottom {
+  width: 20px;
+  height: 2px;
+  margin-top: var(--arrow-spacing-xxs);
+}
+
+.section-borderLeft {
+  display: flex;
+  align-items: baseline;
+
+  .border-left {
+    margin-right: var(--arrow-spacing-xs);
+    min-width: 3px;
+    max-width: 3px;
+    overflow: hidden;
+  }
+
+  .border-left::before {
+    content: "I";
+    font-family: var(--arrow-sans-serif);
+  }
+}
+
+html[dir="rtl"] {
+  .border-left {
+    margin-left: var(--arrow-spacing-xs);
+    margin-right: 0;
+  }
+}
+
+.section-solid {
+  color: var(--arrow-c-light);
+  align-self: self-start;
+  display: inline-flex;
+  padding: var(--arrow-spacing-xxs) var(--arrow-spacing-s);
+  @media (--viewport-medium) {
+    padding: var(--arrow-spacing-xs) var(--arrow-spacing-m);
+  }
+}
+.dark {
+  color: var(--arrow-c-mono2);
+}
+.light {
+  color: var(--arrow-c-invert-mono2);
+}

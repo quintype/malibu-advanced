@@ -4,7 +4,7 @@ import { LazyCollection, LazyLoadImages, replaceAllStoriesInCollection, WithPrev
 
 import { getCollectionTemplate } from "../get-collection-template";
 
-export const HomePage = props => (
+export const HomePage = (props) => (
   <div className="container">
     <LazyLoadImages>
       <LazyCollection collection={props.data.collection} collectionTemplates={getCollectionTemplate} lazyAfter={2} />
@@ -14,12 +14,12 @@ export const HomePage = props => (
 
 HomePage.propTypes = {
   data: shape({
-    collection: object
-  })
+    collection: object,
+  }),
 };
 
 export const HomePagePreview = WithPreview(HomePage, (data, story) =>
   Object.assign({}, data, {
-    collection: replaceAllStoriesInCollection(data.collection, story)
+    collection: replaceAllStoriesInCollection(data.collection, story),
   })
 );

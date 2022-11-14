@@ -1,0 +1,23 @@
+/* eslint-disable scss/at-rule-no-unknown */
+@value viewports: "../../../../../assets/arrow/stylesheets/viewports.m.css";
+@value mobile from viewports;
+
+.wrapper {
+  margin: 0 var(--arrow-spacing-s);
+  @media (min-width: mobile) {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: var(--arrow-spacing-l);
+    margin: 0 var(--arrow-spacing-l);
+  }
+  @media (min-width: tablet) {
+    margin: 0;
+  }
+}
+
+.linkWrapper :global(.arr--author-intro-card) {
+  margin-bottom: var(--arrow-spacing-m);
+  @media (min-width: mobile) {
+    margin-bottom: unset;
+  }
+}

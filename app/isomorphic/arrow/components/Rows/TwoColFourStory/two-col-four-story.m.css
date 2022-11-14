@@ -1,0 +1,64 @@
+@custom-media --viewport-medium (width >= 768px);
+.two-col-four-story {
+  padding: 0 var(--arrow-spacing-s);
+  @media (--viewport-medium) {
+    padding: 0;
+  }
+}
+.wrapper {
+  margin: var(--arrow-spacing-xs) 0;
+  @media (--viewport-medium) {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-column-gap: var(--arrow-spacing-l);
+    margin: var(--arrow-spacing-m) 0;
+  }
+}
+.first-card {
+  margin-bottom: 16px;
+  @media (--viewport-medium) {
+    margin: 0;
+  }
+}
+
+.first-card.border-box {
+  padding: 0;
+  margin-bottom: var(--arrow-fs-xs);
+  @media (--viewport-medium) {
+    margin: 0;
+  }
+}
+
+.border-box.dark {
+  border: 1px solid var(--dark-border);
+  padding: 16px 16px 0;
+}
+
+.border-box.light {
+  border: 1px solid var(--light-border);
+  padding: 16px 16px 0;
+}
+
+.storyCards > .card {
+  margin-bottom: var(--arrow-spacing-m);
+  @media (--viewport-medium) {
+    margin-bottom: var(--arrow-spacing-l);
+  }
+}
+.storyCards > :last-child {
+  margin-bottom: 0;
+}
+.border-box .card {
+  margin-bottom: var(--arrow-spacing-m);
+}
+.first-card-border-box {
+  padding: 4px 12px 16px 10px;
+}
+.two-col-four-story {
+  :global(.arr--story-card .arr--hero-image) {
+    flex-basis: 40%;
+  }
+  :global(.arr--story-card .arr--content-wrapper) {
+    flex-basis: 60%;
+  }
+}

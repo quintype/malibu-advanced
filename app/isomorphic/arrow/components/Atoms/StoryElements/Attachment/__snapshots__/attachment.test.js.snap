@@ -1,0 +1,47 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Attachment Story Element Should render default template 1`] = `
+<AttachmentBase
+  element={
+    Object {
+      "content-type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "description": "",
+      "family-id": "95bf1052-d663-446d-ace7-d014325e0027",
+      "file-name": "document__7_ (1).docx",
+      "id": "2f648c29-ef8f-442c-903a-263f82e631dd",
+      "metadata": Object {
+        "file-size": 8209,
+      },
+      "page-url": "/story/7155b5c2-80a4-4922-bdf1-73f1ff04311e/element/2f648c29-ef8f-442c-903a-263f82e631dd",
+      "s3-key": "ace/2019-08/21f3a19b-1d98-46bc-95e3-a5bdc9045ae9/document__7___1_.docx",
+      "subtype": "attachment",
+      "title": "",
+      "type": "file",
+      "url": "https://thumbor-stg.assettype.com/ace/2019-08/21f3a19b-1d98-46bc-95e3-a5bdc9045ae9/document__7___1_.docx",
+    }
+  }
+/>
+`;
+
+exports[`Attachment Story Element Should render default template with default file-name if not passed 1`] = `
+<AttachmentBase
+  element={
+    Object {
+      "content-type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "description": "",
+      "family-id": "95bf1052-d663-446d-ace7-d014325e0027",
+      "file-name": "",
+      "id": "2f648c29-ef8f-442c-903a-263f82e631dd",
+      "metadata": Object {
+        "file-size": 8209,
+      },
+      "page-url": "/story/7155b5c2-80a4-4922-bdf1-73f1ff04311e/element/2f648c29-ef8f-442c-903a-263f82e631dd",
+      "s3-key": "ace/2019-08/21f3a19b-1d98-46bc-95e3-a5bdc9045ae9/document__7___1_.docx",
+      "subtype": "attachment",
+      "title": "",
+      "type": "file",
+      "url": "https://thumbor-stg.assettype.com/ace/2019-08/21f3a19b-1d98-46bc-95e3-a5bdc9045ae9/document__7___1_.docx",
+    }
+  }
+/>
+`;

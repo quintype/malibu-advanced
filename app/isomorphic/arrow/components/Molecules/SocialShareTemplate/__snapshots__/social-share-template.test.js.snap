@@ -1,0 +1,738 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Social Share Template Should not render facebook icon if url not passed 1`] = `
+<div
+  className="arr--share social-share-template-m_dark__1lmTM social-share-template-m_vertical__VU5JY social-share-template-m_tablet-view-popup__1hXU9"
+  data-test-id="vertical"
+>
+  <div
+    className="social-share-template-m_desktop-view__3TmkO"
+  >
+    <ul
+      className="desktop-share-wrapper social-share-template-m_wrapper__1wXin"
+      data-test-id="plainSvg"
+    >
+      <li
+        className="social-share-template-m_icon__1Mnu5"
+        key="horizontal-0"
+      >
+        <div
+          onClick={[Function]}
+        >
+          <ShareIcon
+            color="#000000"
+          />
+        </div>
+      </li>
+      <ShareItem
+        alt="fb icon"
+        bgColor="#4e71a8"
+        dataTestId="card-share-0"
+        icon={
+          <Facebook
+            color="#000000"
+          />
+        }
+        key="facebook"
+        name="facebook"
+        text="Facebook"
+        url=""
+      />
+      <ShareItem
+        alt="twitter icon"
+        bgColor="#1db7eb"
+        dataTestId="card-share-1"
+        icon={
+          <Twitter
+            color="#000000"
+          />
+        }
+        key="twitter"
+        name="twitter"
+        text="Twitter"
+        url="https://twitter.com/"
+      />
+      <ShareItem
+        alt="linkedin icon"
+        bgColor="#0077B5"
+        dataTestId="card-share-2"
+        icon={
+          <LinkedIn
+            color="#000000"
+          />
+        }
+        key="linkedin"
+        name="linkedin"
+        text="LinkedIn"
+        url="https://twitter.com/"
+      />
+      <ShareItem
+        alt="whatsapp share"
+        bgColor="#25d366"
+        dataTestId="card-share-3"
+        icon={
+          <WhatsApp
+            color="#000000"
+          />
+        }
+        key="whatsapp"
+        name="whatsapp"
+        text="Whatsapp"
+        url="https://twitter.com/"
+      />
+    </ul>
+  </div>
+  <div
+    className="social-share-template-m_tablet-view__kATzi"
+  >
+    <ul
+      className="social-share-template-m_wrapper__1wXin"
+    >
+      <li
+        className="social-share-template-m_icon__1Mnu5"
+        key="horizontal-0"
+      >
+        <div
+          onClick={[Function]}
+        >
+          <ShareIcon
+            color="#000000"
+          />
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+`;
+
+exports[`Social Share Template Should not render linkedin icon if url not passed 1`] = `
+<div
+  className="arr--share social-share-template-m_dark__1lmTM social-share-template-m_vertical__VU5JY social-share-template-m_tablet-view-popup__1hXU9"
+  data-test-id="vertical"
+>
+  <div
+    className="social-share-template-m_desktop-view__3TmkO"
+  >
+    <ul
+      className="desktop-share-wrapper social-share-template-m_wrapper__1wXin"
+      data-test-id="plainSvg"
+    >
+      <li
+        className="social-share-template-m_icon__1Mnu5"
+        key="horizontal-0"
+      >
+        <div
+          onClick={[Function]}
+        >
+          <ShareIcon
+            color="#000000"
+          />
+        </div>
+      </li>
+      <ShareItem
+        alt="fb icon"
+        bgColor="#4e71a8"
+        dataTestId="card-share-0"
+        icon={
+          <Facebook
+            color="#000000"
+          />
+        }
+        key="facebook"
+        name="facebook"
+        text="Facebook"
+        url="https://twitter.com/"
+      />
+      <ShareItem
+        alt="twitter icon"
+        bgColor="#1db7eb"
+        dataTestId="card-share-1"
+        icon={
+          <Twitter
+            color="#000000"
+          />
+        }
+        key="twitter"
+        name="twitter"
+        text="Twitter"
+        url="https://twitter.com/"
+      />
+      <ShareItem
+        alt="linkedin icon"
+        bgColor="#0077B5"
+        dataTestId="card-share-2"
+        icon={
+          <LinkedIn
+            color="#000000"
+          />
+        }
+        key="linkedin"
+        name="linkedin"
+        text="LinkedIn"
+        url=""
+      />
+      <ShareItem
+        alt="whatsapp share"
+        bgColor="#25d366"
+        dataTestId="card-share-3"
+        icon={
+          <WhatsApp
+            color="#000000"
+          />
+        }
+        key="whatsapp"
+        name="whatsapp"
+        text="Whatsapp"
+        url="https://twitter.com/"
+      />
+    </ul>
+  </div>
+  <div
+    className="social-share-template-m_tablet-view__kATzi"
+  >
+    <ul
+      className="social-share-template-m_wrapper__1wXin"
+    >
+      <li
+        className="social-share-template-m_icon__1Mnu5"
+        key="horizontal-0"
+      >
+        <div
+          onClick={[Function]}
+        >
+          <ShareIcon
+            color="#000000"
+          />
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+`;
+
+exports[`Social Share Template Should not render social share template if url is not passed 1`] = `""`;
+
+exports[`Social Share Template Should not render twitter icon if url not passed 1`] = `
+<div
+  className="arr--share social-share-template-m_dark__1lmTM social-share-template-m_vertical__VU5JY social-share-template-m_tablet-view-popup__1hXU9"
+  data-test-id="vertical"
+>
+  <div
+    className="social-share-template-m_desktop-view__3TmkO"
+  >
+    <ul
+      className="desktop-share-wrapper social-share-template-m_wrapper__1wXin"
+      data-test-id="plainSvg"
+    >
+      <li
+        className="social-share-template-m_icon__1Mnu5"
+        key="horizontal-0"
+      >
+        <div
+          onClick={[Function]}
+        >
+          <ShareIcon
+            color="#000000"
+          />
+        </div>
+      </li>
+      <ShareItem
+        alt="fb icon"
+        bgColor="#4e71a8"
+        dataTestId="card-share-0"
+        icon={
+          <Facebook
+            color="#000000"
+          />
+        }
+        key="facebook"
+        name="facebook"
+        text="Facebook"
+        url="https://twitter.com/"
+      />
+      <ShareItem
+        alt="twitter icon"
+        bgColor="#1db7eb"
+        dataTestId="card-share-1"
+        icon={
+          <Twitter
+            color="#000000"
+          />
+        }
+        key="twitter"
+        name="twitter"
+        text="Twitter"
+        url=""
+      />
+      <ShareItem
+        alt="linkedin icon"
+        bgColor="#0077B5"
+        dataTestId="card-share-2"
+        icon={
+          <LinkedIn
+            color="#000000"
+          />
+        }
+        key="linkedin"
+        name="linkedin"
+        text="LinkedIn"
+        url="https://twitter.com/"
+      />
+      <ShareItem
+        alt="whatsapp share"
+        bgColor="#25d366"
+        dataTestId="card-share-3"
+        icon={
+          <WhatsApp
+            color="#000000"
+          />
+        }
+        key="whatsapp"
+        name="whatsapp"
+        text="Whatsapp"
+        url="https://twitter.com/"
+      />
+    </ul>
+  </div>
+  <div
+    className="social-share-template-m_tablet-view__kATzi"
+  >
+    <ul
+      className="social-share-template-m_wrapper__1wXin"
+    >
+      <li
+        className="social-share-template-m_icon__1Mnu5"
+        key="horizontal-0"
+      >
+        <div
+          onClick={[Function]}
+        >
+          <ShareIcon
+            color="#000000"
+          />
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+`;
+
+exports[`Social Share Template Should not render whatsapp icon if url not passed 1`] = `
+<div
+  className="arr--share social-share-template-m_dark__1lmTM social-share-template-m_vertical__VU5JY social-share-template-m_tablet-view-popup__1hXU9"
+  data-test-id="vertical"
+>
+  <div
+    className="social-share-template-m_desktop-view__3TmkO"
+  >
+    <ul
+      className="desktop-share-wrapper social-share-template-m_wrapper__1wXin"
+      data-test-id="plainSvg"
+    >
+      <li
+        className="social-share-template-m_icon__1Mnu5"
+        key="horizontal-0"
+      >
+        <div
+          onClick={[Function]}
+        >
+          <ShareIcon
+            color="#000000"
+          />
+        </div>
+      </li>
+      <ShareItem
+        alt="fb icon"
+        bgColor="#4e71a8"
+        dataTestId="card-share-0"
+        icon={
+          <Facebook
+            color="#000000"
+          />
+        }
+        key="facebook"
+        name="facebook"
+        text="Facebook"
+        url="https://twitter.com/"
+      />
+      <ShareItem
+        alt="twitter icon"
+        bgColor="#1db7eb"
+        dataTestId="card-share-1"
+        icon={
+          <Twitter
+            color="#000000"
+          />
+        }
+        key="twitter"
+        name="twitter"
+        text="Twitter"
+        url="https://twitter.com/"
+      />
+      <ShareItem
+        alt="linkedin icon"
+        bgColor="#0077B5"
+        dataTestId="card-share-2"
+        icon={
+          <LinkedIn
+            color="#000000"
+          />
+        }
+        key="linkedin"
+        name="linkedin"
+        text="LinkedIn"
+        url="https://twitter.com/"
+      />
+      <ShareItem
+        alt="whatsapp share"
+        bgColor="#25d366"
+        dataTestId="card-share-3"
+        icon={
+          <WhatsApp
+            color="#000000"
+          />
+        }
+        key="whatsapp"
+        name="whatsapp"
+        text="Whatsapp"
+        url=""
+      />
+    </ul>
+  </div>
+  <div
+    className="social-share-template-m_tablet-view__kATzi"
+  >
+    <ul
+      className="social-share-template-m_wrapper__1wXin"
+    >
+      <li
+        className="social-share-template-m_icon__1Mnu5"
+        key="horizontal-0"
+      >
+        <div
+          onClick={[Function]}
+        >
+          <ShareIcon
+            color="#000000"
+          />
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+`;
+
+exports[`Social Share Template Should render horizontal social share template 1`] = `
+<div
+  className="arr--share social-share-template-m_dark__1lmTM social-share-template-m_horizontal__1c9Kt"
+  data-test-id="horizontal"
+>
+  <div
+    className="social-share-template-m_desktop-view__3TmkO"
+  >
+    <ul
+      className="desktop-share-wrapper social-share-template-m_wrapper__1wXin"
+      data-test-id="plainSvg"
+    >
+      <li
+        className="social-share-template-m_icon__1Mnu5"
+        key="horizontal-0"
+      >
+        <div
+          onClick={[Function]}
+        >
+          <ShareIcon
+            color="#000000"
+          />
+        </div>
+      </li>
+      <ShareItem
+        alt="fb icon"
+        bgColor="#4e71a8"
+        dataTestId="card-share-0"
+        icon={
+          <Facebook
+            color="#000000"
+          />
+        }
+        key="facebook"
+        name="facebook"
+        text="Facebook"
+        url="https://www.facebook.com"
+      />
+      <ShareItem
+        alt="twitter icon"
+        bgColor="#1db7eb"
+        dataTestId="card-share-1"
+        icon={
+          <Twitter
+            color="#000000"
+          />
+        }
+        key="twitter"
+        name="twitter"
+        text="Twitter"
+        url="https://twitter.com/"
+      />
+      <ShareItem
+        alt="linkedin icon"
+        bgColor="#0077B5"
+        dataTestId="card-share-2"
+        icon={
+          <LinkedIn
+            color="#000000"
+          />
+        }
+        key="linkedin"
+        name="linkedin"
+        text="LinkedIn"
+        url="https://twitter.com/"
+      />
+      <ShareItem
+        alt="whatsapp share"
+        bgColor="#25d366"
+        dataTestId="card-share-3"
+        icon={
+          <WhatsApp
+            color="#000000"
+          />
+        }
+        key="whatsapp"
+        name="whatsapp"
+        text="Whatsapp"
+        url="https://twitter.com/"
+      />
+    </ul>
+  </div>
+  <div
+    className="social-share-template-m_tablet-view__kATzi"
+  >
+    <ul
+      className="social-share-template-m_wrapper__1wXin"
+    >
+      <li
+        className="social-share-template-m_icon__1Mnu5"
+        key="horizontal-0"
+      >
+        <div
+          onClick={[Function]}
+        >
+          <ShareIcon
+            color="#000000"
+          />
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+`;
+
+exports[`Social Share Template Should render template if theme and icon is not passed 1`] = `
+<div
+  className="arr--share social-share-template-m_dark__1lmTM social-share-template-m_vertical__VU5JY social-share-template-m_tablet-view-popup__1hXU9"
+  data-test-id="vertical"
+>
+  <div
+    className="social-share-template-m_desktop-view__3TmkO"
+  >
+    <ul
+      className="desktop-share-wrapper social-share-template-m_wrapper__1wXin"
+      data-test-id="plainSvg"
+    >
+      <li
+        className="social-share-template-m_icon__1Mnu5"
+        key="horizontal-0"
+      >
+        <div
+          onClick={[Function]}
+        >
+          <ShareIcon
+            color="#000000"
+          />
+        </div>
+      </li>
+      <ShareItem
+        alt="fb icon"
+        bgColor="#4e71a8"
+        dataTestId="card-share-0"
+        icon={
+          <Facebook
+            color="#000000"
+          />
+        }
+        key="facebook"
+        name="facebook"
+        text="Facebook"
+        url="https://twitter.com/"
+      />
+      <ShareItem
+        alt="twitter icon"
+        bgColor="#1db7eb"
+        dataTestId="card-share-1"
+        icon={
+          <Twitter
+            color="#000000"
+          />
+        }
+        key="twitter"
+        name="twitter"
+        text="Twitter"
+        url="https://twitter.com/"
+      />
+      <ShareItem
+        alt="linkedin icon"
+        bgColor="#0077B5"
+        dataTestId="card-share-2"
+        icon={
+          <LinkedIn
+            color="#000000"
+          />
+        }
+        key="linkedin"
+        name="linkedin"
+        text="LinkedIn"
+        url="https://twitter.com/"
+      />
+      <ShareItem
+        alt="whatsapp share"
+        bgColor="#25d366"
+        dataTestId="card-share-3"
+        icon={
+          <WhatsApp
+            color="#000000"
+          />
+        }
+        key="whatsapp"
+        name="whatsapp"
+        text="Whatsapp"
+        url="https://twitter.com/"
+      />
+    </ul>
+  </div>
+  <div
+    className="social-share-template-m_tablet-view__kATzi"
+  >
+    <ul
+      className="social-share-template-m_wrapper__1wXin"
+    >
+      <li
+        className="social-share-template-m_icon__1Mnu5"
+        key="horizontal-0"
+      >
+        <div
+          onClick={[Function]}
+        >
+          <ShareIcon
+            color="#000000"
+          />
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+`;
+
+exports[`Social Share Template Should render vertical social share template 1`] = `
+<div
+  className="arr--share social-share-template-m_dark__1lmTM social-share-template-m_vertical__VU5JY social-share-template-m_tablet-view-popup__1hXU9"
+  data-test-id="vertical"
+>
+  <div
+    className="social-share-template-m_desktop-view__3TmkO"
+  >
+    <ul
+      className="desktop-share-wrapper social-share-template-m_wrapper__1wXin"
+      data-test-id="plainSvg"
+    >
+      <li
+        className="social-share-template-m_icon__1Mnu5"
+        key="horizontal-0"
+      >
+        <div
+          onClick={[Function]}
+        >
+          <ShareIcon
+            color="#000000"
+          />
+        </div>
+      </li>
+      <ShareItem
+        alt="fb icon"
+        bgColor="#4e71a8"
+        dataTestId="card-share-0"
+        icon={
+          <Facebook
+            color="#000000"
+          />
+        }
+        key="facebook"
+        name="facebook"
+        text="Facebook"
+        url="https://www.facebook.com"
+      />
+      <ShareItem
+        alt="twitter icon"
+        bgColor="#1db7eb"
+        dataTestId="card-share-1"
+        icon={
+          <Twitter
+            color="#000000"
+          />
+        }
+        key="twitter"
+        name="twitter"
+        text="Twitter"
+        url="https://twitter.com/"
+      />
+      <ShareItem
+        alt="linkedin icon"
+        bgColor="#0077B5"
+        dataTestId="card-share-2"
+        icon={
+          <LinkedIn
+            color="#000000"
+          />
+        }
+        key="linkedin"
+        name="linkedin"
+        text="LinkedIn"
+        url="https://twitter.com/"
+      />
+      <ShareItem
+        alt="whatsapp share"
+        bgColor="#25d366"
+        dataTestId="card-share-3"
+        icon={
+          <WhatsApp
+            color="#000000"
+          />
+        }
+        key="whatsapp"
+        name="whatsapp"
+        text="Whatsapp"
+        url="https://twitter.com/"
+      />
+    </ul>
+  </div>
+  <div
+    className="social-share-template-m_tablet-view__kATzi"
+  >
+    <ul
+      className="social-share-template-m_wrapper__1wXin"
+    >
+      <li
+        className="social-share-template-m_icon__1Mnu5"
+        key="horizontal-0"
+      >
+        <div
+          onClick={[Function]}
+        >
+          <ShareIcon
+            color="#000000"
+          />
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+`;

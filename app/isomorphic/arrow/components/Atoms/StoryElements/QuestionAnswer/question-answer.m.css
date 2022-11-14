@@ -1,0 +1,107 @@
+/* eslint-disable scss/at-rule-no-unknown */
+@value viewports: "../../../../../../assets/arrow/stylesheets/viewports.m.css";
+@value mobile from viewports;
+
+.qa-withAuthorImage:global(.arrow-component) .a-element p,
+.qa-default:global(.arrow-component) .a-element p,
+.qa-withAuthorImage:global(.arrow-component) .q-element p,
+.qa-default:global(.arrow-component) .q-element p,
+.dark {
+  font-size: var(--arrow-fs-s);
+  font-weight: var(--arrow-fw-bold);
+  line-height: var(--arrow-lh-5);
+  display: inline;
+  color: var(--arrow-c-mono2);
+  @media (min-width: mobile) {
+    font-size: var(--arrow-fs-m);
+  }
+}
+
+.q-element {
+  margin-bottom: var(--arrow-spacing-m);
+}
+
+.qa-withAuthorImage:global(.arrow-component) .a-element p,
+.qa-default:global(.arrow-component) .a-element p {
+  font-weight: var(--arrow-fw-normal);
+}
+
+.qa-withAuthorImage .hidden {
+  width: 35px;
+  display: inline-block;
+  @media (min-width: mobile) {
+    width: 38px;
+  }
+}
+
+.qa-default .curveIcon,
+.qa-default .edgeIcon {
+  width: 27px;
+  height: 27px;
+  color: var(--arrow-c-light);
+  background-color: var(--arrow-c-brand1);
+  font-size: var(--arrow-fs-s);
+  font-weight: var(--arrow-fw-bold);
+  display: inline-block;
+  line-height: var(--arrow-lh-5);
+  text-align: center;
+  margin-right: var(--arrow-spacing-xs);
+  @media (min-width: mobile) {
+    width: 30px;
+    height: 30px;
+    font-size: var(--arrow-fs-m);
+  }
+}
+
+.qa-default .edgeIcon {
+  border-radius: 2.8px;
+}
+
+.qa-default .curveIcon {
+  border-radius: 13.5px;
+  @media (min-width: mobile) {
+    border-radius: 15px;
+  }
+}
+
+.qa-withAuthorImage .q-element,
+.qa-withAuthorImage .a-element {
+  position: relative;
+}
+
+.qa-withAuthorImage .labelAttribution img {
+  width: 27px;
+  height: 27px;
+  border-radius: 16px;
+  position: absolute;
+  @media (min-width: mobile) {
+    width: 30px;
+    height: 30px;
+  }
+}
+
+.qa-withAuthorImage:global(.arrow-component) .a-element .light p,
+.qa-default:global(.arrow-component) .a-element .light p,
+.qa-withAuthorImage:global(.arrow-component) .q-element .light p,
+.qa-default:global(.arrow-component) .q-element .light p {
+  color: var(--arrow-c-invert-mono1);
+  a {
+    color: var(--arrow-c-invert-mono2);
+    border-bottom: 1px solid var(--arrow-c-invert-mono2);
+  }
+}
+
+.content {
+  display: inline;
+}
+
+html[dir="rtl"] {
+  .content {
+    margin-right: var(--arrow-spacing-s);
+  }
+  .qa-default .curveIcon,
+  .qa-default .edgeIcon {
+    margin-right: 0;
+    margin-left: var(--arrow-spacing-xs);
+  }
+}

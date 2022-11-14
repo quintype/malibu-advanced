@@ -1,0 +1,23 @@
+.button {
+  padding: var(--arrow-spacing-xs) var(--arrow-spacing-l);
+  border: 1px solid;
+  display: flex;
+  margin: var(--arrow-spacing-m) auto var(--arrow-spacing-xs) auto;
+  font-size: var(--arrow-fs-xs);
+  border-radius: var(--arrow-spacing-xxs);
+  background-color: transparent;
+  width: fit-content;
+  cursor: pointer;
+}
+
+.default {
+  display: block;
+}
+
+.dark {
+  color: var(--arrow-c-mono2);
+}
+
+.light {
+  color: var(--arrow-c-invert-mono2);
+}

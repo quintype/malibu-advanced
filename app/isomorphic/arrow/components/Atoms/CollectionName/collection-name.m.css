@@ -1,0 +1,94 @@
+@custom-media --viewport-medium (width >= 768px);
+
+.collection {
+  font-size: var(--arrow-fs-m);
+  margin-bottom: var(--arrow-spacing-m);
+  font-weight: var(--arrow-fw-bold);
+  @media (--viewport-medium) {
+    font-size: var(--arrow-fs-l);
+    margin-bottom: var(--arrow-spacing-l);
+  }
+}
+
+.collection-borderLeft {
+  display: flex;
+  align-items: baseline;
+
+  .border-left {
+    margin-right: var(--arrow-spacing-xs);
+    min-width: 5px;
+    width: 5px;
+    overflow: hidden;
+  }
+
+  .border-left::before {
+    content: "I";
+    font-family: var(--arrow-sans-serif);
+  }
+}
+
+.collection-borderBottomFull {
+  display: inline-block;
+}
+
+.collection-borderBottom {
+  display: block;
+}
+.collection-crossLine {
+  display: flex;
+  align-items: center;
+}
+.collection-crossLine:before {
+  content: " ";
+  position: relative;
+  flex: 1 1 auto;
+  border-top: 1px solid var(--arrow-c-mono5);
+  margin-right: var(--arrow-spacing-l);
+}
+.collection-crossLine:after {
+  content: " ";
+  position: relative;
+  flex: 1 1 auto;
+  border-top: 1px solid var(--arrow-c-mono5);
+  margin-left: var(--arrow-spacing-l);
+}
+
+html[dir="rtl"] {
+  .collection-borderLeft {
+    .border-left {
+      margin-right: 0;
+      margin-left: var(--arrow-spacing-xs);
+    }
+  }
+
+  .collection-crossLine:before {
+    margin-right: 0;
+    margin-left: var(--arrow-spacing-l);
+  }
+  .collection-crossLine:after {
+    margin-left: 0;
+    margin-right: var(--arrow-spacing-l);
+  }
+}
+
+.border-bottom {
+  width: 20px;
+  height: 4px;
+  margin-top: var(--arrow-spacing-xxs);
+}
+
+.collection-crossLine .border-bottom {
+  visibility: hidden;
+}
+.dark a,
+.dark h3,
+.dark h2,
+.dark h5 {
+  color: var(--arrow-c-mono2);
+}
+.light a,
+.light h3,
+.light h2,
+.light h5 {
+  color: var(--arrow-c-invert-mono2);
+}

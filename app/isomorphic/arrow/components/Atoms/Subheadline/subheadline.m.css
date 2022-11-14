@@ -1,0 +1,17 @@
+@custom-media --viewport-medium (width >= 768px);
+
+.subheadline {
+  margin-bottom: var(--arrow-spacing-xxs);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  @media (--viewport-medium) {
+    margin-bottom: var(--arrow-spacing-xs);
+  }
+}
+.dark {
+  color: var(--arrow-c-mono4);
+}
+.light {
+  color: var(--arrow-c-invert-mono4);
+}

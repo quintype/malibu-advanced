@@ -1,0 +1,24 @@
+@custom-media --viewport-medium (width >= 768px);
+
+.read-time-wrapper {
+  display: flex;
+  font-size: var(--arrow-fs-tiny);
+}
+
+.dot-indicator {
+  padding: 0 var(--arrow-spacing-xs) var(--arrow-spacing-xs);
+}
+
+.dark {
+  color: var(--arrow-c-mono4);
+}
+
+.light {
+  color: var(--arrow-c-invert-mono4);
+}
+
+html[dir="rtl"] {
+  .read-time-wrapper {
+    margin-right: var(--arrow-spacing-xs);
+  }
+}

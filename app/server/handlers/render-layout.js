@@ -10,7 +10,7 @@ import fontFace from "../font";
 import { BreakingNewsView } from "../../isomorphic/components/breaking-news-view";
 import { TopAd } from "../../isomorphic/components/ads/top-ad";
 import { getConfig, extractor, getCriticalCss, getArrowCss, getStyleTags } from "../helpers";
-import get from "lodash.get";
+import get from "lodash/get";
 
 const cssContent = assetPath("app.css") ? readAsset("app.css") : "";
 const fontJsContent = assetPath("font.js") ? readAsset("font.js") : "";
