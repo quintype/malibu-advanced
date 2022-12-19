@@ -12,7 +12,7 @@ const TextStoryTemplate = ({
   config = {},
   storyElementsConfig,
   adComponent,
-  widgetComp,
+  // widgetComp = () => {},
   firstChild,
   secondChild,
 }) => {

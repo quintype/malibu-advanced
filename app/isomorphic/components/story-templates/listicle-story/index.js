@@ -3,7 +3,12 @@ import ListicleStoryTemplate from "../../../arrow/components/Rows/StoryTemplates
 import { object } from "prop-types";
 
 const ListicleStory = ({ story }) => {
-  return <ListicleStoryTemplate story={story} />;
+  return (
+    <ListicleStoryTemplate
+      story={story}
+      config={{ templateType: "hero-vertical-priority", authorDetails: { template: "centerAligned" } }}
+    />
+  );
 };
 
 ListicleStory.propTypes = {

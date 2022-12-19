@@ -3,7 +3,12 @@ import VideoStoryTemplate from "../../../arrow/components/Rows/StoryTemplates/Vi
 import { object } from "prop-types";
 
 const VideoStory = ({ story }) => {
-  return <VideoStoryTemplate story={story} />;
+  return (
+    <VideoStoryTemplate
+      story={story}
+      config={{ templateType: "headline-priority", authorDetails: { template: "centerAligned" } }}
+    />
+  );
 };
 
 VideoStory.propTypes = {

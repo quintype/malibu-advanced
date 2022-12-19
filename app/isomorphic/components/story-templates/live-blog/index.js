@@ -3,7 +3,12 @@ import LiveBlogStoryTemplate from "../../../arrow/components/Rows/StoryTemplates
 import { object } from "prop-types";
 
 const LiveBlogStory = ({ story }) => {
-  return <LiveBlogStoryTemplate story={story} />;
+  return (
+    <LiveBlogStoryTemplate
+      story={story}
+      config={{ templateType: "hero-vertical-priority", authorDetails: { template: "centerAligned" } }}
+    />
+  );
 };
 
 LiveBlogStory.propTypes = {

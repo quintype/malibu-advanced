@@ -3,7 +3,12 @@ import PhotoStoryTemplates from "../../../arrow/components/Rows/StoryTemplates/P
 import { object } from "prop-types";
 
 const PhotoStory = ({ story }) => {
-  return <PhotoStoryTemplates story={story} />;
+  return (
+    <PhotoStoryTemplates
+      story={story}
+      config={{ templateType: "hero-vertical-priority", authorDetails: { template: "centerAligned" } }}
+    />
+  );
 };
 
 PhotoStory.propTypes = {

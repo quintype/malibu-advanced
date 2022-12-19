@@ -98,7 +98,7 @@ const AsideCollection = ({
 
   const { theme } = config;
   const isHorizontal = horizontal ? "horizontal-wrapper" : "";
-
+  console.log("4. isHorizontal is --->", horizontal);
   if (horizontal) {
     return (
       <div
@@ -114,6 +114,7 @@ const AsideCollection = ({
   }
   const isSticky = sticky ? "sticky" : "";
   const asideSlot = (type, slot, index) => {
+    console.log("6. aside slot type is --->", type);
     switch (type) {
       case "ad":
         return (
@@ -136,7 +137,7 @@ const AsideCollection = ({
         );
     }
   };
-
+  // console.log("5. StoryCollection --->", slots, data, horizontal);
   return (
     <div
       className="arrow-component arr--aside-collection"
