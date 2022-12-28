@@ -1,12 +1,21 @@
 import React from "react";
 import VideoStoryTemplate from "../../../arrow/components/Rows/StoryTemplates/VideoStoryTemplates";
 import { object } from "prop-types";
+import { AdPlaceholder } from "../../../arrow/components/Atoms/AdPlaceholder";
 
-const VideoStory = ({ story }) => {
+const VideoStory = ({ story, config }) => {
+  const templateSpecific = {}; // {templateType: "headline-priority", authorDetails: { template: "centerAligned" } };
+  const adWidget = () => {
+    return <AdPlaceholder height="250px" width="300px" />;
+  };
   return (
     <VideoStoryTemplate
       story={story}
-      config={{ templateType: "headline-priority", authorDetails: { template: "centerAligned" } }}
+      config={{ ...config, ...templateSpecific }}
+      adComponent={adWidget}
+      widgetComp={adWidget}
+      firstChild={<AdPlaceholder height="250px" width="300px" />}
+      secondChild={<AdPlaceholder height="250px" width="300px" />}
     />
   );
 };
@@ -15,4 +24,4 @@ VideoStory.propTypes = {
   story: object,
 };
 
-export default React.memo(VideoStory);
+export default VideoStory;

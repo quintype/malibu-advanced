@@ -12,7 +12,7 @@ const TextStoryTemplate = ({
   config = {},
   storyElementsConfig,
   adComponent,
-  // widgetComp = () => {},
+  widgetComp,
   firstChild,
   secondChild,
 }) => {
@@ -37,6 +37,7 @@ const TextStoryTemplate = ({
   const dataTestId = supportImageType[templateType]
     ? `text-story-${templateType}-${kebabCase(supportImageType[templateType])}`
     : `text-story-${templateType}`;
+
   return (
     <div
       data-test-id={dataTestId}

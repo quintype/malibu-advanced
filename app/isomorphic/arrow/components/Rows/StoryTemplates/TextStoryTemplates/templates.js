@@ -51,7 +51,6 @@ export const StoryTemplate = ({
   };
 
   const AsideCollectionCard = () => {
-    console.log("asideCollection --->", asideCollection);
     return (
       asideCollection && (
         <div styleName="aside-collection tablet-index-2">
@@ -85,7 +84,6 @@ export const StoryTemplate = ({
   };
 
   const StoryData = () => {
-    console.log("Inside StoryData Component");
     return (
       <div styleName="gap-16">
         {authorDetails && <AuthorCard story={story} template={authorDetails.template} opts={authorDetails.opts} />}
@@ -121,7 +119,6 @@ export const StoryTemplate = ({
   };
 
   const SideColumn = () => {
-    // console.log("3. asideCollection in side column is --->", asideCollection);
     return (
       asideCollection && (
         <div styleName="text-story-side-column">
@@ -251,7 +248,6 @@ export const StoryTemplate = ({
   };
 
   const getStoryTemplate = (templateType) => {
-    // console.log("2. Template type is --->", templateType);
     switch (templateType) {
       case "hero-priority-center":
         return heroPriorityCenterTemplate();

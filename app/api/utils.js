@@ -30,30 +30,6 @@ export const getAuthorStories = async (id, offset, limit) => {
   return items;
 };
 
-export const loadRelatedStories1 = async (story, config) => {
-  const { mountAt } = config || {};
-  const mountAtPrefix = mountAt || "";
-  const FIELDS =
-    "id,metadata,story-template,headline,slug,hero-image-s3-key,hero-image-metadata,author-name,author-id,authors,url,alternative,last-published-at,first-published-at,hero-image-caption";
-  const sectionQuery = story.sections && story.sections.length !== 0 ? `section-id=${story.sections[0].id}` : "";
-  // const items = await (
-  // ).json();
-  // // console.log("Items are --->", items);
-  // return await items["related-stories"];
-
-  const unresolved = await (
-    await fetch(`${mountAtPrefix}/api/v1/stories/${story.id}/related-stories?${sectionQuery}&fields=${FIELDS}`)
-  ).json();
-
-  // console.log(
-  //   "Unresolved ->",
-  //   `${mountAtPrefix}/api/v1/stories/${story.id}/related-stories?${sectionQuery}&fields=${FIELDS}`
-  // );
-  // const resolved = unresolved.json();
-  // console.log("resolved ->", unresolved["related-stories"]);
-  return unresolved["related-stories"];
-};
-
 export function loadRelatedStories(story, config) {
   const { mountAt } = config || {};
   const mountAtPrefix = mountAt || "";
