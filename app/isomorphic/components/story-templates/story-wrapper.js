@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { loadRelatedStories } from "../../../api/utils";
 import { TextStory, LiveBlogStory, ListicleStory, PhotoStory, VideoStory } from "./index";
 import { AdPlaceholder } from "../../arrow/components/Atoms/AdPlaceholder";
+import { object } from "prop-types";
 
 function StoryWrapper({ story, config }) {
   const [relatedStories, setRelatedStories] = useState([]);
@@ -96,4 +97,10 @@ function StoryWrapper({ story, config }) {
       );
   }
 }
+
+StoryWrapper.propTypes = {
+  story: object,
+  config: object,
+};
+
 export default React.memo(StoryWrapper);
