@@ -1,6 +1,6 @@
 import React from "react";
 import ListicleStoryTemplate from "../../../arrow/components/Rows/StoryTemplates/ListicleStoryTemplates";
-import { object } from "prop-types";
+import { object, func } from "prop-types";
 
 const ListicleStory = ({ story, config, adWidget, adPlaceholder }) => {
   const templateSpecific = {}; // { templateType: "headline-hero-priority", authorDetails: { template: "centerAligned" } };
@@ -19,6 +19,9 @@ const ListicleStory = ({ story, config, adWidget, adPlaceholder }) => {
 
 ListicleStory.propTypes = {
   story: object,
+  config: object,
+  adWidget: func,
+  adPlaceholder: object,
 };
 
 export default ListicleStory;

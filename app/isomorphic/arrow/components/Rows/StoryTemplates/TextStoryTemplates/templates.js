@@ -57,7 +57,7 @@ export const StoryTemplate = ({
           <AsideCollection
             horizontal={true}
             {...asideCollection}
-            // widgetComp={widgetComp}
+            widgetComp={widgetComp}
             adComponent={adComponent}
             storyId={storyId}
             opts={publishedDetails}

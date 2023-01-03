@@ -1,6 +1,6 @@
 import React from "react";
 import VideoStoryTemplate from "../../../arrow/components/Rows/StoryTemplates/VideoStoryTemplates";
-import { object } from "prop-types";
+import { object, func } from "prop-types";
 
 const VideoStory = ({ story, config, adWidget, adPlaceholder }) => {
   const templateSpecific = {}; // {templateType: "headline-priority", authorDetails: { template: "centerAligned" } };
@@ -19,6 +19,9 @@ const VideoStory = ({ story, config, adWidget, adPlaceholder }) => {
 
 VideoStory.propTypes = {
   story: object,
+  config: object,
+  adWidget: func,
+  adPlaceholder: object,
 };
 
 export default VideoStory;

@@ -1,6 +1,6 @@
 import React from "react";
 import TextStoryTemplate from "../../../arrow/components/Rows/StoryTemplates/TextStoryTemplates";
-import { object } from "prop-types";
+import { object, func } from "prop-types";
 
 const TextStory = ({ story, config, adWidget, adPlaceholder }) => {
   const templateSpecific = {};
@@ -21,6 +21,8 @@ const TextStory = ({ story, config, adWidget, adPlaceholder }) => {
 TextStory.propTypes = {
   story: object,
   config: object,
+  adWidget: func,
+  adPlaceholder: object,
 };
 
 export default TextStory;

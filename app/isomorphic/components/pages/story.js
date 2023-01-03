@@ -2,18 +2,16 @@
 
 import React from "react";
 import { InfiniteStoryBase, WithPreview } from "@quintype/components";
-import { number, object, shape, any } from "prop-types";
+import { object, shape } from "prop-types";
 
 import StoryWrapper from "../story-templates/story-wrapper";
 
-function StoryPageBase({ index, story, otherProp, config }) {
-  return <StoryWrapper story={story} config={config} />
+function StoryPageBase({ story, config }) {
+  return <StoryWrapper story={story} config={config} />;
 }
 
 StoryPageBase.propTypes = {
-  index: number,
   story: object,
-  otherProp: any,
   config: object,
 };
 

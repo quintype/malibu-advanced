@@ -1,6 +1,6 @@
 import React from "react";
 import LiveBlogStoryTemplate from "../../../arrow/components/Rows/StoryTemplates/LiveBlogStoryTemplates";
-import { object } from "prop-types";
+import { object, func } from "prop-types";
 
 const LiveBlogStory = ({ story, config, adWidget, adPlaceholder }) => {
   const templateSpecific = {}; // { templateType: "hero-priority", authorDetails: { template: "centerAligned" } };
@@ -19,6 +19,9 @@ const LiveBlogStory = ({ story, config, adWidget, adPlaceholder }) => {
 
 LiveBlogStory.propTypes = {
   story: object,
+  config: object,
+  adWidget: func,
+  adPlaceholder: object,
 };
 
 export default LiveBlogStory;
