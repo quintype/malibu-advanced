@@ -15,7 +15,7 @@ export const PAGE_TYPE = Object.freeze({
   RESET_PASSWORD_PAGE: "reset-password-page",
   PROFILE_PAGE: "profile-page",
   USER_LOGIN: "user-login",
-  VISUAL_STORY: "visual-story"
+  VISUAL_STORY: "visual-story",
 });
 export const TAG_PAGE_URL_PREFIX = "/topic/";
 

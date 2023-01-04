@@ -3,7 +3,8 @@ import ListicleStoryTemplate from "../../../arrow/components/Rows/StoryTemplates
 import { object, func } from "prop-types";
 
 const ListicleStory = ({ story, config, adWidget, adPlaceholder }) => {
-  const templateSpecific = {}; // { templateType: "headline-hero-priority", authorDetails: { template: "centerAligned" } };
+  const templateSpecific = {};
+  // { templateType: "headline-hero-priority", authorDetails: { template: "centerAligned" } };
 
   return (
     <ListicleStoryTemplate

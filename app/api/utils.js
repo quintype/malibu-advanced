@@ -43,5 +43,5 @@ export const loadRelatedStories = async (story, config) => {
     })
     .get()
     .json((relatedStories) => relatedStories["related-stories"]);
-    return response;
+  return response;
 };
