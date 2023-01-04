@@ -1,3 +1,5 @@
+import { STORY_FIELDS } from "../isomorphic/constants";
+
 export const getSearchPageItems = async (slug, offset, limit) => {
   const { results } = await (await fetch(`/api/v1/search?q=${slug}&offset=${offset}&limit=${limit + 1}`)).json();
   const loadMoreStories = results.stories.map((story) => {
@@ -30,17 +32,16 @@ export const getAuthorStories = async (id, offset, limit) => {
   return items;
 };
 
-export function loadRelatedStories(story, config) {
+export const loadRelatedStories = async (story, config) => {
   const { mountAt } = config || {};
   const mountAtPrefix = mountAt || "";
-  const FIELDS =
-    "id,metadata,story-template,headline,slug,hero-image-s3-key,hero-image-metadata,author-name,author-id,authors,url,alternative,last-published-at,first-published-at,hero-image-caption";
   const sectionQuery = story.sections && story.sections.length !== 0 ? `section-id=${story.sections[0].id}` : "";
-  return fetch(`${mountAtPrefix}/api/v1/stories/${story.id}/related-stories?${sectionQuery}&fields=${FIELDS}`)
-    .then((relatedStories) => relatedStories.json())
-    .then((relatedStories) => relatedStories["related-stories"])
-    .catch((err) => {
-      console.error("Error in retrieving related stories :", err);
-      return [];
-    });
-}
+  const response = await global
+    .wretch(`${mountAtPrefix}/api/v1/stories/${story.id}/related-stories?${sectionQuery}`)
+    .query({
+      fields: STORY_FIELDS,
+    })
+    .get()
+    .json((relatedStories) => relatedStories["related-stories"]);
+    return response;
+};

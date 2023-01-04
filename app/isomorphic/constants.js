@@ -18,5 +18,9 @@ export const PAGE_TYPE = Object.freeze({
   VISUAL_STORY: "visual-story"
 });
 export const TAG_PAGE_URL_PREFIX = "/topic/";
+
 export const storyFields =
   "headline,subheadline,sections,author-name,authors,hero-image-metadata,hero-image-s3-key,slug,id";
+
+export const STORY_FIELDS =
+  "id,metadata,story-template,headline,slug,hero-image-s3-key,hero-image-metadata,author-name,author-id,authors,url,alternative,last-published-at,first-published-at,hero-image-caption";
