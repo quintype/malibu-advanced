@@ -4,7 +4,7 @@ import { object, func } from "prop-types";
 
 const TextStory = ({ story, config, adWidget, adPlaceholder }) => {
   const templateSpecific = {
-    templateType: "headline-hero-priority",
+    templateType: "headline-overlay-priority",
     authorDetails: { template: "centerAligned" },
     publishedDetails: {
       enablePublishedTime: true,
