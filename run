@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-npm install
+# npm install
 npm run compile
 supervisord -n -c <(cat <<EOF
 [supervisord]
