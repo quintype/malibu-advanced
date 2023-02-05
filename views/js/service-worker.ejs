@@ -5,4 +5,3 @@ shellUrl, hostname: <%- JSON.stringify(hostname) %> }); workbox.routing.register
 new workbox.strategies.NetworkFirst()); if("<%= config["public-integrations"]["one-signal"] &&
 config["public-integrations"]["one-signal"]["app-id"] %>") {
 importScripts('https://cdn.onesignal.com/sdks/OneSignalSDKWorker.js'); }
-importScripts('https://ssl.widgets.webengage.com/js/service-worker.js');
