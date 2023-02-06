@@ -1,18 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <% if (isGtmEnable) { %>
-      <%- include ("./partials/gtm") -%>
-    <% } %>
-    <% if (isGaEnable) { %>
-      <%- include ("./partials/ga") -%>
-    <% } %>
     <%- metaTags -%>
     <link href="/manifest.json" rel="manifest">
     <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0,maximum-scale=5.0,minimum-scale=1.0">
     <meta content="yes" name="apple-mobile-web-app-capable">
     <meta content="black" name="apple-mobile-web-app-status-bar-style">
-    <meta property="fb:pages" content="188640165600" />
     <meta content="<%- title -%>" name="apple-mobile-web-app-title">
     <link rel="preconnect" href="https://prod-analytics.qlitics.com" crossorigin >
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin >
@@ -136,7 +129,12 @@
       <% } else { %>
       <script type="application/json" id="static-page"><%- serialize(store.getState(), {isJSON: true}) -%></script>
       <% } %>
-
+      <% if (isGtmEnable) { %>
+        <%- include ("./partials/gtm") -%>
+      <% } %>
+      <% if (isGaEnable) { %>
+        <%- include ("./partials/ga") -%>
+      <% } %>
     <script type="text/javascript" src="<%= assetPath("app.js") %>" id="app-js" async></script>
    </body>
 </html>
