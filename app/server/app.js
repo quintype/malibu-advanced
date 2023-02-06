@@ -105,6 +105,7 @@ isomorphicRoutes(app, {
   preloadJs: true,
   oneSignalServiceWorkers: true,
   prerenderServiceUrl: "https://prerender.quintype.io",
+  enableWebengage: true,
   webengageLicenseCode: "311c5229",
   webengageApiKey: "2d5cb58e-7160-4f2a-b423-0c0d8007dd9c",
 });
