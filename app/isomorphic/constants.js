@@ -23,4 +23,4 @@ export const storyFields =
   "headline,subheadline,sections,author-name,authors,hero-image-metadata,hero-image-s3-key,slug,id";
 
 export const STORY_FIELDS =
-  "id,metadata,story-template,headline,slug,hero-image-s3-key,hero-image-metadata,author-name,author-id,authors,url,alternative,last-published-at,first-published-at,hero-image-caption";
+  "id,metadata,story-template,headline,sections,slug,hero-image-s3-key,hero-image-metadata,author-name,author-id,authors,url,alternative,last-published-at,first-published-at,hero-image-caption,read-time";

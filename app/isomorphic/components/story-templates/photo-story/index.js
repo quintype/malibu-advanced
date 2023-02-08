@@ -3,8 +3,15 @@ import PhotoStoryTemplates from "../../../arrow/components/Rows/StoryTemplates/P
 import { object, func } from "prop-types";
 
 const PhotoStory = ({ story, config, adWidget, adPlaceholder }) => {
-  const templateSpecific = {}; // {templateType: "hero-priority-center", authorDetails: { template: "centerAligned" } };
-
+  const templateSpecific = {
+    templateType: "hero-priority-center",
+    showSection: true,
+    publishedDetails: {
+      enablePublishedTime: true,
+      enableUpdatedTime: true,
+      showReadTime: true,
+    },
+  };
   return (
     <PhotoStoryTemplates
       story={story}

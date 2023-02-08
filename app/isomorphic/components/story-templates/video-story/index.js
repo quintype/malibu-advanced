@@ -3,7 +3,15 @@ import VideoStoryTemplate from "../../../arrow/components/Rows/StoryTemplates/Vi
 import { object, func } from "prop-types";
 
 const VideoStory = ({ story, config, adWidget, adPlaceholder }) => {
-  const templateSpecific = {}; // {templateType: "headline-priority", authorDetails: { template: "centerAligned" } };
+  const templateSpecific = {
+    templateType: "headline-priority",
+    showSection: true,
+    publishedDetails: {
+      enablePublishedTime: true,
+      enableUpdatedTime: true,
+      showReadTime: true,
+    },
+  };
 
   return (
     <VideoStoryTemplate

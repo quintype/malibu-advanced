@@ -15,7 +15,7 @@ function StoryWrapper({ story, config }) {
   const templateConfig = {
     asideCollection: {
       data: relatedStories,
-      slots: [
+      slotData: [
         {
           type: "ad",
         },
@@ -31,6 +31,8 @@ function StoryWrapper({ story, config }) {
         title: "Aside Collection Title",
         showAuthor: true,
         showTime: true,
+        showReadTime: true,
+        showSection: true,
       },
     },
   };

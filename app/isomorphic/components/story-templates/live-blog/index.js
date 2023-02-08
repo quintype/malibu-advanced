@@ -3,8 +3,15 @@ import LiveBlogStoryTemplate from "../../../arrow/components/Rows/StoryTemplates
 import { object, func } from "prop-types";
 
 const LiveBlogStory = ({ story, config, adWidget, adPlaceholder }) => {
-  const templateSpecific = {}; // { templateType: "hero-priority", authorDetails: { template: "centerAligned" } };
-
+  const templateSpecific = {
+    templateType: "hero-overlay",
+    showSection: true,
+    publishedDetails: {
+      enablePublishedTime: true,
+      enableUpdatedTime: true,
+      showReadTime: true,
+    },
+  };
   return (
     <LiveBlogStoryTemplate
       story={story}

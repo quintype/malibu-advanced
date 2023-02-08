@@ -83,6 +83,7 @@ StoryCollection.propTypes = {
 
 const AsideCollection = ({
   data = {},
+  slotData,
   config = {},
   horizontal = false,
   slots = [],
@@ -150,7 +151,7 @@ const AsideCollection = ({
           publishedDetails={opts}
         />
       )}
-      {slots.map((slot, index) => asideSlot(slot.type, slot, index))}
+      {slotData.map((slot, index) => asideSlot(slot.type, slot, index))}
     </div>
   );
 };
