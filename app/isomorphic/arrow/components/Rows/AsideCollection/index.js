@@ -162,6 +162,7 @@ AsideCollection.propTypes = {
   opts: PropTypes.object,
   horizontal: PropTypes.bool,
   slots: PropTypes.array,
+  slotData: PropTypes.array,
   adComponent: PropTypes.func,
   widgetComp: PropTypes.func,
   sticky: PropTypes.bool,
