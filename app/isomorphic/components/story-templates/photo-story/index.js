@@ -5,12 +5,7 @@ import { object, func } from "prop-types";
 const PhotoStory = ({ story, config, adWidget, adPlaceholder }) => {
   const templateSpecific = {
     templateType: "hero-priority-center",
-    showSection: true,
-    publishedDetails: {
-      enablePublishedTime: true,
-      enableUpdatedTime: true,
-      showReadTime: true,
-    },
+    showSection: false,
   };
   return (
     <PhotoStoryTemplates

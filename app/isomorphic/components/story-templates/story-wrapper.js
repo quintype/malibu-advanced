@@ -35,6 +35,13 @@ function StoryWrapper({ story, config }) {
         showSection: true,
       },
     },
+    templateType: "default",
+    showSection: true,
+    publishedDetails: {
+      enablePublishedTime: true,
+      enableUpdatedTime: true,
+      showReadTime: true,
+    },
   };
 
   useEffect(() => {

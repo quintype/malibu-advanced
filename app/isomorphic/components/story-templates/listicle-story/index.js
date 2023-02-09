@@ -3,15 +3,8 @@ import ListicleStoryTemplate from "../../../arrow/components/Rows/StoryTemplates
 import { object, func } from "prop-types";
 
 const ListicleStory = ({ story, config, adWidget, adPlaceholder }) => {
-  const templateSpecific = {
-    templateType: "headline-sideway",
-    showSection: true,
-    publishedDetails: {
-      enablePublishedTime: true,
-      enableUpdatedTime: true,
-      showReadTime: true,
-    },
-  };
+  const templateSpecific = { templateType: "headline-sideway" };
+
   return (
     <ListicleStoryTemplate
       story={story}
