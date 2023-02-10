@@ -10,6 +10,13 @@
     <link rel="preconnect" href="https://prod-analytics.qlitics.com" crossorigin >
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin >
 
+    <!-- Cookie setter begin -->
+    <script type="text/javascript">
+      fetch('/set-cookie').then((response) => response.json())
+        .then((data) => console.log("User ID <-----------> ",data));
+    </script>
+    <!-- Cookie setter end -->
+
     <%_ if(enableAds && loadAdsSynchronously) { _%>
       <script async="async" src="https://www.googletagservices.com/tag/js/gpt.js"></script>
     <%_ } _%>
