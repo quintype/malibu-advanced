@@ -12,7 +12,7 @@
 
     <!-- Cookie setter begin -->
     <script type="text/javascript">
-      fetch(`/set-cookie${new Date().getTime()}`).then((response) => response.json())
+      fetch('/set-cookie?time='+new Date().getTime()).then((response) => response.json())
         .then((data) => console.log("User ID <-----------> ",data));
     </script>
     <!-- Cookie setter end -->
