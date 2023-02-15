@@ -3,7 +3,7 @@ import TextStoryTemplate from "../../../arrow/components/Rows/StoryTemplates/Tex
 import { object, func } from "prop-types";
 
 const TextStory = ({ story, config, adWidget, adPlaceholder }) => {
-  const templateSpecific = { templateType: "headline-overlay-priority" };
+  const templateSpecific = { templateType: "hero-priority-center" };
   return (
     <TextStoryTemplate
       story={story}
