@@ -103,7 +103,6 @@ isomorphicRoutes(app, {
   staticRoutes: STATIC_ROUTES,
   seo: generateSeo,
   preloadJs: true,
-  oneSignalServiceWorkers: true,
   prerenderServiceUrl: "https://prerender.quintype.io",
   enableWebengage: true,
   webengageLicenseCode: "~10a5cb515",
