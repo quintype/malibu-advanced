@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { useEffect, useState } from "react";
 import { func, string } from "prop-types";
 import { withFacebookLogin, withGoogleLogin, withAppleLogin, withLinkedinLogin } from "@quintype/bridgekeeper-js";
@@ -23,8 +24,8 @@ export const SocialLoginBase = ({ loginOption, setLoginOption, googleAppId, face
     const getRedirectUrl =
       get(params, ["query", "redirect_uri"]) || get(publisherAttributes, ["sso_login", "redirect_Url"], "");
     const location = new URL(window.location.href);
-    const oauthAuthorize = `${location.origin}/api/auth/v1/oauth/authorize?redirect_uri=${getRedirectUrl}&client_id=${clientId}
-    &callback_uri=${getCallbackUrl}&response_type=code`;
+    const oauthAuthorize = `${location.origin}/api/auth/v1/oauth/authorize?redirect_uri=${getRedirectUrl}
+    &client_id=${clientId}&callback_uri=${getCallbackUrl}&response_type=code`;
     setRedirectUrl(ssoLoginIsEnable ? oauthAuthorize : `${location.origin}${location.pathname}`);
   }, []);
 
@@ -89,7 +90,7 @@ export const SocialLoginBase = ({ loginOption, setLoginOption, googleAppId, face
     return (
       <button onClick={() => setLoginOption(props.label)} styleName="loginBtn">
         <span styleName="icon">
-          <SvgIconHandler type={label} height="15" width="15" iconStyle={{ color: "#000" }} />
+          <SvgIconHandler type={props.label} height="15" width="15" iconStyle={{ color: "#000" }} />
         </span>
         <span>{loginOption}</span>
       </button>
