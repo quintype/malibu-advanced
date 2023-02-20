@@ -63,6 +63,7 @@ const PhoneLogin = ({ onLogin, setLoginOption }) => {
 };
 
 PhoneLogin.propTypes = {
+  onLogin: func,
   setLoginOption: func,
 };
 

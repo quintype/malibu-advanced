@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import PT from "prop-types";
-import { login, sendOtp, updateWithOtp, currentUser } from "@quintype/bridgekeeper-js";
+import { login, sendOtp, updateWithOtp, currentUser, oauthAuthorize } from "@quintype/bridgekeeper-js";
 import { parseUrl } from "query-string";
 
 import { InputField } from "../../atoms/InputField";
@@ -94,7 +94,7 @@ const OTP = ({ member }) => {
     };
     try {
       await sendOtp(data);
-      setSuccessMsg(`OTP Sent to your registered ${member[isPhoneLogin] ? "phone" : "email"}`);
+      setSuccessMsg(`OTP Sent to your registered ${member.isPhoneLogin ? "phone" : "email"}`);
     } catch (error) {
       setError(error);
     }
@@ -103,17 +103,17 @@ const OTP = ({ member }) => {
   return (
     <React.Fragment>
       <p styleName="otp-text">
-        A One Time Password code was sent via {`${member["isPhoneLogin"] ? "phone" : "email"}`} to{" "}
+        A One Time Password code was sent via {`${member.isPhoneLogin ? "phone" : "email"}`} to{" "}
         <span>{member.email || member["phone-number"]}</span>
       </p>
-      <form styleName="malibu-form" onSubmit={member["isPhoneLogin"] ? otpLogin : otpHandler}>
+      <form styleName="malibu-form" onSubmit={member.isPhoneLogin ? otpLogin : otpHandler}>
         <InputField name="Enter OTP" id="otp" type="text" required onChange={setData} />
         {error && <p styleName="error">Invalid OTP</p>}
         {successMsg && <p>{successMsg}</p>}
         <div styleName="actions">
           <button
             aria-label="verify-otp-button"
-            onClick={member["isPhoneLogin"] ? otpLogin : otpHandler}
+            onClick={member.isPhoneLogin ? otpLogin : otpHandler}
             className="malibu-btn-large"
           >
             Verify OTP
