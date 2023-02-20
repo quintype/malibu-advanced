@@ -10,10 +10,10 @@ import Button from "../../atoms/Button";
 import { SvgIconHandler } from "../../atoms/svg-icon-hadler";
 import "./social-login.m.css";
 
-export const SocialLoginBase = ({ googleAppId, facebookAppId }) => {
+export const SocialLoginBase = ({ loginOption, setLoginOption, googleAppId, facebookAppId }) => {
   const [redirectUrl, setRedirectUrl] = useState("/");
-  const publisherAttributes = useSelector(state => get(state, ["qt", "config", "publisher-attributes"], {}));
-  const currentPath = useSelector(state => get(state, ["qt", "currentPath"], ""));
+  const publisherAttributes = useSelector((state) => get(state, ["qt", "config", "publisher-attributes"], {}));
+  const currentPath = useSelector((state) => get(state, ["qt", "currentPath"], ""));
   const ssoLoginIsEnable = get(publisherAttributes, ["sso_login", "is_enable"], false);
   const clientId = get(publisherAttributes, ["sso_login", "client_id"], "");
 
@@ -31,7 +31,7 @@ export const SocialLoginBase = ({ googleAppId, facebookAppId }) => {
     const { serverSideLoginPath } = withFacebookLogin({
       scope: "email",
       emailMandatory: true,
-      redirectUrl: encodeURIComponent(redirectUrl)
+      redirectUrl: encodeURIComponent(redirectUrl),
     });
     return (
       <Button color="#3b5998" flat href={serverSideLoginPath} socialButton>
@@ -47,7 +47,7 @@ export const SocialLoginBase = ({ googleAppId, facebookAppId }) => {
     const { serverSideLoginPath } = withLinkedinLogin({
       scope: "email",
       emailMandatory: true,
-      redirectUrl: encodeURIComponent(redirectUrl)
+      redirectUrl: encodeURIComponent(redirectUrl),
     });
     return (
       <Button color="#dd4b39" flat href={serverSideLoginPath} socialButton>
@@ -63,7 +63,7 @@ export const SocialLoginBase = ({ googleAppId, facebookAppId }) => {
     const { serverSideLoginPath } = withGoogleLogin({
       scope: "email",
       emailMandatory: true,
-      redirectUrl: encodeURIComponent(redirectUrl)
+      redirectUrl: encodeURIComponent(redirectUrl),
     });
     return (
       <Button color="#dd4b39" flat href={serverSideLoginPath} socialButton>
@@ -84,10 +84,24 @@ export const SocialLoginBase = ({ googleAppId, facebookAppId }) => {
     );
   };
 
+  const PhoneEmailLogin = ({ label }) => {
+    return (
+      <button onClick={() => setLoginOption(label)} styleName="loginBtn">
+        <span styleName="icon">
+          <SvgIconHandler type={label} height="15" width="15" iconStyle={{ color: "#000" }} />
+        </span>
+        <span>{loginOption}</span>
+      </button>
+    );
+  };
+
   return (
     <div styleName="social-login">
       <h3 styleName="title">Or login with</h3>
       <ul styleName="buttons">
+        <li styleName="button">
+          {loginOption === "Email" ? <PhoneEmailLogin label={"login"} /> : <PhoneEmailLogin label={"phone"} />}
+        </li>
         <li styleName="button">
           <FaceBookLogin />
         </li>
@@ -107,13 +121,15 @@ export const SocialLoginBase = ({ googleAppId, facebookAppId }) => {
 
 SocialLoginBase.propTypes = {
   getCurrentUser: func,
+  loginOption: string,
+  setLoginOption: func,
   googleAppId: string,
-  facebookAppId: string
+  facebookAppId: string,
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   googleAppId: get(state, ["qt", "config", "publisher-attributes", "google_app_id"], ""),
-  facebookAppId: get(state, ["qt", "config", "publisher-attributes", "facebook_app_id"], "")
+  facebookAppId: get(state, ["qt", "config", "publisher-attributes", "facebook_app_id"], ""),
 });
 
 export const SocialLogin = connect(mapStateToProps, null)(SocialLoginBase);

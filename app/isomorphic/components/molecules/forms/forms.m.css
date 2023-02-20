@@ -32,6 +32,15 @@
   cursor: pointer;
 }
 
+.btn-submit {
+  color: var(--white);
+  background-color: var(--brand-primary);
+  width: 100%;
+  padding: 8px 0;
+  border: none;
+  border-radius: 4px;
+}
+
 .otp-text,
 .otp,
 .resend-otp,
