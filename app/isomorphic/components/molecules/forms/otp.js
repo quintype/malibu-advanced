@@ -37,7 +37,10 @@ const OTP = ({ member }) => {
     e.stopPropagation();
 
     try {
-      const response = await updateWithOtp(otp);
+      const user = {
+        "verification-status": "email",
+      };
+      const response = await updateWithOtp(otp, user);
 
       if (response.status === 200) {
         setSuccessMsg("Verification successful. Please login");

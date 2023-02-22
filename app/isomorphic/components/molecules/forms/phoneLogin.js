@@ -41,7 +41,11 @@ const PhoneLogin = ({ onLogin, setLoginOption }) => {
 
     sendOtp({ "phone-number": phoneNumber, "always-send": true })
       .then((res) => {
-        onLogin({ "phone-number": phoneNumber, isPhoneLogin: true }, res);
+        if (res.status === 200) {
+          onLogin({ "phone-number": phoneNumber, isPhoneLogin: true }, res);
+        } else {
+          setError({ message: res.message });
+        }
       })
       .catch((error) => setError(error));
   };
