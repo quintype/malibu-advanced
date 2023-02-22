@@ -14,6 +14,7 @@ import { renderLayout } from "./handlers/render-layout";
 import { loadData, loadErrorData } from "./load-data";
 import { pickComponent } from "../isomorphic/pick-component";
 import { generateStaticData, generateStructuredData, SEO } from "@quintype/seo";
+import webengageConfig from "../../config/webengage-config";
 
 export const app = createApp();
 
@@ -104,7 +105,5 @@ isomorphicRoutes(app, {
   seo: generateSeo,
   preloadJs: true,
   prerenderServiceUrl: "https://prerender.quintype.io",
-  enableWebengage: true,
-  webengageLicenseCode: "~10a5cb515",
-  webengageApiKey: "2bdc2d5d-583f-4937-bd5a-4dff207a59c3",
+  webengageConfig,
 });
