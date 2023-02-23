@@ -37,7 +37,7 @@ const LinkProfile = ({ onClose, member }) => {
 
     const body = { "always-send": true };
     if (!email) {
-      body["email"] = input;
+      body.email = input;
     } else {
       body["phone-number"] = input;
     }

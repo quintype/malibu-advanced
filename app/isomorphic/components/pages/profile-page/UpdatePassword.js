@@ -61,7 +61,7 @@ const UpdatePassword = ({ onClose, member }) => {
       return null;
     }
     try {
-      let body = {
+      const body = {
         email: email,
         otp: otp,
         "new-password": input,
