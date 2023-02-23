@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PT from "prop-types";
 import { login, sendOtp, updateWithOtp, currentUser, oauthAuthorize } from "@quintype/bridgekeeper-js";
 import { parseUrl } from "query-string";
@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { MEMBER_UPDATED } from "../../store/actions";
 
 import "./forms.m.css";
+import { useTimer } from "../../atoms/timer";
 
 const OTP = ({ member }) => {
   const [otp, setOTP] = useState("");
@@ -22,6 +23,11 @@ const OTP = ({ member }) => {
   const ssoLoginIsEnable = get(publisherAttributes, ["sso_login", "is_enable"], false);
 
   const dispatch = useDispatch();
+  const { start, time } = useTimer();
+
+  useEffect(() => {
+    start(30);
+  }, []);
 
   const getCurrentUser = async () => {
     try {
@@ -96,8 +102,13 @@ const OTP = ({ member }) => {
       [resendMode]: member[resendMode],
     };
     try {
-      await sendOtp(data);
-      setSuccessMsg(`OTP Sent to your registered ${member.isPhoneLogin ? "phone" : "email"}`);
+      start(30);
+      const res = await sendOtp(data);
+      if (res.status === 200) {
+        setSuccessMsg(`OTP Sent to your registered ${member.isPhoneLogin ? "phone" : "email"}`);
+      } else {
+        setError(res.error || res);
+      }
     } catch (error) {
       setError(error);
     }
@@ -121,10 +132,15 @@ const OTP = ({ member }) => {
           >
             Verify OTP
           </button>
-          <p styleName="resend-otp" onClick={resendOTP}>
+          <button disabled={time > 0} className="malibu-btn-large" styleName="resend-otp-btn" onClick={resendOTP}>
             Resend OTP
-          </p>
+          </button>
         </div>
+        {time > 0 && (
+          <p styleName="resend-otp">
+            Resend OTP in <span>{`0.${time}`}</span>
+          </p>
+        )}
       </form>
     </React.Fragment>
   );

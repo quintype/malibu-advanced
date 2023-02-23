@@ -41,6 +41,7 @@ const PhoneLogin = ({ onLogin, setLoginOption }) => {
 
     sendOtp({ "phone-number": phoneNumber, "always-send": true })
       .then((res) => {
+        setError({});
         if (res.status === 200) {
           onLogin({ "phone-number": phoneNumber, isPhoneLogin: true }, res);
         } else {
@@ -55,11 +56,9 @@ const PhoneLogin = ({ onLogin, setLoginOption }) => {
       <form styleName="malibu-form" onSubmit={loginHandler}>
         <InputField name="Phone number" id="phone" type="tel" required onChange={setData} />
         {error && <p styleName="error">{error.message}</p>}
-        <div styleName="actions">
-          <button aria-label="login-button" onClick={loginHandler} styleName="btn-submit" className="malibu-btn-large">
-            Get OTP
-          </button>
-        </div>
+        <button aria-label="login-button" onClick={loginHandler} styleName="btn-submit" className="malibu-btn-large">
+          Get OTP
+        </button>
       </form>
       <SocialLogin getCurrentUser={getCurrentUser} loginOption={"Email"} setLoginOption={setLoginOption} />
     </React.Fragment>

@@ -6,12 +6,15 @@ import { sendOtp, updateWithOtp } from "@quintype/bridgekeeper-js";
 import Modal from "../../login/modal";
 
 import "./profile-page.m.css";
+import { useTimer } from "../../atoms/timer";
+import { SvgIconHandler } from "../../atoms/svg-icon-hadler";
 
 const LinkProfile = ({ onClose, member }) => {
   const [input, setInput] = useState("");
   const [otp, setOTP] = useState("");
   const [showOtp, setShowOtp] = useState(false);
   const [error, setError] = useState({});
+  const { start, time } = useTimer();
 
   const { email, "login-phone-number": loginPhoneNumber } = member;
 
@@ -28,7 +31,7 @@ const LinkProfile = ({ onClose, member }) => {
     e.stopPropagation();
 
     if (input.length < 1) {
-      setError({ message: `Please provide ${email ? "email" : "phone number"}` });
+      setError({ message: `Please provide ${!email ? "email" : "phone number"}` });
       return null;
     }
 
@@ -43,8 +46,10 @@ const LinkProfile = ({ onClose, member }) => {
       .then((res) => {
         if (res.status === 200) {
           setShowOtp(true);
+          start(30);
+          setError({});
         } else {
-          setError({ message: res.message });
+          setError(res.error || res);
         }
       })
       .catch((error) => {
@@ -74,9 +79,8 @@ const LinkProfile = ({ onClose, member }) => {
       const response = await updateWithOtp(otp, user);
 
       if (response.status === 200) {
-        onClose;
+        onClose();
       } else {
-        console.log(response, "error");
         setError({ message: "error" });
       }
     } catch (err) {
@@ -89,14 +93,20 @@ const LinkProfile = ({ onClose, member }) => {
     <Modal onClose={onClose}>
       <form styleName="malibu-form-link" onSubmit={loginHandler}>
         <>
-          {!email ? (
-            <InputField name="Email" id="email" type="string" required onChange={setData} />
-          ) : (
-            <InputField name="Phone number" id="phone" type="tel" required onChange={setData} />
-          )}
+          <div styleName="modal-title">{`${
+            showOtp ? "Enter OTP" : `Link your ${!email ? "Email" : "Phone number"}`
+          }`}</div>
           {showOtp ? (
             <>
+              <p styleName="fields">
+                Please enter the otp we have sent to your
+                {`${!email ? " email" : " phone number"} ${input}`}
+                <span onClick={() => setShowOtp(false)} styleName="edit-icon">
+                  <SvgIconHandler type="edit" height="20" width="20" iconStyle={{ color: "#000" }} />
+                </span>
+              </p>
               <InputField name="OTP" id="otp" type="number" required onChange={setData} />
+              {error && <p styleName="otp-error">{error.message}</p>}
               <button
                 aria-label="login-button"
                 onClick={updateHandler}
@@ -105,18 +115,38 @@ const LinkProfile = ({ onClose, member }) => {
               >
                 Verify and Link
               </button>
+              <button
+                disabled={time > 0}
+                aria-label="resend-otp-button"
+                onClick={loginHandler}
+                styleName="resend-otp-btn"
+              >
+                Resend OTP
+              </button>
+              {time > 0 && (
+                <p styleName="resend-otp">
+                  Resend OTP in <span>{`0.${time}`}</span>
+                </p>
+              )}
             </>
           ) : (
-            <button
-              aria-label="login-button"
-              onClick={loginHandler}
-              styleName="btn-submit"
-              className="malibu-btn-large"
-            >
-              Get OTP
-            </button>
+            <>
+              {!email ? (
+                <InputField name="Email" id="email" type="string" required onChange={setData} />
+              ) : (
+                <InputField name="Phone number" id="phone" type="tel" required onChange={setData} />
+              )}
+              {error && <p styleName="otp-error">{error.message}</p>}
+              <button
+                aria-label="login-button"
+                onClick={loginHandler}
+                styleName="btn-submit"
+                className="malibu-btn-large"
+              >
+                Get OTP
+              </button>
+            </>
           )}
-          {error && <p styleName="error">{error.message}</p>}
         </>
       </form>
     </Modal>

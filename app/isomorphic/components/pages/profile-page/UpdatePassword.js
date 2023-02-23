@@ -26,9 +26,13 @@ const UpdatePassword = ({ onClose, member }) => {
     }
   };
 
-  const otpHandler = async () => {
+  const otpHandler = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
     if (!email) {
       setError({ message: "Email not linked" });
+      return null;
     }
 
     const body = { "always-send": true, email: email };
@@ -66,7 +70,7 @@ const UpdatePassword = ({ onClose, member }) => {
       const response = await resetPassword(body);
 
       if (response.status === 200) {
-        onClose;
+        onClose();
       } else {
         setError({ message: "error" });
       }
@@ -81,18 +85,28 @@ const UpdatePassword = ({ onClose, member }) => {
       <form styleName="malibu-form-link">
         <>
           <h3>Reset your Password</h3>
-          <InputField id="email" type="string" value={email} readOnly />
           {!showOtp && (
-            <button aria-label="login-button" onClick={otpHandler} styleName="btn-submit" className="malibu-btn-large">
-              Proceed
-            </button>
+            <>
+              <p styleName="fields">
+                A One Time Password code will be sent via email to {member.email} for verification
+              </p>
+              {error && <p styleName="otp-error">{error.message}</p>}
+              <button
+                aria-label="login-button"
+                onClick={otpHandler}
+                styleName="btn-submit"
+                className="malibu-btn-large"
+              >
+                Proceed
+              </button>
+            </>
           )}
           {showOtp && (
             <>
-              {/* <p styleName="password-otp-text">A One Time Password code was sent via email to {member.email}</p> */}
+              <p styleName="fields">A One Time Password code was sent via email to {member.email}</p>
               <InputField name="OTP" id="otp" type="number" required onChange={setData} />
               <InputField name="Password" id="password" type="string" required onChange={setData} />
-
+              {error && <p styleName="otp-error">{error.message}</p>}
               <button
                 aria-label="login-button"
                 onClick={updateHandler}
@@ -101,13 +115,21 @@ const UpdatePassword = ({ onClose, member }) => {
               >
                 Reset Password
               </button>
-              <button disabled={time > 0} styleName="resend-otp">{`Resend OTP ${
-                time > 0 ? `in 0.${time}` : ""
-              }`}</button>
+              <button
+                disabled={time > 0}
+                aria-label="resend-otp-button"
+                onClick={otpHandler}
+                styleName="resend-otp-btn"
+              >
+                Resend OTP
+              </button>
+              {time > 0 && (
+                <p styleName="resend-otp">
+                  Resend OTP in <span>{`0.${time}`}</span>
+                </p>
+              )}
             </>
           )}
-
-          {error && <p styleName="error">{error.message}</p>}
         </>
       </form>
     </Modal>

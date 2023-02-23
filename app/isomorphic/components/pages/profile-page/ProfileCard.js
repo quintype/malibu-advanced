@@ -12,7 +12,10 @@ const getFields = function (member, keys, setShowPasswordModal, setShowLinkModal
       switch (key) {
         case "password":
           return (
-            <span styleName="link" onClick={() => setShowPasswordModal(true)}>
+            <span
+              styleName={`link ${member["email"] ? "" : "link-disable"}`}
+              onClick={() => setShowPasswordModal(true)}
+            >
               Update Password
             </span>
           );
