@@ -30,6 +30,8 @@ export async function renderLayout(res, params) {
     get(params.store.getState(), ["qt", "config", "publisher-attributes", "placeholder_delay"])
   );
 
+  const webengageLicenseCode = get(params.store.getState(), ["qt", "config", "webengage-config", "licenseCode"], "");
+
   res.render(
     "pages/layout",
     Object.assign(
@@ -69,6 +71,7 @@ export async function renderLayout(res, params) {
         placeholderDelay,
         pageType,
         enableBreakingNews: params.pageType !== "profile-page",
+        webengageLicenseCode,
       },
       params
     )
