@@ -71,7 +71,6 @@ const OTP = ({ member }) => {
 
     try {
       const response = await login(data);
-      console.log(response);
       if (!response.user) {
         setError({ response });
         return;

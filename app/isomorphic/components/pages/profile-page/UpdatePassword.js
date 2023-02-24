@@ -85,7 +85,7 @@ const UpdatePassword = ({ onClose, member }) => {
       <form styleName="malibu-form-link">
         <>
           <h3>Reset your Password</h3>
-          {!showOtp && (
+          {!showOtp ? (
             <>
               <p styleName="fields">
                 A One Time Password code will be sent via email to {member.email} for verification
@@ -100,8 +100,7 @@ const UpdatePassword = ({ onClose, member }) => {
                 Proceed
               </button>
             </>
-          )}
-          {showOtp && (
+          ) : (
             <>
               <p styleName="fields">A One Time Password code was sent via email to {member.email}</p>
               <InputField name="OTP" id="otp" type="number" required onChange={setData} />
