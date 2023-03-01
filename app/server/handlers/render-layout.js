@@ -53,6 +53,8 @@ export async function renderLayout(res, params) {
         fontFace: fontFace,
         contentTemplate: null,
         title: params.title,
+        enableHeader: params.enableHeader,
+        enableFooter: params.enableFooter,
         topbar: renderLoadableReduxComponent(Header, params.store, extractor),
         navbar: renderLoadableReduxComponent(NavBar, params.store, extractor),
         footer: renderLoadableReduxComponent(Footer, params.store, extractor),
@@ -74,11 +76,11 @@ export async function renderLayout(res, params) {
         isGaEnable,
         isOnesignalEnable,
         oneSignalScript: params.oneSignalScript,
-        enableAds: enableAds && params.pageType !== "profile-page",
+        enableAds: enableAds && params.pageType !== "profile-page" && params.enableHeader,
         loadAdsSynchronously,
         placeholderDelay,
         pageType,
-        enableBreakingNews: params.pageType !== "profile-page",
+        enableBreakingNews: params.pageType !== "profile-page" && params.enableHeader,
       },
       params
     )
