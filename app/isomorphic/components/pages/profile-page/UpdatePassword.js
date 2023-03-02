@@ -69,10 +69,10 @@ const UpdatePassword = ({ onClose, member }) => {
 
       const response = await resetPassword(body);
 
-      if (response.status === 200) {
+      if (response.message) {
         onClose();
       } else {
-        setError({ message: "error" });
+        setError({ message: response?.error?.message || "Error" });
       }
     } catch (err) {
       setError(err);
@@ -104,7 +104,7 @@ const UpdatePassword = ({ onClose, member }) => {
             <>
               <p styleName="fields">A One Time Password code was sent via email to {member.email}</p>
               <InputField name="OTP" id="otp" type="number" required onChange={setData} />
-              <InputField name="Password" id="password" type="string" required onChange={setData} />
+              <InputField name="Password" id="password" type="password" required onChange={setData} />
               {error && <p styleName="otp-error">{error.message}</p>}
               <button
                 aria-label="login-button"
