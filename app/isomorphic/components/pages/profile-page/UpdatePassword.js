@@ -37,19 +37,18 @@ const UpdatePassword = ({ onClose, member }) => {
 
     const body = { "always-send": true, email: email };
 
-    sendOtp(body)
-      .then((res) => {
-        if (res.status === 200) {
-          setShowOtp(true);
-          start(30);
-          setError({});
-        } else {
-          setError({ message: `${res.message}, Click on proceed to resend OTP` });
-        }
-      })
-      .catch((error) => {
-        setError(error);
-      });
+    try {
+      const reponse = await sendOtp(body);
+      if (reponse.status === 200) {
+        setShowOtp(true);
+        start(30);
+        setError({});
+      } else {
+        setError({ message: `${reponse.message}, Click on proceed to resend OTP` });
+      }
+    } catch (error) {
+      setError(error);
+    }
   };
 
   const updateHandler = async (e) => {

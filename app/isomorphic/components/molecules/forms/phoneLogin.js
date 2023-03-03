@@ -38,17 +38,17 @@ const PhoneLogin = ({ onLogin, setLoginOption }) => {
       setError({ message: "Please provide phone number" });
       return null;
     }
-
-    sendOtp({ "phone-number": phoneNumber, "always-send": true })
-      .then((res) => {
+    try {
+      const response = await sendOtp({ "phone-number": phoneNumber, "always-send": true });
+      if (response.status === 200) {
         setError({});
-        if (res.status === 200) {
-          onLogin({ "phone-number": phoneNumber, isPhoneLogin: true }, res);
-        } else {
-          setError({ message: res.message });
-        }
-      })
-      .catch((error) => setError(error));
+        onLogin({ "phone-number": phoneNumber, isPhoneLogin: true }, response);
+      } else {
+        setError({ message: response.message });
+      }
+    } catch (error) {
+      setError(error);
+    }
   };
 
   return (

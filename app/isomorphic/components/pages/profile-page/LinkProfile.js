@@ -8,6 +8,8 @@ import Modal from "../../login/modal";
 import "./profile-page.m.css";
 import { useTimer } from "../../atoms/timer";
 import { SvgIconHandler } from "../../atoms/svg-icon-hadler";
+import { useDispatch } from "react-redux";
+import { MEMBER_UPDATED } from "../../store/actions";
 
 const LinkProfile = ({ onClose, member }) => {
   const [input, setInput] = useState("");
@@ -18,6 +20,7 @@ const LinkProfile = ({ onClose, member }) => {
 
   const { email, "login-phone-number": loginPhoneNumber } = member;
 
+  const dispatch = useDispatch();
   const setData = (e) => {
     if (e.target.id === "otp") {
       setOTP(e.target.value);
@@ -42,19 +45,18 @@ const LinkProfile = ({ onClose, member }) => {
       body["phone-number"] = input;
     }
 
-    sendOtp(body)
-      .then((res) => {
-        if (res.status === 200) {
-          setShowOtp(true);
-          start(30);
-          setError({});
-        } else {
-          setError(res.error || res);
-        }
-      })
-      .catch((error) => {
-        setError(error);
-      });
+    try {
+      const reponse = await sendOtp(body);
+      if (reponse.status === 200) {
+        setShowOtp(true);
+        start(30);
+        setError({});
+      } else {
+        setError(reponse.error || reponse);
+      }
+    } catch (error) {
+      setError(error);
+    }
   };
 
   const updateHandler = async (e) => {
@@ -79,9 +81,13 @@ const LinkProfile = ({ onClose, member }) => {
       const response = await updateWithOtp(otp, user);
 
       if (response.status === 200) {
+        dispatch({
+          type: MEMBER_UPDATED,
+          member: { ...member, email: email || input, "login-phone-number": loginPhoneNumber || input },
+        });
         onClose();
       } else {
-        setError({ message: "error" });
+        setError({ message: "Error - Unable to link" });
       }
     } catch (err) {
       setError(err);
@@ -101,7 +107,13 @@ const LinkProfile = ({ onClose, member }) => {
               <p styleName="fields">
                 Please enter the otp we have sent to your
                 {`${!email ? " email" : " phone number"} ${input}`}
-                <span onClick={() => setShowOtp(false)} styleName="edit-icon">
+                <span
+                  onClick={() => {
+                    setError({});
+                    setShowOtp(false);
+                  }}
+                  styleName="edit-icon"
+                >
                   <SvgIconHandler type="edit" height="20" width="20" iconStyle={{ color: "#000" }} />
                 </span>
               </p>
