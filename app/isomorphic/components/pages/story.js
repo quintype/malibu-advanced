@@ -2,37 +2,17 @@
 
 import React from "react";
 import { InfiniteStoryBase, WithPreview } from "@quintype/components";
-import { number, object, shape, any } from "prop-types";
+import { object, shape } from "prop-types";
 
-import TextStory from "../story-templates/text-story";
-import ListicleStory from "../story-templates/listicle-story";
-import PhotoStory from "../story-templates/photo-story";
-import LiveBlogStory from "../story-templates/live-blog";
-import VideoStory from "../story-templates/video-story";
-function StoryPageBase({ index, story, otherProp }) {
-  // Can switch to a different template based story-template, or only show a spoiler if index > 0
-  const storyTemplate = story["story-template"];
+import StoryWrapper from "../story-templates/story-wrapper";
 
-  switch (storyTemplate) {
-    case "text":
-      return <TextStory story={story} />;
-    case "video":
-      return <VideoStory story={story} />;
-    case "photo":
-      return <PhotoStory story={story} />;
-    case "listicle":
-      return <ListicleStory story={story} />;
-    case "live-blog":
-      return <LiveBlogStory story={story} />;
-    default:
-      return <TextStory story={story} />;
-  }
+function StoryPageBase({ story, config }) {
+  return <StoryWrapper story={story} config={config} />;
 }
 
 StoryPageBase.propTypes = {
-  index: number,
   story: object,
-  otherProp: any,
+  config: object,
 };
 
 const FIELDS =
@@ -68,6 +48,7 @@ export function StoryPage(props) {
 StoryPage.propTypes = {
   data: shape({
     story: object,
+    config: object,
   }),
 };
 
