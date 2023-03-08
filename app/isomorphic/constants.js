@@ -12,6 +12,7 @@ export const PAGE_TYPE = Object.freeze({
   STATIC_PAGE: "static-page",
   FORM_PAGE: "form-page",
   AUTHOR_PAGE: "author-page",
+  SUBSCRIPTION_PAGE: "subscription-page",
   RESET_PASSWORD_PAGE: "reset-password-page",
   PROFILE_PAGE: "profile-page",
   USER_LOGIN: "user-login",
