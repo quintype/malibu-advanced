@@ -1,8 +1,9 @@
 import get from "lodash/get";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import { getOauthAuthorizeUrl } from "@quintype/bridgekeeper-js";
+import { AccessType } from "@quintype/components";
 import AccountModal from "../../login/AccountModal";
+import { GroupsAndPlansModal, LoginModal } from "./Modals";
 
 import "./subscription-page.m.css";
 
@@ -10,42 +11,36 @@ export const SubscriptionPage = function (props) {
   const [showAccountModal, setShowAccountModal] = useState(true);
   const [activeTab, setActiveTab] = useState("subscription");
   const member = useSelector((state) => get(state, ["member"], null));
-  const getState = useSelector((state) => state);
-  const publisherAttributes = get(getState, ["qt", "config", "publisher-attributes"], {});
-  const clientId = get(publisherAttributes, ["sso_login", "client_id"], "");
-  const domainSlug = get(getState, ["qt", "config", "domainSlug"], "");
-  const redirectUrl = domainSlug
-    ? get(publisherAttributes, ["sso_login", "subdomain", domainSlug, "redirect_Url"], "")
-    : get(publisherAttributes, ["sso_login", "redirect_Url"], "");
 
-  const getScreen = function () {
+  const getScreen = function (initAccessType, initRazorPayPayment) {
     switch (activeTab) {
       case "subscription":
         return (
-          <>
-            <div>This is a subscription page</div>
-            <button onClick={() => (member ? setActiveTab("checkout") : setActiveTab("login"))}>subscribe</button>
-          </>
+          <GroupsAndPlansModal
+            initAccessType={initAccessType}
+            initRazorPayPayment={initRazorPayPayment}
+            member={member}
+            setActiveTab={setActiveTab}
+          />
         );
 
       case "login":
-        if (window) {
-          const oauthAuthorizeUrl = getOauthAuthorizeUrl(clientId, redirectUrl, window.location.href);
-          window.location.replace(oauthAuthorizeUrl);
-        }
         return (
-          <div styleName="modal">
-            <div styleName="login-modal">
-              {showAccountModal && <AccountModal isPopup={false} onClose={() => setShowAccountModal(false)} />}
-            </div>
-            <div styleName="plan-preview">You have chosen basic plan for 499/-</div>
-            <button styleNam="proceed-to-payment-btn" onClick={() => setActiveTab("checkout")}>
-              Click here for dummy login
-            </button>
-          </div>
+          <LoginModal
+            showAccountModal={showAccountModal}
+            setShowAccountModal={setShowAccountModal}
+            setActiveTab={setActiveTab}
+            AccountModal={AccountModal}
+          />
         );
 
       case "checkout":
+        initAccessType(() => console.log("Accesstype Initialized"));
+        if (global.AccessType) {
+          console.log("Response from initAccessType is --->", global.AccessType.getSubscriptions());
+        } else {
+          console.log("globalAccessType Not Found --->");
+        }
         return (
           <>
             <div styleName="plan-preview">This is a checkout page</div>
@@ -74,7 +69,19 @@ export const SubscriptionPage = function (props) {
 
   return (
     <>
-      <div>{getScreen()}</div>
+      {/* <div>{getScreen()}</div> */}
+      <AccessType
+        enableAccesstype={true}
+        isStaging={false}
+        accessTypeKey={"yTKoDn8R1d4AY651ZPvGDUq4"}
+        email={"abc@gmail.com"}
+        phone={123456}
+        prodHost="https://www.accesstype.com"
+        stagingHost="https://staging.accesstype.com"
+        accessTypeBkIntegrationId={"8"}
+      >
+        {({ initAccessType, initRazorPayPayment }) => <div>{getScreen(initAccessType, initRazorPayPayment)}</div>}
+      </AccessType>
     </>
   );
 };
