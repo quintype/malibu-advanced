@@ -1,7 +1,6 @@
 import React from "react";
 import { func } from "prop-types";
 
-
 export const PaymentModal = function ({ setActiveTab }) {
   return (
     <>
