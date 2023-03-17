@@ -71,7 +71,9 @@ export const SubscriptionPage = function (props) {
         phone={123456}
         prodHost="https://www.accesstype.com"
         stagingHost="https://staging.accesstype.com"
-        accessTypeBkIntegrationId={"10"}
+        paymentOptions={{
+          razorpay: { proceed: (paymentObject) => console.log("Payment object is --->", paymentObject) },
+        }}
       >
         {({ initAccessType, initRazorPayPayment, getSubscription, validateCoupon }) => (
           <SubscriptionLayout
