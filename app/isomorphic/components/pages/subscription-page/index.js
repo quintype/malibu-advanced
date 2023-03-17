@@ -71,7 +71,7 @@ export const SubscriptionPage = function (props) {
         phone={123456}
         prodHost="https://www.accesstype.com"
         stagingHost="https://staging.accesstype.com"
-        accessTypeBkIntegrationId={"8"}
+        accessTypeBkIntegrationId={"10"}
       >
         {({ initAccessType, initRazorPayPayment, getSubscription, validateCoupon }) => (
           <SubscriptionLayout
