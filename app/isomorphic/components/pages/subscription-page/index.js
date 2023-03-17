@@ -65,8 +65,8 @@ export const SubscriptionPage = function (props) {
     <>
       <AccessType
         enableAccesstype={true}
-        isStaging={false}
-        accessTypeKey={"yTKoDn8R1d4AY651ZPvGDUq4"}
+        isStaging={true}
+        accessTypeKey={"Aw4ujaqhpn8aVMT7yzQawSyZ"}
         email={"abc@gmail.com"}
         phone={123456}
         prodHost="https://www.accesstype.com"
