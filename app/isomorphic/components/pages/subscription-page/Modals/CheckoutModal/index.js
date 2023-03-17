@@ -83,7 +83,7 @@ export const CheckoutModal = function ({ member, setActiveTab, initRazorPayPayme
           <div styleName="label">To Pay</div>
           <div styleName="price">{`${currencyLabels[plan.price_currency]} ${plan.price_cents / 100}/-`}</div>
         </div>
-        <div styleName="payment-details">
+        <div>
           <div styleName="label">Payment Method</div>
           <input type={"radio"} id={"credit-debit-cards"} value={"razorpay"} checked />
           <label styleName="radio-label" htmlFor="credit-debit-cards">
