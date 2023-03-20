@@ -1,21 +1,23 @@
 import get from "lodash/get";
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { func } from "prop-types";
+import { func, object } from "prop-types";
 import { AccessType } from "@quintype/components";
 import AccountModal from "../../login/AccountModal";
 import { GroupsAndPlansModal, LoginModal, CheckoutModal, PaymentModal } from "./Modals";
 
 import "./subscription-page.m.css";
 
-const SubscriptionLayout = function ({ initAccessType, initRazorPayPayment, getSubscription, validateCoupon }) {
+const SubscriptionLayout = function ({ initAccessType, initRazorPayPayment, getSubscription, validateCoupon, member }) {
   const [showAccountModal, setShowAccountModal] = useState(true);
   const [activeTab, setActiveTab] = useState("subscription");
   const [selectedPlan, setSelectedPlan] = useState({});
-  const member = useSelector((state) => get(state, ["member"], null));
 
   useEffect(() => {
     !global.AccessType && initAccessType(() => console.log("Accesstype Initialized --->"));
+    if (global.AccessType) {
+      global.AccessType.getPaymentOptions().then((res) => console.log("Payment options are: ", res));
+    }
   }, []);
 
   switch (activeTab) {
@@ -61,21 +63,22 @@ const SubscriptionLayout = function ({ initAccessType, initRazorPayPayment, getS
 };
 
 export const SubscriptionPage = function (props) {
+  const member = useSelector((state) => get(state, ["member"], null));
+  const email = get(member, ["email"]);
+  const phone = get(member, ["metadata", "phone-number"], "1234");
+
   return (
     <>
       <AccessType
         enableAccesstype={true}
         isStaging={true}
         accessTypeKey={"Aw4ujaqhpn8aVMT7yzQawSyZ"}
-        email={"abc@gmail.com"}
-        phone={123456}
+        email={email}
+        phone={phone}
         prodHost="https://www.accesstype.com"
         stagingHost="https://staging.accesstype.com"
-        paymentOptions={{
-          razorpay: { proceed: (paymentObject) => console.log("Payment object is --->", paymentObject) },
-        }}
       >
-        {({ initAccessType, initRazorPayPayment, getSubscription, validateCoupon }) => (
+        {({ initAccessType, initRazorPayPayment, getSubscription, validateCoupon, member }) => (
           <SubscriptionLayout
             initAccessType={initAccessType}
             initRazorPayPayment={initRazorPayPayment}
@@ -93,4 +96,5 @@ SubscriptionLayout.propTypes = {
   initRazorPayPayment: func,
   getSubscription: func,
   validateCoupon: func,
+  member: object,
 };
