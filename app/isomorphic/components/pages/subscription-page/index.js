@@ -13,6 +13,8 @@ const SubscriptionLayout = function ({ initAccessType, initRazorPayPayment, getS
   const [activeTab, setActiveTab] = useState("subscription");
   const [selectedPlan, setSelectedPlan] = useState({});
 
+  console.log("Member object in SubscriptionLayout is --->", member);
+
   useEffect(() => {
     !global.AccessType && initAccessType(() => console.log("Accesstype Initialized --->"));
     if (global.AccessType) {
@@ -64,8 +66,10 @@ const SubscriptionLayout = function ({ initAccessType, initRazorPayPayment, getS
 
 export const SubscriptionPage = function (props) {
   const member = useSelector((state) => get(state, ["member"], null));
-  const email = get(member, ["email"]);
+  const email = get(member, ["email"], "andukuri.phaneendra@quintype.com");
   const phone = get(member, ["metadata", "phone-number"], "1234");
+
+  console.log("Member object is --->", member);
 
   return (
     <>
@@ -73,11 +77,11 @@ export const SubscriptionPage = function (props) {
         enableAccesstype={true}
         isStaging={true}
         accessTypeKey={"Aw4ujaqhpn8aVMT7yzQawSyZ"}
-        email={email || "andukuri.phaneendra@quintype.com"}
+        email={email}
         phone={phone}
         id={1170884}
         prodHost="https://www.accesstype.com"
-        stagingHost="https://staging.accesstype.com"
+        stagingHost="https://malibu-advanced-web.qtstage.io"
         accessTypeBkIntegrationId={51}
       >
         {({ initAccessType, initRazorPayPayment, getSubscription, validateCoupon }) => (
