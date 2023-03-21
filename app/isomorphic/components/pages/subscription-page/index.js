@@ -80,8 +80,6 @@ export const SubscriptionPage = function (props) {
         email={email}
         phone={phone}
         id={1170884}
-        prodHost="https://www.accesstype.com"
-        stagingHost="https://malibu-advanced-web.qtstage.io"
         accessTypeBkIntegrationId={51}
       >
         {({ initAccessType, initRazorPayPayment, getSubscription, validateCoupon }) => (
