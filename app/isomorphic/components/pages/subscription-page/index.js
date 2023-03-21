@@ -73,17 +73,20 @@ export const SubscriptionPage = function (props) {
         enableAccesstype={true}
         isStaging={true}
         accessTypeKey={"Aw4ujaqhpn8aVMT7yzQawSyZ"}
-        email={email}
+        email={email || "andukuri.phaneendra@quintype.com"}
         phone={phone}
+        id={1170884}
         prodHost="https://www.accesstype.com"
         stagingHost="https://staging.accesstype.com"
+        accessTypeBkIntegrationId={51}
       >
-        {({ initAccessType, initRazorPayPayment, getSubscription, validateCoupon, member }) => (
+        {({ initAccessType, initRazorPayPayment, getSubscription, validateCoupon }) => (
           <SubscriptionLayout
             initAccessType={initAccessType}
             initRazorPayPayment={initRazorPayPayment}
             getSubscription={getSubscription}
             validateCoupon={validateCoupon}
+            member={member}
           />
         )}
       </AccessType>
