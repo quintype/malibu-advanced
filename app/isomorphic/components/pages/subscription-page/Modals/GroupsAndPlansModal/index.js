@@ -5,14 +5,14 @@ import "./group-and-plans.m.css";
 
 export const GroupsAndPlansModal = function ({ member, setActiveTab, setSelectedPlan, getSubscription }) {
   const [subscriptionsData, setSubscriptionsData] = useState([]);
-  const [selectedPlanOption, setSelectedPlanOption] = useState({});
+  const [selectedSubscriptions, setSelectedSubscriptions] = useState({});
 
   useEffect(() => {
     getSubscription().then((res) => setSubscriptionsData(res));
   }, []);
 
   const handlePlanSelection = function (groupName) {
-    setSelectedPlan({ plan: selectedPlanOption[groupName], groupName });
+    setSelectedPlan({ plan: selectedSubscriptions[groupName] });
     member ? setActiveTab("checkout") : setActiveTab("login");
   };
 
@@ -33,7 +33,7 @@ export const GroupsAndPlansModal = function ({ member, setActiveTab, setSelected
               <div styleName="plan-name">
                 <select
                   styleName="select-option"
-                  onChange={(e) => setSelectedPlanOption({ [group.name]: JSON.parse(e.target.value) })}
+                  onChange={(e) => setSelectedSubscriptions({ [group.name]: JSON.parse(e.target.value) })}
                 >
                   {group.subscription_plans.map((plan, id) => {
                     return (
@@ -47,9 +47,7 @@ export const GroupsAndPlansModal = function ({ member, setActiveTab, setSelected
                   })}
                 </select>
               </div>
-              <div styleName="plan-description">
-                {selectedPlanOption[group.name] ? selectedPlanOption[group.name].description : "No Description"}
-              </div>
+              <div styleName="plan-description">{group.description}</div>
               <button styleName="subscribe-btn" onClick={() => handlePlanSelection(group.name)}>
                 Subscribe
               </button>

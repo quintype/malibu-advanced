@@ -58,9 +58,7 @@ export const CheckoutModal = function ({ member, setActiveTab, initRazorPayPayme
                 />
                 <div
                   onClick={() => {
-                    console.log("selectedPlanId is --->", plan.id, "Coupon code is --->", couponCode);
                     validateCoupon(plan.id, couponCode).then((res) => {
-                      console.log("Response from validateCoupon is --->", res);
                       if (res.valid) {
                         setIsCouponApplied(true);
                       } else {

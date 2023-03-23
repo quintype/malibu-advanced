@@ -15,7 +15,6 @@ export const LoginModal = function ({
   selectedPlan,
 }) {
   const { plan } = selectedPlan;
-  console.log("Selected Plan inside login modal is --->", plan);
   return (
     <div styleName="modal">
       <div styleName="checkout-label">Checkout</div>

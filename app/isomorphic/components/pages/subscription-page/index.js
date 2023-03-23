@@ -13,8 +13,6 @@ const SubscriptionLayout = function ({ initAccessType, initRazorPayPayment, getS
   const [activeTab, setActiveTab] = useState("subscription");
   const [selectedPlan, setSelectedPlan] = useState({});
 
-  console.log("Member object in SubscriptionLayout is --->", member);
-
   useEffect(() => {
     !global.AccessType && initAccessType(() => console.log("Accesstype Initialized --->"));
     if (global.AccessType) {
@@ -68,8 +66,6 @@ export const SubscriptionPage = function (props) {
   const member = useSelector((state) => get(state, ["member"], null));
   const email = get(member, ["email"], "andukuri.phaneendra@quintype.com");
   const phone = get(member, ["metadata", "phone-number"], "1234");
-
-  console.log("Member object is --->", member);
 
   return (
     <>
