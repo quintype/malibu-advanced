@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { object, func } from "prop-types";
+import get from "lodash/get";
 
 import "./group-and-plans.m.css";
 
@@ -10,6 +11,15 @@ export const GroupsAndPlansModal = function ({ member, setActiveTab, setSelected
   useEffect(() => {
     getSubscription().then((res) => setSubscriptionsData(res));
   }, []);
+
+  useEffect(() => {
+    const defaultSelectedOptions = {};
+    subscriptionsData.forEach((group, id) => {
+      const firstPlan = get(group, ["subscription_plans", "0"]);
+      defaultSelectedOptions[group.name] = firstPlan;
+    });
+    setSelectedSubscriptions(defaultSelectedOptions);
+  }, [subscriptionsData]);
 
   const handlePlanSelection = function (groupName) {
     setSelectedPlan({ plan: selectedSubscriptions[groupName] });
@@ -33,7 +43,9 @@ export const GroupsAndPlansModal = function ({ member, setActiveTab, setSelected
               <div styleName="plan-name">
                 <select
                   styleName="select-option"
-                  onChange={(e) => setSelectedSubscriptions({ [group.name]: JSON.parse(e.target.value) })}
+                  onChange={(e) =>
+                    setSelectedSubscriptions({ ...selectedSubscriptions, [group.name]: JSON.parse(e.target.value) })
+                  }
                 >
                   {group.subscription_plans.map((plan, id) => {
                     return (
