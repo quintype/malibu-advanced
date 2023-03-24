@@ -15,11 +15,6 @@
   width: 100%;
 }
 
-.account-confirmation {
-  height: 120px;
-  width: 320px;
-}
-
 .checkout-label {
   font-size: 32px;
   margin-bottom: 8px;
@@ -122,4 +117,13 @@
 
 .coupon-apply{
   display: flex;
+}
+
+.change-account{
+  border: 1px solid black;
+  display: flex;
+  padding: 2px 0;
+  height: 120px;
+  width: 320px;
+  margin-bottom: 12px;
 }

@@ -21,9 +21,11 @@ export const CheckoutModal = function ({ member, setActiveTab, initRazorPayPayme
       <div styleName="secure">100% secure</div>
       <div styleName="current-step">Step 1 of 2</div>
       {member && (
-        <div>
-          <div>Account</div>
-          <span>{member.name}</span> <div onClick={() => setActiveTab("login")}>Not you?</div>
+        <div styleName="change-account">
+          <div>
+            Account <span>{"member.name"}</span>
+          </div>
+          <div onClick={() => setActiveTab("login")}>Not you?</div>
         </div>
       )}
       <div styleName="checkout-container">
@@ -58,15 +60,16 @@ export const CheckoutModal = function ({ member, setActiveTab, initRazorPayPayme
                 />
                 <div
                   onClick={() => {
-                    validateCoupon(plan.id, couponCode).then((res) => {
-                      if (res.valid) {
-                        setIsCouponApplied(true);
-                      } else {
-                        console.warn("This coupon code is not valid");
-                      }
-
-                      // setShowCouponCode(false);
-                    });
+                    validateCoupon(plan.id, couponCode)
+                      .then((res) => {
+                        console.log(
+                          `Clicked Apply Coupon with ${plan.id} and ${couponCode} and the response is ${res}`
+                        );
+                        if (res.valid) {
+                          setIsCouponApplied(true);
+                        }
+                      })
+                      .catch((err) => console.error(`Razorpay coupon error: ${err}`));
                   }}
                   styleName="apply-coupon-btn"
                 >
