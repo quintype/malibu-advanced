@@ -74,6 +74,7 @@ function generateSeo(config, pageType) {
       enableVideo: true,
       enableNewsArticle: true
     }),
+    fallbackSocialImage: "https://gumlet.assettype.com/malibu/2021-02/4178bf21-24a4-4551-badf-3c329aa7ef46/707b08698d23aa244ea15a2b8e3e5872_Kohli.webp",
     enableTwitterCards: true,
     enableOgTags: true,
     enableNews: true
