@@ -81,8 +81,7 @@ function generateSeo(config, pageType) {
       enableVideo: true,
       enableNewsArticle: true,
     }),
-    fallbackSocialImage:
-      "https://gumlet.assettype.com/bdnews24-english%2Fimport%2Fmedia%2F2015%2F08%2F16%2Fstar-wars-2.jpg",
+    fallbackSocialImage: "https://gumlet.assettype.com/bdnews24-english/import/media/2015/08/16/star-wars-2.jpg",
     enableTwitterCards: true,
     enableOgTags: true,
     enableNews: true,
