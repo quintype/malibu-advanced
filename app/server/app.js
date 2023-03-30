@@ -81,8 +81,7 @@ function generateSeo(config, pageType) {
       enableVideo: true,
       enableNewsArticle: true,
     }),
-    fallbackSocialImage:
-      "https://media.istockphoto.com/photos/astronaut-lying-in-the-meadow-picture-id1304263738",
+    fallbackSocialImage: "https://media.istockphoto.com/photos/astronaut-lying-in-the-meadow-picture-id1304263738",
     enableTwitterCards: true,
     enableOgTags: true,
     enableNews: true,
