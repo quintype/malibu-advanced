@@ -17,17 +17,9 @@ const fontJsContent = assetPath("font.js") ? readAsset("font.js") : "";
 const allChunks = getAllChunks("list", "story", "home");
 
 export async function renderLayout(res, params) {
-  const {
-    gtmId,
-    gaId,
-    cdnImage,
-    isOnesignalEnable,
-    isGtmEnable,
-    isGaEnable,
-    enableAds,
-    loadAdsSynchronously,
-    pageType,
-  } = getConfig(params.store.getState());
+  const { gtmId, gaId, cdnImage, isGtmEnable, isGaEnable, enableAds, loadAdsSynchronously, pageType } = getConfig(
+    params.store.getState()
+  );
   const chunk = params.shell ? null : allChunks[getChunkName(params.pageType)];
   const criticalCss = await getCriticalCss();
   const styleTags = await getStyleTags();
@@ -37,6 +29,8 @@ export async function renderLayout(res, params) {
   const placeholderDelay = parseInt(
     get(params.store.getState(), ["qt", "config", "publisher-attributes", "placeholder_delay"])
   );
+
+  const webengageLicenseCode = get(params.store.getState(), ["qt", "config", "webengage-config", "licenseCode"], "");
 
   res.render(
     "pages/layout",
@@ -72,13 +66,12 @@ export async function renderLayout(res, params) {
         serialize,
         isGtmEnable,
         isGaEnable,
-        isOnesignalEnable,
-        oneSignalScript: params.oneSignalScript,
         enableAds: enableAds && params.pageType !== "profile-page",
         loadAdsSynchronously,
         placeholderDelay,
         pageType,
         enableBreakingNews: params.pageType !== "profile-page",
+        webengageLicenseCode,
       },
       params
     )
