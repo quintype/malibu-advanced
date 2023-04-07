@@ -38,7 +38,6 @@ export const StoryTemplate = ({
     shareIconType = "plain-color-svg",
     premiumStoryIconConfig = {},
   } = config;
-
   const visibledCards = noOfVisibleCards < 0 ? story.cards : story.cards.slice(0, noOfVisibleCards);
   const storyId = get(story, ["id"], "");
   const HeaderCard = () => {
@@ -264,7 +263,6 @@ export const StoryTemplate = ({
         return headlineOverlayTemplate();
     }
   };
-
   return <>{getStoryTemplate(templateType)}</>;
 };
 

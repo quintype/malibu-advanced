@@ -283,6 +283,7 @@ const ListicleStoryTemplate = ({
       data-test-id={dataTestId}
       className="arrow-component arr--content-wrapper arr--listicle-story-template-wrapper"
       style={{ backgroundColor: theme }}
+      styleName="story-content-inner-wrapper"
     >
       {renderTemplate()}
     </div>
