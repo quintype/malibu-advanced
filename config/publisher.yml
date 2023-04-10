@@ -1,5 +1,5 @@
 asset_host: http://localhost:8080
-sketches_host: https://malibu-web.quintype.io
+sketches_host: https://malibu-advanced-web.quintype.io
 host_to_api_host:
   help.lvh.me: https://user-documentation.quintype.io
 host_to_automatic_api_host:
@@ -9,6 +9,8 @@ domain_mapping:
   subdomain.lvh.me: voices
   malibu.lvh.me: localhost:3000
 publisher:
+  cdn_src: "gumlet"
+  cdn_image: "qtstage-01.gumlet.io"
   sso_login:
     is_enable: true
     redirect_Url: "<Domain>/auth/v1/oauth/token"
