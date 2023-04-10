@@ -129,12 +129,12 @@
       <% } else { %>
       <script type="application/json" id="static-page"><%- serialize(store.getState(), {isJSON: true}) -%></script>
       <% } %>
-    <% if (isGtmEnable) { %>
-      <%- include ("./partials/gtm") -%>
-    <% } %>
-    <% if (isGaEnable) { %>
-      <%- include ("./partials/ga") -%>
-    <% } %>
+      <% if (isGtmEnable) { %>
+        <%- include ("./partials/gtm") -%>
+      <% } %>
+      <% if (isGaEnable) { %>
+        <%- include ("./partials/ga") -%>
+      <% } %>
     <script type="text/javascript" src="<%= assetPath("app.js") %>" id="app-js" async></script>
    </body>
 </html>
