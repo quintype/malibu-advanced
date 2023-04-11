@@ -76,7 +76,7 @@ export const SubscriptionPage = function (props) {
         email={email}
         phone={phone}
         id={1170884}
-        accessTypeBkIntegrationId={51}
+        accessTypeBkIntegrationId={455}
       >
         {({ initAccessType, initRazorPayPayment, getSubscription, validateCoupon }) => (
           <SubscriptionLayout

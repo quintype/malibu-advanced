@@ -11,7 +11,6 @@ export const CheckoutModal = function ({ member, setActiveTab, initRazorPayPayme
   const [couponCode, setCouponCode] = useState("");
   const [showCouponCode, setShowCouponCode] = useState(false);
   const [isCouponApplied, setIsCouponApplied] = useState(false);
-  // const [paymentMethod, setPaymentMethod] = useState("")
 
   const { plan } = selectedPlan;
 
@@ -22,10 +21,11 @@ export const CheckoutModal = function ({ member, setActiveTab, initRazorPayPayme
       <div styleName="current-step">Step 1 of 2</div>
       {member && (
         <div styleName="change-account">
-          <div>
-            Account <span>{"member.name"}</span>
-          </div>
-          <div onClick={() => setActiveTab("login")}>Not you?</div>
+          <div styleName="label">Account</div>
+          <span>{member.name}</span>
+          <span styleName="not-you-btn" onClick={() => setActiveTab("login")}>
+            Not you?
+          </span>
         </div>
       )}
       <div styleName="checkout-container">

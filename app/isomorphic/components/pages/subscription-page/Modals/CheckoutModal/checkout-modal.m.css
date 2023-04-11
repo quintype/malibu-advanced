@@ -121,9 +121,14 @@
 
 .change-account{
   border: 1px solid black;
-  display: flex;
-  padding: 2px 0;
+  padding: 30px 20px;
   height: 120px;
+  margin: 10px;
   width: 320px;
-  margin-bottom: 12px;
+}
+
+.not-you-btn{
+  margin-left: 16px;
+  cursor: pointer;
+  color: var(--brand-primary-dark);
 }
