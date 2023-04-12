@@ -46,13 +46,13 @@ const LinkProfile = ({ onClose, member }) => {
     }
 
     try {
-      const reponse = await sendOtp(body);
-      if (reponse.status === 200) {
+      const response = await sendOtp(body);
+      if (response.status === 200) {
         setShowOtp(true);
         start(30);
         setError({});
       } else {
-        setError(reponse.error || reponse);
+        setError(response.error || response);
       }
     } catch (error) {
       setError(error);
@@ -65,9 +65,9 @@ const LinkProfile = ({ onClose, member }) => {
 
     try {
       let user = {};
-      if (!loginPhoneNumber) {
+      if (loginPhoneNumber) {
         user = {
-          "login-phone-number": input,
+          "login-phone-number": Number(input),
           "phone-number": Number(input.slice(3)),
           "verification-status": "phone-number",
         };
@@ -83,7 +83,7 @@ const LinkProfile = ({ onClose, member }) => {
       if (response.status === 200) {
         dispatch({
           type: MEMBER_UPDATED,
-          member: { ...member, email: email || input, "login-phone-number": loginPhoneNumber || input },
+          member: { ...member, email: email || input, "login-phone-number": loginPhoneNumber || Number(input) },
         });
         onClose();
       } else {
