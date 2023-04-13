@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { func, object } from "prop-types";
 
 import { InputField } from "../../atoms/InputField";
-import { sendOtp, updateWithOtp } from "@quintype/bridgekeeper-js";
+import { sendOtp, updateWithOtp, updateUserProfile } from "@quintype/bridgekeeper-js";
 import Modal from "../../login/modal";
 
 import "./profile-page.m.css";
@@ -10,6 +10,7 @@ import { useTimer } from "../../atoms/timer";
 import { SvgIconHandler } from "../../atoms/svg-icon-hadler";
 import { useDispatch } from "react-redux";
 import { MEMBER_UPDATED } from "../../store/actions";
+import get from "lodash.get";
 
 const LinkProfile = ({ onClose, member }) => {
   const [input, setInput] = useState("");
@@ -78,14 +79,9 @@ const LinkProfile = ({ onClose, member }) => {
         };
       }
       const response = await updateWithOtp(otp, user);
-      await updateWithOtp(otp, user);
-      console.log("trigger otp for linking");
+      const currentUserResp = await updateUserProfile(user);
+      dispatch({ type: MEMBER_UPDATED, member: get(currentUserResp, ["user"], null) });
       if (response.status === 200) {
-        dispatch({
-          type: MEMBER_UPDATED,
-          member: { ...member, email: email || input, "login-phone-number": loginPhoneNumber || input },
-        });
-        console.log("successful linking");
         onClose();
       } else {
         setError({ message: "Error - Unable to link" });
