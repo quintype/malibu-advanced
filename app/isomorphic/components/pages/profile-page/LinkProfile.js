@@ -65,9 +65,9 @@ const LinkProfile = ({ onClose, member }) => {
 
     try {
       let user = {};
-      if (loginPhoneNumber) {
+      if (!loginPhoneNumber) {
         user = {
-          "login-phone-number": Number(input),
+          "login-phone-number": input,
           "phone-number": Number(input.slice(3)),
           "verification-status": "phone-number",
         };
@@ -77,14 +77,15 @@ const LinkProfile = ({ onClose, member }) => {
           "verification-status": "email",
         };
       }
-
       const response = await updateWithOtp(otp, user);
-
+      await updateWithOtp(otp, user);
+      console.log("trigger otp for linking");
       if (response.status === 200) {
         dispatch({
           type: MEMBER_UPDATED,
-          member: { ...member, email: email || input, "login-phone-number": loginPhoneNumber || Number(input) },
+          member: { ...member, email: email || input, "login-phone-number": loginPhoneNumber || input },
         });
+        console.log("successful linking");
         onClose();
       } else {
         setError({ message: "Error - Unable to link" });
