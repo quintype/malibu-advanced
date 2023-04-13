@@ -78,14 +78,9 @@ const LinkProfile = ({ onClose, member }) => {
           "verification-status": "email",
         };
       }
-      const response = await updateWithOtp(otp, user);
+      await updateWithOtp(otp, user);
       const currentUserResp = await updateUserProfile(user);
       dispatch({ type: MEMBER_UPDATED, member: get(currentUserResp, ["user"], null) });
-      if (response.status === 200) {
-        onClose();
-      } else {
-        setError({ message: "Error - Unable to link" });
-      }
     } catch (err) {
       setError(err);
       console.warn("error", err);
