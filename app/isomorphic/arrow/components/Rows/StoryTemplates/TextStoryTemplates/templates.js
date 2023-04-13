@@ -2,7 +2,7 @@ import React from "react";
 import get from "lodash/get";
 import PropTypes from "prop-types";
 import { SocialShareTemplate } from "../../../Molecules/SocialShareTemplate";
-import { SocialShare } from "@quintype/components";
+import { Link, SocialShare } from "@quintype/components";
 import { SectionTag } from "../../../Atoms/SectionTag";
 import { StoryHeadline } from "../../../Atoms/StoryHeadline";
 import { Subheadline } from "../../../Atoms/Subheadline";
@@ -24,6 +24,7 @@ export const StoryTemplate = ({
   firstChild,
   secondChild,
   timezone,
+  storyAccess,
 }) => {
   const {
     theme = "",
@@ -83,6 +84,24 @@ export const StoryTemplate = ({
     );
   };
 
+  console.log("visibledCards --->", visibledCards, storyAccess);
+
+  const Paywall = function () {
+    return (
+      <div styleName="paywall-container">
+        <div styleName="paywall-headline">Want to read full story?</div>
+        <p styleName="paywall-description">
+          We’re glad you’re enjoying this story. Subscribe to our plans to continue reading the story.
+        </p>
+        <div styleName="view-plans-btn">
+          <Link href="/subscription" styleName="view-plans-link">
+            View All Plans
+          </Link>
+        </div>
+      </div>
+    );
+  };
+  // const isSubscribed = false;
   const StoryData = () => {
     return (
       <div styleName="gap-16">
@@ -91,29 +110,45 @@ export const StoryTemplate = ({
           <PublishDetails story={story} opts={publishedDetails} template="story" timezone={timezone} />
           {!verticalShare && <SocialShareComponent />}
         </div>
-        {visibledCards.map((card) => {
-          return (
+        {storyAccess === "subscription" ? (
+          <>
             <StoryElementCard
               story={story}
-              card={card}
-              key={get(card, ["id"], "")}
+              card={visibledCards[0]}
+              key={get(visibledCards[0], ["id"], "")}
               config={storyElementsConfig}
               adComponent={adComponent}
               widgetComp={widgetComp}
             />
-          );
-        })}
-        {firstChild}
-        <div styleName="story-tags">
-          <StoryTags tags={story.tags} />
-          <SlotAfterStory
-            id={story.id}
-            element={story.customSlotAfterStory}
-            AdComponent={adComponent}
-            WidgetComp={widgetComp}
-          />
-        </div>
-        {secondChild}
+            <Paywall />
+          </>
+        ) : (
+          <>
+            {visibledCards.map((card) => {
+              return (
+                <StoryElementCard
+                  story={story}
+                  card={card}
+                  key={get(card, ["id"], "")}
+                  config={storyElementsConfig}
+                  adComponent={adComponent}
+                  widgetComp={widgetComp}
+                />
+              );
+            })}
+            {firstChild}
+            <div styleName="story-tags">
+              <StoryTags tags={story.tags} />
+              <SlotAfterStory
+                id={story.id}
+                element={story.customSlotAfterStory}
+                AdComponent={adComponent}
+                WidgetComp={widgetComp}
+              />
+            </div>
+            {secondChild}
+          </>
+        )}
       </div>
     );
   };
@@ -279,4 +314,5 @@ StoryTemplate.propTypes = {
   storyElementsConfig: PropTypes.object,
   widgetComp: PropTypes.func,
   adComponent: PropTypes.func,
+  storyAccess: PropTypes.string,
 };

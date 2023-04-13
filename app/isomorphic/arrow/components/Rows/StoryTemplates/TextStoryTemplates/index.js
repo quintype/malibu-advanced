@@ -54,6 +54,7 @@ const TextStoryTemplate = ({
         firstChild={firstChild}
         secondChild={secondChild}
         timezone={timezone}
+        storyAccess={story.access}
       />
     </div>
   );

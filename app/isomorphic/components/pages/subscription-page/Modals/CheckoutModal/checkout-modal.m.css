@@ -63,8 +63,8 @@
 
 .amount-saved {
   font-size: 12px;
-  color: green;
-  margin-top: 8px;
+  color: var(--brand-primary-dark);
+  margin: 8px 0;
 }
 
 .apply-coupon-btn {

@@ -44,9 +44,11 @@ export const CheckoutModal = function ({ member, setActiveTab, initRazorPayPayme
             <div styleName="change-plan-btn" onClick={() => setActiveTab("subscription")}>
               Change Plan
             </div>
-            <div styleName="add-coupon-code-btn" onClick={() => setShowCouponCode(true)}>
-              Add Coupon Code
-            </div>
+            {!showCouponCode && (
+              <div styleName="add-coupon-code-btn" onClick={() => setShowCouponCode(true)}>
+                Add Coupon Code
+              </div>
+            )}
           </div>
           {showCouponCode && (
             <div>
@@ -62,14 +64,13 @@ export const CheckoutModal = function ({ member, setActiveTab, initRazorPayPayme
                   onClick={() => {
                     validateCoupon(plan.id, couponCode)
                       .then((res) => {
-                        console.log(
-                          `Clicked Apply Coupon with ${plan.id} and ${couponCode} and the response is ${res}`
-                        );
                         if (res.valid) {
+                          plan.discounted_price_cents = res.discount_details.discounted_price_cents;
+                          plan.coupon_discount = res.discount_details.value;
                           setIsCouponApplied(true);
                         }
                       })
-                      .catch((err) => console.error(`Razorpay coupon error: ${err}`));
+                      .catch((err) => console.error(`Coupon code error: ${err}`));
                   }}
                   styleName="apply-coupon-btn"
                 >
@@ -78,11 +79,17 @@ export const CheckoutModal = function ({ member, setActiveTab, initRazorPayPayme
               </div>
             </div>
           )}
-          {isCouponApplied && <div styleName="amount-saved">You saved Rs. 350/-</div>}
+          {isCouponApplied && (
+            <div styleName="amount-saved">{`You saved ${currencyLabels[plan.price_currency]} ${
+              plan.coupon_discount / 100
+            }/-`}</div>
+          )}
         </div>
         <div styleName="total-payment">
           <div styleName="label">To Pay</div>
-          <div styleName="price">{`${currencyLabels[plan.price_currency]} ${plan.price_cents / 100}/-`}</div>
+          <div styleName="price">{`${currencyLabels[plan.price_currency]} ${
+            plan.discounted_price_cents ? plan.discounted_price_cents / 100 : plan.price_cents / 100
+          }/-`}</div>
         </div>
         <div>
           <div styleName="label">Payment Method</div>
@@ -101,7 +108,9 @@ export const CheckoutModal = function ({ member, setActiveTab, initRazorPayPayme
               setActiveTab("payment");
             }}
           >
-            Proceed to payment
+            {`Proceed to Pay ${currencyLabels[plan.price_currency]} ${
+              plan.discounted_price_cents ? plan.discounted_price_cents / 100 : plan.price_cents / 100
+            }/-`}
           </button>
         </div>
       </div>
