@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { func, object } from "prop-types";
 
 import { InputField } from "../../atoms/InputField";
-import { sendOtp, updateWithOtp, updateUserProfile } from "@quintype/bridgekeeper-js";
+import { sendOtp, updateWithOtp } from "@quintype/bridgekeeper-js";
 import Modal from "../../login/modal";
 
 import "./profile-page.m.css";
@@ -10,7 +10,6 @@ import { useTimer } from "../../atoms/timer";
 import { SvgIconHandler } from "../../atoms/svg-icon-hadler";
 import { useDispatch } from "react-redux";
 import { MEMBER_UPDATED } from "../../store/actions";
-import get from "lodash.get";
 
 const LinkProfile = ({ onClose, member }) => {
   const [input, setInput] = useState("");
@@ -47,13 +46,13 @@ const LinkProfile = ({ onClose, member }) => {
     }
 
     try {
-      const response = await sendOtp(body);
-      if (response.status === 200) {
+      const reponse = await sendOtp(body);
+      if (reponse.status === 200) {
         setShowOtp(true);
         start(30);
         setError({});
       } else {
-        setError(response.error || response);
+        setError(reponse.error || reponse);
       }
     } catch (error) {
       setError(error);
@@ -68,7 +67,7 @@ const LinkProfile = ({ onClose, member }) => {
       let user = {};
       if (!loginPhoneNumber) {
         user = {
-          email: user.email,
+          email: email,
           "login-phone-number": input,
           "phone-number": Number(input.slice(3)),
           "verification-status": "phone-number",
@@ -76,14 +75,23 @@ const LinkProfile = ({ onClose, member }) => {
       } else {
         user = {
           email: input,
-          "verification-status": "email",
           "login-phone-number": loginPhoneNumber,
-          "phone-number": Number(user["phone-number"].slice(3)),
+          "phone-number": Number(loginPhoneNumber.slice(3)),
+          "verification-status": "email",
         };
       }
-      await updateWithOtp(otp, user);
-      const currentUserResp = await updateUserProfile(user);
-      dispatch({ type: MEMBER_UPDATED, member: get(currentUserResp, ["user"], null) });
+
+      const response = await updateWithOtp(otp, user);
+
+      if (response.status === 200) {
+        dispatch({
+          type: MEMBER_UPDATED,
+          member: { ...member, email: email || input, "login-phone-number": loginPhoneNumber || input },
+        });
+        onClose();
+      } else {
+        setError({ message: "Error - Unable to link" });
+      }
     } catch (err) {
       setError(err);
       console.warn("error", err);
