@@ -68,6 +68,7 @@ const LinkProfile = ({ onClose, member }) => {
       let user = {};
       if (!loginPhoneNumber) {
         user = {
+          email: user.email,
           "login-phone-number": input,
           "phone-number": Number(input.slice(3)),
           "verification-status": "phone-number",
@@ -76,6 +77,8 @@ const LinkProfile = ({ onClose, member }) => {
         user = {
           email: input,
           "verification-status": "email",
+          "login-phone-number": loginPhoneNumber,
+          "phone-number": Number(user["phone-number"].slice(3)),
         };
       }
       await updateWithOtp(otp, user);
