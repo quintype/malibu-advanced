@@ -84,8 +84,6 @@ export const StoryTemplate = ({
     );
   };
 
-  console.log("visibledCards --->", visibledCards, storyAccess);
-
   const Paywall = function () {
     return (
       <div styleName="paywall-container">
@@ -98,10 +96,16 @@ export const StoryTemplate = ({
             View All Plans
           </Link>
         </div>
+        <div styleName="go-to-login">
+          Already have a subscription?
+          <Link href="/user-login" styleName="go-to-login-link">
+            Login
+          </Link>
+        </div>
       </div>
     );
   };
-  // const isSubscribed = false;
+
   const StoryData = () => {
     return (
       <div styleName="gap-16">

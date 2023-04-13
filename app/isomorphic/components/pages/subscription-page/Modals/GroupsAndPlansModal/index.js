@@ -26,8 +26,6 @@ export const GroupsAndPlansModal = function ({ member, setActiveTab, setSelected
     member ? setActiveTab("checkout") : setActiveTab("login");
   };
 
-  console.log("Subscriptions Inside GroupsAndPlansModal is --->", subscriptionsData);
-
   return (
     <>
       <div styleName="title">Choose A Plan</div>

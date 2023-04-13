@@ -25,8 +25,8 @@ export const LoginModal = function ({
           <AccountModal
             isPopup={false}
             onClose={() => {
-              setShowAccountModal(false);
               setActiveTab("checkout");
+              setShowAccountModal(false);
             }}
           />
         )}

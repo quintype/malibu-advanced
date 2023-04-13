@@ -482,3 +482,16 @@
 .view-plans-link{
   font-weight: bold;
 }
+
+.go-to-login{
+  display: flex;
+  align-items: flex-end;
+  margin-top: 24px;
+  height: 36px;
+  border-top: 1px solid #dedede;
+}
+
+.go-to-login-link{
+  margin-left: 4px;
+  text-decoration: underline;
+}

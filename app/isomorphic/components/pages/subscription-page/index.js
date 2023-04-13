@@ -14,7 +14,7 @@ const SubscriptionLayout = function ({ initAccessType, initRazorPayPayment, getS
   const [selectedPlan, setSelectedPlan] = useState({});
 
   useEffect(() => {
-    !global.AccessType && initAccessType(() => console.log("Accesstype Initialized --->"));
+    !global.AccessType && initAccessType(() => console.log("Accesstype is initialized"));
     if (global.AccessType) {
       global.AccessType.getPaymentOptions().then((res) => console.log("Payment options are: ", res));
     }

@@ -13,6 +13,7 @@ export const CheckoutModal = function ({ member, setActiveTab, initRazorPayPayme
   const [isCouponApplied, setIsCouponApplied] = useState(false);
 
   const { plan } = selectedPlan;
+  global.AccessType.getPaymentOptions().then((res) => console.log("Payment options are: ", res));
 
   return (
     <div styleName="modal">
@@ -100,12 +101,7 @@ export const CheckoutModal = function ({ member, setActiveTab, initRazorPayPayme
           <button
             styleName="proceed-to-payment-btn"
             onClick={() => {
-              console.log("Plan selected is for payment is ---> ", selectedPlan.plan);
-              global.AccessType.getPaymentOptions().then((paymentOptions) => {
-                console.log("Payment Options --->", paymentOptions);
-              });
               initRazorPayPayment(selectedPlan.plan, "standard");
-              setActiveTab("payment");
             }}
           >
             {`Proceed to Pay ${currencyLabels[plan.price_currency]} ${
