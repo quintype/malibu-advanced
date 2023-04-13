@@ -69,14 +69,14 @@ const LinkProfile = ({ onClose, member }) => {
         user = {
           email: email,
           "login-phone-number": input,
-          "phone-number": Number(input.slice(3)),
+          "phone-number": loginPhoneNumber,
           "verification-status": "phone-number",
         };
       } else {
         user = {
           email: input,
           "login-phone-number": loginPhoneNumber,
-          "phone-number": Number(loginPhoneNumber.slice(3)),
+          "phone-number": loginPhoneNumber,
           "verification-status": "email",
         };
       }
