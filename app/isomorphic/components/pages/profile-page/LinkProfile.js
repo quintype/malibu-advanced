@@ -67,16 +67,13 @@ const LinkProfile = ({ onClose, member }) => {
       let user = {};
       if (!loginPhoneNumber) {
         user = {
-          email: email,
           "login-phone-number": input,
-          "phone-number": loginPhoneNumber,
-          "verification-status": "phone-number",
+          "phone-number": Number(input.slice(3)),
+          "verification-status": "phone",
         };
       } else {
         user = {
           email: input,
-          "login-phone-number": loginPhoneNumber,
-          "phone-number": loginPhoneNumber,
           "verification-status": "email",
         };
       }
