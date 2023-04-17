@@ -67,6 +67,12 @@
   margin: 8px 0;
 }
 
+.coupon-error{
+  font-size: 12px;
+  margin: 8px 0;
+  color: rgb(218, 76, 76);
+}
+
 .apply-coupon-btn {
   border: 1px solid var(--brand-primary-dark);
   color: var(--brand-primary-dark);

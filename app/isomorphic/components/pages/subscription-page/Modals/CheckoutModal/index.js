@@ -10,10 +10,9 @@ const currencyLabels = {
 export const CheckoutModal = function ({ member, setActiveTab, initRazorPayPayment, selectedPlan, validateCoupon }) {
   const [couponCode, setCouponCode] = useState("");
   const [showCouponCode, setShowCouponCode] = useState(false);
-  const [isCouponApplied, setIsCouponApplied] = useState(false);
+  const [isCouponApplied, setIsCouponApplied] = useState("");
 
   const { plan } = selectedPlan;
-  global.AccessType.getPaymentOptions().then((res) => console.log("Payment options are: ", res));
 
   return (
     <div styleName="modal">
@@ -66,9 +65,11 @@ export const CheckoutModal = function ({ member, setActiveTab, initRazorPayPayme
                     validateCoupon(plan.id, couponCode)
                       .then((res) => {
                         if (res.valid) {
-                          plan.discounted_price_cents = res.discount_details.discounted_price_cents;
+                          plan.price_cents = res.discount_details.discounted_price_cents;
                           plan.coupon_discount = res.discount_details.value;
-                          setIsCouponApplied(true);
+                          setIsCouponApplied("applied");
+                        } else {
+                          setIsCouponApplied("failed");
                         }
                       })
                       .catch((err) => console.error(`Coupon code error: ${err}`));
@@ -80,17 +81,16 @@ export const CheckoutModal = function ({ member, setActiveTab, initRazorPayPayme
               </div>
             </div>
           )}
-          {isCouponApplied && (
+          {isCouponApplied === "applied" && (
             <div styleName="amount-saved">{`You saved ${currencyLabels[plan.price_currency]} ${
               plan.coupon_discount / 100
             }/-`}</div>
           )}
+          {isCouponApplied === "failed" && <div styleName="coupon-error">This coupon code is invalid</div>}
         </div>
         <div styleName="total-payment">
           <div styleName="label">To Pay</div>
-          <div styleName="price">{`${currencyLabels[plan.price_currency]} ${
-            plan.discounted_price_cents ? plan.discounted_price_cents / 100 : plan.price_cents / 100
-          }/-`}</div>
+          <div styleName="price">{`${currencyLabels[plan.price_currency]} ${plan.price_cents / 100}/-`}</div>
         </div>
         <div>
           <div styleName="label">Payment Method</div>
@@ -104,9 +104,7 @@ export const CheckoutModal = function ({ member, setActiveTab, initRazorPayPayme
               initRazorPayPayment(selectedPlan.plan, "standard");
             }}
           >
-            {`Proceed to Pay ${currencyLabels[plan.price_currency]} ${
-              plan.discounted_price_cents ? plan.discounted_price_cents / 100 : plan.price_cents / 100
-            }/-`}
+            {`Proceed to Pay ${currencyLabels[plan.price_currency]} ${plan.price_cents / 100}/-`}
           </button>
         </div>
       </div>

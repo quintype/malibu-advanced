@@ -1,14 +1,18 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
+import { AccessType } from "@quintype/components";
+import { object, func } from "prop-types";
+import get from "lodash/get";
 import { SvgIconHandler } from "../../atoms/svg-icon-hadler";
 import { ProfileCard } from "./ProfileCard";
 import { EditProfile } from "./EditProfile";
 import "./profile-page.m.css";
 
-const ProfilePage = () => {
+const ProfilePageBase = ({ member, getSubscriptionForUser }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const member = useSelector(state => state.member || null);
-
+  getSubscriptionForUser().then((res) => {
+    console.log("--->", res);
+  });
   if (!member) {
     return <div styleName="not-logged-in">Please Login</div>;
   }
@@ -39,6 +43,33 @@ const ProfilePage = () => {
       </div>
     </div>
   );
+};
+
+const ProfilePage = () => {
+  const member = useSelector((state) => get(state, ["member"], null));
+  const email = get(member, ["email"], "abc@gmail.com");
+  const phone = get(member, ["metadata", "phone-number"], "1234");
+
+  return (
+    <AccessType
+      enableAccesstype={true}
+      isStaging={true}
+      accessTypeKey={"Aw4ujaqhpn8aVMT7yzQawSyZ"}
+      email={email}
+      phone={phone}
+      id={1170884}
+      accessTypeBkIntegrationId={455}
+    >
+      {({ getSubscriptionForUser }) => (
+        <ProfilePageBase member={member} getSubscriptionForUser={getSubscriptionForUser} />
+      )}
+    </AccessType>
+  );
+};
+
+ProfilePageBase.propTypes = {
+  member: object,
+  getSubscriptionForUser: func,
 };
 
 export { ProfilePage };

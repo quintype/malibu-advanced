@@ -1,6 +1,7 @@
 import React from "react";
 import get from "lodash/get";
 import PropTypes from "prop-types";
+import { useSelector } from "react-redux";
 import { SocialShareTemplate } from "../../../Molecules/SocialShareTemplate";
 import { Link, SocialShare } from "@quintype/components";
 import { SectionTag } from "../../../Atoms/SectionTag";
@@ -85,6 +86,8 @@ export const StoryTemplate = ({
   };
 
   const Paywall = function () {
+    const member = useSelector((state) => get(state, ["member"], null));
+
     return (
       <div styleName="paywall-container">
         <div styleName="paywall-headline">Want to read full story?</div>
@@ -96,12 +99,14 @@ export const StoryTemplate = ({
             View All Plans
           </Link>
         </div>
-        <div styleName="go-to-login">
-          Already have a subscription?
-          <Link href="/user-login" styleName="go-to-login-link">
-            Login
-          </Link>
-        </div>
+        {!member && (
+          <div styleName="go-to-login">
+            Already have a subscription?
+            <Link href="/user-login" styleName="go-to-login-link">
+              Login
+            </Link>
+          </div>
+        )}
       </div>
     );
   };
