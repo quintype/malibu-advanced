@@ -147,6 +147,7 @@ export const StoryTemplate = ({
           <StoryData />
           <div id="metype-commenting-widget"></div>
           <div id="metype-feed-widget"></div>
+          <div id="metype-contribution-widget"></div>
         </div>
         {verticalShare && <SocialShareComponent />}
         <AsideCollectionCard />
@@ -168,6 +169,7 @@ export const StoryTemplate = ({
           <StoryData />
           <div id="metype-commenting-widget"></div>
           <div id="metype-feed-widget"></div>
+          <div id="metype-contribution-widget"></div>
         </div>
         {verticalShare && <SocialShareComponent />}
         <AsideCollectionCard />
@@ -187,6 +189,7 @@ export const StoryTemplate = ({
           <StoryData />
           <div id="metype-commenting-widget"></div>
           <div id="metype-feed-widget"></div>
+          <div id="metype-contribution-widget"></div>
         </div>
         {verticalShare && <SocialShareComponent />}
         <AsideCollectionCard />
@@ -206,6 +209,7 @@ export const StoryTemplate = ({
           <StoryData />
           <div id="metype-commenting-widget"></div>
           <div id="metype-feed-widget"></div>
+          <div id="metype-contribution-widget"></div>
         </div>
         {verticalShare && <SocialShareComponent />}
         <SideColumn />
@@ -225,6 +229,7 @@ export const StoryTemplate = ({
           <StoryData />
           <div id="metype-commenting-widget"></div>
           <div id="metype-feed-widget"></div>
+          <div id="metype-contribution-widget"></div>
         </div>
         {verticalShare && <SocialShareComponent />}
         <SideColumn />
@@ -252,6 +257,7 @@ export const StoryTemplate = ({
           <StoryData />
           <div id="metype-commenting-widget"></div>
           <div id="metype-feed-widget"></div>
+          <div id="metype-contribution-widget"></div>
         </div>
         {verticalShare && <SocialShareComponent />}
         <AsideCollectionCard />
