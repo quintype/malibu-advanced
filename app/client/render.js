@@ -9,6 +9,7 @@ import { NavBar } from "../isomorphic/components/layouts/header/nav-bar";
 import { TopAd } from "../isomorphic/components/ads/top-ad";
 import { gumletScriptGenerator } from "../isomorphic/components/gumlet-script-generator";
 import LoadingIndicatorComponent from "../isomorphic/components/atoms/loading-indicator";
+import { CommentingWidget } from "../isomorphic/components/Metype";
 
 export function preRenderApplication(store) {
   const hydrate = { hydrate: !global.qtLoadedFromShell };
@@ -18,7 +19,7 @@ export function preRenderApplication(store) {
     breakingNewsConfig.interval && breakingNewsConfig.interval <= 60 ? 60 : breakingNewsConfig.interval;
   const breakingNewsbaseProps = {
     hydrate,
-    updateInterval: breakingNewsInterval * 1000
+    updateInterval: breakingNewsInterval * 1000,
   };
 
   if (pageType !== "user-login") {
@@ -43,6 +44,9 @@ export function renderApplication(store) {
   enableAds && pageType !== "profile-page" && pageType !== "user-login" && renderComponent(TopAd, "top-ad", store);
   placeholderDelay && renderComponent(gumletScriptGenerator, "gumlet-script-generator", store);
   renderIsomorphicComponent("container", store, pickComponent, {
-    hydrate: !global.qtLoadedFromShell
+    hydrate: !global.qtLoadedFromShell,
   });
+  setTimeout(() => {
+    renderComponent(CommentingWidget, "metype-commenting-widget", store);
+  }, 1000);
 }

@@ -198,6 +198,7 @@ export const StoryTemplate = ({
           <CaptionAttribution story={story} config={config} />
           <HeaderCard />
           <StoryData />
+          <div id="metype-commenting-widget"></div>
         </div>
         {verticalShare && <SocialShareComponent />}
         <SideColumn />
