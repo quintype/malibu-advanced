@@ -145,6 +145,8 @@ export const StoryTemplate = ({
           <CaptionAttribution story={story} config={config} />
           <HeaderCard />
           <StoryData />
+          <div id="metype-commenting-widget"></div>
+          <div id="metype-feed-widget"></div>
         </div>
         {verticalShare && <SocialShareComponent />}
         <AsideCollectionCard />
@@ -164,6 +166,8 @@ export const StoryTemplate = ({
         <div styleName="story-content-inner-wrapper">
           <CaptionAttribution story={story} config={config} />
           <StoryData />
+          <div id="metype-commenting-widget"></div>
+          <div id="metype-feed-widget"></div>
         </div>
         {verticalShare && <SocialShareComponent />}
         <AsideCollectionCard />
@@ -181,6 +185,8 @@ export const StoryTemplate = ({
         <CaptionAttribution story={story} config={config} />
         <div styleName="story-content-inner-wrapper">
           <StoryData />
+          <div id="metype-commenting-widget"></div>
+          <div id="metype-feed-widget"></div>
         </div>
         {verticalShare && <SocialShareComponent />}
         <AsideCollectionCard />
@@ -199,6 +205,7 @@ export const StoryTemplate = ({
           <HeaderCard />
           <StoryData />
           <div id="metype-commenting-widget"></div>
+          <div id="metype-feed-widget"></div>
         </div>
         {verticalShare && <SocialShareComponent />}
         <SideColumn />
@@ -216,6 +223,8 @@ export const StoryTemplate = ({
         <div styleName="story-content-inner-wrapper">
           <CaptionAttribution story={story} config={config} />
           <StoryData />
+          <div id="metype-commenting-widget"></div>
+          <div id="metype-feed-widget"></div>
         </div>
         {verticalShare && <SocialShareComponent />}
         <SideColumn />
@@ -241,6 +250,8 @@ export const StoryTemplate = ({
         <div styleName="story-content-inner-wrapper">
           <CaptionAttribution story={story} config={config} />
           <StoryData />
+          <div id="metype-commenting-widget"></div>
+          <div id="metype-feed-widget"></div>
         </div>
         {verticalShare && <SocialShareComponent />}
         <AsideCollectionCard />

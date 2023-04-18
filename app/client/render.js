@@ -9,7 +9,8 @@ import { NavBar } from "../isomorphic/components/layouts/header/nav-bar";
 import { TopAd } from "../isomorphic/components/ads/top-ad";
 import { gumletScriptGenerator } from "../isomorphic/components/gumlet-script-generator";
 import LoadingIndicatorComponent from "../isomorphic/components/atoms/loading-indicator";
-import { CommentingWidget } from "../isomorphic/components/Metype";
+import { CommentingWidget } from "../isomorphic/components/Metype/commenting-widget";
+import { FeedWidget } from "../isomorphic/components/Metype/feed-widget";
 
 export function preRenderApplication(store) {
   const hydrate = { hydrate: !global.qtLoadedFromShell };
@@ -48,5 +49,6 @@ export function renderApplication(store) {
   });
   setTimeout(() => {
     renderComponent(CommentingWidget, "metype-commenting-widget", store);
+    renderComponent(FeedWidget, "metype-feed-widget", store);
   }, 1000);
 }
