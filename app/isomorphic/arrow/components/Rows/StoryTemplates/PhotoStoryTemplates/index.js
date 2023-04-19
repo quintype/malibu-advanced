@@ -18,6 +18,7 @@ import { PhotoStoryElement, SlotAfterStory } from "../../../Molecules/StoryEleme
 import { StateProvider } from "../../../SharedContext";
 import AsideCollection from "../../AsideCollection";
 import "./photo.m.css";
+import { Paywall } from "../../Paywall";
 
 const PhotoStory = ({
   story = {},
@@ -82,18 +83,32 @@ const PhotoStory = ({
         <PublishDetails story={story} opts={publishedDetails} template="story" timezone={timezone} />
         {!verticalShare && <SocialShareComponent />}
       </div>
-      {visibledCards.map((card) => {
-        return (
+      {story.access === "subscription" ? (
+        <>
           <PhotoStoryElement
             story={story}
-            card={card}
-            key={get(card, ["id"], "")}
+            card={visibledCards[0]}
+            key={get(visibledCards[0], ["id"], "")}
             config={{ ...storyElementsConfig, theme }}
             adComponent={adComponent}
             widgetComp={widgetComp}
           />
-        );
-      })}
+          <Paywall />
+        </>
+      ) : (
+        visibledCards.map((card) => {
+          return (
+            <PhotoStoryElement
+              story={story}
+              card={card}
+              key={get(card, ["id"], "")}
+              config={{ ...storyElementsConfig, theme }}
+              adComponent={adComponent}
+              widgetComp={widgetComp}
+            />
+          );
+        })
+      )}
       <div styleName="space-32">
         {firstChild}
         <StoryTags tags={story.tags} />

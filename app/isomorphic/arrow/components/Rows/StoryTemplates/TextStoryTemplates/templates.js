@@ -1,9 +1,8 @@
 import React from "react";
 import get from "lodash/get";
 import PropTypes from "prop-types";
-import { useSelector } from "react-redux";
 import { SocialShareTemplate } from "../../../Molecules/SocialShareTemplate";
-import { Link, SocialShare } from "@quintype/components";
+import { SocialShare } from "@quintype/components";
 import { SectionTag } from "../../../Atoms/SectionTag";
 import { StoryHeadline } from "../../../Atoms/StoryHeadline";
 import { Subheadline } from "../../../Atoms/Subheadline";
@@ -15,6 +14,7 @@ import { PublishDetails } from "../../../Atoms/PublishDetail";
 import { StoryTags } from "../../../Atoms/StoryTags";
 import { StoryElementCard, SlotAfterStory } from "../../../Molecules/StoryElementCard";
 import "./text-story.m.css";
+import { Paywall } from "../../Paywall";
 
 export const StoryTemplate = ({
   story = {},
@@ -81,32 +81,6 @@ export const StoryTemplate = ({
           iconType={shareIconType}
           shareIconId={`share-icon-story-share-${storyId}`}
         />
-      </div>
-    );
-  };
-
-  const Paywall = function () {
-    const member = useSelector((state) => get(state, ["member"], null));
-
-    return (
-      <div styleName="paywall-container">
-        <div styleName="paywall-headline">Want to read full story?</div>
-        <p styleName="paywall-description">
-          We’re glad you’re enjoying this story. Subscribe to our plans to continue reading the story.
-        </p>
-        <div styleName="view-plans-btn">
-          <Link href="/subscription" styleName="view-plans-link">
-            View All Plans
-          </Link>
-        </div>
-        {!member && (
-          <div styleName="go-to-login">
-            Already have a subscription?
-            <Link href="/user-login" styleName="go-to-login-link">
-              Login
-            </Link>
-          </div>
-        )}
       </div>
     );
   };

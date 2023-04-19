@@ -16,6 +16,7 @@ import "./listicle-story.m.css";
 import { StoryElementCard, SlotAfterStory } from "../../../Molecules/StoryElementCard";
 import { StoryTags } from "../../../Atoms/StoryTags";
 import AsideCollection from "../../AsideCollection";
+import { Paywall } from "../../Paywall";
 
 const ListicleStoryTemplate = ({
   story = {},
@@ -92,26 +93,41 @@ const ListicleStoryTemplate = ({
 
   const BodyBlock = () => (
     <div styleName={`body-block ${isNumberedBullet ? "numbered-bullet-style" : ""}`}>
-      {visibledCards.map((card, index) => {
-        return (
-          <React.Fragment key={card.id}>
-            {!isNumberedBullet ? (
-              <div styleName="bullet-style-dash" />
-            ) : (
-              <div styleName="bullet-style-number">{index + 1}.</div>
-            )}
-            <StoryElementCard
-              story={story}
-              card={card}
-              key={card.id}
-              config={storyElementsConfig}
-              adComponent={adComponent}
-              widgetComp={widgetComp}
-            />
-          </React.Fragment>
-        );
-      })}
-      {firstChild}
+      {story.access === "subscription" ? (
+        <>
+          <StoryElementCard
+            story={story}
+            card={visibledCards[0]}
+            key={visibledCards[0].id}
+            config={storyElementsConfig}
+            adComponent={adComponent}
+            widgetComp={widgetComp}
+          />
+          <Paywall />
+        </>
+      ) : (
+        <>
+          {visibledCards.map((card, index) => {
+            return (
+              <React.Fragment key={card.id}>
+                {!isNumberedBullet ? (
+                  <div styleName="bullet-style-dash" />
+                ) : (
+                  <div styleName="bullet-style-number">{index + 1}.</div>
+                )}
+                <StoryElementCard
+                  story={story}
+                  card={card}
+                  key={card.id}
+                  config={storyElementsConfig}
+                  adComponent={adComponent}
+                  widgetComp={widgetComp}
+                />
+              </React.Fragment>
+            );
+          })}
+        </>
+      )}
       <div styleName="story-tags">
         <StoryTags tags={story.tags} />
         <SlotAfterStory

@@ -15,6 +15,7 @@ import { StoryTags } from "../../../Atoms/StoryTags";
 import { StoryElementCard, SlotAfterStory } from "../../../Molecules/StoryElementCard";
 import { StateProvider } from "../../../SharedContext";
 import "./video-story.m.css";
+import { Paywall } from "../../Paywall";
 
 const VideoStoryTemplate = ({
   story = {},
@@ -95,19 +96,34 @@ const VideoStoryTemplate = ({
           <PublishDetails story={story} opts={publishedDetails} template="story" timezone={timezone} />
           {!verticalShare && <SocialShareComponent />}
         </div>
-        {visibledCards.map((card) => {
-          return (
+        {story.access === "subscription" ? (
+          <>
             <StoryElementCard
               heroVideoElementId={heroVideo.id}
               story={story}
-              card={card}
-              key={get(card, ["id"], "")}
+              card={visibledCards[0]}
+              key={get(visibledCards[0], ["id"], "")}
               config={storyElementsConfig}
               adComponent={adComponent}
               widgetComp={widgetComp}
             />
-          );
-        })}
+            <Paywall />
+          </>
+        ) : (
+          visibledCards.map((card) => {
+            return (
+              <StoryElementCard
+                heroVideoElementId={heroVideo.id}
+                story={story}
+                card={card}
+                key={get(card, ["id"], "")}
+                config={storyElementsConfig}
+                adComponent={adComponent}
+                widgetComp={widgetComp}
+              />
+            );
+          })
+        )}
         {firstChild}
         <div styleName="story-tags">
           <StoryTags tags={story.tags} />

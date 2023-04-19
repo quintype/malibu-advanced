@@ -62,21 +62,29 @@ const SubscriptionLayout = function ({ initAccessType, initRazorPayPayment, getS
   }
 };
 
-export const SubscriptionPage = function (props) {
+SubscriptionLayout.propTypes = {
+  initAccessType: func,
+  initRazorPayPayment: func,
+  getSubscription: func,
+  validateCoupon: func,
+  member: object,
+};
+
+export const SubscriptionPage = function ({ config }) {
   const member = useSelector((state) => get(state, ["member"], null));
-  const email = get(member, ["email"], "andukuri.phaneendra@quintype.com");
+  const email = get(member, ["email"], "abc@email.com");
   const phone = get(member, ["metadata", "phone-number"], "1234");
+  const { key, accessTypeBkIntegrationId } = config["publisher-attributes"].accesstypeConfig;
 
   return (
     <>
       <AccessType
         enableAccesstype={true}
         isStaging={true}
-        accessTypeKey={"Aw4ujaqhpn8aVMT7yzQawSyZ"}
+        accessTypeKey={key}
         email={email}
         phone={phone}
-        id={1170884}
-        accessTypeBkIntegrationId={455}
+        accessTypeBkIntegrationId={accessTypeBkIntegrationId}
       >
         {({ initAccessType, initRazorPayPayment, getSubscription, validateCoupon }) => (
           <SubscriptionLayout
@@ -92,10 +100,6 @@ export const SubscriptionPage = function (props) {
   );
 };
 
-SubscriptionLayout.propTypes = {
-  initAccessType: func,
-  initRazorPayPayment: func,
-  getSubscription: func,
-  validateCoupon: func,
-  member: object,
+SubscriptionPage.propTypes = {
+  config: object,
 };
