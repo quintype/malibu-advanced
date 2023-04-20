@@ -43,6 +43,7 @@ publisher:
       primaryColor: "#000"
       backgroundColor: "#2cc7a4"
       className: "story-commenting-widget"
+      name: "Malibu"
   google_app_id: ""
   facebook_app_id: ""
   is_verification_link_flow: true

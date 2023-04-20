@@ -1,31 +1,47 @@
-import { MetypeContributionWidget } from "@metype/components";
-import get from "lodash/get";
-import { object } from "prop-types";
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useState, useEffect } from "react";
+import { scriptLoader } from "../index";
+// import SelectDropdown from "../SelectDropdown";
+import { string, number } from "prop-types";
 
-const generateHostUrl = (story = {}) => {
-  if (global.location) {
-    return `${global.location.origin}/${story.slug}`;
-  }
-};
+export const MetypeContributionWidget = ({ host, accountId, publisher, fontFamily, fontUrl }) => {
+  const randomNumber = new Date().getMilliseconds();
+  const [isIframe, setIframe] = useState(false);
 
-export const ContributionWidget = () => {
-  const story = useSelector((state) => get(state, ["qt", "data", "story"], {}));
-  const metypeConfig = useSelector((state) => get(state, ["qt", "config", "publisher-attributes", "metypeConfig"], {}));
-  const { metypeHost = "", metypeAccountId = "", fontUrl = "", fontFamily = "" } = metypeConfig;
+  useEffect(() => {
+    setIframe(true);
+  }, []);
+
+  useEffect(() => {
+    !window.talktype && scriptLoader(host, () => initWidget(randomNumber));
+    initWidget(randomNumber);
+  }, []);
+
+  const initWidget = (randomNumber) => {
+    if (window.talktype) {
+      window.talktype.contributionWidgetIframe(document.getElementById(`metype-contribution-${randomNumber}`));
+    }
+  };
+
   return (
-    <MetypeContributionWidget
-      host={metypeHost}
-      pageURL={generateHostUrl(story)}
-      accountId={metypeAccountId}
-      fontUrl={fontUrl}
-      fontFamily={fontFamily}
-    />
+    <div>
+      {isIframe && (
+        <div
+          id={`metype-contribution-${randomNumber}`}
+          data-metype-account-id={accountId}
+          data-metype-host={host}
+          data-metype-publisher={publisher}
+          data-metype-font-url={fontUrl || ""}
+          data-metype-font-family={fontFamily || ""}
+        ></div>
+      )}
+    </div>
   );
 };
 
-ContributionWidget.propTypes = {
-  metypeConfig: object,
-  story: object,
+MetypeContributionWidget.propTypes = {
+  host: string,
+  accountId: number,
+  publisher: string,
+  fontFamily: string,
+  fontUrl: string,
 };

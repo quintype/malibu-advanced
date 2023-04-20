@@ -9,3 +9,4 @@ export { AuthorPage } from "../components/pages/author-page";
 export { ResetPasswordPage } from "../components/pages/reset-password";
 export { ProfilePage } from "../components/pages/profile-page";
 export { UserLoginPage } from "../components/pages/user-login";
+export { UgcPage } from "../components/pages/ugc-page";

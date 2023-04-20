@@ -15,6 +15,8 @@ import { PublishDetails } from "../../../Atoms/PublishDetail";
 import { StoryTags } from "../../../Atoms/StoryTags";
 import { StoryElementCard, SlotAfterStory } from "../../../Molecules/StoryElementCard";
 import { MetypeCommentsWidget } from "../../../../../components/Metype/commenting-widget";
+import { MetypeContributionWidget } from "../../../../../components/Metype/contribution-widget";
+
 import "./text-story.m.css";
 
 export const StoryTemplate = ({
@@ -160,6 +162,11 @@ export const StoryTemplate = ({
             fontFamily={metypeConfig.fontFamily}
             storyId={story.id}
           />
+          <MetypeContributionWidget
+            host={metypeConfig.metypeHost}
+            accountId={metypeConfig.metypeAccountId}
+            publisher={metypeConfig.name}
+          />
         </div>
         {verticalShare && <SocialShareComponent />}
         <AsideCollectionCard />
@@ -190,6 +197,11 @@ export const StoryTemplate = ({
             fontFamily={metypeConfig.fontFamily}
             storyId={story.id}
           />
+          <MetypeContributionWidget
+            host={metypeConfig.metypeHost}
+            accountId={metypeConfig.metypeAccountId}
+            publisher={metypeConfig.name}
+          />
         </div>
         {verticalShare && <SocialShareComponent />}
         <AsideCollectionCard />
@@ -217,6 +229,11 @@ export const StoryTemplate = ({
             fontUrl={metypeConfig.fontFamilyUrl}
             fontFamily={metypeConfig.fontFamily}
             storyId={story.id}
+          />
+          <MetypeContributionWidget
+            host={metypeConfig.metypeHost}
+            accountId={metypeConfig.metypeAccountId}
+            publisher={metypeConfig.name}
           />
         </div>
         {verticalShare && <SocialShareComponent />}
@@ -246,6 +263,11 @@ export const StoryTemplate = ({
             fontFamily={metypeConfig.fontFamily}
             storyId={story.id}
           />
+          <MetypeContributionWidget
+            host={metypeConfig.metypeHost}
+            accountId={metypeConfig.metypeAccountId}
+            publisher={metypeConfig.name}
+          />
         </div>
         {verticalShare && <SocialShareComponent />}
         <SideColumn />
@@ -273,6 +295,11 @@ export const StoryTemplate = ({
             fontUrl={metypeConfig.fontFamilyUrl}
             fontFamily={metypeConfig.fontFamily}
             storyId={story.id}
+          />
+          <MetypeContributionWidget
+            host={metypeConfig.metypeHost}
+            accountId={metypeConfig.metypeAccountId}
+            publisher={metypeConfig.name}
           />
         </div>
         {verticalShare && <SocialShareComponent />}
@@ -309,6 +336,11 @@ export const StoryTemplate = ({
             fontUrl={metypeConfig.fontFamilyUrl}
             fontFamily={metypeConfig.fontFamily}
             storyId={story.id}
+          />
+          <MetypeContributionWidget
+            host={metypeConfig.metypeHost}
+            accountId={metypeConfig.metypeAccountId}
+            publisher={metypeConfig.name}
           />
         </div>
         {verticalShare && <SocialShareComponent />}

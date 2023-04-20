@@ -16,6 +16,7 @@ export const PAGE_TYPE = Object.freeze({
   PROFILE_PAGE: "profile-page",
   USER_LOGIN: "user-login",
   VISUAL_STORY: "visual-story",
+  UGC_PAGE: "ugc-page",
 });
 export const TAG_PAGE_URL_PREFIX = "/topic/";
 
