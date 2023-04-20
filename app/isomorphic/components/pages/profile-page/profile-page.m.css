@@ -78,3 +78,32 @@
   margin-bottom: 12px;
   text-align: center;
 }
+
+.active-plan-label{
+  font-size: var(--large);
+  font-weight: var(--semi-bold);
+}
+
+.end-date-text {
+  font-weight: bold;
+  color: var(--brand-primary-dark);
+  font-size: var(--medium);
+}
+
+span.highlighted-date {
+  font-weight: bold;
+  color: var(--grey-dark);
+  font-size: var(--large);
+}
+
+.primary-highlighted-text {
+  color: var(--primary-color);
+}
+
+.hidden {
+  display: none;
+}
+
+.shown {
+  display: flex;
+}

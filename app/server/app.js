@@ -116,13 +116,10 @@ ampRoutes(app, {
       },
       score: { supportsViewer: 10, isReadyToPay: 9 },
       fallbackEntitlement: {
-        source: "fallback",
-        granted: () => true,
+        granted: () => false,
         grantReason: () => "SUBSCRIBER",
         data: {
-          isLoggedIn: () => true,
-          numberRemaining: () => 4,
-          isLast: () => false,
+          isLoggedIn: () => false,
         },
       },
     },

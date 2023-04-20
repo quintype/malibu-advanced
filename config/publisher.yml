@@ -1,5 +1,5 @@
 asset_host: http://localhost:8080
-sketches_host: https://malibu-web.quintype.io
+sketches_host: https://malibu-advanced-web.qtstage.io
 host_to_api_host:
   help.lvh.me: https://user-documentation.quintype.io
 host_to_automatic_api_host:
@@ -18,6 +18,9 @@ publisher:
       voices:
         redirect_Url: "<Domain>/api/auth/v1/oauth/token"
         callback_Url: "Callback Url"
+  accesstypeConfig:
+    key: "Aw4ujaqhpn8aVMT7yzQawSyZ"
+    accessTypeBkIntegrationId: 455
   timezone: "Asia/Baku"
   auto_sso:
     is_enable: false
