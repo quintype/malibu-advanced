@@ -80,25 +80,17 @@
 }
 
 .active-plan-label{
-  font-size: var(--large);
-  font-weight: var(--semi-bold);
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 12px;
 }
 
 .end-date-text {
   font-weight: bold;
   color: var(--brand-primary-dark);
-  font-size: var(--medium);
+  font-size: var(--base-smaller);
 }
 
-span.highlighted-date {
-  font-weight: bold;
-  color: var(--grey-dark);
-  font-size: var(--large);
-}
-
-.primary-highlighted-text {
-  color: var(--primary-color);
-}
 
 .hidden {
   display: none;
@@ -107,3 +99,9 @@ span.highlighted-date {
 .shown {
   display: flex;
 }
+
+.plan-name{
+  font-size: 18px;
+  font-weight: bold;
+}
+
