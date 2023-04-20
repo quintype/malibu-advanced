@@ -182,11 +182,12 @@ const ProfilePage = () => {
       phone={phone}
       accessTypeBkIntegrationId={accessTypeBkIntegrationId}
     >
-      {({ getSubscriptionForUser, cancelSubscription }) => (
+      {({ getSubscriptionForUser, cancelSubscription, initAccessType }) => (
         <ProfilePageBase
           member={member}
           getSubscriptionForUser={getSubscriptionForUser}
           cancelSubscription={cancelSubscription}
+          initAccessType={initAccessType}
         />
       )}
     </AccessType>
