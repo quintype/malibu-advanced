@@ -74,7 +74,9 @@ export const SubscriptionPage = function ({ config }) {
   const member = useSelector((state) => get(state, ["member"], null));
   const email = get(member, ["email"], "abc@email.com");
   const phone = get(member, ["metadata", "phone-number"], "1234");
-  const { key, accessTypeBkIntegrationId } = config["publisher-attributes"].accesstypeConfig;
+  const { key, accessTypeBkIntegrationId } = useSelector((state) =>
+    get(state, ["qt", "config", "publisher-attributes", "accesstypeConfig"], {})
+  );
 
   return (
     <>
