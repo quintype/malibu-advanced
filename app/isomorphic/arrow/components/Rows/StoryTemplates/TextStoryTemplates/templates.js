@@ -1,4 +1,5 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import get from "lodash/get";
 import PropTypes from "prop-types";
 import { SocialShareTemplate } from "../../../Molecules/SocialShareTemplate";
@@ -13,6 +14,7 @@ import { HeroImage } from "../../../Atoms/HeroImage";
 import { PublishDetails } from "../../../Atoms/PublishDetail";
 import { StoryTags } from "../../../Atoms/StoryTags";
 import { StoryElementCard, SlotAfterStory } from "../../../Molecules/StoryElementCard";
+import { MetypeCommentsWidget } from "../../../../../components/Metype/commenting-widget";
 import "./text-story.m.css";
 
 export const StoryTemplate = ({
@@ -38,6 +40,8 @@ export const StoryTemplate = ({
     shareIconType = "plain-color-svg",
     premiumStoryIconConfig = {},
   } = config;
+  const metypeConfig = useSelector((state) => get(state, ["qt", "config", "publisher-attributes", "metypeConfig"], {}));
+  const jwtToken = useSelector((state) => get(state, ["userReducer"], null));
   const visibledCards = noOfVisibleCards < 0 ? story.cards : story.cards.slice(0, noOfVisibleCards);
   const storyId = get(story, ["id"], "");
   const HeaderCard = () => {
@@ -145,10 +149,17 @@ export const StoryTemplate = ({
           <CaptionAttribution story={story} config={config} />
           <HeaderCard />
           <StoryData />
-          <div id="metype-commenting-widget"></div>
-          <div id="metype-feed-widget"></div>
-          <div id="metype-contribution-widget"></div>
-          <div id="metype-reactions-widget"></div>
+          <MetypeCommentsWidget
+            host={metypeConfig.metypeHost}
+            accountId={metypeConfig.metypeAccountId}
+            pageURL={story.url}
+            primaryColor={metypeConfig.primaryColor}
+            className={metypeConfig.className}
+            jwt={jwtToken}
+            fontUrl={metypeConfig.fontFamilyUrl}
+            fontFamily={metypeConfig.fontFamily}
+            storyId={story.id}
+          />
         </div>
         {verticalShare && <SocialShareComponent />}
         <AsideCollectionCard />
@@ -168,10 +179,17 @@ export const StoryTemplate = ({
         <div styleName="story-content-inner-wrapper">
           <CaptionAttribution story={story} config={config} />
           <StoryData />
-          <div id="metype-commenting-widget"></div>
-          <div id="metype-feed-widget"></div>
-          <div id="metype-contribution-widget"></div>
-          <div id="metype-reactions-widget"></div>
+          <MetypeCommentsWidget
+            host={metypeConfig.metypeHost}
+            accountId={metypeConfig.metypeAccountId}
+            pageURL={story.url}
+            primaryColor={metypeConfig.primaryColor}
+            className={metypeConfig.className}
+            jwt={jwtToken}
+            fontUrl={metypeConfig.fontFamilyUrl}
+            fontFamily={metypeConfig.fontFamily}
+            storyId={story.id}
+          />
         </div>
         {verticalShare && <SocialShareComponent />}
         <AsideCollectionCard />
@@ -189,10 +207,17 @@ export const StoryTemplate = ({
         <CaptionAttribution story={story} config={config} />
         <div styleName="story-content-inner-wrapper">
           <StoryData />
-          <div id="metype-commenting-widget"></div>
-          <div id="metype-feed-widget"></div>
-          <div id="metype-contribution-widget"></div>
-          <div id="metype-reactions-widget"></div>
+          <MetypeCommentsWidget
+            host={metypeConfig.metypeHost}
+            accountId={metypeConfig.metypeAccountId}
+            pageURL={story.url}
+            primaryColor={metypeConfig.primaryColor}
+            className={metypeConfig.className}
+            jwt={jwtToken}
+            fontUrl={metypeConfig.fontFamilyUrl}
+            fontFamily={metypeConfig.fontFamily}
+            storyId={story.id}
+          />
         </div>
         {verticalShare && <SocialShareComponent />}
         <AsideCollectionCard />
@@ -210,10 +235,17 @@ export const StoryTemplate = ({
           <CaptionAttribution story={story} config={config} />
           <HeaderCard />
           <StoryData />
-          <div id="metype-commenting-widget"></div>
-          <div id="metype-feed-widget"></div>
-          <div id="metype-contribution-widget"></div>
-          <div id="metype-reactions-widget"></div>
+          <MetypeCommentsWidget
+            host={metypeConfig.metypeHost}
+            accountId={metypeConfig.metypeAccountId}
+            pageURL={story.url}
+            primaryColor={metypeConfig.primaryColor}
+            className={metypeConfig.className}
+            jwt={jwtToken}
+            fontUrl={metypeConfig.fontFamilyUrl}
+            fontFamily={metypeConfig.fontFamily}
+            storyId={story.id}
+          />
         </div>
         {verticalShare && <SocialShareComponent />}
         <SideColumn />
@@ -231,10 +263,17 @@ export const StoryTemplate = ({
         <div styleName="story-content-inner-wrapper">
           <CaptionAttribution story={story} config={config} />
           <StoryData />
-          <div id="metype-commenting-widget"></div>
-          <div id="metype-feed-widget"></div>
-          <div id="metype-contribution-widget"></div>
-          <div id="metype-reactions-widget"></div>
+          <MetypeCommentsWidget
+            host={metypeConfig.metypeHost}
+            accountId={metypeConfig.metypeAccountId}
+            pageURL={story.url}
+            primaryColor={metypeConfig.primaryColor}
+            className={metypeConfig.className}
+            jwt={jwtToken}
+            fontUrl={metypeConfig.fontFamilyUrl}
+            fontFamily={metypeConfig.fontFamily}
+            storyId={story.id}
+          />
         </div>
         {verticalShare && <SocialShareComponent />}
         <SideColumn />
@@ -260,10 +299,17 @@ export const StoryTemplate = ({
         <div styleName="story-content-inner-wrapper">
           <CaptionAttribution story={story} config={config} />
           <StoryData />
-          <div id="metype-commenting-widget"></div>
-          <div id="metype-feed-widget"></div>
-          <div id="metype-contribution-widget"></div>
-          <div id="metype-reactions-widget"></div>
+          <MetypeCommentsWidget
+            host={metypeConfig.metypeHost}
+            accountId={metypeConfig.metypeAccountId}
+            pageURL={story.url}
+            primaryColor={metypeConfig.primaryColor}
+            className={metypeConfig.className}
+            jwt={jwtToken}
+            fontUrl={metypeConfig.fontFamilyUrl}
+            fontFamily={metypeConfig.fontFamily}
+            storyId={story.id}
+          />
         </div>
         {verticalShare && <SocialShareComponent />}
         <AsideCollectionCard />

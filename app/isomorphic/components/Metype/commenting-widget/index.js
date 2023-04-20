@@ -1,48 +1,84 @@
-import { MetypeCommentingWidget } from "@metype/components";
-import get from "lodash/get";
-import { object } from "prop-types";
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect } from "react";
+import { string, number } from "prop-types";
+import { scriptLoader } from "../index";
 
-const generateHostUrl = (story = {}) => {
-  if (global.location) {
-    return `${global.location.origin}/${story.slug}`;
-  }
-};
-
-export const CommentingWidget = () => {
-  const story = useSelector((state) => get(state, ["qt", "data", "story"], {}));
-  const metypeConfig = useSelector((state) => get(state, ["qt", "config", "publisher-attributes", "metypeConfig"], {}));
+const MetypeCommentsWidget = (props) => {
   const {
-    metypeHost = "",
-    metypeAccountId = "",
-    primaryColor = "",
-    secondaryColor = "",
-    fontColor = "",
-    fontUrl = "",
-    fontFamily = "",
+    primaryColor,
+    host,
+    accountId,
+    className,
+    secondaryColor,
+    fontColor,
+    pageURL,
     windowHeight,
     windowWidth,
-    className,
-  } = metypeConfig;
+    fontUrl,
+    fontFamily,
+    message = null,
+    jwt,
+    storyId,
+  } = props;
+  const randomNumber = storyId;
+
+  useEffect(() => {
+    !window.talktype && scriptLoader(host, () => initWidget(randomNumber));
+    initWidget(randomNumber);
+  }, []);
+
+  useEffect(() => {
+    if (message !== null) {
+      window.talktype.accountUserLogout();
+      initWidget(randomNumber);
+    }
+  }, [message]);
+
+  const initWidget = (randomNumber) => {
+    if (window.talktype) {
+      jwt &&
+        !message &&
+        window.talktype.accountUserLogin({
+          jwt: jwt,
+        });
+      window.talktype.commentWidgetIframe(document.getElementById(`metype-container-${randomNumber}`));
+    }
+  };
+
   return (
-    <MetypeCommentingWidget
-      host={metypeHost}
-      accountId={metypeAccountId}
-      pageURL={generateHostUrl(story)}
-      primaryColor={primaryColor}
-      secondaryColor={secondaryColor}
-      fontColor={fontColor}
-      fontUrl={fontUrl}
-      fontFamily={fontFamily}
-      className={className}
-      windowHeight={windowHeight}
-      windowWidth={windowWidth}
-    />
+    <div>
+      <div
+        id={`metype-container-${randomNumber}`}
+        className={`iframe-container ${className}`}
+        data-metype-account-id={accountId}
+        data-metype-host={host} // Change fallback to deployed domain name
+        data-metype-primary-color={primaryColor || "#3a9fdd"}
+        data-metype-bg-color={secondaryColor || "transparent"}
+        data-metype-font-color={fontColor || "#4a4a4a"}
+        data-metype-window-width={windowWidth || (!global ? window.screen.width : 700)}
+        data-metype-window-height={windowHeight || (!global ? window.screen.height : 700)}
+        data-metype-page-url={pageURL}
+        data-metype-font-url={fontUrl || ""}
+        data-metype-font-family={fontFamily || ""}
+      ></div>
+    </div>
   );
 };
 
-CommentingWidget.propTypes = {
-  metypeConfig: object,
-  story: object,
+MetypeCommentsWidget.propTypes = {
+  primaryColor: string,
+  host: string,
+  accountId: string,
+  className: string,
+  secondaryColor: string,
+  fontColor: string,
+  pageURL: string,
+  windowHeight: number,
+  windowWidth: number,
+  fontUrl: string,
+  fontFamily: string,
+  message: string,
+  jwt: string,
+  storyId: string,
 };
+
+export { MetypeCommentsWidget };

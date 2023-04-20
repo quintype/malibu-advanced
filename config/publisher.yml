@@ -9,6 +9,7 @@ domain_mapping:
   subdomain.lvh.me: voices
   malibu.lvh.me: localhost:3000
 publisher:
+  className: story-comments-widget
   cdn_src: "gumlet"
   cdn_image: "qtstage-01.gumlet.io"
   sso_login:
