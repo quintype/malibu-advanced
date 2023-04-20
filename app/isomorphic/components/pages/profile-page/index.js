@@ -96,17 +96,17 @@ EndDateText.propTypes = {
 
 const ProfilePageBase = ({ member, getSubscriptionForUser }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [subscriptions, setSubscriptions] = useState([]);
+  const [activeSubscriptions, setActiveSubscriptions] = useState([]);
 
   useEffect(() => {
     getSubscriptionForUser()
       .then((res) => {
-        setSubscriptions(res.subscriptions);
+        const subscriptions = res.subscriptions;
+        const activeSubscriptions = subscriptions.filter((subscription) => subscription.status === "active");
+        setActiveSubscriptions(activeSubscriptions);
       })
       .catch((err) => console.error("Error occurred inside profile page --->", err));
   }, []);
-
-  const activeSubscriptions = subscriptions.filter((subscription) => subscription.status === "active");
 
   if (!member) {
     return <div styleName="not-logged-in">Please Login</div>;
@@ -184,6 +184,7 @@ const ProfilePage = () => {
 ProfilePageBase.propTypes = {
   member: object,
   getSubscriptionForUser: func,
+  checkAccess: func,
 };
 
 export { ProfilePage };
