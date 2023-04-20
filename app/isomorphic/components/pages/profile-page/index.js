@@ -184,7 +184,6 @@ const ProfilePage = () => {
 ProfilePageBase.propTypes = {
   member: object,
   getSubscriptionForUser: func,
-  checkAccess: func,
 };
 
 export { ProfilePage };
