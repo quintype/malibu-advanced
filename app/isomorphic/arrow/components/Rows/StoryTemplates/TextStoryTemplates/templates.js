@@ -2,7 +2,7 @@ import React from "react";
 import get from "lodash/get";
 import PropTypes from "prop-types";
 import { SocialShareTemplate } from "../../../Molecules/SocialShareTemplate";
-import { SocialShare } from "@quintype/components";
+import { AccessType, SocialShare } from "@quintype/components";
 import { SectionTag } from "../../../Atoms/SectionTag";
 import { StoryHeadline } from "../../../Atoms/StoryHeadline";
 import { Subheadline } from "../../../Atoms/Subheadline";
@@ -15,6 +15,7 @@ import { StoryTags } from "../../../Atoms/StoryTags";
 import { StoryElementCard, SlotAfterStory } from "../../../Molecules/StoryElementCard";
 import "./text-story.m.css";
 import { Paywall } from "../../Paywall";
+import { useSelector } from "react-redux";
 
 export const StoryTemplate = ({
   story = {},
@@ -85,7 +86,11 @@ export const StoryTemplate = ({
     );
   };
 
-  const StoryData = () => {
+  // eslint-disable-next-line react/prop-types
+  const StoryData = ({ checkAccess }) => {
+    checkAccess(story.id).then((res) => {
+      console.log("Check Access inside StoryData is --->", res, story.id);
+    });
     return (
       <div styleName="gap-16">
         {authorDetails && <AuthorCard story={story} template={authorDetails.template} opts={authorDetails.opts} />}
@@ -136,6 +141,27 @@ export const StoryTemplate = ({
     );
   };
 
+  const StoryDataWithAccesstype = () => {
+    const member = useSelector((state) => get(state, ["member"], null));
+    const email = get(member, ["email"], "abc@email.com");
+    const phone = get(member, ["metadata", "phone-number"], "1234");
+    const { key, accessTypeBkIntegrationId } = useSelector((state) =>
+      get(state, ["qt", "config", "publisher-attributes", "accesstypeConfig"], {})
+    );
+    return (
+      <AccessType
+        enableAccesstype={true}
+        isStaging={true}
+        accessTypeKey={key}
+        email={email}
+        phone={phone}
+        accessTypeBkIntegrationId={accessTypeBkIntegrationId}
+      >
+        {({ checkAccess }) => <StoryData checkAccess={checkAccess} />}
+      </AccessType>
+    );
+  };
+
   const SideColumn = () => {
     return (
       asideCollection && (
@@ -162,7 +188,7 @@ export const StoryTemplate = ({
         <div styleName="story-content-inner-wrapper">
           <CaptionAttribution story={story} config={config} />
           <HeaderCard />
-          <StoryData />
+          <StoryDataWithAccesstype />
         </div>
         {verticalShare && <SocialShareComponent />}
         <AsideCollectionCard />
@@ -181,7 +207,7 @@ export const StoryTemplate = ({
         </div>
         <div styleName="story-content-inner-wrapper">
           <CaptionAttribution story={story} config={config} />
-          <StoryData />
+          <StoryDataWithAccesstype />
         </div>
         {verticalShare && <SocialShareComponent />}
         <AsideCollectionCard />
@@ -198,7 +224,7 @@ export const StoryTemplate = ({
         </div>
         <CaptionAttribution story={story} config={config} />
         <div styleName="story-content-inner-wrapper">
-          <StoryData />
+          <StoryDataWithAccesstype />
         </div>
         {verticalShare && <SocialShareComponent />}
         <AsideCollectionCard />
@@ -215,7 +241,7 @@ export const StoryTemplate = ({
         <div styleName="story-content-inner-wrapper">
           <CaptionAttribution story={story} config={config} />
           <HeaderCard />
-          <StoryData />
+          <StoryDataWithAccesstype />
         </div>
         {verticalShare && <SocialShareComponent />}
         <SideColumn />
@@ -232,7 +258,7 @@ export const StoryTemplate = ({
         </div>
         <div styleName="story-content-inner-wrapper">
           <CaptionAttribution story={story} config={config} />
-          <StoryData />
+          <StoryDataWithAccesstype />
         </div>
         {verticalShare && <SocialShareComponent />}
         <SideColumn />
@@ -257,7 +283,7 @@ export const StoryTemplate = ({
         <HeaderCard />
         <div styleName="story-content-inner-wrapper">
           <CaptionAttribution story={story} config={config} />
-          <StoryData />
+          <StoryDataWithAccesstype />
         </div>
         {verticalShare && <SocialShareComponent />}
         <AsideCollectionCard />

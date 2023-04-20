@@ -13,9 +13,9 @@ const EndDateText = ({ subscription }) => {
     case "active":
       if (subscription.cancelled) {
         return (
-          <p styleName="end-date-text">
+          <p>
             Subscription has been cancelled and will end on:
-            <span styleName="highlighted-date primary-highlighted-text">
+            <span>
               {new Date(subscription.end_timestamp).toLocaleDateString("en-IN", {
                 day: "numeric",
                 month: "long",
@@ -26,9 +26,9 @@ const EndDateText = ({ subscription }) => {
         );
       } else {
         return (
-          <p styleName="end-date-text">
+          <p>
             {subscription.recurring ? "Renews on:" : "Expires on:"}{" "}
-            <span styleName="highlighted-date">
+            <span>
               {new Date(subscription.end_timestamp).toLocaleDateString("en-IN", {
                 day: "numeric",
                 month: "long",
@@ -40,9 +40,9 @@ const EndDateText = ({ subscription }) => {
       }
     case "pending":
       return (
-        <p styleName="end-date-text">
+        <p>
           Subscription starts from:{" "}
-          <span styleName="highlighted-date">
+          <span>
             {new Date(subscription.start_timestamp).toLocaleDateString("en-IN", {
               day: "numeric",
               month: "long",
@@ -50,7 +50,7 @@ const EndDateText = ({ subscription }) => {
             })}
           </span>{" "}
           and will {subscription.recurring ? "renew on:" : "expire on:"}{" "}
-          <span styleName="highlighted-date">
+          <span>
             {new Date(subscription.end_timestamp).toLocaleDateString("en-IN", {
               day: "numeric",
               month: "long",
@@ -61,9 +61,9 @@ const EndDateText = ({ subscription }) => {
       );
     case "cancelled":
       return (
-        <p styleName="end-date-text">
+        <p>
           {new Date(subscription.cancelled_at) > new Date() ? "Cancels" : "Cancelled"} on:{" "}
-          <span styleName="highlighted-date">
+          <span>
             {new Date(subscription.cancelled_at).toLocaleDateString("en-IN", {
               day: "numeric",
               month: "long",
@@ -74,9 +74,9 @@ const EndDateText = ({ subscription }) => {
       );
     case "expired":
       return (
-        <p styleName="end-date-text">
+        <p>
           {new Date(subscription.end_timestamp) > new Date() ? "Expires" : "Expired"} on:{" "}
-          <span styleName="highlighted-date">
+          <span>
             {new Date(subscription.end_timestamp).toLocaleDateString("en-IN", {
               day: "numeric",
               month: "long",
@@ -86,7 +86,7 @@ const EndDateText = ({ subscription }) => {
         </p>
       );
     default:
-      return <p styleName="end-date-text"></p>;
+      return <p></p>;
   }
 };
 
@@ -141,7 +141,7 @@ const ProfilePageBase = ({ member, initAccessType, getSubscriptionForUser, cance
         <>
           {activeSubscriptions && activeSubscriptions.length ? (
             <div>
-              <div className="active-plan-label">
+              <div styleName="active-plan-label">
                 {activeSubscriptions.length === 1 ? "Active Plan" : "Active Plans"}
               </div>
               {activeSubscriptions.map((subscription, id) => {
