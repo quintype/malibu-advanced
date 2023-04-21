@@ -98,8 +98,8 @@ const ProfilePageBase = ({ member, initAccessType, getSubscriptionForUser, cance
   const [isEditing, setIsEditing] = useState(false);
   const [subscriptions, setSubscriptions] = useState([]);
 
-  useEffect(() => {
-    !global.AccessType && initAccessType(() => console.log("Accesstype is initialized"));
+  useEffect(async () => {
+    await initAccessType(() => console.log("Accesstype is initialized"));
     if (global.AccessType) {
       console.log("global.AccessType in profile page useEffect --->", global.AccessType);
       getSubscriptionForUser()
