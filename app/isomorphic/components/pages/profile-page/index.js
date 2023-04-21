@@ -116,33 +116,32 @@ const ProfilePageBase = ({ member, initAccessType, getSubscriptionForUser, cance
   const getActiveSubscriptions = function () {
     const activeSubscriptions = subscriptions.filter((subscription) => subscription.status === "active");
 
+    if (activeSubscriptions.length === 0) {
+      return <div>No Active Subscriptions</div>;
+    }
+
     return (
-      <>
-        activeSubscriptions && activeSubscriptions.length ? (
-        <div>
-          <div styleName="active-plan-label">{activeSubscriptions.length === 1 ? "Active Plan" : "Active Plans"}</div>
-          {activeSubscriptions.map((subscription, id) => {
-            return (
-              <div key={id}>
-                <span styleName="plan-name">{`${subscription.plan_name}`}</span>
-                <EndDateText subscription={subscription} />
-                <button
-                  styleName="button"
-                  onClick={() =>
-                    cancelSubscription(subscription.id).then((res) =>
-                      console.log("Response from cancelSubscription is --->", res)
-                    )
-                  }
-                >
-                  Cancel Subscription
-                </button>
-              </div>
-            );
-          })}
-        </div>
-        ) : (<div>No Active Subscriptions</div>
-        );
-      </>
+      <div>
+        <div styleName="active-plan-label">{activeSubscriptions.length === 1 ? "Active Plan" : "Active Plans"}</div>
+        {activeSubscriptions.map((subscription, id) => {
+          return (
+            <div key={id}>
+              <span styleName="plan-name">{`${subscription.plan_name}`}</span>
+              <EndDateText subscription={subscription} />
+              <button
+                styleName="button"
+                onClick={() =>
+                  cancelSubscription(subscription.id).then((res) =>
+                    console.log("Response from cancelSubscription is --->", res)
+                  )
+                }
+              >
+                Cancel Subscription
+              </button>
+            </div>
+          );
+        })}
+      </div>
     );
   };
 
