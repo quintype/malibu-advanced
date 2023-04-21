@@ -100,14 +100,16 @@ const ProfilePageBase = ({ member, initAccessType, getSubscriptionForUser, cance
 
   useEffect(() => {
     !global.AccessType && initAccessType(() => console.log("Accesstype is initialized"));
-    getSubscriptionForUser()
-      .then((res) => {
-        const subscriptions = res.subscriptions;
-        const activeSubscriptions = subscriptions.filter((subscription) => subscription.status === "active");
-        console.log("Active subscriptions and subscriptions are --->", activeSubscriptions, subscriptions);
-        setActiveSubscriptions(activeSubscriptions);
-      })
-      .catch((err) => console.error("Error occurred inside profile page --->", err));
+    if (global.AccessType) {
+      getSubscriptionForUser()
+        .then((res) => {
+          const subscriptions = res.subscriptions;
+          const activeSubscriptions = subscriptions.filter((subscription) => subscription.status === "active");
+          console.log("Active subscriptions and subscriptions are --->", activeSubscriptions, subscriptions);
+          setActiveSubscriptions(activeSubscriptions);
+        })
+        .catch((err) => console.error("Error occurred inside profile page --->", err));
+    }
   }, []);
 
   if (!member) {
