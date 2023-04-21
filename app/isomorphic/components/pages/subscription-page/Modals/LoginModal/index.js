@@ -1,5 +1,5 @@
-import React from "react";
-import { bool, func, object } from "prop-types";
+import React, { useState } from "react";
+import { func, object } from "prop-types";
 
 import "./login-modal.m.css";
 
@@ -7,13 +7,9 @@ const currencyLabels = {
   INR: "Rs.",
 };
 
-export const LoginModal = function ({
-  showAccountModal,
-  setShowAccountModal,
-  setActiveTab,
-  AccountModal,
-  selectedPlan,
-}) {
+export const LoginModal = function ({ setActiveTab, AccountModal, selectedPlan }) {
+  const [showAccountModal, setShowAccountModal] = useState(true);
+
   const { plan } = selectedPlan;
   return (
     <div styleName="modal">
@@ -48,8 +44,6 @@ export const LoginModal = function ({
 };
 
 LoginModal.propTypes = {
-  showAccountModal: bool,
-  setShowAccountModal: func,
   setActiveTab: func,
   AccountModal: func,
   selectedPlan: object,

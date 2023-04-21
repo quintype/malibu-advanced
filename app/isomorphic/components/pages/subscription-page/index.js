@@ -9,7 +9,6 @@ import { GroupsAndPlansModal, LoginModal, CheckoutModal, PaymentModal } from "./
 import "./subscription-page.m.css";
 
 const SubscriptionLayout = function ({ initAccessType, initRazorPayPayment, getSubscription, validateCoupon, member }) {
-  const [showAccountModal, setShowAccountModal] = useState(true);
   const [activeTab, setActiveTab] = useState("subscription");
   const [selectedPlan, setSelectedPlan] = useState({});
 
@@ -30,15 +29,7 @@ const SubscriptionLayout = function ({ initAccessType, initRazorPayPayment, getS
       );
 
     case "login":
-      return (
-        <LoginModal
-          showAccountModal={showAccountModal}
-          setShowAccountModal={setShowAccountModal}
-          setActiveTab={setActiveTab}
-          AccountModal={AccountModal}
-          selectedPlan={selectedPlan}
-        />
-      );
+      return <LoginModal setActiveTab={setActiveTab} AccountModal={AccountModal} selectedPlan={selectedPlan} />;
 
     case "checkout":
       return (
