@@ -108,7 +108,7 @@ const ProfilePageBase = ({ member, initAccessType, getSubscriptionForUser, cance
         })
         .catch((err) => console.error("Error occurred inside profile page --->", err));
     }
-  }, []);
+  }, [subscriptions]);
 
   if (!member) {
     return <div styleName="not-logged-in">Please Login</div>;
@@ -133,9 +133,9 @@ const ProfilePageBase = ({ member, initAccessType, getSubscriptionForUser, cance
               <button
                 styleName="button"
                 onClick={() =>
-                  cancelSubscription(subscription.id).then((res) =>
-                    console.log("Response from cancelSubscription is --->", res)
-                  )
+                  cancelSubscription(subscription.id)
+                    .then((res) => setSubscriptions(subscriptions))
+                    .catch((err) => console.error("Error from cancelSubscription is --->", err))
                 }
               >
                 Cancel Subscription

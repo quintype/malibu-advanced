@@ -94,6 +94,7 @@ export const StoryTemplate = ({
       if (global.AccessType) {
         checkAccess(story.id).then((res) => {
           const { granted } = res[story.id];
+          console.log("checking access in storydata res, granted --->", res, granted);
           setHasAccess(granted);
         });
       }
