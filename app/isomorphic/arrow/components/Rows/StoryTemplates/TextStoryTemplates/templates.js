@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import get from "lodash/get";
 import PropTypes from "prop-types";
 import { SocialShareTemplate } from "../../../Molecules/SocialShareTemplate";
@@ -87,10 +87,19 @@ export const StoryTemplate = ({
   };
 
   // eslint-disable-next-line react/prop-types
-  const StoryData = ({ checkAccess }) => {
-    checkAccess(story.id).then((res) => {
-      console.log("Check Access inside StoryData is --->", res, story.id);
-    });
+  const StoryData = ({ initAccessType, checkAccess }) => {
+    const [hasAccess, setHasAccess] = useState(false);
+    useEffect(() => {
+      !global.AccessType && initAccessType(() => console.log("Accesstype is initialized"));
+      if (global.AccessType) {
+        console.log("global.AccessType inside useEffect--->", global.AccessType, story.id, checkAccess(story.id));
+        checkAccess(story.id).then((res) => {
+          console.log("checkAccess inside StoryData is --->", res, story.id);
+          setHasAccess(true);
+        });
+      }
+    }, []);
+
     return (
       <div styleName="gap-16">
         {authorDetails && <AuthorCard story={story} template={authorDetails.template} opts={authorDetails.opts} />}
@@ -98,7 +107,7 @@ export const StoryTemplate = ({
           <PublishDetails story={story} opts={publishedDetails} template="story" timezone={timezone} />
           {!verticalShare && <SocialShareComponent />}
         </div>
-        {storyAccess === "subscription" ? (
+        {storyAccess === "subscription" && hasAccess ? (
           <>
             <StoryElementCard
               story={story}
@@ -157,7 +166,7 @@ export const StoryTemplate = ({
         phone={phone}
         accessTypeBkIntegrationId={accessTypeBkIntegrationId}
       >
-        {({ checkAccess }) => <StoryData checkAccess={checkAccess} />}
+        {({ initAccessType, checkAccess }) => <StoryData checkAccess={checkAccess} initAccessType={initAccessType} />}
       </AccessType>
     );
   };

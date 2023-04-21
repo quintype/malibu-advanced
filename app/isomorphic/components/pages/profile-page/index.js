@@ -113,7 +113,7 @@ const ProfilePageBase = ({ member, initAccessType, getSubscriptionForUser, cance
     return <div styleName="not-logged-in">Please Login</div>;
   }
 
-  const getActiveSubscriptions = function () {
+  const getActiveSubscriptions = function (subscriptions = []) {
     const activeSubscriptions = subscriptions.filter((subscription) => subscription.status === "active");
 
     console.log("Active subscriptions are --->", activeSubscriptions, subscriptions);
@@ -170,7 +170,7 @@ const ProfilePageBase = ({ member, initAccessType, getSubscriptionForUser, cance
             </div>
           </div>
         )}
-        {subscriptions.length && getActiveSubscriptions()}
+        {getActiveSubscriptions(subscriptions)}
       </div>
     </div>
   );
