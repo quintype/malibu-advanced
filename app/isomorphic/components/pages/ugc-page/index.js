@@ -1,15 +1,12 @@
+/* eslint-disable react/no-unknown-property */
 import React, { useEffect, useState } from "react";
 import get from "lodash/get";
 import { connect } from "react-redux";
 import { object } from "prop-types";
 
-import { MetypeContributionWidget } from "../../Metype/contribution-widget";
+import { MetypeContributionWidget } from "../../../components/Metype/contribution-widget";
 
 import "./ugc.m.css";
-
-export const getEntities = (type) => {
-  return fetch(`/api/v1/entities/?type=${type}`).then((response) => response.json());
-};
 
 const UgcPageBase = ({ publisherAttributes }) => {
   const { metypeConfig, publisherName, metypeUgcConfig } = publisherAttributes;
