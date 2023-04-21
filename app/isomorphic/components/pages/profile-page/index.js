@@ -101,6 +101,7 @@ const ProfilePageBase = ({ member, initAccessType, getSubscriptionForUser, cance
   useEffect(() => {
     !global.AccessType && initAccessType(() => console.log("Accesstype is initialized"));
     if (global.AccessType) {
+      console.log("global.AccessType in profile page useEffect --->", global.AccessType);
       getSubscriptionForUser()
         .then((res) => {
           setSubscriptions(res.subscriptions);

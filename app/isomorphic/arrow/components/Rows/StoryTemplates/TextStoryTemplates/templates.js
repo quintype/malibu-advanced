@@ -92,10 +92,9 @@ export const StoryTemplate = ({
     useEffect(() => {
       !global.AccessType && initAccessType(() => console.log("Accesstype is initialized"));
       if (global.AccessType) {
-        console.log("global.AccessType inside useEffect--->", global.AccessType, story.id, checkAccess(story.id));
         checkAccess(story.id).then((res) => {
-          console.log("checkAccess inside StoryData is --->", res, story.id);
-          setHasAccess(true);
+          const { granted } = res[story.id];
+          setHasAccess(granted);
         });
       }
     }, []);
