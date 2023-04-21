@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unknown-property */
 import React from "react";
 import { useSelector } from "react-redux";
 import get from "lodash/get";
@@ -15,6 +16,7 @@ import { PublishDetails } from "../../../Atoms/PublishDetail";
 import { StoryTags } from "../../../Atoms/StoryTags";
 import { StoryElementCard, SlotAfterStory } from "../../../Molecules/StoryElementCard";
 import { MetypeCommentsWidget } from "../../../../../components/Metype/commenting-widget";
+import { MetypeReactionsWidget } from "../../../../../components/Metype/reaction-widget";
 
 import "./text-story.m.css";
 
@@ -150,6 +152,12 @@ export const StoryTemplate = ({
           <CaptionAttribution story={story} config={config} />
           <HeaderCard />
           <StoryData />
+          <MetypeReactionsWidget
+            host={metypeConfig.metypeHost}
+            accountId={metypeConfig.metypeAccountId}
+            storyUrl={story.url}
+            storyId={story.id}
+          />
           <MetypeCommentsWidget
             host={metypeConfig.metypeHost}
             accountId={metypeConfig.metypeAccountId}
@@ -180,6 +188,12 @@ export const StoryTemplate = ({
         <div styleName="story-content-inner-wrapper">
           <CaptionAttribution story={story} config={config} />
           <StoryData />
+          <MetypeReactionsWidget
+            host={metypeConfig.metypeHost}
+            accountId={metypeConfig.metypeAccountId}
+            storyUrl={story.url}
+            storyId={story.id}
+          />
           <MetypeCommentsWidget
             host={metypeConfig.metypeHost}
             accountId={metypeConfig.metypeAccountId}
@@ -208,6 +222,12 @@ export const StoryTemplate = ({
         <CaptionAttribution story={story} config={config} />
         <div styleName="story-content-inner-wrapper">
           <StoryData />
+          <MetypeReactionsWidget
+            host={metypeConfig.metypeHost}
+            accountId={metypeConfig.metypeAccountId}
+            storyUrl={story.url}
+            storyId={story.id}
+          />
           <MetypeCommentsWidget
             host={metypeConfig.metypeHost}
             accountId={metypeConfig.metypeAccountId}
@@ -236,6 +256,12 @@ export const StoryTemplate = ({
           <CaptionAttribution story={story} config={config} />
           <HeaderCard />
           <StoryData />
+          <MetypeReactionsWidget
+            host={metypeConfig.metypeHost}
+            accountId={metypeConfig.metypeAccountId}
+            storyUrl={story.url}
+            storyId={story.id}
+          />
           <MetypeCommentsWidget
             host={metypeConfig.metypeHost}
             accountId={metypeConfig.metypeAccountId}
@@ -264,6 +290,12 @@ export const StoryTemplate = ({
         <div styleName="story-content-inner-wrapper">
           <CaptionAttribution story={story} config={config} />
           <StoryData />
+          <MetypeReactionsWidget
+            host={metypeConfig.metypeHost}
+            accountId={metypeConfig.metypeAccountId}
+            storyUrl={story.url}
+            storyId={story.id}
+          />
           <MetypeCommentsWidget
             host={metypeConfig.metypeHost}
             accountId={metypeConfig.metypeAccountId}
@@ -300,6 +332,12 @@ export const StoryTemplate = ({
         <div styleName="story-content-inner-wrapper">
           <CaptionAttribution story={story} config={config} />
           <StoryData />
+          <MetypeReactionsWidget
+            host={metypeConfig.metypeHost}
+            accountId={metypeConfig.metypeAccountId}
+            storyUrl={story.url}
+            storyId={story.id}
+          />
           <MetypeCommentsWidget
             host={metypeConfig.metypeHost}
             accountId={metypeConfig.metypeAccountId}
