@@ -15,9 +15,6 @@ const SubscriptionLayout = function ({ initAccessType, initRazorPayPayment, getS
 
   useEffect(() => {
     !global.AccessType && initAccessType(() => console.log("Accesstype is initialized"));
-    if (global.AccessType) {
-      global.AccessType.getPaymentOptions().then((res) => console.log("Payment options are: ", res));
-    }
   }, []);
 
   switch (activeTab) {

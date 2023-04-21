@@ -43,9 +43,6 @@ export const LoginModal = function ({
         </div>
         <div styleName="validity">{`Valid for ${plan.duration_length} ${plan.duration_unit}`}</div>
       </div>
-      <button styleName="proceed-to-payment-btn" onClick={() => setActiveTab("checkout")}>
-        Click here for dummy login
-      </button>
     </div>
   );
 };

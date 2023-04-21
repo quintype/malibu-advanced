@@ -96,17 +96,14 @@ EndDateText.propTypes = {
 
 const ProfilePageBase = ({ member, initAccessType, getSubscriptionForUser, cancelSubscription }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [activeSubscriptions, setActiveSubscriptions] = useState([]);
+  const [subscriptions, setSubscriptions] = useState([]);
 
   useEffect(() => {
     !global.AccessType && initAccessType(() => console.log("Accesstype is initialized"));
     if (global.AccessType) {
       getSubscriptionForUser()
         .then((res) => {
-          const subscriptions = res.subscriptions;
-          const activeSubscriptions = subscriptions.filter((subscription) => subscription.status === "active");
-          console.log("Active subscriptions and subscriptions are --->", activeSubscriptions, subscriptions);
-          setActiveSubscriptions(activeSubscriptions);
+          setSubscriptions(res.subscriptions);
         })
         .catch((err) => console.error("Error occurred inside profile page --->", err));
     }
@@ -115,6 +112,39 @@ const ProfilePageBase = ({ member, initAccessType, getSubscriptionForUser, cance
   if (!member) {
     return <div styleName="not-logged-in">Please Login</div>;
   }
+
+  const getActiveSubscriptions = function () {
+    const activeSubscriptions = subscriptions.filter((subscription) => subscription.status === "active");
+
+    return (
+      <>
+        activeSubscriptions && activeSubscriptions.length ? (
+        <div>
+          <div styleName="active-plan-label">{activeSubscriptions.length === 1 ? "Active Plan" : "Active Plans"}</div>
+          {activeSubscriptions.map((subscription, id) => {
+            return (
+              <div key={id}>
+                <span styleName="plan-name">{`${subscription.plan_name}`}</span>
+                <EndDateText subscription={subscription} />
+                <button
+                  styleName="button"
+                  onClick={() =>
+                    cancelSubscription(subscription.id).then((res) =>
+                      console.log("Response from cancelSubscription is --->", res)
+                    )
+                  }
+                >
+                  Cancel Subscription
+                </button>
+              </div>
+            );
+          })}
+        </div>
+        ) : (<div>No Active Subscriptions</div>
+        );
+      </>
+    );
+  };
 
   return (
     <div styleName="profile-page">
@@ -140,28 +170,7 @@ const ProfilePageBase = ({ member, initAccessType, getSubscriptionForUser, cance
             </div>
           </div>
         )}
-        <>
-          {activeSubscriptions && activeSubscriptions.length ? (
-            <div>
-              <div styleName="active-plan-label">
-                {activeSubscriptions.length === 1 ? "Active Plan" : "Active Plans"}
-              </div>
-              {activeSubscriptions.map((subscription, id) => {
-                return (
-                  <div key={id}>
-                    <span styleName="plan-name">{`${subscription.plan_name}`}</span>
-                    <EndDateText subscription={subscription} />
-                    <button styleName="button" onClick={() => cancelSubscription(subscription.id)}>
-                      Cancel Subscription
-                    </button>
-                  </div>
-                );
-              })}
-            </div>
-          ) : (
-            <div>No Active Subscriptions</div>
-          )}
-        </>
+        <>{getActiveSubscriptions()}</>
       </div>
     </div>
   );
