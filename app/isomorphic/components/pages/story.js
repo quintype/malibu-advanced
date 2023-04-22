@@ -1,13 +1,43 @@
 /* eslint-disable no-unused-vars, no-console, react/jsx-indent-props,react/jsx-wrap-multilines, no-undef, react/jsx-closing-bracket-location */
 
-import React from "react";
-import { InfiniteStoryBase, WithPreview } from "@quintype/components";
+import React, { useEffect } from "react";
+import { AccessType, InfiniteStoryBase, WithPreview } from "@quintype/components";
 import { object, shape } from "prop-types";
 
 import StoryWrapper from "../story-templates/story-wrapper";
+import { useSelector } from "react-redux";
+import get from "lodash/get";
 
+function StoryPageBaseWithAccesstype({ story, config }) {
+  const member = useSelector((state) => get(state, ["member"], null));
+  const email = get(member, ["email"], "abc@email.com");
+  const phone = get(member, ["metadata", "phone-number"], "1234");
+  const { key, accessTypeBkIntegrationId } = useSelector((state) =>
+    get(state, ["qt", "config", "publisher-attributes", "accesstypeConfig"], {})
+  );
+
+  return (
+    <AccessType
+      enableAccesstype={true}
+      isStaging={true}
+      accessTypeKey={key}
+      email={email}
+      phone={phone}
+      accessTypeBkIntegrationId={accessTypeBkIntegrationId}
+    >
+      {({ initAccessType, checkAccess }) => (
+        <StoryWrapper story={story} config={config} initAccessType={initAccessType} checkAccess={checkAccess} />
+      )}
+    </AccessType>
+  );
+}
+
+StoryPageBaseWithAccesstype.propTypes = {
+  story: object,
+  config: object,
+};
 function StoryPageBase({ story, config }) {
-  return <StoryWrapper story={story} config={config} />;
+  return <StoryPageBaseWithAccesstype story={story} config={config} />;
 }
 
 StoryPageBase.propTypes = {
