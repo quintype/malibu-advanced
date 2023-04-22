@@ -18,7 +18,6 @@ import LiveIcon from "../../../Svgs/liveicon";
 import KeyEvents from "../../../Molecules/KeyEvents";
 import { ClockIcon } from "../../../Svgs/clock-icon";
 import { StoryHeadline } from "../../../Atoms/StoryHeadline";
-import { Paywall } from "../../Paywall";
 
 export const LiveBlogStoryTemplates = ({
   story = {},
@@ -71,23 +70,6 @@ export const LiveBlogStoryTemplates = ({
     );
   };
   const StoryCards = () => {
-    if (story.access === "subscription") {
-      return (
-        <>
-          <StoryElementCard
-            story={story}
-            card={visibleCards[0]}
-            key={get(visibleCards[0], ["id"], "")}
-            config={storyElementsConfig}
-            isLive
-            theme={theme}
-            adComponent={adComponent}
-            widgetComp={widgetComp}
-          />
-          <Paywall />
-        </>
-      );
-    }
     return visibleCards.map((card = {}, index) => {
       const borderBottom = index === visibleCards.length - 1 ? "" : `share-cards ${textColor}`;
       const cardId = get(card, ["id"], "");

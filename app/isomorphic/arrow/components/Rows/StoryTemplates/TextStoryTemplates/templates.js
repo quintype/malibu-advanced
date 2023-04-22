@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import get from "lodash/get";
 import PropTypes from "prop-types";
 import { SocialShareTemplate } from "../../../Molecules/SocialShareTemplate";
-import { AccessType, SocialShare } from "@quintype/components";
+import { SocialShare } from "@quintype/components";
 import { SectionTag } from "../../../Atoms/SectionTag";
 import { StoryHeadline } from "../../../Atoms/StoryHeadline";
 import { Subheadline } from "../../../Atoms/Subheadline";
@@ -14,8 +14,6 @@ import { PublishDetails } from "../../../Atoms/PublishDetail";
 import { StoryTags } from "../../../Atoms/StoryTags";
 import { StoryElementCard, SlotAfterStory } from "../../../Molecules/StoryElementCard";
 import "./text-story.m.css";
-import { Paywall } from "../../Paywall";
-import { useSelector } from "react-redux";
 
 export const StoryTemplate = ({
   story = {},
@@ -26,7 +24,6 @@ export const StoryTemplate = ({
   firstChild,
   secondChild,
   timezone,
-  storyAccess,
 }) => {
   const {
     theme = "",
@@ -86,20 +83,7 @@ export const StoryTemplate = ({
     );
   };
 
-  // eslint-disable-next-line react/prop-types
-  const StoryData = ({ initAccessType, checkAccess }) => {
-    const [hasAccess, setHasAccess] = useState(false);
-    useEffect(() => {
-      !global.AccessType && initAccessType(() => console.log("Accesstype is initialized"));
-      if (global.AccessType) {
-        checkAccess(story.id).then((res) => {
-          const { granted } = res[story.id];
-          console.log("checking access in storydata res, granted --->", res, granted);
-          setHasAccess(granted);
-        });
-      }
-    }, []);
-
+  const StoryData = () => {
     return (
       <div styleName="gap-16">
         {authorDetails && <AuthorCard story={story} template={authorDetails.template} opts={authorDetails.opts} />}
@@ -107,67 +91,30 @@ export const StoryTemplate = ({
           <PublishDetails story={story} opts={publishedDetails} template="story" timezone={timezone} />
           {!verticalShare && <SocialShareComponent />}
         </div>
-        {storyAccess === "subscription" && hasAccess ? (
-          <>
+        {visibledCards.map((card) => {
+          return (
             <StoryElementCard
               story={story}
-              card={visibledCards[0]}
-              key={get(visibledCards[0], ["id"], "")}
+              card={card}
+              key={get(card, ["id"], "")}
               config={storyElementsConfig}
               adComponent={adComponent}
               widgetComp={widgetComp}
             />
-            <Paywall />
-          </>
-        ) : (
-          <>
-            {visibledCards.map((card) => {
-              return (
-                <StoryElementCard
-                  story={story}
-                  card={card}
-                  key={get(card, ["id"], "")}
-                  config={storyElementsConfig}
-                  adComponent={adComponent}
-                  widgetComp={widgetComp}
-                />
-              );
-            })}
-            {firstChild}
-            <div styleName="story-tags">
-              <StoryTags tags={story.tags} />
-              <SlotAfterStory
-                id={story.id}
-                element={story.customSlotAfterStory}
-                AdComponent={adComponent}
-                WidgetComp={widgetComp}
-              />
-            </div>
-            {secondChild}
-          </>
-        )}
+          );
+        })}
+        {firstChild}
+        <div styleName="story-tags">
+          <StoryTags tags={story.tags} />
+          <SlotAfterStory
+            id={story.id}
+            element={story.customSlotAfterStory}
+            AdComponent={adComponent}
+            WidgetComp={widgetComp}
+          />
+        </div>
+        {secondChild}
       </div>
-    );
-  };
-
-  const StoryDataWithAccesstype = () => {
-    const member = useSelector((state) => get(state, ["member"], null));
-    const email = get(member, ["email"], "abc@email.com");
-    const phone = get(member, ["metadata", "phone-number"], "1234");
-    const { key, accessTypeBkIntegrationId } = useSelector((state) =>
-      get(state, ["qt", "config", "publisher-attributes", "accesstypeConfig"], {})
-    );
-    return (
-      <AccessType
-        enableAccesstype={true}
-        isStaging={true}
-        accessTypeKey={key}
-        email={email}
-        phone={phone}
-        accessTypeBkIntegrationId={accessTypeBkIntegrationId}
-      >
-        {({ initAccessType, checkAccess }) => <StoryData checkAccess={checkAccess} initAccessType={initAccessType} />}
-      </AccessType>
     );
   };
 
@@ -197,7 +144,7 @@ export const StoryTemplate = ({
         <div styleName="story-content-inner-wrapper">
           <CaptionAttribution story={story} config={config} />
           <HeaderCard />
-          <StoryDataWithAccesstype />
+          <StoryData />
         </div>
         {verticalShare && <SocialShareComponent />}
         <AsideCollectionCard />
@@ -216,7 +163,7 @@ export const StoryTemplate = ({
         </div>
         <div styleName="story-content-inner-wrapper">
           <CaptionAttribution story={story} config={config} />
-          <StoryDataWithAccesstype />
+          <StoryData />
         </div>
         {verticalShare && <SocialShareComponent />}
         <AsideCollectionCard />
@@ -233,7 +180,7 @@ export const StoryTemplate = ({
         </div>
         <CaptionAttribution story={story} config={config} />
         <div styleName="story-content-inner-wrapper">
-          <StoryDataWithAccesstype />
+          <StoryData />
         </div>
         {verticalShare && <SocialShareComponent />}
         <AsideCollectionCard />
@@ -250,7 +197,7 @@ export const StoryTemplate = ({
         <div styleName="story-content-inner-wrapper">
           <CaptionAttribution story={story} config={config} />
           <HeaderCard />
-          <StoryDataWithAccesstype />
+          <StoryData />
         </div>
         {verticalShare && <SocialShareComponent />}
         <SideColumn />
@@ -267,7 +214,7 @@ export const StoryTemplate = ({
         </div>
         <div styleName="story-content-inner-wrapper">
           <CaptionAttribution story={story} config={config} />
-          <StoryDataWithAccesstype />
+          <StoryData />
         </div>
         {verticalShare && <SocialShareComponent />}
         <SideColumn />
@@ -292,7 +239,7 @@ export const StoryTemplate = ({
         <HeaderCard />
         <div styleName="story-content-inner-wrapper">
           <CaptionAttribution story={story} config={config} />
-          <StoryDataWithAccesstype />
+          <StoryData />
         </div>
         {verticalShare && <SocialShareComponent />}
         <AsideCollectionCard />
@@ -332,5 +279,4 @@ StoryTemplate.propTypes = {
   storyElementsConfig: PropTypes.object,
   widgetComp: PropTypes.func,
   adComponent: PropTypes.func,
-  storyAccess: PropTypes.string,
 };
