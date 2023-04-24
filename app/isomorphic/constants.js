@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 export const PAGE_TYPE = Object.freeze({
   HOME_PAGE: "home-page",
   SECTION_PAGE: "section-page",

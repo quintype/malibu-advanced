@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { scriptLoader } from "../index.js";
-import { string, array, number, func } from "prop-types";
+import { string, number } from "prop-types";
 
 export const MetypeContributionWidget = ({ host, accountId, publisher, fontFamily, fontUrl }) => {
   const randomNumber = new Date().getMilliseconds();
