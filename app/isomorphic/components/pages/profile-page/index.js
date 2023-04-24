@@ -100,19 +100,35 @@ const ProfilePageBase = ({ member, initAccessType, getSubscriptionForUser, cance
 
   useEffect(() => {
     initAccessType(() => console.log("Accesstype is initialized"));
-    if (global.AccessType) {
-      console.log("global.AccessType in profile page useEffect --->", global.AccessType);
-      getSubscriptionForUser()
-        .then((res) => {
-          setSubscriptions(res.subscriptions);
-        })
-        .catch((err) => console.error("Error occurred inside profile page --->", err));
-    }
   }, []);
 
   if (!member) {
     return <div styleName="not-logged-in">Please Login</div>;
   }
+
+  const ProfileCardWithSubscriptions = function () {
+    useEffect(() => {
+      if (global.AccessType) {
+        console.log("global.AccessType in profile page useEffect --->", global.AccessType);
+        getSubscriptionForUser()
+          .then((res) => {
+            setSubscriptions(res.subscriptions);
+          })
+          .catch((err) => console.error("Error occurred inside profile page --->", err));
+      }
+    }, []);
+
+    return (
+      <div>
+        <ProfileCard member={member} />
+        <div styleName="buttons-container">
+          <button styleName="button" onClick={() => setIsEditing(!isEditing)}>
+            Edit Profile
+          </button>
+        </div>
+      </div>
+    );
+  };
 
   const cancelSubscriptionHandler = function (subscriptionId) {
     const subscriptionIndex = subscriptions.findIndex((subscription) => subscription.id === subscriptionId);
@@ -169,14 +185,7 @@ const ProfilePageBase = ({ member, initAccessType, getSubscriptionForUser, cance
         {isEditing ? (
           <EditProfile member={member} setIsEditing={setIsEditing} isEditing={isEditing} />
         ) : (
-          <div>
-            <ProfileCard member={member} />
-            <div styleName="buttons-container">
-              <button styleName="button" onClick={() => setIsEditing(!isEditing)}>
-                Edit Profile
-              </button>
-            </div>
-          </div>
+          <ProfileCardWithSubscriptions />
         )}
         {getActiveSubscriptions(subscriptions)}
       </div>
