@@ -94,47 +94,25 @@ EndDateText.propTypes = {
   subscription: object,
 };
 
-const ProfilePageBase = ({ member, initAccessType, getSubscriptionForUser, cancelSubscription }) => {
-  const [isEditing, setIsEditing] = useState(false);
+const ProfileCardWithSubscriptions = function ({ member, setIsEditing, getSubscriptionForUser, cancelSubscription }) {
   const [subscriptions, setSubscriptions] = useState([]);
 
   useEffect(() => {
-    initAccessType(() => console.log("Accesstype is initialized"));
+    if (global.AccessType) {
+      console.log("global.AccessType in profile page useEffect --->", global.AccessType);
+      getSubscriptionForUser()
+        .then((res) => {
+          setSubscriptions(res.subscriptions);
+        })
+        .catch((err) => console.error("Error occurred inside profile page --->", err));
+    }
   }, []);
-
-  if (!member) {
-    return <div styleName="not-logged-in">Please Login</div>;
-  }
-
-  const ProfileCardWithSubscriptions = function () {
-    useEffect(() => {
-      if (global.AccessType) {
-        console.log("global.AccessType in profile page useEffect --->", global.AccessType);
-        getSubscriptionForUser()
-          .then((res) => {
-            setSubscriptions(res.subscriptions);
-          })
-          .catch((err) => console.error("Error occurred inside profile page --->", err));
-      }
-    }, []);
-
-    return (
-      <div>
-        <ProfileCard member={member} />
-        <div styleName="buttons-container">
-          <button styleName="button" onClick={() => setIsEditing(!isEditing)}>
-            Edit Profile
-          </button>
-        </div>
-      </div>
-    );
-  };
 
   const cancelSubscriptionHandler = function (subscriptionId) {
     const subscriptionIndex = subscriptions.findIndex((subscription) => subscription.id === subscriptionId);
     cancelSubscription(subscriptionId)
       .then((res) => {
-        console.log("cancel subscription response is --->", res);
+        console.log("cancel subscription response is --->", res, subscriptionId);
         const updatedSubscriptions = [
           ...subscriptions.slice(0, subscriptionIndex),
           ...subscriptions.slice(subscriptionIndex + 1),
@@ -160,7 +138,7 @@ const ProfilePageBase = ({ member, initAccessType, getSubscriptionForUser, cance
             <div key={id}>
               <span styleName="plan-name">{`${subscription.plan_name}`}</span>
               <EndDateText subscription={subscription} />
-              <button styleName="button" onClick={cancelSubscriptionHandler}>
+              <button styleName="button" onClick={() => cancelSubscriptionHandler(subscription.id)}>
                 Cancel Subscription
               </button>
             </div>
@@ -169,6 +147,37 @@ const ProfilePageBase = ({ member, initAccessType, getSubscriptionForUser, cance
       </div>
     );
   };
+
+  return (
+    <div>
+      <ProfileCard member={member} />
+      <div styleName="buttons-container">
+        <button styleName="button" onClick={() => setIsEditing(true)}>
+          Edit Profile
+        </button>
+      </div>
+      {getActiveSubscriptions(subscriptions)}
+    </div>
+  );
+};
+
+ProfileCardWithSubscriptions.propTypes = {
+  member: object,
+  setIsEditing: func,
+  getSubscriptionForUser: func,
+  cancelSubscription: func,
+};
+
+const ProfilePageBase = ({ member, initAccessType, getSubscriptionForUser, cancelSubscription }) => {
+  const [isEditing, setIsEditing] = useState(false);
+
+  useEffect(() => {
+    initAccessType(() => console.log("Accesstype is initialized"));
+  }, []);
+
+  if (!member) {
+    return <div styleName="not-logged-in">Please Login</div>;
+  }
 
   return (
     <div styleName="profile-page">
@@ -185,9 +194,13 @@ const ProfilePageBase = ({ member, initAccessType, getSubscriptionForUser, cance
         {isEditing ? (
           <EditProfile member={member} setIsEditing={setIsEditing} isEditing={isEditing} />
         ) : (
-          <ProfileCardWithSubscriptions />
+          <ProfileCardWithSubscriptions
+            member={member}
+            setIsEditing={setIsEditing}
+            getSubscriptionForUser={getSubscriptionForUser}
+            cancelSubscription={cancelSubscription}
+          />
         )}
-        {getActiveSubscriptions(subscriptions)}
       </div>
     </div>
   );
