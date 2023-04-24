@@ -6,12 +6,16 @@ const TextStory = ({ story, config, adWidget, adPlaceholder, checkAccess }) => {
   const [hasAccess, setHasAccess] = useState(false);
 
   useEffect(() => {
-    checkAccess(story.id).then((res) => {
-      const { granted } = res[story.id];
-      console.log("Granted in text story --->", granted);
-      setHasAccess(granted);
-    });
-  });
+    if (global.Accesstype) {
+      checkAccess(story.id).then((res) => {
+        const { granted } = res[story.id];
+        console.log("Granted in text story --->", granted);
+        setHasAccess(granted);
+      });
+    } else {
+      console.log("Accesstype not found");
+    }
+  }, []);
 
   const templateSpecific = {};
   return (

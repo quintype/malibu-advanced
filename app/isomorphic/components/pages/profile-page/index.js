@@ -99,7 +99,7 @@ const ProfilePageBase = ({ member, initAccessType, getSubscriptionForUser, cance
   const [subscriptions, setSubscriptions] = useState([]);
 
   useEffect(async () => {
-    await initAccessType(() => console.log("Accesstype is initialized"));
+    initAccessType(() => console.log("Accesstype is initialized"));
     if (global.AccessType) {
       console.log("global.AccessType in profile page useEffect --->", global.AccessType);
       getSubscriptionForUser()
@@ -134,7 +134,10 @@ const ProfilePageBase = ({ member, initAccessType, getSubscriptionForUser, cance
                 styleName="button"
                 onClick={() =>
                   cancelSubscription(subscription.id)
-                    .then((res) => setSubscriptions(subscriptions))
+                    .then((res) => {
+                      console.log("cancel subscription response is --->", res);
+                      setSubscriptions(subscriptions);
+                    })
                     .catch((err) => console.error("Error from cancelSubscription is --->", err))
                 }
               >
