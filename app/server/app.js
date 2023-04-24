@@ -95,21 +95,21 @@ ampRoutes(app, {
         authorizationUrl: ({ story, config }) => {
           const domain = config.publisherConfig.sketches_host;
           const { key, accessTypeBkIntegrationId } = config.additionalConfig.publisher.accesstypeConfig;
-          return `${domain}/api/access/v1/stories/${story["story-content-id"]}/amp-access?key=W2bB1tJHojtH5EkWWfYiano3&accesstype_integration_id=455&readerId=READER_ID`;
+          return `https://malibu-advanced-web.qtstage.io/api/access/v1/stories/${story["story-content-id"]}/amp-access?key=Aw4ujaqhpn8aVMT7yzQawSyZ&accesstype_integration_id=455&readerId=READER_ID`;
         },
         pingbackUrl: ({ story, config }) => {
           const domain = config.additionalConfig.sketches_host;
           const { key, accessTypeBkIntegrationId } = config.additionalConfig.publisher.accesstypeConfig;
-          return `${domain}/api/access/v1/stories/${story["story-content-id"]}/amp-pingback?key=W2bB1tJHojtH5EkWWfYiano3&accesstype_integration_id=455&readerId=READER_ID`;
+          return `https://malibu-advanced-web.qtstage.io/api/access/v1/stories/${story["story-content-id"]}/amp-pingback?key=Aw4ujaqhpn8aVMT7yzQawSyZ&accesstype_integration_id=455&readerId=READER_ID`;
         },
         actions: {
           login: ({ story, config }) => {
             const domain = config.additionalConfig.sketches_host;
-            return `${domain}/user-login`;
+            return `https://malibu-advanced-web.qtstage.io/user-login`;
           },
           subscribe: ({ story, config }) => {
             const domain = config.additionalConfig.sketches_host;
-            return `${domain}/subscription`;
+            return `https://malibu-advanced-web.qtstage.io/subscription`;
           },
         },
       },
