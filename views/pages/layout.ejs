@@ -21,6 +21,10 @@
       </script>
     <%_ } _%>
 
+    <%_ if(enableMetype) { _%>
+      <%- include ("./partials/metype-feed") -%>
+    <%_ } _%>
+
     <script type="text/javascript">
       window.GUMLET_CONFIG = {
         hosts: [{ current: "<%= cdnImage %>", gumlet: "<%= cdnImage %>" }],
