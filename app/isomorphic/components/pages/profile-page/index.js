@@ -108,13 +108,27 @@ const ProfilePageBase = ({ member, initAccessType, getSubscriptionForUser, cance
         })
         .catch((err) => console.error("Error occurred inside profile page --->", err));
     }
-  }, [subscriptions]);
+  }, []);
 
   if (!member) {
     return <div styleName="not-logged-in">Please Login</div>;
   }
 
-  const getActiveSubscriptions = function (subscriptions = []) {
+  const cancelSubscriptionHandler = function (subscriptionId) {
+    const subscriptionIndex = subscriptions.findIndex((subscription) => subscription.id === subscriptionId);
+    cancelSubscription(subscriptionId)
+      .then((res) => {
+        console.log("cancel subscription response is --->", res);
+        const updatedSubscriptions = [
+          ...subscriptions.slice(0, subscriptionIndex),
+          ...subscriptions.slice(subscriptionIndex + 1),
+        ];
+        setSubscriptions(updatedSubscriptions);
+      })
+      .catch((err) => console.error("Error from cancelSubscription is --->", err));
+  };
+
+  const getActiveSubscriptions = function (subscriptions) {
     const activeSubscriptions = subscriptions.filter((subscription) => subscription.status === "active");
 
     console.log("Active subscriptions are --->", activeSubscriptions, subscriptions);
@@ -130,17 +144,7 @@ const ProfilePageBase = ({ member, initAccessType, getSubscriptionForUser, cance
             <div key={id}>
               <span styleName="plan-name">{`${subscription.plan_name}`}</span>
               <EndDateText subscription={subscription} />
-              <button
-                styleName="button"
-                onClick={() =>
-                  cancelSubscription(subscription.id)
-                    .then((res) => {
-                      console.log("cancel subscription response is --->", res);
-                      setSubscriptions(subscriptions);
-                    })
-                    .catch((err) => console.error("Error from cancelSubscription is --->", err))
-                }
-              >
+              <button styleName="button" onClick={cancelSubscriptionHandler}>
                 Cancel Subscription
               </button>
             </div>
