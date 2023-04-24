@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unknown-property */
 import { SocialShare } from "@quintype/components";
 import PropTypes from "prop-types";
 import React from "react";
@@ -14,6 +15,8 @@ import { PublishDetails } from "../../../Atoms/PublishDetail";
 import { StoryTags } from "../../../Atoms/StoryTags";
 import { StoryElementCard, SlotAfterStory } from "../../../Molecules/StoryElementCard";
 import { StateProvider } from "../../../SharedContext";
+import { MetypeCommentsWidget } from "../../../../../components/Metype/commenting-widget";
+import { MetypeReactionsWidget } from "../../../../../components/Metype/reaction-widget";
 import "./video-story.m.css";
 
 const VideoStoryTemplate = ({
@@ -50,6 +53,40 @@ const VideoStoryTemplate = ({
   const visibledCards = noOfVisibleCards < 0 ? story.cards : story.cards.slice(0, noOfVisibleCards);
   const storyId = get(story, ["id"], "");
   const timezone = useSelector((state) => get(state, ["qt", "data", "timezone"], null));
+
+  // Metype widgets
+  const MetypeReactionsAndCommentwidget = () => {
+    const metypeConfig = useSelector((state) =>
+      get(state, ["qt", "config", "publisher-attributes", "metypeConfig"], {})
+    );
+    const isMetypeEnabled = useSelector((state) =>
+      get(state, ["qt", "config", "publisher-attributes", "enableMetype"], true)
+    );
+    const jwtToken = useSelector((state) => get(state, ["userReducer"], null));
+    return (
+      isMetypeEnabled && (
+        <>
+          <MetypeReactionsWidget
+            host={metypeConfig.metypeHost}
+            accountId={metypeConfig.metypeAccountId}
+            storyUrl={story.url}
+            storyId={story.id}
+          />
+          <MetypeCommentsWidget
+            host={metypeConfig.metypeHost}
+            accountId={metypeConfig.metypeAccountId}
+            pageURL={story.url}
+            primaryColor={metypeConfig.primaryColor}
+            className={metypeConfig.className}
+            jwt={jwtToken}
+            fontUrl={metypeConfig.fontFamilyUrl}
+            fontFamily={metypeConfig.fontFamily}
+            storyId={story.id}
+          />
+        </>
+      )
+    );
+  };
 
   const HeroVideo = () => {
     return (
@@ -147,6 +184,7 @@ const VideoStoryTemplate = ({
         <div styleName="story-content-wrapper">
           <HeaderCard />
           <StoryData />
+          <MetypeReactionsAndCommentwidget />
         </div>
         {verticalShare && <SocialShareComponent />}
         {asideCollection && (
@@ -176,6 +214,7 @@ const VideoStoryTemplate = ({
         </div>
         <div styleName="story-content-wrapper">
           <StoryData />
+          <MetypeReactionsAndCommentwidget />
         </div>
         {verticalShare && <SocialShareComponent />}
         <SideColumn />
@@ -190,6 +229,7 @@ const VideoStoryTemplate = ({
         <div styleName="story-content-wrapper">
           <HeaderCard />
           <StoryData />
+          <MetypeReactionsAndCommentwidget />
         </div>
 
         {verticalShare && <SocialShareComponent />}

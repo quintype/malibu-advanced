@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unknown-property */
 /* eslint-disable max-len */
 import { SocialShare } from "@quintype/components";
 import PropTypes from "prop-types";
@@ -17,6 +18,8 @@ import { StoryTags } from "../../../Atoms/StoryTags";
 import { PhotoStoryElement, SlotAfterStory } from "../../../Molecules/StoryElementCard";
 import { StateProvider } from "../../../SharedContext";
 import AsideCollection from "../../AsideCollection";
+import { MetypeCommentsWidget } from "../../../../../components/Metype/commenting-widget";
+import { MetypeReactionsWidget } from "../../../../../components/Metype/reaction-widget";
 import "./photo.m.css";
 
 const PhotoStory = ({
@@ -46,6 +49,40 @@ const PhotoStory = ({
   const visibledCards = noOfVisibleCards < 0 ? story.cards : story.cards.slice(0, noOfVisibleCards);
   const storyId = get(story, ["id"], "");
   const timezone = useSelector((state) => get(state, ["qt", "data", "timezone"], null));
+
+  // Metype widgets
+  const MetypeReactionsAndCommentwidget = () => {
+    const metypeConfig = useSelector((state) =>
+      get(state, ["qt", "config", "publisher-attributes", "metypeConfig"], {})
+    );
+    const isMetypeEnabled = useSelector((state) =>
+      get(state, ["qt", "config", "publisher-attributes", "enableMetype"], true)
+    );
+    const jwtToken = useSelector((state) => get(state, ["userReducer"], null));
+    return (
+      isMetypeEnabled && (
+        <>
+          <MetypeReactionsWidget
+            host={metypeConfig.metypeHost}
+            accountId={metypeConfig.metypeAccountId}
+            storyUrl={story.url}
+            storyId={story.id}
+          />
+          <MetypeCommentsWidget
+            host={metypeConfig.metypeHost}
+            accountId={metypeConfig.metypeAccountId}
+            pageURL={story.url}
+            primaryColor={metypeConfig.primaryColor}
+            className={metypeConfig.className}
+            jwt={jwtToken}
+            fontUrl={metypeConfig.fontFamilyUrl}
+            fontFamily={metypeConfig.fontFamily}
+            storyId={story.id}
+          />
+        </>
+      )
+    );
+  };
 
   const HeaderCard = () => {
     return (
@@ -137,6 +174,7 @@ const PhotoStory = ({
           <CaptionAttribution story={story} config={config} />
           <HeaderCard />
           <StoryData />
+          <MetypeReactionsAndCommentwidget />
         </div>
         {verticalShare && <SocialShareComponent />}
         {asideCollection && (
@@ -165,6 +203,7 @@ const PhotoStory = ({
           <CaptionAttribution story={story} config={config} />
           <HeaderCard />
           <StoryData />
+          <MetypeReactionsAndCommentwidget />
         </div>
         {verticalShare && <SocialShareComponent />}
         {asideCollection && (
@@ -195,6 +234,7 @@ const PhotoStory = ({
         <div styleName="grid-col-2-9 side-space">
           <CaptionAttribution story={story} config={config} />
           <StoryData />
+          <MetypeReactionsAndCommentwidget />
         </div>
         {verticalShare && <SocialShareComponent />}
         {asideCollection && (

@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unknown-property */
 import { SocialShare } from "@quintype/components";
 import React from "react";
 import { useSelector } from "react-redux";
@@ -16,6 +17,8 @@ import "./listicle-story.m.css";
 import { StoryElementCard, SlotAfterStory } from "../../../Molecules/StoryElementCard";
 import { StoryTags } from "../../../Atoms/StoryTags";
 import AsideCollection from "../../AsideCollection";
+import { MetypeCommentsWidget } from "../../../../../components/Metype/commenting-widget";
+import { MetypeReactionsWidget } from "../../../../../components/Metype/reaction-widget";
 
 const ListicleStoryTemplate = ({
   story = {},
@@ -44,6 +47,40 @@ const ListicleStoryTemplate = ({
   const storyId = get(story, ["id"], "");
   const isNumberedBullet = storyBulletType !== "bullets";
   const timezone = useSelector((state) => get(state, ["qt", "data", "timezone"], null));
+
+  // Metype widgets
+  const MetypeReactionsAndCommentwidget = () => {
+    const metypeConfig = useSelector((state) =>
+      get(state, ["qt", "config", "publisher-attributes", "metypeConfig"], {})
+    );
+    const isMetypeEnabled = useSelector((state) =>
+      get(state, ["qt", "config", "publisher-attributes", "enableMetype"], true)
+    );
+    const jwtToken = useSelector((state) => get(state, ["userReducer"], null));
+    return (
+      isMetypeEnabled && (
+        <>
+          <MetypeReactionsWidget
+            host={metypeConfig.metypeHost}
+            accountId={metypeConfig.metypeAccountId}
+            storyUrl={story.url}
+            storyId={story.id}
+          />
+          <MetypeCommentsWidget
+            host={metypeConfig.metypeHost}
+            accountId={metypeConfig.metypeAccountId}
+            pageURL={story.url}
+            primaryColor={metypeConfig.primaryColor}
+            className={metypeConfig.className}
+            jwt={jwtToken}
+            fontUrl={metypeConfig.fontFamilyUrl}
+            fontFamily={metypeConfig.fontFamily}
+            storyId={story.id}
+          />
+        </>
+      )
+    );
+  };
 
   // Content Blocks
   const HeroImageBlock = (settings) => {
@@ -153,6 +190,7 @@ const ListicleStoryTemplate = ({
           <HeadlineBlock />
           <AuthourBlock />
           <BodyBlock />
+          <MetypeReactionsAndCommentwidget />
         </div>
         <div data-type-column="right" styleName="right-column">
           <SideColumnBlock />
@@ -171,6 +209,7 @@ const ListicleStoryTemplate = ({
           <HeadlineBlock />
           <AuthourBlock />
           <BodyBlock />
+          <MetypeReactionsAndCommentwidget />
         </div>
       </div>
     </div>
@@ -186,6 +225,7 @@ const ListicleStoryTemplate = ({
           <CaptionAttributionBlock />
           <AuthourBlock />
           <BodyBlock />
+          <MetypeReactionsAndCommentwidget />
         </div>
         <div styleName="right-column">
           <SideColumnBlock />
@@ -206,6 +246,7 @@ const ListicleStoryTemplate = ({
           <CaptionAttributionBlock />
           <AuthourBlock />
           <BodyBlock />
+          <MetypeReactionsAndCommentwidget />
         </div>
       </div>
     </div>
@@ -232,6 +273,7 @@ const ListicleStoryTemplate = ({
           <CaptionAttributionBlock />
           <AuthourBlock />
           <BodyBlock />
+          <MetypeReactionsAndCommentwidget />
         </div>
       </div>
     </div>
@@ -256,6 +298,7 @@ const ListicleStoryTemplate = ({
         <div styleName="center-column">
           <AuthourBlock />
           <BodyBlock />
+          <MetypeReactionsAndCommentwidget />
         </div>
       </div>
     </div>
