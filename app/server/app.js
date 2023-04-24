@@ -93,15 +93,14 @@ ampRoutes(app, {
     subscriptions: {
       services: {
         authorizationUrl: ({ story, config }) => {
-          const domain = config.additionalConfig.sketches_host;
+          const domain = config.publisherConfig.sketches_host;
           const { key, accessTypeBkIntegrationId } = config.additionalConfig.publisher.accesstypeConfig;
-          console.log("Publisher Config is --->", domain, key, accessTypeBkIntegrationId);
-          return `${domain}/api/access/v1/stories/${story["story-content-id"]}/amp-access?key=${key}&accesstype_integration_id=${accessTypeBkIntegrationId}`;
+          return `${domain}/api/access/v1/stories/${story["story-content-id"]}/amp-access?key=W2bB1tJHojtH5EkWWfYiano3&accesstype_integration_id=455&readerId=READER_ID`;
         },
         pingbackUrl: ({ story, config }) => {
           const domain = config.additionalConfig.sketches_host;
           const { key, accessTypeBkIntegrationId } = config.additionalConfig.publisher.accesstypeConfig;
-          return `${domain}/api/access/v1/stories/${story["story-content-id"]}/amp-access?key=${key}&accesstype_integration_id=${accessTypeBkIntegrationId}`;
+          return `${domain}/api/access/v1/stories/${story["story-content-id"]}/amp-pingback?key=W2bB1tJHojtH5EkWWfYiano3&accesstype_integration_id=455&readerId=READER_ID`;
         },
         actions: {
           login: ({ story, config }) => {
@@ -119,7 +118,7 @@ ampRoutes(app, {
         granted: () => true,
         grantReason: () => "SUBSCRIBER",
         data: {
-          isLoggedIn: () => false,
+          isLoggedIn: () => true,
         },
       },
     },
