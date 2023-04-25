@@ -15,7 +15,7 @@ const TextStoryTemplate = ({
   widgetComp,
   firstChild,
   secondChild,
-  hasAccess
+  hasAccess,
 }) => {
   const {
     theme = "",
@@ -74,7 +74,7 @@ TextStoryTemplate.propTypes = {
   storyElementsConfig: PropTypes.object,
   adComponent: PropTypes.func,
   widgetComp: PropTypes.func,
-  hasAccess: PropTypes.bool
+  hasAccess: PropTypes.bool,
 };
 
 export default StateProvider(TextStoryTemplate);
