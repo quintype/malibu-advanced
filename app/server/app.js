@@ -93,12 +93,12 @@ ampRoutes(app, {
     subscriptions: {
       services: {
         authorizationUrl: ({ story }) =>
-          `https://malibu-advanced-web.qtstage.io/api/access/v1/stories/${story["story-content-id"]}/amp-authorisation?key=Aw4ujaqhpn8aVMT7yzQawSyZ&accesstype_integration_id=455&rid=READER_ID&url=SOURCE_URL`,
+          `https://malibu-advanced-web.qtstage.io/api/access/v1/stories/${story["story-content-id"]}/amp-access?key=Aw4ujaqhpn8aVMT7yzQawSyZ&accesstype_integration_id=455&rid=READER_ID&url=SOURCE_URL`,
         pingbackUrl: ({ story }) =>
           `https://malibu-advanced-web.qtstage.io/api/access/v1/stories/${story["story-content-id"]}/amp-pingback?key=Aw4ujaqhpn8aVMT7yzQawSyZ&accesstype_integration_id=455&rid=READER_ID&url=SOURCE_URL`,
         actions: {
-          login: () => "https://malibu-advanced-web.qtstage.io/user-login",
-          subscribe: () => "https://malibu-advanced-web.qtstage.io/subscription",
+          login: () => "https://www.google.com",
+          subscribe: () => "https://www.facebook.com",
         },
       },
       score: { supportsViewer: 10, isReadyToPay: 9 },
