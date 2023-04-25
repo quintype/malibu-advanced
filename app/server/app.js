@@ -92,27 +92,21 @@ ampRoutes(app, {
   featureConfig: {
     subscriptions: {
       services: {
-        authorizationUrl: ({ story, config }) => {
-          return `https://malibu-advanced-web.qtstage.io/api/access/v1/stories/${story["story-content-id"]}/amp-authorization?key=Aw4ujaqhpn8aVMT7yzQawSyZ&accesstype_integration_id=455&readerId=READER_ID`;
-        },
-        pingbackUrl: ({ story, config }) => {
-          return `https://malibu-advanced-web.qtstage.io/api/access/v1/stories/${story["story-content-id"]}/amp-pingback?key=Aw4ujaqhpn8aVMT7yzQawSyZ&accesstype_integration_id=455&readerId=READER_ID`;
-        },
+        authorizationUrl: ({ story }) =>
+          `https://malibu-advanced-web.qtstage.io/api/access/v1/stories/${story["story-content-id"]}/amp-authorisation?rid=READER_ID&url=SOURCE_URL`,
+        pingbackUrl: ({ story }) =>
+          `https://malibu-advanced-web.qtstage.io/api/access/v1/stories/${story["story-content-id"]}/amp-pingback?rid=READER_ID&url=SOURCE_URL`,
         actions: {
-          login: ({ story, config }) => {
-            return `https://malibu-advanced-web.qtstage.io/user-login`;
-          },
-          subscribe: ({ story, config }) => {
-            return `https://malibu-advanced-web.qtstage.io/subscription`;
-          },
+          login: () => "https://malibu-advanced-web.qtstage.io/user-login",
+          subscribe: () => "https://malibu-advanced-web.qtstage.io/subscription",
         },
       },
       score: { supportsViewer: 10, isReadyToPay: 9 },
       fallbackEntitlement: {
-        granted: () => true,
+        granted: () => false,
         grantReason: () => "SUBSCRIBER",
         data: {
-          isLoggedIn: () => true,
+          isLoggedIn: () => false,
         },
       },
     },
