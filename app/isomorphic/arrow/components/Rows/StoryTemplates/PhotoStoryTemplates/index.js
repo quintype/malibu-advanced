@@ -18,6 +18,7 @@ import { PhotoStoryElement, SlotAfterStory } from "../../../Molecules/StoryEleme
 import { StateProvider } from "../../../SharedContext";
 import AsideCollection from "../../AsideCollection";
 import "./photo.m.css";
+import { Paywall } from "../../Paywall";
 
 const PhotoStory = ({
   story = {},
@@ -27,6 +28,7 @@ const PhotoStory = ({
   adComponent,
   firstChild,
   secondChild,
+  hasAccess,
 }) => {
   const {
     theme = "",
@@ -73,40 +75,58 @@ const PhotoStory = ({
     );
   };
 
-  const StoryData = () => (
-    <>
-      {authorDetails && (
-        <AuthorCard clazzName="gap-32" story={story} template={authorDetails.template} opts={authorDetails.opts} />
-      )}
-      <div styleName="story-details">
-        <PublishDetails story={story} opts={publishedDetails} template="story" timezone={timezone} />
-        {!verticalShare && <SocialShareComponent />}
-      </div>
-      {visibledCards.map((card) => {
-        return (
-          <PhotoStoryElement
-            story={story}
-            card={card}
-            key={get(card, ["id"], "")}
-            config={{ ...storyElementsConfig, theme }}
-            adComponent={adComponent}
-            widgetComp={widgetComp}
+  const StoryData = () => {
+    const isStoryBehindPaywall = story.access === "subscription" && hasAccess === false;
+
+    return (
+      <>
+        {authorDetails && (
+          <AuthorCard clazzName="gap-32" story={story} template={authorDetails.template} opts={authorDetails.opts} />
+        )}
+        <div styleName="story-details">
+          <PublishDetails story={story} opts={publishedDetails} template="story" timezone={timezone} />
+          {!verticalShare && <SocialShareComponent />}
+        </div>
+        {isStoryBehindPaywall ? (
+          <>
+            <PhotoStoryElement
+              story={story}
+              card={visibledCards[0]}
+              key={get(visibledCards[0], ["id"], "")}
+              config={{ ...storyElementsConfig, theme }}
+              adComponent={adComponent}
+              widgetComp={widgetComp}
+            />
+            <Paywall />
+          </>
+        ) : (
+          visibledCards.map((card) => {
+            return (
+              <PhotoStoryElement
+                story={story}
+                card={card}
+                key={get(card, ["id"], "")}
+                config={{ ...storyElementsConfig, theme }}
+                adComponent={adComponent}
+                widgetComp={widgetComp}
+              />
+            );
+          })
+        )}
+        <div styleName="space-32">
+          {firstChild}
+          <StoryTags tags={story.tags} />
+          <SlotAfterStory
+            id={story.id}
+            element={story.customSlotAfterStory}
+            AdComponent={adComponent}
+            WidgetComp={widgetComp}
           />
-        );
-      })}
-      <div styleName="space-32">
-        {firstChild}
-        <StoryTags tags={story.tags} />
-        <SlotAfterStory
-          id={story.id}
-          element={story.customSlotAfterStory}
-          AdComponent={adComponent}
-          WidgetComp={widgetComp}
-        />
-        {secondChild}
-      </div>
-    </>
-  );
+          {secondChild}
+        </div>
+      </>
+    );
+  };
 
   const renderImages = (imageRender) => {
     switch (imageRender) {
@@ -254,6 +274,7 @@ PhotoStory.propTypes = {
   storyElementsConfig: PropTypes.object,
   adComponent: PropTypes.func,
   widgetComp: PropTypes.func,
+  hasAccess: PropTypes.bool,
 };
 
 export default StateProvider(PhotoStory);

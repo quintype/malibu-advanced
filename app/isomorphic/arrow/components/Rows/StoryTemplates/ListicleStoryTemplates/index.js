@@ -16,6 +16,7 @@ import "./listicle-story.m.css";
 import { StoryElementCard, SlotAfterStory } from "../../../Molecules/StoryElementCard";
 import { StoryTags } from "../../../Atoms/StoryTags";
 import AsideCollection from "../../AsideCollection";
+import { Paywall } from "../../Paywall";
 
 const ListicleStoryTemplate = ({
   story = {},
@@ -25,6 +26,7 @@ const ListicleStoryTemplate = ({
   widgetComp = () => {},
   firstChild,
   secondChild,
+  hasAccess,
 }) => {
   const {
     theme = "",
@@ -90,40 +92,58 @@ const ListicleStoryTemplate = ({
     </>
   );
 
-  const BodyBlock = () => (
-    <div styleName={`body-block ${isNumberedBullet ? "numbered-bullet-style" : ""}`}>
-      {visibledCards.map((card, index) => {
-        return (
-          <React.Fragment key={card.id}>
-            {!isNumberedBullet ? (
-              <div styleName="bullet-style-dash" />
-            ) : (
-              <div styleName="bullet-style-number">{index + 1}.</div>
-            )}
+  const BodyBlock = () => {
+    const isStoryBehindPaywall = story.access === "subscription" && hasAccess === false;
+
+    return (
+      <div styleName={`body-block ${isNumberedBullet ? "numbered-bullet-style" : ""}`}>
+        {isStoryBehindPaywall ? (
+          <>
             <StoryElementCard
               story={story}
-              card={card}
-              key={card.id}
+              card={visibledCards[0]}
+              key={visibledCards[0].id}
               config={storyElementsConfig}
               adComponent={adComponent}
               widgetComp={widgetComp}
             />
-          </React.Fragment>
-        );
-      })}
-      {firstChild}
-      <div styleName="story-tags">
-        <StoryTags tags={story.tags} />
-        <SlotAfterStory
-          id={story.id}
-          element={story.customSlotAfterStory}
-          AdComponent={adComponent}
-          WidgetComp={widgetComp}
-        />
+            <Paywall />
+          </>
+        ) : (
+          visibledCards.map((card, index) => {
+            return (
+              <React.Fragment key={card.id}>
+                {!isNumberedBullet ? (
+                  <div styleName="bullet-style-dash" />
+                ) : (
+                  <div styleName="bullet-style-number">{index + 1}.</div>
+                )}
+                <StoryElementCard
+                  story={story}
+                  card={card}
+                  key={card.id}
+                  config={storyElementsConfig}
+                  adComponent={adComponent}
+                  widgetComp={widgetComp}
+                />
+              </React.Fragment>
+            );
+          })
+        )}
+        {firstChild}
+        <div styleName="story-tags">
+          <StoryTags tags={story.tags} />
+          <SlotAfterStory
+            id={story.id}
+            element={story.customSlotAfterStory}
+            AdComponent={adComponent}
+            WidgetComp={widgetComp}
+          />
+        </div>
+        {secondChild}
       </div>
-      {secondChild}
-    </div>
-  );
+    );
+  };
   const SideColumnBlock = () =>
     asideCollection && (
       <AsideCollection
@@ -303,6 +323,7 @@ ListicleStoryTemplate.propTypes = {
   adComponent: PropTypes.func,
   widgetComp: PropTypes.func,
   premiumStoryIconConfig: PropTypes.object,
+  hasAccess: PropTypes.bool,
 };
 
 export default StateProvider(ListicleStoryTemplate);

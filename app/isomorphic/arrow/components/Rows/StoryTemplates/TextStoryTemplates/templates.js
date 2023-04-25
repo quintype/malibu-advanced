@@ -87,9 +87,8 @@ export const StoryTemplate = ({
   };
 
   const StoryData = () => {
-    if (!hasAccess) {
-      return <Paywall />;
-    }
+    const isStoryBehindPaywall = story.access === "subscription" && hasAccess === false;
+
     return (
       <div styleName="gap-16">
         {authorDetails && <AuthorCard story={story} template={authorDetails.template} opts={authorDetails.opts} />}
@@ -97,18 +96,32 @@ export const StoryTemplate = ({
           <PublishDetails story={story} opts={publishedDetails} template="story" timezone={timezone} />
           {!verticalShare && <SocialShareComponent />}
         </div>
-        {visibledCards.map((card) => {
-          return (
+        {isStoryBehindPaywall ? (
+          <>
             <StoryElementCard
               story={story}
-              card={card}
-              key={get(card, ["id"], "")}
+              card={visibledCards[0]}
+              key={get(visibledCards[0], ["id"], "")}
               config={storyElementsConfig}
               adComponent={adComponent}
               widgetComp={widgetComp}
             />
-          );
-        })}
+            <Paywall />
+          </>
+        ) : (
+          visibledCards.map((card) => {
+            return (
+              <StoryElementCard
+                story={story}
+                card={card}
+                key={get(card, ["id"], "")}
+                config={storyElementsConfig}
+                adComponent={adComponent}
+                widgetComp={widgetComp}
+              />
+            );
+          })
+        )}
         {firstChild}
         <div styleName="story-tags">
           <StoryTags tags={story.tags} />

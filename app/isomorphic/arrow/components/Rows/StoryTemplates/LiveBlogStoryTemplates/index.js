@@ -15,6 +15,7 @@ const LiveBlogStoryTemplate = ({
   widgetComp,
   firstChild,
   secondChild,
+  hasAccess,
 }) => {
   const { theme = "", templateType = "default", verticalShare = "" } = config;
 
@@ -53,6 +54,7 @@ LiveBlogStoryTemplate.propTypes = {
   storyElementsConfig: PropTypes.object,
   adComponent: PropTypes.func,
   widgetComp: PropTypes.func,
+  hasAccess: PropTypes.bool,
 };
 
 export default StateProvider(LiveBlogStoryTemplate);

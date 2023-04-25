@@ -18,6 +18,7 @@ import LiveIcon from "../../../Svgs/liveicon";
 import KeyEvents from "../../../Molecules/KeyEvents";
 import { ClockIcon } from "../../../Svgs/clock-icon";
 import { StoryHeadline } from "../../../Atoms/StoryHeadline";
+import { Paywall } from "../../Paywall";
 
 export const LiveBlogStoryTemplates = ({
   story = {},
@@ -70,40 +71,58 @@ export const LiveBlogStoryTemplates = ({
     );
   };
   const StoryCards = () => {
-    return visibleCards.map((card = {}, index) => {
-      const borderBottom = index === visibleCards.length - 1 ? "" : `share-cards ${textColor}`;
-      const cardId = get(card, ["id"], "");
-      const { "card-added-at": cardAddedAt } = card;
-      return (
-        <div key={index} styleName={borderBottom}>
-          <div styleName="card-share">
-            <div styleName={`time-wrapper ${textColor}`}>
-              <ClockIcon color={updateColor} />
-              {getTimeStamp(cardAddedAt, timestampToFormat, { isTimeFirst: true })}
+    const isStoryBehindPaywall = story.access === "subscription" && hasAccess === false;
+
+    return isStoryBehindPaywall ? (
+      <>
+        <StoryElementCard
+          story={story}
+          card={visibleCards[0]}
+          key={get(visibleCards[0], ["id"], "")}
+          config={storyElementsConfig}
+          isLive
+          theme={theme}
+          adComponent={adComponent}
+          widgetComp={widgetComp}
+        />
+        <Paywall />
+      </>
+    ) : (
+      visibleCards.map((card = {}, index) => {
+        const borderBottom = index === visibleCards.length - 1 ? "" : `share-cards ${textColor}`;
+        const cardId = get(card, ["id"], "");
+        const { "card-added-at": cardAddedAt } = card;
+        return (
+          <div key={index} styleName={borderBottom}>
+            <div styleName="card-share">
+              <div styleName={`time-wrapper ${textColor}`}>
+                <ClockIcon color={updateColor} />
+                {getTimeStamp(cardAddedAt, timestampToFormat, { isTimeFirst: true })}
+              </div>
+              <div id={`card-share-${cardId}_${storyId}`} className="content-style">
+                <SocialShare
+                  template={SocialShareTemplate}
+                  fullUrl={encodeURI(story.url)}
+                  title={story.headline}
+                  theme={theme}
+                  iconType={shareIconType}
+                />
+              </div>
             </div>
-            <div id={`card-share-${cardId}_${storyId}`} className="content-style">
-              <SocialShare
-                template={SocialShareTemplate}
-                fullUrl={encodeURI(story.url)}
-                title={story.headline}
-                theme={theme}
-                iconType={shareIconType}
-              />
-            </div>
+            <StoryElementCard
+              story={story}
+              card={card}
+              key={cardId}
+              config={storyElementsConfig}
+              isLive
+              theme={theme}
+              adComponent={adComponent}
+              widgetComp={widgetComp}
+            />
           </div>
-          <StoryElementCard
-            story={story}
-            card={card}
-            key={cardId}
-            config={storyElementsConfig}
-            isLive
-            theme={theme}
-            adComponent={adComponent}
-            widgetComp={widgetComp}
-          />
-        </div>
-      );
-    });
+        );
+      })
+    );
   };
 
   const keyEvents = () => {
