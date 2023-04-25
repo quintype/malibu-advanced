@@ -24,7 +24,6 @@ export const StoryTemplate = ({
   firstChild,
   secondChild,
   timezone,
-  hasAccess,
 }) => {
   const {
     theme = "",
@@ -85,7 +84,6 @@ export const StoryTemplate = ({
   };
 
   const StoryData = () => {
-    console.log("Inside Story Data hasAccess is --->", hasAccess);
     return (
       <div styleName="gap-16">
         {authorDetails && <AuthorCard story={story} template={authorDetails.template} opts={authorDetails.opts} />}
@@ -281,5 +279,4 @@ StoryTemplate.propTypes = {
   storyElementsConfig: PropTypes.object,
   widgetComp: PropTypes.func,
   adComponent: PropTypes.func,
-  hasAccess: PropTypes.bool,
 };

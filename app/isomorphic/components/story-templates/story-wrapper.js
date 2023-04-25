@@ -5,6 +5,7 @@ import { AdPlaceholder } from "../../arrow/components/Atoms/AdPlaceholder";
 import { object, func } from "prop-types";
 
 function StoryWrapper({ story, config, initAccessType, checkAccess }) {
+  const [hasAccess, setHasAccess] = useState(false);
   const [relatedStories, setRelatedStories] = useState([]);
   const storyTemplate = story["story-template"];
 
@@ -45,11 +46,18 @@ function StoryWrapper({ story, config, initAccessType, checkAccess }) {
   };
 
   useEffect(() => {
-    initAccessType(() => console.log("Accesstype is initialized in story-wrapper"));
+    initAccessType(() => {
+      checkAccess(story.id).then((res) => {
+        const { granted } = res[story.id];
+        console.log("Granted in text story --->", granted);
+        setHasAccess(granted);
+      });
+    });
     loadRelatedStories(story, config).then((relatedStories) => setRelatedStories(relatedStories));
   }, []);
 
   // Can switch to a different template based story-template, or only show a spoiler if index > 0
+  console.log("storyTemplate, hasAccess in story-wrapper is --->", storyTemplate, hasAccess);
   switch (storyTemplate) {
     case "text":
       return (
@@ -58,7 +66,6 @@ function StoryWrapper({ story, config, initAccessType, checkAccess }) {
           config={{ ...config, ...templateConfig }}
           adWidget={adWidget}
           adPlaceholder={<AdPlaceholder height="250px" width="300px" />}
-          checkAccess={checkAccess}
         />
       );
     case "video":

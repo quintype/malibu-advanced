@@ -136,11 +136,11 @@ const ProfileCardWithSubscriptions = function ({
       .catch((err) => console.error("Error from cancelSubscription is --->", err));
   };
 
-  const getActiveSubscriptions = function (subscriptions) {
+  const getActiveSubscriptions = function (subscriptions = []) {
     const activeSubscriptions = subscriptions.filter((subscription) => subscription.status === "active");
 
     if (activeSubscriptions.length === 0) {
-      return <div>No Active Subscriptions</div>;
+      return <div styleName="active-plan-label">No Active Subscriptions</div>;
     }
 
     return (

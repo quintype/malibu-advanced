@@ -15,7 +15,6 @@ const TextStoryTemplate = ({
   widgetComp,
   firstChild,
   secondChild,
-  hasAccess,
 }) => {
   const {
     theme = "",
@@ -56,7 +55,6 @@ const TextStoryTemplate = ({
         secondChild={secondChild}
         timezone={timezone}
         storyAccess={story.access}
-        hasAccess={hasAccess}
       />
     </div>
   );
@@ -74,7 +72,6 @@ TextStoryTemplate.propTypes = {
   storyElementsConfig: PropTypes.object,
   adComponent: PropTypes.func,
   widgetComp: PropTypes.func,
-  hasAccess: PropTypes.bool,
 };
 
 export default StateProvider(TextStoryTemplate);
