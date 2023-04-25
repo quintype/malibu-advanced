@@ -57,7 +57,6 @@ function StoryWrapper({ story, config, initAccessType, checkAccess }) {
   }, []);
 
   // Can switch to a different template based story-template, or only show a spoiler if index > 0
-  console.log("storyTemplate, hasAccess in story-wrapper is --->", storyTemplate, hasAccess);
   switch (storyTemplate) {
     case "text":
       return (
@@ -66,6 +65,7 @@ function StoryWrapper({ story, config, initAccessType, checkAccess }) {
           config={{ ...config, ...templateConfig }}
           adWidget={adWidget}
           adPlaceholder={<AdPlaceholder height="250px" width="300px" />}
+          hasAccess={hasAccess}
         />
       );
     case "video":
@@ -75,6 +75,7 @@ function StoryWrapper({ story, config, initAccessType, checkAccess }) {
           config={{ ...config, ...templateConfig }}
           adWidget={adWidget}
           adPlaceholder={<AdPlaceholder height="250px" width="300px" />}
+          hasAccess={hasAccess}
         />
       );
     case "photo":
@@ -84,6 +85,7 @@ function StoryWrapper({ story, config, initAccessType, checkAccess }) {
           config={{ ...config, ...templateConfig }}
           adWidget={adWidget}
           adPlaceholder={<AdPlaceholder height="250px" width="300px" />}
+          hasAccess={hasAccess}
         />
       );
     case "listicle":
@@ -93,6 +95,7 @@ function StoryWrapper({ story, config, initAccessType, checkAccess }) {
           config={{ ...config, ...templateConfig }}
           adWidget={adWidget}
           adPlaceholder={<AdPlaceholder height="250px" width="300px" />}
+          hasAccess={hasAccess}
         />
       );
     case "live-blog":
@@ -102,6 +105,7 @@ function StoryWrapper({ story, config, initAccessType, checkAccess }) {
           config={{ ...config, ...templateConfig }}
           adWidget={adWidget}
           adPlaceholder={<AdPlaceholder height="250px" width="300px" />}
+          hasAccess={hasAccess}
         />
       );
     default:
@@ -111,6 +115,7 @@ function StoryWrapper({ story, config, initAccessType, checkAccess }) {
           config={{ ...config, ...templateConfig }}
           adWidget={adWidget}
           adPlaceholder={<AdPlaceholder height="250px" width="300px" />}
+          hasAccess={hasAccess}
         />
       );
   }

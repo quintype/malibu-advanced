@@ -14,6 +14,7 @@ import { PublishDetails } from "../../../Atoms/PublishDetail";
 import { StoryTags } from "../../../Atoms/StoryTags";
 import { StoryElementCard, SlotAfterStory } from "../../../Molecules/StoryElementCard";
 import "./text-story.m.css";
+import { Paywall } from "../../Paywall";
 
 export const StoryTemplate = ({
   story = {},
@@ -24,6 +25,7 @@ export const StoryTemplate = ({
   firstChild,
   secondChild,
   timezone,
+  hasAccess,
 }) => {
   const {
     theme = "",
@@ -40,6 +42,7 @@ export const StoryTemplate = ({
   } = config;
   const visibledCards = noOfVisibleCards < 0 ? story.cards : story.cards.slice(0, noOfVisibleCards);
   const storyId = get(story, ["id"], "");
+  console.log("hasAccess in textStoryTemplates is --->", hasAccess);
   const HeaderCard = () => {
     return (
       <div styleName="header-details">
@@ -84,6 +87,9 @@ export const StoryTemplate = ({
   };
 
   const StoryData = () => {
+    if (!hasAccess) {
+      return <Paywall />;
+    }
     return (
       <div styleName="gap-16">
         {authorDetails && <AuthorCard story={story} template={authorDetails.template} opts={authorDetails.opts} />}
@@ -279,4 +285,5 @@ StoryTemplate.propTypes = {
   storyElementsConfig: PropTypes.object,
   widgetComp: PropTypes.func,
   adComponent: PropTypes.func,
+  hasAccess: PropTypes.bool,
 };
