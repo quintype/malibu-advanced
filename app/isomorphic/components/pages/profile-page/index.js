@@ -94,17 +94,31 @@ EndDateText.propTypes = {
   subscription: object,
 };
 
-const ProfileCardWithSubscriptions = function ({ member, setIsEditing, getSubscriptionForUser, cancelSubscription }) {
+const ProfileCardWithSubscriptions = function ({
+  member,
+  setIsEditing,
+  getSubscriptionForUser,
+  cancelSubscription,
+  initAccessType,
+}) {
   const [subscriptions, setSubscriptions] = useState([]);
 
   useEffect(() => {
     if (global.AccessType) {
-      console.log("global.AccessType in profile page useEffect --->", global.AccessType);
       getSubscriptionForUser()
         .then((res) => {
           setSubscriptions(res.subscriptions);
         })
         .catch((err) => console.error("Error occurred inside profile page --->", err));
+    } else {
+      console.log("Initializing accesstype in ProfileCardWithSubscriptions");
+      initAccessType(() => {
+        getSubscriptionForUser()
+          .then((res) => {
+            setSubscriptions(res.subscriptions);
+          })
+          .catch((err) => console.error("Error occurred inside profile page --->", err));
+      });
     }
   }, []);
 
@@ -125,7 +139,6 @@ const ProfileCardWithSubscriptions = function ({ member, setIsEditing, getSubscr
   const getActiveSubscriptions = function (subscriptions) {
     const activeSubscriptions = subscriptions.filter((subscription) => subscription.status === "active");
 
-    console.log("Active subscriptions are --->", activeSubscriptions, subscriptions);
     if (activeSubscriptions.length === 0) {
       return <div>No Active Subscriptions</div>;
     }
@@ -166,6 +179,7 @@ ProfileCardWithSubscriptions.propTypes = {
   setIsEditing: func,
   getSubscriptionForUser: func,
   cancelSubscription: func,
+  initAccessType: func,
 };
 
 const ProfilePageBase = ({ member, initAccessType, getSubscriptionForUser, cancelSubscription }) => {
@@ -199,6 +213,7 @@ const ProfilePageBase = ({ member, initAccessType, getSubscriptionForUser, cance
             setIsEditing={setIsEditing}
             getSubscriptionForUser={getSubscriptionForUser}
             cancelSubscription={cancelSubscription}
+            initAccessType={initAccessType}
           />
         )}
       </div>
