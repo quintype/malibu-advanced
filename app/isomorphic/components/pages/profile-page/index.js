@@ -42,33 +42,9 @@ EndDateText.propTypes = {
   subscription: object,
 };
 
-const ProfileCardWithSubscriptions = function ({
-  member,
-  setIsEditing,
-  getSubscriptionForUser,
-  cancelSubscription,
-  initAccessType,
-}) {
+const ProfilePageBase = ({ member, initAccessType, getSubscriptionForUser, cancelSubscription }) => {
+  const [isEditing, setIsEditing] = useState(false);
   const [subscriptions, setSubscriptions] = useState([]);
-
-  useEffect(() => {
-    if (global.AccessType) {
-      getSubscriptionForUser()
-        .then((res) => {
-          setSubscriptions(res.subscriptions);
-        })
-        .catch((err) => console.error("Error occurred inside profile page --->", err));
-    } else {
-      console.log("Initializing accesstype in ProfileCardWithSubscriptions");
-      initAccessType(() => {
-        getSubscriptionForUser()
-          .then((res) => {
-            setSubscriptions(res.subscriptions);
-          })
-          .catch((err) => console.error("Error occurred inside profile page --->", err));
-      });
-    }
-  }, []);
 
   const cancelSubscriptionHandler = function (subscriptionId) {
     const subscriptionIndex = subscriptions.findIndex((subscription) => subscription.id === subscriptionId);
@@ -109,32 +85,14 @@ const ProfileCardWithSubscriptions = function ({
     );
   };
 
-  return (
-    <div>
-      <ProfileCard member={member} />
-      <div styleName="buttons-container">
-        <button styleName="button" onClick={() => setIsEditing(true)}>
-          Edit Profile
-        </button>
-      </div>
-      {getActiveSubscriptions(subscriptions)}
-    </div>
-  );
-};
-
-ProfileCardWithSubscriptions.propTypes = {
-  member: object,
-  setIsEditing: func,
-  getSubscriptionForUser: func,
-  cancelSubscription: func,
-  initAccessType: func,
-};
-
-const ProfilePageBase = ({ member, initAccessType, getSubscriptionForUser, cancelSubscription }) => {
-  const [isEditing, setIsEditing] = useState(false);
-
   useEffect(() => {
-    initAccessType(() => console.log("Accesstype is initialized"));
+    initAccessType(() => {
+      getSubscriptionForUser()
+        .then((res) => {
+          setSubscriptions(res.subscriptions);
+        })
+        .catch((err) => console.error("Error occurred inside profile page --->", err));
+    });
   }, []);
 
   if (!member) {
@@ -156,13 +114,15 @@ const ProfilePageBase = ({ member, initAccessType, getSubscriptionForUser, cance
         {isEditing ? (
           <EditProfile member={member} setIsEditing={setIsEditing} isEditing={isEditing} />
         ) : (
-          <ProfileCardWithSubscriptions
-            member={member}
-            setIsEditing={setIsEditing}
-            getSubscriptionForUser={getSubscriptionForUser}
-            cancelSubscription={cancelSubscription}
-            initAccessType={initAccessType}
-          />
+          <div>
+            <ProfileCard member={member} />
+            <div styleName="buttons-container">
+              <button styleName="button" onClick={() => setIsEditing(true)}>
+                Edit Profile
+              </button>
+            </div>
+            {getActiveSubscriptions(subscriptions)}
+          </div>
         )}
       </div>
     </div>
