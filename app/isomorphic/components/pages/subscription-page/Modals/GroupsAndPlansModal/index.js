@@ -9,9 +9,7 @@ export const GroupsAndPlansModal = function ({ member, setActiveTab, setSelected
   const [selectedSubscriptions, setSelectedSubscriptions] = useState({});
 
   useEffect(() => {
-    if (global.Accesstype) {
-      getSubscription().then((res) => setSubscriptionsData(res));
-    }
+    getSubscription().then((res) => setSubscriptionsData(res));
   }, []);
 
   useEffect(() => {

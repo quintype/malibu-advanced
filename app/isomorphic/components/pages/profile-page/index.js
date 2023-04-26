@@ -9,84 +9,32 @@ import { EditProfile } from "./EditProfile";
 import "./profile-page.m.css";
 
 const EndDateText = ({ subscription }) => {
-  switch (subscription.status) {
-    case "active":
-      if (subscription.cancelled) {
-        return (
-          <p>
-            Subscription has been cancelled and will end on:
-            <span>
-              {new Date(subscription.end_timestamp).toLocaleDateString("en-IN", {
-                day: "numeric",
-                month: "long",
-                year: "numeric",
-              })}
-            </span>
-          </p>
-        );
-      } else {
-        return (
-          <p>
-            {subscription.recurring ? "Renews on:" : "Expires on:"}{" "}
-            <span>
-              {new Date(subscription.end_timestamp).toLocaleDateString("en-IN", {
-                day: "numeric",
-                month: "long",
-                year: "numeric",
-              })}
-            </span>
-          </p>
-        );
-      }
-    case "pending":
-      return (
-        <p>
-          Subscription starts from:{" "}
-          <span>
-            {new Date(subscription.start_timestamp).toLocaleDateString("en-IN", {
-              day: "numeric",
-              month: "long",
-              year: "numeric",
-            })}
-          </span>{" "}
-          and will {subscription.recurring ? "renew on:" : "expire on:"}{" "}
-          <span>
-            {new Date(subscription.end_timestamp).toLocaleDateString("en-IN", {
-              day: "numeric",
-              month: "long",
-              year: "numeric",
-            })}
-          </span>
-        </p>
-      );
-    case "cancelled":
-      return (
-        <p>
-          {new Date(subscription.cancelled_at) > new Date() ? "Cancels" : "Cancelled"} on:{" "}
-          <span>
-            {new Date(subscription.cancelled_at).toLocaleDateString("en-IN", {
-              day: "numeric",
-              month: "long",
-              year: "numeric",
-            })}
-          </span>
-        </p>
-      );
-    case "expired":
-      return (
-        <p>
-          {new Date(subscription.end_timestamp) > new Date() ? "Expires" : "Expired"} on:{" "}
-          <span>
-            {new Date(subscription.end_timestamp).toLocaleDateString("en-IN", {
-              day: "numeric",
-              month: "long",
-              year: "numeric",
-            })}
-          </span>
-        </p>
-      );
-    default:
-      return <p></p>;
+  if (subscription.cancelled) {
+    return (
+      <p>
+        Subscription has been cancelled and will end on:
+        <span>
+          {new Date(subscription.end_timestamp).toLocaleDateString("en-IN", {
+            day: "numeric",
+            month: "long",
+            year: "numeric",
+          })}
+        </span>
+      </p>
+    );
+  } else {
+    return (
+      <p>
+        {subscription.recurring ? "Renews on:" : "Expires on:"}{" "}
+        <span>
+          {new Date(subscription.end_timestamp).toLocaleDateString("en-IN", {
+            day: "numeric",
+            month: "long",
+            year: "numeric",
+          })}
+        </span>
+      </p>
+    );
   }
 };
 
