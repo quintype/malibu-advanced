@@ -49,7 +49,7 @@ function StoryWrapper({ story, config, initAccessType, checkAccess }) {
     initAccessType(() => {
       checkAccess(story.id).then((res) => {
         const { granted } = res[story.id];
-        console.log("Granted in text story --->", granted);
+        console.log("Access granted value is --->", granted);
         setHasAccess(granted);
       });
     });
