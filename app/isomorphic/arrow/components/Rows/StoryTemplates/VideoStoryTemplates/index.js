@@ -100,7 +100,7 @@ const VideoStoryTemplate = ({
     );
   };
 
-  const StoryData = () => {
+  const StoryData = (hasAccess) => {
     const isStoryBehindPaywall = story.access === "subscription" && hasAccess === false;
 
     return (
@@ -172,13 +172,13 @@ const VideoStoryTemplate = ({
     );
   };
 
-  const heroPriorityTemplate = () => {
+  const heroPriorityTemplate = (hasAccess) => {
     return (
       <>
         <HeroVideo />
         <div styleName="story-content-wrapper">
           <HeaderCard />
-          <StoryData />
+          <StoryData hasAccess={hasAccess} />
         </div>
         {verticalShare && <SocialShareComponent />}
         {asideCollection && (
@@ -197,7 +197,7 @@ const VideoStoryTemplate = ({
     );
   };
 
-  const headlinePriorityTemplate = () => {
+  const headlinePriorityTemplate = (hasAccess) => {
     return (
       <>
         <div styleName="story-content-wrapper">
@@ -207,7 +207,7 @@ const VideoStoryTemplate = ({
           <HeroVideo />
         </div>
         <div styleName="story-content-wrapper">
-          <StoryData />
+          <StoryData hasAccess={hasAccess} />
         </div>
         {verticalShare && <SocialShareComponent />}
         <SideColumn />
@@ -215,13 +215,13 @@ const VideoStoryTemplate = ({
     );
   };
 
-  const defaultTemplate = () => {
+  const defaultTemplate = (hasAccess) => {
     return (
       <>
         <HeroVideo />
         <div styleName="story-content-wrapper">
           <HeaderCard />
-          <StoryData />
+          <StoryData hasAccess={hasAccess} />
         </div>
 
         {verticalShare && <SocialShareComponent />}
@@ -230,14 +230,14 @@ const VideoStoryTemplate = ({
     );
   };
 
-  const getStoryTemplate = (templateType) => {
+  const getStoryTemplate = (templateType, hasAccess) => {
     switch (templateType) {
       case "hero-priority":
-        return heroPriorityTemplate();
+        return heroPriorityTemplate(hasAccess);
       case "headline-priority":
-        return headlinePriorityTemplate();
+        return headlinePriorityTemplate(hasAccess);
       default:
-        return defaultTemplate();
+        return defaultTemplate(hasAccess);
     }
   };
 
@@ -250,7 +250,7 @@ const VideoStoryTemplate = ({
       styleName={`${templateClass} ${verticalShare}`}
       style={{ backgroundColor: theme }}
     >
-      {getStoryTemplate(templateType)}
+      {getStoryTemplate(templateType, hasAccess)}
     </div>
   );
 };

@@ -86,7 +86,7 @@ export const StoryTemplate = ({
     );
   };
 
-  const StoryData = () => {
+  const StoryData = (hasAccess) => {
     const isStoryBehindPaywall = story.access === "subscription" && hasAccess === false;
 
     return (
@@ -154,7 +154,7 @@ export const StoryTemplate = ({
     );
   };
 
-  const heroPriorityCenterTemplate = () => {
+  const heroPriorityCenterTemplate = (hasAccess) => {
     return (
       <>
         <div styleName="hero-image index-2" data-test-id="hero-priority-center-image">
@@ -163,7 +163,7 @@ export const StoryTemplate = ({
         <div styleName="story-content-inner-wrapper">
           <CaptionAttribution story={story} config={config} />
           <HeaderCard />
-          <StoryData />
+          <StoryData hasAccess={hasAccess} />
         </div>
         {verticalShare && <SocialShareComponent />}
         <AsideCollectionCard />
@@ -171,7 +171,7 @@ export const StoryTemplate = ({
     );
   };
 
-  const headlineHeroPriorityTemplate = () => {
+  const headlineHeroPriorityTemplate = (hasAccess) => {
     return (
       <>
         <div styleName="story-content-inner-wrapper">
@@ -182,7 +182,7 @@ export const StoryTemplate = ({
         </div>
         <div styleName="story-content-inner-wrapper">
           <CaptionAttribution story={story} config={config} />
-          <StoryData />
+          <StoryData hasAccess={hasAccess} />
         </div>
         {verticalShare && <SocialShareComponent />}
         <AsideCollectionCard />
@@ -190,7 +190,7 @@ export const StoryTemplate = ({
     );
   };
 
-  const heroVerticalTemplate = () => {
+  const heroVerticalTemplate = (hasAccess) => {
     return (
       <>
         <HeaderCard />
@@ -199,7 +199,7 @@ export const StoryTemplate = ({
         </div>
         <CaptionAttribution story={story} config={config} />
         <div styleName="story-content-inner-wrapper">
-          <StoryData />
+          <StoryData hasAccess={hasAccess} />
         </div>
         {verticalShare && <SocialShareComponent />}
         <AsideCollectionCard />
@@ -207,7 +207,7 @@ export const StoryTemplate = ({
     );
   };
 
-  const heroPriorityLeftTemplate = () => {
+  const heroPriorityLeftTemplate = (hasAccess) => {
     return (
       <>
         <div styleName="hero-image index-2" data-test-id="hero-priority-left-image">
@@ -216,7 +216,7 @@ export const StoryTemplate = ({
         <div styleName="story-content-inner-wrapper">
           <CaptionAttribution story={story} config={config} />
           <HeaderCard />
-          <StoryData />
+          <StoryData hasAccess={hasAccess} />
         </div>
         {verticalShare && <SocialShareComponent />}
         <SideColumn />
@@ -224,7 +224,7 @@ export const StoryTemplate = ({
     );
   };
 
-  const headlinePriorityTemplate = () => {
+  const headlinePriorityTemplate = (hasAccess) => {
     return (
       <>
         <HeaderCard />
@@ -233,7 +233,7 @@ export const StoryTemplate = ({
         </div>
         <div styleName="story-content-inner-wrapper">
           <CaptionAttribution story={story} config={config} />
-          <StoryData />
+          <StoryData hasAccess={hasAccess} />
         </div>
         {verticalShare && <SocialShareComponent />}
         <SideColumn />
@@ -241,7 +241,7 @@ export const StoryTemplate = ({
     );
   };
 
-  const headlineOverlayTemplate = () => {
+  const headlineOverlayTemplate = (hasAccess) => {
     return (
       <>
         <div styleName="hero-image index-2" data-test-id="headline-overlay-hero-image">
@@ -258,7 +258,7 @@ export const StoryTemplate = ({
         <HeaderCard />
         <div styleName="story-content-inner-wrapper">
           <CaptionAttribution story={story} config={config} />
-          <StoryData />
+          <StoryData hasAccess={hasAccess} />
         </div>
         {verticalShare && <SocialShareComponent />}
         <AsideCollectionCard />
@@ -266,23 +266,23 @@ export const StoryTemplate = ({
     );
   };
 
-  const getStoryTemplate = (templateType) => {
-    switch (templateType) {
+  const getStoryTemplate = (templateType, hasAccess) => {
+    switch ((templateType, hasAccess)) {
       case "hero-priority-center":
-        return heroPriorityCenterTemplate();
+        return heroPriorityCenterTemplate(hasAccess);
       case "default":
-        return heroPriorityLeftTemplate();
+        return heroPriorityLeftTemplate(hasAccess);
       case "headline-hero-priority":
-        return headlineHeroPriorityTemplate();
+        return headlineHeroPriorityTemplate(hasAccess);
       case "hero-vertical-priority":
-        return heroVerticalTemplate();
+        return heroVerticalTemplate(hasAccess);
       case "headline-priority":
-        return headlinePriorityTemplate();
+        return headlinePriorityTemplate(hasAccess);
       case "headline-overlay-priority":
-        return headlineOverlayTemplate();
+        return headlineOverlayTemplate(hasAccess);
     }
   };
-  return <>{getStoryTemplate(templateType)}</>;
+  return <>{getStoryTemplate(templateType, hasAccess)}</>;
 };
 
 StoryTemplate.propTypes = {
