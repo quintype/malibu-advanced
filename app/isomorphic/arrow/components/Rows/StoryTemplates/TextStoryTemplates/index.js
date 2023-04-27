@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import kebabCase from "lodash/kebabCase";
 import { StateProvider } from "../../../SharedContext";
@@ -15,8 +15,21 @@ const TextStoryTemplate = ({
   widgetComp,
   firstChild,
   secondChild,
-  hasAccess,
+  initAccessType,
+  checkAccess,
 }) => {
+  const [hasAccess, setHasAccess] = useState(false);
+
+  useEffect(() => {
+    initAccessType(() => {
+      checkAccess(story.id).then((res) => {
+        const { granted } = res[story.id];
+        console.log("Access granted value is --->", granted);
+        setHasAccess(granted);
+      });
+    });
+  }, []);
+
   const {
     theme = "",
     templateType = "default",
@@ -74,7 +87,8 @@ TextStoryTemplate.propTypes = {
   storyElementsConfig: PropTypes.object,
   adComponent: PropTypes.func,
   widgetComp: PropTypes.func,
-  hasAccess: PropTypes.bool,
+  initAccessType: PropTypes.func,
+  checkAccess: PropTypes.func,
 };
 
 export default StateProvider(TextStoryTemplate);

@@ -5,7 +5,6 @@ import { AdPlaceholder } from "../../arrow/components/Atoms/AdPlaceholder";
 import { object, func } from "prop-types";
 
 function StoryWrapper({ story, config, initAccessType, checkAccess }) {
-  const [hasAccess, setHasAccess] = useState(false);
   const [relatedStories, setRelatedStories] = useState([]);
   const storyTemplate = story["story-template"];
 
@@ -46,13 +45,6 @@ function StoryWrapper({ story, config, initAccessType, checkAccess }) {
   };
 
   useEffect(() => {
-    initAccessType(() => {
-      checkAccess(story.id).then((res) => {
-        const { granted } = res[story.id];
-        console.log("Access granted value is --->", granted);
-        setHasAccess(granted);
-      });
-    });
     loadRelatedStories(story, config).then((relatedStories) => setRelatedStories(relatedStories));
   }, []);
 
@@ -65,7 +57,8 @@ function StoryWrapper({ story, config, initAccessType, checkAccess }) {
           config={{ ...config, ...templateConfig }}
           adWidget={adWidget}
           adPlaceholder={<AdPlaceholder height="250px" width="300px" />}
-          hasAccess={hasAccess}
+          initAccessType={initAccessType}
+          checkAccess={checkAccess}
         />
       );
     case "video":
@@ -75,7 +68,8 @@ function StoryWrapper({ story, config, initAccessType, checkAccess }) {
           config={{ ...config, ...templateConfig }}
           adWidget={adWidget}
           adPlaceholder={<AdPlaceholder height="250px" width="300px" />}
-          hasAccess={hasAccess}
+          initAccessType={initAccessType}
+          checkAccess={checkAccess}
         />
       );
     case "photo":
@@ -85,7 +79,8 @@ function StoryWrapper({ story, config, initAccessType, checkAccess }) {
           config={{ ...config, ...templateConfig }}
           adWidget={adWidget}
           adPlaceholder={<AdPlaceholder height="250px" width="300px" />}
-          hasAccess={hasAccess}
+          initAccessType={initAccessType}
+          checkAccess={checkAccess}
         />
       );
     case "listicle":
@@ -95,7 +90,8 @@ function StoryWrapper({ story, config, initAccessType, checkAccess }) {
           config={{ ...config, ...templateConfig }}
           adWidget={adWidget}
           adPlaceholder={<AdPlaceholder height="250px" width="300px" />}
-          hasAccess={hasAccess}
+          initAccessType={initAccessType}
+          checkAccess={checkAccess}
         />
       );
     case "live-blog":
@@ -105,7 +101,8 @@ function StoryWrapper({ story, config, initAccessType, checkAccess }) {
           config={{ ...config, ...templateConfig }}
           adWidget={adWidget}
           adPlaceholder={<AdPlaceholder height="250px" width="300px" />}
-          hasAccess={hasAccess}
+          initAccessType={initAccessType}
+          checkAccess={checkAccess}
         />
       );
     default:
@@ -115,7 +112,8 @@ function StoryWrapper({ story, config, initAccessType, checkAccess }) {
           config={{ ...config, ...templateConfig }}
           adWidget={adWidget}
           adPlaceholder={<AdPlaceholder height="250px" width="300px" />}
-          hasAccess={hasAccess}
+          initAccessType={initAccessType}
+          checkAccess={checkAccess}
         />
       );
   }

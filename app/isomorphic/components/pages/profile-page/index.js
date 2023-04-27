@@ -46,6 +46,16 @@ const ProfilePageBase = ({ member, initAccessType, getSubscriptionForUser, cance
   const [isEditing, setIsEditing] = useState(false);
   const [subscriptions, setSubscriptions] = useState([]);
 
+  useEffect(() => {
+    initAccessType(() => {
+      getSubscriptionForUser()
+        .then((res) => {
+          setSubscriptions(res.subscriptions);
+        })
+        .catch((err) => console.error("Error occurred inside profile page --->", err));
+    });
+  }, []);
+
   const cancelSubscriptionHandler = function (subscriptionId) {
     const subscriptionIndex = subscriptions.findIndex((subscription) => subscription.id === subscriptionId);
     cancelSubscription(subscriptionId)
@@ -85,16 +95,6 @@ const ProfilePageBase = ({ member, initAccessType, getSubscriptionForUser, cance
     );
   };
 
-  useEffect(() => {
-    initAccessType(() => {
-      getSubscriptionForUser()
-        .then((res) => {
-          setSubscriptions(res.subscriptions);
-        })
-        .catch((err) => console.error("Error occurred inside profile page --->", err));
-    });
-  }, []);
-
   if (!member) {
     return <div styleName="not-logged-in">Please Login</div>;
   }
@@ -129,6 +129,13 @@ const ProfilePageBase = ({ member, initAccessType, getSubscriptionForUser, cance
   );
 };
 
+ProfilePageBase.propTypes = {
+  member: object,
+  initAccessType: func,
+  getSubscriptionForUser: func,
+  cancelSubscription: func,
+};
+
 const ProfilePage = () => {
   const member = useSelector((state) => get(state, ["member"], null));
   const email = get(member, ["email"], "abc@gmail.com");
@@ -156,13 +163,6 @@ const ProfilePage = () => {
       )}
     </AccessType>
   );
-};
-
-ProfilePageBase.propTypes = {
-  member: object,
-  initAccessType: func,
-  getSubscriptionForUser: func,
-  cancelSubscription: func,
 };
 
 export { ProfilePage };

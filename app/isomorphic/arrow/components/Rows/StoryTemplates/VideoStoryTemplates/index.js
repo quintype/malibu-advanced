@@ -1,6 +1,6 @@
 import { SocialShare } from "@quintype/components";
 import PropTypes from "prop-types";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import get from "lodash/get";
 import { SocialShareTemplate } from "../../../Molecules/SocialShareTemplate";
@@ -25,8 +25,21 @@ const VideoStoryTemplate = ({
   adComponent,
   firstChild,
   secondChild,
-  hasAccess,
+  initAccessType,
+  checkAccess,
 }) => {
+  const [hasAccess, setHasAccess] = useState(false);
+
+  useEffect(() => {
+    initAccessType(() => {
+      checkAccess(story.id).then((res) => {
+        const { granted } = res[story.id];
+        console.log("Access granted value is --->", granted);
+        setHasAccess(granted);
+      });
+    });
+  }, []);
+
   const heroVideo =
     story.cards
       .flatMap((card) => card["story-elements"])
@@ -254,7 +267,8 @@ VideoStoryTemplate.propTypes = {
   storyElementsConfig: PropTypes.object,
   adComponent: PropTypes.func,
   widgetComp: PropTypes.func,
-  hasAccess: PropTypes.bool,
+  initAccessType: PropTypes.func,
+  checkAccess: PropTypes.func,
 };
 
 export default StateProvider(VideoStoryTemplate);
