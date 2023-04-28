@@ -37,6 +37,10 @@ export async function renderLayout(res, params) {
   const placeholderDelay = parseInt(
     get(params.store.getState(), ["qt", "config", "publisher-attributes", "placeholder_delay"])
   );
+  const metadataHeader =
+    (pageType === "static-page" && params.metadata?.header === true) || params.metadata?.header === undefined;
+  const metadataFooter =
+    (pageType === "static-page" && params.metadata?.footer === true) || params.metadata?.footer === undefined;
 
   res.render(
     "pages/layout",
@@ -44,6 +48,8 @@ export async function renderLayout(res, params) {
       {
         isProduction,
         assetPath: assetPath,
+        metadataHeader: metadataHeader,
+        metadataFooter: metadataFooter,
         content: params.content || "",
         cssContent: cssContent,
         criticalCss: criticalCss,
