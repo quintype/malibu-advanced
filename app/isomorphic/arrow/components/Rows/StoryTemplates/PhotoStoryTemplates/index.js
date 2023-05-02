@@ -36,9 +36,13 @@ const PhotoStory = ({
   useEffect(() => {
     initAccessType(() => {
       checkAccess(story.id).then((res) => {
-        const { granted } = res[story.id];
-        console.log("Access granted value in PhotoStory --->", granted);
-        setHasAccess(granted);
+        if (res[story.id]) {
+          const { granted } = res[story.id];
+          console.log("Access granted value in PhotoStoryTemplate --->", granted);
+          setHasAccess(granted);
+        } else {
+          setHasAccess(false);
+        }
       });
     });
   }, []);
@@ -90,7 +94,14 @@ const PhotoStory = ({
 
   const StoryData = ({ hasAccess }) => {
     const isStoryBehindPaywall = story.access === "subscription" && hasAccess === false;
-    console.log("hasAccess and isStoryBehindPaywall in photoStory --->", hasAccess, isStoryBehindPaywall);
+    console.log(
+      "hasAccess and isStoryBehindPaywall in photoStory --->",
+      story.access,
+      hasAccess,
+      story.access === "subscription",
+      hasAccess === false,
+      isStoryBehindPaywall
+    );
     return (
       <>
         {authorDetails && (

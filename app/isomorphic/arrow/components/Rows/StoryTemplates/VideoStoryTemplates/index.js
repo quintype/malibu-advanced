@@ -33,9 +33,13 @@ const VideoStoryTemplate = ({
   useEffect(() => {
     initAccessType(() => {
       checkAccess(story.id).then((res) => {
-        const { granted } = res[story.id];
-        console.log("Access granted value in VideoStoryTemplate --->", granted);
-        setHasAccess(granted);
+        if (res[story.id]) {
+          const { granted } = res[story.id];
+          console.log("Access granted value in VideoStoryTemplate --->", granted);
+          setHasAccess(granted);
+        } else {
+          setHasAccess(false);
+        }
       });
     });
   }, []);
@@ -102,7 +106,14 @@ const VideoStoryTemplate = ({
 
   const StoryData = ({ hasAccess }) => {
     const isStoryBehindPaywall = story.access === "subscription" && hasAccess === false;
-    console.log("isStoryBehindPaywall in videoStory --->", isStoryBehindPaywall);
+    console.log(
+      "hasAccess and isStoryBehindPaywall in videoStory --->",
+      story.access,
+      hasAccess,
+      story.access === "subscription",
+      hasAccess === false,
+      isStoryBehindPaywall
+    );
 
     return (
       <div styleName="story-details">

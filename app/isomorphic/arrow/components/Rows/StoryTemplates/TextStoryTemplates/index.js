@@ -23,9 +23,13 @@ const TextStoryTemplate = ({
   useEffect(() => {
     initAccessType(() => {
       checkAccess(story.id).then((res) => {
-        const { granted } = res[story.id];
-        console.log("Access granted value in TextStoryTemplate --->", granted);
-        setHasAccess(granted);
+        if (res[story.id]) {
+          const { granted } = res[story.id];
+          console.log("Access granted value in TextStoryTemplate --->", granted);
+          setHasAccess(granted);
+        } else {
+          setHasAccess(false);
+        }
       });
     });
   }, []);
