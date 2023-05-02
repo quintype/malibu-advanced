@@ -29,7 +29,6 @@ const EditProfile = ({ member = {}, setIsEditing, isEditing }) => {
   const onProfileChange = async (event) => {
     setIsLoading(true);
     const imageList = event.target.files;
-    console.log(imageList, "<---imageList inside profile change ");
     const signedImage = await signImage(imageList[0].name, imageList[0].type);
 
     const keys = [
@@ -44,10 +43,8 @@ const EditProfile = ({ member = {}, setIsEditing, isEditing }) => {
     ];
 
     const formdata = prepareFormData(keys, imageList, signedImage);
-    console.log(formdata, "<--- prepare form data");
-    console.log(signedImage, "<---signedImage - image url ");
     try {
-      const uploadedImage = await uploadS3ToTemp(signedImage.key, formdata);
+      const uploadedImage = await uploadS3ToTemp(signedImage, formdata);
       if (uploadedImage.status === 201) {
         tempImageKey = signedImage.key;
         setIsLoading(false);
