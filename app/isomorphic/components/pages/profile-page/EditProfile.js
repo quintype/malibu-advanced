@@ -17,13 +17,13 @@ const EditProfile = ({ member = {}, setIsEditing, isEditing }) => {
 
   const prepareFormData = (keys, imageList, res) => {
     // eslint-disable-next-line no-undef
-    const formdata = new FormData();
+    const formData = new FormData();
 
     keys.forEach((key) => {
-      key === "file" ? formdata.append(key, imageList[0]) : formdata.append(key, res[key]);
+      key === "file" ? formData.append(key, imageList[0]) : formData.append(key, res[key]);
     });
 
-    return formdata;
+    return formData;
   };
 
   const onProfileChange = async (event) => {
@@ -42,9 +42,9 @@ const EditProfile = ({ member = {}, setIsEditing, isEditing }) => {
       "file",
     ];
 
-    const formdata = prepareFormData(keys, imageList, signedImage);
+    const FormData = prepareFormData(keys, imageList, signedImage);
     try {
-      const uploadedImage = await uploadS3ToTemp(signedImage, formdata);
+      const uploadedImage = await uploadS3ToTemp(signedImage.action, FormData);
       if (uploadedImage.status === 201) {
         tempImageKey = signedImage.key;
         setIsLoading(false);
