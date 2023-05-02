@@ -22,7 +22,7 @@ const EditProfile = ({ member = {}, setIsEditing, isEditing }) => {
     keys.forEach((key) => {
       key === "file" ? formdata.append(key, imageList[0]) : formdata.append(key, res[key]);
     });
-    console.log(formdata, "<---formdata");
+
     return formdata;
   };
 
@@ -44,9 +44,10 @@ const EditProfile = ({ member = {}, setIsEditing, isEditing }) => {
     ];
 
     const formdata = prepareFormData(keys, imageList, signedImage);
+    console.log(formdata, "<--- prepare form data");
     console.log(signedImage, "<---signedImage - image url ");
     try {
-      const uploadedImage = await uploadS3ToTemp(signedImage.action, formdata);
+      const uploadedImage = await uploadS3ToTemp(signedImage.key, formdata);
       if (uploadedImage.status === 201) {
         tempImageKey = signedImage.key;
         setIsLoading(false);
