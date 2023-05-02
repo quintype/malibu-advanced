@@ -100,8 +100,9 @@ const VideoStoryTemplate = ({
     );
   };
 
-  const StoryData = (hasAccess) => {
+  const StoryData = ({ hasAccess }) => {
     const isStoryBehindPaywall = story.access === "subscription" && hasAccess === false;
+    console.log("isStoryBehindPaywall in videoStory --->", isStoryBehindPaywall);
 
     return (
       <div styleName="story-details">
@@ -153,6 +154,10 @@ const VideoStoryTemplate = ({
         {secondChild}
       </div>
     );
+  };
+
+  StoryData.propTypes = {
+    hasAccess: PropTypes.bool,
   };
 
   const SideColumn = () => {

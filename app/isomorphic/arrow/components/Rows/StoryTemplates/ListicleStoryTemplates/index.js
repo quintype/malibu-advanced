@@ -1,5 +1,5 @@
 import { SocialShare } from "@quintype/components";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import get from "lodash/get";
 import PropTypes from "prop-types";
@@ -26,8 +26,21 @@ const ListicleStoryTemplate = ({
   widgetComp = () => {},
   firstChild,
   secondChild,
-  hasAccess,
+  initAccessType,
+  checkAccess,
 }) => {
+  const [hasAccess, setHasAccess] = useState(false);
+
+  useEffect(() => {
+    initAccessType(() => {
+      checkAccess(story.id).then((res) => {
+        const { granted } = res[story.id];
+        console.log("Access granted value is --->", granted);
+        setHasAccess(granted);
+      });
+    });
+  }, []);
+
   const {
     theme = "",
     noOfVisibleCards = -1,
@@ -92,7 +105,7 @@ const ListicleStoryTemplate = ({
     </>
   );
 
-  const BodyBlock = () => {
+  const BodyBlock = ({ hasAccess }) => {
     const isStoryBehindPaywall = story.access === "subscription" && hasAccess === false;
 
     return (
@@ -157,7 +170,7 @@ const ListicleStoryTemplate = ({
     );
 
   // Templates
-  const DefaultTemplate = () => (
+  const DefaultTemplate = ({ hasAccess }) => (
     <>
       <HeroImageBlock
         aspectRatio={[
@@ -180,7 +193,7 @@ const ListicleStoryTemplate = ({
       </div>
     </>
   );
-  const HeroPriority = () => (
+  const HeroPriority = ({ hasAccess }) => (
     <div styleName="hero-priority-template">
       <div styleName="grid-container">
         <div styleName="full-grid">
@@ -190,12 +203,12 @@ const ListicleStoryTemplate = ({
           <CaptionAttributionBlock />
           <HeadlineBlock />
           <AuthourBlock />
-          <BodyBlock />
+          <BodyBlock hasAccess={hasAccess} />
         </div>
       </div>
     </div>
   );
-  const HeadlinePriority = () => (
+  const HeadlinePriority = ({ hasAccess }) => (
     <div styleName="headline-priority-template">
       <div styleName="grid-container">
         <div styleName="headline-priority-grid">
@@ -205,7 +218,7 @@ const ListicleStoryTemplate = ({
           <HeroImageBlock />
           <CaptionAttributionBlock />
           <AuthourBlock />
-          <BodyBlock />
+          <BodyBlock hasAccess={hasAccess} />
         </div>
         <div styleName="right-column">
           <SideColumnBlock />
@@ -213,7 +226,7 @@ const ListicleStoryTemplate = ({
       </div>
     </div>
   );
-  const HeadlineHeroPriority = () => (
+  const HeadlineHeroPriority = ({ hasAccess }) => (
     <div styleName="headline-hero-priority-template">
       <div styleName="grid-container">
         <div styleName="center-column">
@@ -225,12 +238,12 @@ const ListicleStoryTemplate = ({
         <div styleName="center-column">
           <CaptionAttributionBlock />
           <AuthourBlock />
-          <BodyBlock />
+          <BodyBlock hasAccess={hasAccess} />
         </div>
       </div>
     </div>
   );
-  const HeroOverlay = () => (
+  const HeroOverlay = ({ hasAccess }) => (
     <div styleName="hero-overlay-template">
       <div styleName="grid-container">
         <div styleName="full-grid hero-faded-relative">
@@ -251,12 +264,12 @@ const ListicleStoryTemplate = ({
         <div styleName="center-column">
           <CaptionAttributionBlock />
           <AuthourBlock />
-          <BodyBlock />
+          <BodyBlock hasAccess={hasAccess} />
         </div>
       </div>
     </div>
   );
-  const HeadlineSideway = () => (
+  const HeadlineSideway = ({ hasAccess }) => (
     <div styleName="headline-sideway-template">
       <div styleName="sideway-grid">
         <div styleName="sideway-headline">
@@ -275,26 +288,26 @@ const ListicleStoryTemplate = ({
       <div styleName="grid-container">
         <div styleName="center-column">
           <AuthourBlock />
-          <BodyBlock />
+          <BodyBlock hasAccess={hasAccess} />
         </div>
       </div>
     </div>
   );
 
-  const renderTemplate = () => {
+  const renderTemplate = (hasAccess) => {
     switch (templateType) {
       case "hero-priority":
-        return <HeroPriority />;
+        return <HeroPriority hasAccess={hasAccess} />;
       case "headline-priority":
-        return <HeadlinePriority />;
+        return <HeadlinePriority hasAccess={hasAccess} />;
       case "headline-hero-priority":
-        return <HeadlineHeroPriority />;
+        return <HeadlineHeroPriority hasAccess={hasAccess} />;
       case "hero-overlay":
-        return <HeroOverlay />;
+        return <HeroOverlay hasAccess={hasAccess} />;
       case "headline-sideway":
-        return <HeadlineSideway />;
+        return <HeadlineSideway hasAccess={hasAccess} />;
       default:
-        return <DefaultTemplate />;
+        return <DefaultTemplate hasAccess={hasAccess} />;
     }
   };
   const dataTestId = templateType ? `listicle-story-${templateType}` : "listicle-story";
@@ -305,7 +318,7 @@ const ListicleStoryTemplate = ({
       style={{ backgroundColor: theme }}
       styleName="story-content-inner-wrapper"
     >
-      {renderTemplate()}
+      {renderTemplate(hasAccess)}
     </div>
   );
 };
@@ -323,7 +336,8 @@ ListicleStoryTemplate.propTypes = {
   adComponent: PropTypes.func,
   widgetComp: PropTypes.func,
   premiumStoryIconConfig: PropTypes.object,
-  hasAccess: PropTypes.bool,
+  initAccessType: PropTypes.func,
+  checkAccess: PropTypes.func,
 };
 
 export default StateProvider(ListicleStoryTemplate);

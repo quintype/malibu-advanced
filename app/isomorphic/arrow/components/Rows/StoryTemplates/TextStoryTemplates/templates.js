@@ -86,8 +86,15 @@ export const StoryTemplate = ({
     );
   };
 
-  const StoryData = (hasAccess) => {
+  const StoryData = ({ hasAccess }) => {
     const isStoryBehindPaywall = story.access === "subscription" && hasAccess === false;
+    console.log(
+      "isStoryBehindPaywall --->",
+      hasAccess,
+      story.access === "subscription",
+      hasAccess === false,
+      isStoryBehindPaywall
+    );
 
     return (
       <div styleName="gap-16">
@@ -267,7 +274,8 @@ export const StoryTemplate = ({
   };
 
   const getStoryTemplate = (templateType, hasAccess) => {
-    switch ((templateType, hasAccess)) {
+    console.log("getStoryTemplate --->", templateType, hasAccess);
+    switch (templateType) {
       case "hero-priority-center":
         return heroPriorityCenterTemplate(hasAccess);
       case "default":

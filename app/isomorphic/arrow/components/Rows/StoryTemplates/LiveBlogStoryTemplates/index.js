@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-import React from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
 import get from "lodash/get";
@@ -15,8 +15,20 @@ const LiveBlogStoryTemplate = ({
   widgetComp,
   firstChild,
   secondChild,
-  hasAccess,
+  initAccessType,
+  checkAccess,
 }) => {
+  const [hasAccess, setHasAccess] = useState(false);
+
+  useEffect(() => {
+    initAccessType(() => {
+      checkAccess(story.id).then((res) => {
+        const { granted } = res[story.id];
+        console.log("Access granted value is --->", granted);
+        setHasAccess(granted);
+      });
+    });
+  }, []);
   const { theme = "", templateType = "default", verticalShare = "" } = config;
 
   const containerClass = templateType !== "hero-overlay" ? "container" : "";
@@ -39,6 +51,7 @@ const LiveBlogStoryTemplate = ({
         firstChild={firstChild}
         secondChild={secondChild}
         timezone={timezone}
+        hasAccess={hasAccess}
       />
     </div>
   );
@@ -54,7 +67,8 @@ LiveBlogStoryTemplate.propTypes = {
   storyElementsConfig: PropTypes.object,
   adComponent: PropTypes.func,
   widgetComp: PropTypes.func,
-  hasAccess: PropTypes.bool,
+  initAccessType: PropTypes.func,
+  checkAccess: PropTypes.func,
 };
 
 export default StateProvider(LiveBlogStoryTemplate);

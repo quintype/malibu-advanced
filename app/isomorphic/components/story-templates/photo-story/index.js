@@ -1,8 +1,8 @@
 import React from "react";
 import PhotoStoryTemplates from "../../../arrow/components/Rows/StoryTemplates/PhotoStoryTemplates";
-import { object, func, bool } from "prop-types";
+import { object, func } from "prop-types";
 
-const PhotoStory = ({ story, config, adWidget, adPlaceholder, hasAccess }) => {
+const PhotoStory = ({ story, config, adWidget, adPlaceholder, initAccessType, checkAccess }) => {
   const templateSpecific = {
     templateType: "hero-priority-center",
     showSection: false,
@@ -15,7 +15,8 @@ const PhotoStory = ({ story, config, adWidget, adPlaceholder, hasAccess }) => {
       widgetComp={adWidget}
       firstChild={adPlaceholder}
       secondChild={adPlaceholder}
-      hasAccess={hasAccess}
+      initAccessType={initAccessType}
+      checkAccess={checkAccess}
     />
   );
 };
@@ -25,7 +26,8 @@ PhotoStory.propTypes = {
   config: object,
   adWidget: func,
   adPlaceholder: object,
-  hasAccess: bool,
+  initAccessType: func,
+  checkAccess: func,
 };
 
 export default PhotoStory;

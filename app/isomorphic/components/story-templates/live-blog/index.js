@@ -1,8 +1,8 @@
 import React from "react";
 import LiveBlogStoryTemplate from "../../../arrow/components/Rows/StoryTemplates/LiveBlogStoryTemplates";
-import { object, func, bool } from "prop-types";
+import { object, func } from "prop-types";
 
-const LiveBlogStory = ({ story, config, adWidget, adPlaceholder, hasAccess }) => {
+const LiveBlogStory = ({ story, config, adWidget, adPlaceholder, initAccessType, checkAccess }) => {
   const templateSpecific = { templateType: "hero-overlay", showSection: false };
 
   return (
@@ -13,7 +13,8 @@ const LiveBlogStory = ({ story, config, adWidget, adPlaceholder, hasAccess }) =>
       widgetComp={adWidget}
       firstChild={adPlaceholder}
       secondChild={adPlaceholder}
-      hasAccess={hasAccess}
+      initAccessType={initAccessType}
+      checkAccess={checkAccess}
     />
   );
 };
@@ -23,7 +24,8 @@ LiveBlogStory.propTypes = {
   config: object,
   adWidget: func,
   adPlaceholder: object,
-  hasAccess: bool,
+  initAccessType: func,
+  checkAccess: func,
 };
 
 export default LiveBlogStory;

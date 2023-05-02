@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 import { SocialShare } from "@quintype/components";
 import PropTypes from "prop-types";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import get from "lodash/get";
 import { useSelector } from "react-redux";
 import kebabCase from "lodash/kebabCase";
@@ -28,8 +28,21 @@ const PhotoStory = ({
   adComponent,
   firstChild,
   secondChild,
-  hasAccess,
+  initAccessType,
+  checkAccess,
 }) => {
+  const [hasAccess, setHasAccess] = useState(false);
+
+  useEffect(() => {
+    initAccessType(() => {
+      checkAccess(story.id).then((res) => {
+        const { granted } = res[story.id];
+        console.log("Access granted value is --->", granted);
+        setHasAccess(granted);
+      });
+    });
+  }, []);
+
   const {
     theme = "",
     asideCollection = {},
@@ -75,9 +88,9 @@ const PhotoStory = ({
     );
   };
 
-  const StoryData = () => {
+  const StoryData = ({ hasAccess }) => {
     const isStoryBehindPaywall = story.access === "subscription" && hasAccess === false;
-
+    console.log("isStoryBehindPaywall in photoStory --->", hasAccess, isStoryBehindPaywall);
     return (
       <>
         {authorDetails && (
@@ -139,7 +152,7 @@ const PhotoStory = ({
     }
   };
 
-  const DefaultTemplate = ({ story }) => {
+  const DefaultTemplate = ({ story, hasAccess }) => {
     return (
       <>
         <div data-test-id="hero-image" styleName={`${renderImages(imageRender)} index-2`}>
@@ -156,7 +169,7 @@ const PhotoStory = ({
         <div styleName="grid-col-2-10 space-12">
           <CaptionAttribution story={story} config={config} />
           <HeaderCard />
-          <StoryData />
+          <StoryData hasAccess={hasAccess} />
         </div>
         {verticalShare && <SocialShareComponent />}
         {asideCollection && (
@@ -175,7 +188,7 @@ const PhotoStory = ({
     );
   };
 
-  const HeroPriority = ({ story }) => {
+  const HeroPriority = ({ story, hasAccess }) => {
     return (
       <>
         <div data-test-id="hero-image" styleName={`${renderImages(imageRender)} index-2`}>
@@ -184,7 +197,7 @@ const PhotoStory = ({
         <div styleName="grid-col-4-12 space-12">
           <CaptionAttribution story={story} config={config} />
           <HeaderCard />
-          <StoryData />
+          <StoryData hasAccess={hasAccess} />
         </div>
         {verticalShare && <SocialShareComponent />}
         {asideCollection && (
@@ -203,7 +216,7 @@ const PhotoStory = ({
     );
   };
 
-  const HeadlinePriority = ({ story }) => {
+  const HeadlinePriority = ({ story, hasAccess }) => {
     return (
       <>
         <div styleName="grid-container side-space">
@@ -214,7 +227,7 @@ const PhotoStory = ({
         </div>
         <div styleName="grid-col-2-9 side-space">
           <CaptionAttribution story={story} config={config} />
-          <StoryData />
+          <StoryData hasAccess={hasAccess} />
         </div>
         {verticalShare && <SocialShareComponent />}
         {asideCollection && (
@@ -233,18 +246,19 @@ const PhotoStory = ({
     );
   };
 
-  const PhotoStoryTemplate = ({ templateType }) => {
+  const PhotoStoryTemplate = ({ templateType, hasAccess }) => {
     switch (templateType) {
       case "hero-priority-center":
-        return <HeroPriority story={story} />;
+        return <HeroPriority story={story} hasAccess={hasAccess} />;
       case "headline-priority":
-        return <HeadlinePriority story={story} />;
+        return <HeadlinePriority story={story} hasAccess={hasAccess} />;
       default:
-        return <DefaultTemplate story={story} />;
+        return <DefaultTemplate story={story} hasAccess={hasAccess} />;
     }
   };
   PhotoStoryTemplate.propTypes = {
     templateType: PropTypes.string,
+    hasAccess: PropTypes.bool,
   };
 
   PhotoStoryTemplate.propTypes = {
@@ -258,7 +272,7 @@ const PhotoStory = ({
       className={`arrow-component arr-story-grid arr--content-wrapper arr--photo-story-template-wrapper ${templateType} `}
       style={{ backgroundColor: theme }}
     >
-      <PhotoStoryTemplate templateType={templateType} />
+      <PhotoStoryTemplate templateType={templateType} hasAccess={hasAccess} />
     </div>
   );
 };
@@ -274,7 +288,8 @@ PhotoStory.propTypes = {
   storyElementsConfig: PropTypes.object,
   adComponent: PropTypes.func,
   widgetComp: PropTypes.func,
-  hasAccess: PropTypes.bool,
+  initAccessType: PropTypes.func,
+  checkAccess: PropTypes.func,
 };
 
 export default StateProvider(PhotoStory);
