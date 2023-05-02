@@ -35,7 +35,7 @@ const ListicleStoryTemplate = ({
     initAccessType(() => {
       checkAccess(story.id).then((res) => {
         const { granted } = res[story.id];
-        console.log("Access granted value is --->", granted);
+        console.log("Access granted value in ListicleStoryTemplate --->", granted);
         setHasAccess(granted);
       });
     });
@@ -107,6 +107,7 @@ const ListicleStoryTemplate = ({
 
   const BodyBlock = ({ hasAccess }) => {
     const isStoryBehindPaywall = story.access === "subscription" && hasAccess === false;
+    console.log("hasAccess and isStoryBehindPaywall in listicleStory --->", hasAccess, isStoryBehindPaywall);
 
     return (
       <div styleName={`body-block ${isNumberedBullet ? "numbered-bullet-style" : ""}`}>

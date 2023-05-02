@@ -44,7 +44,6 @@ export const LiveBlogStoryTemplates = ({
     },
     premiumStoryIconConfig = {},
   } = config;
-  console.log("hasAccess at top in liveBlog --->", hasAccess);
 
   const visibleCards = noOfVisibleCards < 0 ? story.cards : story.cards.slice(0, noOfVisibleCards);
   const textColor = getTextColor(theme);
@@ -74,6 +73,7 @@ export const LiveBlogStoryTemplates = ({
   };
   const StoryCards = ({ hasAccess }) => {
     const isStoryBehindPaywall = story.access === "subscription" && hasAccess === false;
+    console.log("hasAccess and isStoryBehindPaywall in liveBlogStory --->", hasAccess, isStoryBehindPaywall);
 
     return isStoryBehindPaywall ? (
       <>
@@ -159,8 +159,6 @@ export const LiveBlogStoryTemplates = ({
   };
 
   const StoryData = ({ hasAccess }) => {
-    console.log("hasAccess in liveBlog --->", hasAccess);
-
     return (
       <>
         <AuthorCard clazzName="gap-32" story={story} template={authorDetails.template} opts={authorDetails.opts} />

@@ -24,7 +24,7 @@ const LiveBlogStoryTemplate = ({
     initAccessType(() => {
       checkAccess(story.id).then((res) => {
         const { granted } = res[story.id];
-        console.log("Access granted value is --->", granted);
+        console.log("Access granted value in LiveBlogStoryTemplate --->", granted);
         setHasAccess(granted);
       });
     });

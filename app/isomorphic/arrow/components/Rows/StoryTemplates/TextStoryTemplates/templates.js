@@ -42,7 +42,6 @@ export const StoryTemplate = ({
   } = config;
   const visibledCards = noOfVisibleCards < 0 ? story.cards : story.cards.slice(0, noOfVisibleCards);
   const storyId = get(story, ["id"], "");
-  console.log("hasAccess in textStoryTemplates is --->", hasAccess);
   const HeaderCard = () => {
     return (
       <div styleName="header-details">
@@ -88,13 +87,7 @@ export const StoryTemplate = ({
 
   const StoryData = ({ hasAccess }) => {
     const isStoryBehindPaywall = story.access === "subscription" && hasAccess === false;
-    console.log(
-      "isStoryBehindPaywall --->",
-      hasAccess,
-      story.access === "subscription",
-      hasAccess === false,
-      isStoryBehindPaywall
-    );
+    console.log("hasAccess and isStoryBehindPaywall in textStory --->", hasAccess, isStoryBehindPaywall);
 
     return (
       <div styleName="gap-16">
@@ -274,7 +267,6 @@ export const StoryTemplate = ({
   };
 
   const getStoryTemplate = (templateType, hasAccess) => {
-    console.log("getStoryTemplate --->", templateType, hasAccess);
     switch (templateType) {
       case "hero-priority-center":
         return heroPriorityCenterTemplate(hasAccess);
