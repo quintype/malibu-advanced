@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unknown-property */
 import React, { useState } from "react";
 import { object, func, bool } from "prop-types";
 import { useDispatch } from "react-redux";
@@ -18,17 +19,17 @@ const EditProfile = ({ member = {}, setIsEditing, isEditing }) => {
     // eslint-disable-next-line no-undef
     const formdata = new FormData();
 
-    keys.forEach(key => {
+    keys.forEach((key) => {
       key === "file" ? formdata.append(key, imageList[0]) : formdata.append(key, res[key]);
     });
-
+    console.log(formdata, "<---formdata");
     return formdata;
   };
 
-  const onProfileChange = async event => {
+  const onProfileChange = async (event) => {
     setIsLoading(true);
     const imageList = event.target.files;
-
+    console.log(imageList, "<---imageList inside profile change ");
     const signedImage = await signImage(imageList[0].name, imageList[0].type);
 
     const keys = [
@@ -39,11 +40,11 @@ const EditProfile = ({ member = {}, setIsEditing, isEditing }) => {
       "success_action_status",
       "AWSAccessKeyId",
       "signature",
-      "file"
+      "file",
     ];
 
     const formdata = prepareFormData(keys, imageList, signedImage);
-
+    console.log(signedImage, "<---signedImage - image url ");
     try {
       const uploadedImage = await uploadS3ToTemp(signedImage.action, formdata);
       if (uploadedImage.status === 201) {
@@ -55,7 +56,7 @@ const EditProfile = ({ member = {}, setIsEditing, isEditing }) => {
     }
   };
 
-  const onSubmitHandler = async e => {
+  const onSubmitHandler = async (e) => {
     e.preventDefault();
     const body = { name };
 
@@ -78,7 +79,13 @@ const EditProfile = ({ member = {}, setIsEditing, isEditing }) => {
       <div>
         <div styleName="fields-container">
           <b>Name: </b>
-          <input styleName="text-input" name="Name" type="text" value={name} onChange={e => setName(e.target.value)} />
+          <input
+            styleName="text-input"
+            name="Name"
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
           <b>Profile Pic: </b>
           <input styleName="file-input" name="File" type="file" onChange={onProfileChange} />
           {isLoading ? <div styleName="loading">Loading Image...</div> : <div styleName="loading"></div>}
@@ -99,7 +106,7 @@ const EditProfile = ({ member = {}, setIsEditing, isEditing }) => {
 EditProfile.propTypes = {
   member: object,
   isEditing: bool,
-  setIsEditing: func
+  setIsEditing: func,
 };
 
 export { EditProfile };
