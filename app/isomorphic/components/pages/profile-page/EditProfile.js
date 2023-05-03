@@ -12,8 +12,6 @@ let tempImageKey = null;
 
 const EditProfile = ({ member = {}, setIsEditing, isEditing }) => {
   const [name, setName] = useState(member.name);
-  const [email, setEmail] = useState(member.email);
-  const [phoneNumber, setPhoneNumber] = useState(member["phone-number"]);
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
 
@@ -59,7 +57,7 @@ const EditProfile = ({ member = {}, setIsEditing, isEditing }) => {
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
-    const body = { name, email, phoneNumber };
+    const body = { name, email: member.email || member["phone-number"] };
 
     if (tempImageKey !== null) {
       body["temp-s3-key"] = tempImageKey;
@@ -69,6 +67,7 @@ const EditProfile = ({ member = {}, setIsEditing, isEditing }) => {
       const currentUserResp = await updateUserProfile(body);
       console.log("successfully updated profile");
       dispatch({ type: MEMBER_UPDATED, member: get(currentUserResp, ["user"], null) });
+      console.log(member, "<--member");
       console.log("member updated successfully");
     } catch (error) {
       console.log(error);
@@ -92,22 +91,6 @@ const EditProfile = ({ member = {}, setIsEditing, isEditing }) => {
           <b>Profile Pic: </b>
           <input styleName="file-input" name="File" type="file" onChange={onProfileChange} />
           {isLoading ? <div styleName="loading">Loading Image...</div> : <div styleName="loading"></div>}
-          <b>Email: </b>
-          <input
-            styleName="text-input"
-            name="Name"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <b>Phone Number: </b>
-          <input
-            styleName="text-input"
-            name="Name"
-            type="tel"
-            value={phoneNumber}
-            onChange={(e) => setPhoneNumber(e.target.value)}
-          />
         </div>
         <div styleName="buttons-container">
           <button styleName="button" onClick={() => setIsEditing(!isEditing)}>
