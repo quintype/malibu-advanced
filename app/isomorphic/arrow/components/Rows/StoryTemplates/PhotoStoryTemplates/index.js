@@ -96,6 +96,7 @@ const PhotoStory = ({
     const isStoryBehindPaywall = story.access === "subscription" && hasAccess === false;
     console.log(
       "hasAccess and isStoryBehindPaywall in photoStory --->",
+      story,
       story.access,
       hasAccess,
       story.access === "subscription",

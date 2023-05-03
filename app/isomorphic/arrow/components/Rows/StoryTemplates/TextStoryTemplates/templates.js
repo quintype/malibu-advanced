@@ -89,6 +89,7 @@ export const StoryTemplate = ({
     const isStoryBehindPaywall = story.access === "subscription" && hasAccess === false;
     console.log(
       "hasAccess and isStoryBehindPaywall in textStory --->",
+      story,
       story.access,
       hasAccess,
       story.access === "subscription",

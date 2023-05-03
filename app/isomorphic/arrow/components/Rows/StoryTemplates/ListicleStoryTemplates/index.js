@@ -113,6 +113,7 @@ const ListicleStoryTemplate = ({
     const isStoryBehindPaywall = story.access === "subscription" && hasAccess === false;
     console.log(
       "hasAccess and isStoryBehindPaywall in listicleStory --->",
+      story,
       story.access,
       hasAccess,
       story.access === "subscription",
