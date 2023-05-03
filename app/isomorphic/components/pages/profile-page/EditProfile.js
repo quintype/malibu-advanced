@@ -29,8 +29,6 @@ const EditProfile = ({ member = {}, setIsEditing, isEditing }) => {
   const onProfileChange = async (event) => {
     setIsLoading(true);
     const imageList = event.target.files;
-    const signedImage = await signImage(imageList[0].name, imageList[0].type);
-
     const keys = [
       "key",
       "Content-Type",
@@ -42,9 +40,12 @@ const EditProfile = ({ member = {}, setIsEditing, isEditing }) => {
       "file",
     ];
 
-    const FormData = prepareFormData(keys, imageList, signedImage);
     try {
-      const uploadedImage = await uploadS3ToTemp(signedImage.action, FormData);
+      const signedImage = await signImage(imageList[0].name, imageList[0].type);
+      console.log("successfully signed the image");
+      const formData = prepareFormData(keys, imageList, signedImage);
+      const uploadedImage = await uploadS3ToTemp(signedImage.action, formData);
+      console.log("successfully uploaded the image to the s3-bucket");
       if (uploadedImage.status === 201) {
         tempImageKey = signedImage.key;
         setIsLoading(false);
