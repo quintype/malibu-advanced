@@ -61,7 +61,7 @@ export async function getArrowCss(state, { qtAssetHelpers = require("@quintype/f
     case "ArrowThreeColGrid":
       return getAsset("arrowThreeColGridCssChunk.css", qtAssetHelpers);
     case "ArrowThreeColSevenStories":
-      return getAsset("arrowThreeColSevenStoryCssChunk.css", qtAssetHelpers);
+      return getAsset("arrowThreeColSevenStoriesCssChunk.css", qtAssetHelpers);
     case "ArrowTwoColFourStories":
       return getAsset("arrowTwoColFourStoriesCssChunk.css", qtAssetHelpers);
     case "ArrowTwoColThreeStories":
@@ -78,12 +78,6 @@ export async function getArrowCss(state, { qtAssetHelpers = require("@quintype/f
       return getAsset("arrowFourStorySliderPortraitCssChunk.css", qtAssetHelpers);
     case "ArrowThreeColFourteenStories":
       return getAsset("arrowThreeColFourteenStoriesCssChunk.css", qtAssetHelpers);
-    case "ArrowFourColSixteenStories":
-      return getAsset("arrowFourColSixteenStoriesCssChunk.css", qtAssetHelpers);
-    case "ArrowFourColFiveStories":
-      return getAsset("arrowFourColFiveStoriesCssChunk.css", qtAssetHelpers);
-    case "ArrowTwoColSixStories":
-      return getAsset("arrowTwoColSixStoriesCssChunk.css", qtAssetHelpers);
     case "ArrowFourColSixteenStories":
       return getAsset("arrowFourColSixteenStoriesCssChunk.css", qtAssetHelpers);
     case "ArrowFourColFiveStories":

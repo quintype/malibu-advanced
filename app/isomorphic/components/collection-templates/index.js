@@ -34,7 +34,7 @@ function wrapEager(f) {
   const wrappedComponent = function WrapEager(props) {
     if (props.index === 0) {
       return (
-        <EagerLoadImages predicate={token => token === "above-fold"}>{React.createElement(f, props)}</EagerLoadImages>
+        <EagerLoadImages predicate={(token) => token === "above-fold"}>{React.createElement(f, props)}</EagerLoadImages>
       );
     } else {
       return React.createElement(f, props);
@@ -79,5 +79,5 @@ export default {
   ArrowThreeColTwelveStories: wrapEager(wrapCollectionLayout(ArrowThreeColTwelveStories)),
   ArrowFourTabbedBigStorySlider: wrapEager(wrapCollectionLayout(ArrowFourTabbedBigStorySlider)),
   ArrowFourColPortraitStories: wrapEager(wrapCollectionLayout(ArrowFourColPortraitStories)),
-  defaultTemplate: wrapEager(wrapCollectionLayout(FourColGrid))
+  defaultTemplate: wrapEager(wrapCollectionLayout(FourColGrid)),
 };

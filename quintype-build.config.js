@@ -12,7 +12,7 @@ const loadableConfigObj = {
       arrowFullScreenSliderCssChunk: "./app/isomorphic/arrow/components/Rows/FullScreenSlider",
       arrowOneColStoryListCssChunk: "./app/isomorphic/arrow/components/Rows/OneColStoryList",
       arrowThreeColGridCssChunk: "./app/isomorphic/arrow/components/Rows/ThreeColGrid",
-      arrowThreeColSevenStoryCssChunk: "./app/isomorphic/arrow/components/Rows/ThreeColSevenStory",
+      arrowThreeColSevenStoriesCssChunk: "./app/isomorphic/arrow/components/Rows/ThreeColSevenStory",
       arrowTwoColFourStoriesCssChunk: "./app/isomorphic/arrow/components/Rows/TwoColFourStory",
       arrowTwoColThreeStoriesCssChunk: "./app/isomorphic/arrow/components/Rows/TwoColThreeStory",
       arrowTwoColSevenStoriesCssChunk: "./app/isomorphic/arrow/components/Rows/TwoColSevenStories",
