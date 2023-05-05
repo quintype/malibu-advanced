@@ -18,18 +18,14 @@ const TextStoryTemplate = ({
   initAccessType,
   checkAccess,
 }) => {
-  const [hasAccess, setHasAccess] = useState(false);
+  const [hasAccess, setHasAccess] = useState(true);
 
   useEffect(() => {
     initAccessType(() => {
       checkAccess(story.id).then((res) => {
-        if (res[story.id]) {
-          const { granted } = res[story.id];
-          console.log("Access granted value in TextStoryTemplate --->", granted);
-          setHasAccess(granted);
-        } else {
-          setHasAccess(false);
-        }
+        const { granted } = res[story.id];
+        console.log("Access granted value in TextStoryTemplate --->", granted);
+        setHasAccess(granted);
       });
     });
   }, []);
