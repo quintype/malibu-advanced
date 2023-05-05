@@ -77,3 +77,18 @@ collection-layouts:
 - name : ArrowFourColPortraitStories
   display name: Arrow Four Col Portrait Stories
   options: []
+- name : ArrowCollectionFilter
+  display name: Arrow Collection Filter
+  options: []
+- name : ArrowAlternateCollectionFilter
+  display name: Arrow Alternate Collection Filter
+  options: []
+- name : ArrowAstrologyCollection
+  display name: Arrow Astrology Collection
+  options: []
+- name : ArrowOpinionCollection
+  display name: Arrow Opinion Collection
+  options: []
+- name : ArrowListicles
+  display name: Arrow Listicles
+  options: []

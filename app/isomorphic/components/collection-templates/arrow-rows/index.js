@@ -23,6 +23,11 @@ import { ArrowTwoColTenStoriesSidebar } from "./two-col-ten-stories-sidebar";
 import { ArrowFourTabbedBigStorySlider } from "./four-tabbed-big-story-slider";
 import { ArrowFourColPortraitStories } from "./four-col-portrait-stories";
 import { ArrowThreeColTwelveStories } from "./three-col-12-stories";
+import { ArrowCollectionFilter } from "./collection-filter";
+import { ArrowAlternateCollectionFilter } from "./alt-collection-filter";
+import { ArrowAstrologyCollection } from "./astrology-collection";
+import { ArrowOpinionCollection } from "./opinion-collection";
+import { ArrowListicles } from "./listicles";
 
 export {
   ArrowElevenStories,
@@ -50,4 +55,9 @@ export {
   ArrowThreeColTwelveStories,
   ArrowFourTabbedBigStorySlider,
   ArrowFourColPortraitStories,
+  ArrowCollectionFilter,
+  ArrowAlternateCollectionFilter,
+  ArrowAstrologyCollection,
+  ArrowOpinionCollection,
+  ArrowListicles,
 };
