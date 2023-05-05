@@ -68,7 +68,7 @@ export { default as AsideCollection } from "./components/Rows/AsideCollection";
 export { StoryCollection } from "./components/Rows/AsideCollection";
 export { default as VideoStoryTemplate } from "./components/Rows/StoryTemplates/VideoStoryTemplates";
 export { default as TextStoryTemplate } from "./components/Rows/StoryTemplates/TextStoryTemplates";
-export { default as LiveBlogStoryTemplate } from "./components/Rows/StoryTemplates/LiveBlogStorytemplates";
+export { default as LiveBlogStoryTemplate } from "./components/Rows/StoryTemplates/LiveBlogStoryTemplates";
 export { default as ListicleStoryTemplate } from "./components/Rows/StoryTemplates/ListicleStoryTemplates";
 export { default as ListComponent } from "./components/Rows/ListComponent";
 export { default as MagazineEditions } from "./components/Rows/MagazineEditions";
