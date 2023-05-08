@@ -28,6 +28,9 @@ import { ArrowAlternateCollectionFilter } from "./alt-collection-filter";
 import { ArrowAstrologyCollection } from "./astrology-collection";
 import { ArrowOpinionCollection } from "./opinion-collection";
 import { ArrowListicles } from "./listicles";
+import { ArrowMagazineWidget } from "./magazine-widget";
+import { ArrowMagazineEditions } from "./magazine-editions/index";
+import { ArrowListComponent } from "./list-component/index";
 
 export {
   ArrowElevenStories,
@@ -60,4 +63,7 @@ export {
   ArrowAstrologyCollection,
   ArrowOpinionCollection,
   ArrowListicles,
+  ArrowMagazineWidget,
+  ArrowMagazineEditions,
+  ArrowListComponent,
 };

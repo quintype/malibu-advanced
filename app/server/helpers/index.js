@@ -108,7 +108,12 @@ export async function getArrowCss(state, { qtAssetHelpers = require("@quintype/f
       return getAsset("arrowOpinionCollectionCssChunk.css", qtAssetHelpers);
     case "ArrowListicles":
       return getAsset("arrowListiclesCssChunk.css", qtAssetHelpers);
-
+    case "ArrowMagazineWidget":
+      return getAsset("arrowArrowMagazineWidgetCssChunk.css", qtAssetHelpers);
+    case "ArrowMagazineEditions":
+      return getAsset("arrowArrowMagazineEditionsCssChunk.css", qtAssetHelpers);
+    case "ArrowListComponent":
+      return getAsset("arrowArrowListComponentCssChunk.css", qtAssetHelpers);
     default:
       return "";
   }

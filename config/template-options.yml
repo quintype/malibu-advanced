@@ -8,87 +8,96 @@ collection-layouts:
   - name : ArrowFourColGrid
     display name: Arrow Four Col Grid
     options: []
-  - name : ArrowFourColTwelveStories
+  - name: ArrowFourColTwelveStories
     display name: Arrow Four Col 12 Stories
     options: []
-  - name : ArrowFullScreenSlider
+  - name: ArrowFullScreenSlider
     display name: Arrow Full Screen Slider
     options: []
-  - name : ArrowThreeColSevenStories
+  - name: ArrowThreeColSevenStories
     display name: Arrow Three Col Seven Stories
     options: []
-  - name : ArrowElevenStoriesRow
+  - name: ArrowElevenStoriesRow
     display name: Arrow Eleven Stories Row
     options: []
-  - name : ArrowTwoColFourStories
+  - name: ArrowTwoColFourStories
     display name: Arrow Two Col Four Stories
     options: []
-  - name : ArrowOneColStoryList
+  - name: ArrowOneColStoryList
     display name: Arrow One Col Story List
     options: []
-  - name : ArrowTwoColThreeStories
+  - name: ArrowTwoColThreeStories
     display name: Arrow Two Col Three Stories
     options: []
-  - name : ArrowTwoColSevenStories
+  - name: ArrowTwoColSevenStories
     display name: Arrow Two Col Seven Stories
     options: []
-  - name : ArrowThreeColSixStories
+  - name: ArrowThreeColSixStories
     display name: Arrow Three Col Six Stories
     options: []
-  - name : ArrowHalfScreenSlider
+  - name: ArrowHalfScreenSlider
     display name: Arrow Half Screen Slider
     options: []
-  - name : ArrowFourStorySlider
+  - name: ArrowFourStorySlider
     display name: Arrow Four Story Slider
     options: []
-  - name : ArrowFourStorySliderPortrait
+  - name: ArrowFourStorySliderPortrait
     display name: Arrow Four Story Slider Portrait
     options: []
-  - name : ArrowThreeColFourteenStories
+  - name: ArrowThreeColFourteenStories
     display name: Arrow Three Col Fourteen Stories
     options: []
-  - name : ArrowFourColSixteenStories
+  - name: ArrowFourColSixteenStories
     display name: Arrow Four Col Sixteen Stories
     options: []
-  - name : ArrowFourColFiveStories
+  - name: ArrowFourColFiveStories
     display name: Arrow Four Col Five Stories
     options: []
-  - name : ArrowTwoColSixStories
+  - name: ArrowTwoColSixStories
     display name: Arrow Two Col Six Stories
     options: []
-  - name : ArrowTwoColFourStoryHighlight
+  - name: ArrowTwoColFourStoryHighlight
     display name: Arrow Two Col Four Story Highlight
     options: []
-  - name : ArrowThreeColFlexStories
+  - name: ArrowThreeColFlexStories
     display name: Arrow Three Col Flex Stories
     options: []
-  - name : ArrowSixColSixStories
+  - name: ArrowSixColSixStories
     display name: Arrow Six Col Six Stories
     options: []
-  - name : ArrowTwoColTenStoriesSidebar
+  - name: ArrowTwoColTenStoriesSidebar
     display name: Arrow Two Col Ten Stories Sidebar
     options: []
-  - name : ArrowThreeColTwelveStories
+  - name: ArrowThreeColTwelveStories
     display name: Arrow Three Col 12 Stories
     options: []
-  - name : ArrowFourTabbedBigStorySlider
+  - name: ArrowFourTabbedBigStorySlider
     display name: Arrow Four Tabbed Big StorySlider
     options: []
-  - name : ArrowFourColPortraitStories
+  - name: ArrowFourColPortraitStories
     display name: Arrow Four Col Portrait Stories
     options: []
-  - name : ArrowCollectionFilter
+  - name: ArrowCollectionFilter
     display name: Arrow Collection Filter
     options: []
-  - name : ArrowAlternateCollectionFilter
+  - name: ArrowAlternateCollectionFilter
     display name: Arrow Alternate Collection Filter
     options: []
-  - name : ArrowAstrologyCollection
+  - name: ArrowAstrologyCollection
     display name: Arrow Astrology Collection
     options: []
-  - name : ArrowOpinionCollection
+  - name: ArrowOpinionCollection
     display name: Arrow Opinion Collection
     options: []
-  - name : ArrowListicles
+  - name: ArrowListicles
     display name: Arrow Listicles
+    options: []
+  - name: ArrowMagazineWidget
+    display name: Arrow Magazine Widget
+    options: []
+  - name: ArrowMagazineEditions
+    display name: Arrow Magazine Editions
+    options: []
+  - name: ArrowListComponent
+    display name: Arrow List Component
     options: []

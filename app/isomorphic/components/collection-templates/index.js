@@ -32,6 +32,9 @@ import {
   ArrowAstrologyCollection,
   ArrowOpinionCollection,
   ArrowListicles,
+  ArrowMagazineWidget,
+  ArrowMagazineEditions,
+  ArrowListComponent,
 } from "./arrow-rows";
 
 // This should not be needed anymore as we are using Gumlet
@@ -89,5 +92,8 @@ export default {
   ArrowAstrologyCollection: wrapEager(wrapCollectionLayout(ArrowAstrologyCollection)),
   ArrowOpinionCollection: wrapEager(wrapCollectionLayout(ArrowOpinionCollection)),
   ArrowListicles: wrapEager(wrapCollectionLayout(ArrowListicles)),
+  ArrowMagazineWidget: wrapEager(wrapCollectionLayout(ArrowMagazineWidget)),
+  ArrowMagazineEditions: wrapEager(wrapCollectionLayout(ArrowMagazineEditions)),
+  ArrowListComponent: wrapEager(wrapCollectionLayout(ArrowListComponent)),
   defaultTemplate: wrapEager(wrapCollectionLayout(FourColGrid)),
 };
