@@ -5,7 +5,7 @@ import { useDispatch } from "react-redux";
 import get from "lodash/get";
 import { updateUserProfile, signImage, uploadS3ToTemp } from "@quintype/bridgekeeper-js";
 import { MEMBER_UPDATED } from "../../store/actions";
-
+import { InputField } from "../../atoms/InputField";
 import "./profile-page.m.css";
 
 let tempImageKey = null;
@@ -81,7 +81,7 @@ const EditProfile = ({ member = {}, setIsEditing, isEditing }) => {
       <div>
         <div styleName="fields-container">
           <b>Name: </b>
-          <input
+          <InputField
             styleName="text-input"
             name="Name"
             type="text"
@@ -89,7 +89,7 @@ const EditProfile = ({ member = {}, setIsEditing, isEditing }) => {
             onChange={(e) => setName(e.target.value)}
           />
           <b>Profile Pic: </b>
-          <input styleName="file-input" name="File" type="file" onChange={onProfileChange} />
+          <InputField styleName="file-input" name="File" type="file" onChange={onProfileChange} />
           {isLoading ? <div styleName="loading">Loading Image...</div> : <div styleName="loading"></div>}
         </div>
         <div styleName="buttons-container">
