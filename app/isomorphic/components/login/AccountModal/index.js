@@ -10,6 +10,7 @@ import { OTP } from "../../molecules/forms/otp";
 import { ForgotPassword } from "../../molecules/forms/forgot-password";
 
 import "./account-modal.m.css";
+import PhoneLogin from "../../molecules/forms/phoneLogin";
 
 const AccountModal = ({ onClose, isPopup = true }) => {
   const [activeTab, setActiveTab] = useState("login");
@@ -27,9 +28,10 @@ const AccountModal = ({ onClose, isPopup = true }) => {
     setActiveTab("otp");
   };
 
-  const onSuccess = async member => {
+  const onSuccess = async (member) => {
     try {
-      const otpDetails = await sendOtp(member.email);
+      const data = { email: member.email };
+      const otpDetails = await sendOtp(data);
       otpHandler(member, otpDetails);
     } catch (err) {
       console.log(err);
@@ -47,12 +49,15 @@ const AccountModal = ({ onClose, isPopup = true }) => {
           <Login
             onLogin={(member, res) => otpHandler(member, res)}
             forgotPassword={() => setActiveTab("forgot-password")}
+            setLoginOption={setActiveTab}
           />
         );
+      case "phone":
+        return <PhoneLogin onLogin={(member, res) => otpHandler(member, res)} setLoginOption={setActiveTab} />;
       case "register":
         return (
           <SignUp
-            onSignup={member => onSuccess(member)}
+            onSignup={(member) => onSuccess(member)}
             onLogin={() => {
               setActiveTab("login");
             }}
@@ -91,7 +96,7 @@ const AccountModal = ({ onClose, isPopup = true }) => {
     <Modal onClose={onClose}>
       <div styleName="account-modal">
         <div styleName="form-wrapper">
-          {getActiveTabHeading()}
+          {activeTab !== "phone" && getActiveTabHeading()}
           <div className="forms">{getScreen()}</div>
         </div>
       </div>
@@ -99,7 +104,7 @@ const AccountModal = ({ onClose, isPopup = true }) => {
   ) : (
     <div styleName="account-modal">
       <div styleName="form-wrapper" className="form-wrapper">
-        {getActiveTabHeading()}
+        {activeTab !== "phone" && getActiveTabHeading()}
         <div className="forms">{getScreen()}</div>
       </div>
     </div>
@@ -108,7 +113,7 @@ const AccountModal = ({ onClose, isPopup = true }) => {
 
 AccountModal.propTypes = {
   onClose: func,
-  isPopup: bool
+  isPopup: bool,
 };
 
 export default AccountModal;
