@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { SocialShare } from "@quintype/components";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
