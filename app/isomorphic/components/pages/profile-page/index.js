@@ -54,7 +54,7 @@ const ProfilePageBase = ({ member, getSubscriptionForUser, cancelSubscription })
         })
         .catch((err) => console.error("Error occurred inside profile page --->", err));
     }
-  }, [global.AccessType]);
+  }, [global.AccessType, member]);
 
   const cancelSubscriptionHandler = function (subscriptionId) {
     const subscriptionIndex = subscriptions.findIndex((subscription) => subscription.id === subscriptionId);
