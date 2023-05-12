@@ -47,23 +47,14 @@ const ProfilePageBase = ({ member, initAccessType, getSubscriptionForUser, cance
   const [subscriptions, setSubscriptions] = useState([]);
 
   useEffect(() => {
-    console.log("Global.Accesstype --->", global.AccessType);
     if (global.AccessType) {
       getSubscriptionForUser()
         .then((res) => {
           setSubscriptions(res.subscriptions);
         })
         .catch((err) => console.error("Error occurred inside profile page --->", err));
-    } else {
-      initAccessType(() => {
-        return getSubscriptionForUser()
-          .then((res) => {
-            setSubscriptions(res.subscriptions);
-          })
-          .catch((err) => console.error("Error occurred inside profile page --->", err));
-      });
     }
-  }, []);
+  }, [global.AccessType]);
 
   const cancelSubscriptionHandler = function (subscriptionId) {
     const subscriptionIndex = subscriptions.findIndex((subscription) => subscription.id === subscriptionId);
