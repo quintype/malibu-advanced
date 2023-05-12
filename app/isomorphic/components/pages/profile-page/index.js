@@ -42,9 +42,9 @@ EndDateText.propTypes = {
   subscription: object,
 };
 
-const ProfilePageBase = ({ member, initAccessType, getSubscriptionForUser, cancelSubscription }) => {
+const ProfilePageBase = ({ member, getSubscriptionForUser, cancelSubscription }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [subscriptions, setSubscriptions] = useState([]);
+  const [subscriptions, setSubscriptions] = useState(null);
 
   useEffect(() => {
     if (global.AccessType) {
@@ -121,7 +121,14 @@ const ProfilePageBase = ({ member, initAccessType, getSubscriptionForUser, cance
                 Edit Profile
               </button>
             </div>
-            {getActiveSubscriptions(subscriptions)}
+            {subscriptions === null ? (
+              <div>
+                <b>Loading...</b>
+                <p>We are finding your subscriptions, Please wait</p>
+              </div>
+            ) : (
+              getActiveSubscriptions(subscriptions)
+            )}
           </div>
         )}
       </div>
@@ -131,7 +138,6 @@ const ProfilePageBase = ({ member, initAccessType, getSubscriptionForUser, cance
 
 ProfilePageBase.propTypes = {
   member: object,
-  initAccessType: func,
   getSubscriptionForUser: func,
   cancelSubscription: func,
 };
@@ -153,12 +159,11 @@ const ProfilePage = () => {
       phone={phone}
       accessTypeBkIntegrationId={accessTypeBkIntegrationId}
     >
-      {({ getSubscriptionForUser, cancelSubscription, initAccessType }) => (
+      {({ getSubscriptionForUser, cancelSubscription }) => (
         <ProfilePageBase
           member={member}
           getSubscriptionForUser={getSubscriptionForUser}
           cancelSubscription={cancelSubscription}
-          initAccessType={initAccessType}
         />
       )}
     </AccessType>
