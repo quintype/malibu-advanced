@@ -91,6 +91,10 @@ function generateSeo(config, pageType) {
 
 ampRoutes(app, {
   seo: generateSeo,
+  render: {
+    // eslint-disable-next-line
+    footerRender: ({ story, config }) => <p>This is new custom footer</p>
+  },
 });
 
 isomorphicRoutes(app, {
