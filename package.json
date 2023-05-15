@@ -13,7 +13,7 @@
   "dependencies": {
     "@loadable/component": "^5.14.1",
     "@loadable/server": "^5.14.2",
-    "@quintype/bridgekeeper-js": "^2.8.1",
+    "@quintype/bridgekeeper-js": "^2.8.2-feature-otp.1",
     "@quintype/components": "^3.0.2",
     "@quintype/framework": "7.19.4-podcast-scroll-issue.0",
     "@quintype/seo": "^1.42.1",
