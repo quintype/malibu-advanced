@@ -1,4 +1,5 @@
 /* eslint-disable no-console, no-unused-vars, import/extensions, object-shorthand, global-require */
+import React from "react";
 import createApp from "@quintype/framework/server/create-app";
 import { getClient, Collection } from "@quintype/framework/server/api-client";
 import logger from "@quintype/framework/server/logger";
@@ -91,6 +92,9 @@ function generateSeo(config, pageType) {
 
 ampRoutes(app, {
   seo: generateSeo,
+  render: {
+    navbarRender: ({config, theme }) => <h3>Custom Navbar</h3>
+  },
 });
 
 isomorphicRoutes(app, {
