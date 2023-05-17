@@ -93,7 +93,7 @@ function generateSeo(config, pageType) {
 ampRoutes(app, {
   seo: generateSeo,
   render: {
-    navbarRender: ({config, theme }) => <h3>Custom Navbar</h3>
+    navbarRender: ({ config, theme }) => <h3>Custom Navbar</h3>,
   },
 });
 
