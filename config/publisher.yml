@@ -9,6 +9,8 @@ domain_mapping:
   subdomain.lvh.me: voices
   malibu.lvh.me: localhost:3000
 publisher:
+  cdn_src: "gumlet"
+  cdn_image: "qtstage-01.gumlet.io"
   sso_login:
     is_enable: true
     redirect_Url: "<Domain>/auth/v1/oauth/token"
