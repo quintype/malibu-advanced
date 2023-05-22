@@ -22,8 +22,8 @@ export const LoginModal = function ({ setActiveTab, AccountModal, selectedPlan }
             isPopup={false}
             customCallbackUrl={global.location.href}
             onClose={() => {
-              setActiveTab("checkout");
               setShowAccountModal(false);
+              setActiveTab("checkout");
             }}
           />
         )}

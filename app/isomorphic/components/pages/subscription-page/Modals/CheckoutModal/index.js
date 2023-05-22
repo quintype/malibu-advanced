@@ -104,7 +104,9 @@ export const CheckoutModal = function ({ member, setActiveTab, initRazorPayPayme
             styleName="proceed-to-payment-btn"
             onClick={async () => {
               const paymentResponse = await initRazorPayPayment(selectedPlan.plan, "standard");
-              console.log("razorpayPaymentResponse is --->", paymentResponse);
+              if (paymentResponse.subscription) {
+                window.location.href = "";
+              }
             }}
           >
             {`Proceed to Pay ${currencyLabels[plan.price_currency]} ${
