@@ -11,7 +11,7 @@ import { MEMBER_UPDATED } from "../../store/actions";
 import "./forms.m.css";
 import { useTimer } from "../../atoms/timer";
 
-const OTP = ({ member }) => {
+const OTP = ({ member, customCallbackUrl }) => {
   const [otp, setOTP] = useState("");
   const [error, setError] = useState(false);
   const [successMsg, setSuccessMsg] = useState("");
@@ -79,7 +79,9 @@ const OTP = ({ member }) => {
       console.log("loged in successfully");
       const params = parseUrl(currentPath);
       const callbackUrl =
-        get(params, ["query", "callback_uri"]) || get(publisherAttributes, ["sso_login", "callback_Url"], "");
+        customCallbackUrl ||
+        get(params, ["query", "callback_uri"]) ||
+        get(publisherAttributes, ["sso_login", "callback_Url"], "");
       const redirectUrl =
         get(params, ["query", "redirect_uri"]) || get(publisherAttributes, ["sso_login", "redirect_Url"], "");
       const allowAjax = true;
@@ -147,6 +149,7 @@ const OTP = ({ member }) => {
 
 OTP.propTypes = {
   member: PT.object,
+  customCallbackUrl: PT.string,
 };
 
 export { OTP };
