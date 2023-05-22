@@ -12,6 +12,7 @@ import { SvgIconHandler } from "../../atoms/svg-icon-hadler";
 import "./social-login.m.css";
 
 export const SocialLoginBase = ({ loginOption, setLoginOption, googleAppId, facebookAppId, customCallbackUrl }) => {
+  console.log("Callback URL in SocialLoginBase is --->", customCallbackUrl);
   const [redirectUrl, setRedirectUrl] = useState("/");
   const publisherAttributes = useSelector((state) => get(state, ["qt", "config", "publisher-attributes"], {}));
   const currentPath = useSelector((state) => get(state, ["qt", "currentPath"], ""));
