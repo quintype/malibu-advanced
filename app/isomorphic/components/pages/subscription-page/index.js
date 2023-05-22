@@ -42,9 +42,6 @@ const SubscriptionLayout = function ({ initAccessType, initRazorPayPayment, getS
         />
       );
 
-    case "payment":
-      return <PaymentModal setActiveTab={setActiveTab} />;
-
     default:
       return <GroupsAndPlansModal member={member} setActiveTab={setActiveTab} getSubscription={getSubscription} />;
   }
