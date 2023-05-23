@@ -91,6 +91,32 @@ function generateSeo(config, pageType) {
 
 ampRoutes(app, {
   seo: generateSeo,
+  featureConfig: {
+    ga4Config: {
+      vars: {
+        GA4_MEASUREMENT_ID: "G-8V3JM8CSKL",
+        GA4_ENDPOINT_HOSTNAME: "www.google-analytics.com",
+        DEFAULT_PAGEVIEW_ENABLED: true,
+        GOOGLE_CONSENT_ENABLED: true,
+        WEBVITALS_TRACKING: true,
+        PERFORMANCE_TIMING_TRACKING: true,
+        SEND_DOUBLECLICK_BEACON: true,
+      },
+      extraUrlParams: {
+        event__str_action: "pageview",
+        event__str_test_key: "test_value",
+        user__str_Client_ID: "CLIENT_ID(_ga).",
+      },
+      customPageview: {
+        enabled: true,
+        on: "visible",
+        request: "ga4Event",
+        vars: {
+          ga4_event_name: "ga_4_pageview",
+        },
+      },
+    },
+  },
 });
 
 isomorphicRoutes(app, {
