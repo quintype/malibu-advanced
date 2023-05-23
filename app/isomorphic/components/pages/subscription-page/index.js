@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { func, object } from "prop-types";
 import { AccessType } from "@quintype/components";
 import AccountModal from "../../login/AccountModal";
-import { GroupsAndPlansModal, LoginModal, CheckoutModal, PaymentModal } from "./Modals";
+import { GroupsAndPlansModal, LoginModal, CheckoutModal } from "./Modals";
 
 import "./subscription-page.m.css";
 
@@ -55,7 +55,7 @@ SubscriptionLayout.propTypes = {
   member: object,
 };
 
-export const SubscriptionPage = function ({ config }) {
+export const SubscriptionPage = function () {
   const member = useSelector((state) => get(state, ["member"], null));
   const email = get(member, ["email"], "abc@email.com");
   const phone = get(member, ["metadata", "phone-number"], "1234");
@@ -85,8 +85,4 @@ export const SubscriptionPage = function ({ config }) {
       </AccessType>
     </>
   );
-};
-
-SubscriptionPage.propTypes = {
-  config: object,
 };

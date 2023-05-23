@@ -105,7 +105,7 @@ export const CheckoutModal = function ({ member, setActiveTab, initRazorPayPayme
             onClick={async () => {
               const paymentResponse = await initRazorPayPayment(selectedPlan.plan, "standard");
               if (paymentResponse.subscription) {
-                window.location.href = "";
+                window.location.href = "/profile";
               }
             }}
           >
