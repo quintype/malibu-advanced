@@ -73,15 +73,6 @@ export const LiveBlogStoryTemplates = ({
   };
   const StoryCards = ({ hasAccess }) => {
     const isStoryBehindPaywall = story.access === "subscription" && hasAccess === false;
-    console.log(
-      "hasAccess and isStoryBehindPaywall in liveBlogStory --->",
-      story,
-      story.access,
-      hasAccess,
-      story.access === "subscription",
-      hasAccess === false,
-      isStoryBehindPaywall
-    );
 
     return isStoryBehindPaywall ? (
       <>

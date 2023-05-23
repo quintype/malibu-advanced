@@ -60,7 +60,6 @@ const ProfilePageBase = ({ member, getSubscriptionForUser, cancelSubscription })
     const subscriptionIndex = subscriptions.findIndex((subscription) => subscription.id === subscriptionId);
     cancelSubscription(subscriptionId)
       .then((res) => {
-        console.log("cancel subscription response is --->", res, subscriptionId);
         const updatedSubscriptions = [
           ...subscriptions.slice(0, subscriptionIndex),
           ...subscriptions.slice(subscriptionIndex + 1),

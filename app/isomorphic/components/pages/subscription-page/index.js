@@ -13,7 +13,7 @@ const SubscriptionLayout = function ({ initAccessType, initRazorPayPayment, getS
   const [selectedPlan, setSelectedPlan] = useState({});
 
   useEffect(() => {
-    !global.AccessType && initAccessType(() => console.log("Accesstype is initialized"));
+    !global.AccessType && initAccessType();
   }, []);
 
   switch (activeTab) {

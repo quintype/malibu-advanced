@@ -15,7 +15,6 @@ const UserLoginPage = () => {
   const params = parseUrl(currentPath);
   const callbackUrl =
     get(params, ["query", "callback_uri"]) || get(publisherAttributes, ["sso_login", "callback_Url"], "");
-  console.log("callbackUrl is --->", callbackUrl);
   return (
     <div styleName="wrapper">
       <div styleName="header">

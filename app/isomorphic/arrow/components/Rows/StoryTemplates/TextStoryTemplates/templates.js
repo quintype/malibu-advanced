@@ -87,15 +87,6 @@ export const StoryTemplate = ({
 
   const StoryData = ({ hasAccess }) => {
     const isStoryBehindPaywall = story.access === "subscription" && hasAccess === false;
-    console.log(
-      "hasAccess and isStoryBehindPaywall in textStory --->",
-      story,
-      story.access,
-      hasAccess,
-      story.access === "subscription",
-      hasAccess === false,
-      isStoryBehindPaywall
-    );
 
     return (
       <div styleName="gap-16">

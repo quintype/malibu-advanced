@@ -24,7 +24,6 @@ const TextStoryTemplate = ({
     initAccessType(() => {
       checkAccess(story.id).then((res) => {
         const { granted } = res[story.id];
-        console.log("Access granted value in TextStoryTemplate --->", granted);
         setHasAccess(granted);
       });
     });

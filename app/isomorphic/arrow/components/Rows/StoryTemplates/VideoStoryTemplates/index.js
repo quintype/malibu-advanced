@@ -34,7 +34,6 @@ const VideoStoryTemplate = ({
     initAccessType(() => {
       checkAccess(story.id).then((res) => {
         const { granted } = res[story.id];
-        console.log("Access granted value in VideoStoryTemplate --->", granted);
         setHasAccess(granted);
       });
     });
@@ -102,15 +101,6 @@ const VideoStoryTemplate = ({
 
   const StoryData = ({ hasAccess }) => {
     const isStoryBehindPaywall = story.access === "subscription" && hasAccess === false;
-    console.log(
-      "hasAccess and isStoryBehindPaywall in videoStory --->",
-      story,
-      story.access,
-      hasAccess,
-      story.access === "subscription",
-      hasAccess === false,
-      isStoryBehindPaywall
-    );
 
     return (
       <div styleName="story-details">

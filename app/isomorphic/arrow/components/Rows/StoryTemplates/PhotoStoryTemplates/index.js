@@ -38,7 +38,6 @@ const PhotoStory = ({
     initAccessType(() => {
       checkAccess(story.id).then((res) => {
         const { granted } = res[story.id];
-        console.log("Access granted value in PhotoStoryTemplate --->", granted);
         setHasAccess(granted);
       });
     });
@@ -91,15 +90,7 @@ const PhotoStory = ({
 
   const StoryData = ({ hasAccess }) => {
     const isStoryBehindPaywall = story.access === "subscription" && hasAccess === false;
-    console.log(
-      "hasAccess and isStoryBehindPaywall in photoStory --->",
-      story,
-      story.access,
-      hasAccess,
-      story.access === "subscription",
-      hasAccess === false,
-      isStoryBehindPaywall
-    );
+
     return (
       <>
         {authorDetails && (
