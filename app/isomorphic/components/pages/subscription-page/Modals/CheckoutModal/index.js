@@ -83,7 +83,7 @@ export const CheckoutModal = ({ member, setActiveTab, initRazorPayPayment, selec
           )}
           {isCouponApplied === "applied" && (
             <div styleName="amount-saved">{`You saved ${currencyLabels[plan.price_currency]} ${
-              plan.discounted_price_cents ? plan.discounted_price_cents / 100 : plan.price_cents / 100
+              (plan.price_cents - plan.discounted_price_cents) / 100
             }/-`}</div>
           )}
           {isCouponApplied === "failed" && <div styleName="coupon-error">This coupon code is invalid</div>}
