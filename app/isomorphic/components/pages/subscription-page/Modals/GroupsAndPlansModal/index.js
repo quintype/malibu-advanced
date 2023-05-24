@@ -4,7 +4,7 @@ import get from "lodash/get";
 
 import "./group-and-plans.m.css";
 
-export const GroupsAndPlansModal = function ({ member, setActiveTab, setSelectedPlan, getSubscription }) {
+export const GroupsAndPlansModal = ({ member, setActiveTab, setSelectedPlan, getSubscription }) => {
   const [subscriptionsData, setSubscriptionsData] = useState([]);
   const [selectedSubscriptions, setSelectedSubscriptions] = useState({});
 
@@ -21,7 +21,7 @@ export const GroupsAndPlansModal = function ({ member, setActiveTab, setSelected
     setSelectedSubscriptions(defaultSelectedOptions);
   }, [subscriptionsData]);
 
-  const handlePlanSelection = function (groupName) {
+  const handlePlanSelection = (groupName) => {
     setSelectedPlan({ plan: selectedSubscriptions[groupName] });
     member ? setActiveTab("checkout") : setActiveTab("login");
   };

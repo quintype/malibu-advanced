@@ -7,7 +7,7 @@ const currencyLabels = {
   INR: "Rs.",
 };
 
-export const CheckoutModal = function ({ member, setActiveTab, initRazorPayPayment, selectedPlan, validateCoupon }) {
+export const CheckoutModal = ({ member, setActiveTab, initRazorPayPayment, selectedPlan, validateCoupon }) => {
   const [couponCode, setCouponCode] = useState("");
   const [showCouponCode, setShowCouponCode] = useState(false);
   const [isCouponApplied, setIsCouponApplied] = useState("");

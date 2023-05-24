@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { Link } from "@quintype/components";
 import "./paywall.m.css";
 
-export const Paywall = function () {
+export const Paywall = () => {
   const member = useSelector((state) => get(state, ["member"], null));
 
   return (

@@ -7,7 +7,7 @@ const currencyLabels = {
   INR: "Rs.",
 };
 
-export const LoginModal = function ({ setActiveTab, AccountModal, selectedPlan }) {
+export const LoginModal = ({ setActiveTab, AccountModal, selectedPlan }) => {
   const [showAccountModal, setShowAccountModal] = useState(true);
 
   const { plan } = selectedPlan;

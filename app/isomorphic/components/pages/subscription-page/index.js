@@ -8,7 +8,7 @@ import { GroupsAndPlansModal, LoginModal, CheckoutModal } from "./Modals";
 
 import "./subscription-page.m.css";
 
-const SubscriptionLayout = function ({ initAccessType, initRazorPayPayment, getSubscription, validateCoupon, member }) {
+const SubscriptionLayout = ({ initAccessType, initRazorPayPayment, getSubscription, validateCoupon, member }) => {
   const [activeTab, setActiveTab] = useState("subscription");
   const [selectedPlan, setSelectedPlan] = useState({});
 
@@ -55,10 +55,10 @@ SubscriptionLayout.propTypes = {
   member: object,
 };
 
-export const SubscriptionPage = function () {
+export const SubscriptionPage = () => {
   const member = useSelector((state) => get(state, ["member"], null));
-  const email = get(member, ["email"], "abc@email.com");
-  const phone = get(member, ["metadata", "phone-number"], "1234");
+  const email = get(member, ["email"], "");
+  const phone = get(member, ["metadata", "phone-number"], "");
   const { key, accessTypeBkIntegrationId } = useSelector((state) =>
     get(state, ["qt", "config", "publisher-attributes", "accesstypeConfig"], {})
   );

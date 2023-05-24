@@ -56,7 +56,7 @@ const ProfilePageBase = ({ member, getSubscriptionForUser, cancelSubscription })
     }
   }, [global.AccessType, member]);
 
-  const cancelSubscriptionHandler = function (subscriptionId) {
+  const cancelSubscriptionHandler = (subscriptionId) => {
     const subscriptionIndex = subscriptions.findIndex((subscription) => subscription.id === subscriptionId);
     cancelSubscription(subscriptionId)
       .then((res) => {
@@ -69,7 +69,7 @@ const ProfilePageBase = ({ member, getSubscriptionForUser, cancelSubscription })
       .catch((err) => console.error("Error from cancelSubscription is --->", err));
   };
 
-  const getActiveSubscriptions = function (subscriptions = []) {
+  const getActiveSubscriptions = (subscriptions = []) => {
     const activeSubscriptions = subscriptions.filter((subscription) => subscription.status === "active");
 
     if (activeSubscriptions.length === 0) {
@@ -143,8 +143,8 @@ ProfilePageBase.propTypes = {
 
 const ProfilePage = () => {
   const member = useSelector((state) => get(state, ["member"], null));
-  const email = get(member, ["email"], "abc@gmail.com");
-  const phone = get(member, ["metadata", "phone-number"], "1234");
+  const email = get(member, ["email"], "");
+  const phone = get(member, ["metadata", "phone-number"], "");
   const { key, accessTypeBkIntegrationId } = useSelector((state) =>
     get(state, ["qt", "config", "publisher-attributes", "accesstypeConfig"], {})
   );
