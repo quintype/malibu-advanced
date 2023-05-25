@@ -27,12 +27,13 @@ const ProfilePage = () => {
         setIsATGlobal(true);
       }}
     >
-      {({ getSubscriptionForUser, cancelSubscription }) => (
+      {({ initAccessType, getSubscriptionForUser, cancelSubscription }) => (
         <ProfilePageWithAccesstype
           member={member}
           getSubscriptionForUser={getSubscriptionForUser}
           cancelSubscription={cancelSubscription}
           isATGlobal={isATGlobal}
+          initAccessType={initAccessType}
         />
       )}
     </AccessType>
