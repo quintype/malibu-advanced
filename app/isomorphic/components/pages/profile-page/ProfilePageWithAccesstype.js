@@ -39,9 +39,7 @@ export const ProfilePageWithAccesstype = ({ member, getSubscriptionForUser, canc
       .filter((plan) => plan.subscription_type === "standard" || plan.subscription_type === "group_access")
       .filter((plan) => plan.status === "active" || plan.status === "pending");
 
-    if (subscriptions.length && activeSubscriptions.length === 0) {
-      return <div styleName="active-plan-label">No Active Subscriptions</div>;
-    }
+    if (activeSubscriptions.length === 0) return null;
 
     return (
       <div>
