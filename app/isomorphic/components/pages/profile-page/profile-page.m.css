@@ -79,6 +79,12 @@
   text-align: center;
 }
 
+.active-plan-label {
+  font-size: 20px;
+  font-weight: bold;
+  margin: 12px 0;
+}
+
 .end-date-text {
   font-weight: bold;
   color: var(--brand-primary-dark);

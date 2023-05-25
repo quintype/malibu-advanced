@@ -1,6 +1,6 @@
 import { SocialShare } from "@quintype/components";
 import PropTypes from "prop-types";
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useSelector } from "react-redux";
 import get from "lodash/get";
 import { SocialShareTemplate } from "../../../Molecules/SocialShareTemplate";

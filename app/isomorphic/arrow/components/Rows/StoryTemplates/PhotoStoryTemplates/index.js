@@ -2,7 +2,7 @@
 /* eslint-disable max-len */
 import { SocialShare } from "@quintype/components";
 import PropTypes from "prop-types";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import get from "lodash/get";
 import { useSelector } from "react-redux";
 import kebabCase from "lodash/kebabCase";
