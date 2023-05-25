@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useSelector } from "react-redux";
 import kebabCase from "lodash/kebabCase";
 import { StateProvider } from "../../../SharedContext";
