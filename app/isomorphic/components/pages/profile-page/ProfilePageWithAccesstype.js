@@ -24,8 +24,8 @@ export const ProfilePageWithAccesstype = ({
           setSubscriptions(res.subscriptions);
         })
         .catch((err) => console.error("Error occurred inside profile page --->", err));
-    }, [global.AccessType, member, isATGlobal]);
-  });
+    });
+  }, [global.AccessType, member, isATGlobal]);
 
   const cancelSubscriptionHandler = (subscriptionId) => {
     const subscriptionIndex = subscriptions.findIndex((subscription) => subscription.id === subscriptionId);
