@@ -35,7 +35,9 @@ export const ProfilePageWithAccesstype = ({ member, getSubscriptionForUser, canc
   };
 
   const getActiveSubscriptions = (subscriptions = []) => {
-    const activeSubscriptions = subscriptions.filter((subscription) => subscription.status === "active");
+    const activeSubscriptions = subscriptions
+      .filter((plan) => plan.subscription_type === "standard" || plan.subscription_type === "group_access")
+      .filter((plan) => plan.status === "active" || plan.status === "pending");
 
     if (activeSubscriptions.length === 0) {
       return <div styleName="active-plan-label">No Active Subscriptions</div>;
@@ -52,6 +54,30 @@ export const ProfilePageWithAccesstype = ({ member, getSubscriptionForUser, canc
               <button styleName="button" onClick={() => cancelSubscriptionHandler(subscription.id)}>
                 Cancel Subscription
               </button>
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
+
+  const getExpiredSubscriptions = (subscriptions = []) => {
+    const expiredPlans = subscriptions.filter(
+      (plan) =>
+        plan.status === "expired" &&
+        (plan.subscription_type === "standard" || plan.subscription_type === "group_access")
+    );
+
+    if (expiredPlans.length === 0) return null;
+
+    return (
+      <div>
+        <div styleName="active-plan-label">{expiredPlans.length === 1 ? "Expired Plan" : "Expired Plans"}</div>
+        {expiredPlans.map((subscription, id) => {
+          return (
+            <div key={id}>
+              <span styleName="plan-name">{`${subscription.plan_name}`}</span>
+              <EndDateText subscription={subscription} />
             </div>
           );
         })}
@@ -91,7 +117,10 @@ export const ProfilePageWithAccesstype = ({ member, getSubscriptionForUser, canc
                 <p>We are finding your subscriptions, Please wait</p>
               </div>
             ) : (
-              getActiveSubscriptions(subscriptions)
+              <>
+                {getActiveSubscriptions(subscriptions)}
+                {getExpiredSubscriptions(subscriptions)}
+              </>
             )}
           </div>
         )}

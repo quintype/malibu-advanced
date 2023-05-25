@@ -2,10 +2,10 @@ import React from "react";
 import { object } from "prop-types";
 
 export const EndDateText = ({ subscription }) => {
-  if (subscription.cancelled) {
+  if (subscription.expired) {
     return (
       <p>
-        Subscription has been cancelled and will end on:
+        Subscription has been expired on:
         <span>
           {new Date(subscription.end_timestamp).toLocaleDateString("en-IN", {
             day: "numeric",
