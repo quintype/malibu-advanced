@@ -50,14 +50,12 @@ function StoryWrapper({ isATGlobal, story, config, initAccessType, checkAccess }
   }, []);
 
   useEffect(() => {
-    initAccessType(() => {
+    if (isATGlobal) {
       checkAccess(story.id).then((res) => {
         const { granted } = res[story.id];
-        console.log("Granted in story-wrapper is --->", granted);
         setHasAccess(granted);
       });
-    });
-    console.log("isATGlobal in story-wrapper is --->", isATGlobal);
+    }
   }, [isATGlobal]);
 
   // Can switch to a different template based story-template, or only show a spoiler if index > 0

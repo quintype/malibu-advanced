@@ -99,6 +99,10 @@
   display: flex;
 }
 
+.plan {
+  margin-bottom: 10px;
+}
+
 .plan-name {
   font-size: 18px;
   font-weight: bold;

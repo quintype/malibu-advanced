@@ -39,7 +39,7 @@ export const ProfilePageWithAccesstype = ({ member, getSubscriptionForUser, canc
       .filter((plan) => plan.subscription_type === "standard" || plan.subscription_type === "group_access")
       .filter((plan) => plan.status === "active" || plan.status === "pending");
 
-    if (activeSubscriptions.length === 0) {
+    if (subscriptions.length && activeSubscriptions.length === 0) {
       return <div styleName="active-plan-label">No Active Subscriptions</div>;
     }
 
@@ -48,7 +48,7 @@ export const ProfilePageWithAccesstype = ({ member, getSubscriptionForUser, canc
         <div styleName="active-plan-label">{activeSubscriptions.length === 1 ? "ACTIVE PLAN" : "ACTIVE PLANS"}</div>
         {activeSubscriptions.map((subscription, id) => {
           return (
-            <div key={id}>
+            <div styleName="plan" key={id}>
               <span styleName="plan-name">{`${subscription.plan_name}`}</span>
               <EndDateText subscription={subscription} />
               <button styleName="button" onClick={() => cancelSubscriptionHandler(subscription.id)}>
@@ -75,7 +75,7 @@ export const ProfilePageWithAccesstype = ({ member, getSubscriptionForUser, canc
         <div styleName="active-plan-label">{expiredPlans.length === 1 ? "EXPIRED PLAN" : "EXPIRED PLANS"}</div>
         {expiredPlans.map((subscription, id) => {
           return (
-            <div key={id}>
+            <div styleName="plan" key={id}>
               <span styleName="plan-name">{`${subscription.plan_name}`}</span>
               <EndDateText subscription={subscription} />
             </div>
