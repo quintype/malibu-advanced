@@ -15,19 +15,8 @@ const LiveBlogStoryTemplate = ({
   widgetComp,
   firstChild,
   secondChild,
-  initAccessType,
-  checkAccess,
+  hasAccess,
 }) => {
-  const [hasAccess, setHasAccess] = useState(true);
-
-  useEffect(() => {
-    initAccessType(() => {
-      checkAccess(story.id).then((res) => {
-        const { granted } = res[story.id];
-        setHasAccess(granted);
-      });
-    });
-  }, []);
   const { theme = "", templateType = "default", verticalShare = "" } = config;
 
   const containerClass = templateType !== "hero-overlay" ? "container" : "";
@@ -66,8 +55,7 @@ LiveBlogStoryTemplate.propTypes = {
   storyElementsConfig: PropTypes.object,
   adComponent: PropTypes.func,
   widgetComp: PropTypes.func,
-  initAccessType: PropTypes.func,
-  checkAccess: PropTypes.func,
+  hasAccess: PropTypes.func,
 };
 
 export default StateProvider(LiveBlogStoryTemplate);

@@ -50,12 +50,12 @@ function StoryWrapper({ isATGlobal, story, config, initAccessType, checkAccess }
   }, []);
 
   useEffect(() => {
-    if (isATGlobal) {
+    initAccessType(() => {
       checkAccess(story.id).then((res) => {
         const { granted } = res[story.id];
         setHasAccess(granted);
       });
-    }
+    });
   }, [isATGlobal]);
 
   // Can switch to a different template based story-template, or only show a spoiler if index > 0
@@ -77,8 +77,7 @@ function StoryWrapper({ isATGlobal, story, config, initAccessType, checkAccess }
           config={{ ...config, ...templateConfig }}
           adWidget={adWidget}
           adPlaceholder={<AdPlaceholder height="250px" width="300px" />}
-          initAccessType={initAccessType}
-          checkAccess={checkAccess}
+          hasAccess={hasAccess}
         />
       );
     case "photo":
@@ -88,8 +87,7 @@ function StoryWrapper({ isATGlobal, story, config, initAccessType, checkAccess }
           config={{ ...config, ...templateConfig }}
           adWidget={adWidget}
           adPlaceholder={<AdPlaceholder height="250px" width="300px" />}
-          initAccessType={initAccessType}
-          checkAccess={checkAccess}
+          hasAccess={hasAccess}
         />
       );
     case "listicle":
@@ -99,8 +97,7 @@ function StoryWrapper({ isATGlobal, story, config, initAccessType, checkAccess }
           config={{ ...config, ...templateConfig }}
           adWidget={adWidget}
           adPlaceholder={<AdPlaceholder height="250px" width="300px" />}
-          initAccessType={initAccessType}
-          checkAccess={checkAccess}
+          hasAccess={hasAccess}
         />
       );
     case "live-blog":
@@ -110,8 +107,7 @@ function StoryWrapper({ isATGlobal, story, config, initAccessType, checkAccess }
           config={{ ...config, ...templateConfig }}
           adWidget={adWidget}
           adPlaceholder={<AdPlaceholder height="250px" width="300px" />}
-          initAccessType={initAccessType}
-          checkAccess={checkAccess}
+          hasAccess={hasAccess}
         />
       );
     default:
@@ -121,8 +117,7 @@ function StoryWrapper({ isATGlobal, story, config, initAccessType, checkAccess }
           config={{ ...config, ...templateConfig }}
           adWidget={adWidget}
           adPlaceholder={<AdPlaceholder height="250px" width="300px" />}
-          initAccessType={initAccessType}
-          checkAccess={checkAccess}
+          hasAccess={hasAccess}
         />
       );
   }

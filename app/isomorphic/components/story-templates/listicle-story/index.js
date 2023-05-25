@@ -2,7 +2,7 @@ import React from "react";
 import ListicleStoryTemplate from "../../../arrow/components/Rows/StoryTemplates/ListicleStoryTemplates";
 import { object, func } from "prop-types";
 
-const ListicleStory = ({ story, config, adWidget, adPlaceholder, initAccessType, checkAccess }) => {
+const ListicleStory = ({ story, config, adWidget, adPlaceholder, hasAccess }) => {
   const templateSpecific = { templateType: "headline-sideway" };
 
   return (
@@ -13,8 +13,7 @@ const ListicleStory = ({ story, config, adWidget, adPlaceholder, initAccessType,
       widgetComp={adWidget}
       firstChild={adPlaceholder}
       secondChild={adPlaceholder}
-      initAccessType={initAccessType}
-      checkAccess={checkAccess}
+      hasAccess={hasAccess}
     />
   );
 };
@@ -24,8 +23,7 @@ ListicleStory.propTypes = {
   config: object,
   adWidget: func,
   adPlaceholder: object,
-  initAccessType: func,
-  checkAccess: func,
+  hasAccess: func,
 };
 
 export default ListicleStory;

@@ -2,7 +2,7 @@ import React from "react";
 import VideoStoryTemplate from "../../../arrow/components/Rows/StoryTemplates/VideoStoryTemplates";
 import { object, func } from "prop-types";
 
-const VideoStory = ({ story, config, adWidget, adPlaceholder, initAccessType, checkAccess }) => {
+const VideoStory = ({ story, config, adWidget, adPlaceholder, hasAccess }) => {
   const templateSpecific = { templateType: "headline-priority" };
 
   return (
@@ -13,8 +13,7 @@ const VideoStory = ({ story, config, adWidget, adPlaceholder, initAccessType, ch
       widgetComp={adWidget}
       firstChild={adPlaceholder}
       secondChild={adPlaceholder}
-      initAccessType={initAccessType}
-      checkAccess={checkAccess}
+      hasAccess={hasAccess}
     />
   );
 };
@@ -24,8 +23,7 @@ VideoStory.propTypes = {
   config: object,
   adWidget: func,
   adPlaceholder: object,
-  initAccessType: func,
-  checkAccess: func,
+  hasAccess: func,
 };
 
 export default VideoStory;

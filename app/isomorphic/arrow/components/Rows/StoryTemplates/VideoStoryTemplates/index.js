@@ -25,20 +25,8 @@ const VideoStoryTemplate = ({
   adComponent,
   firstChild,
   secondChild,
-  initAccessType,
-  checkAccess,
+  hasAccess,
 }) => {
-  const [hasAccess, setHasAccess] = useState(true);
-
-  useEffect(() => {
-    initAccessType(() => {
-      checkAccess(story.id).then((res) => {
-        const { granted } = res[story.id];
-        setHasAccess(granted);
-      });
-    });
-  }, []);
-
   const heroVideo =
     story.cards
       .flatMap((card) => card["story-elements"])
@@ -270,8 +258,7 @@ VideoStoryTemplate.propTypes = {
   storyElementsConfig: PropTypes.object,
   adComponent: PropTypes.func,
   widgetComp: PropTypes.func,
-  initAccessType: PropTypes.func,
-  checkAccess: PropTypes.func,
+  hasAccess: PropTypes.func,
 };
 
 export default StateProvider(VideoStoryTemplate);
