@@ -57,6 +57,7 @@ function StoryWrapper({ isATGlobal, story, config, initAccessType, checkAccess }
         setHasAccess(granted);
       });
     });
+    console.log("isATGlobal in story-wrapper is --->", isATGlobal);
   }, [isATGlobal]);
 
   // Can switch to a different template based story-template, or only show a spoiler if index > 0

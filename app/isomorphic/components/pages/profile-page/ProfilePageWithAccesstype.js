@@ -45,7 +45,7 @@ export const ProfilePageWithAccesstype = ({ member, getSubscriptionForUser, canc
 
     return (
       <div>
-        <div styleName="active-plan-label">{activeSubscriptions.length === 1 ? "Active Plan" : "Active Plans"}</div>
+        <div styleName="active-plan-label">{activeSubscriptions.length === 1 ? "ACTIVE PLAN" : "ACTIVE PLANS"}</div>
         {activeSubscriptions.map((subscription, id) => {
           return (
             <div key={id}>
@@ -72,7 +72,7 @@ export const ProfilePageWithAccesstype = ({ member, getSubscriptionForUser, canc
 
     return (
       <div>
-        <div styleName="active-plan-label">{expiredPlans.length === 1 ? "Expired Plan" : "Expired Plans"}</div>
+        <div styleName="active-plan-label">{expiredPlans.length === 1 ? "EXPIRED PLAN" : "EXPIRED PLANS"}</div>
         {expiredPlans.map((subscription, id) => {
           return (
             <div key={id}>
