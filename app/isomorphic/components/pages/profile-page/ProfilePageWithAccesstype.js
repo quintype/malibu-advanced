@@ -7,19 +7,19 @@ import { EndDateText } from "./EndDateText";
 
 import "./profile-page.m.css";
 
-export const ProfilePageWithAccesstype = ({ member, getSubscriptionForUser, cancelSubscription }) => {
+export const ProfilePageWithAccesstype = ({ member, getSubscriptionForUser, cancelSubscription, isATGlobal }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [subscriptions, setSubscriptions] = useState(null);
 
   useEffect(() => {
-    if (global.AccessType) {
+    if (global.AccessType || isATGlobal) {
       getSubscriptionForUser()
         .then((res) => {
           setSubscriptions(res.subscriptions);
         })
         .catch((err) => console.error("Error occurred inside profile page --->", err));
     }
-  }, [global.AccessType, member]);
+  }, [global.AccessType, member, isATGlobal]);
 
   const cancelSubscriptionHandler = (subscriptionId) => {
     const subscriptionIndex = subscriptions.findIndex((subscription) => subscription.id === subscriptionId);
@@ -133,4 +133,5 @@ ProfilePageWithAccesstype.propTypes = {
   member: object,
   getSubscriptionForUser: func,
   cancelSubscription: func,
+  isATGlobal: func,
 };

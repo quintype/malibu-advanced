@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import get from "lodash/get";
 import { AccessType } from "@quintype/components";
@@ -7,6 +7,7 @@ import { ProfilePageWithAccesstype } from "./ProfilePageWithAccesstype";
 import "./profile-page.m.css";
 
 const ProfilePage = () => {
+  const [isATGlobal, setIsATGlobal] = useState(false);
   const member = useSelector((state) => get(state, ["member"], null));
   const email = get(member, ["email"], "");
   const phone = get(member, ["metadata", "phone-number"], "");
@@ -22,12 +23,16 @@ const ProfilePage = () => {
       email={email}
       phone={phone}
       accessTypeBkIntegrationId={accessTypeBkIntegrationId}
+      onATGlobalSet={() => {
+        setIsATGlobal(true);
+      }}
     >
       {({ getSubscriptionForUser, cancelSubscription }) => (
         <ProfilePageWithAccesstype
           member={member}
           getSubscriptionForUser={getSubscriptionForUser}
           cancelSubscription={cancelSubscription}
+          isATGlobal={isATGlobal}
         />
       )}
     </AccessType>
