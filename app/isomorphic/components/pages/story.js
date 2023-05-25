@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars, no-console, react/jsx-indent-props,react/jsx-wrap-multilines, no-undef, react/jsx-closing-bracket-location */
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { AccessType, InfiniteStoryBase, WithPreview } from "@quintype/components";
 import { object, shape } from "prop-types";
 
@@ -9,6 +9,7 @@ import { useSelector } from "react-redux";
 import get from "lodash/get";
 
 function StoryPageBaseWithAccesstype({ story, config }) {
+  const [isATGlobal, setIsATGlobal] = useState(false);
   const member = useSelector((state) => get(state, ["member"], null));
   const email = get(member, ["email"], "");
   const phone = get(member, ["metadata", "phone-number"], "");
@@ -24,9 +25,18 @@ function StoryPageBaseWithAccesstype({ story, config }) {
       email={email}
       phone={phone}
       accessTypeBkIntegrationId={accessTypeBkIntegrationId}
+      onATGlobalSet={() => {
+        setIsATGlobal(true);
+      }}
     >
       {({ initAccessType, checkAccess }) => (
-        <StoryWrapper story={story} config={config} initAccessType={initAccessType} checkAccess={checkAccess} />
+        <StoryWrapper
+          isATGlobal={isATGlobal}
+          story={story}
+          config={config}
+          initAccessType={initAccessType}
+          checkAccess={checkAccess}
+        />
       )}
     </AccessType>
   );
