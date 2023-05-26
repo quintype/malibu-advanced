@@ -9,15 +9,16 @@ import {
   ArrowOneColStoryList,
   ArrowThreeColGrid,
   ArrowThreeColSevenStories,
-  ArrowTwoColFourStories
+  ArrowTwoColFourStories,
 } from "./arrow-rows";
+import { FourTabbedBigStorySlider } from "../../arrow/components/Rows/FourTabbedBigStorySlider";
 
 // This should not be needed anymore as we are using Gumlet
 function wrapEager(f) {
   const wrappedComponent = function WrapEager(props) {
     if (props.index === 0) {
       return (
-        <EagerLoadImages predicate={token => token === "above-fold"}>{React.createElement(f, props)}</EagerLoadImages>
+        <EagerLoadImages predicate={(token) => token === "above-fold"}>{React.createElement(f, props)}</EagerLoadImages>
       );
     } else {
       return React.createElement(f, props);
@@ -45,5 +46,5 @@ export default {
   ArrowFullScreenSlider: wrapEager(wrapCollectionLayout(ArrowFullScreenSlider)),
   ArrowOneColStoryList: wrapEager(wrapCollectionLayout(ArrowOneColStoryList)),
   ArrowThreeColSevenStories: wrapEager(wrapCollectionLayout(ArrowThreeColSevenStories)),
-  defaultTemplate: wrapEager(wrapCollectionLayout(FourColGrid))
+  defaultTemplate: wrapEager(wrapCollectionLayout(FourTabbedBigStorySlider)),
 };
