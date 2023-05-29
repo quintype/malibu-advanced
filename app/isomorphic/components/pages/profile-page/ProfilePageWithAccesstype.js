@@ -43,7 +43,7 @@ export const ProfilePageWithAccesstype = ({
   const getActiveSubscriptions = (subscriptions = []) => {
     const activeSubscriptions = subscriptions
       .filter((plan) => plan.subscription_type === "standard" || plan.subscription_type === "group_access")
-      .filter((plan) => plan.status === "active" || plan.status === "pending");
+      .filter((plan) => plan.status === "active");
 
     if (activeSubscriptions.length === 0) return null;
 
