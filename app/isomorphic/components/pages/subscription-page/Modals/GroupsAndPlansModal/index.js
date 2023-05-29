@@ -49,9 +49,11 @@ export const GroupsAndPlansModal = ({ member, setActiveTab, setSelectedPlan, get
                     return (
                       // eslint-disable-next-line react/jsx-key
                       <option key={id} value={JSON.stringify(plan)}>
-                        {`${plan.duration_length} ${plan.duration_unit} ${plan.price_cents / 100} ${
-                          plan.price_currency
-                        }`}
+                        {`${plan.duration_length} ${
+                          plan.duration_length === 1
+                            ? plan.duration_unit
+                            : plan.duration_unit.substring(0, plan.duration_unit.length - 1)
+                        } ${plan.price_cents / 100} ${plan.price_currency}`}
                       </option>
                     );
                   })}
