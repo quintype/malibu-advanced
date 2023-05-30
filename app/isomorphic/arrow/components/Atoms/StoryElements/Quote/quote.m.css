@@ -1,7 +1,4 @@
 /* eslint-disable scss/at-rule-no-unknown */
-@value viewports: "../../../../../../assets/arrow/stylesheets/viewports.m.css";
-@value mobile from viewports;
-
 .quote .text,
 .quote-borderNone .text,
 .quote-borderTopSmall .text,
@@ -11,9 +8,6 @@
   color: var(--arrow-c-mono2);
   line-height: var(--arrow-lh-5);
   font-size: var(--arrow-fs-m);
-  @media (min-width: mobile) {
-    font-size: var(--arrow-fs-l);
-  }
 }
 
 .quote .text.light,
@@ -45,10 +39,6 @@
   font-style: italic;
   display: flex;
   margin-top: var(--arrow-spacing-s);
-  @media (min-width: mobile) {
-    font-size: var(--arrow-fs-m);
-    margin-top: var(--arrow-spacing-m);
-  }
 }
 .quote .attribution.light,
 .quote-borderNone .attribution.light,
@@ -106,7 +96,25 @@ html[dir="rtl"] {
   height: 4px;
   background-color: var(--arrow-c-brand1);
   margin-bottom: var(--arrow-spacing-xs);
-  @media (min-width: mobile) {
+}
+
+@media (min-width: 768px) {
+  .quote-borderTopSmall .line {
     margin-bottom: var(--arrow-spacing-s);
+  }
+  .quote .attribution,
+  .quote-borderNone .attribution,
+  .quote-borderLeft .attribution,
+  .quote-borderTopSmall .attribution,
+  .dark {
+    font-size: var(--arrow-fs-m);
+    margin-top: var(--arrow-spacing-m);
+  }
+  .quote .text,
+  .quote-borderNone .text,
+  .quote-borderTopSmall .text,
+  .quote-borderLeft .text,
+  .dark {
+    font-size: var(--arrow-fs-l);
   }
 }

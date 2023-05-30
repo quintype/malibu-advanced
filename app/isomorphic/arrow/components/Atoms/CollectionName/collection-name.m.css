@@ -1,13 +1,7 @@
-@custom-media --viewport-medium (width >= 768px);
-
 .collection {
   font-size: var(--arrow-fs-m);
   margin-bottom: var(--arrow-spacing-m);
   font-weight: var(--arrow-fw-bold);
-  @media (--viewport-medium) {
-    font-size: var(--arrow-fs-l);
-    margin-bottom: var(--arrow-spacing-l);
-  }
 }
 
 .collection-borderLeft {
@@ -91,4 +85,11 @@ html[dir="rtl"] {
 .light h2,
 .light h5 {
   color: var(--arrow-c-invert-mono2);
+}
+
+@media (min-width: 768px) {
+ .collection {
+  font-size: var(--arrow-fs-l);
+  margin-bottom: var(--arrow-spacing-l);
+ }
 }

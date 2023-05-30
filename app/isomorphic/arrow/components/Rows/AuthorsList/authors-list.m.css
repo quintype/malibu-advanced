@@ -1,23 +1,29 @@
 /* eslint-disable scss/at-rule-no-unknown */
 @value viewports: "../../../../../assets/arrow/stylesheets/viewports.m.css";
-@value mobile from viewports;
+@value 768px from viewports;
 
 .wrapper {
   margin: 0 var(--arrow-spacing-s);
-  @media (min-width: mobile) {
+}
+
+.linkWrapper :global(.arr--author-intro-card) {
+  margin-bottom: var(--arrow-spacing-m);
+}
+
+@media (min-width: 768px) {
+  .wrapper {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-gap: var(--arrow-spacing-l);
     margin: 0 var(--arrow-spacing-l);
   }
-  @media (min-width: tablet) {
-    margin: 0;
+  .linkWrapper :global(.arr--author-intro-card) {
+    margin-bottom: unset;
   }
 }
 
-.linkWrapper :global(.arr--author-intro-card) {
-  margin-bottom: var(--arrow-spacing-m);
-  @media (min-width: mobile) {
-    margin-bottom: unset;
+@media (min-width: 992px) {
+  .wrapper {
+    margin: 0;
   }
 }

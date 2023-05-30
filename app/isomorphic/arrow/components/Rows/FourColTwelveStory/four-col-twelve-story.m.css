@@ -1,13 +1,6 @@
-@custom-media --viewport-medium (width >= 992px);
-@custom-media --viewport-tab (width >= 768px);
-
 .columns-container {
   display: grid;
   grid-template-columns: 1fr;
-  @media (--viewport-medium) {
-    grid-template-columns: repeat(4, 1fr);
-    grid-column-gap: var(--arrow-spacing-l);
-  }
 
   :global .arr--story-card {
     margin-bottom: var(--arrow-spacing-m);
@@ -16,18 +9,12 @@
 
 .small-card-content-container {
   margin-left: var(--arrow-spacing-xs);
-  @media (--viewport-medium) {
-    margin-left: var(--arrow-spacing-s);
-  }
 }
 
 html[dir="rtl"] {
   .small-card-content-container {
     margin-left: 0;
     margin-right: var(--arrow-spacing-xs);
-    @media (--viewport-medium) {
-      margin-right: var(--arrow-spacing-s);
-    }
   }
 
   .arrow-icon {
@@ -65,7 +52,24 @@ html[dir="rtl"] {
 
 .other-news-top-container {
   margin-bottom: var(--arrow-spacing-m);
-  @media (--viewport-tab) {
+}
+
+@media (min-width: 768px) {
+  .other-news-top-container {
     margin-bottom: var(--arrow-spacing-l);
+  }
+}
+@media (min-width: 992px) {
+  html[dir="rtl"] {
+    .small-card-content-container {
+      margin-right: var(--arrow-spacing-s);
+    }
+  }
+  .small-card-content-container {
+    margin-left: var(--arrow-spacing-s);
+  }
+  .columns-container {
+    grid-template-columns: repeat(4, 1fr);
+    grid-column-gap: var(--arrow-spacing-l);
   }
 }

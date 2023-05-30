@@ -1,5 +1,3 @@
-@custom-media --viewport-medium (width >= 768px);
-
 .author-time-wrapper {
   display: flex;
   flex-wrap: wrap;
@@ -26,9 +24,6 @@
   position: relative;
   margin-right: var(--arrow-spacing-xs);
   top: -1px;
-  @media (--viewport-medium) {
-    top: -3px;
-  }
 }
 
 html[dir="rtl"] {
@@ -38,5 +33,10 @@ html[dir="rtl"] {
 
   .dash {
     padding-left: var(--arrow-spacing-xs);
+  }
+}
+@media only screen and (min-width: 768px) {
+  .dash {
+    top: -3px;
   }
 }

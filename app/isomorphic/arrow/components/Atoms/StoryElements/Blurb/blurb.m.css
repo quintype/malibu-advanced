@@ -1,32 +1,20 @@
 /* eslint-disable scss/at-rule-no-unknown */
-@value viewports: "../../../../../../assets/arrow/stylesheets/viewports.m.css";
-@value mobile from viewports;
-
 .blurb blockquote,
 .blurb-default blockquote,
 .blurb-withBorder blockquote {
   font-family: var(--arrow-typeface-secondary);
   font-size: var(--arrow-fs-s);
   line-height: var(--arrow-lh-5);
-  @media (min-width: mobile) {
-    font-size: var(--arrow-fs-m);
-  }
 }
 
 .blurb blockquote,
 .blurb-default blockquote {
   font-style: italic;
   padding-left: var(--arrow-spacing-m);
-  @media (min-width: mobile) {
-    padding-left: var(--arrow-spacing-l);
-  }
 }
 
 .blurb-withBorder blockquote {
   padding: var(--arrow-spacing-s) var(--arrow-spacing-m);
-  @media (min-width: mobile) {
-    padding: var(--arrow-spacing-m) var(--arrow-spacing-l);
-  }
 }
 
 html[dir="rtl"] {
@@ -34,9 +22,6 @@ html[dir="rtl"] {
   .blurb-default blockquote {
     padding-left: 0;
     padding-right: var(--arrow-spacing-m);
-    @media (min-width: mobile) {
-      padding-right: var(--arrow-spacing-l);
-    }
   }
 }
 
@@ -52,5 +37,29 @@ html[dir="rtl"] {
   a {
     color: var(--arrow-c-invert-mono2);
     border-bottom: 1px solid var(--arrow-c-invert-mono2);
+  }
+}
+
+@media (min-width: 768px) {
+  .blurb blockquote,
+  .blurb-default blockquote,
+  .blurb-withBorder blockquote {
+    font-size: var(--arrow-fs-m);
+  }
+
+  .blurb blockquote,
+  .blurb-default blockquote {
+    padding-left: var(--arrow-spacing-l);
+  }
+
+  .blurb-withBorder blockquote {
+    padding: var(--arrow-spacing-m) var(--arrow-spacing-l);
+  }
+
+  html[dir="rtl"] {
+    .blurb blockquote,
+    .blurb-default blockquote {
+      padding-right: var(--arrow-spacing-l);
+    }
   }
 }

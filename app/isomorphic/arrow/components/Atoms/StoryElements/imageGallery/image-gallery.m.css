@@ -1,14 +1,7 @@
-@value viewports: "../../../../../../assets/arrow/stylesheets/viewports.m.css";
-@value mobile from viewports;
-
 .image-gallery {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-gap: var(--arrow-spacing-xxs);
-  @media (min-width: mobile) {
-    grid-template-columns: repeat(3, 1fr);
-    grid-gap: var(--arrow-spacing-xs);
-  }
 }
 
 .image-gallery figure,
@@ -49,4 +42,11 @@
 
 .hyperlink-gallery-image {
   position: relative;
+}
+
+@media (min-width: 768px) {
+  .image-gallery {
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: var(--arrow-spacing-xs);
+  }
 }

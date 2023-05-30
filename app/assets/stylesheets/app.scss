@@ -54,10 +54,6 @@ a {
 
 #breaking-news-container {
   min-height: 71px;
-
-  @media screen and (min-width: 480px) {
-    min-height: 51px;
-  }
 }
 
 .container {
@@ -84,15 +80,7 @@ a {
   margin: 10px 1%;
   border: 1px solid black;
   padding: 5px;
-  width: 23%;
-
-  @media only screen and (max-width: 768px) {
-    width: 48%;
-  }
-
-  @media only screen and (max-width: 480px) {
-    width: 98%;
-  }
+  width: 98%;
 }
 
 .story-grid-item h3 {
@@ -188,4 +176,13 @@ a {
 .logo-wrapper {
   line-height: 0;
   padding: 16px 0;
+}
+
+@media only screen and (min-width: 480px) {
+  #breaking-news-container {min-height: 51px;}
+  .story-grid-item {width: 23%;}
+}
+
+@media only screen and (min-width: 480px) {
+  .story-grid-item {width: 48%;}
 }

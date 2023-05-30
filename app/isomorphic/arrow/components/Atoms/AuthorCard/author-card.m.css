@@ -1,7 +1,4 @@
 /* eslint-disable scss/at-rule-no-unknown */
-@value viewports: "../../../../../assets/arrow/stylesheets/viewports.m.css";
-@value mobile from viewports;
-
 .author-card-wrapper {
   display: flex;
 }
@@ -15,9 +12,6 @@
   display: flex;
   margin-right: var(--arrow-spacing-m);
   margin-bottom: var(--arrow-spacing-s);
-  @media (min-width: mobile) {
-    margin-right: var(--arrow-spacing-l);
-  }
 }
 
 .default .author-image-wrapper {
@@ -42,10 +36,6 @@
   border-radius: 50%;
   height: 72px;
   width: 72px;
-  @media (min-width: mobile) {
-    height: 124px;
-    width: 124px;
-  }
 }
 
 .multi-author-image img {
@@ -72,10 +62,6 @@
   justify-content: center;
   padding: 0;
   margin-left: var(--arrow-spacing-m);
-  @media (min-width: mobile) {
-    padding: var(--arrow-spacing-xs) var(--arrow-spacing-xs) var(--arrow-spacing-xs) 0;
-    margin-left: var(--arrow-spacing-l);
-  }
 }
 
 .default .author-details-wrapper {
@@ -84,9 +70,6 @@
 
 .leftAligned .author-details-wrapper {
   margin-left: var(--arrow-spacing-m);
-  @media (min-width: mobile) {
-    margin-left: var(--arrow-spacing-l);
-  }
 }
 
 .centerAligned .author-details-wrapper {
@@ -100,26 +83,17 @@
   font-size: var(--arrow-fs-xs);
   line-height: var(--arrow-lh-1);
   justify-content: center;
-  @media (min-width: mobile) {
-    font-size: var(--arrow-fs-s);
-  }
 }
 
 html[dir="rtl"] {
   .author-image-wrapper {
     margin-left: var(--arrow-spacing-m);
     margin-right: 0;
-    @media (min-width: mobile) {
-      margin-left: var(--arrow-spacing-l);
-    }
   }
 
   .leftAligned .author-details-wrapper {
     margin-right: var(--arrow-spacing-m);
     margin-left: 0;
-    @media (min-width: mobile) {
-      margin-right: var(--arrow-spacing-l);
-    }
   }
 
   .multi-author-image {
@@ -130,10 +104,6 @@ html[dir="rtl"] {
   .default .multi-author-image {
     margin-left: -16px;
     right: -12px;
-    @media (min-width: mobile) {
-      margin-left: -24px;
-      right: -12px;
-    }
   }
 
   .author-image.first-author-image {
@@ -147,9 +117,6 @@ html[dir="rtl"] {
 
 .multiple-author-style {
   font-size: var(--arrow-fs-xs);
-  @media (min-width: mobile) {
-    font-size: var(--arrow-fs-s);
-  }
 }
 
 .dot-wrapper {
@@ -161,9 +128,6 @@ html[dir="rtl"] {
   line-height: var(--arrow-lh-5);
   color: var(--arrow-c-m);
   font-size: var(--arrow-fs-tiny);
-  @media (min-width: mobile) {
-    font-size: var(--arrow-fs-xs);
-  }
 }
 
 .dark {
@@ -172,4 +136,30 @@ html[dir="rtl"] {
 
 .light {
   color: var(--arrow-c-invert-mono2);
+}
+
+@media only screen and (min-width: 768px) {
+  .author-image-wrapper {
+    margin-right: var(--arrow-spacing-l);
+  }
+  .author-image img {
+    height: 124px;
+    width: 124px;
+  }
+  .author-details-wrapper {
+    padding: var(--arrow-spacing-xs) var(--arrow-spacing-xs) var(--arrow-spacing-xs) 0;
+      margin-left: var(--arrow-spacing-l);
+  }
+  .leftAligned .author-details-wrapper {margin-left: var(--arrow-spacing-l);}
+  .author-name-share {font-size: var(--arrow-fs-s);}
+  html[dir="rtl"] {
+    .author-image-wrapper {margin-left: var(--arrow-spacing-l);}
+    .leftAligned .author-details-wrapper {margin-right: var(--arrow-spacing-l);}
+    .default .multi-author-image {
+      margin-left: -24px;
+      right: -12px;
+    }
+  }
+  .multiple-author-style {font-size: var(--arrow-fs-s);}
+  .author-bio {font-size: var(--arrow-fs-xs);}
 }

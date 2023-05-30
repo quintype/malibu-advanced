@@ -1,19 +1,9 @@
 /* eslint-disable scss/at-rule-no-unknown, no-descending-specificity, no-duplicate-selectors */
-@value viewports: "../../../../../assets/arrow/stylesheets/viewports.m.css";
-@value mobile from viewports;
-@value desktop from viewports;
-
 .four-col-five-stories {
   padding: 0 var(--arrow-spacing-s);
-  @media (min-width: desktop) {
-    padding: 0;
-  }
 }
 .wrapper {
   margin: var(--arrow-spacing-xs) 0;
-  @media (min-width: desktop) {
-    margin: var(--arrow-spacing-m) 0;
-  }
 }
 
 .first-card {
@@ -21,18 +11,6 @@
   flex-direction: column;
   gap: var(--arrow-spacing-xs);
   margin-bottom: var(--arrow-spacing-m);
-  @media (min-width: mobile) {
-    :global(.arrow-component) h6 {
-      font-size: var(--arrow-spacing-l);
-    }
-    margin-bottom: var(--arrow-spacing-l);
-  }
-  @media (min-width: desktop) {
-    flex-direction: row;
-    align-items: center;
-    gap: var(--arrow-spacing-l);
-    margin-bottom: var(--arrow-spacing-l);
-  }
 }
 
 .first-card {
@@ -44,10 +22,6 @@
     bottom: 10px;
     left: 10px;
     z-index: var(--z-index-1);
-    @media (--viewport-small) {
-      height: 24px;
-      width: 24px;
-    }
 
     :global .live-icon {
       animation: blink 1.5s linear infinite;
@@ -98,16 +72,47 @@
 .other-cards {
   display: grid;
   grid-row-gap: var(--arrow-spacing-m);
-  @media (min-width: mobile) {
-    grid-template-columns: repeat(2, 1fr);
-    grid-column-gap: var(--arrow-spacing-l);
-    grid-row-gap: var(--arrow-spacing-l);
-  }
-  @media (min-width: desktop) {
-    grid-template-columns: repeat(4, 1fr);
-  }
 }
 
 .card > div > :last-child {
   margin-top: var(--arrow-spacing-xs);
+}
+
+@media (min-width: 768px) {
+  .first-card {
+    :global(.arrow-component) h6 {
+      font-size: var(--arrow-spacing-l);
+    }
+    margin-bottom: var(--arrow-spacing-l);
+  }
+  .other-cards {
+    grid-template-columns: repeat(2, 1fr);
+    grid-column-gap: var(--arrow-spacing-l);
+    grid-row-gap: var(--arrow-spacing-l);
+  }
+  .first-card {
+    :global .arr--responsive-hero-image .story-icon,
+    :global .arr--fallback-hero-image .story-icon {
+      height: 24px;
+      width: 24px;
+    }
+  }
+}
+
+@media(min-width: 1025px) {
+  .other-cards {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .first-card {
+    flex-direction: row;
+    align-items: center;
+    gap: var(--arrow-spacing-l);
+    margin-bottom: var(--arrow-spacing-l);
+  }
+  .four-col-five-stories {
+    padding: 0;
+  }
+  .wrapper {
+    margin: var(--arrow-spacing-m) 0;
+  }
 }

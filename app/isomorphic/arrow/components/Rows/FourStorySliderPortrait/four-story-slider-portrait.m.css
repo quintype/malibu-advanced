@@ -1,32 +1,11 @@
-/*eslint-disable no-descending-specificity, scss/operator-no-unspaced */
-@custom-media --viewport-medium (width >=768px);
-@custom-media --viewport-desktop (width >=992px);
-@custom-media --viewport-mobile (width >=400px);
-
 .four-story-slider-portrait-wrapper {
   position: relative;
   margin: 0 0 var(--arrow-spacing-m) var(--arrow-spacing-s);
-
-  @media (--viewport-medium) {
-    margin: 0 0 var(--arrow-spacing-m) var(--arrow-spacing-28);
-  }
-
-  @media (--viewport-desktop) {
-    margin: 0;
-  }
 
   .story-grid {
     display: grid;
     grid-template-columns: 1fr;
     grid-gap: var(--arrow-fs-xs);
-
-    @media (--viewport-mobile) {
-      grid-template-columns: repeat(2, 1fr);
-    }
-
-    @media (--viewport-medium) {
-      grid-template-columns: repeat(4, 1fr);
-    }
   }
 
   :global {
@@ -115,20 +94,10 @@
 
     .arr--content-wrapper {
       border-radius: var(--arrow-spacing-xxs);
-
-      @media (--viewport-desktop) {
-        padding: var(--arrow-spacing-m);
-      }
     }
 
     .arr--content-wrapper time {
       color: var(--arrow-c-light);
-    }
-
-    .read-time-wrapper {
-      @media (--viewport-medium) {
-        margin-bottom: var(--arrow-spacing-xxs);
-      }
     }
 
     .arr--read-time > span:nth-child(1) > div {
@@ -160,24 +129,6 @@
       scroll-snap-align: end;
       width: 70%;
       margin: 0 0 0 4%;
-
-      @media (--viewport-medium) {
-        width: 33%;
-        margin: 0 0 0 3%;
-      }
-
-      @media (--viewport-desktop) {
-        scroll-snap-align: start;
-        width: 21%;
-        margin: 0 0 0 2%;
-      }
-    }
-
-    .scroll-snap-carousel > div:last-of-type {
-      @media (--viewport-medium) {
-        margin-left: 2%;
-        margin-right: 0;
-      }
     }
 
     .arr--story-card > a > figure {
@@ -200,14 +151,6 @@
 
     .scroll-snap-wrapper button {
       top: calc(25% + 85px);
-
-      @media (--viewport-medium) {
-        top: calc(25% + 110px);
-      }
-
-      @media (--viewport-desktop) {
-        top: calc(25% + 100px);
-      }
     }
 
     .arr--button {
@@ -232,39 +175,96 @@
 html[dir="rtl"] {
   .four-story-slider-portrait-wrapper {
     margin: 0 var(--arrow-spacing-s) var(--arrow-spacing-m) 0;
-
-    @media (--viewport-medium) {
-      margin: 0 var(--arrow-spacing-28) var(--arrow-spacing-m) 0;
-    }
-
     :global .arr--author-time > span {
       display: none;
     }
-
-    :global .scroll-snap-carousel > div {
-      @media (--viewport-desktop) {
-        margin: 0 2% 0 0;
-      }
-    }
-
-    :global .scroll-snap-carousel > div:last-of-type {
-      @media (--viewport-medium) {
-        margin-right: 2%;
-      }
-    }
-
     :global .scroll-snap-carousel > div:first-of-type {
       margin-right: 0;
     }
-
     :global .arr--seperator {
       padding: 0 var(--arrow-spacing-xxs) 0;
+    }
+  }
+}
 
-      @media (--viewport-mobile) {
-        display: none;
+@media (min-width: 768px) {
+  .four-story-slider-portrait-wrapper {
+    margin: 0 0 var(--arrow-spacing-m) var(--arrow-spacing-28);
+    .story-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+    :global {
+      .read-time-wrapper {
+        margin-bottom: var(--arrow-spacing-xxs);
+      }
+      .scroll-snap-carousel > div {
+        width: 33%;
+        margin: 0 0 0 3%;
+      }
+      .scroll-snap-carousel > div:last-of-type {
+        margin-left: 2%;
+        margin-right: 0;
+      }
+    }
+  }
+
+  html[dir="rtl"] {
+    .four-story-slider-portrait-wrapper {
+      margin: 0 var(--arrow-spacing-28) var(--arrow-spacing-m) 0;
+      :global .scroll-snap-carousel > div:last-of-type {
+        margin-right: 2%;
+      }
+    }
+  }
+}
+@media (min-width: 400px) {
+  .four-story-slider-portrait-wrapper {
+    .story-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  html[dir="rtl"] {
+    :global .arr--seperator {
+      display: none;
+    }
+  }
+}
+@media (min-width: 992px) {
+  .four-story-slider-portrait-wrapper {
+    margin: 0;
+    .story-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      grid-gap: var(--arrow-fs-xs);
+    }
+
+    :global {
+      .arr--content-wrapper {
+        padding: var(--arrow-spacing-m);
       }
 
-      @media (--viewport-desktop) {
+      .arr--content-wrapper time {
+        color: var(--arrow-c-light);
+      }
+
+      .scroll-snap-carousel > div {
+        scroll-snap-align: start;
+        width: 21%;
+        margin: 0 0 0 2%;
+      }
+
+      .scroll-snap-wrapper button {
+        top: calc(25% + 100px);
+      }
+    }
+
+  }
+  html[dir="rtl"] {
+    .four-story-slider-portrait-wrapper {
+      :global .scroll-snap-carousel > div {
+        margin: 0 2% 0 0;
+      }
+      :global .arr--seperator {
         display: block;
       }
     }

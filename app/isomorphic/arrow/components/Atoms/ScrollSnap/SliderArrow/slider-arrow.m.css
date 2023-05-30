@@ -8,9 +8,6 @@
   padding: var(--arrow-spacing-l) var(--arrow-spacing-s);
   border: none;
   border-radius: 0;
-  @media only screen and (max-width: 767px) {
-    top: calc(25% + 40px);
-  }
 }
 
 .left-arrow-dark,
@@ -42,4 +39,8 @@
 .right-arrow-rtl {
   left: 0;
   right: unset;
+}
+
+@media only screen and (max-width: 767px) {
+  .arrow {top: calc(25% + 40px);}
 }

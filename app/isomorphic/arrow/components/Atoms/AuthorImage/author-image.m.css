@@ -1,8 +1,4 @@
 /* eslint-disable scss/at-rule-no-unknown */
-@value viewports: "../../../../../assets/arrow/stylesheets/viewports.m.css";
-@value mobile from viewports;
-@value tablet from viewports;
-
 .image-container {
   top: 0;
   left: 0;
@@ -17,14 +13,6 @@
   border-radius: 50%;
   width: 160px;
   height: 160px;
-  @media (min-width: mobile) {
-    position: relative;
-    width: 224px;
-    height: 224px;
-    @media (min-width: tablet) {
-      width: 364px;
-    }
-  }
 }
 
 .square img {
@@ -36,18 +24,31 @@
   border-radius: 133.5px;
   width: 40px;
   height: 40px;
-  @media (min-width: mobile) {
-    width: 88px;
-    height: 88px;
-  }
-  @media (min-width: tablet) {
-    width: 120px;
-    height: 120px;
-  }
 }
 
 .smaller-circle.author-image img,
 .smaller-circle.author-image svg {
   width: 64px;
   height: 64px;
+}
+
+@media only sceeen and (min-width: 768px) {
+  .author-image img,.author-image svg {
+    position: relative;
+    width: 224px;
+    height: 224px;
+  }
+  .small-circle.author-image img,
+  .small-circle.author-image svg {
+    width: 88px;
+    height: 88px;
+  }
+}
+@media only screen and (min-width: 992px) {
+  .author-image img,.author-image svg {width: 364px;}
+  .small-circle.author-image img,
+  .small-circle.author-image svg {
+    width: 120px;
+    height: 120px;
+  }
 }

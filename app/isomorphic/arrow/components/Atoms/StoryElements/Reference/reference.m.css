@@ -1,15 +1,8 @@
 /* eslint-disable scss/at-rule-no-unknown */
-@value viewports: "../../../../../../assets/arrow/stylesheets/viewports.m.css";
-@value mobile from viewports;
-@value tablet from viewports;
-
 .wrapper {
   border-radius: var(--arrow-spacing-xxs);
   padding: var(--arrow-spacing-m);
   margin-bottom: var(--arrow-spacing-l);
-  @media (min-width: tablet) {
-    padding: var(--arrow-spacing-l);
-  }
 }
 
 .name {
@@ -17,17 +10,11 @@
   font-weight: var(--arrow-fw-bold);
   line-height: var(--arrow-lh-3);
   margin-bottom: var(--arrow-spacing-m);
-  @media (min-width: mobile) {
-    font-size: var(--arrow-fs-l);
-  }
 }
 
 .description {
   font-size: var(--arrow-fs-s);
   line-height: var(--arrow-lh-5);
-  @media (min-width: mobile) {
-    font-size: var(--arrow-fs-m);
-  }
 }
 
 .dark {
@@ -40,4 +27,19 @@
   background-color: var(--arrow-c-invert-mono7);
   border: solid 1px var(--arrow-c-invert-mono7);
   color: var(--arrow-c-invert-mono2);
+}
+
+@media (min-width: 768px) {
+  .name {
+    font-size: var(--arrow-fs-l);
+  }
+  .description {
+    font-size: var(--arrow-fs-m);
+  }
+}
+
+@media (min-width: 992px) {
+  .wrapper {
+    padding: var(--arrow-spacing-l);
+  }
 }

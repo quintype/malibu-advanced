@@ -1,23 +1,13 @@
 /* eslint-disable scss/at-rule-no-unknown */
-@value viewports: "../../../../../../assets/arrow/stylesheets/viewports.m.css";
-@value mobile from viewports;
-
 .promotionalMessage p {
   font-size: var(--arrow-fs-tiny);
   padding-bottom: var(--arrow-spacing-xxs);
-  @media (min-width: mobile) {
-    font-size: var(--arrow-fs-xs);
-    padding-bottom: var(--arrow-spacing-xs);
-  }
 }
 
 .textElement p,
 .dark {
   line-height: var(--arrow-lh-5);
   font-size: var(--arrow-fs-s);
-  @media (min-width: mobile) {
-    font-size: var(--arrow-fs-m);
-  }
 }
 
 .promotionalMessage a,
@@ -52,9 +42,6 @@
 .textElement ol {
   list-style: initial;
   padding: var(--arrow-spacing-m) 0 0 var(--arrow-spacing-l);
-  @media (min-width: mobile) {
-    padding: var(--arrow-spacing-m) 0 0 var(--arrow-spacing-xl);
-  }
 }
 
 .textElement ol {
@@ -70,10 +57,25 @@
   padding: var(--arrow-spacing-s) var(--arrow-spacing-m);
   display: block;
   text-align: center;
+}
 
-  @media (min-width: mobile) {
+@media (min-width: 768px) {
+  .textElement :global .cta-anchor {
     display: inline-block;
     font-size: var(--arrow-fs-m);
     padding: var(--arrow-spacing-m) var(--arrow-spacing-l);
+  }
+  .textElement ul,
+  .textElement ol {
+    padding: var(--arrow-spacing-m) 0 0 var(--arrow-spacing-xl);
+  }
+  .promotionalMessage p {
+    font-size: var(--arrow-fs-xs);
+    padding-bottom: var(--arrow-spacing-xs);
+  }
+
+  .textElement p,
+  .dark {
+    font-size: var(--arrow-fs-m);
   }
 }

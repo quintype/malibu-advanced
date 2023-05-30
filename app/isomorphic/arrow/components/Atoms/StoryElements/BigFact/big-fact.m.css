@@ -1,7 +1,4 @@
 /* eslint-disable scss/at-rule-no-unknown */
-@value viewports: "../../../../../../assets/arrow/stylesheets/viewports.m.css";
-@value mobile from viewports;
-
 .bigfact-element {
   border-bottom: 1px solid var(--arrow-c-mono5);
   border-top: 1px solid var(--arrow-c-mono5);
@@ -17,11 +14,6 @@
   font-weight: var(--arrow-fw-bold);
   color: var(--arrow-c-brand1);
   padding: var(--arrow-spacing-m) 0 var(--arrow-spacing-xxs) 0;
-  @media (min-width: mobile) {
-    font-size: 48px;
-    padding: var(--arrow-spacing-m) 0 var(--arrow-spacing-xs) 0;
-    line-height: var(--arrow-lh-3);
-  }
 }
 
 .attribution {
@@ -29,9 +21,6 @@
   font-style: italic;
   line-height: var(--arrow-lh-5);
   padding-bottom: var(--arrow-spacing-m);
-  @media (min-width: mobile) {
-    font-size: var(--arrow-fs-m);
-  }
 }
 
 .dark {
@@ -39,4 +28,15 @@
 }
 .light {
   color: var(--arrow-c-invert-mono1);
+}
+
+@media (min-width: 768px) {
+  .attribution {
+    font-size: var(--arrow-fs-m);
+  }
+  .content {
+    font-size: 48px;
+    padding: var(--arrow-spacing-m) 0 var(--arrow-spacing-xs) 0;
+    line-height: var(--arrow-lh-3);
+  }
 }

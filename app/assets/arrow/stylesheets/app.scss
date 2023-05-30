@@ -120,9 +120,6 @@
     font-style: normal;
     line-height: var(--arrow-lh-3);
     letter-spacing: normal;
-    @media only screen and (min-width: 768px) {
-      font-size: var(--arrow-fs-big);
-    }
   }
   h2 {
     font-size: var(--arrow-fs-l);
@@ -131,9 +128,6 @@
     font-style: normal;
     line-height: var(--arrow-lh-3);
     letter-spacing: normal;
-    @media only screen and (min-width: 768px) {
-      font-size: var(--arrow-fs-huge);
-    }
   }
   h3 {
     font-size: var(--arrow-fs-m);
@@ -142,9 +136,6 @@
     font-style: normal;
     line-height: var(--arrow-lh-3);
     letter-spacing: normal;
-    @media only screen and (min-width: 768px) {
-      font-size: var(--arrow-fs-l);
-    }
   }
   h4 {
     font-size: var(--arrow-fs-s);
@@ -153,9 +144,6 @@
     font-style: normal;
     line-height: var(--arrow-lh-3);
     letter-spacing: normal;
-    @media only screen and (min-width: 768px) {
-      font-size: var(--arrow-fs-m);
-    }
   }
   h5 {
     font-size: var(--arrow-fs-xs);
@@ -164,9 +152,6 @@
     font-style: normal;
     line-height: var(--arrow-lh-3);
     letter-spacing: normal;
-    @media only screen and (min-width: 768px) {
-      font-size: var(--arrow-fs-s);
-    }
   }
   h6 {
     font-size: var(--arrow-fs-xs);
@@ -229,17 +214,11 @@
 }
 
 .arr-hidden-desktop {
-  display: none;
-  @media only screen and (max-width: 768px) {
-    display: block;
-  }
+  display: block;
 }
 
 .arr-hidden-mob {
-  display: block;
-  @media only screen and (max-width: 768px) {
-    display: none;
-  }
+  display: none;
 }
 
 .arr-custom-style a {
@@ -253,25 +232,26 @@
   grid-template-columns: repeat(4, minmax(auto, 150px));
   position: relative;
   margin: 0 12px;
-  @media only screen and (min-width: 768px) {
-    grid-template-columns:
-      [grid-start] minmax(48px, auto) [container-start] repeat(12, minmax(auto, 55px)) [container-end] minmax(
-        48px,
-        auto
-      )
-      [grid-end];
-    margin: unset;
-    @media only screen and (min-width: 1025px) {
-      grid-template-columns:
-        [grid-start] minmax(56px, auto) [container-start] repeat(12, minmax(auto, 73px)) [container-end] minmax(
-          56px,
-          auto
-        )
-        [grid-end];
-    }
-  }
 }
 
 .content-style {
   display: contents;
+}
+
+@media only screen and (min-width: 768px) {
+  h1 {font-size: var(--arrow-fs-big);}
+  h2 {font-size: var(--arrow-fs-huge);}
+  h3 {font-size: var(--arrow-fs-l);}
+  h4 {font-size: var(--arrow-fs-m);}
+  h5 {font-size: var(--arrow-fs-s);}
+  .arr-story-grid {
+    grid-template-columns: [grid-start] minmax(48px, auto) [container-start] repeat(12, minmax(auto, 55px)) [container-end] minmax(48px,auto)[grid-end];
+    margin: unset;
+  }
+  .arr-hidden-desktop {display: none;}
+  .arr-hidden-mob {display: block;}
+}
+
+@media only screen and (min-width: 1025px) {
+  .arr-story-grid {grid-template-columns: [grid-start] minmax(56px, auto) [container-start] repeat(12, minmax(auto, 73px)) [container-end] minmax(56px,auto)[grid-end];}
 }

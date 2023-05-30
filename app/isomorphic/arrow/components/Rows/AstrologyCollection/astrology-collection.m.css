@@ -1,5 +1,3 @@
-@custom-media --viewport-medium (width >= 768px);
-@custom-media --viewport-large (width >= 1024px);
 .wrapper {
   text-align: center;
 
@@ -19,21 +17,12 @@
   line-height: var(--arrow-lh-3);
   margin-bottom: var(--arrow-spacing-xl);
   color: var(--arrow-c-mono4);
-  @media (--viewport-medium) {
-    max-width: 80%;
-    margin-left: auto;
-    margin-right: auto;
-  }
 }
 
 .tab {
   display: flex;
   justify-content: center;
   margin-bottom: var(--arrow-spacing-xl);
-
-  @media (--viewport-medium) {
-    margin-bottom: var(--arrow-spacing-48);
-  }
 }
 
 .child-collections {
@@ -81,14 +70,6 @@
   border-bottom: var(--arrow-spacing-xxs) solid var(--arrow-c-brand1);
 }
 
-.main-wrapper {
-  @media (--viewport-medium) {
-    display: grid;
-    grid-template-columns: 9fr 3fr;
-    grid-gap: var(--arrow-spacing-s);
-  }
-}
-
 .main-wrapper-container {
   max-width: 1000px;
   margin-left: auto;
@@ -104,10 +85,6 @@
   animation-delay: 1s;
   justify-content: space-between;
 
-  @media (--viewport-large) {
-    grid-template-columns: repeat(6, 1fr);
-  }
-
   :global .arr--fallback-image {
     border-radius: 50%;
   }
@@ -117,11 +94,6 @@
   flex-basis: 32%;
   margin-bottom: var(--arrow-spacing-l);
   padding: 0 var(--arrow-spacing-xs);
-
-  @media (--viewport-medium) {
-    flex-basis: 16%;
-  }
-
   :global .qt-image {
     border-radius: 50%;
     border: solid 1px var(--arrow-c-invert-mono7);
@@ -137,11 +109,6 @@
     height: 56px;
     margin-left: auto;
     margin-right: auto;
-
-    @media (--viewport-medium) {
-      width: 88px;
-      height: 88px;
-    }
   }
 }
 
@@ -161,5 +128,31 @@
   }
   to {
     opacity: 1;
+  }
+}
+
+@media (min-width: 768px) {
+  .collection-summary {
+    max-width: 80%;
+    margin-left: auto;
+  }
+
+  .tab {
+    margin-bottom: var(--arrow-spacing-48);
+  }
+  .main-wrapper {
+    display: grid;
+    grid-template-columns: 9fr 3fr;
+    grid-gap: var(--arrow-spacing-s);
+  }
+  .card {
+    flex-basis: 16%;
+    :global .arr--hero-image {
+      width: 88px;
+       height: 88px;
+    }
+  }
+  .subCollection-stories {
+    grid-template-columns: repeat(6, 1fr);
   }
 }

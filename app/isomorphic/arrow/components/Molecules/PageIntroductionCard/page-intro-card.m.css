@@ -1,30 +1,14 @@
 /* eslint-disable scss/at-rule-no-unknown */
-@value viewports: "../../../../../assets/arrow/stylesheets/viewports.m.css";
-@value mobile from viewports;
-@value tablet from viewports;
-
 .author-page-wrapper:global(.full-width-with-padding) {
   text-align: center;
   padding-top: 40px;
   padding-bottom: 32px;
-  @media (min-width: mobile) {
-    padding-top: 48px;
-    padding-bottom: 48px;
-    @media (min-width: tablet) {
-      padding-right: 302px;
-      padding-left: 301px;
-      padding-top: 60px;
-    }
-  }
 }
 
 .pageTitle {
   font-size: var(--arrow-fs-l);
   color: var(--arrow-c-mono2);
   padding-bottom: var(--arrow-spacing-xs);
-  @media (min-width: mobile) {
-    font-size: var(--arrow-fs-huge);
-  }
 }
 
 .borderBottom {
@@ -48,9 +32,6 @@
   font-size: var(--arrow-fs-xs);
   line-height: var(--arrow-lh-5);
   color: var(--arrow-c-mono2);
-  @media (min-width: mobile) {
-    font-size: var(--arrow-fs-s);
-  }
 }
 
 .dark {
@@ -59,4 +40,25 @@
 
 .light {
   color: var(--arrow-c-invert-mono2);
+}
+
+@media (min-width: 768px) {
+  .pageDescription {
+    font-size: var(--arrow-fs-s);
+  }
+  .pageTitle {
+    font-size: var(--arrow-fs-huge);
+  }
+  author-page-wrapper:global(.full-width-with-padding) {
+    padding-top: 48px;
+    padding-bottom: 48px;
+  }
+}
+
+@media (min-width: 992px) {
+  .author-page-wrapper:global(.full-width-with-padding) {
+    padding-right: 302px;
+    padding-left: 301px;
+    padding-top: 60px;
+  }
 }

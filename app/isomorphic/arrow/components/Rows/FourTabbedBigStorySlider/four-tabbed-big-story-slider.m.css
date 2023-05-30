@@ -1,20 +1,3 @@
-/* eslint-disable scss/at-rule-no-unknown, no-descending-specificity */
-@value viewports: "../../../../../assets/arrow/stylesheets/viewports.m.css";
-@value mobile from viewports;
-@value desktop from viewports;
-
-@custom-media --viewport-mobile (width < 768px);
-@custom-media --viewport-desktop (width > 1024px);
-
-@media (--viewport-mobile) {
-  .four-tabbed-big-story-slider {
-    padding: 0 var(--arrow-spacing-s);
-  }
-  .story-card-content {
-    display: none;
-  }
-}
-
 .four-tabbed-big-story-slider {
   :global {
     .author-name,
@@ -39,10 +22,6 @@
       bottom: 10px;
       left: 10px;
       z-index: var(--z-index-1);
-      @media (--viewport-mobile) {
-        height: 24px;
-        width: 24px;
-      }
     }
 
     .live-icon {
@@ -180,13 +159,6 @@
   h6 {
     margin-bottom: 0;
   }
-
-  @media (min-width: mobile) {
-    min-width: 44%;
-  }
-  @media (min-width: desktop) {
-    min-width: 30%;
-  }
 }
 
 .story.dark:hover,
@@ -241,7 +213,17 @@
   }
 }
 
-@media only screen and (max-width: desktop) {
+@media(min-width: 768px) {
+  .story-headline-container {
+    min-width: 44%;
+  }
+}
+@media(min-width: 1025px) {
+  .story-headline-container {
+    min-width: 30%;
+  }
+}
+@media only screen and (max-width: 1025px) {
   .four-tabbed-big-story-slider {
     :global {
       .section-tag {
@@ -255,11 +237,27 @@
   }
 }
 
-@media (--viewport-desktop) {
+@media (max-width: 1024px) {
   .four-tabbed-big-story-slider {
     :global {
       .arr--author-time {
         margin-bottom: 8px;
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .four-tabbed-big-story-slider {
+    padding: 0 var(--arrow-spacing-s);
+    .story-card-content {
+      display: none;
+    }
+    :global {
+      .arr--responsive-hero-image .story-icon,
+      .arr--fallback-hero-image .story-icon {
+        height: 24px;
+        width: 24px;
       }
     }
   }

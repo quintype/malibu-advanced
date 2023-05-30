@@ -1,15 +1,9 @@
 /* eslint-disable scss/at-rule-no-unknown */
-@value viewports: "../../../../../assets/arrow/stylesheets/viewports.m.css";
-@value mobile from viewports;
-
 .caption {
   font-size: 12px;
   font-family: var(--arrow-typeface-secondary);
   margin: var(--arrow-spacing-xs) 0;
   line-height: var(--arrow-lh-5);
-  @media (min-width: mobile) {
-    font-size: var(--arrow-fs-tiny);
-  }
 }
 
 .wrapper {
@@ -38,4 +32,7 @@ html[dir="rtl"] {
     padding-right: var(--arrow-spacing-s);
     display: inline-block;
   }
+}
+@media only screen and (min-width: 768px) {
+  .caption {font-size: var(--arrow-fs-tiny);}
 }

@@ -1,10 +1,5 @@
-@custom-media --viewport-medium (width >= 768px);
-
 .section {
   margin-bottom: var(--arrow-spacing-xxs);
-  @media (--viewport-medium) {
-    margin-bottom: var(--arrow-spacing-xs);
-  }
 }
 .section-borderBottomSml .border-bottom {
   width: 20px;
@@ -41,13 +36,19 @@ html[dir="rtl"] {
   align-self: self-start;
   display: inline-flex;
   padding: var(--arrow-spacing-xxs) var(--arrow-spacing-s);
-  @media (--viewport-medium) {
-    padding: var(--arrow-spacing-xs) var(--arrow-spacing-m);
-  }
 }
 .dark {
   color: var(--arrow-c-mono2);
 }
 .light {
   color: var(--arrow-c-invert-mono2);
+}
+
+@media (min-width: 768px) {
+  .section {
+    margin-bottom: var(--arrow-spacing-xs);
+  }
+  .section-solid {
+    padding: var(--arrow-spacing-xs) var(--arrow-spacing-m);
+  }
 }
