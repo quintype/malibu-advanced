@@ -11,8 +11,9 @@ export const CheckoutModal = ({ member, setActiveTab, initRazorPayPayment, selec
   const [couponCode, setCouponCode] = useState("");
   const [showCouponCode, setShowCouponCode] = useState(false);
   const [isCouponApplied, setIsCouponApplied] = useState("");
+  const [plan, setPlan] = useState(selectedPlan.plan);
 
-  const { plan } = selectedPlan;
+  // const { plan } = selectedPlan;
 
   return (
     <div styleName="modal">
@@ -65,9 +66,11 @@ export const CheckoutModal = ({ member, setActiveTab, initRazorPayPayment, selec
                     validateCoupon(plan.id, couponCode)
                       .then((res) => {
                         if (res.valid) {
-                          plan.discounted_price_cents = res.discount_details.discounted_price_cents;
-                          plan.coupon_discount = res.discount_details.value;
+                          const updatedPlan = { ...plan };
+                          updatedPlan.discounted_price_cents = res.discount_details.discounted_price_cents;
+                          updatedPlan.coupon_discount = res.discount_details.value;
                           setIsCouponApplied("applied");
+                          setPlan(updatedPlan);
                         } else {
                           setIsCouponApplied("failed");
                         }
@@ -91,7 +94,7 @@ export const CheckoutModal = ({ member, setActiveTab, initRazorPayPayment, selec
         <div styleName="total-payment">
           <div styleName="label">To Pay</div>
           <div styleName="price">{`${currencyLabels[plan.price_currency]} ${
-            plan.discounted_price_cents ? plan.discounted_price_cents / 100 : plan.price_cents / 100
+            plan.discounted_price_cents !== undefined ? plan.discounted_price_cents / 100 : plan.price_cents / 100
           }/-`}</div>
         </div>
         <div>
@@ -110,7 +113,7 @@ export const CheckoutModal = ({ member, setActiveTab, initRazorPayPayment, selec
             }}
           >
             {`Proceed to Pay ${currencyLabels[plan.price_currency]} ${
-              plan.discounted_price_cents ? plan.discounted_price_cents / 100 : plan.price_cents / 100
+              plan.discounted_price_cents !== undefined ? plan.discounted_price_cents / 100 : plan.price_cents / 100
             }/-`}
           </button>
         </div>
