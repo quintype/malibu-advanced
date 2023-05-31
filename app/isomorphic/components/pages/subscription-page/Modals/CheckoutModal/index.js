@@ -69,6 +69,7 @@ export const CheckoutModal = ({ member, setActiveTab, initRazorPayPayment, selec
                           const updatedPlan = { ...plan };
                           updatedPlan.discounted_price_cents = res.discount_details.discounted_price_cents;
                           updatedPlan.coupon_discount = res.discount_details.value;
+                          updatedPlan.coupon_code = couponCode;
                           setIsCouponApplied("applied");
                           setPlan(updatedPlan);
                         } else {
@@ -106,7 +107,9 @@ export const CheckoutModal = ({ member, setActiveTab, initRazorPayPayment, selec
           <button
             styleName="proceed-to-payment-btn"
             onClick={async () => {
-              const paymentResponse = await initRazorPayPayment(plan, "standard");
+              const updatedPlan = { ...plan };
+              updatedPlan.price_cents = updatedPlan.discounted_price_cents;
+              const paymentResponse = await initRazorPayPayment(updatedPlan, "standard");
               if (paymentResponse.subscription) {
                 window.location.href = "/profile";
               }
