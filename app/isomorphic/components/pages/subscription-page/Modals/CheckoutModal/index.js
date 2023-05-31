@@ -107,9 +107,7 @@ export const CheckoutModal = ({ member, setActiveTab, initRazorPayPayment, selec
           <button
             styleName="proceed-to-payment-btn"
             onClick={async () => {
-              const updatedPlan = { ...plan };
-              updatedPlan.price_cents = updatedPlan.discounted_price_cents;
-              const paymentResponse = await initRazorPayPayment(updatedPlan, "standard");
+              const paymentResponse = await initRazorPayPayment(plan, "standard");
               if (paymentResponse.subscription) {
                 window.location.href = "/profile";
               }
