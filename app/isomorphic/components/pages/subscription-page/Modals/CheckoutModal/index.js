@@ -106,7 +106,7 @@ export const CheckoutModal = ({ member, setActiveTab, initRazorPayPayment, selec
           <button
             styleName="proceed-to-payment-btn"
             onClick={async () => {
-              const paymentResponse = await initRazorPayPayment(selectedPlan.plan, "standard");
+              const paymentResponse = await initRazorPayPayment(plan, "standard");
               if (paymentResponse.subscription) {
                 window.location.href = "/profile";
               }
