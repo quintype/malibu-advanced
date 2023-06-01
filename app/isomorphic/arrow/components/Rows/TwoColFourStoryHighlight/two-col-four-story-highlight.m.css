@@ -1,19 +1,6 @@
-/* eslint-disable scss/at-rule-no-unknown */
-@value viewports: "../../../../../assets/arrow/stylesheets/viewports.m.css";
-@value mobile from viewports;
-@value desktop from viewports;
-
 .componentWrapper:global(.arrow-component.full-width-with-padding) {
   display: flex;
   flex-direction: column-reverse;
-  @media (min-width: mobile) {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-column-gap: var(--arrow-spacing-l);
-  }
-  @media (min-width: mobile) and (max-width: desktop) {
-    padding: var(--arrow-spacing-m) var(--arrow-spacing-s) var(--arrow-spacing-xs) var(--arrow-spacing-s);
-  }
 }
 
 .bulletCardWrapper {
@@ -54,49 +41,12 @@
   margin: var(--arrow-spacing-m) 0 var(--arrow-spacing-xs) 22px;
 }
 
-.highlightWrapper :global(.arr--collection-name) {
-  @media (max-width: mobile) {
-    display: none;
-  }
-}
-
-.coverCardWrapper :global(.arr--collection-name) {
-  @media (min-width: mobile) {
-    display: none;
-  }
-
-  @media (max-width: mobile) {
-    padding: 0 var(--arrow-spacing-s);
-  }
-}
-
-.coverCardWrapper {
-  @media (max-width: mobile) {
-    margin-bottom: var(--arrow-spacing-l);
-  }
-}
-
 .storyHighlightWrapper :global(.arr--story-card) {
   width: 100%;
 }
 
-.highlightWrapper{
-  @media (max-width: mobile) {
-    padding: 0 var(--arrow-spacing-s) var(--arrow-spacing-m) var(--arrow-spacing-s);
-  }
-}
-
-.coverCardWrapper :global(.arr--story-card) > :nth-child(2) {
-  @media (max-width: mobile) {
-    padding: var(--arrow-spacing-m) var(--arrow-spacing-s);
-  }
-}
-
 .storyHighlightWrapper > :last-child :global(.arr--story-card) {
   border-bottom: none;
-  @media (min-width: mobile) {
-    padding-bottom: var(--arrow-spacing-xs);
-  }
 }
 
 html[dir="rtl"] {
@@ -113,5 +63,45 @@ html[dir="rtl"] {
 
   .bulletStyle :global(.arr--button) {
     margin: var(--arrow-spacing-m) 22px var(--arrow-spacing-xs) 0;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1025px) {
+  .componentWrapper:global(.arrow-component.full-width-with-padding) {
+    padding: var(--arrow-spacing-m) var(--arrow-spacing-s) var(--arrow-spacing-xs) var(--arrow-spacing-s);
+  }
+}
+
+@media (min-width: 768px) {
+  .storyHighlightWrapper > :last-child :global(.arr--story-card) {
+    padding-bottom: var(--arrow-spacing-xs);
+  }
+  .highlightWrapper{
+    padding: 0 var(--arrow-spacing-s) var(--arrow-spacing-m) var(--arrow-spacing-s);
+  }
+
+  .coverCardWrapper :global(.arr--story-card) > :nth-child(2) {
+    padding: var(--arrow-spacing-m) var(--arrow-spacing-s);
+  }
+  .coverCardWrapper {
+    margin-bottom: var(--arrow-spacing-l);
+  }
+  .componentWrapper:global(.arrow-component.full-width-with-padding) {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-column-gap: var(--arrow-spacing-l);
+  }
+  .highlightWrapper :global(.arr--collection-name) {
+    display: none;
+  }
+
+  .coverCardWrapper :global(.arr--collection-name) {
+    display: none;
+  }
+}
+
+@media(max-width: 768px) {
+  .coverCardWrapper :global(.arr--collection-name) {
+    padding: 0 var(--arrow-spacing-s);
   }
 }

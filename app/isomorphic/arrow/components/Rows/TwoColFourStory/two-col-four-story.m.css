@@ -1,32 +1,16 @@
-@custom-media --viewport-medium (width >= 768px);
 .two-col-four-story {
   padding: 0 var(--arrow-spacing-s);
-  @media (--viewport-medium) {
-    padding: 0;
-  }
 }
 .wrapper {
   margin: var(--arrow-spacing-xs) 0;
-  @media (--viewport-medium) {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-column-gap: var(--arrow-spacing-l);
-    margin: var(--arrow-spacing-m) 0;
-  }
 }
 .first-card {
   margin-bottom: 16px;
-  @media (--viewport-medium) {
-    margin: 0;
-  }
 }
 
 .first-card.border-box {
   padding: 0;
   margin-bottom: var(--arrow-fs-xs);
-  @media (--viewport-medium) {
-    margin: 0;
-  }
 }
 
 .border-box.dark {
@@ -41,9 +25,6 @@
 
 .storyCards > .card {
   margin-bottom: var(--arrow-spacing-m);
-  @media (--viewport-medium) {
-    margin-bottom: var(--arrow-spacing-l);
-  }
 }
 .storyCards > :last-child {
   margin-bottom: 0;
@@ -60,5 +41,24 @@
   }
   :global(.arr--story-card .arr--content-wrapper) {
     flex-basis: 60%;
+  }
+}
+
+@media(min-width: 768px) {
+  .two-col-four-story {
+    padding: 0;
+  }
+  .wrapper {
+    display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-column-gap: var(--arrow-spacing-l);
+      margin: var(--arrow-spacing-m) 0;
+  }
+  .first-card, .first-card.border-box {
+    margin: 0;
+  }
+
+  .storyCards > .card {
+    margin-bottom: var(--arrow-spacing-l);
   }
 }

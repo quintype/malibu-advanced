@@ -1,25 +1,13 @@
-@custom-media --viewport-medium (width >= 768px);
 .wrapper {
   padding: 0 var(--arrow-spacing-s);
-  @media (--viewport-medium) {
-    padding: 0;
-  }
 }
 .three-col-five-stories {
   display: flex;
   flex-direction: column;
-  @media (--viewport-medium) {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-column-gap: var(--arrow-spacing-l);
-  }
 }
 
 .card {
   margin-bottom: var(--arrow-spacing-s);
-  @media (--viewport-medium) {
-    margin-bottom: var(--arrow-spacing-l);
-  }
 }
 .card-bottom {
   margin-bottom: var(--arrow-spacing-s);
@@ -27,10 +15,6 @@
 .cards {
   border-bottom: 1px solid var(--arrow-c-mono5);
   margin-bottom: var(--arrow-spacing-m);
-  @media (--viewport-medium) {
-    margin-bottom: 0;
-    border-bottom: unset;
-  }
 }
 .border-unset :global(.arr--story-card) {
   border: none;
@@ -41,4 +25,22 @@
 
 .wrapper :global(.arr--button) {
   margin: 0 auto var(--arrow-spacing-xs) auto;
+}
+
+@media (min-width: 768px) {
+  .cards {
+    margin-bottom: 0;
+    border-bottom: unset;
+  }
+  .card {
+    margin-bottom: var(--arrow-spacing-l);
+  }
+  .wrapper {
+    padding: 0;
+  }
+  .three-col-five-stories {
+    display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      grid-column-gap: var(--arrow-spacing-l);
+  }
 }

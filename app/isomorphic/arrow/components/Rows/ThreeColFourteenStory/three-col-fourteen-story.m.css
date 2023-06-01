@@ -1,28 +1,8 @@
-@custom-media --viewport-medium (width >= 768px);
-
 .wrapper {
   padding: 0 var(--arrow-spacing-s);
-  @media (--viewport-medium) {
-    padding: 0;
-  }
-}
-
-.storycards-row {
-  @media (--viewport-medium) {
-    display: grid;
-    grid-template-columns: repeat(12, 1fr);
-    grid-column-gap: var(--arrow-spacing-l);
-    align-items: flex-start;
-  }
 }
 
 .card-with-separator {
-  @media (--viewport-medium) {
-    :global .arr--story-card:last-child {
-      border-bottom: none;
-    }
-  }
-
   :global .arr--story-card {
     margin-bottom: var(--arrow-spacing-m);
   }
@@ -40,12 +20,31 @@
   grid-column: 10/13;
   display: flex;
   flex-direction: column;
-  @media (--viewport-medium) {
-    display: block;
-  }
 }
 
 .ad-slot {
   order: -1;
   margin-bottom: var(--arrow-spacing-m);
+}
+
+@media (min-width: 768px) {
+  .third-card {
+    grid-column: 10/13;
+    display: flex;
+    flex-direction: column;
+  }
+  .card-with-separator {
+    :global .arr--story-card:last-child {
+      border-bottom: none;
+    }
+  }
+  .storycards-row {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-column-gap: var(--arrow-spacing-l);
+    align-items: flex-start;
+  }
+  .wrapper {
+    padding: 0;
+  }
 }

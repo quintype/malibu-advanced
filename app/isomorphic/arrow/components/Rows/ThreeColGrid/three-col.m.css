@@ -1,20 +1,10 @@
-@custom-media --viewport-medium (width >= 768px);
 .three-col-grid {
   padding: 0 var(--arrow-spacing-s);
-  @media (--viewport-medium) {
-    padding: 0;
-  }
 }
 .wrapper {
   display: flex;
   flex-direction: column;
   margin: var(--arrow-spacing-xs) 0 0;
-  @media (--viewport-medium) {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-gap: var(--arrow-spacing-l);
-    margin: var(--arrow-spacing-m) 0;
-  }
 }
 .ad {
   margin-bottom: var(--arrow-fs-xs);
@@ -22,17 +12,11 @@
 
 .cards {
   margin-bottom: var(--arrow-spacing-m);
-  @media (--viewport-medium) {
-    margin-bottom: 0;
-  }
 }
 
 .wrapper > :first-child,
 .ad {
   order: -1;
-  @media (--viewport-medium) {
-    order: 0;
-  }
 }
 
 .three-col-grid :global(.arr--story-card .arr--hero-image) {
@@ -40,4 +24,23 @@
 }
 .three-col-grid :global(.arr--story-card .arr--content-wrapper) {
   flex-basis: 60%;
+}
+
+@media (min-width: 768px) {
+  .wrapper > :first-child,
+  .ad {
+    order: 0;
+  }
+  .cards {
+    margin-bottom: 0;
+  }
+  .three-col-grid {
+    padding: 0;
+  }
+  .wrapper {
+    display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-gap: var(--arrow-spacing-l);
+      margin: var(--arrow-spacing-m) 0;
+  }
 }

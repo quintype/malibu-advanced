@@ -1,12 +1,8 @@
-/* eslint-disable scss/at-rule-no-unknown */
-@value viewports: "../../../../../assets/arrow/stylesheets/viewports.m.css";
-@value mobile from viewports;
-
 .description {
   font-size: var(--arrow-fs-xs);
   margin-top: var(--arrow-spacing-xs);
   line-height: var(--arrow-lh-5);
-  @media (min-width: mobile) {
+  @media (min-width: 768px) {
     font-size: var(--arrow-fs-s);
   }
 }
