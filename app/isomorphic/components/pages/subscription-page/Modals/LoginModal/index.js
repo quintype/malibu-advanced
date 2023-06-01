@@ -38,7 +38,11 @@ export const LoginModal = ({ setActiveTab, AccountModal, selectedPlan }) => {
             <div styleName="price">{`${currencyLabels[plan.price_currency]} ${plan.price_cents / 100}/-`}</div>
           </div>
         </div>
-        <div styleName="validity">{`Valid for ${plan.duration_length} ${plan.duration_unit}`}</div>
+        <div styleName="validity">{`Valid for ${plan.duration_length} ${
+          plan.duration_length === 1
+            ? plan.duration_unit.substring(0, plan.duration_unit.length - 1)
+            : plan.duration_unit
+        }`}</div>
       </div>
     </div>
   );

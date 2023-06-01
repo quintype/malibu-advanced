@@ -13,8 +13,6 @@ export const CheckoutModal = ({ member, setActiveTab, initRazorPayPayment, selec
   const [isCouponApplied, setIsCouponApplied] = useState("");
   const [plan, setPlan] = useState(selectedPlan.plan);
 
-  // const { plan } = selectedPlan;
-
   return (
     <div styleName="modal">
       <div styleName="checkout-label">Checkout</div>
@@ -40,7 +38,11 @@ export const CheckoutModal = ({ member, setActiveTab, initRazorPayPayment, selec
               <div styleName="price">{`${currencyLabels[plan.price_currency]} ${plan.price_cents / 100}/-`}</div>
             </div>
           </div>
-          <div styleName="validity">{`Valid for ${plan.duration_length} ${plan.duration_unit}`}</div>
+          <div styleName="validity">{`Valid for ${plan.duration_length} ${
+            plan.duration_length === 1
+              ? plan.duration_unit.substring(0, plan.duration_unit.length - 1)
+              : plan.duration_unit
+          }`}</div>
           <div styleName="plan-and-coupon-btns">
             <div styleName="change-plan-btn" onClick={() => setActiveTab("subscription")}>
               Change Plan
