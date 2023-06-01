@@ -49,7 +49,7 @@
   .pageTitle {
     font-size: var(--arrow-fs-huge);
   }
-  author-page-wrapper:global(.full-width-with-padding) {
+  .author-page-wrapper:global(.full-width-with-padding) {
     padding-top: 48px;
     padding-bottom: 48px;
   }
