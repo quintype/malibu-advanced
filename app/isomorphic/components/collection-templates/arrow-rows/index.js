@@ -6,6 +6,7 @@ import { ArrowOneColStoryList } from "./one-col-story-list";
 import { ArrowThreeColGrid } from "./three-col-grid";
 import { ArrowThreeColSevenStories } from "./three-col-seven-stories";
 import { ArrowTwoColFourStories } from "./two-col-four-stories";
+import { ArrowFourTabbedBigStorySlider } from "./four-tabbed-big-story-slider";
 
 export {
   ArrowElevenStories,
@@ -15,5 +16,6 @@ export {
   ArrowOneColStoryList,
   ArrowThreeColGrid,
   ArrowThreeColSevenStories,
-  ArrowTwoColFourStories
+  ArrowTwoColFourStories,
+  ArrowFourTabbedBigStorySlider,
 };
