@@ -1,142 +1,28 @@
 collection-layouts:
-  - name: FourColGrid
-    display: Default Malibu Widget
-    options: []
-  - name: ArrowThreeColGrid
-    display: Arrow Three Col Grid
-    options: []
-  - name: ArrowFourColGrid
-    display: Arrow Four Col Grid
-    options: []
-  - name: ArrowFourColTwelveStories
-    display: Arrow Four Col 12 Stories
-    options: []
-  - name: ArrowFullScreenSlider
-    display: Arrow Full Screen Slider
-    options: []
-  - name: ArrowThreeColSevenStories
-    display: Arrow Three Col Seven Stories
-    options: []
-  - name: ArrowElevenStoriesRow
-    display: Arrow Eleven Stories Row
-    options: []
-  - name: ArrowTwoColFourStories
-    display: Arrow Two Col Four Stories
-    options: []
-  - name: ArrowOneColStoryList
-    display: Arrow One Col Story List
-    options: []
-  - name: ArrowTwoColThreeStories
-    display: Arrow Two Col Three Stories
-    options: []
-  - name: ArrowTwoColSevenStories
-    display: Arrow Two Col Seven Stories
-    options: []
-  - name: ArrowThreeColSixStories
-    display: Arrow Three Col Six Stories
-    options: []
-  - name: ArrowHalfScreenSlider
-    display: Arrow Half Screen Slider
-    options: []
-  - name: ArrowFourStorySlider
-    display: Arrow Four Story Slider
-    options: []
-  - name: ArrowFourStorySliderPortrait
-    display: Arrow Four Story Slider Portrait
-    options: []
-  - name: ArrowThreeColFourteenStories
-    display: Arrow Three Col Fourteen Stories
-    options: []
-  - name: ArrowFourColSixteenStories
-    display: Arrow Four Col Sixteen Stories
-    options: []
-  - name: ArrowFourColFiveStories
-    display: Arrow Four Col Five Stories
-    options: []
-  - name: ArrowTwoColSixStories
-    display: Arrow Two Col Six Stories
-    options: []
-  - name: ArrowTwoColFourStoryHighlight
-    display: Arrow Two Col Four Story Highlight
-    options: []
-  - name: ArrowThreeColFlexStories
-    display: Arrow Three Col Flex Stories
-    options: []
-  - name: ArrowSixColSixStories
-    display: Arrow Six Col Six Stories
-    options: []
-  - name: ArrowTwoColTenStoriesSidebar
-    display: Arrow Two Col Ten Stories Sidebar
-    options: []
-  - name: ArrowThreeColTwelveStories
-    display: Arrow Three Col 12 Stories
-    options: []
-  - name: ArrowFourTabbedBigStorySlider
-    display: Four Tabbed Big Story With Scroll
-    options:
-      - default: null
-        name: ad_above_component
-        type: string
-      - default: "#FFFFFF"
-        name: row_background_color
-        type: string
-      - default: false
-        name: hide_row_title
-        type: boolean
-      - default: "#e43232"
-        name: collection_name_border_color
-        type: string
-      - default: false
-        name: hide_section_tag
-        type: boolean
-      - default: "#e43232"
-        name: section_border_color
-        type: string
-      - default: false
-        name: hide_author
-        type: boolean
-      - default: false
-        name: hide_timestamp
-        type: boolean
-      - default: false
-        name: hide_read_time
-        type: boolean
-      - default: false
-        name: hide_button
-        type: boolean
-      - default: "Read More"
-        name: button_text
-        type: string
-      - default: null
-        name: widget_above_component
-        type: string
-      - default: null
-        name: alternative_collection_title
-        type: string
-  - name: ArrowFourColPortraitStories
-    display: Arrow Four Col Portrait Stories
-    options: []
-  - name: ArrowCollectionFilter
-    display: Arrow Collection Filter
-    options: []
-  - name: ArrowAlternateCollectionFilter
-    display: Arrow Alternate Collection Filter
-    options: []
-  - name: ArrowAstrologyCollection
-    display: Arrow Astrology Collection
-    options: []
-  - name: ArrowOpinionCollection
-    display: Arrow Opinion Collection
-    options: []
-  - name: ArrowListicles
-    display: Arrow Listicles
-    options: []
-  - name: ArrowMagazineWidget
-    display: Arrow Magazine Widget
-    options: []
-  - name: ArrowMagazineEditions
-    display: Arrow Magazine Editions
-    options: []
-  - name: ArrowListComponent
-    display: Arrow List Component
-    options: []
+- name: FourColGrid
+  display: Default Malibu Widget
+  options: []
+- name: ArrowThreeColGrid
+  display: Arrow Three Col Grid
+  options: []
+- name : ArrowFourColGrid
+  display name: Arrow Four Col Grid
+  options: []
+- name : ArrowFourColTwelveStories
+  display name: Arrow Four Col 12 Stories
+  options: []
+- name : ArrowFullScreenSlider
+  display name: Arrow Full Screen Slider
+  options: []
+- name : ArrowThreeColSevenStories
+  display name: Arrow Three Col Seven Stories
+  options: []
+- name : ArrowElevenStoriesRow
+  display name: Arrow Eleven Stories Row
+  options: []
+- name : ArrowTwoColFourStories
+  display name: Arrow Two Col Four Stories
+  options: []
+- name : ArrowOneColStoryList
+  display name: Arrow One Col Story List
+  options: []
