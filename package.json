@@ -16,7 +16,7 @@
     "@quintype/bridgekeeper-js": "^2.8.2-feature-otp.1",
     "@quintype/components": "^3.0.2",
     "@quintype/framework": "^7.7.7",
-    "@quintype/seo": "^1.42.1",
+    "@quintype/seo": "1.42.2-fix-socialshare-image.0",
     "axios": "^0.24.0",
     "fontfaceobserver": "^2.1.0",
     "intersection-observer": "^0.12.2",
