@@ -1,4 +1,5 @@
 /* eslint-disable no-console, no-unused-vars, import/extensions, object-shorthand, global-require */
+import React from "react";
 import createApp from "@quintype/framework/server/create-app";
 import { getClient, Collection } from "@quintype/framework/server/api-client";
 import logger from "@quintype/framework/server/logger";
@@ -91,6 +92,18 @@ function generateSeo(config, pageType) {
 
 ampRoutes(app, {
   seo: generateSeo,
+  slots: {
+    story: {
+      "default-story-card-slot": ({ story, config, index, card }) => (
+        <div style={{ padding: "10px", backgroundColor: "yellow" }}>Slot after card {index}</div>
+      ),
+      "default-story-element-slot": ({ story, config, cardIdx, storyElementIdx, storyElement }) => (
+        <div style={{ padding: "10px", backgroundColor: "aquamarine" }}>
+          Slot after card: {cardIdx} and storyElement: {storyElementIdx}
+        </div>
+      ),
+    },
+  },
 });
 
 isomorphicRoutes(app, {
