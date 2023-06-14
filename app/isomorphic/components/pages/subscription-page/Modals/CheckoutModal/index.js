@@ -111,9 +111,11 @@ export const CheckoutModal = ({ member, setActiveTab, initRazorPayPayment, selec
             onClick={async () => {
               const updatedPlan = JSON.parse(JSON.stringify(plan));
               updatedPlan.coupon_code = couponCode;
-              const paymentResponse = updatedPlan.discounted_price_cents
-                ? await initRazorPayPayment(updatedPlan, "standard")
-                : await initRazorPayPayment(updatedPlan, "standard", "", "", "", "skip_payment_gateway");
+              const paymentResponse = await initRazorPayPayment(updatedPlan, "standard");
+
+              // const paymentResponse = updatedPlan.discounted_price_cents
+              //   ? await initRazorPayPayment(updatedPlan, "standard")
+              //   : await initRazorPayPayment(updatedPlan, "standard", "", "", "", "skip_payment_gateway");
               if (paymentResponse.subscription) {
                 window.location.href = "/profile";
               }
