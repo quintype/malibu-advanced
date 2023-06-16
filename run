@@ -1,6 +1,8 @@
 #!/bin/bash -e
 
 npm install
+#Uncomment the below line when running local to get latest changes from arrow and even add the correct path in sync-arrow.sh file before running
+# npm run sync-arrow
 npm run compile
 supervisord -n -c <(cat <<EOF
 [supervisord]
