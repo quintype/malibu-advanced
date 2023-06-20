@@ -2,6 +2,9 @@
 
 npm install
 npm run copy-arrow
+
+# Do not overwrite these two files - line 1 in fullscreenimages.scss, line 23 to 26 in author-image.css and line 1 in author.m.css
+
 npm run compile
 supervisord -n -c <(cat <<EOF
 [supervisord]
