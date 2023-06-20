@@ -4,7 +4,6 @@
   display: flex;
   align-items: center;
   color: var(--arrow-c-mono4);
-  margin-bottom: var(--arrow-spacing-xs);
 }
 
 .author-image {
@@ -24,10 +23,7 @@
 
 .author-name {
   margin: auto var(--arrow-spacing-xs) auto 0;
-}
-
-.bottom-fix {
-  margin-top: auto;
+  word-break: break-all;
 }
 
 .prefix {
@@ -60,6 +56,7 @@ html[dir="rtl"] {
 .dark {
   color: var(--arrow-c-mono4);
 }
+
 .light {
   color: var(--arrow-c-invert-mono4);
 }

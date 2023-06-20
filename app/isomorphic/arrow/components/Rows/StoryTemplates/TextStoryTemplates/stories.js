@@ -13,11 +13,11 @@ const authorTemplate = {
   default: "default",
   leftAligned: "leftAligned",
   centerAligned: "centerAligned",
-  "No value": "",
+  "No value": ""
 };
 const imageTypeOptions = {
   "Full Bleed": "fullBleed",
-  "With In Container": "container",
+  "With In Container": "container"
 };
 
 const iconTypeOptions = {
@@ -25,7 +25,7 @@ const iconTypeOptions = {
   "Circular Plain Svg": "circular-plain-svg",
   "Plain Svg": "plain-svg",
   "Plain Color Svg": "plain-color-svg",
-  "Square Svg": "square-svg",
+  "Square Svg": "square-svg"
 };
 
 const templates = {
@@ -34,7 +34,7 @@ const templates = {
   "Headline Hero Priority": "headline-hero-priority",
   "Hero Vertical Priority": "hero-vertical-priority",
   "Headline Priority": "headline-priority",
-  "Headline Overlay Priority": "headline-overlay-priority",
+  "Headline Overlay Priority": "headline-overlay-priority"
 };
 
 const storyElementsConfig = {
@@ -45,7 +45,7 @@ const storyElementsConfig = {
   "also-read": {},
   "q-and-a": {},
   question: {},
-  answer: {},
+  answer: {}
 };
 
 const configurableSlot = () => {
@@ -54,12 +54,12 @@ const configurableSlot = () => {
 
 const sortFirstOptions = {
   "Headline First": "headline-first",
-  "Image First": "image-first",
+  "Image First": "image-first"
 };
 
 const shareType = {
   "Vertical Share": "sticky",
-  "Horizontal Share": "",
+  "Horizontal Share": ""
 };
 
 withStore(
@@ -68,9 +68,9 @@ withStore(
     qt: {
       config: {
         "cdn-image": "thumbor-stg.assettype.com",
-        mountAt: "/sub-directory",
-      },
-    },
+        mountAt: "/sub-directory"
+      }
+    }
   },
   Readme
 ).add("default", () => {
@@ -86,21 +86,21 @@ withStore(
     publishedDetails: {
       enablePublishedTime: boolean("Show Published Time", true),
       enableUpdatedTime: boolean("Show Updated Time", false),
-      showReadTime: boolean("Read time", true),
+      showReadTime: boolean("Read time", true)
     },
     premiumStoryIconConfig: {
       iconColor: "#F7B500",
       iconType: "star",
-      enablePremiumStoryIcon: true,
+      enablePremiumStoryIcon: true
     },
     asideCollection: {
       data: collection,
       config: {
         collectionNameBorderColor: color("Aside Collection Name Border Color", "#3a9fdd"),
         title: text("Aside Collection Title", "Trending"),
-        theme: color("BG Color", "#ffffff"),
+        theme: color("BG Color", "#ffffff")
       },
-      slots: slotData,
+      slots: slotData
     },
     authorDetails: {
       template: optionalSelect("Author Template Options", authorTemplate, "default"),
@@ -108,8 +108,11 @@ withStore(
         showBio: false,
         showImage: true,
         showName: true,
-      },
-    },
+        showLabels: boolean("show labels", true),
+        showGuestAuthorName: boolean("show guest author name", false),
+        showGuestAuthorImage: boolean("show guest author image", false)
+      }
+    }
   };
   return (
     <TextStoryTemplate

@@ -41,12 +41,12 @@ ReferenceBase.propTypes = {
   element: PropTypes.shape({
     "story-elements": PropTypes.arrayOf(
       PropTypes.shape({
-        metadata: PropTypes.shape({ name: PropTypes.string, description: PropTypes.string, url: PropTypes.string }),
+        metadata: PropTypes.shape({ name: PropTypes.string, description: PropTypes.string, url: PropTypes.string })
       })
-    ),
+    )
   }),
   opts: PropTypes.shape({ hideHeadline: PropTypes.bool }),
-  config: shapeConfig,
+  config: shapeConfig
 };
 
 export const Reference = withElementWrapper(ReferenceBase);

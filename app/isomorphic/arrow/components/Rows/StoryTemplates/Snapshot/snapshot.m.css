@@ -1,0 +1,66 @@
+@import "../../../../../assets/stylesheets/mixins.scss";
+
+.wrapper {
+  border-bottom: 1px solid var(--arrow-c-invert-mono4);
+  padding: var(--arrow-spacing-xl) 0;
+  margin: 0 12px;
+  @include tablet {
+    max-width: 752px;
+    margin: auto;
+  }
+
+  :global .arr--story-headline {
+    padding-bottom: var(--arrow-spacing-s);
+  }
+
+  :global .section-tag {
+    padding-top: var(--arrow-spacing-s);
+  }
+
+  :global .arr--publish-details {
+    padding: var(--arrow-spacing-s) 0;
+  }
+}
+
+.wrapper.dark {
+  border-bottom: 1px solid var(--arrow-c-mono4);
+}
+
+.wrapper.light {
+  border-bottom: 1px solid var(--arrow-c-invert-mono4);
+}
+
+.read-more-card {
+  position: relative;
+}
+
+.content-overlay {
+  /* background-image: linear-gradient(180deg,hsla(0,0%,100%,0),#fff); */
+  bottom: 0;
+  height: var(--arrow-spacing-xl);
+  position: absolute;
+  width: 100%;
+  @include tablet {
+    height: 50px;
+  }
+}
+
+.read-more-overlay {
+  padding-bottom: var(--arrow-spacing-s);
+}
+
+.read-more-btn {
+  text-align: center;
+  padding: var(--arrow-spacing-s);
+  background-color: transparent;
+  font-size: var(--arrow-fs-m);
+}
+
+.dark,
+.dark.hyperlink-button {
+  color: var(--arrow-c-mono2);
+}
+.light,
+.light.hyperlink-button {
+  color: var(--arrow-c-invert-mono2);
+}

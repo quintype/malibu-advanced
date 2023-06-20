@@ -9,7 +9,7 @@ const collection = generateCollection({ stories: 4 });
 
 const footerButton = {
   NavigateToPage: "NavigateToPage",
-  CustomUrlPath: "CustomUrlPath",
+  CustomUrlPath: "CustomUrlPath"
 };
 
 withStore(
@@ -18,9 +18,9 @@ withStore(
     qt: {
       config: {
         "cdn-image": "thumbor-stg.assettype.com",
-        mountAt: "/sub-directory",
-      },
-    },
+        mountAt: "/sub-directory"
+      }
+    }
   },
   Readme
 ).add("Magazine header card", () => {
@@ -30,7 +30,7 @@ withStore(
     buttonText: text("Button text", "Subscribe"),
     footerButton: optionalSelect("Button Settings", footerButton),
     customUrlPath: text("Custom URL", ""),
-    magazineTitle: "Fortune",
+    magazineTitle: "Fortune"
   };
   return <MagazineHeaderCard collection={collection} config={contextConfig} />;
 });

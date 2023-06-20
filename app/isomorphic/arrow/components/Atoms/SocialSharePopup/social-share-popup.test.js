@@ -11,7 +11,7 @@ describe("Social Share Template", () => {
       whatsappUrl: "https://twitter.com/",
       theme: "#ffff",
       iconType: "plain-svg",
-      closePopup: "",
+      closePopup: ""
     };
     const wrapper = shallow(<SocialSharePopup {...data} />);
     expect(wrapper).toMatchSnapshot();
@@ -25,7 +25,7 @@ describe("Social Share Template", () => {
       whatsappUrl: "https://twitter.com/",
       theme: "#ffff",
       iconType: "plain-svg",
-      closePopup: "",
+      closePopup: ""
     };
     const wrapper = shallow(<SocialSharePopup {...data} />);
     expect(wrapper).toMatchSnapshot();
@@ -40,7 +40,7 @@ describe("Social Share Template", () => {
       theme: "#ffff",
       iconType: "plain-svg",
       vertical: true,
-      closePopup: "",
+      closePopup: ""
     };
     const wrapper = shallow(<SocialSharePopup {...data} />);
     expect(wrapper).toMatchSnapshot();
@@ -55,7 +55,7 @@ describe("Social Share Template", () => {
       theme: "#ffff",
       iconType: "plain-svg",
       vertical: true,
-      closePopup: "",
+      closePopup: ""
     };
     const wrapper = shallow(<SocialSharePopup {...data} />);
     expect(wrapper).toMatchSnapshot();
@@ -70,7 +70,7 @@ describe("Social Share Template", () => {
       theme: "#ffff",
       iconType: "plain-svg",
       vertical: true,
-      closePopup: "",
+      closePopup: ""
     };
     const wrapper = shallow(<SocialSharePopup {...data} />);
     expect(wrapper).toMatchSnapshot();
@@ -85,7 +85,7 @@ describe("Social Share Template", () => {
       theme: "",
       iconType: "plain-svg",
       vertical: true,
-      closePopup: "",
+      closePopup: ""
     };
     const wrapper = shallow(<SocialSharePopup {...data} />);
     expect(wrapper).toMatchSnapshot();

@@ -1,4 +1,4 @@
-@import "../../../../../assets/arrow/stylesheets/mixins.scss";
+@import "../../../../assets/stylesheets/mixins.scss";
 
 .element-container {
   margin: var(--arrow-spacing-l) 0;
@@ -30,12 +30,20 @@
 }
 
 .story-card {
-  border-bottom: 1px solid var(--arrow-c-mono5);
   margin-bottom: var(--arrow-spacing-xl);
+}
+
+.story-card.dark {
+  border-bottom: 1px solid var(--arrow-c-mono2);
+}
+
+.story-card.light {
+  border-bottom: 1px solid var(--arrow-c-invert-mono2);
 }
 
 .element-container :global(.story-element-jsembed) iframe {
   max-width: 100%;
+  width: 100%;
 }
 
 .element-container :global(.story-element-jsembed) img {
@@ -54,12 +62,6 @@
   }
 }
 
-:global(.story-element-jsembed.story-element-jsembed-facebook-post) {
-  @include mobile {
-    max-width: calc(100vw - var(--arrow-spacing-l));
-  }
-}
-
 .table :global(.story-element-data-table) {
   max-width: calc(100vw - 24px);
   @include tablet {
@@ -68,6 +70,31 @@
       max-width: calc(calc(calc(1025px / 12) * 8) - 24px);
     }
   }
+}
+
+:global(.story-element-jsembed.story-element-jsembed-facebook-post) {
+  @include mobile {
+    max-width: calc(100vw - var(--arrow-spacing-l));
+  }
+}
+
+.element-container :global(.dailymotion-embed-wrapper) {
+  padding-bottom: 56.25%;
+  position: relative;
+}
+
+.element-container :global(.story-element-jsembed-instagram > .jsembed-wrapper) {
+  /* fix instagram overflowing container on safari */
+  position: relative;
+}
+
+.element-container :global(.dailymotion-embed-wrapper .dailymotion-player-root) {
+  padding-bottom: 0 !important;
+  position: absolute !important;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
 
 .dark {

@@ -1,5 +1,5 @@
 import React from "react";
-import get from "lodash/get";
+import get from "lodash.get";
 import PropTypes from "prop-types";
 import { SocialShare } from "@quintype/components";
 import { SocialShareTemplate } from "../../../Molecules/SocialShareTemplate";
@@ -18,6 +18,7 @@ import LiveIcon from "../../../Svgs/liveicon";
 import KeyEvents from "../../../Molecules/KeyEvents";
 import { ClockIcon } from "../../../Svgs/clock-icon";
 import { StoryHeadline } from "../../../Atoms/StoryHeadline";
+import { StoryReview } from "../../../Atoms/StoryReview";
 
 export const LiveBlogStoryTemplates = ({
   story = {},
@@ -28,19 +29,21 @@ export const LiveBlogStoryTemplates = ({
   firstChild,
   secondChild,
   timezone,
+  enableDarkMode,
+  mountAt
 }) => {
   const {
     theme = "",
     asideCollection = {},
     templateType,
-    noOfVisibleCards = -1,
+    noOfVisibleCards = 0,
     publishedDetails = {},
     verticalShare = "",
     shareIconType = "plain-color-svg",
     authorDetails = {
-      template: "default",
+      template: "default"
     },
-    premiumStoryIconConfig = {},
+    premiumStoryIconConfig = {}
   } = config;
 
   const visibleCards = noOfVisibleCards < 0 ? story.cards : story.cards.slice(0, noOfVisibleCards);
@@ -100,6 +103,7 @@ export const LiveBlogStoryTemplates = ({
             theme={theme}
             adComponent={adComponent}
             widgetComp={widgetComp}
+            enableDarkMode={enableDarkMode}
           />
         </div>
       );
@@ -140,11 +144,20 @@ export const LiveBlogStoryTemplates = ({
   const StoryData = () => {
     return (
       <>
-        <AuthorCard clazzName="gap-32" story={story} template={authorDetails.template} opts={authorDetails.opts} />
+        <AuthorCard
+          clazzName="gap-32"
+          story={story}
+          template={authorDetails.template}
+          opts={authorDetails.opts}
+          mountAt={mountAt}
+        />
         <div styleName="timestamp-social-share">
-          <PublishDetails story={story} opts={publishedDetails} template="story" timezone={timezone} />
+          <div id={`publish-details-container-${storyId}`}>
+            <PublishDetails story={story} opts={publishedDetails} template="story" timezone={timezone} />
+          </div>
           {!verticalShare && <SocialShareComponent />}
         </div>
+        <StoryReview theme={theme} story={story} />
         {showKeyEvents()}
         <StoryCards />
         <div styleName="space-32">
@@ -166,14 +179,7 @@ export const LiveBlogStoryTemplates = ({
     return (
       <>
         <div data-test-id="hero-image" styleName="grid-col-full index-2">
-          <HeroImage
-            story={story}
-            aspectRatio={[
-              [16, 9],
-              [8, 3],
-            ]}
-            isStoryPageImage
-          />
+          <HeroImage story={story} aspectRatio={[[16, 9], [8, 3]]} isStoryPageImage />
         </div>
         <div styleName="header-wrapper">
           <CaptionAttribution story={story} config={config} />
@@ -202,15 +208,8 @@ export const LiveBlogStoryTemplates = ({
   const HeroOverlay = (story) => {
     return (
       <>
-        <div styleName="overlay-hero index-2">
-          <HeroImage
-            story={story}
-            aspectRatio={[
-              [1, 2],
-              [16, 9],
-            ]}
-            isStoryPageImage
-          />
+        <div styleName="overlay-hero  index-2">
+          <HeroImage story={story} aspectRatio={[[1, 2], [16, 9]]} isStoryPageImage />
         </div>
         <div styleName="overlay-grid">
           <HeaderCard />
@@ -381,7 +380,7 @@ LiveBlogStoryTemplates.propTypes = {
   config: PropTypes.shape({
     templateType: PropTypes.string,
     authorCard: PropTypes.object,
-    asideCollection: PropTypes.object,
+    asideCollection: PropTypes.object
   }),
   timezone: PropTypes.string,
   firstChild: PropTypes.node,
@@ -389,4 +388,5 @@ LiveBlogStoryTemplates.propTypes = {
   storyElementsConfig: PropTypes.object,
   adComponent: PropTypes.func,
   widgetComp: PropTypes.func,
+  enableDarkMode: PropTypes.bool
 };

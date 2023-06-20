@@ -1,6 +1,5 @@
-/* eslint-disable no-case-declarations */
 import React from "react";
-import get from "lodash/get";
+import get from "lodash.get";
 import { Text } from "../../Atoms/StoryElements/Text";
 import { Blurb } from "../../Atoms/StoryElements/Blurb";
 import "./story-element-card.m.css";
@@ -22,9 +21,10 @@ import { SocialShare } from "@quintype/components";
 import { SocialShareTemplate } from "../../Molecules/SocialShareTemplate";
 import { facebookMobileVideoResizeFix, getTextColor } from "../../../utils/utils";
 import { ImageSlideshow } from "../../Atoms/StoryElements/ImageSlideshow";
+import { useStateValue } from "../../SharedContext";
 
-const getElementType = (element) => element.subtype || element.type || "";
-const getElement = (story, element, config = {}, AdComponent, WidgetComp, index, cardId) => {
+const getElementType = (element) => element["subtype"] || element["type"] || "";
+const getElement = (story, element, config = {}, AdComponent, WidgetComp, index, cardId, enableDarkMode) => {
   const {
     text = {},
     summary = {},
@@ -36,33 +36,49 @@ const getElement = (story, element, config = {}, AdComponent, WidgetComp, index,
     question: questionElement = {},
     answer: answerElement = {},
     references = {},
+    jsEmbed = {}
   } = config;
+
+  const configData = useStateValue() || {};
+  const textInvertColor = getTextColor(configData.theme);
 
   let elementType = getElementType(element);
 
   if (elementType === "image-gallery") {
-    elementType = element.metadata.type;
+    elementType = element.metadata["type"];
   }
 
   const storyElementId = get(element, ["id"]);
-
+  const targetId = element.targetId ? `widget-${element.targetId}-${story.id}` : `widget-${index}_${cardId}`;
   switch (elementType) {
     case "ad":
       return <AdComponent {...element} id={`ad-${index}_${cardId}`} />;
 
     case "widget":
-      return <WidgetComp widgetCode={element.config.customCode} id={`widget-${index}_${cardId}`} />;
+      return <WidgetComp widgetCode={element.config.customCode} id={targetId} />;
 
     case "text":
     case "cta":
-      const { css: { textColor: textElementColor = "#000", hyperlinkColor = "#2f81cd" } = {} } = text;
-      return <Text element={element} css={{ textColor: textElementColor, hyperlinkColor: hyperlinkColor }} />;
+      const {
+        css: {
+          textColor: textElementColor = "#000",
+          darkTextColor: darkTextElementColor = "#fff",
+          hyperlinkColor = "#2f81cd"
+        } = {}
+      } = text;
+
+      return (
+        <Text
+          element={element}
+          css={{ textColor: enableDarkMode ? darkTextElementColor : textElementColor, hyperlinkColor: hyperlinkColor }}
+        />
+      );
 
     case "summary":
       const {
         template: summaryTemplate = "",
-        css: { headerBgColor = "" } = {},
-        opts: { headline = "", hideHeadline = false } = {},
+        css: { headerBgColor = "", darkHeaderBgColor } = {},
+        opts: { headline = "", hideHeadline = false } = {}
       } = summary;
       return (
         <Summary
@@ -70,20 +86,35 @@ const getElement = (story, element, config = {}, AdComponent, WidgetComp, index,
           template={summaryTemplate}
           opts={{
             headline: headline || "Summary",
-            hideHeadline: hideHeadline,
+            hideHeadline: hideHeadline
           }}
-          css={{ headerBgColor: headerBgColor || "" }}
+          css={{ headerBgColor: enableDarkMode ? darkHeaderBgColor : headerBgColor || "" }}
         />
       );
 
     case "blurb":
-      const { template: blurbTemplate = "default", css: { borderColor = "#2f81cd" } = {} } = blurb;
-      return <Blurb element={element} template={blurbTemplate} css={{ borderColor: borderColor }} />;
+      const {
+        template: blurbTemplate = "default",
+        css: { borderColor = "#3cab92", darkBorderColor = "#3cab92" } = {}
+      } = blurb;
+      return (
+        <Blurb
+          element={element}
+          template={blurbTemplate}
+          css={{ borderColor: enableDarkMode ? darkBorderColor : borderColor }}
+        />
+      );
 
     case "blockquote":
       const {
         template: blockQuoteTemplate = "default",
-        css: { iconType = "edgeIcon", blockQuoteColor = "#2f81cd", backgroundShade = "" } = {},
+        css: {
+          iconType = "edgeIcon",
+          blockQuoteColor = "",
+          darkBlockQuoteColor = "",
+          backgroundShade = "",
+          darkBackgroundShade = ""
+        } = {}
       } = blockquote;
       return (
         <BlockQuote
@@ -91,15 +122,24 @@ const getElement = (story, element, config = {}, AdComponent, WidgetComp, index,
           template={blockQuoteTemplate}
           css={{
             iconType: iconType,
-            blockQuoteColor: blockQuoteColor,
-            backgroundShade: backgroundShade,
+            blockQuoteColor: enableDarkMode ? darkBlockQuoteColor : blockQuoteColor,
+            backgroundShade: enableDarkMode ? darkBackgroundShade : backgroundShade
           }}
         />
       );
 
     case "quote":
-      const { template: quoteTemplate = "borderNone", css: { borderColor: quoteBorderColor = "#2f81cd" } = {} } = quote;
-      return <Quote element={element} template={quoteTemplate} css={{ borderColor: quoteBorderColor }} />;
+      const {
+        template: quoteTemplate = "borderNone",
+        css: { borderColor: quoteBorderColor = "#2f81cd", darkBorderColor: darkQuoteBorderColor = "#2f81cd" } = {}
+      } = quote;
+      return (
+        <Quote
+          element={element}
+          template={quoteTemplate}
+          css={{ borderColor: enableDarkMode ? darkQuoteBorderColor : quoteBorderColor }}
+        />
+      );
 
     case "bigfact":
       return <BigFact element={element} />;
@@ -107,15 +147,15 @@ const getElement = (story, element, config = {}, AdComponent, WidgetComp, index,
     case "also-read":
       const {
         template: alsoReadTemplate = "default",
-        css: { textColor = "#000" } = {},
-        opts: { title = "" } = {},
+        css: { textColor = "", darkTextColor = "" } = {},
+        opts: { title = "" } = {}
       } = alsoRead;
       return (
         <AlsoRead
           story={story}
           element={element}
           template={alsoReadTemplate}
-          css={{ textColor: textColor }}
+          css={{ textColor: enableDarkMode ? darkTextColor : textColor }}
           opts={{ title }}
         />
       );
@@ -127,18 +167,18 @@ const getElement = (story, element, config = {}, AdComponent, WidgetComp, index,
       const {
         template: qaTemplate = "default",
         css: { iconColor = "" } = {},
-        opts: { defaultIconType = "edge" } = {},
+        opts: { defaultIconType = "edge" } = {}
       } = qaElement;
       return (
         <QuestionAnswer
           element={element}
           opts={{
             type: "q-and-a",
-            defaultIconType: defaultIconType,
+            defaultIconType: defaultIconType
           }}
           template={qaTemplate}
           css={{
-            iconColor: iconColor,
+            iconColor: iconColor
           }}
         />
       );
@@ -147,18 +187,18 @@ const getElement = (story, element, config = {}, AdComponent, WidgetComp, index,
       const {
         template: questionTemplate = "default",
         css: { questionIconColor = "" } = {},
-        opts: { defaultQuestionIconType = "edge" } = {},
+        opts: { defaultQuestionIconType = "edge" } = {}
       } = questionElement;
       return (
         <QuestionAnswer
           element={element}
           opts={{
             type: "question",
-            defaultIconType: defaultQuestionIconType,
+            defaultIconType: defaultQuestionIconType
           }}
           template={questionTemplate}
           css={{
-            iconColor: questionIconColor,
+            iconColor: questionIconColor
           }}
         />
       );
@@ -167,18 +207,18 @@ const getElement = (story, element, config = {}, AdComponent, WidgetComp, index,
       const {
         template: answerTemplate = "default",
         css: { answerIconColor = "" } = {},
-        opts: { defaultAnswerIconType = "edge" } = {},
+        opts: { defaultAnswerIconType = "edge" } = {}
       } = answerElement;
       return (
         <QuestionAnswer
           element={element}
           opts={{
             type: "answer",
-            defaultIconType: defaultAnswerIconType,
+            defaultIconType: defaultAnswerIconType
           }}
           template={answerTemplate}
           css={{
-            iconColor: answerIconColor,
+            iconColor: answerIconColor
           }}
         />
       );
@@ -199,9 +239,12 @@ const getElement = (story, element, config = {}, AdComponent, WidgetComp, index,
 
     case "youtube-video":
     case "dailymotion-video":
+    case "dailymotion-embed-script":
+    case "brightcove-video":
+      const lazyLoad = get(jsEmbed, ["lazyLoad"], true);
       return (
         <div className="content-style" id={`video-${storyElementId}`}>
-          <Video element={element} story={story} loadIframeOnClick={true} />
+          <Video element={element} story={story} loadIframeOnClick={lazyLoad} />
         </div>
       );
     case "attachment":
@@ -220,13 +263,13 @@ const getElement = (story, element, config = {}, AdComponent, WidgetComp, index,
           element={element}
           opts={{
             showHeadline: showHeadline,
-            headlineText: headlineText,
+            headlineText: headlineText
           }}
         />
       );
     default:
       return (
-        <div className="content-style" id={`element-${storyElementId}`}>
+        <div className="content-style" id={`element-${storyElementId}`} styleName={`${textInvertColor}`}>
           <StoryElement element={element} story={story} />
         </div>
       );
@@ -236,7 +279,7 @@ const getElement = (story, element, config = {}, AdComponent, WidgetComp, index,
 const MainImageWrapper = ({ imageElement, story, children, config, card }) => {
   return (
     <>
-      <div style={{ backgroundColor: config.theme }}>
+      <div style={{ backgroundColor: config.theme || "initial" }}>
         <Image element={imageElement} caption={false} />
         <div styleName="image-share">
           <CaptionAttribution element={imageElement} config={config} />
@@ -258,8 +301,8 @@ MainImageWrapper.propTypes = {
   config: PropTypes.object,
   children: PropTypes.node,
   card: PropTypes.shape({
-    id: PropTypes.string,
-  }),
+    id: PropTypes.string
+  })
 };
 
 export const StoryElementCard = ({
@@ -271,6 +314,7 @@ export const StoryElementCard = ({
   theme,
   adComponent,
   widgetComp,
+  enableDarkMode
 }) => {
   const textColor = getTextColor(theme);
   const isLiveBlog = isLive ? "live-blog" : "";
@@ -290,9 +334,8 @@ export const StoryElementCard = ({
           <div
             key={element.id}
             className="arr--element-container"
-            styleName={`element-container ${isLiveBlog} ${tableStyle} ${textColor}`}
-          >
-            {getElement(story, element, config, adComponent, widgetComp, index, cardId)}
+            styleName={`element-container ${isLiveBlog} ${tableStyle} ${textColor}`}>
+            {getElement(story, element, config, adComponent, widgetComp, index, cardId, enableDarkMode)}
           </div>
         );
       })}
@@ -308,12 +351,14 @@ StoryElementCard.propTypes = {
   theme: PropTypes.string,
   adComponent: PropTypes.func,
   widgetComp: PropTypes.func,
+  enableDarkMode: PropTypes.bool
 };
 
-export const PhotoStoryElement = ({ card = {}, config, story, adComponent, widgetComp }) => {
+export const PhotoStoryElement = ({ card = {}, config, story, adComponent, widgetComp, enableDarkMode, theme }) => {
   let shouldRunFBMobileVideoFix = true;
+  const textColor = getTextColor(theme);
   return (
-    <div styleName="story-card">
+    <div styleName={`story-card ${textColor}`}>
       {get(card, ["story-elements"], []).map((element, index) => {
         const cardId = get(card, ["id"], "");
         if (element.type === "image") {
@@ -325,7 +370,7 @@ export const PhotoStoryElement = ({ card = {}, config, story, adComponent, widge
           }
           return (
             <div styleName="element-container" key={index}>
-              {getElement(story, element, config, adComponent, widgetComp, index, cardId)}
+              {getElement(story, element, config, adComponent, widgetComp, index, cardId, enableDarkMode)}
             </div>
           );
         }
@@ -340,14 +385,17 @@ PhotoStoryElement.propTypes = {
   config: PropTypes.object,
   adComponent: PropTypes.func,
   widgetComp: PropTypes.func,
+  enableDarkMode: PropTypes.bool,
+  theme: PropTypes.string
 };
 
 export const SlotAfterStory = ({ id = "", element = {}, AdComponent, WidgetComp }) => {
+  const targetId = element.targetId ? `widget-after-story-${element.targetId}-${id}` : `widget-after-story-${id}`;
   switch (element.type) {
     case "ad":
       return <AdComponent {...element} id={`ad-after-story-${id}`} />;
     case "widget":
-      return <WidgetComp widgetCode={element.config.customCode} id={`widget-after-story-${id}`} />;
+      return <WidgetComp widgetCode={element.config.customCode} id={targetId} />;
     default:
       return null;
   }
@@ -357,5 +405,5 @@ SlotAfterStory.propTypes = {
   id: PropTypes.string,
   element: PropTypes.object,
   AdComponent: PropTypes.func,
-  WidgetComp: PropTypes.func,
+  WidgetComp: PropTypes.func
 };

@@ -38,5 +38,5 @@ export const ImageFallbackIcon = ({ width = 40, height = 30, iconColor = "#99B0C
 ImageFallbackIcon.propTypes = {
   width: PropTypes.object,
   height: PropTypes.object,
-  iconColor: PropTypes.object,
+  iconColor: PropTypes.object
 };

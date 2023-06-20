@@ -1,9 +1,6 @@
-@import "../../../../../assets/arrow/stylesheets/mixins.scss";
+@import "../../../../assets/stylesheets/mixins.scss";
 
 .stories {
-  margin-top: var(--arrow-spacing-m);
-}
-.wrapper {
   margin-top: var(--arrow-spacing-m);
 }
 .wrapper :global(.arr--collection-name) {
@@ -15,8 +12,6 @@
 }
 
 .story-hero-image {
-  min-width: 82px;
-  max-width: 82px;
   margin-right: var(--arrow-spacing-xs);
 }
 
@@ -30,12 +25,6 @@
   text-align: center;
 }
 
-.dark {
-  color: var(--arrow-c-mono4);
-}
-.light {
-  color: var(--arrow-c-mono4);
-}
 .wrapper h3 {
   font-size: var(--arrow-fs-m);
 }
@@ -45,6 +34,10 @@
   @include tablet {
     padding: var(--arrow-spacing-xl) 0;
   }
+}
+
+.story :global(.arr--story-card) {
+  width: 100%;
 }
 
 .horizontal-wrapper {
@@ -103,4 +96,12 @@ html[dir="rtl"] {
     top: 125px;
     margin-bottom: 64px;
   }
+}
+
+.dark {
+  color: var(--arrow-c-mono2);
+}
+
+.light {
+  color: var(--arrow-c-invert-mono2);
 }

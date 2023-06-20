@@ -47,11 +47,11 @@ const AuthorIntroductionCard = ({ data = {}, config = {}, template = "" }) => {
       data-test-id="author-intro"
       className={`${isFullWidth} arrow-component arr--author-intro-card`}
       styleName={`${authorCardStyle} ${supportBorder} ${textColor}`}
-      style={{ backgroundColor: theme, color: textColor }}
+      style={{ backgroundColor: theme || "initial" }}
     >
       <div styleName={`wrapper ${textColor}`} className="arrow-author-intro-wrapper">
         <div styleName="introduction-card" className="arrow-author-introduction-card">
-          {isSmallCircle && isMobile ? null : <h2 styleName={`author-name ${textColor}`}>{name}</h2>}
+          {isSmallCircle && isMobile ? null : <h1 styleName={`author-name ${textColor}`}>{name}</h1>}
           {enableBio && bio && (
             <div data-test-id="author-bio" styleName={`author-description ${textColor}`}>
               {bio}
@@ -59,7 +59,7 @@ const AuthorIntroductionCard = ({ data = {}, config = {}, template = "" }) => {
                 <div
                   styleName="fade-out"
                   style={{
-                    backgroundImage: `linear-gradient(to right, transparent, ${theme})`,
+                    backgroundImage: `linear-gradient(to right, transparent, ${theme})` || "initial",
                   }}
                 ></div>
               )}
@@ -103,7 +103,7 @@ const AuthorIntroductionCard = ({ data = {}, config = {}, template = "" }) => {
         </div>
         <div styleName="author-image" className="arrow-author-image">
           <AuthorImage author={data} template={template} />
-          {isSmallCircle && isMobile && <h2 styleName={`author-name ${textColor}`}>{name}</h2>}
+          {isSmallCircle && isMobile && <h1 styleName={`author-name ${textColor}`}>{name}</h1>}
         </div>
       </div>
     </div>

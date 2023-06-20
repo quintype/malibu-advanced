@@ -5,23 +5,21 @@ import "./quote.m.css";
 import { shapeStory, shapeConfig, getTextColor } from "../../../../utils/utils";
 import { useStateValue } from "../../../SharedContext";
 
-const QuoteBase = ({ element, template = "", css = {}, story = {}, config = {}, render, ...restProps }) => {
+const QuoteBase = ({ element, template = "borderLeft", css = {}, story = {}, config = {}, render, ...restProps }) => {
   const configData = useStateValue() || {};
   const textInvertColor = getTextColor(configData.theme);
   const { content, attribution } = element.metadata;
   if (!content) return null;
-  const { borderColor } = css;
-  const updateBorderColor = template === "borderLeft" && `4px solid ${borderColor}`;
+  const { borderColor = "" } = css;
+  const updateBorderColor = template === "borderLeft" && borderColor ? `4px solid ${borderColor}` : "none";
   const templateStyle = template ? `quote-${template}` : "quote";
 
   return (
     <div className="arrow-component arr--quote-element" data-test-id="quote" styleName={templateStyle} {...restProps}>
-      {template === "borderTopSmall" && (
-        <div styleName="line" style={borderColor && { backgroundColor: borderColor }} />
-      )}
+      {template === "borderTopSmall" && <div styleName="line" style={{ backgroundColor: borderColor || "initial" }} />}
       <p
         styleName={`text ${textInvertColor}`}
-        style={borderColor && { borderLeft: updateBorderColor }}
+        style={{ borderLeft: updateBorderColor }}
         dangerouslySetInnerHTML={{ __html: content }}
       />
       <p data-test-id="quote-attribution" styleName={`attribution ${textInvertColor}`}>
@@ -38,7 +36,7 @@ QuoteBase.propTypes = {
   story: shapeStory,
   config: shapeConfig,
   render: PropTypes.func,
-  css: PropTypes.object,
+  css: PropTypes.object
 };
 
 export const Quote = withElementWrapper(QuoteBase);

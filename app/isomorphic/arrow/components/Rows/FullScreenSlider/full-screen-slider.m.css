@@ -15,12 +15,13 @@
 }
 
 .full-screen-slider-wrapper:global(.arrow-component.full-width-with-padding.full-width) {
-  padding: unset;
+  padding: var(--arrow-spacing-m) 0 0 0;
 }
 
 .container-width,
-.container-width :global(.arr--collection-name) {
-  max-width: 1140px;
+.container-width :global(.arr--collection-name),
+.full-width :global(.arr--collection-name) {
+  max-width: 1172px;
   margin: 0 auto;
 }
 .wrapper {
@@ -39,7 +40,9 @@
 .full-screen-slider :global(.author-name),
 .full-screen-slider :global(.arr-separator),
 .full-screen-slider :global(.arr-author-prefix),
-.full-screen-slider :global(.arr--read-time) {
+.full-screen-slider :global(.arr--read-time),
+.full-screen-slider :global(.arr--dot),
+.full-screen-slider :global(.arr--divider) {
   @media (--viewport-medium) {
     color: var(--arrow-c-light);
     fill: var(--arrow-c-light);

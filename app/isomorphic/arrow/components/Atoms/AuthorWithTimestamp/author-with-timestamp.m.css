@@ -17,18 +17,12 @@
 .dot {
   position: relative;
   margin-right: var(--arrow-spacing-xs);
-  top: -6px;
+  top: -3px;
 }
-.bottom-fix {
-  margin-top: auto;
-}
+
 .dash {
   position: relative;
   margin-right: var(--arrow-spacing-xs);
-  top: -1px;
-  @media (--viewport-medium) {
-    top: -3px;
-  }
 }
 
 html[dir="rtl"] {

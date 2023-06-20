@@ -1,6 +1,6 @@
 function createUUID() {
   var dt = new Date().getTime();
-  var uuid = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+  var uuid = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(c) {
     var r = (dt + Math.random() * 16) % 16 | 0;
     dt = Math.floor(dt / 16);
     return (c === "x" ? r : (r & 0x3) | 0x8).toString(16);
@@ -13,8 +13,8 @@ export const dummyStory = {
   "updated-at": 1564650013782,
   seo: {
     "claim-reviews": {
-      story: null,
-    },
+      story: null
+    }
   },
   "assignee-id": 123981,
   "author-name": "Ravigopal Kesari",
@@ -24,21 +24,21 @@ export const dummyStory = {
       name: "politics",
       "meta-description": null,
       slug: "politics",
-      "tag-type": "Tag",
+      "tag-type": "Tag"
     },
     {
       id: 169510,
       name: "review",
       "meta-description": null,
       slug: "review",
-      "tag-type": "Tag",
-    },
+      "tag-type": "Tag"
+    }
   ],
   customSlotAfterStory: {
     config: { targetingId: "" },
     layout: "Leaderboard",
     layoutLabel: "Leaderboard",
-    type: "ad",
+    type: "ad"
   },
   headline: "Ready Player One review \u2013 Spielberg\u00A0",
   "storyline-id": null,
@@ -63,19 +63,19 @@ export const dummyStory = {
           collection: {
             slug: "coronavirus",
             name: "Coronavirus",
-            id: 92836,
+            id: 92836
           },
-          data: null,
-        },
+          data: null
+        }
       ],
       "hero-image-metadata": {
-        "original-url": "https://www.aljazeera.com/mritems/Images/2020/4/19/f90b71cdf10141ff9913b72bcfd29768_18.jpg",
+        "original-url": "https://www.aljazeera.com/mritems/Images/2020/4/19/f90b71cdf10141ff9913b72bcfd29768_18.jpg"
       },
       "hero-image-s3-key": "ace/2020-04/9adec2ac-d37c-496f-abcc-98309a4bb356/f90b71cdf10141ff9913b72bcfd29768_18.jpg",
       url: "https://ace-web.qtstage.io/anything/coronavirus/how-is-the-coronavirus-impacting-people-with-disabilities",
       "content-updated-at": 1587491154824,
       "author-id": 934395,
-      "first-published-at": 1587405627183,
+      "first-published-at": 1671083514919,
       authors: [
         {
           id: 934395,
@@ -84,10 +84,10 @@ export const dummyStory = {
           "avatar-url": null,
           "avatar-s3-key": null,
           "twitter-handle": null,
-          bio: null,
-        },
-      ],
-    },
+          bio: null
+        }
+      ]
+    }
   },
   "last-published-at": 1564650017054,
   subheadline:
@@ -100,7 +100,7 @@ export const dummyStory = {
           "hero-image-metadata": {
             width: 1080,
             height: 1330,
-            "focus-point": [525, 207],
+            "focus-point": [525, 207]
           },
           "hero-image-attribution": "attribution",
           "hero-image-s3-key":
@@ -108,10 +108,10 @@ export const dummyStory = {
           "hero-image-caption": "",
           "hero-image-url":
             "https://thumbor-stg.assettype.com/ace/2018-01/7f028fc9-48fa-4e6c-b2b3-8baf1e6e8928/22520141_862918130543643_474831853139210771_o.jpg",
-          "temporary-hero-image-key": null,
-        },
-      },
-    },
+          "temporary-hero-image-key": null
+        }
+      }
+    }
   },
   sections: [
     {
@@ -125,9 +125,9 @@ export const dummyStory = {
       collection: {
         slug: "news",
         name: "News",
-        id: 3795,
+        id: 3795
       },
-      data: null,
+      data: null
     },
     {
       "domain-slug": null,
@@ -140,9 +140,9 @@ export const dummyStory = {
       collection: {
         slug: "recent",
         name: "Recent stories",
-        id: 2760,
+        id: 2760
       },
-      data: null,
+      data: null
     },
     {
       "domain-slug": null,
@@ -155,13 +155,13 @@ export const dummyStory = {
       collection: {
         slug: "film-manual-collection",
         name: "Film",
-        id: 2725,
+        id: 2725
       },
-      data: null,
-    },
+      data: null
+    }
   ],
   "story-audio": {
-    "s3-key": "story-audio/ace/2019-08/a3561065-11ce-4281-9d86-325934aa2146/12132634-d337-471b-9e92-1ce7b4d15bfb.mp3",
+    "s3-key": "story-audio/ace/2019-08/a3561065-11ce-4281-9d86-325934aa2146/12132634-d337-471b-9e92-1ce7b4d15bfb.mp3"
   },
   "read-time": 2,
   "access-level-value": 23,
@@ -177,7 +177,7 @@ export const dummyStory = {
     "mime-type": "image/png",
     "file-size": 587085,
     "file-name": "ready-player-one-hd-wallpapers-70749-6537851.png",
-    "focus-point": [883, 411],
+    "focus-point": [883, 411]
   },
   comments: null,
   "word-count": 323,
@@ -207,6 +207,95 @@ export const dummyStory = {
       "story-elements": [
         {
           description: "",
+          "embed-js":
+            "PGlmcmFtZSBzcmM9Jy8vcGxheWVycy5icmlnaHRjb3ZlLm5ldC82MTM5ODI1NDc4MDAxL2RlZmF1bHRfZGVmYXVsdC9pbmRleC5odG1sP3ZpZGVvSWQ9NjMxOTg4MDI0NDExMicgYWxsb3dmdWxsc2NyZWVuIGZyYW1lYm9yZGVyPTA+PC9pZnJhbWU+",
+          "page-url": "/story/b7b6ecab-2b4f-4dc1-b04a-0b0ec76a50c4/element/f4dc8f57-8a79-4b96-bc4b-7c4c5d481373",
+          type: "jsembed",
+          "family-id": "96bea74a-8fed-43f0-9624-a5c9686e1062",
+          title: "",
+          id: "f4dc8f57-8a79-4b96-bc4b-7c4c5d481373",
+          metadata: {},
+          subtype: null
+        },
+        {
+          description: "",
+          "page-url": "/story/b7b6ecab-2b4f-4dc1-b04a-0b0ec76a50c4/element/2cfc6b4e-85fb-47b0-ae4e-580a650372f7",
+          type: "external-file",
+          "family-id": "0148ec01-3c7c-49ee-8a3f-db8ca4907dc8",
+          title: "",
+          "file-type": "video",
+          id: "2cfc6b4e-85fb-47b0-ae4e-580a650372f7",
+          url: null,
+          "content-type": "video/brightcove",
+          metadata: {
+            "account-id": "1752604059001",
+            "player-id": "default",
+            "player-media": "default",
+            "video-id": "6156696074001",
+            "embed-code":
+              "aHR0cHM6Ly9wbGF5ZXJzLmJyaWdodGNvdmUubmV0LzI3NjY2MjQ5MDUwMDEvZGVmYXVsdF9kZWZhdWx0L2luZGV4Lmh0bWw/dmlkZW9JZD02MzIzMDIxNjcxMTEy",
+            "player-url": "//players.brightcove.net/2766624905001/default_default/index.html?videoId=6323021671112"
+          },
+          subtype: "brightcove-video"
+        },
+        {
+          description: "",
+          "embed-js":
+            "PHNjcmlwdCBzcmM9Imh0dHBzOi8vZ2VvLmRhaWx5bW90aW9uLmNvbS9wbGF5ZXIveDc4NTlBLmpzIiBkYXRhLXZpZGVvPSJ4ODRzaDg3Ij48L3NjcmlwdD4=",
+          "page-url": "/story/88553fe8-640b-4023-90de-d82e4843d7e5/element/ccbe1571-6b25-4f1d-aea0-135622d378e3",
+          type: "jsembed",
+          "family-id": "2a419ba5-064d-44c9-b5af-59f284f4c4b1",
+          title: "",
+          id: "ccbe1571-6b25-4f1d-aea0-135622d378e3",
+          metadata: {
+            "video-id": "xjzije",
+            "dailymotion-url": "https://www.dailymotion.com/video/xjzije",
+            provider: "dailymotion-video",
+            "player-id": "x7859A"
+          },
+          subtype: "dailymotion-embed-script"
+        },
+        {
+          description: "",
+          "page-url": "/story/191d390f-7f10-422a-86b5-cf589a0bac08/element/813676c9-6606-4fa9-a25a-70b9910e4631",
+          type: "text",
+          "family-id": "9309e866-a7e2-475d-b41d-e285c9029b9b",
+          title: "",
+          id: "813676c9-6606-4fa9-a25a-70b9910e4631",
+          metadata: {
+            content: "Quote: Rajasthan Chief Minister Ashok",
+            attribution: "Ashok"
+          },
+          subtype: "quote",
+          text:
+            '<div><blockquote>Quote: Rajasthan Chief Minister Ashok</blockquote><span class="attribution">Ashok</span></div>'
+        },
+        {
+          description: "",
+          "page-url": "/story/191d390f-7f10-422a-86b5-cf589a0bac08/element/9ee341b5-464a-4d91-a567-258a7cc90db2",
+          type: "title",
+          "family-id": "75bc3d37-489a-4e28-b7a0-3831aafe2bd5",
+          title: "",
+          id: "9ee341b5-464a-4d91-a567-258a7cc90db2",
+          metadata: {},
+          subtype: null,
+          text: "Title element"
+        },
+
+        {
+          description: "",
+          "page-url": "/story/a3561065-11ce-4281-9d86-325934aa2146/element/c529557b-a4f5-4363-ba3f-7ac0eb14f299",
+          type: "text",
+          "family-id": "2b7c81f0-98f6-416c-9692-90ba504c9385",
+          title: "",
+          id: "c529557b-a4f5-4363-ba3f-7ac0eb14f299",
+          metadata: {},
+          subtype: null,
+          text:
+            '<p><a href="https://www.theguardian.com/technology/virtual-reality">Virtual reality</a> is the air guitar solo of modern cinema: a frenetic imagined activity in a made-up world that exists one level below the already made-up world of the story. <a href="https://www.theguardian.com/film/stevenspielberg">Steven Spielberg</a> 2019s <a href="https://www.theguardian.com/film/ready-player-one">Ready Player One</a>.</p>'
+        },
+        {
+          description: "",
           "page-url": "/story/49ed61fb-647e-4d23-9097-3c5088cc3fa7/element/d08cb2d1-0316-4af3-ad93-192824111745",
           type: "text",
           "family-id": "7e42ab53-fb73-49e9-b0fe-51a889cd3f97",
@@ -216,10 +305,11 @@ export const dummyStory = {
             "cta-title": "CTA text button",
             "cta-url": "https://www.google.com",
             "open-in-new-tab": true,
-            "no-follow": true,
+            "no-follow": true
           },
           subtype: "cta",
-          text: '<a class="cta-anchor" href="https://www.google.com" target="_blank" rel="nofollow"><span class="cta-text">CTA text button</span></a>',
+          text:
+            '<a class="cta-anchor" href="https://www.google.com" target="_blank" rel="nofollow"><span class="cta-text">CTA text button</span></a>'
         },
         {
           description: "",
@@ -233,9 +323,9 @@ export const dummyStory = {
           metadata: {
             "video-id": "xeg4c4",
             "dailymotion-url": "https://www.dailymotion.com/video/xeg4c4",
-            provider: "dailymotion-video",
+            provider: "dailymotion-video"
           },
-          subtype: "dailymotion-video",
+          subtype: "dailymotion-video"
         },
         {
           description: "",
@@ -245,13 +335,14 @@ export const dummyStory = {
           title: "",
           id: "2f648c29-ef8f-442c-903a-263f82e631dd",
           "file-name": "document__7_ (1).docx",
-          url: "https://thumbor-stg.assettype.com/ace/2019-08/21f3a19b-1d98-46bc-95e3-a5bdc9045ae9/document__7___1_.docx",
+          url:
+            "https://thumbor-stg.assettype.com/ace/2019-08/21f3a19b-1d98-46bc-95e3-a5bdc9045ae9/document__7___1_.docx",
           "s3-key": "ace/2019-08/21f3a19b-1d98-46bc-95e3-a5bdc9045ae9/document__7___1_.docx",
           "content-type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
           metadata: {
-            "file-size": 8209,
+            "file-size": 8209
           },
-          subtype: "attachment",
+          subtype: "attachment"
         },
         {
           description: "",
@@ -265,9 +356,9 @@ export const dummyStory = {
           "s3-key": "ace/2019-07/6dcf2021-615b-43e6-85f3-21acb8953cea/resume_samples.pdf",
           "content-type": "application/pdf",
           metadata: {
-            "file-size": 301808,
+            "file-size": 301808
           },
-          subtype: "attachment",
+          subtype: "attachment"
         },
         {
           "page-url": "/story/ed8a181b-4750-48b9-967e-83f29416ee2a/element/e2478f89-edab-44c8-a7df-6c6c84399c82",
@@ -278,10 +369,11 @@ export const dummyStory = {
           metadata: {
             content: "The human eye can distinguish around 10 million different colors!",
             attribution:
-              "Color processing begins at a very early level in the visual system (even within the retina) through initial color opponent mechanisms.",
+              "Color processing begins at a very early level in the visual system (even within the retina) through initial color opponent mechanisms."
           },
           subtype: "bigfact",
-          text: '<div><div class="bigfact-title">The human eye can distinguish around 10 million different colors!</div><div class="bigfact-description">Color processing begins at a very early level in the visual system (even within the retina) through initial color opponent mechanisms.</div></div>',
+          text:
+            '<div><div class="bigfact-title">The human eye can distinguish around 10 million different colors!</div><div class="bigfact-description">Color processing begins at a very early level in the visual system (even within the retina) through initial color opponent mechanisms.</div></div>'
         },
         {
           description: "",
@@ -293,7 +385,7 @@ export const dummyStory = {
           url: "https://www.youtube.com/watch?v=AST2-4db4ic&feature=youtu.be",
           "embed-url": "https://www.youtube.com/embed/AST2-4db4ic",
           metadata: {},
-          subtype: null,
+          subtype: null
         },
         {
           description: "",
@@ -307,9 +399,9 @@ export const dummyStory = {
           metadata: {
             "dailymotion-url": "https://www.dailymotion.com/video/x5vla8l",
             provider: "dailymotion-video",
-            "video-id": "x5vla8l",
+            "video-id": "x5vla8l"
           },
-          subtype: "dailymotion-video",
+          subtype: "dailymotion-video"
         },
         {
           description: "",
@@ -323,9 +415,9 @@ export const dummyStory = {
           metadata: {
             "tweet-url": "https://twitter.com/atlantahumane/status/1243218832581447683",
             provider: "twitter",
-            "tweet-id": "1243218832581447683",
+            "tweet-id": "1243218832581447683"
           },
-          subtype: "tweet",
+          subtype: "tweet"
         },
         {
           description: "",
@@ -337,18 +429,7 @@ export const dummyStory = {
           title: "",
           id: "3ea4a656-e20b-4ed3-ba8f-58874b5e8715",
           metadata: {},
-          subtype: null,
-        },
-        {
-          description: "",
-          "page-url": "/story/a3561065-11ce-4281-9d86-325934aa2146/element/c529557b-a4f5-4363-ba3f-7ac0eb14f299",
-          type: "text",
-          "family-id": "2b7c81f0-98f6-416c-9692-90ba504c9385",
-          title: "",
-          id: "c529557b-a4f5-4363-ba3f-7ac0eb14f299",
-          metadata: {},
-          subtype: null,
-          text: '<p><a href="https://www.theguardian.com/technology/virtual-reality">Virtual reality</a> is the air guitar solo of modern cinema: a frenetic imagined activity in a made-up world that exists one level below the already made-up world of the story. <a href="https://www.theguardian.com/film/stevenspielberg">Steven Spielberg</a> 2019s <a href="https://www.theguardian.com/film/ready-player-one">Ready Player One</a>.</p>',
+          subtype: null
         },
         {
           description: "",
@@ -356,7 +437,7 @@ export const dummyStory = {
             width: 6016,
             height: 4016,
             "mime-type": "image/jpeg",
-            "focus-point": [2741, 1930],
+            "focus-point": [2741, 1930]
           },
           "page-url": "/story/560b39d9-ae5b-44ef-acc7-04db4472b4f8/element/6c6cf4a8-6700-4829-8076-88373a1436b1",
           type: "image",
@@ -367,7 +448,7 @@ export const dummyStory = {
           "image-s3-key": "demo/2018-11/b1fa99ff-b05d-464b-97b9-83cd8f2bf65d/2072.jpg",
           metadata: {},
           subtype: null,
-          hyperlink: "https://www.google.com/",
+          hyperlink: "https://www.google.com/"
         },
         {
           description: "",
@@ -383,18 +464,19 @@ export const dummyStory = {
                 description:
                   "In the year 2045, people can escape their harsh reality in the OASIS, an immersive virtual world where you can go anywhere, do anything, be anyone-the only limits are your own imagination. OASIS creator James Halliday left his immense fortune and control of the Oasis to the winner of a contest designed to find a worthy heir. When unlikely hero Wade Watts conquers the first challenge of the reality-bending treasure hunt, he and his friends-known as the High Five-are hurled into a fantastical universe of discovery and danger to save the OASIS and their world.",
                 url: "https://www.rottentomatoes.com/m/ready_player_one/",
-                name: "Ready player One review from rotten tomatoes",
+                name: "Ready player One review from rotten tomatoes"
               },
-              text: '<div><p>Ready player One review from rotten tomatoes</p><p><a href="https://www.rottentomatoes.com/m/ready_player_one/">In the year 2045, people can escape their harsh reality in the OASIS, an immersive virtual world where you can go anywhere, do anything, be anyone-the only limits are your own imagination. OASIS creator James Halliday left his immense fortune and control of the Oasis to the winner of a contest designed to find a worthy heir. When unlikely hero Wade Watts conquers the first challenge of the reality-bending treasure hunt, he and his friends-known as the High Five-are hurled into a fantastical universe of discovery and danger to save the OASIS and their world.</a></p></div>',
+              text:
+                '<div><p>Ready player One review from rotten tomatoes</p><p><a href="https://www.rottentomatoes.com/m/ready_player_one/">In the year 2045, people can escape their harsh reality in the OASIS, an immersive virtual world where you can go anywhere, do anything, be anyone-the only limits are your own imagination. OASIS creator James Halliday left his immense fortune and control of the Oasis to the winner of a contest designed to find a worthy heir. When unlikely hero Wade Watts conquers the first challenge of the reality-bending treasure hunt, he and his friends-known as the High Five-are hurled into a fantastical universe of discovery and danger to save the OASIS and their world.</a></p></div>',
               id: "47afb0c6-aa50-446c-8e55-c10c604c5246",
               "family-id": "6b236f36-ce8a-4f9a-b70e-844367f13af0",
-              type: "text",
-            },
+              type: "text"
+            }
           ],
           title: "",
           id: "4abd5e1d-4f02-433a-af48-2733a63682b9",
           metadata: {},
-          subtype: "references",
+          subtype: "references"
         },
         {
           description: "",
@@ -406,10 +488,11 @@ export const dummyStory = {
           metadata: {
             content:
               "After the death of James Halliday, the creator of the virtual reality world, his pre-recorded message reveals the hidden fortune, which makes Wade Watts, a teenager, embark on a quest.",
-            attribution: "Player",
+            attribution: "Player"
           },
           subtype: "quote",
-          text: '<div><blockquote>After the death of James Halliday, the creator of the virtual reality world, his pre-recorded message reveals the hidden fortune, which makes Wade Watts, a teenager, embark on a quest.</blockquote><span class="attribution">Player</span></div>',
+          text:
+            '<div><blockquote>After the death of James Halliday, the creator of the virtual reality world, his pre-recorded message reveals the hidden fortune, which makes Wade Watts, a teenager, embark on a quest.</blockquote><span class="attribution">Player</span></div>'
         },
         {
           description: "",
@@ -441,7 +524,7 @@ export const dummyStory = {
               "avatar-s3-key": "ace/2019-08/565bba26-4f05-4e63-b619-511a2a2bd5b7/images.jpeg",
               "twitter-handle": null,
               "created-at": 1551268188983,
-              metadata: {},
+              metadata: {}
             },
             interviewee: {
               "author-collection-id": null,
@@ -461,11 +544,12 @@ export const dummyStory = {
               "avatar-s3-key": "ace/2019-08/565bba26-4f05-4e63-b619-511a2a2bd5b7/images.jpeg",
               "twitter-handle": null,
               "created-at": 1551268188983,
-              metadata: {},
-            },
+              metadata: {}
+            }
           },
           subtype: "q-and-a",
-          text: '<div><div class="question"><p>Is Ready Player One book<a href="https://www.jbsimmons.com/blog/books-better-than-movies-ready-player-one"> better </a>than the movie?</p></div><div class="answer"><p><strong>Ready Player One</strong> is the latest example. I read Earnest Cline\'s <strong><a href="https://www.jbsimmons.com/blog/books-better-than-movies-ready-player-one">book</a></strong> a couple months before watching Steven Spielberg\'s <strong>movie</strong>. ... The <strong>book</strong> generally fares <strong>better</strong> with reviewers, averaging 4.6 out of 5 stars on Amazon, while the <strong>movie</strong> scores 73% on Rotten Tomatoes.</p></div></div>',
+          text:
+            '<div><div class="question"><p>Is Ready Player One book<a href="https://www.jbsimmons.com/blog/books-better-than-movies-ready-player-one"> better </a>than the movie?</p></div><div class="answer"><p><strong>Ready Player One</strong> is the latest example. I read Earnest Cline\'s <strong><a href="https://www.jbsimmons.com/blog/books-better-than-movies-ready-player-one">book</a></strong> a couple months before watching Steven Spielberg\'s <strong>movie</strong>. ... The <strong>book</strong> generally fares <strong>better</strong> with reviewers, averaging 4.6 out of 5 stars on Amazon, while the <strong>movie</strong> scores 73% on Rotten Tomatoes.</p></div></div>'
         },
         {
           description: "",
@@ -493,11 +577,12 @@ export const dummyStory = {
               "avatar-s3-key": "ace/2019-08/565bba26-4f05-4e63-b619-511a2a2bd5b7/images.jpeg",
               "twitter-handle": null,
               "created-at": 1551268188983,
-              metadata: {},
-            },
+              metadata: {}
+            }
           },
           subtype: "question",
-          text: '<p>Is Ready Player One book <a href="https://www.jbsimmons.com/blog/books-better-than-movies-ready-player-one">better</a> than the movie?</p>',
+          text:
+            '<p>Is Ready Player One book <a href="https://www.jbsimmons.com/blog/books-better-than-movies-ready-player-one">better</a> than the movie?</p>'
         },
         {
           description: "",
@@ -525,11 +610,12 @@ export const dummyStory = {
               "avatar-s3-key": "ace/2019-08/565bba26-4f05-4e63-b619-511a2a2bd5b7/images.jpeg",
               "twitter-handle": null,
               "created-at": 1551268188983,
-              metadata: {},
-            },
+              metadata: {}
+            }
           },
           subtype: "answer",
-          text: "<p><strong>Ready Player One</strong> is the latest example. I read Earnest Cline's <strong>book</strong> a couple months before watching Steven Spielberg's <strong>movie</strong>. ... The <strong><a href=\"https://www.jbsimmons.com/blog/books-better-than-movies-ready-player-one\">book</a></strong> generally fares <strong>better</strong> with reviewers, averaging 4.6 out of 5 stars on Amazon, while the <strong>movie</strong> scores 73% on Rotten Tomatoes.</p>",
+          text:
+            "<p><strong>Ready Player One</strong> is the latest example. I read Earnest Cline's <strong>book</strong> a couple months before watching Steven Spielberg's <strong>movie</strong>. ... The <strong><a href=\"https://www.jbsimmons.com/blog/books-better-than-movies-ready-player-one\">book</a></strong> generally fares <strong>better</strong> with reviewers, averaging 4.6 out of 5 stars on Amazon, while the <strong>movie</strong> scores 73% on Rotten Tomatoes.</p>"
         },
         {
           id: "00000000-0000-0000-0000-000000000000",
@@ -539,8 +625,8 @@ export const dummyStory = {
           type: "text",
           text: '<p>text <a href="https://ace-web.qtstage.io/">promotional</a> message</p>',
           metadata: {
-            "promotional-message": true,
-          },
+            "promotional-message": true
+          }
         },
         {
           id: "00000000-0000-0000-0000-000000000000",
@@ -550,8 +636,8 @@ export const dummyStory = {
           type: "text",
           text: '<p>text <a href="https://ace-web.qtstage.io/">promotional</a> message</p>',
           metadata: {
-            "promotional-message": true,
-          },
+            "promotional-message": true
+          }
         },
         {
           description: "",
@@ -562,10 +648,11 @@ export const dummyStory = {
           id: "0e1e9777-e0e6-45f9-b212-264db2d8eeb5",
           metadata: {
             content:
-              "Although the many story changes might be hard for book purists to accept, Steven Spielberg has lovingly captured the zeitgeist of '80s nostalgia in this adventure.",
+              "Although the many story changes might be hard for book purists to accept, Steven Spielberg has lovingly captured the zeitgeist of '80s nostalgia in this adventure."
           },
           subtype: "blurb",
-          text: '<blockquote>Although the many story changes might be hard for book purists to accept, <a href="https://www.rottentomatoes.com/m/ready_player_one/">Steven Spielberg</a> has lovingly captured the zeitgeist of 80s nostalgia in this adventure.</blockquote>',
+          text:
+            '<blockquote>Although the many story changes might be hard for book purists to accept, <a href="https://www.rottentomatoes.com/m/ready_player_one/">Steven Spielberg</a> has lovingly captured the zeitgeist of 80s nostalgia in this adventure.</blockquote>'
         },
         {
           description: "",
@@ -577,10 +664,11 @@ export const dummyStory = {
           metadata: {
             content:
               "After the death of James Halliday, the creator of the virtual reality world, his pre-recorded message reveals the hidden fortune, which makes Wade Watts, a teenager, embark on a quest.",
-            attribution: "Player",
+            attribution: "Player"
           },
           subtype: "blockquote",
-          text: '<div><blockquote>After the death of James Halliday, the creator of the virtual reality world, his pre-recorded message reveals the hidden fortune, which makes Wade Watts, a teenager, embark on a quest.</blockquote><span class="attribution">Player</span></div>',
+          text:
+            '<div><blockquote>After the death of James Halliday, the creator of the virtual reality world, his pre-recorded message reveals the hidden fortune, which makes Wade Watts, a teenager, embark on a quest.</blockquote><span class="attribution">Player</span></div>'
         },
         {
           description: "",
@@ -596,11 +684,11 @@ export const dummyStory = {
               "story-content-id": "2d0008f7-768f-4667-822f-cb531d9627f4",
               "highlighted-text": "",
               id: "2d0008f7-768f-4667-822f-cb531d9627f4",
-              "highlighted-headline": null,
-            },
+              "highlighted-headline": null
+            }
           },
           subtype: "also-read",
-          text: "How is the coronavirus impacting people with disabilities?",
+          text: "How is the coronavirus impacting people with disabilities?"
         },
         {
           description: "",
@@ -611,7 +699,8 @@ export const dummyStory = {
           id: "373d6e0b-c5ac-4904-8d41-78e4fd5602cd",
           metadata: {},
           subtype: "summary",
-          text: "<p>Lorem<em> Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries</em>, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>",
+          text:
+            "<p>Lorem<em> Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries</em>, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>"
         },
         {
           description: "",
@@ -623,7 +712,7 @@ export const dummyStory = {
               description: "",
               "image-metadata": {
                 "original-url":
-                  "https://www.washingtonpost.com/resizer/_I2QC1BPsP-wxv7XSvBBK48bv8E=/1440x0/smart/arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/OP2ZX3T6KYI6VBGCA6JNQWIZCE.jpg",
+                  "https://www.washingtonpost.com/resizer/_I2QC1BPsP-wxv7XSvBBK48bv8E=/1440x0/smart/arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/OP2ZX3T6KYI6VBGCA6JNQWIZCE.jpg"
               },
               type: "image",
               "family-id": "0444a13c-f52a-43ff-8564-b52411ffdefc",
@@ -633,13 +722,13 @@ export const dummyStory = {
               "image-s3-key": "ace/2020-04/b6b55f73-a713-4087-849b-a7dbb04826e6/OP2ZX3T6KYI6VBGCA6JNQWIZCE.jpg",
               metadata: {},
               subtype: null,
-              hyperlink: "https://www.google.com/",
+              hyperlink: "https://www.google.com/"
             },
             {
               description: "",
               "image-metadata": {
                 "original-url":
-                  "https://media3.s-nbcnews.com/j/newscms/2020_16/3314681/200419-michelle-tom-cover-cs-509p_6155bfe91e67a4f93ecc2cf00530c404.nbcnews-fp-1200-630.jpg",
+                  "https://media3.s-nbcnews.com/j/newscms/2020_16/3314681/200419-michelle-tom-cover-cs-509p_6155bfe91e67a4f93ecc2cf00530c404.nbcnews-fp-1200-630.jpg"
               },
               type: "image",
               "family-id": "5173f4e7-f94c-4e7a-ba54-806ae1a7deef",
@@ -650,12 +739,12 @@ export const dummyStory = {
                 "ace/2020-04/e58b991e-4a82-4fca-818d-c1f8fd6e98e6/200419_michelle_tom_cover_cs_509p_6155bfe91e67a4f93ecc2cf00530c404_nbcnews_fp_1200_630.jpg",
               metadata: {},
               subtype: null,
-              hyperlink: "https://www.google.com/",
+              hyperlink: "https://www.google.com/"
             },
             {
               description: "",
               "image-metadata": {
-                "original-url": "https://www.dw.com/image/53181437_304.jpg",
+                "original-url": "https://www.dw.com/image/53181437_304.jpg"
               },
               type: "image",
               "family-id": "5f454472-b7ed-4a18-b923-452332c16125",
@@ -665,13 +754,13 @@ export const dummyStory = {
               "image-s3-key": "ace/2020-04/ea98e4fb-f8a8-4b18-a2b0-8ec03b17820c/53181437_304.jpg",
               metadata: {},
               subtype: null,
-              hyperlink: "https://www.google.com/",
+              hyperlink: "https://www.google.com/"
             },
             {
               description: "",
               "image-metadata": {
                 "original-url":
-                  "https://www.washingtonpost.com/resizer/_f5BO1VdLp-O-jX1x-NK-GfYknU=/1440x0/smart/arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/ZE2IQNUBVAI6VBGCA6JNQWIZCE.jpg",
+                  "https://www.washingtonpost.com/resizer/_f5BO1VdLp-O-jX1x-NK-GfYknU=/1440x0/smart/arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/ZE2IQNUBVAI6VBGCA6JNQWIZCE.jpg"
               },
               type: "image",
               "family-id": "67ae55bd-3f34-417b-8951-fb525da321f2",
@@ -681,13 +770,13 @@ export const dummyStory = {
               "image-s3-key": "ace/2020-04/aef8d5e1-d2fc-4f77-968b-50ff0c4764ea/ZE2IQNUBVAI6VBGCA6JNQWIZCE.jpg",
               metadata: {},
               subtype: null,
-              hyperlink: "https://www.google.com/",
+              hyperlink: "https://www.google.com/"
             },
             {
               description: "",
               "image-metadata": {
                 "original-url":
-                  "https://www.washingtonpost.com/resizer/_f5BO1VdLp-O-jX1x-NK-GfYknU=/1440x0/smart/arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/ZE2IQNUBVAI6VBGCA6JNQWIZCE.jpg",
+                  "https://www.washingtonpost.com/resizer/_f5BO1VdLp-O-jX1x-NK-GfYknU=/1440x0/smart/arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/ZE2IQNUBVAI6VBGCA6JNQWIZCE.jpg"
               },
               type: "image",
               "family-id": "67ae55bd-3f34-417b-8951-fb525da321f2",
@@ -697,13 +786,13 @@ export const dummyStory = {
               "image-s3-key": "ace/2020-04/aef8d5e1-d2fc-4f77-968b-50ff0c4764ea/ZE2IQNUBVAI6VBGCA6JNQWIZCE.jpg",
               metadata: {},
               subtype: null,
-              hyperlink: "https://www.google.com/",
+              hyperlink: "https://www.google.com/"
             },
             {
               description: "",
               "image-metadata": {
                 "original-url":
-                  "https://www.washingtonpost.com/resizer/_f5BO1VdLp-O-jX1x-NK-GfYknU=/1440x0/smart/arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/ZE2IQNUBVAI6VBGCA6JNQWIZCE.jpg",
+                  "https://www.washingtonpost.com/resizer/_f5BO1VdLp-O-jX1x-NK-GfYknU=/1440x0/smart/arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/ZE2IQNUBVAI6VBGCA6JNQWIZCE.jpg"
               },
               type: "image",
               "family-id": "67ae55bd-3f34-417b-8951-fb525da321f2",
@@ -713,13 +802,13 @@ export const dummyStory = {
               "image-s3-key": "ace/2020-04/aef8d5e1-d2fc-4f77-968b-50ff0c4764ea/ZE2IQNUBVAI6VBGCA6JNQWIZCE.jpg",
               metadata: {},
               subtype: null,
-              hyperlink: "https://www.google.com/",
+              hyperlink: "https://www.google.com/"
             },
             {
               description: "",
               "image-metadata": {
                 "original-url":
-                  "https://www.washingtonpost.com/resizer/_f5BO1VdLp-O-jX1x-NK-GfYknU=/1440x0/smart/arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/ZE2IQNUBVAI6VBGCA6JNQWIZCE.jpg",
+                  "https://www.washingtonpost.com/resizer/_f5BO1VdLp-O-jX1x-NK-GfYknU=/1440x0/smart/arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/ZE2IQNUBVAI6VBGCA6JNQWIZCE.jpg"
               },
               type: "image",
               "family-id": "67ae55bd-3f34-417b-8951-fb525da321f2",
@@ -729,13 +818,13 @@ export const dummyStory = {
               "image-s3-key": "ace/2020-04/aef8d5e1-d2fc-4f77-968b-50ff0c4764ea/ZE2IQNUBVAI6VBGCA6JNQWIZCE.jpg",
               metadata: {},
               subtype: null,
-              hyperlink: "https://www.google.com/",
+              hyperlink: "https://www.google.com/"
             },
             {
               description: "",
               "image-metadata": {
                 "original-url":
-                  "https://www.aljazeera.com/mritems/Images/2020/4/19/e69c7b29e024420d95e519b96edfc7aa_18.jpg",
+                  "https://www.aljazeera.com/mritems/Images/2020/4/19/e69c7b29e024420d95e519b96edfc7aa_18.jpg"
               },
               type: "image",
               "family-id": "096ff456-dd70-45f8-9953-4ac78c6c332c",
@@ -746,13 +835,13 @@ export const dummyStory = {
                 "ace/2020-04/7cebf55c-27c1-4e73-839f-85d1399a354e/e69c7b29e024420d95e519b96edfc7aa_18.jpg",
               metadata: {},
               subtype: null,
-              hyperlink: "https://www.google.com/",
+              hyperlink: "https://www.google.com/"
             },
             {
               description: "",
               "image-metadata": {
                 "original-url":
-                  "https://media.khou.com/assets/KHOU/images/55ceb4cc-e4a7-4a99-bc29-34ed175c4df2/55ceb4cc-e4a7-4a99-bc29-34ed175c4df2_1140x641.jpg",
+                  "https://media.khou.com/assets/KHOU/images/55ceb4cc-e4a7-4a99-bc29-34ed175c4df2/55ceb4cc-e4a7-4a99-bc29-34ed175c4df2_1140x641.jpg"
               },
               type: "image",
               "family-id": "69f2fa84-f55b-4176-a48e-9cc0521b610d",
@@ -763,16 +852,16 @@ export const dummyStory = {
                 "ace/2020-04/167805cc-a440-41fe-bccf-132660d4350f/55ceb4cc_e4a7_4a99_bc29_34ed175c4df2_1140x641.jpg",
               metadata: {},
               subtype: null,
-              hyperlink: "https://www.google.com/",
-            },
+              hyperlink: "https://www.google.com/"
+            }
           ],
           title: "",
           id: "b35ef956-35ce-4431-a68d-018760a4ddda",
           metadata: {
-            type: "gallery",
+            type: "gallery"
           },
-          subtype: "image-gallery",
-        },
+          subtype: "image-gallery"
+        }
       ],
       "card-updated-at": 1587559563683,
       "content-version-id": "11beb6bf-bcb3-4ea2-8764-7355fc40811b",
@@ -797,12 +886,12 @@ export const dummyStory = {
               "mime-type": "image/png",
               "file-size": 587085,
               "file-name": "ready-player-one-hd-wallpapers-70749-6537851.png",
-              "focus-point": [883, 411],
-            },
-          },
+              "focus-point": [883, 411]
+            }
+          }
         },
-        attributes: {},
-      },
+        attributes: {}
+      }
     },
     {
       "story-elements": [
@@ -816,7 +905,7 @@ export const dummyStory = {
           url: "https://www.youtube.com/watch?v=cSp1dM2Vj48&feature=youtu.be",
           "embed-url": "https://www.youtube.com/embed/cSp1dM2Vj48",
           metadata: {},
-          subtype: null,
+          subtype: null
         },
         {
           id: "00000000-0000-0000-0000-000000000000",
@@ -824,11 +913,12 @@ export const dummyStory = {
           title: "",
           subtype: null,
           type: "text",
-          text: '<p><a href="https://www.theguardian.com/technology/virtual-reality">Virtual reality</a> is the air guitar solo of modern cinema: a frenetic imagined activity in a made-up world that exists one level below the already made-up world of the story. <a href="https://www.theguardian.com/film/stevenspielberg">Steven Spielberg</a> 2019s <a href="https://www.theguardian.com/film/ready-player-one">Ready Player One</a>.</p>',
+          text:
+            '<p><a href="https://www.theguardian.com/technology/virtual-reality">Virtual reality</a> is the air guitar solo of modern cinema: a frenetic imagined activity in a made-up world that exists one level below the already made-up world of the story. <a href="https://www.theguardian.com/film/stevenspielberg">Steven Spielberg</a> 2019s <a href="https://www.theguardian.com/film/ready-player-one">Ready Player One</a>.</p>',
           metadata: {
-            "promotional-message": true,
-          },
-        },
+            "promotional-message": true
+          }
+        }
       ],
       "card-updated-at": 1524116209278,
       "content-version-id": "f1e7f3ea-21f2-4801-b6d7-2022ee079478",
@@ -853,14 +943,15 @@ export const dummyStory = {
               "mime-type": "image/png",
               "file-size": 587085,
               "file-name": "ready-player-one-hd-wallpapers-70749-6537851.png",
-              "focus-point": [883, 411],
-            },
-          },
-        },
-      },
-    },
+              "focus-point": [883, 411]
+            }
+          }
+        }
+      }
+    }
   ],
-  url: "https://ace-web.qtstage.io/anything/recent-stories/news/ready-player-one-review-spielberg-spins-a-dizzying-vr-yarn",
+  url:
+    "https://ace-web.qtstage.io/anything/recent-stories/news/ready-player-one-review-spielberg-spins-a-dizzying-vr-yarn",
   "story-version-id": "28c7b47d-3b37-49f6-a0ba-2886d14182e4",
   "content-type": "story",
   "content-updated-at": 1564650017530,
@@ -869,7 +960,7 @@ export const dummyStory = {
   "linked-story-ids": [],
   "promotional-message": '<p>text <a href="https://ace-web.qtstage.io/">promotional</a> message</p>',
   "asana-project-id": null,
-  "first-published-at": 1524116216298,
+  "first-published-at": 1671083514919,
   "hero-image-caption": "hero image caption",
   version: 47,
   "story-template": "review",
@@ -882,8 +973,8 @@ export const dummyStory = {
       social: {
         twitter: {
           url: "https://www.twitter.com/sabqorg",
-          handle: "elonmusk",
-        },
+          handle: "elonmusk"
+        }
       },
       slug: "stephen-wertheim",
       "avatar-url": "https://thumbor-stg.assettype.com/ace/2019-08/145ab200-429f-44ac-8618-00c6e4643e31/cat.jpeg",
@@ -892,8 +983,8 @@ export const dummyStory = {
       bio: null,
       "contributor-role": {
         id: 873,
-        name: "Author",
-      },
+        name: "Author"
+      }
     },
     {
       id: 123981,
@@ -902,8 +993,8 @@ export const dummyStory = {
       social: {
         twitter: {
           url: "https://www.twitter.com/sabqorg",
-          handle: "elonmusk",
-        },
+          handle: "elonmusk"
+        }
       },
       "avatar-url":
         "https://lh5.googleusercontent.com/-NhNrHEp1w4M/AAAAAAAAAAI/AAAAAAAAAAs/lzYwVY1BQdQ/photo.jpg?sz=50",
@@ -912,23 +1003,62 @@ export const dummyStory = {
       bio: null,
       "contributor-role": {
         id: 873,
-        name: "Author",
-      },
+        name: "Author"
+      }
     },
+
+    {
+      id: 949805,
+      name: "Harry Potter",
+      social: {
+        twitter: {
+          url: "https://www.twitter.com/sabqorg",
+          handle: "elonmusk"
+        }
+      },
+      slug: "stephen-wertheim",
+      "avatar-url": "https://thumbor-stg.assettype.com/ace/2019-08/145ab200-429f-44ac-8618-00c6e4643e31/cat.jpeg",
+      "avatar-s3-key": "ace/2019-08/145ab200-429f-44ac-8618-00c6e4643e31/cat.jpeg",
+      "twitter-handle": null,
+      bio: null,
+      "contributor-role": {
+        id: 879,
+        name: "Guest Author"
+      }
+    },
+    {
+      id: 949806,
+      name: "Hagrid",
+      social: {
+        twitter: {
+          url: "https://www.twitter.com/sabqorg",
+          handle: "elonmusk"
+        }
+      },
+      slug: "stephen-wertheim",
+      "avatar-url": "https://thumbor-stg.assettype.com/ace/2019-08/145ab200-429f-44ac-8618-00c6e4643e31/cat.jpeg",
+      "avatar-s3-key": "ace/2019-08/145ab200-429f-44ac-8618-00c6e4643e31/cat.jpeg",
+      "twitter-handle": null,
+      bio: null,
+      "contributor-role": {
+        id: 8708,
+        name: "Guest Author"
+      }
+    }
   ],
   metadata: {
     "review-title": "Ready Player One",
     "review-rating": {
       label: "1",
-      value: "1",
+      value: "1"
     },
     "sponsored-by": "quint",
     "card-share": {
-      shareable: false,
-    },
+      shareable: false
+    }
   },
   "publish-at": null,
-  "assignee-name": "Ravigopal Kesari",
+  "assignee-name": "Ravigopal Kesari"
 };
 
 export const dummyPhotoStory = {
@@ -936,8 +1066,8 @@ export const dummyPhotoStory = {
   "updated-at": 1599115419318,
   seo: {
     "claim-reviews": {
-      story: null,
-    },
+      story: null
+    }
   },
   "assignee-id": 187245,
   "author-name": "Shreya Shukla",
@@ -949,7 +1079,7 @@ export const dummyPhotoStory = {
       "meta-description": "5th Anniversary of quintype",
       "meta-title": "5th Anniversary of qt",
       slug: "50th-anniversary",
-      "tag-type": "Tag",
+      "tag-type": "Tag"
     },
     {
       id: 1092771,
@@ -957,7 +1087,7 @@ export const dummyPhotoStory = {
       "meta-description": null,
       "meta-title": null,
       slug: "newzealand",
-      "tag-type": "Tag",
+      "tag-type": "Tag"
     },
     {
       id: 1292529,
@@ -965,7 +1095,7 @@ export const dummyPhotoStory = {
       "meta-description": null,
       "meta-title": null,
       slug: "50",
-      "tag-type": "Tag",
+      "tag-type": "Tag"
     },
     {
       id: 1292530,
@@ -973,14 +1103,14 @@ export const dummyPhotoStory = {
       "meta-description": null,
       "meta-title": null,
       slug: "bangalore",
-      "tag-type": "Tag",
-    },
+      "tag-type": "Tag"
+    }
   ],
   customSlotAfterStory: {
     config: { targetingId: "" },
     layout: "Leaderboard",
     layoutLabel: "Leaderboard",
-    type: "ad",
+    type: "ad"
   },
   headline: "Karnataka tourism",
   "storyline-id": null,
@@ -1002,13 +1132,13 @@ export const dummyPhotoStory = {
       collection: {
         slug: "child-sec-parent-sec",
         name: "child-sec (parent-sec)",
-        id: 17115,
+        id: 17115
       },
-      data: null,
-    },
+      data: null
+    }
   ],
   "story-audio": {
-    "s3-key": "ace/story-audio/2020-09/231f55c0-ba92-4da6-a2c0-697c520f860f/.0fc573c1-97de-4644-8a26-bf65c4d6f0d9.mp3",
+    "s3-key": "ace/story-audio/2020-09/231f55c0-ba92-4da6-a2c0-697c520f860f/.0fc573c1-97de-4644-8a26-bf65c4d6f0d9.mp3"
   },
   "read-time": 2,
   "access-level-value": null,
@@ -1020,7 +1150,7 @@ export const dummyPhotoStory = {
   "hero-image-metadata": {
     "original-url": "https://www.india.com/wp-content/uploads/2014/09/vikasa-soudha-245043_960_720.jpg",
     width: 625,
-    height: 470,
+    height: 470
   },
   comments: null,
   "word-count": 245,
@@ -1048,10 +1178,22 @@ export const dummyPhotoStory = {
       "story-elements": [
         {
           description: "",
+          "page-url": "/story/191d390f-7f10-422a-86b5-cf589a0bac08/element/d31da4d6-2738-48c6-8a9c-bd1a6ca919ba",
+          type: "text",
+          "family-id": "4e2d8d24-581a-4204-a40a-f8ab46d62c04",
+          title: "",
+          id: "d31da4d6-2738-48c6-8a9c-bd1a6ca919ba",
+          metadata: {},
+          subtype: "summary",
+          text:
+            '<p>Summary: In 2005, <em><a href="https://en.wikipedia.org/wiki/Nature_(journal)">Nature</a></em> published a peer review comparing 42 <a href="https://en.wikipedia.org/wiki/Hard_science">hard science</a> articles from <em><a href="https://en.wikipedia.org/wiki/Encyclop%C3%A6dia_Britannica">Encyclopædia Britannica</a></em> and Wikipedia and found that Wikipedia\'s level of accuracy approached that of <em>Britannica</em>,<sup><a href="https://en.wikipedia.org/wiki/Wikipedia#cite_note-GilesJ2005Internet-23">[21]</a></sup> although critics suggested that it might not have fared so well in a similar study of a <a href="https://en.wikipedia.org/wiki/Random_sampling">random sampling</a> of all articles or one focused on social science or contentious social issues.<sup><a href="https://en.wikipedia.org/wiki/Wikipedia#cite_note-Reagle,_pp._165%E2%80%93166-24">[22]</a><a href="https://en.wikipedia.org/wiki/Wikipedia#cite_note-Orlowski2005-25">[23]</a></sup> The following year, <em><a href="https://en.wikipedia.org/wiki/Time_(magazine)">Time</a></em> magazine stated that the open-door policy of allowing anyone to edit had made Wikipedia the biggest and possibly the best encyclopedia in the world, and was a testament to the vision of Jimmy Wales.<sup><a href="https://en.wikipedia.org/wiki/Wikipedia#cite_note-26">[24]</a></sup></p>'
+        },
+        {
+          description: "",
           "image-metadata": {
             width: 1920,
             height: 1080,
-            "focus-point": [964, 507],
+            "focus-point": [964, 507]
           },
           "page-url": "/story/231f55c0-ba92-4da6-a2c0-697c520f860f/element/7798674b-46f4-429c-95ce-cb5d334277e4",
           type: "image",
@@ -1062,7 +1204,7 @@ export const dummyPhotoStory = {
           "image-s3-key": "ace/2018-12/fcdb3782-886c-47ce-a84f-0ef5e051d639/Images_9.jpg",
           metadata: {},
           subtype: null,
-          hyperlink: "https://www.google.com/",
+          hyperlink: "https://www.google.com/"
         },
         {
           description: "",
@@ -1073,7 +1215,7 @@ export const dummyPhotoStory = {
           id: "664c9d54-f0c2-4016-a80e-7c7ed1d64330",
           metadata: {},
           subtype: null,
-          text: "Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus",
+          text: "Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus"
         },
         {
           description: "",
@@ -1084,14 +1226,15 @@ export const dummyPhotoStory = {
           id: "3bd855a8-9db1-404b-b193-6b4ec7a4c6f2",
           metadata: {},
           subtype: null,
-          text: "<p>Dolor sit amet lorem ipsum, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>",
+          text:
+            "<p>Dolor sit amet lorem ipsum, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>"
         },
         {
           config: { targetingId: "" },
           layout: "Leaderboard",
           layoutLabel: "Leaderboard",
-          type: "ad",
-        },
+          type: "ad"
+        }
       ],
       "card-updated-at": 1599070341951,
       "content-version-id": "7160cfea-8a20-48a6-a67c-c5c1bf26a062",
@@ -1113,12 +1256,12 @@ export const dummyPhotoStory = {
             metadata: {
               width: 1920,
               height: 1080,
-              "focus-point": [964, 507],
-            },
-          },
+              "focus-point": [964, 507]
+            }
+          }
         },
-        attributes: {},
-      },
+        attributes: {}
+      }
     },
     {
       "story-elements": [
@@ -1128,7 +1271,7 @@ export const dummyPhotoStory = {
             "original-url":
               "https://s.rfi.fr/media/display/ddb13a2c-e9b1-11ea-9cf1-005056bf87d6/w:1280/p:16x9/f4da51e521694ef3b14820c2fd32709e691f058e.jpg",
             width: 1280,
-            height: 720,
+            height: 720
           },
           "page-url": "/story/231f55c0-ba92-4da6-a2c0-697c520f860f/element/d33f9a51-4bc6-4205-8784-86cb11027115",
           type: "image",
@@ -1140,7 +1283,7 @@ export const dummyPhotoStory = {
             "ace/2020-08/04562266-d044-4cf3-8ff3-58ab0b084d33/f4da51e521694ef3b14820c2fd32709e691f058e.jpg",
           metadata: {},
           subtype: null,
-          hyperlink: "https://www.google.com/",
+          hyperlink: "https://www.google.com/"
         },
         {
           description: "",
@@ -1151,7 +1294,8 @@ export const dummyPhotoStory = {
           id: "530154d6-f1eb-4e12-8c87-6a49e8269cc6",
           metadata: {},
           subtype: "summary",
-          text: "<p>Dolor sit amet lorem ipsum, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>",
+          text:
+            "<p>Dolor sit amet lorem ipsum, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>"
         },
         {
           description: "",
@@ -1163,10 +1307,11 @@ export const dummyPhotoStory = {
           metadata: {
             content:
               "Dolor sit amet lorem ipsum, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-            attribution: "Quintype",
+            attribution: "Quintype"
           },
           subtype: "quote",
-          text: '<div><blockquote>Dolor sit amet lorem ipsum, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</blockquote><span class="attribution">Quintype</span></div>',
+          text:
+            '<div><blockquote>Dolor sit amet lorem ipsum, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</blockquote><span class="attribution">Quintype</span></div>'
         },
         {
           description: "",
@@ -1178,10 +1323,11 @@ export const dummyPhotoStory = {
           metadata: {
             content:
               "Dolor sit amet lorem ipsum, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-            attribution: "Quintype",
+            attribution: "Quintype"
           },
           subtype: "blockquote",
-          text: '<div><blockquote>Dolor sit amet lorem ipsum, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</blockquote><span class="attribution">Quintype</span></div>',
+          text:
+            '<div><blockquote>Dolor sit amet lorem ipsum, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</blockquote><span class="attribution">Quintype</span></div>'
         },
         {
           description: "",
@@ -1195,9 +1341,9 @@ export const dummyPhotoStory = {
           "s3-key": "ace/2020-09/d33ccb5b-a3c4-4376-8767-bedebe3e6f7c/Doker.pdf",
           "content-type": "application/pdf",
           metadata: {
-            "file-size": 28746,
+            "file-size": 28746
           },
-          subtype: "attachment",
+          subtype: "attachment"
         },
         {
           description: "",
@@ -1208,10 +1354,11 @@ export const dummyPhotoStory = {
           id: "85b7b83e-d1ac-4775-8c3c-5c48107db183",
           metadata: {
             question: "<p>Grand Central Terminal, Park Avenue, New York is the world's</p>",
-            answer: "<p>largest railway station</p>",
+            answer: "<p>largest railway station</p>"
           },
           subtype: "q-and-a",
-          text: '<div><div class="question"><p>Grand Central Terminal, Park Avenue, New York is the world\'s</p></div><div class="answer"><p>largest railway station</p></div></div>',
+          text:
+            '<div><div class="question"><p>Grand Central Terminal, Park Avenue, New York is the world\'s</p></div><div class="answer"><p>largest railway station</p></div></div>'
         },
         {
           description: "",
@@ -1222,11 +1369,12 @@ export const dummyPhotoStory = {
           id: "bb010ef2-8e67-4b72-8d4a-a525c7c4818c",
           metadata: {
             question: "<p>For which of the following disciplines is Nobel Prize awarded?</p>",
-            answer: "<p>Physics and Chemistry</p><p>Physiology or Medicine</p><p>Literature, Peace and Economics</p>",
+            answer: "<p>Physics and Chemistry</p><p>Physiology or Medicine</p><p>Literature, Peace and Economics</p>"
           },
           subtype: "q-and-a",
-          text: '<div><div class="question"><p>For which of the following disciplines is Nobel Prize awarded?</p></div><div class="answer"><p>Physics and Chemistry</p><p>Physiology or Medicine</p><p>Literature, Peace and Economics</p></div></div>',
-        },
+          text:
+            '<div><div class="question"><p>For which of the following disciplines is Nobel Prize awarded?</p></div><div class="answer"><p>Physics and Chemistry</p><p>Physiology or Medicine</p><p>Literature, Peace and Economics</p></div></div>'
+        }
       ],
       "card-updated-at": 1599070341951,
       "content-version-id": "4a3303f2-250d-4e57-9411-4e6b6ff30cd3",
@@ -1249,12 +1397,12 @@ export const dummyPhotoStory = {
               "original-url":
                 "https://s.rfi.fr/media/display/ddb13a2c-e9b1-11ea-9cf1-005056bf87d6/w:1280/p:16x9/f4da51e521694ef3b14820c2fd32709e691f058e.jpg",
               width: 1280,
-              height: 720,
-            },
-          },
+              height: 720
+            }
+          }
         },
-        attributes: {},
-      },
+        attributes: {}
+      }
     },
     {
       "story-elements": [
@@ -1267,7 +1415,8 @@ export const dummyPhotoStory = {
           id: "a22e71ed-d2e6-442c-b30c-4eaae392241e",
           metadata: {},
           subtype: null,
-          text: "<p>Dolor sit amet lorem ipsum, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>",
+          text:
+            "<p>Dolor sit amet lorem ipsum, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>"
         },
         {
           description: "",
@@ -1275,7 +1424,7 @@ export const dummyPhotoStory = {
             "original-url":
               "https://s.rfi.fr/media/display/e21e72c0-ec66-11ea-9857-005056a964fe/w:1280/p:16x9/8bfca0efa60a7b897690bea687d9cb3b991611ff_0.jpg",
             width: 1280,
-            height: 720,
+            height: 720
           },
           "page-url": "/story/231f55c0-ba92-4da6-a2c0-697c520f860f/element/613fcdb4-c551-4deb-be2f-ff50428235ec",
           type: "image",
@@ -1287,7 +1436,7 @@ export const dummyPhotoStory = {
             "ace/2020-09/12d48d3c-dac1-4b99-b961-a724c92c6cc2/8bfca0efa60a7b897690bea687d9cb3b991611ff_0.jpg",
           metadata: {},
           subtype: null,
-          hyperlink: "https://www.google.com/",
+          hyperlink: "https://www.google.com/"
         },
         {
           description: "",
@@ -1298,7 +1447,8 @@ export const dummyPhotoStory = {
           id: "3f57c4cb-0736-4c89-94a2-3891e6cf1dce",
           metadata: {},
           subtype: "summary",
-          text: "<p>Dolor sit amet lorem ipsum, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>",
+          text:
+            "<p>Dolor sit amet lorem ipsum, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>"
         },
         {
           id: "00000000-0000-0000-0000-000000000000",
@@ -1308,9 +1458,9 @@ export const dummyPhotoStory = {
           type: "text",
           text: ' <p>text <a href="https://ace-web.qtstage.io/">promotional</a> message</p>',
           metadata: {
-            "promotional-message": true,
-          },
-        },
+            "promotional-message": true
+          }
+        }
       ],
       "card-updated-at": 1599072759773,
       "content-version-id": "d92aae5f-7d65-4260-853f-c440373905c4",
@@ -1333,13 +1483,13 @@ export const dummyPhotoStory = {
               "original-url":
                 "https://s.rfi.fr/media/display/e21e72c0-ec66-11ea-9857-005056a964fe/w:1280/p:16x9/8bfca0efa60a7b897690bea687d9cb3b991611ff_0.jpg",
               width: 1280,
-              height: 720,
-            },
-          },
+              height: 720
+            }
+          }
         },
-        attributes: {},
-      },
-    },
+        attributes: {}
+      }
+    }
   ],
   url: "https://ace-web.qtstage.io/child-sec/2020/09/02/karnataka-tourism",
   "story-version-id": "fb04a248-7855-484c-ab2f-9b71e45fe7e7",
@@ -1350,7 +1500,7 @@ export const dummyPhotoStory = {
   "linked-story-ids": [],
   "promotional-message": ' <p>text <a href="https://ace-web.qtstage.io/">promotional</a> message</p>',
   "asana-project-id": null,
-  "first-published-at": 1599070346878,
+  "first-published-at": 1671083514919,
   "hero-image-caption": "Supreme Court Justice Clarence Thomas in 2007. ",
   version: 19,
   "story-template": "photo",
@@ -1361,29 +1511,30 @@ export const dummyPhotoStory = {
       slug: "shreya-shukla-2",
       social: {
         twitter: {
-          handle: "shuklashreya801",
-        },
+          handle: "shuklashreya801"
+        }
       },
       name: "Shreya Shukla",
       "contributor-role": {
         id: 873,
-        name: "Author",
+        name: "Author"
       },
       "avatar-url":
         "https://lh6.googleusercontent.com/-pBdJGAfN81c/AAAAAAAAAAI/AAAAAAAAAAA/ACHi3rfmrjS-gWdYzH3Gtmuib3KbVLdixw/photo.jpg",
-      bio: "At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi ",
+      bio:
+        "At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi ",
       id: 187245,
       "avatar-s3-key": null,
-      "twitter-handle": "shuklashreya801",
-    },
+      "twitter-handle": "shuklashreya801"
+    }
   ],
   metadata: {
     "card-share": {
-      shareable: false,
-    },
+      shareable: false
+    }
   },
   "publish-at": null,
-  "assignee-name": "Shreya Shukla",
+  "assignee-name": "Shreya Shukla"
 };
 
 export const dummyLiveBlogStory = {
@@ -1400,7 +1551,7 @@ export const dummyLiveBlogStory = {
       "meta-description": null,
       "meta-title": null,
       slug: "entertainment",
-      "tag-type": "Tag",
+      "tag-type": "Tag"
     },
     {
       id: 1209598,
@@ -1408,22 +1559,15 @@ export const dummyLiveBlogStory = {
       "meta-description": null,
       "meta-title": null,
       slug: "government",
-      "tag-type": "Tag",
+      "tag-type": "Tag"
     },
-    {
-      id: 1409326,
-      name: "liveblog",
-      "meta-description": null,
-      "meta-title": null,
-      slug: "liveblog",
-      "tag-type": "Tag",
-    },
+    { id: 1409326, name: "liveblog", "meta-description": null, "meta-title": null, slug: "liveblog", "tag-type": "Tag" }
   ],
   customSlotAfterStory: {
     config: { targetingId: "" },
     layout: "Leaderboard",
     layoutLabel: "Leaderboard",
-    type: "ad",
+    type: "ad"
   },
   headline: "Live blog story ",
   "storyline-id": null,
@@ -1443,8 +1587,8 @@ export const dummyLiveBlogStory = {
       "parent-id": 38586,
       "display-name": "Entertainment",
       collection: { slug: "entertainment", name: "Entertainment", id: 3946 },
-      data: null,
-    },
+      data: null
+    }
   ],
   "story-audio": { "s3-key": null },
   "read-time": 0,
@@ -1488,7 +1632,7 @@ export const dummyLiveBlogStory = {
           id: "3a569347-2bed-4763-bf3b-b58df01ad6cc",
           metadata: {},
           subtype: null,
-          text: "Sed ut perspiciatis unde omnis iste natus error",
+          text: "Sed ut perspiciatis unde omnis iste natus error"
         },
         {
           description: "",
@@ -1499,8 +1643,9 @@ export const dummyLiveBlogStory = {
           id: "739cf8a1-26d8-48fb-8cbf-771b1161ed68",
           metadata: {},
           subtype: null,
-          text: "<p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est</p>",
-        },
+          text:
+            "<p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est</p>"
+        }
       ],
       "card-updated-at": 1601431229891,
       "content-version-id": "254fdb13-fa12-426f-a50b-8846847158a5",
@@ -1519,11 +1664,11 @@ export const dummyLiveBlogStory = {
             url: "https://thumbor-stg.assettype.com/ace/2019-03/f25cc9c1-917c-4a19-9c9a-fa498f84f17b/test.jpg",
             attribution: "Google",
             caption: "Saque ipsa quae ab illo inventore veritatis et quip",
-            metadata: { "mime-type": "image/jpeg", "focus-point": [975, 375], width: 1682, height: 820 },
-          },
+            metadata: { "mime-type": "image/jpeg", "focus-point": [975, 375], width: 1682, height: 820 }
+          }
         },
-        attributes: {},
-      },
+        attributes: {}
+      }
     },
     {
       "story-elements": [
@@ -1536,7 +1681,7 @@ export const dummyLiveBlogStory = {
           id: "8ee1c6ed-57d8-4891-8a77-e789b2d33c29",
           metadata: {},
           subtype: null,
-          text: "At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium",
+          text: "At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium"
         },
         {
           description: "",
@@ -1547,7 +1692,8 @@ export const dummyLiveBlogStory = {
           id: "78142993-d358-4c17-b610-9c80101f32b1",
           metadata: {},
           subtype: null,
-          text: "<p>Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem.</p>",
+          text:
+            "<p>Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem.</p>"
         },
         {
           description: "",
@@ -1558,7 +1704,7 @@ export const dummyLiveBlogStory = {
             "original-url":
               "https://s.rfi.fr/media/display/a1b6b938-01c2-11eb-ba87-005056a964fe/w:1280/p:16x9/3aae2ba50b3667e9f02e3674a37581fae1ebaf74_3.jpg",
             width: 1280,
-            height: 720,
+            height: 720
           },
           "uploaded-at": 1601327722596,
           "page-url": "/story/4270e6db-f238-46d4-8b6d-788ede41760e/element/bf739a18-6878-485a-adc7-d608d767f123",
@@ -1571,8 +1717,8 @@ export const dummyLiveBlogStory = {
             "ace/2020-09/55df83b2-3181-49f3-b1d9-31cc91dda1be/3aae2ba50b3667e9f02e3674a37581fae1ebaf74_3.jpg",
           metadata: {},
           subtype: null,
-          hyperlink: "https://www.google.com/",
-        },
+          hyperlink: "https://www.google.com/"
+        }
       ],
       "card-updated-at": 1601431229891,
       "content-version-id": "2640b2cd-e57e-47b8-9a09-0c9e61bec4a9",
@@ -1588,19 +1734,20 @@ export const dummyLiveBlogStory = {
           message: null,
           image: {
             key: "ace/2020-09/55df83b2-3181-49f3-b1d9-31cc91dda1be/3aae2ba50b3667e9f02e3674a37581fae1ebaf74_3.jpg",
-            url: "https://thumbor-stg.assettype.com/ace/2020-09/55df83b2-3181-49f3-b1d9-31cc91dda1be/3aae2ba50b3667e9f02e3674a37581fae1ebaf74_3.jpg",
+            url:
+              "https://thumbor-stg.assettype.com/ace/2020-09/55df83b2-3181-49f3-b1d9-31cc91dda1be/3aae2ba50b3667e9f02e3674a37581fae1ebaf74_3.jpg",
             attribution: "",
             caption: null,
             metadata: {
               "original-url":
                 "https://s.rfi.fr/media/display/a1b6b938-01c2-11eb-ba87-005056a964fe/w:1280/p:16x9/3aae2ba50b3667e9f02e3674a37581fae1ebaf74_3.jpg",
               width: 1280,
-              height: 720,
-            },
-          },
+              height: 720
+            }
+          }
         },
-        attributes: {},
-      },
+        attributes: {}
+      }
     },
     {
       "story-elements": [
@@ -1613,8 +1760,8 @@ export const dummyLiveBlogStory = {
           id: "1cef89d6-c934-4f3c-b4d1-56460eb076e4",
           metadata: {},
           subtype: null,
-          text: "Sed ut perspiciatis unde omnis iste natus error ",
-        },
+          text: "Sed ut perspiciatis unde omnis iste natus error "
+        }
       ],
       "card-updated-at": 1601431229891,
       "content-version-id": "89935f86-dba4-4f90-b7ea-f59db58554f7",
@@ -1633,11 +1780,11 @@ export const dummyLiveBlogStory = {
             url: "https://thumbor-stg.assettype.com/ace/2019-03/f25cc9c1-917c-4a19-9c9a-fa498f84f17b/test.jpg",
             attribution: "Google",
             caption: "Saque ipsa quae ab illo inventore veritatis et quip",
-            metadata: { "mime-type": "image/jpeg", "focus-point": [975, 375], width: 1682, height: 820 },
-          },
+            metadata: { "mime-type": "image/jpeg", "focus-point": [975, 375], width: 1682, height: 820 }
+          }
         },
-        attributes: { "key-event": true },
-      },
+        attributes: { "key-event": true }
+      }
     },
     {
       "story-elements": [
@@ -1650,8 +1797,8 @@ export const dummyLiveBlogStory = {
           id: "1cef89d6-c934-4f3c-b4d1-56460eb076e4",
           metadata: {},
           subtype: null,
-          text: "Sed ut perspiciatis unde omnis iste natus error ",
-        },
+          text: "Sed ut perspiciatis unde omnis iste natus error "
+        }
       ],
       "card-updated-at": 1601431229891,
       "content-version-id": "89935f86-dba4-4f90-b7ea-f59db58554f7",
@@ -1670,11 +1817,11 @@ export const dummyLiveBlogStory = {
             url: "https://thumbor-stg.assettype.com/ace/2019-03/f25cc9c1-917c-4a19-9c9a-fa498f84f17b/test.jpg",
             attribution: "Google",
             caption: "Saque ipsa quae ab illo inventore veritatis et quip",
-            metadata: { "mime-type": "image/jpeg", "focus-point": [975, 375], width: 1682, height: 820 },
-          },
+            metadata: { "mime-type": "image/jpeg", "focus-point": [975, 375], width: 1682, height: 820 }
+          }
         },
-        attributes: { "key-event": true },
-      },
+        attributes: { "key-event": true }
+      }
     },
     {
       "story-elements": [
@@ -1687,8 +1834,8 @@ export const dummyLiveBlogStory = {
           id: "1cef89d6-c934-4f3c-b4d1-56460eb076e4",
           metadata: {},
           subtype: null,
-          text: "Sed ut perspiciatis unde omnis iste natus error ",
-        },
+          text: "Sed ut perspiciatis unde omnis iste natus error "
+        }
       ],
       "card-updated-at": 1601431229891,
       "content-version-id": "89935f86-dba4-4f90-b7ea-f59db58554f7",
@@ -1707,11 +1854,11 @@ export const dummyLiveBlogStory = {
             url: "https://thumbor-stg.assettype.com/ace/2019-03/f25cc9c1-917c-4a19-9c9a-fa498f84f17b/test.jpg",
             attribution: "Google",
             caption: "Saque ipsa quae ab illo inventore veritatis et quip",
-            metadata: { "mime-type": "image/jpeg", "focus-point": [975, 375], width: 1682, height: 820 },
-          },
+            metadata: { "mime-type": "image/jpeg", "focus-point": [975, 375], width: 1682, height: 820 }
+          }
         },
-        attributes: { "key-event": true },
-      },
+        attributes: { "key-event": true }
+      }
     },
     {
       "story-elements": [
@@ -1724,8 +1871,8 @@ export const dummyLiveBlogStory = {
           id: "b62c0458-b8eb-4f3d-9f3b-86d04447a909",
           metadata: {},
           subtype: null,
-          text: "At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium",
-        },
+          text: "At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium"
+        }
       ],
       "card-updated-at": 1601277247407,
       "content-version-id": "49686375-3b2c-4f02-93a8-e47d1a063e1f",
@@ -1744,11 +1891,11 @@ export const dummyLiveBlogStory = {
             url: "https://thumbor-stg.assettype.com/ace/2019-03/f25cc9c1-917c-4a19-9c9a-fa498f84f17b/test.jpg",
             attribution: "Google",
             caption: "Saque ipsa quae ab illo inventore veritatis et quip",
-            metadata: { "mime-type": "image/jpeg", "focus-point": [975, 375], width: 1682, height: 820 },
-          },
+            metadata: { "mime-type": "image/jpeg", "focus-point": [975, 375], width: 1682, height: 820 }
+          }
         },
-        attributes: { "key-event": true },
-      },
+        attributes: { "key-event": true }
+      }
     },
     {
       "story-elements": [
@@ -1761,7 +1908,7 @@ export const dummyLiveBlogStory = {
           id: "3ca72d69-09d3-47be-8921-a993c111fd9e",
           metadata: {},
           subtype: null,
-          text: "Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus",
+          text: "Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus"
         },
         {
           id: "00000000-0000-0000-0000-000000000000",
@@ -1770,8 +1917,8 @@ export const dummyLiveBlogStory = {
           subtype: null,
           type: "text",
           text: ' <p>text <a href="https://ace-web.qtstage.io/">promotional</a> message</p>',
-          metadata: { "promotional-message": true },
-        },
+          metadata: { "promotional-message": true }
+        }
       ],
       "card-updated-at": 1601277247407,
       "content-version-id": "0acfbcb5-c770-498e-8439-a137e031dede",
@@ -1790,12 +1937,12 @@ export const dummyLiveBlogStory = {
             url: "https://thumbor-stg.assettype.com/ace/2019-03/f25cc9c1-917c-4a19-9c9a-fa498f84f17b/test.jpg",
             attribution: "Google",
             caption: "Saque ipsa quae ab illo inventore veritatis et quip",
-            metadata: { "mime-type": "image/jpeg", "focus-point": [975, 375], width: 1682, height: 820 },
-          },
+            metadata: { "mime-type": "image/jpeg", "focus-point": [975, 375], width: 1682, height: 820 }
+          }
         },
-        attributes: { "key-event": true },
-      },
-    },
+        attributes: { "key-event": true }
+      }
+    }
   ],
   url: "https://ace-web.qtstage.io/entertainment/2020/09/28/live-blog-story-3",
   "story-version-id": "dbc68251-e21d-4b1f-b8d2-e6ec972249ce",
@@ -1806,7 +1953,7 @@ export const dummyLiveBlogStory = {
   "linked-story-ids": [],
   "promotional-message": ' <p>text <a href="https://ace-web.qtstage.io/">promotional</a> message</p>',
   "asana-project-id": null,
-  "first-published-at": 1601276764461,
+  "first-published-at": 1671083514919,
   "hero-image-caption": "Saque ipsa quae ab illo inventore veritatis et quip",
   version: 10,
   "story-template": "live-blog",
@@ -1823,13 +1970,25 @@ export const dummyLiveBlogStory = {
       bio: "Biooo ?",
       id: 425675,
       "avatar-s3-key": null,
-      "twitter-handle": "h_bindiya",
+      "twitter-handle": "h_bindiya"
     },
+    {
+      slug: "bindiya-h",
+      social: { twitter: { handle: "h_bindiya" } },
+      name: "Raman V",
+      "contributor-role": { id: 873, name: "Guest Author" },
+      "avatar-url":
+        "https://lh6.googleusercontent.com/-T9_sTsD4Qco/AAAAAAAAAAI/AAAAAAAAAAA/ACHi3rc0KarItXiZkh68r6sgS4QwAApcbg/photo.jpg",
+      bio: "Biooo ?",
+      id: 425676,
+      "avatar-s3-key": null,
+      "twitter-handle": "h_bindiya"
+    }
   ],
   metadata: { "is-closed": false, "card-share": { shareable: false } },
   "hero-image-url": "https://thumbor-stg.assettype.com/ace/2019-03/f25cc9c1-917c-4a19-9c9a-fa498f84f17b/test.jpg",
   "publish-at": null,
-  "assignee-name": "Bindiya H",
+  "assignee-name": "Bindiya H"
 };
 
 export const dummyListicleStory = {
@@ -1848,14 +2007,14 @@ export const dummyListicleStory = {
       "meta-description": null,
       "meta-title": null,
       slug: "workplace",
-      "tag-type": "Tag",
-    },
+      "tag-type": "Tag"
+    }
   ],
   customSlotAfterStory: {
     config: { targetingId: "" },
     layout: "Leaderboard",
     layoutLabel: "Leaderboard",
-    type: "ad",
+    type: "ad"
   },
   headline: "It pays to be kind: improving workplace culture through kindness",
   "storyline-id": null,
@@ -1875,11 +2034,11 @@ export const dummyListicleStory = {
       "parent-id": 38586,
       "display-name": "Health",
       collection: { slug: "health", name: "Health", id: 15603 },
-      data: null,
-    },
+      data: null
+    }
   ],
   "story-audio": {
-    "s3-key": "ace/story-audio/2020-10/307e5a1b-5cf0-4321-8193-827b2add174f/.0e6d9a89-3bb7-47b0-8bee-a34b5f75f5e9.mp3",
+    "s3-key": "ace/story-audio/2020-10/307e5a1b-5cf0-4321-8193-827b2add174f/.0e6d9a89-3bb7-47b0-8bee-a34b5f75f5e9.mp3"
   },
   "read-time": 2,
   "access-level-value": null,
@@ -1893,7 +2052,7 @@ export const dummyListicleStory = {
     height: 900,
     "mime-type": "image/jpeg",
     "file-size": 228062,
-    "file-name": "seo.jpg",
+    "file-name": "seo.jpg"
   },
   comments: null,
   "word-count": 232,
@@ -1928,7 +2087,7 @@ export const dummyListicleStory = {
           id: "5ffad09b-7db1-489a-8308-f7d63c745c70",
           metadata: {},
           subtype: null,
-          text: "Nemo enim ipsam voluptatem quia volup tas sit aspernatur aut odit aut fugit",
+          text: "Nemo enim ipsam voluptatem quia volup tas sit aspernatur aut odit aut fugit"
         },
         {
           description: "",
@@ -1939,8 +2098,9 @@ export const dummyListicleStory = {
           id: "f24c83a4-dd3d-47fe-8d05-90f6ada10632",
           metadata: {},
           subtype: null,
-          text: "<p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est</p>",
-        },
+          text:
+            "<p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est</p>"
+        }
       ],
       "card-updated-at": 1602234185925,
       "content-version-id": "9378abd6-2cec-4bdd-88b2-005cc6d1775f",
@@ -1964,12 +2124,12 @@ export const dummyListicleStory = {
               height: 900,
               "mime-type": "image/jpeg",
               "file-size": 228062,
-              "file-name": "seo.jpg",
-            },
-          },
+              "file-name": "seo.jpg"
+            }
+          }
         },
-        attributes: {},
-      },
+        attributes: {}
+      }
     },
     {
       "story-elements": [
@@ -1982,7 +2142,7 @@ export const dummyListicleStory = {
           id: "82244bcd-c453-41c4-a215-bb038f569375",
           metadata: {},
           subtype: null,
-          text: "Nemo enim ipsam voluptatem quia volup tas sit aspernatur aut odit aut fugit",
+          text: "Nemo enim ipsam voluptatem quia volup tas sit aspernatur aut odit aut fugit"
         },
         {
           description: "",
@@ -1993,8 +2153,9 @@ export const dummyListicleStory = {
           id: "ae7131f6-450a-4589-9995-812ba5832c58",
           metadata: {},
           subtype: null,
-          text: "<p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est</p>",
-        },
+          text:
+            "<p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est</p>"
+        }
       ],
       "card-updated-at": 1602155725655,
       "content-version-id": "43ff8777-4176-4294-95a3-5aaee8e34537",
@@ -2018,12 +2179,12 @@ export const dummyListicleStory = {
               height: 900,
               "mime-type": "image/jpeg",
               "file-size": 228062,
-              "file-name": "seo.jpg",
-            },
-          },
+              "file-name": "seo.jpg"
+            }
+          }
         },
-        attributes: {},
-      },
+        attributes: {}
+      }
     },
     {
       "story-elements": [
@@ -2036,7 +2197,7 @@ export const dummyListicleStory = {
           id: "d3cbfcce-a503-499d-80cd-52fce2215ef3",
           metadata: {},
           subtype: null,
-          text: "Nemo enim ipsam voluptatem quia volup tas sit aspernatur aut odit aut fugit",
+          text: "Nemo enim ipsam voluptatem quia volup tas sit aspernatur aut odit aut fugit"
         },
         {
           description: "",
@@ -2045,7 +2206,7 @@ export const dummyListicleStory = {
             height: 540,
             "mime-type": "image/jpeg",
             "file-size": 26544,
-            "file-name": "quintype-website_2020-01_2f2ba42d-7a45-4a60-b4af-7d4758f27f5d_Untitled_presentation.jpg",
+            "file-name": "quintype-website_2020-01_2f2ba42d-7a45-4a60-b4af-7d4758f27f5d_Untitled_presentation.jpg"
           },
           "page-url": "/story/307e5a1b-5cf0-4321-8193-827b2add174f/element/a7f79ffa-4be0-4207-a495-a035a020cac3",
           type: "image",
@@ -2057,7 +2218,7 @@ export const dummyListicleStory = {
             "ace/2020-10/920f35b9-023e-44d2-b4de-69dce8587bf7/quintype_website_2020_01_2f2ba42d_7a45_4a60_b4af_7d4758f27f5d_Untitled_presentation.jpg",
           metadata: {},
           subtype: null,
-          hyperlink: "https://www.google.com/",
+          hyperlink: "https://www.google.com/"
         },
         {
           description: "",
@@ -2068,8 +2229,9 @@ export const dummyListicleStory = {
           id: "2a248f86-3181-4456-9f96-f7e56668fbc1",
           metadata: {},
           subtype: null,
-          text: "<p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est</p>",
-        },
+          text:
+            "<p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est</p>"
+        }
       ],
       "card-updated-at": 1602156067786,
       "content-version-id": "dbfeb570-f9aa-4875-9c3d-f48bf551dd91",
@@ -2084,7 +2246,8 @@ export const dummyListicleStory = {
           title: "It pays to be kind: improving workplace culture through kindness",
           message: null,
           image: {
-            key: "ace/2020-10/920f35b9-023e-44d2-b4de-69dce8587bf7/quintype_website_2020_01_2f2ba42d_7a45_4a60_b4af_7d4758f27f5d_Untitled_presentation.jpg",
+            key:
+              "ace/2020-10/920f35b9-023e-44d2-b4de-69dce8587bf7/quintype_website_2020_01_2f2ba42d_7a45_4a60_b4af_7d4758f27f5d_Untitled_presentation.jpg",
             url: null,
             attribution: "Jon Doe",
             caption: null,
@@ -2093,12 +2256,12 @@ export const dummyListicleStory = {
               height: 540,
               "mime-type": "image/jpeg",
               "file-size": 26544,
-              "file-name": "quintype-website_2020-01_2f2ba42d-7a45-4a60-b4af-7d4758f27f5d_Untitled_presentation.jpg",
-            },
-          },
+              "file-name": "quintype-website_2020-01_2f2ba42d-7a45-4a60-b4af-7d4758f27f5d_Untitled_presentation.jpg"
+            }
+          }
         },
-        attributes: {},
-      },
+        attributes: {}
+      }
     },
     {
       "story-elements": [
@@ -2111,7 +2274,8 @@ export const dummyListicleStory = {
           id: "20db973e-4612-4933-9acd-5a6d4c3d281d",
           metadata: {},
           subtype: null,
-          text: "<p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est</p>",
+          text:
+            "<p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est</p>"
         },
         {
           id: "00000000-0000-0000-0000-000000000000",
@@ -2120,8 +2284,8 @@ export const dummyListicleStory = {
           subtype: null,
           type: "text",
           text: ' <p>text <a href="https://ace-web.qtstage.io/">promotional</a> message</p>',
-          metadata: { "promotional-message": true },
-        },
+          metadata: { "promotional-message": true }
+        }
       ],
       "card-updated-at": 1602156067786,
       "content-version-id": "dc523cfa-dcf2-41b5-ab7a-b5c3577e11f7",
@@ -2145,13 +2309,13 @@ export const dummyListicleStory = {
               height: 900,
               "mime-type": "image/jpeg",
               "file-size": 228062,
-              "file-name": "seo.jpg",
-            },
-          },
+              "file-name": "seo.jpg"
+            }
+          }
         },
-        attributes: {},
-      },
-    },
+        attributes: {}
+      }
+    }
   ],
   url: "https://ace-web.qtstage.io/health/2020/10/08/it-pays-to-be-kind-improving-workplace-culture-through-kindness",
   "story-version-id": "8768d161-6433-4f1e-b8ef-e632d180ede9",
@@ -2162,7 +2326,7 @@ export const dummyListicleStory = {
   "linked-story-ids": [],
   "promotional-message": ' <p>text <a href="https://ace-web.qtstage.io/">promotional</a> message</p>',
   "asana-project-id": null,
-  "first-published-at": 1602155728566,
+  "first-published-at": 1671083514919,
   "hero-image-caption": "Saque ipsa quae ab illo inventore veritatis et quip",
   version: 18,
   "story-template": "listicle",
@@ -2172,17 +2336,18 @@ export const dummyListicleStory = {
     {
       slug: "pravin-atigre",
       social: null,
-      name: "Pravin Atigre",
+      name: "Virat Kohli",
       "contributor-role": { id: 873, name: "Author" },
       "avatar-url":
         "https://lh3.googleusercontent.com/-I9kNTMFkn3E/AAAAAAAAAAI/AAAAAAAAAAA/ACHi3rdZeM4LMMdylmULvtrAvmeVF9DmAQ/photo.jpg",
-      bio: null,
+      bio:
+        "Virat Kohli (Hindi pronunciation: [ʋɪˈɾɑːʈ ˈkoːɦli] (listen); born 5 November 1988) is an Indian international cricketer and the former captain of the Indian national cricket team who plays as a right-handed batsman for Royal Challengers Bangalore in the IPL and for Delhi in Indian domestic cricket. Widely regarded as one of the greatest batsmen of all time,[4] Kohli holds the records for scoring most runs in T20 internationals and in the IPL. In 2020, the International Cricket Council named him the male cricketer of the decade. Kohli has also contributed to a number of India's successes, including winning the 2011 World Cup and the 2013 Champions trophy.",
       id: 927927,
       "avatar-s3-key": null,
-      "twitter-handle": null,
-    },
+      "twitter-handle": null
+    }
   ],
   metadata: { "card-share": { shareable: false } },
   "publish-at": null,
-  "assignee-name": "Pravin Atigre",
+  "assignee-name": "Pravin Atigre"
 };

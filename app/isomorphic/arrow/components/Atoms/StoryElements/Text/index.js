@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import get from "lodash/get";
+import get from "lodash.get";
 import { withElementWrapper } from "../withElementWrapper";
 import { updateContentLinks, shapeStory, shapeConfig, getTextColor } from "../../../../utils/utils";
 import "./text.m.css";
@@ -21,10 +21,9 @@ const TextBase = ({ element = {}, opts = {}, css = {}, story = {}, config = {}, 
     <div
       className="arrow-component arr--text-element"
       styleName={`${updatedStyle} ${textInvertColor}`}
-      style={!isPromotionalMessage ? { color: textColor } : {}}
+      style={!isPromotionalMessage && textColor ? { color: textColor } : {}}
       data-test-id={isPromotionalMessage ? "promotional-message" : "text"}
       dangerouslySetInnerHTML={{ __html: text }}
-      id="text-element"
       {...restProps}
     />
   );
@@ -35,7 +34,7 @@ TextBase.propTypes = {
   opts: PropTypes.shape({ isExternalLink: PropTypes.bool }),
   css: PropTypes.shape({ hyperlinkColor: PropTypes.string, textColor: PropTypes.string }),
   story: shapeStory,
-  config: shapeConfig,
+  config: shapeConfig
 };
 
 export const Text = withElementWrapper(TextBase);

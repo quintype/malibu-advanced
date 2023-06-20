@@ -1,7 +1,7 @@
-import get from "lodash/get";
+import get from "lodash.get";
 import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
-import { isEmpty, getCollectionData } from "../../../utils/utils";
+import { isEmpty, getCollectionData, getTextColor } from "../../../utils/utils";
 import { AuthorWithTime } from "../../Atoms/AuthorWithTimestamp";
 import { CollectionName } from "../../Atoms/CollectionName";
 import { Headline } from "../../Atoms/Headline";
@@ -13,7 +13,8 @@ import KeyEvents from "../../Molecules/KeyEvents";
 import "./aside-collection.m.css";
 
 const StoryCollection = ({ data, slotData, horizontal, config, opts }) => {
-  const { theme = "", title = "", collectionSlug = "" } = slotData || config;
+  const { title = "", collectionSlug = "" } = slotData || config;
+  const { theme = "" } = config;
   const heading = title || "Related Stories";
   const isHorizontal = horizontal ? "horizontal-wrapper" : "";
   const mountAt = get(config, ["mountAtPrefix"], "");
@@ -39,6 +40,8 @@ const StoryCollection = ({ data, slotData, horizontal, config, opts }) => {
     }
   }, [data, collectionSlug]);
 
+  const textColor = getTextColor(theme);
+
   return (
     <>
       <CollectionName customCollectionName={heading} textColor collection={collectionData} />
@@ -50,13 +53,18 @@ const StoryCollection = ({ data, slotData, horizontal, config, opts }) => {
               <div styleName="story" key={story.id}>
                 <StoryCard story={story} isHorizontal theme={theme} config={config}>
                   <div styleName="story-hero-image">
-                    <HeroImage story={story} aspectRatio={[[4, 3]]} />
+                    <HeroImage
+                      story={story}
+                      aspectRatio={[[16, 9]]}
+                      queryParam={{ utm_source: "website", utm_medium: "related-stories" }}
+                      initialAltImage={true}
+                    />
                   </div>
                   <div>
                     {isHorizontal && <SectionTag story={story} />}
-                    <Headline story={story} />
+                    <Headline story={story} queryParam={{ utm_source: "website", utm_medium: "related-stories" }} />
                     <div styleName="story-byline">
-                      <AuthorWithTime config={opts} story={story} />
+                      <AuthorWithTime config={{ ...opts, isRelatedCollection: true }} story={story} />
                     </div>
                   </div>
                 </StoryCard>
@@ -64,7 +72,7 @@ const StoryCollection = ({ data, slotData, horizontal, config, opts }) => {
             );
           })
         ) : (
-          <div data-test-id="no-stories" styleName="info">
+          <div data-test-id="no-stories" styleName={`info ${textColor}`}>
             No stories found.
           </div>
         )}
@@ -78,12 +86,11 @@ StoryCollection.propTypes = {
   config: PropTypes.object,
   horizontal: PropTypes.bool,
   slotData: PropTypes.object,
-  opts: PropTypes.object,
+  opts: PropTypes.object
 };
 
 const AsideCollection = ({
   data = {},
-  slotData,
   config = {},
   horizontal = false,
   slots = [],
@@ -93,7 +100,7 @@ const AsideCollection = ({
   adComponent,
   widgetComp,
   storyId,
-  opts = {},
+  opts = {}
 }) => {
   if (isEmpty(data)) return null;
 
@@ -104,16 +111,17 @@ const AsideCollection = ({
       <div
         className="arrow-component arr--aside-collection"
         styleName={`wrapper ${isHorizontal}`}
-        style={{ backgroundColor: theme }}
+        style={{ backgroundColor: theme || "initial" }}
         data-test-id="aside-collection"
-        id={`aside-collection-${storyId}`}
-      >
-        <StoryCollection data={data} horizontal={horizontal} config={config} opts={opts} />
+        data-nosnippet
+        id={`aside-collection-${storyId}`}>
+        <StoryCollection data={data} horizontal={horizontal} config={config} opts={opts} theme1={theme} />
       </div>
     );
   }
   const isSticky = sticky ? "sticky" : "";
   const asideSlot = (type, slot, index) => {
+    const targetId = slot.targetId ? `widget-${slot.targetId}-${storyId}` : `widget-${index}_${storyId}`;
     switch (type) {
       case "ad":
         return (
@@ -124,7 +132,7 @@ const AsideCollection = ({
       case "widget":
         return (
           <div styleName="ad-slot" className="aside-collection-ad-slot">
-            {widgetComp({ ...slot, id: `widget-${index}_${storyId}` })}
+            {widgetComp({ ...slot, id: targetId })}
           </div>
         );
 
@@ -136,13 +144,14 @@ const AsideCollection = ({
         );
     }
   };
+
   return (
     <div
       className="arrow-component arr--aside-collection"
       styleName={["wrapper", isHorizontal, isSticky].join(" ")}
-      style={{ backgroundColor: theme }}
-      data-test-id="aside-collection"
-    >
+      style={{ backgroundColor: theme || "initial" }}
+      data-nosnippet
+      data-test-id="aside-collection">
       {enableKeyEvents && (
         <KeyEvents
           story={keyEventsData.story}
@@ -151,7 +160,7 @@ const AsideCollection = ({
           publishedDetails={opts}
         />
       )}
-      {slotData.map((slot, index) => asideSlot(slot.type, slot, index))}
+      {slots.map((slot, index) => asideSlot(slot.type, slot, index))}
     </div>
   );
 };
@@ -162,17 +171,16 @@ AsideCollection.propTypes = {
   opts: PropTypes.object,
   horizontal: PropTypes.bool,
   slots: PropTypes.array,
-  slotData: PropTypes.array,
   adComponent: PropTypes.func,
   widgetComp: PropTypes.func,
   sticky: PropTypes.bool,
   keyEventsData: PropTypes.shape({
     story: PropTypes.object,
     config: PropTypes.object,
-    showLoadMore: PropTypes.boolean,
+    showLoadMore: PropTypes.boolean
   }),
   enableKeyEvents: PropTypes.boolean,
-  storyId: PropTypes.string,
+  storyId: PropTypes.string
 };
 
 export default StateProvider(AsideCollection);

@@ -1,5 +1,5 @@
 import React from "react";
-import get from "lodash/get";
+import get from "lodash.get";
 import PropTypes from "prop-types";
 import { SocialShareTemplate } from "../../../Molecules/SocialShareTemplate";
 import { SocialShare } from "@quintype/components";
@@ -13,6 +13,7 @@ import { HeroImage } from "../../../Atoms/HeroImage";
 import { PublishDetails } from "../../../Atoms/PublishDetail";
 import { StoryTags } from "../../../Atoms/StoryTags";
 import { StoryElementCard, SlotAfterStory } from "../../../Molecules/StoryElementCard";
+import { StoryReview } from "../../../Atoms/StoryReview";
 import "./text-story.m.css";
 
 export const StoryTemplate = ({
@@ -24,20 +25,21 @@ export const StoryTemplate = ({
   firstChild,
   secondChild,
   timezone,
+  enableDarkMode,
+  mountAt
 }) => {
   const {
     theme = "",
     asideCollection = {},
     templateType = "default",
-    noOfVisibleCards = -1,
+    noOfVisibleCards = 0,
     publishedDetails = {},
-    authorDetails = {
-      template: "default",
-    },
+    authorDetails = {},
     verticalShare = "",
     shareIconType = "plain-color-svg",
-    premiumStoryIconConfig = {},
+    premiumStoryIconConfig = {}
   } = config;
+
   const visibledCards = noOfVisibleCards < 0 ? story.cards : story.cards.slice(0, noOfVisibleCards);
   const storyId = get(story, ["id"], "");
   const HeaderCard = () => {
@@ -86,11 +88,16 @@ export const StoryTemplate = ({
   const StoryData = () => {
     return (
       <div styleName="gap-16">
-        {authorDetails && <AuthorCard story={story} template={authorDetails.template} opts={authorDetails.opts} />}
+        {authorDetails && (
+          <AuthorCard story={story} template={authorDetails.template} opts={authorDetails.opts} mountAt={mountAt} />
+        )}
         <div styleName="timestamp-social-share">
-          <PublishDetails story={story} opts={publishedDetails} template="story" timezone={timezone} />
+          <div id={`publish-details-container-${storyId}`}>
+            <PublishDetails story={story} opts={publishedDetails} template="story" timezone={timezone} />
+          </div>
           {!verticalShare && <SocialShareComponent />}
         </div>
+        <StoryReview theme={theme} story={story} />
         {visibledCards.map((card) => {
           return (
             <StoryElementCard
@@ -100,6 +107,7 @@ export const StoryTemplate = ({
               config={storyElementsConfig}
               adComponent={adComponent}
               widgetComp={widgetComp}
+              enableDarkMode={enableDarkMode}
             />
           );
         })}
@@ -226,15 +234,7 @@ export const StoryTemplate = ({
     return (
       <>
         <div styleName="hero-image index-2" data-test-id="headline-overlay-hero-image">
-          <HeroImage
-            story={story}
-            FullBleed={false}
-            aspectRatio={[
-              [3, 4],
-              [16, 9],
-            ]}
-            isStoryPageImage
-          />
+          <HeroImage story={story} FullBleed={false} aspectRatio={[[3, 4], [16, 9]]} isStoryPageImage />
         </div>
         <HeaderCard />
         <div styleName="story-content-inner-wrapper">
@@ -263,6 +263,7 @@ export const StoryTemplate = ({
         return headlineOverlayTemplate();
     }
   };
+
   return <>{getStoryTemplate(templateType)}</>;
 };
 
@@ -271,7 +272,7 @@ StoryTemplate.propTypes = {
   config: PropTypes.shape({
     templateType: PropTypes.string,
     authorDetails: PropTypes.object,
-    asideCollection: PropTypes.object,
+    asideCollection: PropTypes.object
   }),
   firstChild: PropTypes.node,
   secondChild: PropTypes.node,
@@ -279,4 +280,6 @@ StoryTemplate.propTypes = {
   storyElementsConfig: PropTypes.object,
   widgetComp: PropTypes.func,
   adComponent: PropTypes.func,
+  enableDarkMode: PropTypes.bool,
+  mountAt: PropTypes.string
 };

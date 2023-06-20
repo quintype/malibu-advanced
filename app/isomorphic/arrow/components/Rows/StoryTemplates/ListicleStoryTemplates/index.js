@@ -1,7 +1,7 @@
 import { SocialShare } from "@quintype/components";
 import React from "react";
 import { useSelector } from "react-redux";
-import get from "lodash/get";
+import get from "lodash.get";
 import PropTypes from "prop-types";
 import { AuthorCard } from "../../../Atoms/AuthorCard";
 import { CaptionAttribution } from "../../../Atoms/CaptionAttribution";
@@ -16,6 +16,7 @@ import "./listicle-story.m.css";
 import { StoryElementCard, SlotAfterStory } from "../../../Molecules/StoryElementCard";
 import { StoryTags } from "../../../Atoms/StoryTags";
 import AsideCollection from "../../AsideCollection";
+import { StoryReview } from "../../../Atoms/StoryReview";
 
 const ListicleStoryTemplate = ({
   story = {},
@@ -25,6 +26,7 @@ const ListicleStoryTemplate = ({
   widgetComp = () => {},
   firstChild,
   secondChild,
+  enableDarkMode
 }) => {
   const {
     theme = "",
@@ -32,18 +34,21 @@ const ListicleStoryTemplate = ({
     publishedDetails = {},
     templateType = "",
     authorDetails = {
-      template: "default",
+      template: "default"
     },
     asideCollection = {},
     showSection,
     sectionTagSettings,
-    premiumStoryIconConfig = {},
+    premiumStoryIconConfig = {}
   } = config;
   const visibledCards = noOfVisibleCards < 0 ? story.cards : story.cards.slice(0, noOfVisibleCards);
   const { "bullet-type": storyBulletType = "" } = story;
   const storyId = get(story, ["id"], "");
   const isNumberedBullet = storyBulletType !== "bullets";
-  const timezone = useSelector((state) => get(state, ["qt", "data", "timezone"], null));
+
+  const qtState = useSelector((state) => get(state, ["qt"], {}));
+  const timezone = get(qtState, ["data", "timezone"], null);
+  const mountAt = get(qtState, ["config", "mountAt"], "");
 
   // Content Blocks
   const HeroImageBlock = (settings) => {
@@ -72,57 +77,65 @@ const ListicleStoryTemplate = ({
     </div>
   );
 
-  const AuthourBlock = () => (
-    <>
-      <AuthorCard story={story} {...authorDetails} />
-      <div styleName="timestamp-social-share">
-        <PublishDetails story={story} opts={publishedDetails} template="story" timezone={timezone} />
-        <div id={`story-share-${storyId}`} className="content-style">
-          <SocialShare
-            template={SocialShareTemplate}
-            theme={theme}
-            fullUrl={encodeURI(story.url)}
-            title={story.headline}
-            shareIconId={`share-icon-story-share-${storyId}`}
-          />
+  const AuthorBlock = () => {
+    return (
+      <>
+        <AuthorCard story={story} {...authorDetails} mountAt={mountAt} />
+        <div styleName="timestamp-social-share">
+          <div id={`publish-details-container-${storyId}`}>
+            <PublishDetails story={story} opts={publishedDetails} template="story" timezone={timezone} />
+          </div>
+          <div id={`story-share-${storyId}`} className="content-style">
+            <SocialShare
+              template={SocialShareTemplate}
+              theme={theme}
+              fullUrl={encodeURI(story.url)}
+              title={story.headline}
+              shareIconId={`share-icon-story-share-${storyId}`}
+            />
+          </div>
         </div>
-      </div>
-    </>
-  );
+      </>
+    );
+  };
 
   const BodyBlock = () => (
-    <div styleName={`body-block ${isNumberedBullet ? "numbered-bullet-style" : ""}`}>
-      {visibledCards.map((card, index) => {
-        return (
-          <React.Fragment key={card.id}>
-            {!isNumberedBullet ? (
-              <div styleName="bullet-style-dash" />
-            ) : (
-              <div styleName="bullet-style-number">{index + 1}.</div>
-            )}
-            <StoryElementCard
-              story={story}
-              card={card}
-              key={card.id}
-              config={storyElementsConfig}
-              adComponent={adComponent}
-              widgetComp={widgetComp}
-            />
-          </React.Fragment>
-        );
-      })}
-      {firstChild}
-      <div styleName="story-tags">
-        <StoryTags tags={story.tags} />
-        <SlotAfterStory
-          id={story.id}
-          element={story.customSlotAfterStory}
-          AdComponent={adComponent}
-          WidgetComp={widgetComp}
-        />
+    <>
+      <StoryReview theme={theme} story={story} />
+      <div styleName={`body-block ${isNumberedBullet ? "numbered-bullet-style" : ""}`}>
+        {visibledCards.map((card, index) => {
+          return (
+            <React.Fragment key={card.id}>
+              {!isNumberedBullet ? (
+                <div styleName="bullet-style-dash" />
+              ) : (
+                <div styleName="bullet-style-number">{index + 1}.</div>
+              )}
+              <StoryElementCard
+                story={story}
+                card={card}
+                key={card.id}
+                config={storyElementsConfig}
+                adComponent={adComponent}
+                widgetComp={widgetComp}
+                enableDarkMode={enableDarkMode}
+              />
+            </React.Fragment>
+          );
+        })}
+        {firstChild}
+        <div styleName="story-tags">
+          <StoryTags tags={story.tags} />
+          <SlotAfterStory
+            id={story.id}
+            element={story.customSlotAfterStory}
+            AdComponent={adComponent}
+            WidgetComp={widgetComp}
+          />
+        </div>
+        {secondChild}
       </div>
-      {secondChild}
-    </div>
+    </>
   );
   const SideColumnBlock = () =>
     asideCollection && (
@@ -139,19 +152,14 @@ const ListicleStoryTemplate = ({
   // Templates
   const DefaultTemplate = () => (
     <>
-      <HeroImageBlock
-        aspectRatio={[
-          [16, 9],
-          [16, 6],
-        ]}
-      />
+      <HeroImageBlock aspectRatio={[[16, 9], [16, 6]]} />
       <div styleName="grid-container">
         <div styleName="full-grid">
           <CaptionAttributionBlock />
         </div>
         <div data-type-column="left" styleName="left-column">
           <HeadlineBlock />
-          <AuthourBlock />
+          <AuthorBlock />
           <BodyBlock />
         </div>
         <div data-type-column="right" styleName="right-column">
@@ -169,7 +177,7 @@ const ListicleStoryTemplate = ({
         <div styleName="center-column">
           <CaptionAttributionBlock />
           <HeadlineBlock />
-          <AuthourBlock />
+          <AuthorBlock />
           <BodyBlock />
         </div>
       </div>
@@ -184,7 +192,7 @@ const ListicleStoryTemplate = ({
         <div styleName="left-column">
           <HeroImageBlock />
           <CaptionAttributionBlock />
-          <AuthourBlock />
+          <AuthorBlock />
           <BodyBlock />
         </div>
         <div styleName="right-column">
@@ -204,7 +212,7 @@ const ListicleStoryTemplate = ({
         </div>
         <div styleName="center-column">
           <CaptionAttributionBlock />
-          <AuthourBlock />
+          <AuthorBlock />
           <BodyBlock />
         </div>
       </div>
@@ -219,18 +227,13 @@ const ListicleStoryTemplate = ({
               <HeadlineBlock />
             </div>
           </div>
-          <HeroImageBlock
-            aspectRatio={[
-              [2, 3],
-              [16, 9],
-            ]}
-          />
+          <HeroImageBlock aspectRatio={[[2, 3], [16, 9]]} />
         </div>
       </div>
       <div styleName="grid-container">
         <div styleName="center-column">
           <CaptionAttributionBlock />
-          <AuthourBlock />
+          <AuthorBlock />
           <BodyBlock />
         </div>
       </div>
@@ -243,18 +246,13 @@ const ListicleStoryTemplate = ({
           <HeadlineBlock />
         </div>
         <div styleName="sideway-hero">
-          <HeroImageBlock
-            aspectRatio={[
-              [16, 9],
-              [4, 3],
-            ]}
-          />
+          <HeroImageBlock aspectRatio={[[16, 9], [4, 3]]} />
           <CaptionAttributionBlock />
         </div>
       </div>
       <div styleName="grid-container">
         <div styleName="center-column">
-          <AuthourBlock />
+          <AuthorBlock />
           <BodyBlock />
         </div>
       </div>
@@ -282,9 +280,7 @@ const ListicleStoryTemplate = ({
     <div
       data-test-id={dataTestId}
       className="arrow-component arr--content-wrapper arr--listicle-story-template-wrapper"
-      style={{ backgroundColor: theme }}
-      styleName="story-content-inner-wrapper"
-    >
+      style={{ backgroundColor: theme || "initial" }}>
       {renderTemplate()}
     </div>
   );
@@ -295,7 +291,7 @@ ListicleStoryTemplate.propTypes = {
   config: PropTypes.shape({
     templateType: PropTypes.string,
     authorCard: PropTypes.object,
-    asideCollection: PropTypes.object,
+    asideCollection: PropTypes.object
   }),
   firstChild: PropTypes.node,
   secondChild: PropTypes.node,
@@ -303,6 +299,7 @@ ListicleStoryTemplate.propTypes = {
   adComponent: PropTypes.func,
   widgetComp: PropTypes.func,
   premiumStoryIconConfig: PropTypes.object,
+  enableDarkMode: PropTypes.bool
 };
 
 export default StateProvider(ListicleStoryTemplate);

@@ -1,8 +1,8 @@
-/* eslint-disable scss/at-rule-no-unknown */
-@value viewports: "../../../../../assets/arrow/stylesheets/viewports.m.css";
+@value viewports: "../../../../assets/stylesheets/viewports.m.css";
 @value mobile from viewports;
 
 .timeStamp {
+  margin-top: var(--arrow-spacing-m);
   font-size: var(--arrow-fs-tiny);
   @media (min-width: mobile) {
     font-size: var(--arrow-fs-xs);
@@ -25,9 +25,7 @@
 
 .update-details {
   display: flex;
-  margin-top: var(--arrow-spacing-xs);
-  align-items: baseline;
-  flex-wrap: wrap;
+  margin-top: var(--arrow-spacing-s);
 }
 .dot-indicator {
   display: flex;

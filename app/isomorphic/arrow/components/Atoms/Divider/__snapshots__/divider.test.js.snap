@@ -2,7 +2,7 @@
 
 exports[`Divider should render 1`] = `
 <div
-  className="divider-m_light__w-7sy"
+  className="arr--divider divider-m_light__w-7sy"
 >
   <svg
     height="10"

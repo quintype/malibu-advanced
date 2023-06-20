@@ -1,5 +1,4 @@
-/* eslint-disable scss/at-rule-no-unknown */
-@value viewports: "../../../../../../assets/arrow/stylesheets/viewports.m.css";
+@value viewports: "../../../../../assets/stylesheets/viewports.m.css";
 @value mobile from viewports;
 
 .card-image img {
@@ -31,7 +30,6 @@
 .alsoread-default .headline {
   padding-top: var(--arrow-spacing-xs);
   font-size: var(--arrow-fs-s);
-  color: var(--arrow-c-dark);
   @media (min-width: mobile) {
     padding-top: 0;
     font-size: var(--arrow-fs-l);
@@ -41,7 +39,6 @@
 .alsoread-textLeftAlign .headline {
   margin-top: var(--arrow-spacing-xs);
   font-size: var(--arrow-fs-m);
-  color: var(--arrow-c-brand1);
   @media (min-width: mobile) {
     font-size: var(--arrow-fs-l);
   }
@@ -50,7 +47,6 @@
 .alsoread-imageRightAlign .headline {
   font-size: var(--arrow-fs-m);
   margin-right: var(--arrow-spacing-m);
-  color: var(--arrow-c-dark);
   @media (min-width: mobile) {
     font-size: var(--arrow-fs-l);
   }
@@ -81,7 +77,7 @@
 }
 
 .alsoread-default {
-  border: solid 1px var(--arrow-c-mono5);
+  border: solid 1px var(--arrow-c-brand5);
   display: block;
   padding: var(--arrow-spacing-m);
   @media (min-width: mobile) {
@@ -128,6 +124,7 @@ html[dir="rtl"] {
     margin-right: 0;
   }
 }
+
 .dark {
   color: var(--arrow-c-mono1);
 }

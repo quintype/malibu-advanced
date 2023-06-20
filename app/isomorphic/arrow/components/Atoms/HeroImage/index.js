@@ -1,5 +1,5 @@
-import { Link, ResponsiveHeroImage } from "@quintype/components";
-import get from "lodash/get";
+import { Link, ResponsiveImage, ResponsiveHeroImage } from "@quintype/components";
+import get from "lodash.get";
 import PropTypes from "prop-types";
 import React from "react";
 import { useSelector } from "react-redux";
@@ -21,6 +21,8 @@ export const HeroImage = ({
   defaultFallback,
   isStoryPageImage,
   config,
+  queryParam = {},
+  initialAltImage
 }) => {
   const { fallbackImageUrl = "" } = useStateValue() || {};
   const { StoryTemplateIcon = () => null } = config;
@@ -51,8 +53,8 @@ export const HeroImage = ({
   const imageAspectRatio = isMobile ? mobileAspectRatio : desktopAspectRatio;
   const imagePadding = isMobile ? getPadding(mobileAspectRatio) : getPadding(desktopAspectRatio);
   const slug =
-    get(story, ["hero-image-s3-key"]) ||
-    get(story, ["alternative", "home", "default", "hero-image", "hero-image-s3-key"]);
+    get(story, ["alternative", "home", "default", "hero-image", "hero-image-s3-key"]) ||
+    get(story, ["hero-image-s3-key"]);
   const hyperLink = get(story, ["hero-image-hyperlink"], "");
   const imageCaption = get(story, ["hero-image-caption"], "");
   const imageAltText = imageCaption ? removeHtmlTags(imageCaption) : get(story, ["headline"], "");
@@ -65,10 +67,9 @@ export const HeroImage = ({
             styleName={`image ${getPlaceholderStyleName}`}
             className="arr--responsive-hero-image"
             style={{
-              paddingTop: imagePadding + `%`,
-            }}
-          >
-            <img className="qt-image" data-src={`${fallbackImageUrl}`} alt="image-fallback"></img>
+              paddingTop: imagePadding + `%`
+            }}>
+            <img className="qt-image" data-src={fallbackImageUrl} alt="image-fallback" />
           </figure>
         );
       }
@@ -81,9 +82,8 @@ export const HeroImage = ({
               className="arr--fallback-hero-image"
               data-test-id="arr--fallback-hero-image"
               style={{
-                paddingTop: imagePadding + `%`,
-              }}
-            >
+                paddingTop: imagePadding + `%`
+              }}>
               <StoryTemplateIcon storyTemplate={story["story-template"]} />
               <FallbackImage />
             </div>
@@ -96,17 +96,28 @@ export const HeroImage = ({
         <figure
           styleName={`image ${getPlaceholderStyleName}`}
           className="arr--responsive-hero-image"
-          style={{ paddingTop: imagePadding + `%` }}
-        >
+          style={{ paddingTop: imagePadding + `%` }}>
           <StoryTemplateIcon storyTemplate={story["story-template"]} />
-          <ResponsiveHeroImage
-            story={story}
-            aspectRatio={imageAspectRatio}
-            defaultWidth={defaultWidth}
-            widths={widths}
-            imgParams={{ auto: ["format", "compress"], fit: "max" }}
-            alt={imageAltText}
-          />
+          {initialAltImage ? (
+            <ResponsiveImage
+              slug={slug}
+              metadata={story["hero-image-metadata"]}
+              alt={imageAltText}
+              aspectRatio={imageAspectRatio}
+              defaultWidth={defaultWidth}
+              widths={widths}
+              imgParams={{ auto: ["format", "compress"], fit: "max" }}
+            />
+          ) : (
+            <ResponsiveHeroImage
+              story={story}
+              aspectRatio={imageAspectRatio}
+              defaultWidth={defaultWidth}
+              widths={widths}
+              imgParams={{ auto: ["format", "compress"], fit: "max" }}
+              alt={imageAltText}
+            />
+          )}
         </figure>
         {isStoryPageImage && hyperLink && <HyperLink hyperLink={hyperLink} />}
       </>
@@ -119,19 +130,17 @@ export const HeroImage = ({
       <div
         className="arr--hero-image"
         data-test-id="arr--hero-image"
-        styleName={`${heroImageClass} ${fullBleed} ${heroImageMobClasses}`}
-      >
+        styleName={`${heroImageClass} ${fullBleed} ${heroImageMobClasses}`}>
         {fallbackImage()}
       </div>
     ) : (
       <Link
         className="arr--hero-image"
         data-test-id="arr--hero-image"
-        href={getStoryUrl(story, `/${story.slug}`)}
+        href={getStoryUrl(story, `/${story.slug}`, queryParam)}
         externalLink={isExternalStory(story)}
         styleName={`${heroImageClass} ${fullBleed} ${heroImageMobClasses}`}
-        aria-label="fallback-hero-image"
-      >
+        aria-label="fallback-hero-image">
         {fallbackImage()}
       </Link>
     ))
@@ -160,14 +169,15 @@ HeroImage.propTypes = {
   isHorizontalWithImageLast: PropTypes.bool,
   isStoryPageImage: PropTypes.bool,
   config: PropTypes.object,
+  queryParam: PropTypes.shape({
+    utmContent: PropTypes.string
+  }),
+  initialAltImage: PropTypes.bool
 };
 
 HeroImage.defaultProps = {
   FullBleed: true,
-  aspectRatio: [
-    [1, 1],
-    [16, 9],
-  ],
+  aspectRatio: [[1, 1], [16, 9]],
   defaultWidth: 480,
   widths: [250, 480, 640],
   isHorizontal: false,
@@ -176,4 +186,5 @@ HeroImage.defaultProps = {
   isStoryPageImage: false,
   isHorizontalWithImageLast: false,
   config: {},
+  initialAltImage: false
 };

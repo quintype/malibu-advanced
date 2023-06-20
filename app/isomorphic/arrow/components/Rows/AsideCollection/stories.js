@@ -23,9 +23,9 @@ withStore(
   {
     qt: {
       config: {
-        "cdn-image": "thumbor-stg.assettype.com",
-      },
-    },
+        "cdn-image": "thumbor-stg.assettype.com"
+      }
+    }
   },
   Readme
 ).add("Aside Collection template", () => {
@@ -37,7 +37,7 @@ withStore(
     showReadTime: boolean("Read time", true),
     showRowTitle: boolean("Collection name", true),
     collectionNameTemplate: optionalSelect("Collection Name Templates", collectionNameTemplates),
-    collectionNameBorderColor: color(collectionNameBorderColorLabel, collectionNameDefaultValue),
+    collectionNameBorderColor: color(collectionNameBorderColorLabel, collectionNameDefaultValue)
   };
   return (
     <AsideCollection

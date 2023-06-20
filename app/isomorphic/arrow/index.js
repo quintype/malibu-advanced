@@ -17,6 +17,7 @@ export { Subheadline } from "./components/Atoms/Subheadline";
 export { TimeStamp } from "./components/Atoms/TimeStamp";
 export { LoadMoreTarget } from "./components/Atoms/LoadMoreTarget";
 export { ScrollSnap } from "./components/Atoms/ScrollSnap";
+export { PublishDetails } from "./components/Atoms/PublishDetail";
 
 // STORY ELEMENTS
 export { Text } from "./components/Atoms/StoryElements/Text";
@@ -66,6 +67,7 @@ export { default as AuthorIntroductionCard } from "./components/Rows/AuthorIntro
 export { default as AuthorsList } from "./components/Rows/AuthorsList";
 export { default as AsideCollection } from "./components/Rows/AsideCollection";
 export { StoryCollection } from "./components/Rows/AsideCollection";
+export { default as Snapshot } from "./components/Rows/StoryTemplates/Snapshot";
 export { default as VideoStoryTemplate } from "./components/Rows/StoryTemplates/VideoStoryTemplates";
 export { default as TextStoryTemplate } from "./components/Rows/StoryTemplates/TextStoryTemplates";
 export { default as LiveBlogStoryTemplate } from "./components/Rows/StoryTemplates/LiveBlogStorytemplates";
@@ -89,3 +91,6 @@ export { default as AlternateCollectionFilter } from "./components/Rows/Alternat
 export { default as FourColPortraitStories } from "./components/Rows/FourColPortraitStories";
 export { default as AstrologyCollection } from "./components/Rows/AstrologyCollection";
 export { default as Listicles } from "./components/Rows/Listicles";
+
+// UTILS
+export { formatter } from "./utils/utils";

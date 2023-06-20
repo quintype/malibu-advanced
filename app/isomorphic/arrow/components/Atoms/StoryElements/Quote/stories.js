@@ -9,7 +9,7 @@ const element = generateStoryElementData("quote");
 const collectionTemplates = {
   default: "borderNone",
   borderLeft: "borderLeft",
-  borderTopSml: "borderTopSmall",
+  borderTopSml: "borderTopSmall"
 };
 
 withStore("Atoms/Story Elements/Quote", {}, Readme)

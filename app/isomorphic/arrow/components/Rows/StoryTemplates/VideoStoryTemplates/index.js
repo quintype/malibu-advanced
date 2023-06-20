@@ -2,7 +2,7 @@ import { SocialShare } from "@quintype/components";
 import PropTypes from "prop-types";
 import React from "react";
 import { useSelector } from "react-redux";
-import get from "lodash/get";
+import get from "lodash.get";
 import { SocialShareTemplate } from "../../../Molecules/SocialShareTemplate";
 import { SectionTag } from "../../../Atoms/SectionTag";
 import { StoryHeadline } from "../../../Atoms/StoryHeadline";
@@ -12,6 +12,7 @@ import AsideCollection from "../../AsideCollection";
 import { AuthorCard } from "../../../Atoms/AuthorCard";
 import { PublishDetails } from "../../../Atoms/PublishDetail";
 import { StoryTags } from "../../../Atoms/StoryTags";
+import { StoryReview } from "../../../Atoms/StoryReview";
 import { StoryElementCard, SlotAfterStory } from "../../../Molecules/StoryElementCard";
 import { StateProvider } from "../../../SharedContext";
 import "./video-story.m.css";
@@ -24,37 +25,42 @@ const VideoStoryTemplate = ({
   adComponent,
   firstChild,
   secondChild,
+  enableDarkMode
 }) => {
   const heroVideo =
     story.cards
       .flatMap((card) => card["story-elements"])
       .find(
-        ({ type, subtype }) => type === "youtube-video" || (type === "jsembed" && subtype === "dailymotion-video")
+        ({ type, subtype }) =>
+          type === "youtube-video" ||
+          (type === "jsembed" && (subtype === "dailymotion-video" || subtype === "dailymotion-embed-script"))
       ) || {};
 
   const {
     theme = "",
     authorCard = {},
-    authorDetails = {
-      template: "default",
-    },
+    authorDetails = {},
     asideCollection = {},
     templateType = "",
-    noOfVisibleCards = -1,
+    noOfVisibleCards = 0,
     publishedDetails = {},
     verticalShare = "",
     shareIconType = "plain-color-svg",
-    premiumStoryIconConfig = {},
+    premiumStoryIconConfig = {}
   } = config;
 
   const visibledCards = noOfVisibleCards < 0 ? story.cards : story.cards.slice(0, noOfVisibleCards);
   const storyId = get(story, ["id"], "");
-  const timezone = useSelector((state) => get(state, ["qt", "data", "timezone"], null));
+
+  const qtState = useSelector((state) => get(state, ["qt"], {}));
+  const timezone = get(qtState, ["data", "timezone"], null);
+  const mountAt = get(qtState, ["config", "mountAt"], "");
 
   const HeroVideo = () => {
+    const lazyLoad = get(storyElementsConfig, ["jsEmbed", "lazyLoad"], true);
     return (
       <div styleName="hero-video index-2" id={`video-${get(heroVideo, ["id"])}`}>
-        <Video element={heroVideo} loadIframeOnClick={true} />
+        <Video element={heroVideo} loadIframeOnClick={lazyLoad} />
       </div>
     );
   };
@@ -89,12 +95,17 @@ const VideoStoryTemplate = ({
     return (
       <div styleName="story-details">
         <div styleName="author">
-          {authorCard && <AuthorCard story={story} template={authorDetails.template} opts={authorDetails.opts} />}
+          {authorCard && (
+            <AuthorCard story={story} template={authorDetails.template} opts={authorDetails.opts} mountAt={mountAt} />
+          )}
         </div>
         <div styleName="timestamp-social-share">
-          <PublishDetails story={story} opts={publishedDetails} template="story" timezone={timezone} />
+          <div id={`publish-details-container-${storyId}`}>
+            <PublishDetails story={story} opts={publishedDetails} template="story" timezone={timezone} />
+          </div>
           {!verticalShare && <SocialShareComponent />}
         </div>
+        <StoryReview theme={theme} story={story} />
         {visibledCards.map((card) => {
           return (
             <StoryElementCard
@@ -105,6 +116,7 @@ const VideoStoryTemplate = ({
               config={storyElementsConfig}
               adComponent={adComponent}
               widgetComp={widgetComp}
+              enableDarkMode={enableDarkMode}
             />
           );
         })}
@@ -216,8 +228,7 @@ const VideoStoryTemplate = ({
       data-test-id={dataTestId}
       className="arrow-component arr--content-wrapper arr-story-grid arr--video-story-template-wrapper"
       styleName={`${templateClass} ${verticalShare}`}
-      style={{ backgroundColor: theme }}
-    >
+      style={{ backgroundColor: theme || "initial" }}>
       {getStoryTemplate(templateType)}
     </div>
   );
@@ -228,13 +239,14 @@ VideoStoryTemplate.propTypes = {
   config: PropTypes.shape({
     templateType: PropTypes.string,
     authorCard: PropTypes.object,
-    asideCollection: PropTypes.object,
+    asideCollection: PropTypes.object
   }),
   firstChild: PropTypes.node,
   secondChild: PropTypes.node,
   storyElementsConfig: PropTypes.object,
   adComponent: PropTypes.func,
   widgetComp: PropTypes.func,
+  enableDarkMode: PropTypes.bool
 };
 
 export default StateProvider(VideoStoryTemplate);

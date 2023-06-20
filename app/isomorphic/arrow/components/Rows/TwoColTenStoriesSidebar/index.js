@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { collectionToStories } from "@quintype/components";
 import { StateProvider } from "../../SharedContext";
-import { generateNavigateSlug, getTextColor, navigateTo, getSlot } from "../../../utils/utils";
+import { generateNavigateSlug, navigateTo, getSlot } from "../../../utils/utils";
 import { HeroImage } from "../../Atoms/HeroImage";
 import { CollectionName } from "../../Atoms/CollectionName";
 import { StorycardContent } from "../../Molecules/StorycardContent";
@@ -29,9 +29,9 @@ export const TwoColTenStoriesSidebar = ({ collection, config = {} }) => {
     collectionNameBorderColor = "",
     theme = "",
     slotConfig = [],
-    collectionNameTemplate = "",
+    collectionNameTemplate = ""
   } = config;
-  const textColor = getTextColor(theme);
+
   const dispatch = useDispatch();
   const qtConfig = useSelector((state) => get(state, ["qt", "config"], {}));
   const firstCardBorderStyle = border === "bottom" ? "first-card-border-box" : "";
@@ -44,9 +44,8 @@ export const TwoColTenStoriesSidebar = ({ collection, config = {} }) => {
     <div
       className="full-width-with-padding arrow-component"
       data-test-id="two-col-ten-stories-sidebar"
-      style={{ backgroundColor: theme, color: textColor }}
-      styleName="component-wrapper"
-    >
+      style={{ backgroundColor: theme || "initial" }}
+      styleName="component-wrapper">
       <div styleName="collection-wrapper">
         <CollectionName
           collection={childCollections[0]}
@@ -61,19 +60,9 @@ export const TwoColTenStoriesSidebar = ({ collection, config = {} }) => {
               theme={theme}
               headerLevel="3"
               bgImgContentOverlap
-              aspectRatio={[
-                [16, 9],
-                [16, 9],
-              ]}
-              config={config}
-            >
-              <HeroImage
-                story={firstCollectionStories[0]}
-                aspectRatio={[
-                  [16, 9],
-                  [16, 9],
-                ]}
-              />
+              aspectRatio={[[16, 9], [16, 9]]}
+              config={config}>
+              <HeroImage story={firstCollectionStories[0]} aspectRatio={[[16, 9], [16, 9]]} />
               <StorycardContent
                 styleName={firstCardBorderStyle}
                 story={firstCollectionStories[0]}
@@ -82,6 +71,7 @@ export const TwoColTenStoriesSidebar = ({ collection, config = {} }) => {
                 isHorizontal
                 borderColor={borderColor}
                 config={config}
+                collectionId={`${collection.id}-${childCollections[0].id}`}
               />
             </StoryCard>
           </div>
@@ -94,26 +84,16 @@ export const TwoColTenStoriesSidebar = ({ collection, config = {} }) => {
                   headerLevel="4"
                   isHorizontal
                   border={border}
-                  aspectRatio={[
-                    [16, 9],
-                    [16, 9],
-                  ]}
-                  config={config}
-                >
-                  <HeroImage
-                    story={story}
-                    isHorizontal
-                    aspectRatio={[
-                      [16, 9],
-                      [16, 9],
-                    ]}
-                  />
+                  aspectRatio={[[16, 9], [16, 9]]}
+                  config={config}>
+                  <HeroImage story={story} isHorizontal aspectRatio={[[16, 9], [16, 9]]} />
                   <StorycardContent
                     theme={theme}
                     story={story}
                     isHorizontal
                     borderColor={borderColor}
                     config={config}
+                    collectionId={`${collection.id}-${childCollections[0].id}`}
                   />
                 </StoryCard>
               </div>
@@ -139,7 +119,12 @@ export const TwoColTenStoriesSidebar = ({ collection, config = {} }) => {
           <div>
             {sidebarCollectionStories.slice(0, 4).map((story) => (
               <div styleName="card" key={story.id}>
-                <StoryCardWithBulletPoint story={story} bulletValue={`${++storyCounter}`} config={config} />
+                <StoryCardWithBulletPoint
+                  story={story}
+                  bulletValue={`${++storyCounter}`}
+                  config={config}
+                  collectionId={`${collection.id}-${childCollections[1].id}`}
+                />
               </div>
             ))}
           </div>
@@ -149,6 +134,7 @@ export const TwoColTenStoriesSidebar = ({ collection, config = {} }) => {
                 story={sidebarCollectionStories[4]}
                 bulletValue={`${++storyCounter}`}
                 config={config}
+                collectionId={`${collection.id}-${childCollections[1].id}`}
               />
             </div>
             {adWidgetSlot ? (
@@ -156,7 +142,12 @@ export const TwoColTenStoriesSidebar = ({ collection, config = {} }) => {
             ) : (
               sidebarCollectionStories.slice(5, 8).map((story) => (
                 <div styleName="card" key={story.id}>
-                  <StoryCardWithBulletPoint story={story} bulletValue={`${++storyCounter}`} config={config} />
+                  <StoryCardWithBulletPoint
+                    story={story}
+                    bulletValue={`${++storyCounter}`}
+                    config={config}
+                    collectionId={`${collection.id}-${childCollections[1].id}`}
+                  />
                 </div>
               ))
             )}
@@ -185,6 +176,6 @@ TwoColTenStoriesSidebar.propTypes = {
     slotConfig: PropTypes.array,
     collectionNameBorderColor: PropTypes.string,
     borderColor: PropTypes.string,
-    localizationConfig: PropTypes.object,
-  }),
+    localizationConfig: PropTypes.object
+  })
 };

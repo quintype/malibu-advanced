@@ -1,4 +1,4 @@
-@import "../../../../../../assets/arrow/stylesheets/mixins.scss";
+@import "../../../../../assets/stylesheets/mixins.scss";
 :root {
   --grid-container-width: 1140px;
   --fluid-grid-container-width: 1440px;
@@ -17,6 +17,7 @@
 .headline-block :global(.arr--sub-headline) {
   font-size: var(--arrow-fs-s);
   font-style: italic;
+  padding-right: 2px;
   margin: var(--arrow-spacing-xs) 0 var(--arrow-spacing-l);
   @include tablet {
     font-size: var(--arrow-fs-m);
@@ -195,9 +196,7 @@
     grid-column: 2 / 7;
   }
 }
-.story-content-inner-wrapper {
-  margin-bottom: var(--arrow-spacing-m) ;
-}
+
 .sideway-hero {
   @include tablet {
     grid-column: 6 / 13;

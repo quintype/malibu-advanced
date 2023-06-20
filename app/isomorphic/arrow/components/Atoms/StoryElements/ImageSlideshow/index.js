@@ -1,5 +1,5 @@
 import { LazyLoadImages, ResponsiveImage } from "@quintype/components";
-import get from "lodash/get";
+import get from "lodash.get";
 import PropTypes from "prop-types";
 import React from "react";
 import { shapeStory } from "../../../../utils/utils";
@@ -21,7 +21,7 @@ const ImageSlideshowBase = (props) => {
             <ResponsiveImage
               slug={imageS3Key}
               metadata={metadata}
-              aspect-ratio={[16, 9]}
+              aspectRatio={[16, 9]}
               defaultWidth={480}
               widths={[250, 480, 640]}
               imgParams={{ auto: ["format", "compress"] }}
@@ -49,7 +49,7 @@ const ImageSlideshowBase = (props) => {
   };
 
   ImageSlideshowTemplate.propTypes = {
-    onClickHandler: PropTypes.func,
+    onClickHandler: PropTypes.func
   };
 
   return <FullScreenImages template={ImageSlideshowTemplate} element={props.element} />;
@@ -57,9 +57,9 @@ const ImageSlideshowBase = (props) => {
 
 ImageSlideshowBase.propTypes = {
   element: PropTypes.shape({
-    "story-elements": PropTypes.array,
+    "story-elements": PropTypes.array
   }),
-  story: shapeStory,
+  story: shapeStory
 };
 
 export const ImageSlideshow = withElementWrapper(ImageSlideshowBase);

@@ -13,5 +13,5 @@ export const LeftArrow = ({ color = "#333" }) => {
 };
 
 LeftArrow.propTypes = {
-  color: PropTypes.string,
+  color: PropTypes.string
 };

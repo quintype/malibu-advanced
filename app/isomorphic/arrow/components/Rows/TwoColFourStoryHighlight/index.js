@@ -16,11 +16,9 @@ import { useDispatch, useSelector } from "react-redux";
 import get from "lodash/get";
 import "./two-col-four-story-highlight.m.css";
 
-export const TwoColFourStoryHighlight = ({ collection, config = {} }) => {
+export const TwoColFourStoryHighlight = ({ collection, config = {}, enableDarkMode = false }) => {
   const items = collectionToStories(collection);
-  if (!items.length) {
-    return null;
-  }
+  if (!items.length) return null;
 
   const {
     showBorder = true,
@@ -30,8 +28,8 @@ export const TwoColFourStoryHighlight = ({ collection, config = {} }) => {
     collectionNameTemplate = "",
     showBullet = true,
     customBulletColor = "",
-    localizationConfig = {},
-    bulletColorType = "default",
+    darkCustomBulletColor = "",
+    localizationConfig = {}
   } = config;
   const textColor = getTextColor(theme);
   const [firstStory, ...restStories] = items;
@@ -39,14 +37,13 @@ export const TwoColFourStoryHighlight = ({ collection, config = {} }) => {
   const qtConfig = useSelector((state) => get(state, ["qt", "config"], {}));
   const url = generateNavigateSlug(collection, qtConfig);
   const SectionTagBorderColor = rgbToHex(borderColor);
-
+  const getBulletColor = enableDarkMode ? darkCustomBulletColor : customBulletColor;
   return (
     <div
       className="full-width-with-padding arrow-component arr--two-col-four-story-highlight"
       data-test-id="two-col-four-story-highlight"
-      style={{ backgroundColor: theme, color: textColor }}
-      styleName={`componentWrapper ${showBullet ? "bulletStyle" : ""}`}
-    >
+      style={{ backgroundColor: theme || "initial" }}
+      styleName={`componentWrapper ${showBullet ? "bulletStyle" : ""}`}>
       <div styleName="highlightWrapper">
         <CollectionName
           collection={collection}
@@ -59,8 +56,8 @@ export const TwoColFourStoryHighlight = ({ collection, config = {} }) => {
               {showBullet && (
                 <span
                   data-test-id="bullet"
-                  styleName={`bullet ${bulletColorType === "default" ? textColor : ""}`}
-                  style={{ color: customBulletColor }}
+                  styleName={`bullet ${!getBulletColor ? textColor : ""}`}
+                  style={{ color: getBulletColor || "initial" }}
                 />
               )}
               <StoryCard
@@ -68,9 +65,13 @@ export const TwoColFourStoryHighlight = ({ collection, config = {} }) => {
                 bgImgContentOverlap
                 config={config}
                 border={showBorder ? "bottom" : ""}
-                theme={theme}
-              >
-                <StorycardContent story={story} borderColor={SectionTagBorderColor} />
+                theme={theme}>
+                <StorycardContent
+                  config={config}
+                  story={story}
+                  borderColor={SectionTagBorderColor}
+                  collectionId={collection.id}
+                />
               </StoryCard>
             </div>
           ))}
@@ -94,14 +95,13 @@ export const TwoColFourStoryHighlight = ({ collection, config = {} }) => {
           bgImgContentOverlap
           config={config}
           border={showBorder ? "full" : ""}
-          theme={theme}
-        >
+          theme={theme}>
           <HeroImage story={firstStory} />
-          <div style={{ backgroundColor: theme, color: textColor }}>
+          <div style={{ backgroundColor: theme || "initial" }}>
             <SectionTag story={firstStory} borderColor={SectionTagBorderColor} />
             <Headline story={firstStory} headerLevel={4} premiumStoryIconConfig={config} />
             <Subheadline story={firstStory} />
-            <AuthorWithTime config={localizationConfig} story={firstStory} />
+            <AuthorWithTime config={localizationConfig} story={firstStory} collectionId={collection.id} />
           </div>
         </StoryCard>
       </div>
@@ -113,6 +113,7 @@ export default StateProvider(TwoColFourStoryHighlight);
 
 TwoColFourStoryHighlight.propTypes = {
   collection: PropTypes.object.isRequired,
+  enableDarkMode: PropTypes.bool,
   config: PropTypes.shape({
     theme: PropTypes.string,
     showBorder: PropTypes.bool,
@@ -120,6 +121,6 @@ TwoColFourStoryHighlight.propTypes = {
     collectionNameBorderColor: PropTypes.string,
     borderColor: PropTypes.string,
     showBullet: PropTypes.bool,
-    localizationConfig: PropTypes.object,
-  }),
+    localizationConfig: PropTypes.object
+  })
 };

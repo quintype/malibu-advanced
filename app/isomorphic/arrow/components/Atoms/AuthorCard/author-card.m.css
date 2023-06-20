@@ -1,9 +1,10 @@
-/* eslint-disable scss/at-rule-no-unknown */
-@value viewports: "../../../../../assets/arrow/stylesheets/viewports.m.css";
+@value viewports: "../../../../assets/stylesheets/viewports.m.css";
 @value mobile from viewports;
 
 .author-card-wrapper {
   display: flex;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
 .author-card-wrapper.centerAligned {
@@ -13,25 +14,47 @@
 
 .author-image-wrapper {
   display: flex;
-  margin-right: var(--arrow-spacing-m);
-  margin-bottom: var(--arrow-spacing-s);
+  align-items: center;
+}
+
+.default .author-image-wrapper a {
+  margin: 0 var(--arrow-spacing-s) 0 0;
+}
+
+.default .author-image-wrapper a:last-child {
+  margin: 0 var(--arrow-spacing-xs) 0 0;
+}
+
+.default .author-card-label {
+  font-size: var(--arrow-fs-xs);
+  line-height: var(--arrow-lh-1);
+  margin-right: var(--arrow-spacing-xxs);
   @media (min-width: mobile) {
-    margin-right: var(--arrow-spacing-l);
+    font-size: var(--arrow-fs-s);
   }
 }
 
-.default .author-image-wrapper {
-  margin: 0 12px 0 0;
+.guest-author-wrapper {
+  margin-top: var(--arrow-spacing-xs);
 }
 
 .centerAligned .author-image-wrapper {
   justify-content: center;
   margin-right: 0;
+  margin-bottom: var(--arrow-spacing-m);
 }
 
 .author-image {
   margin-left: -100px;
   overflow: hidden;
+}
+
+.leftAligned .author-image {
+  margin-left: -64px;
+  overflow: hidden;
+  @media (min-width: mobile) {
+    margin-left: -100px;
+  }
 }
 
 .author-image figure {
@@ -52,6 +75,7 @@
   border: solid 2px var(--arrow-c-light);
 }
 
+.default .author-image,
 .default .author-image img {
   height: 32px;
   width: 32px;
@@ -70,16 +94,23 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 0;
+  padding: var(--arrow-spacing-xs) var(--arrow-spacing-xs) var(--arrow-spacing-xs) 0;
   margin-left: var(--arrow-spacing-m);
   @media (min-width: mobile) {
-    padding: var(--arrow-spacing-xs) var(--arrow-spacing-xs) var(--arrow-spacing-xs) 0;
     margin-left: var(--arrow-spacing-l);
   }
 }
 
 .default .author-details-wrapper {
   margin-left: var(--arrow-spacing-s);
+}
+
+.leftAligned {
+  align-items: center;
+}
+
+.leftAligned .author-image-wrapper {
+  margin-bottom: unset;
 }
 
 .leftAligned .author-details-wrapper {
@@ -95,7 +126,6 @@
 }
 
 .author-name-share {
-  display: flex;
   align-items: center;
   font-size: var(--arrow-fs-xs);
   line-height: var(--arrow-lh-1);
@@ -105,43 +135,57 @@
   }
 }
 
+.default .author-name-share.single-author,
+.leftAligned .author-name-share.single-author {
+  display: flex;
+}
+
+.twitter-wrapper {
+  margin: 0 0 0 var(--arrow-spacing-xs);
+}
+
 html[dir="rtl"] {
-  .author-image-wrapper {
-    margin-left: var(--arrow-spacing-m);
-    margin-right: 0;
-    @media (min-width: mobile) {
-      margin-left: var(--arrow-spacing-l);
-    }
-  }
-
-  .leftAligned .author-details-wrapper {
-    margin-right: var(--arrow-spacing-m);
-    margin-left: 0;
-    @media (min-width: mobile) {
-      margin-right: var(--arrow-spacing-l);
-    }
-  }
-
-  .multi-author-image {
-    position: relative;
-    right: -100px;
-  }
-
   .default .multi-author-image {
-    margin-left: -16px;
-    right: -12px;
-    @media (min-width: mobile) {
-      margin-left: -24px;
-      right: -12px;
-    }
+    margin-right: -24px;
+    margin-left: unset;
   }
 
+  .default .author-card-label {
+    margin-right: unset;
+    margin-left: var(--arrow-spacing-xxs);
+  }
+
+  .author-image {
+    margin-right: -100px;
+    margin-left: unset;
+  }
+
+  .default .author-image-wrapper a {
+    margin: 0 0 0 var(--arrow-spacing-s);
+  }
+  .default .author-image-wrapper a:last-child {
+    margin: 0 0 0 var(--arrow-spacing-xs);
+  }
+
+  .leftAligned .author-image-wrapper a {
+    margin-left: var(--arrow-spacing-m);
+  }
+  .leftAligned .author-image.multi-author-image {
+    margin-right: -64px;
+    margin-left: unset;
+  }
+
+  .leftAligned .author-image.first-author-image,
   .author-image.first-author-image {
-    position: static;
+    margin-right: 0;
   }
 
-  .centerAligned .author-image-wrapper {
-    margin-left: 0;
+  .author-name-share span {
+    display: inline-block;
+  }
+
+  .twitter-wrapper {
+    margin: 0 var(--arrow-spacing-xs) 0 0;
   }
 }
 
@@ -150,10 +194,6 @@ html[dir="rtl"] {
   @media (min-width: mobile) {
     font-size: var(--arrow-fs-s);
   }
-}
-
-.dot-wrapper {
-  margin: 0 var(--arrow-spacing-xxs) 0 var(--arrow-spacing-xs);
 }
 
 .author-bio {
@@ -172,4 +212,13 @@ html[dir="rtl"] {
 
 .light {
   color: var(--arrow-c-invert-mono2);
+}
+
+.centerAligned .author-image-wrapper a {
+  margin-left: var(--arrow-spacing-l);
+  margin-right: var(--arrow-spacing-l);
+}
+
+.leftAligned .author-image-wrapper a {
+  margin-right: var(--arrow-spacing-m);
 }

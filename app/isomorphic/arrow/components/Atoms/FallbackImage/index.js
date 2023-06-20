@@ -26,5 +26,5 @@ export const FallbackImage = ({ slug }) => {
 };
 
 FallbackImage.propTypes = {
-  slug: PropTypes.string,
+  slug: PropTypes.string
 };

@@ -163,3 +163,11 @@
     opacity: 1;
   }
 }
+
+.nomore-stories.dark {
+  color: var(--arrow-c-mono4);
+}
+
+.nomore-stories.light {
+  color: var(--arrow-c-invert-mono3);
+}

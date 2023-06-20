@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import get from "lodash/get";
+import get from "lodash.get";
 import { useStateValue } from "../../SharedContext";
 import { getTextColor } from "../../../utils/utils";
 
@@ -31,6 +31,6 @@ StoryHeadline.propTypes = {
   premiumStoryIconConfig: PropTypes.shape({
     iconColor: PropTypes.string,
     iconType: PropTypes.string,
-    enablePremiumStoryIcon: PropTypes.bool,
-  }),
+    enablePremiumStoryIcon: PropTypes.bool
+  })
 };

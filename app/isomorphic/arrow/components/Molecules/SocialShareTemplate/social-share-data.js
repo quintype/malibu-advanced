@@ -11,7 +11,7 @@ const getSocialIcons = (color, iconType) => {
         facebook: <Facebook key={iconType} />,
         twitter: <Twitter key={iconType} />,
         linkedin: <LinkedIn key={iconType} />,
-        whatsapp: <WhatsApp key={iconType} />,
+        whatsapp: <WhatsApp key={iconType} />
       };
 
     default:
@@ -19,7 +19,7 @@ const getSocialIcons = (color, iconType) => {
         facebook: <Facebook color={color} key={iconType} />,
         twitter: <Twitter color={color} key={iconType} />,
         linkedin: <LinkedIn color={color} key={iconType} />,
-        whatsapp: <WhatsApp color={color} key={iconType} />,
+        whatsapp: <WhatsApp color={color} key={iconType} />
       };
   }
 };
@@ -31,35 +31,35 @@ export const socialShareData = ({ fbUrl, twitterUrl, linkedinUrl, whatsappUrl, i
       {
         name: "facebook",
         url: fbUrl,
-        icon: socialIcons.facebook,
+        icon: socialIcons["facebook"],
         text: "Facebook",
         bgColor: "#4e71a8",
-        alt: "fb icon",
+        alt: "fb icon"
       },
       {
         name: "twitter",
         url: twitterUrl,
-        icon: socialIcons.twitter,
+        icon: socialIcons["twitter"],
         text: "Twitter",
         bgColor: "#1db7eb",
-        alt: "twitter icon",
+        alt: "twitter icon"
       },
       {
         name: "linkedin",
         url: linkedinUrl,
-        icon: socialIcons.linkedin,
+        icon: socialIcons["linkedin"],
         text: "LinkedIn",
         bgColor: "#0077B5",
-        alt: "linkedin icon",
+        alt: "linkedin icon"
       },
       {
         name: "whatsapp",
         url: whatsappUrl,
-        icon: socialIcons.whatsapp,
+        icon: socialIcons["whatsapp"],
         text: "Whatsapp",
         bgColor: "#25d366",
-        alt: "whatsapp share",
-      },
+        alt: "whatsapp share"
+      }
     ];
   };
   return getOptions();

@@ -24,7 +24,7 @@ describe("Quote Story Element", () => {
   it("Should render border left template with border color", () => {
     const wrapper = shallow(<Quote template="borderLeft" element={element} css={{ borderColor: "#ff214b" }} />);
     expect(wrapper.html()).toBe(
-      '<div data-test-id="quote" class="arrow-component arr--quote-element quote-m_quote-borderLeft__3QaAY "><p style="border-left:4px solid #ff214b" class="quote-m_text__2hXSE quote-m_dark__1migZ">After the death of James Halliday, the creator of the virtual reality world, his pre-recorded message reveals the hidden fortune, which makes Wade Watts, a teenager, embark on a quest.</p><p data-test-id="quote-attribution" class="quote-m_attribution__20Y6O quote-m_dark__1migZ">Player</p></div>'
+      '<div data-test-id="quote" class="arrow-component arr--quote-element quote-m_quote-borderLeft__3QaAY "><p style="border-left:4px solid #ff214b" class="quote-m_text__2hXSE quote-m_dark__1migZ">Quote: Rajasthan Chief Minister Ashok</p><p data-test-id="quote-attribution" class="quote-m_attribution__20Y6O quote-m_dark__1migZ">Ashok</p></div>'
     );
   });
 
@@ -32,8 +32,6 @@ describe("Quote Story Element", () => {
     // eslint-disable-next-line react/prop-types
     const customTemplate = ({ element }) => <h3 dangerouslySetInnerHTML={{ __html: element.metadata.content }} />;
     const wrapper = shallow(<Quote element={element} render={customTemplate} />);
-    expect(wrapper.html()).toBe(
-      "<h3>After the death of James Halliday, the creator of the virtual reality world, his pre-recorded message reveals the hidden fortune, which makes Wade Watts, a teenager, embark on a quest.</h3>"
-    );
+    expect(wrapper.html()).toBe("<h3>Quote: Rajasthan Chief Minister Ashok</h3>");
   });
 });

@@ -1,5 +1,4 @@
-/* eslint-disable scss/at-rule-no-unknown */
-@value viewports: "../../../../../../assets/arrow/stylesheets/viewports.m.css";
+@value viewports: "../../../../../assets/stylesheets/viewports.m.css";
 @value mobile from viewports;
 
 .qa-withAuthorImage:global(.arrow-component) .a-element p,
@@ -10,13 +9,11 @@
   font-size: var(--arrow-fs-s);
   font-weight: var(--arrow-fw-bold);
   line-height: var(--arrow-lh-5);
-  display: inline;
   color: var(--arrow-c-mono2);
   @media (min-width: mobile) {
     font-size: var(--arrow-fs-m);
   }
 }
-
 .q-element {
   margin-bottom: var(--arrow-spacing-m);
 }
@@ -91,10 +88,6 @@
   }
 }
 
-.content {
-  display: inline;
-}
-
 html[dir="rtl"] {
   .content {
     margin-right: var(--arrow-spacing-s);
@@ -104,4 +97,9 @@ html[dir="rtl"] {
     margin-right: 0;
     margin-left: var(--arrow-spacing-xs);
   }
+}
+
+.content,
+.content :first-child {
+  display: inline;
 }

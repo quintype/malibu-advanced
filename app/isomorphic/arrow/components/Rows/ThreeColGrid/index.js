@@ -1,11 +1,11 @@
 import React, { Fragment } from "react";
-import get from "lodash/get";
+import get from "lodash.get";
 import { StoryCard } from "../../Molecules/StoryCard";
 import { HeroImage } from "../../Atoms/HeroImage";
 import { StorycardContent } from "../../Molecules/StorycardContent";
 import { CollectionName } from "../../Atoms/CollectionName";
 import { LoadmoreButton } from "../../Atoms/Loadmore";
-import { getTextColor, getSlot, navigateTo, generateNavigateSlug } from "../../../utils/utils";
+import { getSlot, navigateTo, generateNavigateSlug } from "../../../utils/utils";
 import { collectionToStories } from "@quintype/components";
 import PropTypes from "prop-types";
 import { StateProvider } from "../../SharedContext";
@@ -22,6 +22,9 @@ const loadMore = ({ isLoading, storyItems, getMoreStories, subsequentLoadCount =
 };
 
 const ThreeColGrid = ({ collection, config = {}, getMoreStories, isLoadMoreVisible, isLoading, isolatedLoadMore }) => {
+  const storyItems = collectionToStories(collection);
+  if (!storyItems.length) return null;
+
   const {
     collectionNameBorderColor = "",
     borderColor = "",
@@ -31,12 +34,9 @@ const ThreeColGrid = ({ collection, config = {}, getMoreStories, isLoadMoreVisib
     collectionNameTemplate = "",
     footerSlotConfig = {},
     footerButton = "",
-    subsequentLoadCount = 3,
+    subsequentLoadCount = 3
   } = config;
-  const storyItems = collectionToStories(collection);
-  if (!storyItems.length) return null;
 
-  const textColor = getTextColor(theme);
   const { footerSlot } = footerSlotConfig;
   const footerSlotComp = footerSlot ? footerSlot() : null;
   const { type = "", component } = get(slotConfig, [0], {});
@@ -55,6 +55,7 @@ const ThreeColGrid = ({ collection, config = {}, getMoreStories, isLoadMoreVisib
           componentName={"ThreeColGrid"}
           offset={storyItems.length}
           limit={subsequentLoadCount}
+          theme={theme}
         />
       );
     }
@@ -86,6 +87,7 @@ const ThreeColGrid = ({ collection, config = {}, getMoreStories, isLoadMoreVisib
             isHorizontalMobile
             borderColor={borderColor}
             config={config}
+            collectionId={collection.id}
           />
         </StoryCard>
       </div>
@@ -96,8 +98,7 @@ const ThreeColGrid = ({ collection, config = {}, getMoreStories, isLoadMoreVisib
     <div
       className="full-width-with-padding arrow-component"
       data-test-id="three-col-grid"
-      style={{ backgroundColor: theme, color: textColor }}
-    >
+      style={{ backgroundColor: theme || "initial" }}>
       <div styleName="three-col-grid">
         <CollectionName
           collection={collection}
@@ -132,18 +133,18 @@ ThreeColGrid.propTypes = {
     footerButton: PropTypes.string,
     collectionNameTemplate: PropTypes.string,
     collectionNameBorderColor: PropTypes.string,
-    subsequentLoadCount: PropTypes.number,
+    subsequentLoadCount: PropTypes.number
   }),
   getMoreStories: PropTypes.func,
   isLoadMoreVisible: PropTypes.bool,
   isLoading: PropTypes.bool,
-  isolatedLoadMore: PropTypes.bool,
+  isolatedLoadMore: PropTypes.bool
 };
 
 ThreeColGrid.defaultProps = {
   getMoreStories: () => {},
   isLoadMoreVisible: true,
-  isLoading: false,
+  isLoading: false
 };
 
 export default StateProvider(ThreeColGrid);

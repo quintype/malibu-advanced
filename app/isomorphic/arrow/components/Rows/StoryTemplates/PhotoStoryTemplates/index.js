@@ -1,10 +1,9 @@
-/* eslint-disable max-len */
 import { SocialShare } from "@quintype/components";
 import PropTypes from "prop-types";
 import React from "react";
-import get from "lodash/get";
+import get from "lodash.get";
 import { useSelector } from "react-redux";
-import kebabCase from "lodash/kebabCase";
+import kebabCase from "lodash.kebabcase";
 import { AuthorCard } from "../../../Atoms/AuthorCard";
 import { CaptionAttribution } from "../../../Atoms/CaptionAttribution";
 import { SocialShareTemplate } from "../../../Molecules/SocialShareTemplate";
@@ -15,6 +14,7 @@ import { HeroImage } from "../../../Atoms/HeroImage";
 import { PublishDetails } from "../../../Atoms/PublishDetail";
 import { StoryTags } from "../../../Atoms/StoryTags";
 import { PhotoStoryElement, SlotAfterStory } from "../../../Molecules/StoryElementCard";
+import { StoryReview } from "../../../Atoms/StoryReview";
 import { StateProvider } from "../../../SharedContext";
 import AsideCollection from "../../AsideCollection";
 import "./photo.m.css";
@@ -27,6 +27,7 @@ const PhotoStory = ({
   adComponent,
   firstChild,
   secondChild,
+  enableDarkMode
 }) => {
   const {
     theme = "",
@@ -37,15 +38,18 @@ const PhotoStory = ({
     verticalShare = "",
     shareIconType = "plain-color-svg",
     authorDetails = {
-      template: "default",
+      template: "default"
     },
     imageRender = "fullBleed",
-    premiumStoryIconConfig = {},
+    premiumStoryIconConfig = {}
   } = config;
   const isFullBleed = imageRender === "fullBleed";
   const visibledCards = noOfVisibleCards < 0 ? story.cards : story.cards.slice(0, noOfVisibleCards);
   const storyId = get(story, ["id"], "");
-  const timezone = useSelector((state) => get(state, ["qt", "data", "timezone"], null));
+
+  const qtState = useSelector((state) => get(state, ["qt"], {}));
+  const timezone = get(qtState, ["data", "timezone"], null);
+  const mountAt = get(qtState, ["config", "mountAt"], "");
 
   const HeaderCard = () => {
     return (
@@ -73,40 +77,53 @@ const PhotoStory = ({
     );
   };
 
-  const StoryData = () => (
-    <>
-      {authorDetails && (
-        <AuthorCard clazzName="gap-32" story={story} template={authorDetails.template} opts={authorDetails.opts} />
-      )}
-      <div styleName="story-details">
-        <PublishDetails story={story} opts={publishedDetails} template="story" timezone={timezone} />
-        {!verticalShare && <SocialShareComponent />}
-      </div>
-      {visibledCards.map((card) => {
-        return (
-          <PhotoStoryElement
+  const StoryData = () => {
+    return (
+      <>
+        {authorDetails && (
+          <AuthorCard
+            clazzName="gap-32"
             story={story}
-            card={card}
-            key={get(card, ["id"], "")}
-            config={{ ...storyElementsConfig, theme }}
-            adComponent={adComponent}
-            widgetComp={widgetComp}
+            template={authorDetails.template}
+            opts={authorDetails.opts}
+            mountAt={mountAt}
           />
-        );
-      })}
-      <div styleName="space-32">
-        {firstChild}
-        <StoryTags tags={story.tags} />
-        <SlotAfterStory
-          id={story.id}
-          element={story.customSlotAfterStory}
-          AdComponent={adComponent}
-          WidgetComp={widgetComp}
-        />
-        {secondChild}
-      </div>
-    </>
-  );
+        )}
+        <div styleName="story-details">
+          <div id={`publish-details-container-${storyId}`}>
+            <PublishDetails story={story} opts={publishedDetails} template="story" timezone={timezone} />
+          </div>
+          {!verticalShare && <SocialShareComponent />}
+        </div>
+        <StoryReview theme={theme} story={story} />
+        {visibledCards.map((card) => {
+          return (
+            <PhotoStoryElement
+              story={story}
+              card={card}
+              key={get(card, ["id"], "")}
+              config={{ ...storyElementsConfig, theme }}
+              adComponent={adComponent}
+              widgetComp={widgetComp}
+              enableDarkMode={enableDarkMode}
+              theme={theme}
+            />
+          );
+        })}
+        <div styleName="space-32">
+          {firstChild}
+          <StoryTags tags={story.tags} />
+          <SlotAfterStory
+            id={story.id}
+            element={story.customSlotAfterStory}
+            AdComponent={adComponent}
+            WidgetComp={widgetComp}
+          />
+          {secondChild}
+        </div>
+      </>
+    );
+  };
 
   const renderImages = (imageRender) => {
     switch (imageRender) {
@@ -123,15 +140,7 @@ const PhotoStory = ({
     return (
       <>
         <div data-test-id="hero-image" styleName={`${renderImages(imageRender)} index-2`}>
-          <HeroImage
-            story={story}
-            aspectRatio={[
-              [16, 9],
-              [8, 3],
-            ]}
-            defaultFallback={false}
-            isStoryPageImage
-          />
+          <HeroImage story={story} aspectRatio={[[16, 9], [8, 3]]} defaultFallback={false} isStoryPageImage />
         </div>
         <div styleName="grid-col-2-10 space-12">
           <CaptionAttribution story={story} config={config} />
@@ -224,11 +233,11 @@ const PhotoStory = ({
     }
   };
   PhotoStoryTemplate.propTypes = {
-    templateType: PropTypes.string,
+    templateType: PropTypes.string
   };
 
   PhotoStoryTemplate.propTypes = {
-    templateType: PropTypes.string,
+    templateType: PropTypes.string
   };
 
   return (
@@ -236,8 +245,7 @@ const PhotoStory = ({
       styleName={`${verticalShare} ${isFullBleed ? "fullBleed" : ""}`}
       data-test-id={`photo-story-${templateType}-${kebabCase(imageRender)}`}
       className={`arrow-component arr-story-grid arr--content-wrapper arr--photo-story-template-wrapper ${templateType} `}
-      style={{ backgroundColor: theme }}
-    >
+      style={{ backgroundColor: theme || "initial" }}>
       <PhotoStoryTemplate templateType={templateType} />
     </div>
   );
@@ -247,13 +255,14 @@ PhotoStory.propTypes = {
   story: PropTypes.object,
   config: PropTypes.shape({
     templateType: PropTypes.string,
-    asideCollection: PropTypes.object,
+    asideCollection: PropTypes.object
   }),
   firstChild: PropTypes.node,
   secondChild: PropTypes.node,
   storyElementsConfig: PropTypes.object,
   adComponent: PropTypes.func,
   widgetComp: PropTypes.func,
+  enableDarkMode: PropTypes.bool
 };
 
 export default StateProvider(PhotoStory);

@@ -19,12 +19,12 @@ const sectionTagDefaultvalue = "#3a9fdd";
 
 const borderTemplate = {
   default: "",
-  border: "full",
+  border: "full"
 };
 
 const footerButton = {
   SubsequentLoadCount: "SubsequentLoadCount",
-  NavigateToPage: "NavigateToPage",
+  NavigateToPage: "NavigateToPage"
 };
 
 const footerSlot = () => {
@@ -35,9 +35,9 @@ withStore(
   {
     qt: {
       config: {
-        "cdn-image": "thumbor-stg.assettype.com",
-      },
-    },
+        "cdn-image": "thumbor-stg.assettype.com"
+      }
+    }
   },
   Readme
 )
@@ -59,7 +59,7 @@ withStore(
       footerSlotConfig: { footerSlot: footerSlot },
       showButton: boolean("Show button", true),
       showReadTime: boolean("Read time", true),
-      subsequentLoadCount: text("Subsequent Load", 8),
+      subsequentLoadCount: text("Subsequent Load", 8)
     };
 
     return <FourColGrid collection={collection} config={contextConfig} />;

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import get from "lodash/get";
+import get from "lodash.get";
 import PropTypes from "prop-types";
 import { ClockIcon } from "../../Svgs/clock-icon";
 import { getTextColor, getTimeStamp, timestampToFormat } from "../../../utils/utils";
@@ -32,7 +32,7 @@ const KeyEventCards = (props) => {
             <div
               styleName="fade-out"
               style={{
-                backgroundImage: `linear-gradient(to bottom, transparent, ${theme})`,
+                backgroundImage: `linear-gradient(to bottom, transparent, ${theme})` || "none"
               }}
             />
           )}
@@ -46,7 +46,7 @@ KeyEventCards.propTypes = {
   card: PropTypes.shape({
     "card-added-at": PropTypes.number,
     "story-elements": PropTypes.array,
-    id: PropTypes.string,
+    id: PropTypes.string
   }),
   config: PropTypes.object,
   slug: PropTypes.string,
@@ -55,7 +55,7 @@ KeyEventCards.propTypes = {
   index: PropTypes.number,
   cardLength: PropTypes.number,
   loadCards: PropTypes.bool,
-  showLoadMore: PropTypes.bool,
+  showLoadMore: PropTypes.bool
 };
 
 const KeyEvents = ({ story = {}, config = {}, showLoadMore = true, publishedDetails = {} }) => {
@@ -92,7 +92,7 @@ const KeyEvents = ({ story = {}, config = {}, showLoadMore = true, publishedDeta
   ));
 
   return (
-    <div className="arrow-component" style={{ background: theme }} styleName={`container ${textColor}`}>
+    <div className="arrow-component" style={{ background: theme || "initial" }} styleName={`container ${textColor}`}>
       <h3>{keyEventsTitle}</h3>
       <div styleName="cards-wrapper">{keyEvents}</div>
       {showLoadMore && lastElement && (
@@ -106,7 +106,7 @@ KeyEvents.propTypes = {
   story: PropTypes.object,
   config: PropTypes.object,
   showLoadMore: PropTypes.bool,
-  publishedDetails: PropTypes.object,
+  publishedDetails: PropTypes.object
 };
 
 export default StateProvider(KeyEvents);

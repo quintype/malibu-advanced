@@ -1,7 +1,7 @@
 @custom-media --viewport-medium (width >= 768px);
 
 .wrapper {
-  flex-basis: 70%;
+  flex-basis: 60%;
   @media (--viewport-medium) {
     flex-basis: 100%;
   }

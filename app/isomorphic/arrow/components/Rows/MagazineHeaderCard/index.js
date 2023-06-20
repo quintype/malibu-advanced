@@ -20,14 +20,13 @@ const MagazineHeaderCard = ({ collection = {}, config = {} }) => {
   const date = issueDate || createdAt;
   const timeStampConfig = {
     isUpperCase: true,
-    disableMeridiem: true,
+    disableMeridiem: true
   };
   return (
     <div
       className="full-width-with-padding arrow-component"
-      style={{ backgroundColor: theme }}
-      data-test-id="magazine-header-card"
-    >
+      style={{ backgroundColor: theme || "initial" }}
+      data-test-id="magazine-header-card">
       <div className="arr-magazine-card" styleName="magazine-header intro-button">
         <MagazineCoverImageCard collection={collection} config={{ ...config, magazineSlug }} />
         <div styleName="content">
@@ -59,15 +58,15 @@ MagazineHeaderCard.propTypes = {
   collection: PropTypes.shape({
     "created-at": PropTypes.number,
     summary: PropTypes.string,
-    items: PropTypes.array,
+    items: PropTypes.array
   }),
   config: PropTypes.shape({
     theme: PropTypes.string,
     footerButton: PropTypes.string,
     magazineTitle: PropTypes.string,
     magazinePageUrl: PropTypes.string,
-    customUrlPath: PropTypes.string,
-  }),
+    customUrlPath: PropTypes.string
+  })
 };
 
 export default StateProvider(MagazineHeaderCard);

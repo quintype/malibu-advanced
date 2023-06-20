@@ -1,4 +1,4 @@
-@import "../../../../../../assets/arrow/stylesheets/mixins.scss";
+@import "../../../../../assets/stylesheets/mixins.scss";
 
 .grid-col-full {
   grid-column: 1/5;
@@ -78,6 +78,7 @@
   :global(.arr--sub-headline) {
     font-size: var(--arrow-fs-s);
     font-style: italic;
+    padding-right: 2px;
     @include tablet {
       font-size: var(--arrow-fs-m);
     }

@@ -1,4 +1,4 @@
-@import "../../../../../../assets/arrow/stylesheets/mixins.scss";
+@import "../../../../../assets/stylesheets/mixins.scss";
 
 .default,
 .hero-priority,
@@ -31,6 +31,7 @@
 .header-details :global(.arr--sub-headline) {
   font-size: var(--arrow-fs-s);
   font-style: italic;
+  padding-right: 2px;
   @include tablet {
     font-size: var(--arrow-fs-m);
   }
@@ -191,15 +192,5 @@
 .tablet-index-2 {
   @include tablet {
     z-index: 2;
-  }
-}
-:global {
-  @media only screen and (max-width: 768px) {
-    .arr-story-grid {
-      display: block;
-    }
-    .story-element-jsembed{
-      word-break: break-word;
-    }
   }
 }
