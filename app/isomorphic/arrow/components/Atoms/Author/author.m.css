@@ -1,4 +1,4 @@
-@custom-media --viewport-medium (width >= 768px);
+@custom-media --viewport-medium (width >=768px);
 
 .author {
   display: flex;

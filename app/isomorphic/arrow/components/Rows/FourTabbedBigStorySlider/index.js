@@ -114,7 +114,7 @@ export const FourTabbedBigStorySlider = ({ collection, config = {} }) => {
   );
 };
 
-const DefaultStoryCardContent = ({ story, config = {}, borderColor, showSubheadline }) => {
+const DefaultStoryCardContentBase = ({ story, config = {}, borderColor, showSubheadline }) => {
   const SectionTagBorderColor = rgbToHex(borderColor);
   const { localizationConfig = {} } = config;
   return (
@@ -135,6 +135,7 @@ const DefaultStoryCardContent = ({ story, config = {}, borderColor, showSubheadl
 };
 
 export default StateProvider(FourTabbedBigStorySlider);
+const DefaultStoryCardContent = StateProvider(DefaultStoryCardContentBase);
 
 FourTabbedBigStorySlider.propTypes = {
   /**  collection is the array of objects which is returning by API  */
@@ -150,7 +151,7 @@ FourTabbedBigStorySlider.propTypes = {
   })
 };
 
-DefaultStoryCardContent.propTypes = {
+DefaultStoryCardContentBase.propTypes = {
   story: PropTypes.object.isRequired,
   config: PropTypes.object,
   borderColor: PropTypes.string,

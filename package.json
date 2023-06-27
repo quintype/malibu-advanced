@@ -18,7 +18,6 @@
     "@quintype/framework": "^7.7.7",
     "@quintype/seo": "^1.42.1",
     "axios": "^0.24.0",
-    "css-loader": "^6.8.1",
     "fontfaceobserver": "^2.1.0",
     "intersection-observer": "^0.12.2",
     "lodash": "^4.17.21",
@@ -42,6 +41,7 @@
     "babel-eslint": "^10.0.3",
     "check-node-version": "^4.1.0",
     "cosmiconfig": "^7.0.0",
+    "css-loader": "^6.8.1",
     "eslint": "^8.1.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-config-standard": "^16.0.3",
@@ -100,7 +100,7 @@
     "lint:css:ci": "npx stylelint $(git diff --pretty='' --diff-filter=d --name-only origin/master...HEAD -- '*.css' '*.scss') ./app/assets/stylesheets/app.scss",
     "lint:ci": "npm run lint:js:ci && npm run lint:css:ci",
     "check-node-npm": "check-node-version --node '>= 12.13.0' --npm '^6.14.0'",
-    "copy-arrow": "cp -r /Users/shraddhakesari_1/workspace/quintype-node-arrow/src/* /Users/shraddhakesari_1/workspace/malibu-advanced/app/isomorphic/arrow && echo 'Files copied successfully!'"
+    "copy-arrow": "bash ./copy-arrow.sh"
   },
   "husky": {
     "hooks": {
