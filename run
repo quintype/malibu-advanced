@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-# npm install
+npm install
 npm run copy-arrow
 
 # Do not overwrite the import in line 1 in fullscreenimages.scss
