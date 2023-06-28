@@ -91,6 +91,15 @@ function generateSeo(config, pageType) {
 
 ampRoutes(app, {
   seo: generateSeo,
+  featureConfig: {
+    visualStories: {
+      ads: {
+        mgId: {
+          widgetId: 1473537,
+        },
+      },
+    },
+  },
 });
 
 isomorphicRoutes(app, {
