@@ -40,7 +40,7 @@ publisher:
   enableMetype: true
   metypeConfig:
       metypeHost: "https://www.metype.com/"
-      metypeAccountId: "1003587"
+      metypeAccountId: "1003794"
       primaryColor: "#000"
       backgroundColor: "#2cc7a4"
       className: "story-commenting-widget"
