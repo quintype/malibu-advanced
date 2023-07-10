@@ -13,6 +13,7 @@
   "dependencies": {
     "@loadable/component": "^5.14.1",
     "@loadable/server": "^5.14.2",
+    "@quintype/amp": "^2.17.5-ga4-new-implementation.0",
     "@quintype/bridgekeeper-js": "^2.8.2-feature-otp.1",
     "@quintype/components": "^3.0.2",
     "@quintype/framework": "^7.19.16",
