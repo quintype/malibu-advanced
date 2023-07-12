@@ -91,6 +91,19 @@ function generateSeo(config, pageType) {
 
 ampRoutes(app, {
   seo: generateSeo,
+  featureConfig: {
+    visualStories: {
+      logoAlignment: "left",
+      logoUrl:
+        "https://thumbor-stg.assettype.com/malibu/2021-07/eb879d94-c255-46eb-9944-dc361d3da0c0/malibu_16_svg.png",
+      autoAdvanceAfter: "5s",
+      ads: {
+        mgId: {
+          widgetId: 1473537,
+        },
+      },
+    },
+  },
 });
 
 isomorphicRoutes(app, {

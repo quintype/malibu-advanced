@@ -91,12 +91,12 @@
       <%- include ("./partials/noscriptgtm") -%>
     <% } %>
     <div class="page-wrapper">
-      <%_ if(pageType !== 'user-login') {%>
+      <%_ if(pageType !== 'user-login' && metadataHeader){%>
         <div><%- topbar %></div>
         <header id="nav-bar" class="sticky-header"><%- navbar %></header>
       <% } %>
 
-      <% if(enableBreakingNews && pageType !== 'user-login') {%>
+      <% if(enableBreakingNews && pageType !== 'user-login' && metadataHeader){%>
         <div id='breaking-news-container'><%- breakingNews -%></div>
       <% } %>
       <%_ if(enableAds && pageType !== 'user-login') { _%>
@@ -104,7 +104,7 @@
       <%_ } _%>
       <div id="container"><%_ if(contentTemplate) { _%><%- include(contentTemplate) -%><%_ }else { _%><%- content %><%_ } _%>
         </div>
-      <%_ if(pageType !== 'user-login') {%>
+      <%_ if(pageType !== 'user-login' && metadataFooter) {%>
         <footer id="footer" class="footer-wrapper"><%- footer %></footer>
       <% } %>
       <div id="loading-indicator"></div>
