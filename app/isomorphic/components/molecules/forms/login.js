@@ -11,13 +11,13 @@ import { IS_OPEN_LOGIN_FORM, MEMBER_UPDATED } from "../../store/actions";
 
 import "./forms.m.css";
 
-const LoginBase = ({ onLogin, forgotPassword, manageLoginForm }) => {
+const LoginBase = ({ onLogin, forgotPassword, manageLoginForm, setLoginOption }) => {
   const [user, setUser] = useState({
     email: "",
-    password: ""
+    password: "",
   });
 
-  const qtConfig = useSelector(state => get(state, ["qt"], {}));
+  const qtConfig = useSelector((state) => get(state, ["qt"], {}));
   const publisherAttributes = get(qtConfig, ["config", "publisher-attributes"], {});
   const currentPath = get(qtConfig, ["currentPath"], "");
   const clientId = get(publisherAttributes, ["sso_login", "client_id"], "");
@@ -36,20 +36,20 @@ const LoginBase = ({ onLogin, forgotPassword, manageLoginForm }) => {
 
   const [error, setError] = useState({});
 
-  const setData = e => {
+  const setData = (e) => {
     const userObj = { ...user };
     const fieldName = e.target.id;
     userObj[fieldName] = e.target.value;
     setUser(userObj);
   };
 
-  const loginHandler = async e => {
+  const loginHandler = async (e) => {
     e.preventDefault();
     e.stopPropagation();
     const userObj = {
       username: user.email,
       email: user.email,
-      password: user.password
+      password: user.password,
     };
 
     if (user.email.length < 1 || user.password.length < 1) {
@@ -79,12 +79,12 @@ const LoginBase = ({ onLogin, forgotPassword, manageLoginForm }) => {
           if (oauthResponse.redirect_uri) window.location.href = oauthResponse.redirect_uri;
         } else {
           // User needs to validate the email account so send out an email to verify
-          return sendOtp(user.email)
-            .then(res => onLogin(user, res))
-            .catch(error => setError(error));
+          return sendOtp({ email: user.email })
+            .then((res) => onLogin(user, res))
+            .catch((error) => setError(error));
         }
       })
-      .catch(error => console.log("error msg", error.message));
+      .catch((error) => console.log("error msg", error.message));
   };
 
   return (
@@ -102,7 +102,7 @@ const LoginBase = ({ onLogin, forgotPassword, manageLoginForm }) => {
           </button>
         </div>
       </form>
-      <SocialLogin getCurrentUser={getCurrentUser} />
+      <SocialLogin getCurrentUser={getCurrentUser} loginOption={"Phone"} setLoginOption={setLoginOption} />
     </React.Fragment>
   );
 };
@@ -111,20 +111,21 @@ LoginBase.propTypes = {
   onLogin: func,
   forgotPassword: func,
   manageLoginForm: func,
-  isLoginOpen: bool
+  isLoginOpen: bool,
+  setLoginOption: func,
 };
 
-const mapStateToProps = state => ({
-  isLoginOpen: get(state, ["isLoginOpen"], false)
+const mapStateToProps = (state) => ({
+  isLoginOpen: get(state, ["isLoginOpen"], false),
 });
 
-const mapDispatchToProps = dispatch => ({
-  manageLoginForm: function(payload) {
+const mapDispatchToProps = (dispatch) => ({
+  manageLoginForm: function (payload) {
     dispatch({
       type: IS_OPEN_LOGIN_FORM,
-      payload: payload
+      payload: payload,
     });
-  }
+  },
 });
 
 export const Login = connect(mapStateToProps, mapDispatchToProps)(LoginBase);
