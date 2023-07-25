@@ -79,12 +79,12 @@ export const SocialLoginBase = ({ loginOption, setLoginOption, googleAppId, face
       redirectUrl: encodeURIComponent(redirectUrl),
     });
     return (
-      <Button color="#dd4b39" flat onClick={(e) => socialLogin(e, login, "google")}>
+      <button color="#dd4b39" onClick={(e) => socialLogin(e, login, "google")}>
         <span styleName="icon">
           <SvgIconHandler type="google" width="13" height="13" viewBox="0 0 13 13" />
         </span>{" "}
         Google
-      </Button>
+      </button>
     );
   };
 
