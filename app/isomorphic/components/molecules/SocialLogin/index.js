@@ -74,7 +74,7 @@ export const SocialLoginBase = ({ loginOption, setLoginOption, googleAppId, face
 
   const GoogleLogin = () => {
     const { login } = withGoogleLogin({
-      clientId: clientId,
+      clientId: googleAppId,
       scope: "email",
       emailMandatory: true,
       redirectUrl: encodeURIComponent(redirectUrl),
