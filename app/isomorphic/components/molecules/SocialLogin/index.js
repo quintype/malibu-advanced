@@ -29,14 +29,14 @@ export const SocialLoginBase = ({ loginOption, setLoginOption, googleAppId, face
     setRedirectUrl(ssoLoginIsEnable ? oauthAuthorize : `${location.origin}${location.pathname}`);
   }, []);
 
-  const socialLogin = (e, login, type) => {
+  const socialLogin = (e, login) => {
     e.preventDefault();
     login()
       .then(() => {
         window.location.reload();
       })
       .catch((err) => {
-        console.log(err);
+        console.log("Error From Social Login --->", err);
       });
   };
 
@@ -74,12 +74,13 @@ export const SocialLoginBase = ({ loginOption, setLoginOption, googleAppId, face
 
   const GoogleLogin = () => {
     const { login } = withGoogleLogin({
+      clientId: clientId,
       scope: "email",
       emailMandatory: true,
       redirectUrl: encodeURIComponent(redirectUrl),
     });
     return (
-      <button color="#dd4b39" onClick={(e) => socialLogin(e, login, "google")}>
+      <button color="#dd4b39" onClick={(e) => socialLogin(e, login)}>
         <span styleName="icon">
           <SvgIconHandler type="google" width="13" height="13" viewBox="0 0 13 13" />
         </span>{" "}
