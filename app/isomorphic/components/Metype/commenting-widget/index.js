@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { string, number } from "prop-types";
+import { string, number, object } from "prop-types";
 import { scriptLoader } from "../index";
 
 const MetypeCommentsWidget = (props) => {

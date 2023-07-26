@@ -63,7 +63,7 @@ export const LiveBlogStoryTemplates = ({
     const isMetypeEnabled = useSelector((state) =>
       get(state, ["qt", "config", "publisher-attributes", "enableMetype"], true)
     );
-    const jwtToken = useSelector((state) => get(state, ["userReducer"], null));
+    const jwtToken = useSelector((state) => get(state, ["userReducer", "jwt_token"], null));
     return (
       isMetypeEnabled && (
         <>

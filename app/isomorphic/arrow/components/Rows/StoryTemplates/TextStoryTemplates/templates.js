@@ -47,7 +47,7 @@ export const StoryTemplate = ({
   const isMetypeEnabled = useSelector((state) =>
     get(state, ["qt", "config", "publisher-attributes", "enableMetype"], true)
   );
-  const jwtToken = useSelector((state) => get(state, ["userReducer"], null));
+  const jwtToken = useSelector((state) => get(state, ["userReducer", "jwt_token"], null));
   const visibledCards = noOfVisibleCards < 0 ? story.cards : story.cards.slice(0, noOfVisibleCards);
   const storyId = get(story, ["id"], "");
   const HeaderCard = () => {
