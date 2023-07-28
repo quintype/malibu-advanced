@@ -166,6 +166,7 @@ const NavBar = () => {
     }
   }, []);
 
+  // eslint-disable-next-line no-unused-vars
   const userLogin = (loading) => {
     setLoading(loading);
     if (window) {
