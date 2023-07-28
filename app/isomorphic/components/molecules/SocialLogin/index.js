@@ -29,17 +29,6 @@ export const SocialLoginBase = ({ loginOption, setLoginOption, googleAppId, face
     setRedirectUrl(ssoLoginIsEnable ? oauthAuthorize : `${location.origin}${location.pathname}`);
   }, []);
 
-  const socialLogin = (e, login) => {
-    e.preventDefault();
-    login()
-      .then(() => {
-        window.location.reload();
-      })
-      .catch((err) => {
-        console.log("Error From Social Login --->", err);
-      });
-  };
-
   const FaceBookLogin = () => {
     const { serverSideLoginPath } = withFacebookLogin({
       scope: "email",
@@ -72,22 +61,39 @@ export const SocialLoginBase = ({ loginOption, setLoginOption, googleAppId, face
     );
   };
 
+  // ---- Client Side Login
+
+  const onGoogleButtonClick = (e, login) => {
+    e.preventDefault();
+    login()
+      .then(() => {
+        console.log("Client Side Login Successful");
+      })
+      .catch((err) => {
+        console.log("Error From Social Login --->", err);
+      });
+  };
+
+  const urlToBeRedirected = window.location.href; // or to any desired page location
+
   const GoogleLogin = () => {
     const { login } = withGoogleLogin({
       clientId: googleAppId,
       scope: "email",
       emailMandatory: true,
-      redirectUrl: encodeURIComponent(redirectUrl),
+      redirectUrl: urlToBeRedirected,
     });
     return (
-      <button color="#dd4b39" onClick={(e) => socialLogin(e, login)}>
+      <Button color="#dd4b39" flat onClick={(e) => onGoogleButtonClick(e, login)} socialButton>
         <span styleName="icon">
           <SvgIconHandler type="google" width="13" height="13" viewBox="0 0 13 13" />
         </span>{" "}
         Google
-      </button>
+      </Button>
     );
   };
+
+  // ----
 
   const AppleLogin = () => {
     const { serverSideLoginPath } = withAppleLogin(encodeURIComponent(redirectUrl));
