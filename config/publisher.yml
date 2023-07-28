@@ -36,7 +36,7 @@ publisher:
     open_in_new_tab: false
     pages: [home-page, section-page, tag-page, search-page, story-page, catalog-page, static-page, form-page]
   should_use_collection: true
-  google_app_id: "996100625065-em0i4hcjolhsu8b7eij50m8i0g8etpb4.apps.googleusercontent.com"
+  google_app_id: ""
   facebook_app_id: ""
   is_verification_link_flow: true
   enable_placeholder: true

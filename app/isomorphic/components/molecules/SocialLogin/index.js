@@ -94,8 +94,6 @@ export const SocialLoginBase = ({ loginOption, setLoginOption, googleAppId, face
     );
   };
 
-  // ----
-
   const AppleLogin = () => {
     const { serverSideLoginPath } = withAppleLogin(encodeURIComponent(redirectUrl));
     return (
