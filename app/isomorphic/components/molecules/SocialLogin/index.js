@@ -84,7 +84,7 @@ export const SocialLoginBase = ({ loginOption, setLoginOption, googleAppId, face
       redirectUrl: urlToBeRedirected,
     });
     return (
-      <Button color="#dd4b39" flat onClick={(e) => onGoogleButtonClick(e, login)} socialButton>
+      <Button color="#dd4b39" onClick={(e) => onGoogleButtonClick(e, login)}>
         <span styleName="icon">
           <SvgIconHandler type="google" width="13" height="13" viewBox="0 0 13 13" />
         </span>{" "}
