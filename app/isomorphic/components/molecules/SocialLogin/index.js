@@ -68,6 +68,7 @@ export const SocialLoginBase = ({ loginOption, setLoginOption, googleAppId, face
     login()
       .then(() => {
         console.log("Client Side Login Successful");
+        window.location.href = "/";
       })
       .catch((err) => {
         console.log("Error From Social Login --->", err);
