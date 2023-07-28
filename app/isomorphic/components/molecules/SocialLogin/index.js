@@ -74,7 +74,7 @@ export const SocialLoginBase = ({ loginOption, setLoginOption, googleAppId, face
       });
   };
 
-  const urlToBeRedirected = window.location.href; // or to any desired page location
+  const urlToBeRedirected = "/"; // or to any desired page location
 
   const GoogleLogin = () => {
     const { login } = withGoogleLogin({
