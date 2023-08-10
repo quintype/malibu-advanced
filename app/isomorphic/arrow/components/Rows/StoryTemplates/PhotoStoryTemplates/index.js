@@ -22,7 +22,7 @@ import { MetypeCommentsWidget } from "../../../../../components/Metype/commentin
 import { MetypeReactionsWidget } from "../../../../../components/Metype/reaction-widget";
 import "./photo.m.css";
 
-const PhotoStory = ({
+const StoryTemplatePhoto = ({
   story = {},
   config = {},
   storyElementsConfig,
@@ -45,44 +45,16 @@ const PhotoStory = ({
     imageRender = "fullBleed",
     premiumStoryIconConfig = {},
   } = config;
-  const isFullBleed = imageRender === "fullBleed";
+
+  const metypeConfig = useSelector((state) => get(state, ["qt", "config", "publisher-attributes", "metypeConfig"], {}));
+  const isMetypeEnabled = useSelector((state) =>
+    get(state, ["qt", "config", "publisher-attributes", "enableMetype"], true)
+  );
+  const jwtToken = useSelector((state) => get(state, ["userReducer", "jwt_token"], null));
+
   const visibledCards = noOfVisibleCards < 0 ? story.cards : story.cards.slice(0, noOfVisibleCards);
   const storyId = get(story, ["id"], "");
   const timezone = useSelector((state) => get(state, ["qt", "data", "timezone"], null));
-
-  // Metype widgets
-  const MetypeReactionsAndCommentwidget = () => {
-    const metypeConfig = useSelector((state) =>
-      get(state, ["qt", "config", "publisher-attributes", "metypeConfig"], {})
-    );
-    const isMetypeEnabled = useSelector((state) =>
-      get(state, ["qt", "config", "publisher-attributes", "enableMetype"], true)
-    );
-    const jwtToken = useSelector((state) => get(state, ["userReducer", "jwt_token"], null));
-    return (
-      isMetypeEnabled && (
-        <>
-          <MetypeReactionsWidget
-            host={metypeConfig.metypeHost}
-            accountId={metypeConfig.metypeAccountId}
-            storyUrl={story.url}
-            storyId={story.id}
-          />
-          <MetypeCommentsWidget
-            host={metypeConfig.metypeHost}
-            accountId={metypeConfig.metypeAccountId}
-            pageURL={story.url}
-            primaryColor={metypeConfig.primaryColor}
-            className={metypeConfig.className}
-            jwt={jwtToken}
-            fontUrl={metypeConfig.fontFamilyUrl}
-            fontFamily={metypeConfig.fontFamily}
-            storyId={story.id}
-          />
-        </>
-      )
-    );
-  };
 
   const HeaderCard = () => {
     return (
@@ -156,7 +128,7 @@ const PhotoStory = ({
     }
   };
 
-  const DefaultTemplate = ({ story }) => {
+  const defaultTemplate = ({ story, config }) => {
     return (
       <>
         <div data-test-id="hero-image" styleName={`${renderImages(imageRender)} index-2`}>
@@ -174,7 +146,27 @@ const PhotoStory = ({
           <CaptionAttribution story={story} config={config} />
           <HeaderCard />
           <StoryData />
-          <MetypeReactionsAndCommentwidget />
+          {isMetypeEnabled && (
+            <>
+              <MetypeCommentsWidget
+                host={metypeConfig.metypeHost}
+                accountId={metypeConfig.metypeAccountId}
+                pageURL={story.url}
+                primaryColor={metypeConfig.primaryColor}
+                className={metypeConfig.className}
+                jwt={jwtToken}
+                fontUrl={metypeConfig.fontFamilyUrl}
+                fontFamily={metypeConfig.fontFamily}
+                storyId={story.id}
+              />
+              <MetypeReactionsWidget
+                host={metypeConfig.metypeHost}
+                accountId={metypeConfig.metypeAccountId}
+                storyUrl={story.url}
+                storyId={story.id}
+              />
+            </>
+          )}
         </div>
         {verticalShare && <SocialShareComponent />}
         {asideCollection && (
@@ -193,7 +185,7 @@ const PhotoStory = ({
     );
   };
 
-  const HeroPriority = ({ story }) => {
+  const heroPriority = ({ story, config }) => {
     return (
       <>
         <div data-test-id="hero-image" styleName={`${renderImages(imageRender)} index-2`}>
@@ -203,7 +195,27 @@ const PhotoStory = ({
           <CaptionAttribution story={story} config={config} />
           <HeaderCard />
           <StoryData />
-          <MetypeReactionsAndCommentwidget />
+          {isMetypeEnabled && (
+            <>
+              <MetypeReactionsWidget
+                host={metypeConfig.metypeHost}
+                accountId={metypeConfig.metypeAccountId}
+                storyUrl={story.url}
+                storyId={story.id}
+              />
+              <MetypeCommentsWidget
+                host={metypeConfig.metypeHost}
+                accountId={metypeConfig.metypeAccountId}
+                pageURL={story.url}
+                primaryColor={metypeConfig.primaryColor}
+                className={metypeConfig.className}
+                jwt={jwtToken}
+                fontUrl={metypeConfig.fontFamilyUrl}
+                fontFamily={metypeConfig.fontFamily}
+                storyId={story.id}
+              />
+            </>
+          )}
         </div>
         {verticalShare && <SocialShareComponent />}
         {asideCollection && (
@@ -222,7 +234,7 @@ const PhotoStory = ({
     );
   };
 
-  const HeadlinePriority = ({ story }) => {
+  const headlinePriority = ({ story, config }) => {
     return (
       <>
         <div styleName="grid-container side-space">
@@ -234,7 +246,27 @@ const PhotoStory = ({
         <div styleName="grid-col-2-9 side-space">
           <CaptionAttribution story={story} config={config} />
           <StoryData />
-          <MetypeReactionsAndCommentwidget />
+          {isMetypeEnabled && (
+            <>
+              <MetypeReactionsWidget
+                host={metypeConfig.metypeHost}
+                accountId={metypeConfig.metypeAccountId}
+                storyUrl={story.url}
+                storyId={story.id}
+              />
+              <MetypeCommentsWidget
+                host={metypeConfig.metypeHost}
+                accountId={metypeConfig.metypeAccountId}
+                pageURL={story.url}
+                primaryColor={metypeConfig.primaryColor}
+                className={metypeConfig.className}
+                jwt={jwtToken}
+                fontUrl={metypeConfig.fontFamilyUrl}
+                fontFamily={metypeConfig.fontFamily}
+                storyId={story.id}
+              />
+            </>
+          )}
         </div>
         {verticalShare && <SocialShareComponent />}
         {asideCollection && (
@@ -253,37 +285,20 @@ const PhotoStory = ({
     );
   };
 
-  const PhotoStoryTemplate = ({ templateType }) => {
+  const getStoryTemplate = (templateType, { story, config }) => {
     switch (templateType) {
       case "hero-priority-center":
-        return <HeroPriority story={story} />;
+        return heroPriority({ story, config });
       case "headline-priority":
-        return <HeadlinePriority story={story} />;
+        return headlinePriority({ story, config });
       default:
-        return <DefaultTemplate story={story} />;
+        return defaultTemplate({ story, config });
     }
   };
-  PhotoStoryTemplate.propTypes = {
-    templateType: PropTypes.string,
-  };
-
-  PhotoStoryTemplate.propTypes = {
-    templateType: PropTypes.string,
-  };
-
-  return (
-    <div
-      styleName={`${verticalShare} ${isFullBleed ? "fullBleed" : ""}`}
-      data-test-id={`photo-story-${templateType}-${kebabCase(imageRender)}`}
-      className={`arrow-component arr-story-grid arr--content-wrapper arr--photo-story-template-wrapper ${templateType} `}
-      style={{ backgroundColor: theme }}
-    >
-      <PhotoStoryTemplate templateType={templateType} />
-    </div>
-  );
+  return <>{getStoryTemplate(templateType, { story, config })}</>;
 };
 
-PhotoStory.propTypes = {
+StoryTemplatePhoto.propTypes = {
   story: PropTypes.object,
   config: PropTypes.shape({
     templateType: PropTypes.string,
@@ -296,4 +311,58 @@ PhotoStory.propTypes = {
   widgetComp: PropTypes.func,
 };
 
-export default StateProvider(PhotoStory);
+const PhotoStoryTemplate = ({
+  story = {},
+  config = {},
+  storyElementsConfig,
+  widgetComp,
+  adComponent,
+  firstChild,
+  secondChild,
+}) => {
+  const {
+    theme = "",
+    templateType = "default",
+    verticalShare = "",
+
+    imageRender = "fullBleed",
+  } = config;
+
+  const isFullBleed = imageRender === "fullBleed";
+
+  const timezone = useSelector((state) => get(state, ["qt", "data", "timezone"], null));
+  return (
+    <div
+      styleName={`${verticalShare} ${isFullBleed ? "fullBleed" : ""}`}
+      data-test-id={`photo-story-${templateType}-${kebabCase(imageRender)}`}
+      className={`arrow-component arr-story-grid arr--content-wrapper arr--photo-story-template-wrapper ${templateType} `}
+      style={{ backgroundColor: theme }}
+    >
+      <StoryTemplatePhoto
+        story={story}
+        config={config}
+        templateType={templateType}
+        adComponent={adComponent}
+        widgetComp={widgetComp}
+        firstChild={firstChild}
+        secondChild={secondChild}
+        timezone={timezone}
+        storyElementsConfig={storyElementsConfig}
+      />
+    </div>
+  );
+};
+PhotoStoryTemplate.propTypes = {
+  story: PropTypes.object,
+  config: PropTypes.shape({
+    templateType: PropTypes.string,
+    asideCollection: PropTypes.object,
+  }),
+  firstChild: PropTypes.node,
+  secondChild: PropTypes.node,
+  storyElementsConfig: PropTypes.object,
+  adComponent: PropTypes.func,
+  widgetComp: PropTypes.func,
+};
+
+export default StateProvider(PhotoStoryTemplate, StoryTemplatePhoto);
