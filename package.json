@@ -14,7 +14,7 @@
     "@loadable/component": "^5.14.1",
     "@loadable/server": "^5.14.2",
     "@quintype/bridgekeeper-js": "^2.8.2-feature-otp.1",
-    "@quintype/components": "^3.0.2",
+    "@quintype/components": "^3.4.2-accesstype-integration.0",
     "@quintype/framework": "^7.19.21",
     "@quintype/seo": "^1.42.2",
     "axios": "^0.24.0",
