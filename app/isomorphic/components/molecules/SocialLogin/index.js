@@ -25,8 +25,7 @@ export const SocialLoginBase = ({ loginOption, setLoginOption, googleAppId, face
     const getRedirectUrl =
       get(params, ["query", "redirect_uri"]) || get(publisherAttributes, ["sso_login", "redirect_Url"], "");
     const location = new URL(window.location.href);
-    const oauthAuthorize = `${location.origin}/api/auth/v1/oauth/authorize?redirect_uri=${getRedirectUrl}
-    &client_id=${clientId}&callback_uri=${getCallbackUrl}&response_type=code`;
+    const oauthAuthorize = `${location.origin}/api/auth/v1/oauth/authorize?redirect_uri=${getRedirectUrl}&client_id=${clientId}&callback_uri=${getCallbackUrl}&response_type=code`;
     setRedirectUrl(ssoLoginIsEnable ? oauthAuthorize : `${location.origin}${location.pathname}`);
   }, []);
 
