@@ -67,7 +67,6 @@ export const SubscriptionPage = () => {
     <>
       <AccessType
         enableAccesstype={true}
-        isStaging={true}
         accessTypeKey={key}
         email={email}
         phone={phone}
