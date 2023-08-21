@@ -21,7 +21,7 @@ const NavBar = () => {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const [showUserHandler, setUserHandler] = useState(false);
-  const getState = useSelector(state => state);
+  const getState = useSelector((state) => state);
   const publisherAttributes = get(getState, ["qt", "config", "publisher-attributes"], {});
   const enableLogin = get(publisherAttributes, ["enableLogin"], true);
   const isHamburgerMenuOpen = get(getState, ["isHamburgerMenuOpen"], false);
@@ -40,11 +40,11 @@ const NavBar = () => {
   const toggleHandler = () => {
     dispatch({
       type: OPEN_HAMBURGER_MENU,
-      isHamburgerMenuOpen: !isHamburgerMenuOpen
+      isHamburgerMenuOpen: !isHamburgerMenuOpen,
     });
     dispatch({
       type: OPEN_SEARCHBAR,
-      isSearchBarOpen: false
+      isSearchBarOpen: false,
     });
   };
 
@@ -52,7 +52,7 @@ const NavBar = () => {
     setUserHandler(!showUserHandler);
     dispatch({
       type: OPEN_SEARCHBAR,
-      isSearchBarOpen: false
+      isSearchBarOpen: false,
     });
   };
 
@@ -75,7 +75,7 @@ const NavBar = () => {
       .then(() => {
         dispatch({
           type: MEMBER_UPDATED,
-          member: null
+          member: null,
         });
       })
       .finally(() => {
@@ -88,15 +88,15 @@ const NavBar = () => {
     setShowAccountModal(true);
     dispatch({
       type: OPEN_SEARCHBAR,
-      isSearchBarOpen: false
+      isSearchBarOpen: false,
     });
   };
 
-  const getNavbarMenu = menu => {
+  const getNavbarMenu = (menu) => {
     return (
       <ul styleName="navbar">
         {menu.length > 0 &&
-          menu.map(item => {
+          menu.map((item) => {
             return (
               <li key={item.title} styleName="dropdown">
                 <MenuItem
@@ -105,7 +105,7 @@ const NavBar = () => {
                   toggleHandler={() =>
                     dispatch({
                       type: OPEN_SEARCHBAR,
-                      isSearchBarOpen: false
+                      isSearchBarOpen: false,
                     })
                   }
                 />
@@ -126,7 +126,7 @@ const NavBar = () => {
         <ul styleName="dropdown-content" style={{ display: displayStyle }}>
           <HamburgerMenu onMenuToggle={() => toggleHandler()} isMegaMenuOpen={isHamburgerMenuOpen} />
           {hamburgerMenu.length > 0 &&
-            hamburgerMenu.map(item => {
+            hamburgerMenu.map((item) => {
               return (
                 <li key={item.title} styleName="dropdown">
                   <MenuItem menuStyle="menu-link" item={item} toggleHandler={() => toggleHandler()} />
@@ -138,7 +138,7 @@ const NavBar = () => {
     );
   };
 
-  const member = useSelector(state => get(state, ["member"], null));
+  const member = useSelector((state) => get(state, ["member"], null));
   const imageUrl = member && member["avatar-url"];
 
   useEffect(() => {
@@ -166,7 +166,8 @@ const NavBar = () => {
     }
   }, []);
 
-  const userLogin = loading => {
+  // eslint-disable-next-line no-unused-vars
+  const userLogin = (loading) => {
     setLoading(loading);
     if (window) {
       const oauthAuthorizeUrl = getOauthAuthorizeUrl(clientId, redirectUrl, window.location.href);
@@ -174,7 +175,7 @@ const NavBar = () => {
     }
   };
 
-  const messageModal = message => {
+  const messageModal = (message) => {
     // Import modal on message
     const Modal = lazy(() => import("../../../login/modal"));
     return (
@@ -250,9 +251,9 @@ const NavBar = () => {
                     <SvgIconHandler type="user-icon" width="18" height="20" viewBox="0 0 18 20" />
                   </button>
                 ) : !loading ? (
-                  <a styleName="user-btn" onClick={() => userLogin(true)}>
+                  <Link styleName="user-btn" href={"/user-login"}>
                     <SvgIconHandler type="user-icon" width="18" height="20" viewBox="0 0 18 20" />
-                  </a>
+                  </Link>
                 ) : (
                   <span>Loading...</span>
                 )}

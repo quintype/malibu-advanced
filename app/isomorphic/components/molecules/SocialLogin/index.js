@@ -60,14 +60,31 @@ export const SocialLoginBase = ({ loginOption, setLoginOption, googleAppId, face
     );
   };
 
+  // ---- Client Side Login
+
+  const onGoogleButtonClick = (e, login) => {
+    e.preventDefault();
+    login()
+      .then(() => {
+        console.log("Client Side Login Successful");
+        window.location.href = "/";
+      })
+      .catch((err) => {
+        console.log("Error From Social Login --->", err);
+      });
+  };
+
+  const urlToBeRedirected = "/"; // or to any desired page location
+
   const GoogleLogin = () => {
-    const { serverSideLoginPath } = withGoogleLogin({
+    const { login } = withGoogleLogin({
+      clientId: googleAppId,
       scope: "email",
       emailMandatory: true,
-      redirectUrl: encodeURIComponent(redirectUrl),
+      redirectUrl: urlToBeRedirected,
     });
     return (
-      <Button color="#dd4b39" flat href={serverSideLoginPath} socialButton>
+      <Button color="#dd4b39" onClick={(e) => onGoogleButtonClick(e, login)}>
         <span styleName="icon">
           <SvgIconHandler type="google" width="13" height="13" viewBox="0 0 13 13" />
         </span>{" "}
