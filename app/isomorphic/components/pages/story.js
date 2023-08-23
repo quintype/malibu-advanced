@@ -20,7 +20,6 @@ function StoryPageBaseWithAccesstype({ story, config }) {
   return (
     <AccessType
       enableAccesstype={true}
-      isStaging={true}
       accessTypeKey={key}
       email={email}
       phone={phone}

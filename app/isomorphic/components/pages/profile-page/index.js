@@ -18,7 +18,6 @@ const ProfilePage = () => {
   return (
     <AccessType
       enableAccesstype={true}
-      isStaging={true}
       accessTypeKey={key}
       email={email}
       phone={phone}
