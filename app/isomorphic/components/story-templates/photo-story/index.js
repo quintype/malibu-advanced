@@ -1,5 +1,5 @@
 import React from "react";
-import PhotoStoryTemplates from "../../../arrow/components/Rows/StoryTemplates/PhotoStoryTemplates";
+import PhotoStoryTemplate from "../../../arrow/components/Rows/StoryTemplates/PhotoStoryTemplates";
 import { object, func } from "prop-types";
 
 const PhotoStory = ({ story, config, adWidget, adPlaceholder, hasAccess }) => {
@@ -8,7 +8,7 @@ const PhotoStory = ({ story, config, adWidget, adPlaceholder, hasAccess }) => {
     showSection: false,
   };
   return (
-    <PhotoStoryTemplates
+    <PhotoStoryTemplate
       story={story}
       config={{ ...config, ...templateSpecific }}
       adComponent={adWidget}

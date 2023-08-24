@@ -41,7 +41,11 @@ const ISOMORPHIC_ROUTES = [
     pageType: PAGE_TYPE.STORY_PUBLIC_PREVIEW_PAGE,
     exact: true,
   },
-
+  {
+    path: "/ugc-page",
+    pageType: PAGE_TYPE.UGC_PAGE,
+    exact: true,
+  },
   {
     path: `${TAG_PAGE_URL_PREFIX}:tagSlug`,
     pageType: PAGE_TYPE.TAG_PAGE,

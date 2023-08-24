@@ -27,6 +27,7 @@ export async function renderLayout(res, params) {
     enableAds,
     loadAdsSynchronously,
     pageType,
+    enableMetype,
   } = getConfig(params.store.getState());
   const chunk = params.shell ? null : allChunks[getChunkName(params.pageType)];
   const criticalCss = await getCriticalCss();
@@ -90,6 +91,7 @@ export async function renderLayout(res, params) {
         placeholderDelay,
         pageType,
         enableBreakingNews: params.pageType !== "profile-page",
+        enableMetype: enableMetype,
       },
       params
     )
