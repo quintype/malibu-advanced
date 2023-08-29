@@ -128,6 +128,6 @@
   color: var(--brand-primary-dark);
 }
 
-.subscribe-btn{
-  color: red;
+.subscribe-btn {
+  color: var(--brand-secondary);
 }
