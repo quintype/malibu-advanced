@@ -19,6 +19,7 @@ import { MetypeCommentsWidget } from "../../../../../components/Metype/commentin
 import { MetypeReactionsWidget } from "../../../../../components/Metype/reaction-widget";
 
 import "./text-story.m.css";
+import { Paywall } from "../../Paywall";
 
 export const StoryTemplate = ({
   story = {},
@@ -29,6 +30,7 @@ export const StoryTemplate = ({
   firstChild,
   secondChild,
   timezone,
+  hasAccess,
 }) => {
   const {
     theme = "",
@@ -93,16 +95,30 @@ export const StoryTemplate = ({
     );
   };
 
-  const StoryData = () => {
+  const StoryData = ({ hasAccess }) => {
+    const isStoryBehindPaywall = story.access === "subscription" && hasAccess === false;
+
     return (
-      <>
-        <div styleName="gap-16">
-          {authorDetails && <AuthorCard story={story} template={authorDetails.template} opts={authorDetails.opts} />}
-          <div styleName="timestamp-social-share">
-            <PublishDetails story={story} opts={publishedDetails} template="story" timezone={timezone} />
-            {!verticalShare && <SocialShareComponent />}
-          </div>
-          {visibledCards.map((card) => {
+      <div styleName="gap-16">
+        {authorDetails && <AuthorCard story={story} template={authorDetails.template} opts={authorDetails.opts} />}
+        <div styleName="timestamp-social-share">
+          <PublishDetails story={story} opts={publishedDetails} template="story" timezone={timezone} />
+          {!verticalShare && <SocialShareComponent />}
+        </div>
+        {isStoryBehindPaywall ? (
+          <>
+            <StoryElementCard
+              story={story}
+              card={visibledCards[0]}
+              key={get(visibledCards[0], ["id"], "")}
+              config={storyElementsConfig}
+              adComponent={adComponent}
+              widgetComp={widgetComp}
+            />
+            <Paywall />
+          </>
+        ) : (
+          visibledCards.map((card) => {
             return (
               <StoryElementCard
                 story={story}
@@ -113,20 +129,19 @@ export const StoryTemplate = ({
                 widgetComp={widgetComp}
               />
             );
-          })}
-          {firstChild}
-          <div styleName="story-tags">
-            <StoryTags tags={story.tags} />
-            <SlotAfterStory
-              id={story.id}
-              element={story.customSlotAfterStory}
-              AdComponent={adComponent}
-              WidgetComp={widgetComp}
-            />
-          </div>
-          {secondChild}
+          })
+        )}
+        {firstChild}
+        <div styleName="story-tags">
+          <StoryTags tags={story.tags} />
+          <SlotAfterStory
+            id={story.id}
+            element={story.customSlotAfterStory}
+            AdComponent={adComponent}
+            WidgetComp={widgetComp}
+          />
         </div>
-      </>
+      </div>
     );
   };
 
@@ -147,7 +162,7 @@ export const StoryTemplate = ({
     );
   };
 
-  const heroPriorityCenterTemplate = () => {
+  const heroPriorityCenterTemplate = (hasAccess) => {
     return (
       <>
         <div styleName="hero-image index-2" data-test-id="hero-priority-center-image">
@@ -156,7 +171,7 @@ export const StoryTemplate = ({
         <div styleName="story-content-inner-wrapper">
           <CaptionAttribution story={story} config={config} />
           <HeaderCard />
-          <StoryData />
+          <StoryData hasAccess={hasAccess} />
           {isMetypeEnabled && (
             <>
               <MetypeReactionsWidget
@@ -185,7 +200,7 @@ export const StoryTemplate = ({
     );
   };
 
-  const headlineHeroPriorityTemplate = () => {
+  const headlineHeroPriorityTemplate = (hasAccess) => {
     return (
       <>
         <div styleName="story-content-inner-wrapper">
@@ -196,7 +211,7 @@ export const StoryTemplate = ({
         </div>
         <div styleName="story-content-inner-wrapper">
           <CaptionAttribution story={story} config={config} />
-          <StoryData />
+          <StoryData hasAccess={hasAccess} />
           {isMetypeEnabled && (
             <>
               <MetypeReactionsWidget
@@ -225,7 +240,7 @@ export const StoryTemplate = ({
     );
   };
 
-  const heroVerticalTemplate = () => {
+  const heroVerticalTemplate = (hasAccess) => {
     return (
       <>
         <HeaderCard />
@@ -234,7 +249,7 @@ export const StoryTemplate = ({
         </div>
         <CaptionAttribution story={story} config={config} />
         <div styleName="story-content-inner-wrapper">
-          <StoryData />
+          <StoryData hasAccess={hasAccess} />
           {isMetypeEnabled && (
             <>
               <MetypeReactionsWidget
@@ -263,7 +278,7 @@ export const StoryTemplate = ({
     );
   };
 
-  const heroPriorityLeftTemplate = () => {
+  const heroPriorityLeftTemplate = (hasAccess) => {
     return (
       <>
         <div styleName="hero-image index-2" data-test-id="hero-priority-left-image">
@@ -272,7 +287,7 @@ export const StoryTemplate = ({
         <div styleName="story-content-inner-wrapper">
           <CaptionAttribution story={story} config={config} />
           <HeaderCard />
-          <StoryData />
+          <StoryData hasAccess={hasAccess} />
           {isMetypeEnabled && (
             <>
               <MetypeReactionsWidget
@@ -301,7 +316,7 @@ export const StoryTemplate = ({
     );
   };
 
-  const headlinePriorityTemplate = () => {
+  const headlinePriorityTemplate = (hasAccess) => {
     return (
       <>
         <HeaderCard />
@@ -310,7 +325,7 @@ export const StoryTemplate = ({
         </div>
         <div styleName="story-content-inner-wrapper">
           <CaptionAttribution story={story} config={config} />
-          <StoryData />
+          <StoryData hasAccess={hasAccess} />
           {isMetypeEnabled && (
             <>
               <MetypeReactionsWidget
@@ -339,7 +354,7 @@ export const StoryTemplate = ({
     );
   };
 
-  const headlineOverlayTemplate = () => {
+  const headlineOverlayTemplate = (hasAccess) => {
     return (
       <>
         <div styleName="hero-image index-2" data-test-id="headline-overlay-hero-image">
@@ -356,7 +371,7 @@ export const StoryTemplate = ({
         <HeaderCard />
         <div styleName="story-content-inner-wrapper">
           <CaptionAttribution story={story} config={config} />
-          <StoryData />
+          <StoryData hasAccess={hasAccess} />
           {isMetypeEnabled && (
             <>
               <MetypeReactionsWidget
@@ -385,23 +400,23 @@ export const StoryTemplate = ({
     );
   };
 
-  const getStoryTemplate = (templateType) => {
+  const getStoryTemplate = (templateType, hasAccess) => {
     switch (templateType) {
       case "hero-priority-center":
-        return heroPriorityCenterTemplate();
+        return heroPriorityCenterTemplate(hasAccess);
       case "default":
-        return heroPriorityLeftTemplate();
+        return heroPriorityLeftTemplate(hasAccess);
       case "headline-hero-priority":
-        return headlineHeroPriorityTemplate();
+        return headlineHeroPriorityTemplate(hasAccess);
       case "hero-vertical-priority":
-        return heroVerticalTemplate();
+        return heroVerticalTemplate(hasAccess);
       case "headline-priority":
-        return headlinePriorityTemplate();
+        return headlinePriorityTemplate(hasAccess);
       case "headline-overlay-priority":
-        return headlineOverlayTemplate();
+        return headlineOverlayTemplate(hasAccess);
     }
   };
-  return <>{getStoryTemplate(templateType)}</>;
+  return <>{getStoryTemplate(templateType, hasAccess)}</>;
 };
 
 StoryTemplate.propTypes = {
@@ -417,4 +432,5 @@ StoryTemplate.propTypes = {
   storyElementsConfig: PropTypes.object,
   widgetComp: PropTypes.func,
   adComponent: PropTypes.func,
+  hasAccess: PropTypes.bool,
 };

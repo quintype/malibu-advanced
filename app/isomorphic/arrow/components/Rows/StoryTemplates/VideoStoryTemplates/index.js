@@ -18,6 +18,7 @@ import { StateProvider } from "../../../SharedContext";
 import { MetypeCommentsWidget } from "../../../../../components/Metype/commenting-widget";
 import { MetypeReactionsWidget } from "../../../../../components/Metype/reaction-widget";
 import "./video-story.m.css";
+import { Paywall } from "../../Paywall";
 
 const VideoStoryTemplate = ({
   story = {},
@@ -27,6 +28,7 @@ const VideoStoryTemplate = ({
   adComponent,
   firstChild,
   secondChild,
+  hasAccess,
 }) => {
   const heroVideo =
     story.cards
@@ -94,7 +96,9 @@ const VideoStoryTemplate = ({
     );
   };
 
-  const StoryData = () => {
+  const StoryData = ({ hasAccess }) => {
+    const isStoryBehindPaywall = story.access === "subscription" && hasAccess === false;
+
     return (
       <div styleName="story-details">
         <div styleName="author">
@@ -104,19 +108,34 @@ const VideoStoryTemplate = ({
           <PublishDetails story={story} opts={publishedDetails} template="story" timezone={timezone} />
           {!verticalShare && <SocialShareComponent />}
         </div>
-        {visibledCards.map((card) => {
-          return (
+        {isStoryBehindPaywall ? (
+          <>
             <StoryElementCard
               heroVideoElementId={heroVideo.id}
               story={story}
-              card={card}
-              key={get(card, ["id"], "")}
+              card={visibledCards[0]}
+              key={get(visibledCards[0], ["id"], "")}
               config={storyElementsConfig}
               adComponent={adComponent}
               widgetComp={widgetComp}
             />
-          );
-        })}
+            <Paywall />
+          </>
+        ) : (
+          visibledCards.map((card) => {
+            return (
+              <StoryElementCard
+                heroVideoElementId={heroVideo.id}
+                story={story}
+                card={card}
+                key={get(card, ["id"], "")}
+                config={storyElementsConfig}
+                adComponent={adComponent}
+                widgetComp={widgetComp}
+              />
+            );
+          })
+        )}
         {firstChild}
         <div styleName="story-tags">
           <StoryTags tags={story.tags} />
@@ -130,6 +149,10 @@ const VideoStoryTemplate = ({
         {secondChild}
       </div>
     );
+  };
+
+  StoryData.propTypes = {
+    hasAccess: PropTypes.bool,
   };
 
   const SideColumn = () => {
@@ -149,13 +172,13 @@ const VideoStoryTemplate = ({
     );
   };
 
-  const heroPriorityTemplate = () => {
+  const heroPriorityTemplate = (hasAccess) => {
     return (
       <>
         <HeroVideo />
         <div styleName="story-content-wrapper">
           <HeaderCard />
-          <StoryData />
+          <StoryData hasAccess={hasAccess} />
           {isMetypeEnabled && (
             <>
               <MetypeReactionsWidget
@@ -195,7 +218,7 @@ const VideoStoryTemplate = ({
     );
   };
 
-  const headlinePriorityTemplate = () => {
+  const headlinePriorityTemplate = (hasAccess) => {
     return (
       <>
         <div styleName="story-content-wrapper">
@@ -205,7 +228,7 @@ const VideoStoryTemplate = ({
           <HeroVideo />
         </div>
         <div styleName="story-content-wrapper">
-          <StoryData />
+          <StoryData hasAccess={hasAccess} />
           {isMetypeEnabled && (
             <>
               <MetypeReactionsWidget
@@ -234,13 +257,13 @@ const VideoStoryTemplate = ({
     );
   };
 
-  const defaultTemplate = () => {
+  const defaultTemplate = (hasAccess) => {
     return (
       <>
         <HeroVideo />
         <div styleName="story-content-wrapper">
           <HeaderCard />
-          <StoryData />
+          <StoryData hasAccess={hasAccess} />
           {isMetypeEnabled && (
             <>
               <MetypeReactionsWidget
@@ -270,14 +293,14 @@ const VideoStoryTemplate = ({
     );
   };
 
-  const getStoryTemplate = (templateType) => {
+  const getStoryTemplate = (templateType, hasAccess) => {
     switch (templateType) {
       case "hero-priority":
-        return heroPriorityTemplate(story);
+        return heroPriorityTemplate(hasAccess);
       case "headline-priority":
-        return headlinePriorityTemplate(story);
+        return headlinePriorityTemplate(hasAccess);
       default:
-        return defaultTemplate(story);
+        return defaultTemplate(hasAccess);
     }
   };
 
@@ -290,7 +313,7 @@ const VideoStoryTemplate = ({
       styleName={`${templateClass} ${verticalShare}`}
       style={{ backgroundColor: theme }}
     >
-      {getStoryTemplate(templateType)}
+      {getStoryTemplate(templateType, hasAccess)}
     </div>
   );
 };
@@ -307,6 +330,7 @@ VideoStoryTemplate.propTypes = {
   storyElementsConfig: PropTypes.object,
   adComponent: PropTypes.func,
   widgetComp: PropTypes.func,
+  hasAccess: PropTypes.func,
 };
 
 export default StateProvider(VideoStoryTemplate);

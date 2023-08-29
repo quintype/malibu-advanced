@@ -80,6 +80,7 @@ function generateSeo(config, pageType) {
       enableLiveBlog: true,
       enableVideo: true,
       enableNewsArticle: true,
+      isAmpSubscriptionsEnabled: true,
     }),
     fallbackSocialImage:
       "https://gumlet.assettype.com/malibu/2023-04/59d3e1a7-019f-46eb-ba51-03989f32c4c1/birds_7901303_960_720.jpeg",
@@ -91,15 +92,29 @@ function generateSeo(config, pageType) {
 
 ampRoutes(app, {
   seo: generateSeo,
+
   featureConfig: {
-    visualStories: {
-      logoAlignment: "left",
-      logoUrl:
-        "https://thumbor-stg.assettype.com/malibu/2021-07/eb879d94-c255-46eb-9944-dc361d3da0c0/malibu_16_svg.png",
-      autoAdvanceAfter: "5s",
-      ads: {
-        mgId: {
-          widgetId: 1473537,
+    subscriptions: {
+      services: {
+        authorizationUrl: ({ story, config }) => {
+          const { key, accessTypeBkIntegrationId } = config.additionalConfig.publisher.accesstypeConfig;
+          return `https://malibu-advanced-web.qtstage.io/api/access/v1/stories/${story["story-content-id"]}/amp-access?key=${key}&accesstype_integration_id=${accessTypeBkIntegrationId}&rid=READER_ID&url=SOURCE_URL`;
+        },
+        pingbackUrl: ({ story, config }) => {
+          const { key, accessTypeBkIntegrationId } = config.additionalConfig.publisher.accesstypeConfig;
+          return `https://malibu-advanced-web.qtstage.io/api/access/v1/stories/${story["story-content-id"]}/amp-access?key=${key}&accesstype_integration_id=${accessTypeBkIntegrationId}&rid=READER_ID&url=SOURCE_URL`;
+        },
+        actions: {
+          login: () => "https://malibu-advanced-web.qtstage.io/user-login",
+          subscribe: () => "https://malibu-advanced-web.qtstage.io/subscription",
+        },
+      },
+      score: { supportsViewer: 10, isReadyToPay: 9 },
+      fallbackEntitlement: {
+        granted: () => false,
+        grantReason: () => "SUBSCRIBER",
+        data: {
+          isLoggedIn: () => false,
         },
       },
     },

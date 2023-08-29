@@ -20,6 +20,7 @@ import LiveIcon from "../../../Svgs/liveicon";
 import KeyEvents from "../../../Molecules/KeyEvents";
 import { ClockIcon } from "../../../Svgs/clock-icon";
 import { StoryHeadline } from "../../../Atoms/StoryHeadline";
+import { Paywall } from "../../Paywall";
 import { MetypeCommentsWidget } from "../../../../../components/Metype/commenting-widget";
 import { MetypeReactionsWidget } from "../../../../../components/Metype/reaction-widget";
 
@@ -32,6 +33,7 @@ export const LiveBlogStoryTemplates = ({
   firstChild,
   secondChild,
   timezone,
+  hasAccess,
 }) => {
   const {
     theme = "",
@@ -78,41 +80,59 @@ export const LiveBlogStoryTemplates = ({
       </div>
     );
   };
-  const StoryCards = () => {
-    return visibleCards.map((card = {}, index) => {
-      const borderBottom = index === visibleCards.length - 1 ? "" : `share-cards ${textColor}`;
-      const cardId = get(card, ["id"], "");
-      const { "card-added-at": cardAddedAt } = card;
-      return (
-        <div key={index} styleName={borderBottom}>
-          <div styleName="card-share">
-            <div styleName={`time-wrapper ${textColor}`}>
-              <ClockIcon color={updateColor} />
-              {getTimeStamp(cardAddedAt, timestampToFormat, { isTimeFirst: true })}
+  const StoryCards = ({ hasAccess }) => {
+    const isStoryBehindPaywall = story.access === "subscription" && hasAccess === false;
+
+    return isStoryBehindPaywall ? (
+      <>
+        <StoryElementCard
+          story={story}
+          card={visibleCards[0]}
+          key={get(visibleCards[0], ["id"], "")}
+          config={storyElementsConfig}
+          isLive
+          theme={theme}
+          adComponent={adComponent}
+          widgetComp={widgetComp}
+        />
+        <Paywall />
+      </>
+    ) : (
+      visibleCards.map((card = {}, index) => {
+        const borderBottom = index === visibleCards.length - 1 ? "" : `share-cards ${textColor}`;
+        const cardId = get(card, ["id"], "");
+        const { "card-added-at": cardAddedAt } = card;
+        return (
+          <div key={index} styleName={borderBottom}>
+            <div styleName="card-share">
+              <div styleName={`time-wrapper ${textColor}`}>
+                <ClockIcon color={updateColor} />
+                {getTimeStamp(cardAddedAt, timestampToFormat, { isTimeFirst: true })}
+              </div>
+              <div id={`card-share-${cardId}_${storyId}`} className="content-style">
+                <SocialShare
+                  template={SocialShareTemplate}
+                  fullUrl={encodeURI(story.url)}
+                  title={story.headline}
+                  theme={theme}
+                  iconType={shareIconType}
+                />
+              </div>
             </div>
-            <div id={`card-share-${cardId}_${storyId}`} className="content-style">
-              <SocialShare
-                template={SocialShareTemplate}
-                fullUrl={encodeURI(story.url)}
-                title={story.headline}
-                theme={theme}
-                iconType={shareIconType}
-              />
-            </div>
+            <StoryElementCard
+              story={story}
+              card={card}
+              key={cardId}
+              config={storyElementsConfig}
+              isLive
+              theme={theme}
+              adComponent={adComponent}
+              widgetComp={widgetComp}
+            />
           </div>
-          <StoryElementCard
-            story={story}
-            card={card}
-            key={cardId}
-            config={storyElementsConfig}
-            isLive
-            theme={theme}
-            adComponent={adComponent}
-            widgetComp={widgetComp}
-          />
-        </div>
-      );
-    });
+        );
+      })
+    );
   };
 
   const keyEvents = () => {
@@ -146,7 +166,7 @@ export const LiveBlogStoryTemplates = ({
     return keyEvents();
   };
 
-  const StoryData = () => {
+  const StoryData = ({ hasAccess }) => {
     return (
       <>
         <AuthorCard clazzName="gap-32" story={story} template={authorDetails.template} opts={authorDetails.opts} />
@@ -155,7 +175,7 @@ export const LiveBlogStoryTemplates = ({
           {!verticalShare && <SocialShareComponent />}
         </div>
         {showKeyEvents()}
-        <StoryCards />
+        <StoryCards hasAccess={hasAccess} />
         <div styleName="space-32">
           {firstChild}
           <StoryTags tags={story.tags} />
@@ -171,7 +191,7 @@ export const LiveBlogStoryTemplates = ({
     );
   };
 
-  const DefaultTemplate = (story) => {
+  const DefaultTemplate = (story, hasAccess) => {
     return (
       <>
         <div data-test-id="hero-image" styleName="grid-col-full index-2">
@@ -187,7 +207,7 @@ export const LiveBlogStoryTemplates = ({
         <div styleName="header-wrapper">
           <CaptionAttribution story={story} config={config} />
           <HeaderCard />
-          <StoryData />
+          <StoryData hasAccess={hasAccess} />
           {isMetypeEnabled && (
             <>
               <MetypeReactionsWidget
@@ -229,7 +249,7 @@ export const LiveBlogStoryTemplates = ({
     );
   };
 
-  const HeroOverlay = (story) => {
+  const HeroOverlay = (story, hasAccess) => {
     return (
       <>
         <div styleName="overlay-hero index-2">
@@ -247,7 +267,7 @@ export const LiveBlogStoryTemplates = ({
         </div>
         <div styleName="grid-col-4-12 ">
           <CaptionAttribution story={story} config={config} />
-          <StoryData />
+          <StoryData hasAccess={hasAccess} />
           {isMetypeEnabled && (
             <>
               <MetypeReactionsWidget
@@ -287,7 +307,7 @@ export const LiveBlogStoryTemplates = ({
     );
   };
 
-  const HeadlineSideway = (story) => {
+  const HeadlineSideway = (story, hasAccess) => {
     return (
       <>
         <div styleName="grid-col-2-9 sideway ">
@@ -298,7 +318,7 @@ export const LiveBlogStoryTemplates = ({
           <CaptionAttribution story={story} config={config} />
         </div>
         <div styleName="grid-col-4-12 ">
-          <StoryData />
+          <StoryData hasAccess={hasAccess} />
           {isMetypeEnabled && (
             <>
               <MetypeReactionsWidget
@@ -338,7 +358,7 @@ export const LiveBlogStoryTemplates = ({
     );
   };
 
-  const HeadlinePriority = (story) => {
+  const HeadlinePriority = (story, hasAccess) => {
     return (
       <>
         <div styleName="grid-col-2-9  grid-row-1-2 headline-space">
@@ -349,7 +369,7 @@ export const LiveBlogStoryTemplates = ({
         </div>
         <div styleName="grid-col-2-9  grid-row-3-4">
           <CaptionAttribution story={story} config={config} />
-          <StoryData />
+          <StoryData hasAccess={hasAccess} />
           {isMetypeEnabled && (
             <>
               <MetypeReactionsWidget
@@ -391,7 +411,7 @@ export const LiveBlogStoryTemplates = ({
     );
   };
 
-  const HeroPriority = (story) => {
+  const HeroPriority = (story, hasAccess) => {
     return (
       <>
         <div styleName="grid-container index-2">
@@ -400,7 +420,7 @@ export const LiveBlogStoryTemplates = ({
         <div styleName="grid-col-4-12 ">
           <CaptionAttribution story={story} config={config} />
           <HeaderCard />
-          <StoryData />
+          <StoryData hasAccess={hasAccess} />
           {isMetypeEnabled && (
             <>
               <MetypeReactionsWidget
@@ -440,7 +460,7 @@ export const LiveBlogStoryTemplates = ({
     );
   };
 
-  const HeadlineHeroPriority = (story) => {
+  const HeadlineHeroPriority = (story, hasAccess) => {
     return (
       <>
         <div styleName="grid-col-4-12 headline-space">
@@ -451,7 +471,7 @@ export const LiveBlogStoryTemplates = ({
         </div>
         <div styleName="grid-col-4-12 ">
           <CaptionAttribution story={story} config={config} />
-          <StoryData />
+          <StoryData hasAccess={hasAccess} />
           {isMetypeEnabled && (
             <>
               <MetypeReactionsWidget
@@ -491,24 +511,24 @@ export const LiveBlogStoryTemplates = ({
     );
   };
 
-  const getLiveBlogStoryTemplates = (templateType) => {
+  const getLiveBlogStoryTemplates = (templateType, hasAccess) => {
     switch (templateType) {
       case "hero-priority":
-        return HeroPriority(story);
+        return HeroPriority(story, hasAccess);
       case "hero-overlay":
-        return HeroOverlay(story);
+        return HeroOverlay(story, hasAccess);
       case "headline-sideway":
-        return HeadlineSideway(story);
+        return HeadlineSideway(story, hasAccess);
       case "headline-priority":
-        return HeadlinePriority(story);
+        return HeadlinePriority(story, hasAccess);
       case "headline-hero-priority":
-        return HeadlineHeroPriority(story);
+        return HeadlineHeroPriority(story, hasAccess);
       default:
-        return DefaultTemplate(story);
+        return DefaultTemplate(story, hasAccess);
     }
   };
 
-  return <>{getLiveBlogStoryTemplates(templateType)}</>;
+  return <>{getLiveBlogStoryTemplates(templateType, hasAccess)}</>;
 };
 
 LiveBlogStoryTemplates.propTypes = {
@@ -524,4 +544,5 @@ LiveBlogStoryTemplates.propTypes = {
   storyElementsConfig: PropTypes.object,
   adComponent: PropTypes.func,
   widgetComp: PropTypes.func,
+  hasAccess: PropTypes.bool,
 };

@@ -21,6 +21,9 @@ publisher:
       voices:
         redirect_Url: "<Domain>/api/auth/v1/oauth/token"
         callback_Url: "Callback Url"
+  accesstypeConfig:
+    key: "Aw4ujaqhpn8aVMT7yzQawSyZ"
+    accessTypeBkIntegrationId: 455
   timezone: "Asia/Baku"
   auto_sso:
     is_enable: false

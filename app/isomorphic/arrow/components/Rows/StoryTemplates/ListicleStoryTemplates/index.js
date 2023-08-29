@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable react/no-unknown-property */
 import { SocialShare } from "@quintype/components";
 import React from "react";
@@ -17,6 +18,7 @@ import "./listicle-story.m.css";
 import { StoryElementCard, SlotAfterStory } from "../../../Molecules/StoryElementCard";
 import { StoryTags } from "../../../Atoms/StoryTags";
 import AsideCollection from "../../AsideCollection";
+import { Paywall } from "../../Paywall";
 import { MetypeCommentsWidget } from "../../../../../components/Metype/commenting-widget";
 import { MetypeReactionsWidget } from "../../../../../components/Metype/reaction-widget";
 
@@ -28,6 +30,7 @@ const StoryTemplateListicle = ({
   widgetComp = () => {},
   firstChild,
   secondChild,
+  hasAccess,
 }) => {
   const {
     theme = "",
@@ -100,40 +103,58 @@ const StoryTemplateListicle = ({
     </>
   );
 
-  const BodyBlock = () => (
-    <div styleName={`body-block ${isNumberedBullet ? "numbered-bullet-style" : ""}`}>
-      {visibledCards.map((card, index) => {
-        return (
-          <React.Fragment key={card.id}>
-            {!isNumberedBullet ? (
-              <div styleName="bullet-style-dash" />
-            ) : (
-              <div styleName="bullet-style-number">{index + 1}.</div>
-            )}
+  const BodyBlock = ({ hasAccess }) => {
+    const isStoryBehindPaywall = story.access === "subscription" && hasAccess === false;
+
+    return (
+      <div styleName={`body-block ${isNumberedBullet ? "numbered-bullet-style" : ""}`}>
+        {isStoryBehindPaywall ? (
+          <>
             <StoryElementCard
               story={story}
-              card={card}
-              key={card.id}
+              card={visibledCards[0]}
+              key={visibledCards[0].id}
               config={storyElementsConfig}
               adComponent={adComponent}
               widgetComp={widgetComp}
             />
-          </React.Fragment>
-        );
-      })}
-      {firstChild}
-      <div styleName="story-tags">
-        <StoryTags tags={story.tags} />
-        <SlotAfterStory
-          id={story.id}
-          element={story.customSlotAfterStory}
-          AdComponent={adComponent}
-          WidgetComp={widgetComp}
-        />
+            <Paywall />
+          </>
+        ) : (
+          visibledCards.map((card, index) => {
+            return (
+              <React.Fragment key={card.id}>
+                {!isNumberedBullet ? (
+                  <div styleName="bullet-style-dash" />
+                ) : (
+                  <div styleName="bullet-style-number">{index + 1}.</div>
+                )}
+                <StoryElementCard
+                  story={story}
+                  card={card}
+                  key={card.id}
+                  config={storyElementsConfig}
+                  adComponent={adComponent}
+                  widgetComp={widgetComp}
+                />
+              </React.Fragment>
+            );
+          })
+        )}
+        {firstChild}
+        <div styleName="story-tags">
+          <StoryTags tags={story.tags} />
+          <SlotAfterStory
+            id={story.id}
+            element={story.customSlotAfterStory}
+            AdComponent={adComponent}
+            WidgetComp={widgetComp}
+          />
+        </div>
+        {secondChild}
       </div>
-      {secondChild}
-    </div>
-  );
+    );
+  };
   const SideColumnBlock = () =>
     asideCollection && (
       <AsideCollection
@@ -147,7 +168,7 @@ const StoryTemplateListicle = ({
     );
 
   // Templates
-  const defaultTemplate = () => (
+  const defaultTemplate = ({ hasAccess }) => (
     <>
       <HeroImageBlock
         aspectRatio={[
@@ -191,7 +212,7 @@ const StoryTemplateListicle = ({
       </div>
     </>
   );
-  const heroPriority = () => (
+  const heroPriority = ({ hasAccess }) => (
     <div styleName="hero-priority-template">
       <div styleName="grid-container">
         <div styleName="full-grid">
@@ -201,7 +222,7 @@ const StoryTemplateListicle = ({
           <CaptionAttributionBlock />
           <HeadlineBlock />
           <AuthourBlock />
-          <BodyBlock />
+          <BodyBlock hasAccess={hasAccess} />
           {isMetypeEnabled && (
             <>
               <MetypeReactionsWidget
@@ -227,7 +248,7 @@ const StoryTemplateListicle = ({
       </div>
     </div>
   );
-  const headlinePriority = () => (
+  const headlinePriority = ({ hasAccess }) => (
     <div styleName="headline-priority-template">
       <div styleName="grid-container">
         <div styleName="headline-priority-grid">
@@ -237,7 +258,7 @@ const StoryTemplateListicle = ({
           <HeroImageBlock />
           <CaptionAttributionBlock />
           <AuthourBlock />
-          <BodyBlock />
+          <BodyBlock hasAccess={hasAccess} />
           {isMetypeEnabled && (
             <>
               <MetypeReactionsWidget
@@ -266,7 +287,7 @@ const StoryTemplateListicle = ({
       </div>
     </div>
   );
-  const headlineHeroPriority = () => (
+  const headlineHeroPriority = ({ hasAccess }) => (
     <div styleName="headline-hero-priority-template">
       <div styleName="grid-container">
         <div styleName="center-column">
@@ -278,7 +299,7 @@ const StoryTemplateListicle = ({
         <div styleName="center-column">
           <CaptionAttributionBlock />
           <AuthourBlock />
-          <BodyBlock />
+          <BodyBlock hasAccess={hasAccess} />
           {isMetypeEnabled && (
             <>
               <MetypeReactionsWidget
@@ -304,7 +325,7 @@ const StoryTemplateListicle = ({
       </div>
     </div>
   );
-  const heroOverlay = () => (
+  const heroOverlay = ({ hasAccess }) => (
     <div styleName="hero-overlay-template">
       <div styleName="grid-container">
         <div styleName="full-grid hero-faded-relative">
@@ -325,7 +346,7 @@ const StoryTemplateListicle = ({
         <div styleName="center-column">
           <CaptionAttributionBlock />
           <AuthourBlock />
-          <BodyBlock />
+          <BodyBlock hasAccess={hasAccess} />
           {isMetypeEnabled && (
             <>
               <MetypeReactionsWidget
@@ -351,7 +372,7 @@ const StoryTemplateListicle = ({
       </div>
     </div>
   );
-  const headlineSideway = () => (
+  const headlineSideway = ({ hasAccess }) => (
     <div styleName="headline-sideway-template">
       <div styleName="sideway-grid">
         <div styleName="sideway-headline">
@@ -370,7 +391,7 @@ const StoryTemplateListicle = ({
       <div styleName="grid-container">
         <div styleName="center-column">
           <AuthourBlock />
-          <BodyBlock />
+          <BodyBlock hasAccess={hasAccess} />
           {isMetypeEnabled && (
             <>
               <MetypeReactionsWidget
@@ -397,23 +418,23 @@ const StoryTemplateListicle = ({
     </div>
   );
 
-  const renderTemplate = (templateType, { story, config }) => {
+  const renderTemplate = (templateType, { story, config }, hasAccess) => {
     switch (templateType) {
       case "hero-priority":
-        return heroPriority({ story, config });
+        return heroPriority({ story, config }, hasAccess);
       case "headline-priority":
-        return headlinePriority({ story, config });
+        return headlinePriority({ story, config }, hasAccess);
       case "headline-hero-priority":
-        return headlineHeroPriority({ story, config });
+        return headlineHeroPriority({ story, config }, hasAccess);
       case "hero-overlay":
-        return heroOverlay({ story, config });
+        return heroOverlay({ story, config }, hasAccess);
       case "headline-sideway":
-        return headlineSideway({ story, config });
+        return headlineSideway({ story, config }, hasAccess);
       default:
         return defaultTemplate();
     }
   };
-  return <>{renderTemplate(templateType, { story, config })}</>;
+  return <>{renderTemplate(templateType, { story, config }, hasAccess)}</>;
 };
 
 StoryTemplateListicle.propTypes = {
@@ -429,6 +450,7 @@ StoryTemplateListicle.propTypes = {
   adComponent: PropTypes.func,
   widgetComp: PropTypes.func,
   premiumStoryIconConfig: PropTypes.object,
+  hasAccess: PropTypes.func,
 };
 
 const ListicleStoryTemplate = ({

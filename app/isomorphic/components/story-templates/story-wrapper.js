@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react";
 import { loadRelatedStories } from "../../../api/utils";
 import { TextStory, LiveBlogStory, ListicleStory, PhotoStory, VideoStory } from "./index";
 import { AdPlaceholder } from "../../arrow/components/Atoms/AdPlaceholder";
-import { object } from "prop-types";
+import { object, func } from "prop-types";
 
-function StoryWrapper({ story, config }) {
+function StoryWrapper({ isATGlobal, story, config, initAccessType, checkAccess }) {
+  const [hasAccess, setHasAccess] = useState(true);
   const [relatedStories, setRelatedStories] = useState([]);
   const storyTemplate = story["story-template"];
 
@@ -48,6 +49,15 @@ function StoryWrapper({ story, config }) {
     loadRelatedStories(story, config).then((relatedStories) => setRelatedStories(relatedStories));
   }, []);
 
+  useEffect(() => {
+    initAccessType(() => {
+      checkAccess(story.id).then((res) => {
+        const { granted } = res[story.id];
+        setHasAccess(granted);
+      });
+    });
+  }, [isATGlobal]);
+
   // Can switch to a different template based story-template, or only show a spoiler if index > 0
   switch (storyTemplate) {
     case "text":
@@ -57,6 +67,7 @@ function StoryWrapper({ story, config }) {
           config={{ ...config, ...templateConfig }}
           adWidget={adWidget}
           adPlaceholder={<AdPlaceholder height="250px" width="300px" />}
+          hasAccess={hasAccess}
         />
       );
     case "video":
@@ -66,6 +77,7 @@ function StoryWrapper({ story, config }) {
           config={{ ...config, ...templateConfig }}
           adWidget={adWidget}
           adPlaceholder={<AdPlaceholder height="250px" width="300px" />}
+          hasAccess={hasAccess}
         />
       );
     case "photo":
@@ -75,6 +87,7 @@ function StoryWrapper({ story, config }) {
           config={{ ...config, ...templateConfig }}
           adWidget={adWidget}
           adPlaceholder={<AdPlaceholder height="250px" width="300px" />}
+          hasAccess={hasAccess}
         />
       );
     case "listicle":
@@ -84,6 +97,7 @@ function StoryWrapper({ story, config }) {
           config={{ ...config, ...templateConfig }}
           adWidget={adWidget}
           adPlaceholder={<AdPlaceholder height="250px" width="300px" />}
+          hasAccess={hasAccess}
         />
       );
     case "live-blog":
@@ -93,6 +107,7 @@ function StoryWrapper({ story, config }) {
           config={{ ...config, ...templateConfig }}
           adWidget={adWidget}
           adPlaceholder={<AdPlaceholder height="250px" width="300px" />}
+          hasAccess={hasAccess}
         />
       );
     default:
@@ -102,14 +117,18 @@ function StoryWrapper({ story, config }) {
           config={{ ...config, ...templateConfig }}
           adWidget={adWidget}
           adPlaceholder={<AdPlaceholder height="250px" width="300px" />}
+          hasAccess={hasAccess}
         />
       );
   }
 }
 
 StoryWrapper.propTypes = {
+  isATGlobal: func,
   story: object,
   config: object,
+  initAccessType: func,
+  checkAccess: func,
 };
 
 export default React.memo(StoryWrapper);

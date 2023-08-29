@@ -14,6 +14,7 @@ const { pickComponent, getChunkName } = pickComponentHelper(
     [PAGE_TYPE.STORY_PREVIEW]: { chunk: "story", component: "StoryPagePreview" },
     [PAGE_TYPE.STORY_PUBLIC_PREVIEW_PAGE]: { chunk: "story", component: "StoryPage" },
     [PAGE_TYPE.AUTHOR_PAGE]: { chunk: "list", component: "AuthorPage" },
+    [PAGE_TYPE.SUBSCRIPTION_PAGE]: { chunk: "list", component: "SubscriptionPage" },
     [PAGE_TYPE.HOME_PREVIEW]: { chunk: "home", component: "HomePagePreview" },
     [PAGE_TYPE.RESET_PASSWORD_PAGE]: { chunk: "list", component: "ResetPasswordPage" },
     [PAGE_TYPE.PROFILE_PAGE]: { chunk: "list", component: "ProfilePage" },

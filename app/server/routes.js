@@ -59,6 +59,7 @@ const ISOMORPHIC_ROUTES = [
   },
   { path: "/collection/:collectionSlug", pageType: PAGE_TYPE.COLLECTION_PAGE, exact: true, skipPWA: true },
   { path: "/author/:authorSlug", pageType: PAGE_TYPE.AUTHOR_PAGE, exact: true },
+  { path: "/subscription", pageType: PAGE_TYPE.SUBSCRIPTION_PAGE, exact: true },
   {
     path: "/auth/reset-password",
     pageType: PAGE_TYPE.RESET_PASSWORD_PAGE,

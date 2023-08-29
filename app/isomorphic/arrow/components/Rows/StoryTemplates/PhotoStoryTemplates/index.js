@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable react/no-unknown-property */
 /* eslint-disable max-len */
 import { SocialShare } from "@quintype/components";
@@ -21,6 +22,7 @@ import AsideCollection from "../../AsideCollection";
 import { MetypeCommentsWidget } from "../../../../../components/Metype/commenting-widget";
 import { MetypeReactionsWidget } from "../../../../../components/Metype/reaction-widget";
 import "./photo.m.css";
+import { Paywall } from "../../Paywall";
 
 const StoryTemplatePhoto = ({
   story = {},
@@ -30,6 +32,7 @@ const StoryTemplatePhoto = ({
   adComponent,
   firstChild,
   secondChild,
+  hasAccess,
 }) => {
   const {
     theme = "",
@@ -82,40 +85,58 @@ const StoryTemplatePhoto = ({
     );
   };
 
-  const StoryData = () => (
-    <>
-      {authorDetails && (
-        <AuthorCard clazzName="gap-32" story={story} template={authorDetails.template} opts={authorDetails.opts} />
-      )}
-      <div styleName="story-details">
-        <PublishDetails story={story} opts={publishedDetails} template="story" timezone={timezone} />
-        {!verticalShare && <SocialShareComponent />}
-      </div>
-      {visibledCards.map((card) => {
-        return (
-          <PhotoStoryElement
-            story={story}
-            card={card}
-            key={get(card, ["id"], "")}
-            config={{ ...storyElementsConfig, theme }}
-            adComponent={adComponent}
-            widgetComp={widgetComp}
+  const StoryData = ({ hasAccess }) => {
+    const isStoryBehindPaywall = story.access === "subscription" && hasAccess === false;
+
+    return (
+      <>
+        {authorDetails && (
+          <AuthorCard clazzName="gap-32" story={story} template={authorDetails.template} opts={authorDetails.opts} />
+        )}
+        <div styleName="story-details">
+          <PublishDetails story={story} opts={publishedDetails} template="story" timezone={timezone} />
+          {!verticalShare && <SocialShareComponent />}
+        </div>
+        {isStoryBehindPaywall ? (
+          <>
+            <PhotoStoryElement
+              story={story}
+              card={visibledCards[0]}
+              key={get(visibledCards[0], ["id"], "")}
+              config={{ ...storyElementsConfig, theme }}
+              adComponent={adComponent}
+              widgetComp={widgetComp}
+            />
+            <Paywall />
+          </>
+        ) : (
+          visibledCards.map((card) => {
+            return (
+              <PhotoStoryElement
+                story={story}
+                card={card}
+                key={get(card, ["id"], "")}
+                config={{ ...storyElementsConfig, theme }}
+                adComponent={adComponent}
+                widgetComp={widgetComp}
+              />
+            );
+          })
+        )}
+        <div styleName="space-32">
+          {firstChild}
+          <StoryTags tags={story.tags} />
+          <SlotAfterStory
+            id={story.id}
+            element={story.customSlotAfterStory}
+            AdComponent={adComponent}
+            WidgetComp={widgetComp}
           />
-        );
-      })}
-      <div styleName="space-32">
-        {firstChild}
-        <StoryTags tags={story.tags} />
-        <SlotAfterStory
-          id={story.id}
-          element={story.customSlotAfterStory}
-          AdComponent={adComponent}
-          WidgetComp={widgetComp}
-        />
-        {secondChild}
-      </div>
-    </>
-  );
+          {secondChild}
+        </div>
+      </>
+    );
+  };
 
   const renderImages = (imageRender) => {
     switch (imageRender) {
@@ -128,7 +149,7 @@ const StoryTemplatePhoto = ({
     }
   };
 
-  const defaultTemplate = ({ story, config }) => {
+  const defaultTemplate = ({ story, config, hasAccess }) => {
     return (
       <>
         <div data-test-id="hero-image" styleName={`${renderImages(imageRender)} index-2`}>
@@ -145,7 +166,7 @@ const StoryTemplatePhoto = ({
         <div styleName="grid-col-2-10 space-12">
           <CaptionAttribution story={story} config={config} />
           <HeaderCard />
-          <StoryData />
+          <StoryData hasAccess={hasAccess} />
           {isMetypeEnabled && (
             <>
               <MetypeCommentsWidget
@@ -185,7 +206,7 @@ const StoryTemplatePhoto = ({
     );
   };
 
-  const heroPriority = ({ story, config }) => {
+  const heroPriority = ({ story, config, hasAccess }) => {
     return (
       <>
         <div data-test-id="hero-image" styleName={`${renderImages(imageRender)} index-2`}>
@@ -194,7 +215,7 @@ const StoryTemplatePhoto = ({
         <div styleName="grid-col-4-12 space-12">
           <CaptionAttribution story={story} config={config} />
           <HeaderCard />
-          <StoryData />
+          <StoryData hasAccess={hasAccess} />
           {isMetypeEnabled && (
             <>
               <MetypeReactionsWidget
@@ -234,7 +255,7 @@ const StoryTemplatePhoto = ({
     );
   };
 
-  const headlinePriority = ({ story, config }) => {
+  const headlinePriority = ({ story, config, hasAccess }) => {
     return (
       <>
         <div styleName="grid-container side-space">
@@ -245,7 +266,7 @@ const StoryTemplatePhoto = ({
         </div>
         <div styleName="grid-col-2-9 side-space">
           <CaptionAttribution story={story} config={config} />
-          <StoryData />
+          <StoryData hasAccess={hasAccess} />
           {isMetypeEnabled && (
             <>
               <MetypeReactionsWidget
@@ -285,17 +306,17 @@ const StoryTemplatePhoto = ({
     );
   };
 
-  const getStoryTemplate = (templateType, { story, config }) => {
+  const getStoryTemplate = (templateType, { story, config }, hasAccess) => {
     switch (templateType) {
       case "hero-priority-center":
-        return heroPriority({ story, config });
+        return heroPriority({ story, config, hasAccess });
       case "headline-priority":
-        return headlinePriority({ story, config });
+        return headlinePriority({ story, config, hasAccess });
       default:
-        return defaultTemplate({ story, config });
+        return defaultTemplate({ story, config, hasAccess });
     }
   };
-  return <>{getStoryTemplate(templateType, { story, config })}</>;
+  return <>{getStoryTemplate(templateType, { story, config }, hasAccess)}</>;
 };
 
 StoryTemplatePhoto.propTypes = {
@@ -309,6 +330,7 @@ StoryTemplatePhoto.propTypes = {
   storyElementsConfig: PropTypes.object,
   adComponent: PropTypes.func,
   widgetComp: PropTypes.func,
+  hasAccess: PropTypes.func,
 };
 
 const PhotoStoryTemplate = ({
