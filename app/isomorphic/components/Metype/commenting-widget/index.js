@@ -59,6 +59,7 @@ const MetypeCommentsWidget = (props) => {
   //     ></div>
   //   </div>
   // );
+  return null;
 };
 
 MetypeCommentsWidget.propTypes = {

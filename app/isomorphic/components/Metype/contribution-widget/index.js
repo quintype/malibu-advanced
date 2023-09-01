@@ -26,6 +26,7 @@ export const MetypeContributionWidget = ({ host, accountId, publisher, fontFamil
   //     ></div>
   //   </div>
   // );
+  return null;
 };
 
 MetypeContributionWidget.propTypes = {

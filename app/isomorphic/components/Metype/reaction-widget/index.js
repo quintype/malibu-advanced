@@ -33,6 +33,7 @@ const MetypeReactionsWidget = (props) => {
   //     data-metype-font-family={fontFamily || ""}
   //   ></div>
   // );
+  return null;
 };
 
 export { MetypeReactionsWidget };
