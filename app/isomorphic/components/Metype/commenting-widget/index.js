@@ -20,16 +20,19 @@ const MetypeCommentsWidget = (props) => {
     storyId,
   } = props;
   const randomNumber = storyId;
+
   useEffect(() => {
     !window.talktype && scriptLoader(host, () => initWidget(randomNumber));
     initWidget(randomNumber);
   }, []);
+
   useEffect(() => {
     if (message !== null) {
       window.talktype.accountUserLogout();
       initWidget(randomNumber);
     }
   }, [message]);
+
   const initWidget = (randomNumber) => {
     if (window.talktype) {
       jwt &&
@@ -40,6 +43,7 @@ const MetypeCommentsWidget = (props) => {
       window.talktype.commentWidgetIframe(document.getElementById(`metype-container-${randomNumber}`));
     }
   };
+
   return (
     <div>
       <div
