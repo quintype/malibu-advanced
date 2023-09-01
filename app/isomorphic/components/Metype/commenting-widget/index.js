@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect } from "react";
 import { string, number } from "prop-types";
 import { scriptLoader } from "../index";
