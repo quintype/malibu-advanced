@@ -15,6 +15,16 @@ jobs:
           root: /tmp/workspace
           paths:
             - docker-tag.txt
+  malibu_test:
+    docker:
+      - image: circleci/node:12.13.0
+    steps:
+      - checkout
+      - run: npm install
+      - run:
+          name: Print a Message
+          command: echo "Malibu Test goes here - Placeholder added, actual test added after sorting the test_id"
+
 
   deploy_task: &deploy_task
     machine: true
@@ -53,15 +63,7 @@ jobs:
       - checkout
       - run: npm install
       - run: npm run lint:css:ci
-  malibu_test:
-    docker:
-      - image: circleci/node:12.13.0
-    steps:
-      - checkout
-      - run: npm install
-      - run:
-          name: Print a Message
-          command: echo "Malibu Test goes here - Placeholder added, actual test added after sorting the test_id"
+
 
   stg_lighthouse_task:
     docker:
