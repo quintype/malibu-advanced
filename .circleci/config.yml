@@ -53,6 +53,15 @@ jobs:
       - checkout
       - run: npm install
       - run: npm run lint:css:ci
+  malibu_test:
+    docker:
+      - image: circleci/node:12.13.0
+    steps:
+      - checkout
+      - run: npm install
+      - run:
+          name: Print a Message
+          command: echo "Malibu Test goes here - Placeholder added, actual test added after sorting the test_id"
 
   stg_lighthouse_task:
     docker:
@@ -84,6 +93,10 @@ workflows:
     jobs:
       - lint_js
       - lint_css
+      - malibu_test:
+          requires:
+            - build
+            - deploy_staging
 
   stg_lighthouse_test:
     jobs:
