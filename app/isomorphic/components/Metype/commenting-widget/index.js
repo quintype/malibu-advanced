@@ -5,7 +5,7 @@ import { scriptLoader } from "../index";
 const MetypeCommentsWidget = (props) => {
   const {
     primaryColor,
-    host,
+    host = "https://www.metype.com/",
     accountId,
     className,
     secondaryColor,

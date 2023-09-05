@@ -3,7 +3,7 @@ import { scriptLoader } from "../index";
 
 const MetypeReactionsWidget = (props) => {
   // eslint-disable-next-line react/prop-types
-  const { accountId, host, storyUrl, storyId, fontUrl, fontFamily } = props;
+  const { accountId, host = "https://www.metype.com/", storyUrl, storyId, fontUrl, fontFamily } = props;
   const [triggerInitPageReactions, setTriggerInitPageReactions] = useState(false);
   const reactionWrapper =
     typeof document !== "undefined" && document.getElementById(`metype-page-reactions-container-${storyId}`);

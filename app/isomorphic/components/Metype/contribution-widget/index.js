@@ -2,7 +2,13 @@ import React, { useEffect } from "react";
 import { scriptLoader } from "../index.js";
 import { string, number } from "prop-types";
 
-export const MetypeContributionWidget = ({ host, accountId, publisher, fontFamily, fontUrl }) => {
+export const MetypeContributionWidget = ({
+  host = "https://www.metype.com/",
+  accountId,
+  publisher,
+  fontFamily,
+  fontUrl,
+}) => {
   const randomNumber = new Date().getMilliseconds();
 
   useEffect(() => {
