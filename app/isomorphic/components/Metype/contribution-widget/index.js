@@ -4,7 +4,7 @@ import { string, number } from "prop-types";
 
 export const MetypeContributionWidget = ({
   host = "https://www.metype.com/",
-  accountId,
+  accountId = "1003587",
   publisher,
   fontFamily,
   fontUrl,

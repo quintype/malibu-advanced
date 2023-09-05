@@ -6,7 +6,7 @@ const MetypeCommentsWidget = (props) => {
   const {
     primaryColor,
     host = "https://www.metype.com/",
-    accountId,
+    accountId = "1003587",
     className,
     secondaryColor,
     fontColor,
