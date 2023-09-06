@@ -1,3 +1,5 @@
+/// <reference types="cypress" />
+
 
 
 describe('Text and CSS Properties Test', () => {
