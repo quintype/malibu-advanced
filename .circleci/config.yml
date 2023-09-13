@@ -28,7 +28,6 @@ jobs:
           no_output_timeout: 10m
           command: |
             npm install cypress mocha mochawesome mochawesome-merge mochawesome-report-generator --legacy-peer-deps
-            cd sanitytest
             apt-get update
             apt install -y google-chrome-stable
             npx cypress run --spec "cypress/e2e/sanitytest/sanityUI_1.cy.js"
