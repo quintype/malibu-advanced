@@ -23,7 +23,7 @@ jobs:
       - image: circleci/node:12.13.0
     steps:
       - checkout
-      - run: npm install
+      - run: npm install cypress --save-dev
       - run: npm install cypress-xpath --save-dev
       - run: npx cypress run --spec "cypress/e2e/sanitytest/sanityUI_1.cy.js"
       - run:
