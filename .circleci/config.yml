@@ -1,4 +1,7 @@
-version: 2
+version: 2.1
+orbs:
+  slack: circleci/slack@4.4.2
+  cypress: cypress-io/cypress@1
 jobs:
   build:
     docker:
