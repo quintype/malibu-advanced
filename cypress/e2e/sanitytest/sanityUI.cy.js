@@ -21,7 +21,7 @@ describe('Text and CSS Properties Test', () => {
   // After clicking the element, you can use cy.url() to assert the current URL
 cy.url().should('eq', 'https://malibu-advanced-web.qtstage.io/sports/cricket/autotest-text-story-10148');
 
- title_xpath = //*[@id="container"]/div/div/div[1]/div/div[2]/div[2]/div[1]/h1/bdi
+    const title_xpath = "//*[@id=\"container\"]/div/div/div[1]/div/div[2]/div[2]/div[1]/h1/bdi";
     // Get the computed CSS properties of the element
     cy.get('h1').should('have.css', 'font-family').and('match', /Arial, sans-serif/);
     cy.get('h1').should('have.css', 'font-size').and('eq', '40px');
