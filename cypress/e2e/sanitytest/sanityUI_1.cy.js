@@ -23,22 +23,21 @@ describe('Text and CSS Properties Test', () => {
   // After clicking the element, you can use cy.url() to assert the current URL
     cy.url().should('eq', 'https://malibu-advanced-web.qtstage.io/sports/cricket/autotest-text-story-10148');
 
-    const title_xpath = "//*[@id=\"container\"]/div/div/div[1]/div/div[2]/div[2]/div[1]/h1/bdi";
-    cy.get(title_xpath).should('have.css', 'font-family').and('match', /Arial, sans-serif/);
-    const fontFamily_name = cy.get(title_xpath.fontFamily);
-    cy.wrap(title_xpath).invoke('css', 'font-family').should('match', /Arial, sans-serif/);
-    // Get the computed CSS properties of the element
-    //cy.get('h1').should('have.css', 'font-family').and('match', /Arial, sans-serif/);
+    //const title_xpath = "//bdi[normalize-space()='AutoTest - Text Story']";
+    const title = "//bdi[contains(text(),'AutoTest - Text Story')]";
+    cy.xpath(title).should('have.css', 'font-family').and('match', /Arial, sans-serif/);
+    //const fontFamily_name = cy.get(a.fontFamily);
+    //cy.wrap(a).invoke('css', 'font-family').should('match', /Arial, sans-serif/);
 
-
+    // console.log('Actual Font Family:', fontFamily_name);
+    cy.xpath(title).should('have.css', 'font-size').and('eq', '40px');
+    cy.xpath(title).should('have.css', 'font-weight').and('eq', '700');
     // cy.get('your-element-selector').invoke('css', 'font-family').then((fontFamily) => {
     //   // Log the actual value to the Cypress command log
     //   cy.log('Actual Font Family:', fontFamily);
 
     // Use the variable in your assertions or other logic
-    console.log('Actual Font Family:', fontFamily_name);
-    cy.get('h1').should('have.css', 'font-size').and('eq', '40px');
-    cy.get('h1').should('have.css', 'font-weight').and('eq', 'bold');
+
 
     // You can add more CSS properties as needed
 

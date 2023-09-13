@@ -21,6 +21,7 @@ jobs:
     steps:
       - checkout
       - run: npm install
+      - run: npx cypress run --spec "cypress/e2e/sanitytest/sanityUI_1.cy.js"
       - run:
           name: Print a Message
           command: echo "Malibu Test goes here - Placeholder added, actual test added after sorting the test_id"
