@@ -20,7 +20,7 @@ jobs:
             - docker-tag.txt
   malibu_test:
     docker:
-      - image: circleci/node:12.13.0
+      - image: circleci/node:16.14.2
     steps:
       - checkout
       - run: npm install cypress --save-dev
