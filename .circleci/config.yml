@@ -24,14 +24,13 @@ jobs:
         environment:
           ## this enables colors in the output
           TERM: xterm
-    working_directory: ~/sanitytest
     steps:
       - checkout
       - run:
           name: Run Cypress Test
           no_output_timeout: 10m
           command: |
-              'npm install'
+              npm install
               'npx cypress run --spec "cypress/e2e/sanitytest/sanityUI.cy.js"'
       # sudo apt install libnss
       # sudo apt install libnss3-dev libgdk-pixbuf2.0-dev libgtk-3-dev libxss-dev
