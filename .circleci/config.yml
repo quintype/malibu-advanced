@@ -33,18 +33,7 @@ jobs:
               npm install
               npx cypress run --spec "cypress/e2e/sanitytest/sanity-ui.cy.js"
 
-      # sudo npm install cypress mocha mochawesome mochawesome-merge mochawesome-report-generator --legacy-peer-deps
-      # sudo apt-get install
-      #      npx cypress run --browser /usr/bin/google-chrome --key $CHROMA_KEY
-      #      npx mochawesome-merge ./mochawesome-report/*.json > ./mochawesome-report/final.json
-      #      npx marge mochawesome-report/final.json --reportDir ./reports --inline
-      # - run: npm install cypress --save-dev
-      # - run: npm install cypress-xpath --save-dev
-      # - run: npx cypress run --spec "cypress/e2e/sanitytest/sanityUI_1.cy.js"
-      # - run:
-      #     name: Print a Message
-      #     command: echo "Malibu Test goes here - Placeholder added, actual test added after sorting the test_id"
-deploy_task: &deploy_task
+  deploy_task: &deploy_task
     machine: true
     steps:
       - attach_workspace:
