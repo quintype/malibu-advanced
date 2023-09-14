@@ -30,6 +30,12 @@ jobs:
             npm install
             npx cypress install
       - run:
+          name: Install the required libnss3 library and set path
+          command: |
+            sudo apt-get install libnss3
+            echo "export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu" >> ~/.bashrc
+            source ~/.bashrc
+      - run:
           name: Run Cypress Test
           no_output_timeout: 10m
           command: npx cypress run --spec "cypress/e2e/sanitytest/sanityUI_1.cy.js"
