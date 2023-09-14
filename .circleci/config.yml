@@ -28,10 +28,10 @@ jobs:
           no_output_timeout: 10m
           command: |
             npm install cypress mocha mochawesome mochawesome-merge mochawesome-report-generator --legacy-peer-deps
-        # sudo apt-get install
             apt install libnss
             apt install libnss3-dev libgdk-pixbuf2.0-dev libgtk-3-dev libxss-dev
             npx cypress run --spec "cypress/e2e/sanitytest/sanityUI_1.cy.js"
+      # sudo apt-get install
       #      npx cypress run --browser /usr/bin/google-chrome --key $CHROMA_KEY
       #      npx mochawesome-merge ./mochawesome-report/*.json > ./mochawesome-report/final.json
       #      npx marge mochawesome-report/final.json --reportDir ./reports --inline
