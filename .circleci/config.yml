@@ -32,7 +32,8 @@ jobs:
       - run:
           name: Install the required libnss3 library and set path
           command: |
-            sudo apt-get install libnss3
+            sudo apt-get update
+            sudo apt-get install libnspr4 libnss3
             echo "export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu" >> ~/.bashrc
             source ~/.bashrc
       - run:
