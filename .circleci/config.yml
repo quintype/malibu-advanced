@@ -21,10 +21,10 @@ jobs:
   malibu_test:
     docker:
       - image: cypress/base:20.6.1
-      environment:
+        environment:
           ## this enables colors in the output
           TERM: xterm
-      working_directory: ~/sanitytest
+    working_directory: ~/sanitytest
     steps:
       - checkout
       - run:
