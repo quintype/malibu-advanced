@@ -19,23 +19,8 @@ jobs:
           paths:
             - docker-tag.txt
   malibu_test:
-    docker:
-      - image: circleci/node:12.13.0
     steps:
       - checkout
-      - run:
-          name: Install Cypress
-          no_output_timeout: 10m
-          command: |
-            npm install
-            npx cypress install
-      - run:
-          name: Install the required libnss3 library and set path
-          command: |
-            sudo apt-get update
-            sudo apt-get install libnspr4 libnss3
-            echo "export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu" >> ~/.bashrc
-            source ~/.bashrc
       - run:
           name: Run Cypress Test
           no_output_timeout: 10m
