@@ -21,6 +21,12 @@ const loadableConfigObj = {
       arrowPhotoStoryCssChunk: "./app/isomorphic/arrow/components/Rows/StoryTemplates/PhotoStoryTemplates",
       arrowListicleStoryCssChunk: "./app/isomorphic/arrow/components/Rows/StoryTemplates/ListicleStoryTemplates",
       arrowLiveBlogStoryCssChunk: "./app/isomorphic/arrow/components/Rows/StoryTemplates/LiveBlogStoryTemplates",
+      arrowThreeColFourteenStoriesCssChunk: "./app/isomorphic/arrow/components/Rows/ThreeColFourteenStory",
+      arrowTwoColSevenStoriesCssChunk: "./app/isomorphic/arrow/components/Rows/TwoColSevenStories",
+      arrowListComponentCssChunk: "./app/isomorphic/arrow/components/Rows/ListComponent",
+      arrowFourStorySliderPortraitCssChunk: "./app/isomorphic/arrow/components/Rows/FourStorySliderPortrait",
+      arrowFourTabbedBigStorySliderCssChunk: "./app/isomorphic/arrow/components/Rows/FourTabbedBigStorySlider",
+      arrowAlternateCollectionFilterCssChunk: "./app/isomorphic/arrow/components/Rows/AlternateCollectionFilter",
     },
   },
 };

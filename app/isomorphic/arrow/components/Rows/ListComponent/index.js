@@ -1,7 +1,7 @@
 import React from "react";
 import { StoryCard } from "../../Molecules/StoryCard";
 import { CollectionName } from "../../Atoms/CollectionName";
-import { generateNavigateSlug, getTextColor, navigateTo } from "../../../utils/utils";
+import { generateNavigateSlug, navigateTo } from "../../../utils/utils";
 import { collectionToStories } from "@quintype/components";
 import { HeroImage } from "../../Atoms/HeroImage";
 import { StorycardContent } from "../../Molecules/StorycardContent";
@@ -14,7 +14,7 @@ import "./list-component.m.css";
 import { Subheadline } from "../../Atoms/Subheadline";
 import { LoadmoreButton } from "../../Atoms/Loadmore";
 import { useDispatch, useSelector } from "react-redux";
-import get from "lodash/get";
+import get from "lodash.get";
 
 const ListComponent = ({ collection, config = {}, getMoreStories, limit, hideButton, authorPrefix = "By" }) => {
   const storyItems = collectionToStories(collection);
@@ -95,17 +95,15 @@ const ListComponent = ({ collection, config = {}, getMoreStories, limit, hideBut
     }
   };
 
-  const textColor = getTextColor(theme);
-
   return (
-    <div className="full-width-with-padding arrow-component" style={{ backgroundColor: theme, color: textColor }}>
+    <div className="full-width-with-padding arrow-component" style={{ backgroundColor: theme || "initial" }}>
       <div styleName="list-wrapper ">
         <CollectionName
           collection={collection}
           collectionNameTemplate={collectionNameTemplate}
           collectionNameBorderColor={collectionNameBorderColor}
         />
-        <div styleName="wrapper" style={{ backgroundColor: theme, color: textColor }}>
+        <div styleName="wrapper" style={{ backgroundColor: theme || "initial" }}>
           <div styleName="list">
             {storyItems.slice(0, limit).map((story, index) => {
               return <div key={`default-${index}`}>{borderHandler(story)}</div>;
