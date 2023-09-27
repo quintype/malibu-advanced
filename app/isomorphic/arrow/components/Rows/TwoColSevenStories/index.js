@@ -28,7 +28,7 @@ export const TwoColSevenStories = ({ collection, config = {} }) => {
     collectionNameTemplate = "",
     footerButton = "",
     slotConfig = [],
-    localizationConfig = {}
+    localizationConfig = {},
   } = config;
 
   if (items.length < 1) {
@@ -48,7 +48,8 @@ export const TwoColSevenStories = ({ collection, config = {} }) => {
     <div
       className="full-width-with-padding arrow-component"
       data-test-id="two-col-seven-stories"
-      style={{ backgroundColor: theme || "initial" }}>
+      style={{ backgroundColor: theme || "initial" }}
+    >
       <div styleName="two-col-seven-story">
         <CollectionName
           collection={collection}
@@ -63,9 +64,20 @@ export const TwoColSevenStories = ({ collection, config = {} }) => {
               border={border}
               bgImgContentOverlap
               headerLevel="2"
-              aspectRatio={[[16, 9], [16, 9]]}
-              config={config}>
-              <HeroImage config={config} story={items[0]} aspectRatio={[[16, 9], [16, 9]]} />
+              aspectRatio={[
+                [16, 9],
+                [16, 9],
+              ]}
+              config={config}
+            >
+              <HeroImage
+                config={config}
+                story={items[0]}
+                aspectRatio={[
+                  [16, 9],
+                  [16, 9],
+                ]}
+              />
               <StorycardContent story={items[0]} headerLevel="3" config={config}>
                 <SectionTag story={items[0]} borderColor={sectionTagBorderColor} />
                 <Headline premiumStoryIconConfig={config} story={items[0]} headerLevel={2} />
@@ -80,7 +92,14 @@ export const TwoColSevenStories = ({ collection, config = {} }) => {
               return (
                 <div key={index}>
                   <StoryCard story={story} border={border} theme={theme} config={config}>
-                    <HeroImage config={config} story={story} aspectRatio={[[16, 9], [16, 9]]} />
+                    <HeroImage
+                      config={config}
+                      story={story}
+                      aspectRatio={[
+                        [16, 9],
+                        [16, 9],
+                      ]}
+                    />
                     <StorycardContent
                       theme={theme}
                       border={border}
@@ -101,7 +120,14 @@ export const TwoColSevenStories = ({ collection, config = {} }) => {
                 return (
                   <div key={index}>
                     <StoryCard story={story} border={border} theme={theme} config={config}>
-                      <HeroImage config={config} story={story} aspectRatio={[[16, 9], [16, 9]]} />
+                      <HeroImage
+                        config={config}
+                        story={story}
+                        aspectRatio={[
+                          [16, 9],
+                          [16, 9],
+                        ]}
+                      />
                       <StorycardContent
                         theme={theme}
                         border={border}
@@ -142,11 +168,11 @@ TwoColSevenStories.propTypes = {
     border: PropTypes.string,
     footerButton: PropTypes.string,
     collectionNameTemplate: PropTypes.string,
-    collectionNameBorderColor: PropTypes.string
-  })
+    collectionNameBorderColor: PropTypes.string,
+  }),
 };
 
 TwoColSevenStories.defaultProps = {
   theme: "#ffffff",
-  border: ""
+  border: "",
 };

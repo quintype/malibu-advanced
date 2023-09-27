@@ -5,7 +5,7 @@ import {
   optionalSelect,
   sectionTagTemplates,
   collectionNameTemplates,
-  footerButton
+  footerButton,
 } from "../../../../storybook";
 import TwoColSevenStories from "./index";
 import Readme from "./README.md";
@@ -30,7 +30,7 @@ const configurableSlot = () => {
 
 const borderTemplate = {
   default: "",
-  border: "full"
+  border: "full",
 };
 
 withStore(
@@ -38,9 +38,9 @@ withStore(
   {
     qt: {
       config: {
-        "cdn-image": "thumbor-stg.assettype.com"
-      }
-    }
+        "cdn-image": "thumbor-stg.assettype.com",
+      },
+    },
   },
   Readme
 )
@@ -60,7 +60,7 @@ withStore(
       buttonText: text("Footer text", "Read More"),
       showRowTitle: boolean("Row title", true),
       showButton: boolean("Show button", true),
-      showReadTime: boolean("Read time", true)
+      showReadTime: boolean("Read time", true),
     };
 
     return <TwoColSevenStories collection={collection} config={contextConfig} />;
@@ -70,9 +70,9 @@ withStore(
   {
     qt: {
       config: {
-        "cdn-image": "thumbor-stg.assettype.com"
-      }
-    }
+        "cdn-image": "thumbor-stg.assettype.com",
+      },
+    },
   },
   Readme
 )
@@ -93,7 +93,7 @@ withStore(
       showRowTitle: boolean("Row title", true),
       showButton: boolean("Show button", true),
       showReadTime: boolean("Read time", true),
-      slotConfig: [{ type: "ad", component: configurableSlot }]
+      slotConfig: [{ type: "ad", component: configurableSlot }],
     };
 
     return <TwoColSevenStories collection={collection} config={contextConfig} />;
