@@ -44,7 +44,7 @@ export const ArrowFourStorySliderPortrait = ({ collection }) => {
     showReadTime: !hideReadTime,
     showLiveIcon: true,
     showSubheadline: true,
-    numberOfStoriesToShow: 5,
+    numberOfStoriesToShow: 10,
   };
   return <FourStorySliderPortrait collection={collection} config={config} />;
 };

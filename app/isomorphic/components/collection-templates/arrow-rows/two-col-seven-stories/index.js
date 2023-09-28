@@ -32,7 +32,7 @@ export const ArrowTwoColSevenStories = ({ collection }) => {
     collectionNameBorderColor: collectionNameBorderColor,
     borderColor: sectionBorderColor,
     theme: backgroundColor,
-    border: "fullBorder",
+    border: "full",
     collectionNameTemplate: "borderLeft",
     sectionTagTemplate: "borderLeft",
     showSection: !hideSectionTag,
