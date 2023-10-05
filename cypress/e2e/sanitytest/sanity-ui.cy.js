@@ -34,17 +34,6 @@ describe("Text and CSS Properties Test", () => {
     // console.log('Actual Font Family:', fontFamily_name);
     cy.xpath(title).should("have.css", "font-size").and("eq", "40px");
     cy.xpath(title).should("have.css", "font-weight").and("eq", "700");
-    // cy.get('your-element-selector').invoke('css', 'font-family').then((fontFamily) => {
-    //   // Log the actual value to the Cypress command log
-    //   cy.log('Actual Font Family:', fontFamily);
 
-    // Use the variable in your assertions or other logic
-
-    // You can add more CSS properties as needed
-
-    // Perform additional assertions as required
-    // For example, you can check the color, background-color, etc.
-
-    // You can also interact with the page further and perform more tests
   });
 });
