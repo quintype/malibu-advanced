@@ -34,6 +34,5 @@ describe("Text and CSS Properties Test", () => {
     // console.log('Actual Font Family:', fontFamily_name);
     cy.xpath(title).should("have.css", "font-size").and("eq", "40px");
     cy.xpath(title).should("have.css", "font-weight").and("eq", "700");
-
   });
 });
