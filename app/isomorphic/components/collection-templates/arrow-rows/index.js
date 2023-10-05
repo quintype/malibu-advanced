@@ -15,5 +15,5 @@ export {
   ArrowOneColStoryList,
   ArrowThreeColGrid,
   ArrowThreeColSevenStories,
-  ArrowTwoColFourStories
+  ArrowTwoColFourStories,
 };

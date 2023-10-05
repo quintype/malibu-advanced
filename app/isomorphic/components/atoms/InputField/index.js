@@ -24,5 +24,5 @@ InputField.propTypes = {
   placeholder: string,
   type: string,
   value: string,
-  required: bool
+  required: bool,
 };

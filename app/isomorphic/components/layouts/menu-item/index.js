@@ -37,7 +37,7 @@ const MenuItem = ({ item, toggleHandler, menuStyle = "menu-link" }) => {
 
 MenuItem.propTypes = {
   item: PT.object,
-  showIcon: PT.bool
+  showIcon: PT.bool,
 };
 
 export { MenuItem };

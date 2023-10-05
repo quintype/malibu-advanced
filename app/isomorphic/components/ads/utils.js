@@ -28,7 +28,7 @@ const getStoryId = (state, pageType) => {
 const getSectionList = (state, pageType) => {
   if (pageType === "story-page") {
     const sections = get(state, ["data", "story", "sections"], []);
-    const sectionList = sections.map(item => item.name);
+    const sectionList = sections.map((item) => item.name);
     return sectionList;
   }
 
@@ -38,7 +38,7 @@ const getSectionList = (state, pageType) => {
 const getTagList = (state, pageType) => {
   if (pageType === "story-page") {
     const tags = get(state, ["data", "story", "tags"], []);
-    const tagList = tags.map(item => item.name);
+    const tagList = tags.map((item) => item.name);
     return tagList;
   }
 
@@ -57,7 +57,7 @@ export const setViewportSizeMapping = (adSlot, googletag, viewPortSizeMapping) =
 
 export const generateLazyLoading = (googletag, fetchMarginPercent, renderMarginPercent, mobileScaling) => {
   const updateSlotStatus = (slotId, state) => {
-    var elem = document.getElementById(slotId + "-" + state);
+    const elem = document.getElementById(slotId + "-" + state);
     if (elem) {
       elem.className = "activated";
       elem.innerText = "Yes";
@@ -69,14 +69,14 @@ export const generateLazyLoading = (googletag, fetchMarginPercent, renderMarginP
     googletag.pubads().enableLazyLoad({
       fetchMarginPercent, // Fetch slots within specified viewports
       renderMarginPercent, // Render slots within specified viewports
-      mobileScaling // Multiplies the specified value with the above values for mobile
+      mobileScaling, // Multiplies the specified value with the above values for mobile
     });
 
-    googletag.pubads().addEventListener("slotRequested", function(event) {
+    googletag.pubads().addEventListener("slotRequested", function (event) {
       updateSlotStatus(event.slot.getSlotElementId(), "fetched");
     });
 
-    googletag.pubads().addEventListener("slotOnload", function(event) {
+    googletag.pubads().addEventListener("slotOnload", function (event) {
       updateSlotStatus(event.slot.getSlotElementId(), "rendered");
     });
   }
@@ -105,20 +105,20 @@ export const setTargetingParams = (googletag, adSlot, qtState, storySectionSlug)
 export const useDfpSlot = ({ path, size, id, qtState, viewPortSizeMapping, storySectionSlug, refreshAdUnit }) => {
   if (refreshAdUnit && window.googletag && window.googletag.apiReady) {
     // check if the API is ready
-    window.googletag.cmd.push(function() {
+    window.googletag.cmd.push(function () {
       if (window.googletag.pubadsReady) {
         // detect whether PubAdsService is fully loaded
         const existingSlot = window.googletag
           .pubads()
           .getSlots()
-          .filter(item => id === item.getSlotElementId());
+          .filter((item) => id === item.getSlotElementId());
 
         window.googletag.pubads().refresh(existingSlot);
       }
     });
   }
 
-  window.googletag.cmd.push(function() {
+  window.googletag.cmd.push(function () {
     const responsiveAdSlot = window.googletag.defineSlot(path, size, id);
     const adsConfig = get(qtState, ["config", "ads-config", "dfp_ads"], {});
     const enableLazyLoadAds = get(adsConfig, ["enable_lazy_load_ads"]);
@@ -136,7 +136,7 @@ export const useDfpSlot = ({ path, size, id, qtState, viewPortSizeMapping, story
     }
   });
 
-  window.googletag.cmd.push(function() {
+  window.googletag.cmd.push(function () {
     window.googletag.display(id);
   });
 };
@@ -160,7 +160,7 @@ export const getAdSlots = ({
   storySectionSlug,
   loadAdsSynchronously,
   delayPeriod,
-  refreshAdUnit
+  refreshAdUnit,
 }) => {
   if (loadAdsSynchronously) {
     useDfpSlot({
@@ -171,7 +171,7 @@ export const getAdSlots = ({
       type: type,
       viewPortSizeMapping: viewPortSizeMapping,
       storySectionSlug,
-      refreshAdUnit
+      refreshAdUnit,
     });
   } else {
     setTimeout(() => {
@@ -183,7 +183,7 @@ export const getAdSlots = ({
         type: type,
         viewPortSizeMapping: viewPortSizeMapping,
         storySectionSlug,
-        refreshAdUnit
+        refreshAdUnit,
       });
     }, delayPeriod);
   }

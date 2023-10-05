@@ -8,6 +8,6 @@ export async function loadAuthorPageData(client, authorSlug, config, next) {
   const authorCollection = await Author.getAuthorCollection(client, authorData.author.id, params);
   return {
     author: authorData.author,
-    authorCollection
+    authorCollection,
   };
 }

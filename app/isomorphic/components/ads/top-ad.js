@@ -6,7 +6,7 @@ import { DfpComponent } from "./dfp-component";
 import { appendGoogleTagServices } from "./utils";
 
 export const TopAd = () => {
-  const qtState = useSelector(state => get(state, ["qt"], {}));
+  const qtState = useSelector((state) => get(state, ["qt"], {}));
   const adsConfig = get(qtState, ["config", "ads-config", "dfp_ads"], {});
   const enableAds = get(adsConfig, ["enable_ads"], null);
   const loadAdsSynchronously = get(adsConfig, ["load_ads_synchronously"], null);
@@ -18,7 +18,7 @@ export const TopAd = () => {
 
   useEffect(() => {
     if (enableAds && !loadAdsSynchronously) {
-      setTimeout(function() {
+      setTimeout(function () {
         appendGoogleTagServices();
       }, delayAdScript * 1000);
     }
@@ -27,7 +27,7 @@ export const TopAd = () => {
   useEffect(() => {
     if (window.googletag && window.googletag.apiReady) {
       // check if the API is ready
-      window.googletag.cmd.push(function() {
+      window.googletag.cmd.push(function () {
         if (window.googletag.pubadsReady) {
           // detect whether PubAdsService is fully loaded
           window.googletag.pubads().refresh();

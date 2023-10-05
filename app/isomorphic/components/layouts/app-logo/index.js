@@ -15,6 +15,6 @@ const AppLogo = ({ width = "178" }) => {
 };
 
 AppLogo.propTypes = {
-  width: string
+  width: string,
 };
 export { AppLogo };

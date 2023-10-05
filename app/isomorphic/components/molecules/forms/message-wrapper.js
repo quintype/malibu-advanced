@@ -10,7 +10,7 @@ const MessageWrapper = ({ message }) => (
 );
 
 MessageWrapper.propTypes = {
-  message: string
+  message: string,
 };
 
 export default MessageWrapper;

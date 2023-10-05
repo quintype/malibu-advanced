@@ -11,11 +11,11 @@ export async function loadHomePageData(client, config, slug = "home") {
       depth: 2,
       storyLimits: getStoryLimits(),
       nestedCollectionLimit: getNestedCollectionLimit(),
-      defaultNestedLimit: 4
+      defaultNestedLimit: 4,
     }
   );
   return {
     collection: collection.asJson(),
-    cacheKeys: collection.cacheKeys(config["publisher-id"])
+    cacheKeys: collection.cacheKeys(config["publisher-id"]),
   };
 }

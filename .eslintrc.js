@@ -23,6 +23,7 @@ module.exports = {
   },
   rules: {
     "max-len": ["warn", { code: 120 }],
+    "react/prop-types": 0,
   },
   settings: {
     react: {

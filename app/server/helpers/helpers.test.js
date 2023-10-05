@@ -16,7 +16,7 @@ describe("getArrowCss helper function", () => {
 function getMockAssetHelpers() {
   return {
     assetPath: () => true,
-    readAsset: asset => {
+    readAsset: (asset) => {
       switch (asset) {
         case "arrowFourColGridCssChunk.css":
         case "arrowThreeColSevenStoryCssChunk.css":
@@ -25,7 +25,7 @@ function getMockAssetHelpers() {
         default:
           throw new Error("value not mocked");
       }
-    }
+    },
   };
 }
 function getMockState({ makeFirstRowArrow }) {
@@ -41,18 +41,18 @@ function getMockState({ makeFirstRowArrow }) {
           items: [],
           "created-at": 1604464073190,
           metadata: {
-            "cover-image": null
-          }
-        }
-      }
-    }
+            "cover-image": null,
+          },
+        },
+      },
+    },
   };
   const nonArrowItem = {
     id: 109049,
     "associated-metadata": {
-      layout: "FourColGrid"
+      layout: "FourColGrid",
     },
-    type: "collection"
+    type: "collection",
   };
   if (makeFirstRowArrow) {
     accumulator.qt.data.collection.items.push(...getRandomArrowItems(1));
@@ -73,9 +73,9 @@ function getRandomArrowItems(count) {
     accumulator.push({
       id: Math.floor(Math.random() * 1000000),
       "associated-metadata": {
-        layout: arrowTemplates[Math.floor(Math.random() * arrowTemplates.length)]
+        layout: arrowTemplates[Math.floor(Math.random() * arrowTemplates.length)],
       },
-      type: "collection"
+      type: "collection",
     });
   }
   return accumulator;

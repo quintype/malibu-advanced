@@ -11,8 +11,8 @@ import "./four-col-grid.m.css";
 import { DfpComponent } from "../../ads/dfp-component";
 
 export function FourColGrid({ collection, stories }) {
-  const adConfig = useSelector(state => get(state, ["qt", "config", "ads-config", "slots", "listing_page_ads"], {}));
-  const pageType = useSelector(state => get(state, ["qt", "pageType"], null));
+  const adConfig = useSelector((state) => get(state, ["qt", "config", "ads-config", "slots", "listing_page_ads"], {}));
+  const pageType = useSelector((state) => get(state, ["qt", "pageType"], null));
 
   return (
     <div>
@@ -31,7 +31,7 @@ export function FourColGrid({ collection, stories }) {
 
 FourColGrid.propTypes = {
   collection: object,
-  stories: array
+  stories: array,
 };
 
 FourColGrid.storyLimit = 8;
