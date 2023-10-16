@@ -5,6 +5,8 @@ dfp_ads:
   fetch_margin_percent: 0
   render_margin_percent: 0
   mobile_scaling: 0
+  delay_ad_load: 4
+  delay_ad_script: 3
 network_id: ""
 slots:
   top_ad:
