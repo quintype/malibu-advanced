@@ -80,7 +80,7 @@ function generateSeo(config, pageType) {
       enableLiveBlog: true,
       enableVideo: true,
       enableNewsArticle: true,
-      isAmpSubscriptionsEnabled: true,
+      isAmpSubscriptionsEnabled: false,
     }),
     fallbackSocialImage:
       "https://gumlet.assettype.com/malibu/2023-04/59d3e1a7-019f-46eb-ba51-03989f32c4c1/birds_7901303_960_720.jpeg",
@@ -92,33 +92,32 @@ function generateSeo(config, pageType) {
 
 ampRoutes(app, {
   seo: generateSeo,
-
-  featureConfig: {
-    subscriptions: {
-      services: {
-        authorizationUrl: ({ story, config }) => {
-          const { key, accessTypeBkIntegrationId } = config.additionalConfig.publisher.accesstypeConfig;
-          return `https://malibu-advanced-web.qtstage.io/api/access/v1/stories/${story["story-content-id"]}/amp-access?key=${key}&accesstype_integration_id=${accessTypeBkIntegrationId}&rid=READER_ID&url=SOURCE_URL`;
-        },
-        pingbackUrl: ({ story, config }) => {
-          const { key, accessTypeBkIntegrationId } = config.additionalConfig.publisher.accesstypeConfig;
-          return `https://malibu-advanced-web.qtstage.io/api/access/v1/stories/${story["story-content-id"]}/amp-access?key=${key}&accesstype_integration_id=${accessTypeBkIntegrationId}&rid=READER_ID&url=SOURCE_URL`;
-        },
-        actions: {
-          login: () => "https://malibu-advanced-web.qtstage.io/user-login",
-          subscribe: () => "https://malibu-advanced-web.qtstage.io/subscription",
-        },
-      },
-      score: { supportsViewer: 10, isReadyToPay: 9 },
-      fallbackEntitlement: {
-        granted: () => false,
-        grantReason: () => "SUBSCRIBER",
-        data: {
-          isLoggedIn: () => false,
-        },
-      },
-    },
-  },
+  // featureConfig: {
+  //   subscriptions: {
+  //     services: {
+  //       authorizationUrl: ({ story, config }) => {
+  //         const { key, accessTypeBkIntegrationId } = config.additionalConfig.publisher.accesstypeConfig;
+  //         return `https://malibu-advanced-web.qtstage.io/api/access/v1/stories/${story["story-content-id"]}/amp-access?key=${key}&accesstype_integration_id=${accessTypeBkIntegrationId}&rid=READER_ID&url=SOURCE_URL`;
+  //       },
+  //       pingbackUrl: ({ story, config }) => {
+  //         const { key, accessTypeBkIntegrationId } = config.additionalConfig.publisher.accesstypeConfig;
+  //         return `https://malibu-advanced-web.qtstage.io/api/access/v1/stories/${story["story-content-id"]}/amp-access?key=${key}&accesstype_integration_id=${accessTypeBkIntegrationId}&rid=READER_ID&url=SOURCE_URL`;
+  //       },
+  //       actions: {
+  //         login: () => "https://malibu-advanced-web.qtstage.io/user-login",
+  //         subscribe: () => "https://malibu-advanced-web.qtstage.io/subscription",
+  //       },
+  //     },
+  //     score: { supportsViewer: 10, isReadyToPay: 9 },
+  //     fallbackEntitlement: {
+  //       granted: () => false,
+  //       grantReason: () => "SUBSCRIBER",
+  //       data: {
+  //         isLoggedIn: () => false,
+  //       },
+  //     },
+  //   },
+  // },
 });
 
 isomorphicRoutes(app, {
