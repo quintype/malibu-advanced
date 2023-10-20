@@ -1,6 +1,7 @@
 #!/bin/bash -e
 
 npm install
+# npm run copy-amp
 npm run compile
 supervisord -n -c <(cat <<EOF
 [supervisord]

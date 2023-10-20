@@ -16,7 +16,7 @@
     "@metype/components": "^2.3.3",
     "@quintype/bridgekeeper-js": "^2.8.2-feature-otp.1",
     "@quintype/components": "^3.4.2",
-    "@quintype/framework": "7.20.2-video-lcp.1",
+    "@quintype/framework": "7.20.2-video-lcp.2",
     "@quintype/seo": "^1.42.2",
     "axios": "^0.24.0",
     "fontfaceobserver": "^2.1.0",
@@ -98,7 +98,8 @@
     "lint:css": "npx stylelint './app/**/*.{scss,css}'",
     "lint:css:ci": "npx stylelint $(git diff --pretty='' --diff-filter=d --name-only origin/master...HEAD -- '*.css' '*.scss') ./app/assets/stylesheets/app.scss",
     "lint:ci": "npm run lint:js:ci && npm run lint:css:ci",
-    "check-node-npm": "check-node-version --node '>= 12.13.0' --npm '^6.14.0'"
+    "check-node-npm": "check-node-version --node '>= 12.13.0' --npm '^6.14.0'",
+    "copy-amp": "rm -rf /Users/shraddhakesari_1/workspace/malibu-advanced/node_modules/@quintype/amp/dist && cp -r /Users/shraddhakesari_1/workspace/quintype-amp/dist /Users/shraddhakesari_1/workspace/malibu-advanced/node_modules/@quintype/amp"
   },
   "husky": {
     "hooks": {
