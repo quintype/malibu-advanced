@@ -42,11 +42,8 @@ const sendWebPushNotification = async ({ res, webhookContent, cdnName, sketchesH
   await createVariation({
     res,
     webhookContent,
-    platform: WEB_PUSH_PLATFORM,
     url: `${BASE_URL}/v1/accounts/${licenseCode}/${WEB_PUSH_PLATFORM}/${campaignId}/variations`,
     sketchesHost,
-    eventType,
-    cdnName,
     webengageHeaders,
     logger,
   });
