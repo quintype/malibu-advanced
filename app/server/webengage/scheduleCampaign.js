@@ -6,6 +6,7 @@ async function scheduleCampaign({ res, url, webengageHeaders, logger }) {
       sendNow: true,
       sendInTz: "ACCOUNT",
       sendIntelligently: false,
+      time: null,
     },
     triggerSet: null,
     oneTime: true,
