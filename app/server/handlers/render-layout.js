@@ -38,7 +38,7 @@ export async function renderLayout(res, params) {
   const placeholderDelay = parseInt(
     get(params.store.getState(), ["qt", "config", "publisher-attributes", "placeholder_delay"])
   );
-
+  const webengageLicenseCode = get(params.store.getState(), ["qt", "config", "webengage-config", "licenseCode"], "");
   // Need to change this condition after static page api is fixed
   const metadataHeader =
     (pageType === "static-page" && params.metadata?.header && params.metadata?.header === true) ||
@@ -51,6 +51,7 @@ export async function renderLayout(res, params) {
     "pages/layout",
     Object.assign(
       {
+        webengageLicenseCode,
         isProduction,
         assetPath: assetPath,
         metadata: params.metadata,
