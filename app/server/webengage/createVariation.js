@@ -40,14 +40,12 @@ async function createVariation({ res, webhookContent, url, sketchesHost, webenga
   console.log("webRequestPayload: CreateVariation >>>", webRequestPayload);
 
   try {
-    const createVariationResponse = await (
-      await fetch(url, {
-        method: "PUT",
-        body: JSON.stringify(webRequestPayload),
-        headers: webengageHeaders,
-      })
-    ).json();
-    console.log("FROM createVariation Response 123:", createVariationResponse);
+    const createVariationResponse = await fetch(url, {
+      method: "PUT",
+      body: JSON.stringify(webRequestPayload),
+      headers: webengageHeaders,
+    });
+    console.log("FROM createVariation Response VVV:", createVariationResponse);
     await (
       await fetch(url, {
         method: "PUT",
