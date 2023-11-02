@@ -19,22 +19,10 @@ const webengageHeaders = {
 
 const sendWebPushNotification = async ({ res, webhookContent, cdnName, sketchesHost, eventType }) => {
   // Step 1 : AUDIENCE Selection
-  const headline = get(webhookContent, ["headline"], "");
-  const title = get(webhookContent, ["title"], headline);
-  const TAGS = ["storypublish"];
-
-  const requestPayload = {
-    title,
-    sdks: null,
-    container: "ONETIME",
-    tags: TAGS,
-    experimentMetaData: { applyUCG: true },
-    applyUCG: true,
-  };
 
   const campaignId = await createWebPushCampaign({
     res,
-    requestPayload,
+    webhookContent,
     url: `${BASE_URL}/v2/accounts/${licenseCode}/${WEB_PUSH_PLATFORM}`,
     webengageHeaders,
     logger,

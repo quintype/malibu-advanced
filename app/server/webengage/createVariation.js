@@ -55,6 +55,14 @@ async function createVariation({
   console.log("webRequestPayload: CreateVariation >>>", webRequestPayload, webRequestPayload[0].layoutEId);
 
   try {
+    const createVariationResponse = await (
+      await fetch(url, {
+        method: "PUT",
+        body: JSON.stringify(webRequestPayload),
+        headers: webengageHeaders,
+      })
+    ).json();
+    console.log("FROM createVariation Response:", createVariationResponse);
     await (
       await fetch(url, {
         method: "PUT",

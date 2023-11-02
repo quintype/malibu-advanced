@@ -1,7 +1,20 @@
 import get from "lodash/get";
 import fetch from "node-fetch";
 
-async function createWebPushCampaign({ res, requestPayload, url, webengageHeaders, logger }) {
+async function createWebPushCampaign({ res, webhookContent, url, webengageHeaders, logger }) {
+  const headline = get(webhookContent, ["headline"], "");
+  const title = get(webhookContent, ["title"], headline);
+  const TAGS = ["storypublish"];
+
+  const requestPayload = {
+    title,
+    sdks: null,
+    container: "ONETIME",
+    tags: TAGS,
+    experimentMetaData: { applyUCG: true },
+    applyUCG: true,
+  };
+
   try {
     const audienceCreationResponse = await (
       await fetch(url, {
