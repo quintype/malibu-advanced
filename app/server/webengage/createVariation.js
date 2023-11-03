@@ -34,7 +34,6 @@ async function createVariation({ res, webhookContent, url, sketchesHost, webenga
       description: message || subheadline,
       sampling: 100,
       icon: `https://afiles.webengage.com/${licenseCode}/44091f7c-c5ce-4f9f-8a9a-511c540c29a4.jpg`,
-      cta: { actionText: "NA", actionLink: storyUrl || slug, type: "EXTERNAL_URL", isPrime: true },
     },
   ];
   console.log("webRequestPayload: CreateVariation >>>", webRequestPayload);
