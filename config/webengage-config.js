@@ -1,5 +1,5 @@
 module.exports = {
   enableWebengage: true,
-  licenseCode: "~2024b827",
-  apiKey: "cba25516-8ea4-46ff-aa52-f86b0c789cd6",
+  licenseCode: "~13410580b",
+  apiKey: "a78f469a-19bc-4549-b6d6-7b06a09e6d63",
 };
