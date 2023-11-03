@@ -6,11 +6,11 @@ import createVariation from "./createVariation";
 import launchCampaign from "./launchCampaign";
 import get from "lodash/get";
 import { licenseCode, apiKey } from "../../../config/webengage-config";
+import createConversion from "./createConversion";
 
 const BASE_URL = "https://api.webengage.com/api";
 
 const WEB_PUSH_PLATFORM = "web-push";
-// const APP_PUSH_PLATFORM = "push-notifications";
 
 const webengageHeaders = {
   "Content-Type": "application/json",
@@ -49,6 +49,16 @@ const sendWebPushNotification = async ({ res, webhookContent, cdnName, sketchesH
   });
   console.log("3. WEB createCampaignVariations DONE");
 
+  // Step 4: Conversion Tracking
+  await createConversion({
+    res,
+    webhookContent,
+    url: `${BASE_URL}/v1/accounts/${licenseCode}/conversions`,
+    webengageHeaders,
+    logger,
+  });
+  console.log("4. createConversion DONE");
+
   // Step 5: Activate / Launch
   await launchCampaign({
     res,
@@ -72,7 +82,6 @@ export const handleWebEngageNotifications = async (req, res, next) => {
 
   let targetMapping = [];
   const targets = get(webhookContent, "targets", []);
-  console.log("FIRST LOGS:", webhookContent, eventType, targets);
 
   targetMapping = targets.map((target) =>
     targetHandlers[target]({ res, webhookContent, cdnName, sketchesHost, eventType })
