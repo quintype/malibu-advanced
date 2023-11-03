@@ -23,8 +23,8 @@ async function createVariation({ res, webhookContent, url, sketchesHost, webenga
   const title = get(webhookContent, ["title"], headline);
   const message = get(webhookContent, ["message"], "");
   const subheadline = get(webhookContent, ["subheadline"], "");
-  const storyUrl = get(webhookContent, ["story-url"], "");
-  const slug = `${sketchesHost}/${get(webhookContent, ["slug"], "")}`;
+  // const storyUrl = get(webhookContent, ["story-url"], "");
+  // const slug = `${sketchesHost}/${get(webhookContent, ["slug"], "")}`;
 
   const layoutId = await getLayout(res, logger);
   const webRequestPayload = [
