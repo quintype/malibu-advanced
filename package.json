@@ -16,7 +16,7 @@
     "@metype/components": "^2.3.3",
     "@quintype/bridgekeeper-js": "^2.8.2-feature-otp.1",
     "@quintype/components": "^3.4.2",
-    "@quintype/framework": "^7.21.0-amp-image-caption-redesign.0",
+    "@quintype/framework": "^7.21.0",
     "@quintype/seo": "^1.42.2",
     "axios": "^0.24.0",
     "fontfaceobserver": "^2.1.0",
