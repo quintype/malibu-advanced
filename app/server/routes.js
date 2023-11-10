@@ -75,6 +75,7 @@ const ISOMORPHIC_ROUTES = [
     pageType: PAGE_TYPE.USER_LOGIN,
     exact: true,
   },
+  { path: "/magazines", pageType: PAGE_TYPE.MAGAZINE_PAGE, exact: true },
 ];
 
 export function generateRoutes(config, domainSlug = undefined) {

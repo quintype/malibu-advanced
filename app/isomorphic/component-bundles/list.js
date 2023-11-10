@@ -7,6 +7,7 @@ export { NotFoundPage } from "../components/pages/not-found";
 export { CollectionPage } from "../components/pages/collection-page";
 export { AuthorPage } from "../components/pages/author-page";
 export { SubscriptionPage } from "../components/pages/subscription-page";
+export { MagazinePage } from "../components/pages/magazine-page";
 export { ResetPasswordPage } from "../components/pages/reset-password";
 export { ProfilePage } from "../components/pages/profile-page";
 export { UserLoginPage } from "../components/pages/user-login";
