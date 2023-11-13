@@ -29,7 +29,7 @@
     "react-image-lightbox": "^5.1.4",
     "react-modal": "^3.12.1",
     "react-redux": "^7.2.5",
-    "react-timeago": "^4.4.0",
+    "react-timeago": "^7.2.0",
     "redux": "^4.0.1",
     "serialize-javascript": "^6.0.0",
     "wretch": "^1.4.1"
