@@ -14,19 +14,18 @@ export const MagazinePageWithAccesstype = ({ member, getSubscriptionForUser, isA
     });
   }, [global.AccessType, member, isATGlobal]);
 
-  const getActiveSubscriptions = (subscriptions = []) => {
-    const activeSubscriptions = subscriptions
+  const getActiveSubscriptions = (plans = []) => {
+    const activePlans = plans
       .filter((plan) => plan.subscription_type === "standard" || plan.subscription_type === "group_access")
       .filter((plan) => plan.status === "active");
 
-    return activeSubscriptions;
+    return activePlans;
   };
 
   return (
     <ol>
-      {getActiveSubscriptions(subscriptions).map((subscription, id) => (
-        <li key={id}>{subscription}</li>
-      ))}
+      {subscriptions &&
+        getActiveSubscriptions(subscriptions).map((subscription, id) => <li key={id}>{subscription}</li>)}
       {subscriptions.length === 0 && <p>No Subscriptions found</p>}
     </ol>
   );
