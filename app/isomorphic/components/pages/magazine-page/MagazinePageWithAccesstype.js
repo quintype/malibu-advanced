@@ -14,19 +14,37 @@ export const MagazinePageWithAccesstype = ({ member, getSubscriptionForUser, isA
     });
   }, [global.AccessType, member, isATGlobal]);
 
-  const getActiveSubscriptions = (plans = []) => {
-    const activePlans = plans
+  const getActiveSubscriptions = (subscriptions = []) => {
+    const activeSubscriptions = subscriptions
       .filter((plan) => plan.subscription_type === "standard" || plan.subscription_type === "group_access")
       .filter((plan) => plan.status === "active");
 
-    return activePlans;
+    if (activeSubscriptions.length === 0) return null;
+
+    return (
+      <div>
+        <div styleName="active-plan-label">{activeSubscriptions.length === 1 ? "ACTIVE PLAN" : "ACTIVE PLANS"}</div>
+        {activeSubscriptions.map((subscription, id) => {
+          return (
+            <div styleName="plan" key={id}>
+              <span styleName="plan-name">{`${subscription.plan_name}`}</span>
+            </div>
+          );
+        })}
+      </div>
+    );
   };
 
   return (
     <ol>
-      {subscriptions &&
-        getActiveSubscriptions(subscriptions).map((subscription, id) => <li key={id}>{subscription}</li>)}
-      {subscriptions.length === 0 && <p>No Subscriptions found</p>}
+      {subscriptions === null ? (
+        <div>
+          <b>Loading...</b>
+          <p>We are finding your subscriptions, Please wait</p>
+        </div>
+      ) : (
+        <>{getActiveSubscriptions(subscriptions)}</>
+      )}
     </ol>
   );
 };
