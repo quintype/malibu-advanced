@@ -23,11 +23,11 @@ export const MagazinePageWithAccesstype = ({ member, getSubscriptionForUser, isA
 
     return (
       <div>
-        <div styleName="active-plan-label">{activeSubscriptions.length === 1 ? "ACTIVE PLAN" : "ACTIVE PLANS"}</div>
+        <div>{activeSubscriptions.length === 1 ? "ACTIVE PLAN" : "ACTIVE PLANS"}</div>
         {activeSubscriptions.map((subscription, id) => {
           return (
-            <div styleName="plan" key={id}>
-              <span styleName="plan-name">{`${subscription.plan_name}`}</span>
+            <div key={id}>
+              <span>{`${subscription.plan_name}`}</span>
             </div>
           );
         })}
