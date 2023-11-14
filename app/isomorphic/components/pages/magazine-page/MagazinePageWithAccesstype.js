@@ -2,12 +2,10 @@ import { object, func, bool } from "prop-types";
 import React, { useEffect, useState } from "react";
 
 export const MagazinePageWithAccesstype = ({ member, getSubscriptionForUser, isATGlobal, initAccessType }) => {
-  const [subscriptions, setSubscriptions] = useState([]);
+  const [subscriptions, setSubscriptions] = useState(null);
 
   useEffect(() => {
-    console.log("Is Accesstype Global Set?", isATGlobal);
     initAccessType(() => {
-      console.log("Accesstype Initialized");
       getSubscriptionForUser()
         .then((res) => {
           setSubscriptions(res.subscriptions);
