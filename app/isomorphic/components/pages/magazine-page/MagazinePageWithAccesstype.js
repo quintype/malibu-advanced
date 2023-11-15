@@ -376,8 +376,6 @@ const ActiveSubscriptions = ({ subscriptions = [] }) => {
   }, []);
   console.log({ collections });
 
-  if (activePlans.length === 0) return <a href="/subscription">Subscribe</a>;
-
   const isPlanAccessible = (plan, collection) => {
     const planStart = new Date(plan.start_timestamp);
     const planEnd = new Date(plan.end_timestamp);
@@ -402,7 +400,7 @@ const ActiveSubscriptions = ({ subscriptions = [] }) => {
       {hasAccessToDownload ? (
         <a href="https://www.africau.edu/images/default/sample.pdf">DOWNLOAD</a>
       ) : (
-        <p>has no access to download</p>
+        <a href="/subscription">Subscribe</a>
       )}
     </div>
   );
