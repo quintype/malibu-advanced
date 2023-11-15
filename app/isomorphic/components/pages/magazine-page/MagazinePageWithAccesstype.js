@@ -27,6 +27,7 @@ const ActiveSubscriptions = ({ subscriptions = [] }) => {
         // console.log({ pdfFileURL });
       });
   }, []);
+  console.log({ collections });
 
   if (activePlans.length === 0) return <a href="/subscription">Subscribe</a>;
 
