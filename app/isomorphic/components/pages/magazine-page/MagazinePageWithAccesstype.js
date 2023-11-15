@@ -14,17 +14,15 @@ const ActiveSubscriptions = ({ subscriptions = [] }) => {
   }, [subscriptions]);
 
   useEffect(() => {
-    // const currentURL = window.location.href;
-    // const parts = currentURL.split("/");
-    // const collectionSlug = parts[parts.length - 1];
-    // console.log({ collectionSlug });
-    fetch("https://malibu-perfadvanced.quintype.io/api/v1/collections/home")
+    const currentURL = window.location.href;
+    const parts = currentURL.split("/");
+    const collectionSlug = parts[parts.length - 1];
+    console.log({ collectionSlug });
+    fetch("https://vyshnav.madrid.quintype.io/magazine/residentmagazine/january-2019")
       .then((response) => response.json())
       .then((data) => {
         setCollections(data);
         console.log({ data });
-        // const pdfFileURL = data.metadata["pdf-src-key"]["pdf-file-url"];
-        // console.log({ pdfFileURL });
       });
   }, []);
   console.log({ collections });
@@ -34,6 +32,8 @@ const ActiveSubscriptions = ({ subscriptions = [] }) => {
   let hasAccessToDownload = false;
   if (activePlans.length > 0 && Object.keys(collections).includes("created-at")) {
     console.log("Subscription End date: ", new Date(activePlans[0].end_timestamp));
+    const pdfFileURL = collections.metadata["pdf-src-key"]["pdf-file-url"];
+    console.log({ pdfFileURL });
     console.log("Magazine Created date: ", new Date(collections["created-at"]));
     hasAccessToDownload = new Date(activePlans[0].end_timestamp) > new Date(collections["created-at"]);
   }
