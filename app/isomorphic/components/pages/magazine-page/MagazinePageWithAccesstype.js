@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 const ActiveSubscriptions = ({ subscriptions = [] }) => {
   console.log({ subscriptions });
   const [activePlans, setActivePlans] = useState([]);
-  const [collections, setCollections] = useState([]);
+  const [collections, setCollections] = useState({});
 
   useEffect(() => {
     const activeSubscriptions = subscriptions
