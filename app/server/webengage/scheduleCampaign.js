@@ -12,9 +12,9 @@ async function scheduleCampaign({ res, url, webengageHeaders, logger }) {
     oneTime: true,
     queueMessage: true,
     ttl: 86400,
-    applyFrequencyCapping: false,
-    incrementFrequencyCappingCount: false,
-    applyDnd: false,
+    applyFrequencyCapping: true,
+    incrementFrequencyCappingCount: true,
+    applyDnd: true,
     startDate: null,
     endDate: null,
   };
