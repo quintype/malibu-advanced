@@ -18,7 +18,7 @@ const ActiveSubscriptions = ({ subscriptions = [] }) => {
     const parts = currentURL.split("/");
     const collectionSlug = parts[parts.length - 1];
     console.log({ collectionSlug });
-    fetch("https://vyshnav.madrid.quintype.io/magazine/residentmagazine/january-2019")
+    fetch("https://malibu-perfadvanced.quintype.io/api/v1/collections/home", { mode: "no-cors" })
       .then((response) => response.json())
       .then((data) => {
         setCollections(data);
