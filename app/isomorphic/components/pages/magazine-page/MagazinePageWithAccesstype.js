@@ -29,13 +29,23 @@ const ActiveSubscriptions = ({ subscriptions = [] }) => {
 
   if (activePlans.length === 0) return <a href="/subscription">Subscribe</a>;
 
-  let hasAccessToDownload = false;
-  if (activePlans.length > 0 && Object.keys(collections).includes("created-at")) {
-    console.log("Subscription End date: ", new Date(activePlans[0].end_timestamp));
+  const isPlanAccessible = (plan, collection) => {
+    const planStart = new Date(plan.start_timestamp);
+    const planEnd = new Date(plan.end_timestamp);
+    const collectionCreationDate = collection["collection-date"];
+
     const pdfFileURL = collections.metadata["pdf-src-key"]["pdf-file-url"];
     console.log({ pdfFileURL });
-    console.log("Magazine Created date: ", new Date(collections["created-at"]));
-    hasAccessToDownload = new Date(activePlans[0].end_timestamp) > new Date(collections["created-at"]);
+
+    return planStart <= collectionCreationDate && planEnd >= collectionCreationDate;
+  };
+
+  let hasAccessToDownload = false;
+  if (activePlans.length > 0 && Object.keys(collections).includes("collection-date")) {
+    console.log("Subscription Start date: ", new Date(activePlans[0].start_timestamp));
+    console.log("Subscription End date: ", new Date(activePlans[0].end_timestamp));
+    console.log("Magazine Created date: ", new Date(collections["collection-date"]));
+    hasAccessToDownload = isPlanAccessible(activePlans[0], collections);
   }
 
   return (
