@@ -1,5 +1,45 @@
-import { object, func, bool } from "prop-types";
+import { object, func, bool, array } from "prop-types";
 import React, { useEffect, useState } from "react";
+
+const ActiveSubscriptions = ({ subscriptions = [] }) => {
+  console.log({ subscriptions });
+  const [activePlans, setActivePlans] = useState([]);
+  const [collections, setCollections] = useState([]);
+
+  useEffect(() => {
+    const activeSubscriptions = subscriptions
+      .filter((plan) => plan.subscription_type === "standard" || plan.subscription_type === "group_access")
+      .filter((plan) => plan.status === "active");
+    setActivePlans(activeSubscriptions);
+  }, [subscriptions]);
+
+  useEffect(() => {
+    // const currentURL = window.location.href;
+    // const parts = currentURL.split("/");
+    // const collectionSlug = parts[parts.length - 1];
+    // console.log({ collectionSlug });
+    fetch("https://malibu-perfadvanced.quintype.io/api/v1/collections/home")
+      .then((response) => response.json())
+      .then((data) => {
+        setCollections(data);
+        console.log({ data });
+        // const pdfFileURL = data.metadata["pdf-src-key"]["pdf-file-url"];
+        // console.log({ pdfFileURL });
+      });
+  }, []);
+
+  if (activePlans.length === 0) return <a href="/subscription">Subscribe</a>;
+
+  return (
+    <div>
+      <a href="https://www.africau.edu/images/default/sample.pdf">DOWNLOAD</a>
+    </div>
+  );
+};
+
+ActiveSubscriptions.propTypes = {
+  subscriptions: array,
+};
 
 export const MagazinePageWithAccesstype = ({ member, getSubscriptionForUser, isATGlobal, initAccessType }) => {
   const [subscriptions, setSubscriptions] = useState(null);
@@ -14,27 +54,6 @@ export const MagazinePageWithAccesstype = ({ member, getSubscriptionForUser, isA
     });
   }, [global.AccessType, member, isATGlobal]);
 
-  const getActiveSubscriptions = (subscriptions = []) => {
-    const activeSubscriptions = subscriptions
-      .filter((plan) => plan.subscription_type === "standard" || plan.subscription_type === "group_access")
-      .filter((plan) => plan.status === "active");
-
-    if (activeSubscriptions.length === 0) return null;
-
-    return (
-      <div>
-        <div>{activeSubscriptions.length === 1 ? "ACTIVE PLAN" : "ACTIVE PLANS"}</div>
-        {activeSubscriptions.map((subscription, id) => {
-          return (
-            <div key={id}>
-              <span>{`${subscription.plan_name}`}</span>
-            </div>
-          );
-        })}
-      </div>
-    );
-  };
-
   return (
     <ol>
       {subscriptions === null ? (
@@ -43,7 +62,7 @@ export const MagazinePageWithAccesstype = ({ member, getSubscriptionForUser, isA
           <p>We are finding your subscriptions, Please wait</p>
         </div>
       ) : (
-        <>{getActiveSubscriptions(subscriptions)}</>
+        <ActiveSubscriptions subscriptions={subscriptions} />
       )}
     </ol>
   );
