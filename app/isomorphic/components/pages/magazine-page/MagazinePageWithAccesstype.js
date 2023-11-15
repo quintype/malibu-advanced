@@ -32,7 +32,7 @@ const ActiveSubscriptions = ({ subscriptions = [] }) => {
   if (activePlans.length === 0) return <a href="/subscription">Subscribe</a>;
 
   let hasAccessToDownload = false;
-  if (activePlans.length > 0 && Object.keys().includes("created-at")) {
+  if (activePlans.length > 0 && Object.keys(collections).includes("created-at")) {
     console.log("Subscription End date: ", new Date(activePlans[0].end_timestamp));
     console.log("Magazine Created date: ", new Date(collections["created-at"]));
     hasAccessToDownload = new Date(activePlans[0].end_timestamp) > new Date(collections[0]["created-at"]);
