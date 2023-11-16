@@ -12,11 +12,11 @@ async function createVariation({ res, webhookContent, url, sketchesHost, webenga
 
   const webRequestPayload = [
     {
-      layoutEId: "1af576ba",
+      layoutEId: "i78egae",
       title,
       description: message || subheadline,
       sampling: 100,
-      icon: `https://afiles.webengage.com/${licenseCode}/44091f7c-c5ce-4f9f-8a9a-511c540c29a4.jpg`,
+      icon: `https://afiles.webengage.com/${licenseCode}/97bd14d8-58fe-4303-be6c-9a1c2b99787f.jpg`,
       requireInteraction: true,
       cta: { actionText: "NA", actionLink: storyUrl || slug, type: "EXTERNAL_URL", isPrime: true },
     },
@@ -30,7 +30,7 @@ async function createVariation({ res, webhookContent, url, sketchesHost, webenga
       body: JSON.stringify(webRequestPayload),
       headers: webengageHeaders,
     });
-    console.log("FROM createVariation Response VVV:", createVariationResponse);
+    console.log("FROM createVariation Response :", createVariationResponse);
     await (
       await fetch(url, {
         method: "PUT",

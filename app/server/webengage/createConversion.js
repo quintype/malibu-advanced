@@ -1,11 +1,14 @@
 import fetch from "node-fetch";
 import get from "lodash/get";
+import { licenseCode } from "../../../config/webengage-config";
 
-async function createConversion({ res, webhookContent, url, webengageHeaders, logger }) {
+async function createConversion({ res, webhookContent, url, campaignId, webengageHeaders, logger }) {
   const headline = get(webhookContent, ["headline"], "");
   const title = get(webhookContent, ["title"], headline);
   const requestPayload = {
     deadline: "+7d",
+    experiment: `${campaignId}`,
+    licenseCode: `${licenseCode}`,
     controlGroup: 0,
     name: title,
     triggerSet: {

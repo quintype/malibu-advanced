@@ -54,6 +54,7 @@ const sendWebPushNotification = async ({ res, webhookContent, cdnName, sketchesH
     res,
     webhookContent,
     url: `${BASE_URL}/v1/accounts/${licenseCode}/conversions`,
+    campaignId,
     webengageHeaders,
     logger,
   });
