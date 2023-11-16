@@ -1,12 +1,12 @@
 import get from "lodash/get";
 import fetch from "node-fetch";
 
-async function createWebPushCampaign({ res, webhookContent, url, webengageHeaders, logger }) {
+async function createCampaign({ res, webhookContent, platform, url, webengageHeaders, logger }) {
   const headline = get(webhookContent, ["headline"], "");
   const title = get(webhookContent, ["title"], headline);
   const TAGS = ["storypublish"];
 
-  const requestPayload = {
+  const webRequestPayload = {
     title,
     sdks: null,
     container: "ONETIME",
@@ -15,11 +15,19 @@ async function createWebPushCampaign({ res, webhookContent, url, webengageHeader
     applyUCG: true,
   };
 
+  const appRequestPayload = {
+    title,
+    sdks: [2, 3],
+    container: "ONETIME",
+    tags: TAGS,
+    appIds: {},
+  };
+
   try {
     const audienceCreationResponse = await (
       await fetch(url, {
         method: "POST",
-        body: JSON.stringify(requestPayload),
+        body: JSON.stringify(platform === "push-notifications" ? appRequestPayload : webRequestPayload),
         headers: webengageHeaders,
       })
     ).json();
@@ -30,4 +38,4 @@ async function createWebPushCampaign({ res, webhookContent, url, webengageHeader
     res.status(503).send({ error: { message: "Audience creation failure" } });
   }
 }
-export default createWebPushCampaign;
+export default createCampaign;
