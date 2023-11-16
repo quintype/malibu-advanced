@@ -20,12 +20,6 @@ async function scheduleCampaign({ res, url, webengageHeaders, logger }) {
   };
 
   try {
-    const scheduleCampaignResponse = await fetch(url, {
-      method: "POST",
-      body: JSON.stringify(requestPayload),
-      headers: webengageHeaders,
-    });
-    console.log("FROM scheduleCampaign Response VVV:", scheduleCampaignResponse);
     await (
       await fetch(url, { method: "POST", body: JSON.stringify(requestPayload), headers: webengageHeaders })
     ).json();

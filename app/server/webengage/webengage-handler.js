@@ -27,7 +27,6 @@ const sendWebPushNotification = async ({ res, webhookContent, cdnName, sketchesH
     webengageHeaders,
     logger,
   });
-  console.log("1. WEB createWebPushCampaign DONE");
 
   // Step 2: Schedule campaign  -- WHEN
   await scheduleCampaign({
@@ -36,7 +35,6 @@ const sendWebPushNotification = async ({ res, webhookContent, cdnName, sketchesH
     webengageHeaders,
     logger,
   });
-  console.log("2. WEB scheduleCampaign DONE");
 
   // Step 3: Create variation either Text / Banner -- MESSAGE
   await createVariation({
@@ -47,7 +45,6 @@ const sendWebPushNotification = async ({ res, webhookContent, cdnName, sketchesH
     webengageHeaders,
     logger,
   });
-  console.log("3. WEB createCampaignVariations DONE");
 
   // Step 4: Conversion Tracking
   await createConversion({
@@ -58,7 +55,6 @@ const sendWebPushNotification = async ({ res, webhookContent, cdnName, sketchesH
     webengageHeaders,
     logger,
   });
-  console.log("4. createConversion DONE");
 
   // Step 5: Activate / Launch
   await launchCampaign({
@@ -67,7 +63,6 @@ const sendWebPushNotification = async ({ res, webhookContent, cdnName, sketchesH
     webengageHeaders,
     logger,
   });
-  console.log("4. WEB launchCampaign DONE");
 };
 
 export const handleWebEngageNotifications = async (req, res, next) => {

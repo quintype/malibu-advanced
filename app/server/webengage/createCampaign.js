@@ -24,7 +24,6 @@ async function createWebPushCampaign({ res, webhookContent, url, webengageHeader
       })
     ).json();
     const campaignId = get(audienceCreationResponse, ["response", "data", "id"]);
-    console.log("audienceCreationResponse:", url, audienceCreationResponse, campaignId);
     return campaignId;
   } catch (e) {
     logger.error("Error handling Audience Creation : " + e);

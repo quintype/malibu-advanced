@@ -30,13 +30,7 @@ async function createConversion({ res, webhookContent, url, campaignId, webengag
     status: "ACTIVE",
   };
 
-  console.log("4.createConversion: LOGS ", url, requestPayload);
-
   try {
-    console.log(
-      "FROM Create Conversion:",
-      await fetch(url, { method: "POST", body: JSON.stringify(requestPayload), headers: webengageHeaders })
-    );
     await (
       await fetch(url, { method: "POST", body: JSON.stringify(requestPayload), headers: webengageHeaders })
     ).json();
