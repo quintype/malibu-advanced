@@ -377,6 +377,9 @@ const ActiveSubscriptions = ({ subscriptions = [] }) => {
   console.log({ collections });
 
   const isPlanAccessible = (plan, collection) => {
+    if (plan.plan_name === "Plan A") {
+      return true;
+    }
     const planStart = new Date(plan.start_timestamp);
     const planEnd = new Date(plan.end_timestamp);
     const collectionCreationDate = collection["collection-date"];
