@@ -1,6 +1,6 @@
 <%- serviceWorkerHelper %>;
 <%
- /%
+ /*
   const shellUrl = "/shell.html?revision=<%= assetHash("app.js") %>-<%= configVersion %>";
 
   const REQUIRED_ASSETS = [
@@ -23,7 +23,7 @@
   if("<%= config["public-integrations"]["one-signal"] &&  config["public-integrations"]["one-signal"]["app-id"] %>") {
     importScripts('https://cdn.onesignal.com/sdks/OneSignalSDKWorker.js');
   }
- %/
+ */
 %>
 self.skipWaiting();
 importScripts('https://ssl.widgets.webengage.com/js/service-worker.js');
