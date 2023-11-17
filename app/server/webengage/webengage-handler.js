@@ -78,7 +78,10 @@ const sendWebPushNotification = async ({ res, webhookContent, cdnName, sketchesH
     webengageHeaders,
     logger,
   });
-  console.log("Web ENgage Logs 555 :", getUrl(`${BASE_URL}/api/v1/accounts`, licenseCode, WEB_PUSH_PLATFORM, `${campaignId}/activate`);
+  console.log(
+    "Web ENgage Logs 555 :",
+    getUrl(`${BASE_URL}/api/v1/accounts`, licenseCode, WEB_PUSH_PLATFORM, `${campaignId}/activate`)
+  );
 };
 
 const sendAppPushNotification = async ({ res, webhookContent, cdnName, sketchesHost, eventType }) => {
