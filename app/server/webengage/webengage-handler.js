@@ -8,7 +8,7 @@ import get from "lodash/get";
 import { licenseCode, apiKey } from "../../../config/webengage-config";
 import createConversion from "./createConversion";
 
-const BASE_URL = "https://api.webengage.com/api";
+const BASE_URL = "https://api.webengage.com";
 
 const WEB_PUSH_PLATFORM = "web-push";
 const APP_PUSH_PLATFORM = "push-notifications";
@@ -24,7 +24,7 @@ const sendWebPushNotification = async ({ res, webhookContent, cdnName, sketchesH
     res,
     webhookContent,
     platform: WEB_PUSH_PLATFORM,
-    url: `${BASE_URL}/v2/accounts/${licenseCode}/${WEB_PUSH_PLATFORM}`,
+    url: `${BASE_URL}/api/v2/accounts/${licenseCode}/${WEB_PUSH_PLATFORM}`,
     webengageHeaders,
     logger,
   });
@@ -32,7 +32,7 @@ const sendWebPushNotification = async ({ res, webhookContent, cdnName, sketchesH
   // Step 2: Schedule campaign  -- WHEN
   await scheduleCampaign({
     res,
-    url: `${BASE_URL}/v1/accounts/${licenseCode}/${WEB_PUSH_PLATFORM}/${campaignId}/targetingRule/schedule`,
+    url: `${BASE_URL}/api/v1/accounts/${licenseCode}/${WEB_PUSH_PLATFORM}/${campaignId}/targetingRule/schedule`,
     webengageHeaders,
     logger,
   });
@@ -42,7 +42,7 @@ const sendWebPushNotification = async ({ res, webhookContent, cdnName, sketchesH
     res,
     webhookContent,
     platform: WEB_PUSH_PLATFORM,
-    url: `${BASE_URL}/v1/accounts/${licenseCode}/${WEB_PUSH_PLATFORM}/${campaignId}/variations`,
+    url: `${BASE_URL}/api/v1/accounts/${licenseCode}/${WEB_PUSH_PLATFORM}/${campaignId}/variations`,
     sketchesHost,
     eventType,
     cdnName,
@@ -54,7 +54,7 @@ const sendWebPushNotification = async ({ res, webhookContent, cdnName, sketchesH
   await createConversion({
     res,
     webhookContent,
-    url: `${BASE_URL}/v1/accounts/${licenseCode}/conversions`,
+    url: `${BASE_URL}/api/v1/accounts/${licenseCode}/conversions`,
     campaignId,
     webengageHeaders,
     logger,
@@ -63,7 +63,7 @@ const sendWebPushNotification = async ({ res, webhookContent, cdnName, sketchesH
   // Step 5: Activate / Launch
   await launchCampaign({
     res,
-    url: `${BASE_URL}/v1/accounts/${licenseCode}/${WEB_PUSH_PLATFORM}/${campaignId}/activate`,
+    url: `${BASE_URL}/api/v1/accounts/${licenseCode}/${WEB_PUSH_PLATFORM}/${campaignId}/activate`,
     webengageHeaders,
     logger,
   });
@@ -79,7 +79,6 @@ const sendAppPushNotification = async ({ res, webhookContent, cdnName, sketchesH
     webengageHeaders,
     logger,
   });
-  console.log("1. APP createWebPushCampaign DONE", campaignId);
 
   // Step 2: Schedule campaign  -- WHEN
   await scheduleCampaign({
@@ -88,7 +87,6 @@ const sendAppPushNotification = async ({ res, webhookContent, cdnName, sketchesH
     webengageHeaders,
     logger,
   });
-  console.log("2. APP scheduleCampaign DONE");
 
   // Step 3: Create variation either Text / Banner -- MESSAGE
   await createVariation({
@@ -103,8 +101,6 @@ const sendAppPushNotification = async ({ res, webhookContent, cdnName, sketchesH
     logger,
   });
 
-  console.log("3. APP createCampaignVariations DONE");
-
   // Step 4: Conversion Tracking
   await createConversion({
     res,
@@ -113,7 +109,6 @@ const sendAppPushNotification = async ({ res, webhookContent, cdnName, sketchesH
     webengageHeaders,
     logger,
   });
-  console.log("4. createConversion API DONE");
 
   // Step 5: Activate / Launch
   await launchCampaign({
@@ -122,7 +117,6 @@ const sendAppPushNotification = async ({ res, webhookContent, cdnName, sketchesH
     webengageHeaders,
     logger,
   });
-  console.log("4. APP launchCampaign DONE");
 };
 
 export const handleWebEngageNotifications = async (req, res, next) => {

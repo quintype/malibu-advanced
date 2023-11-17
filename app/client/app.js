@@ -20,13 +20,11 @@ function enableHotReload(store) {
     });
   }
 }
-/*
 if (window.OneSignal) {
   Object.assign(opts, {
-    serviceWorkerLocation: "/OneSignalSDKWorker.js"
+    serviceWorkerLocation: "/OneSignalSDKWorker.js",
   });
 }
-*/
 global.wretch = wretch;
 
 startApp(renderApplication, REDUCERS, opts).then(enableHotReload);
