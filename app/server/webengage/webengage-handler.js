@@ -29,7 +29,11 @@ const sendWebPushNotification = async ({ res, webhookContent, cdnName, sketchesH
     webengageHeaders,
     logger,
   });
-
+  console.log(
+    "Web ENgage Logs 111 :",
+    campaignId,
+    getUrl(`${BASE_URL}/api/v2/accounts`, licenseCode, WEB_PUSH_PLATFORM)
+  );
   // Step 2: Schedule campaign  -- WHEN
   await scheduleCampaign({
     res,
@@ -37,7 +41,10 @@ const sendWebPushNotification = async ({ res, webhookContent, cdnName, sketchesH
     webengageHeaders,
     logger,
   });
-
+  console.log(
+    "Web ENgage Logs 222 :",
+    getUrl(`${BASE_URL}/api/v1/accounts`, licenseCode, WEB_PUSH_PLATFORM, `${campaignId}/targetingRule/schedule`)
+  );
   // Step 3: Create variation either Text / Banner -- MESSAGE
   await createVariation({
     res,
@@ -50,7 +57,10 @@ const sendWebPushNotification = async ({ res, webhookContent, cdnName, sketchesH
     webengageHeaders,
     logger,
   });
-
+  console.log(
+    "Web ENgage Logs 333 :",
+    getUrl(`${BASE_URL}/api/v1/accounts`, licenseCode, WEB_PUSH_PLATFORM, `${campaignId}/variations`)
+  );
   // Step 4: Conversion Tracking
   await createConversion({
     res,
@@ -60,7 +70,7 @@ const sendWebPushNotification = async ({ res, webhookContent, cdnName, sketchesH
     webengageHeaders,
     logger,
   });
-
+  console.log("Web ENgage Logs 444 :", `${BASE_URL}/api/v1/accounts/${licenseCode}/conversions`);
   // Step 5: Activate / Launch
   await launchCampaign({
     res,
@@ -68,6 +78,7 @@ const sendWebPushNotification = async ({ res, webhookContent, cdnName, sketchesH
     webengageHeaders,
     logger,
   });
+  console.log("Web ENgage Logs 555 :", getUrl(`${BASE_URL}/api/v1/accounts`, licenseCode, WEB_PUSH_PLATFORM, `${campaignId}/activate`);
 };
 
 const sendAppPushNotification = async ({ res, webhookContent, cdnName, sketchesHost, eventType }) => {
@@ -80,7 +91,6 @@ const sendAppPushNotification = async ({ res, webhookContent, cdnName, sketchesH
     webengageHeaders,
     logger,
   });
-
   // Step 2: Schedule campaign  -- WHEN
   await scheduleCampaign({
     res,
