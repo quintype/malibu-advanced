@@ -20,12 +20,15 @@ async function scheduleCampaign({ res, url, webengageHeaders, logger }) {
   };
 
   try {
-    await (
-      await fetch(url, { method: "POST", body: JSON.stringify(requestPayload), headers: webengageHeaders })
-    ).json();
+    const response = await fetch(url, {
+      method: "POST",
+      body: JSON.stringify(requestPayload),
+      headers: webengageHeaders,
+    });
+    await response.json();
   } catch (e) {
-    logger.error("Error handling ScheduleCampaign Creation : " + e);
-    res.status(503).send({ error: { message: "Notification campaign creation failure" } });
+    logger.error("Error handling ScheduleCampaign  : " + e);
+    res.status(503).send({ error: { message: "ScheduleCampaign failure" } });
   }
 }
 

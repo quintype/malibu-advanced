@@ -1,4 +1,5 @@
 /* eslint-disable no-console, no-unused-vars, import/extensions, object-shorthand, global-require */
+import bodyParser from "body-parser";
 import createApp from "@quintype/framework/server/create-app";
 import { getClient, Collection } from "@quintype/framework/server/api-client";
 import logger from "@quintype/framework/server/logger";
@@ -15,14 +16,11 @@ import { loadData, loadErrorData } from "./load-data";
 import { pickComponent } from "../isomorphic/pick-component";
 import { generateStaticData, generateStructuredData, SEO } from "@quintype/seo";
 import { enableWebengage } from "../../config/webengage-config";
-import express from "express";
-import bodyParser from "body-parser";
 import { handleWebEngageNotifications } from "./webengage/webengage-handler";
 
 export const app = createApp();
 
 upstreamQuintypeRoutes(app, {});
-const jsonParser = express.json();
 
 const redirectCollectionHandler =
   () =>

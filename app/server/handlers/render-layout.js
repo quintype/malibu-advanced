@@ -17,6 +17,7 @@ const fontJsContent = assetPath("font.js") ? readAsset("font.js") : "";
 const allChunks = getAllChunks("list", "story", "home");
 
 export async function renderLayout(res, params) {
+  const storeState = params.store.getState();
   const {
     gtmId,
     gaId,
@@ -28,17 +29,15 @@ export async function renderLayout(res, params) {
     loadAdsSynchronously,
     pageType,
     enableMetype,
-  } = getConfig(params.store.getState());
+  } = getConfig(storeState);
   const chunk = params.shell ? null : allChunks[getChunkName(params.pageType)];
   const criticalCss = await getCriticalCss();
   const styleTags = await getStyleTags();
-  const arrowCss = await getArrowCss(params.store.getState());
+  const arrowCss = await getArrowCss(storeState);
   const isProduction = process.env.NODE_ENV === "production";
 
-  const placeholderDelay = parseInt(
-    get(params.store.getState(), ["qt", "config", "publisher-attributes", "placeholder_delay"])
-  );
-  const webengageLicenseCode = get(params.store.getState(), ["qt", "config", "webengage-config", "licenseCode"], "");
+  const placeholderDelay = parseInt(get(storeState, ["qt", "config", "publisher-attributes", "placeholder_delay"]));
+  const webengageLicenseCode = get(storeState, ["qt", "config", "webengage-config", "licenseCode"], "");
   // Need to change this condition after static page api is fixed
   const metadataHeader =
     (pageType === "static-page" && params.metadata?.header && params.metadata?.header === true) ||

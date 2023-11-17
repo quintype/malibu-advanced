@@ -22,20 +22,18 @@ async function createCampaign({ res, webhookContent, platform, url, webengageHea
     tags: TAGS,
     appIds: {},
   };
-
+  const requestPayload = platform === "push-notifications" ? appRequestPayload : webRequestPayload;
   try {
-    const audienceCreationResponse = await (
-      await fetch(url, {
-        method: "POST",
-        body: JSON.stringify(platform === "push-notifications" ? appRequestPayload : webRequestPayload),
-        headers: webengageHeaders,
-      })
-    ).json();
-    const campaignId = get(audienceCreationResponse, ["response", "data", "id"]);
-    return campaignId;
+    const apiResponse = await fetch(url, {
+      method: "POST",
+      body: JSON.stringify(requestPayload),
+      headers: webengageHeaders,
+    });
+    const audienceCreationResponse = await apiResponse.json();
+    return get(audienceCreationResponse, ["response", "data", "id"]);
   } catch (e) {
-    logger.error("Error handling Audience Creation : " + e);
-    res.status(503).send({ error: { message: "Audience creation failure" } });
+    logger.error("Error handling Audience/Campaign Creation : " + e);
+    res.status(503).send({ error: { message: "Audience/Campaign creation failure" } });
   }
 }
 export default createCampaign;

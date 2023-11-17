@@ -31,12 +31,15 @@ async function createConversion({ res, webhookContent, url, campaignId, webengag
   };
 
   try {
-    await (
-      await fetch(url, { method: "POST", body: JSON.stringify(requestPayload), headers: webengageHeaders })
-    ).json();
+    const response = await fetch(url, {
+      method: "POST",
+      body: JSON.stringify(requestPayload),
+      headers: webengageHeaders,
+    });
+    await response.json();
   } catch (e) {
     logger.error("Error handling createConversion Creation : " + e);
-    res.status(503).send({ error: { message: "Notification campaign creation failure" } });
+    res.status(503).send({ error: { message: "Conversion creation failure" } });
   }
 }
 

@@ -1,5 +1,11 @@
 import get from "lodash/get";
-import { licenseCode } from "../../../config/webengage-config";
+import {
+  licenseCode,
+  webPushTextLayoutId,
+  appPushTextLayoutId,
+  appPushBannerLayoutId,
+  pnIcon,
+} from "../../../config/webengage-config";
 import fetch from "node-fetch";
 
 async function createVariation({
@@ -24,14 +30,15 @@ async function createVariation({
     eventType === STORY_PUBLISH_EVENT
       ? `${cdnName}${get(webhookContent, ["v1", "data", "hero-image-s3-key"])}`
       : get(webhookContent, ["hero-image-url"], "");
+  const icon = `https://afiles.webengage.com/${licenseCode}/${pnIcon}`;
 
   const webRequestPayload = [
     {
-      layoutEId: "i78egae",
+      layoutEId: webPushTextLayoutId,
       title,
       description: message || subheadline,
       sampling: 100,
-      icon: `https://afiles.webengage.com/${licenseCode}/97bd14d8-58fe-4303-be6c-9a1c2b99787f.jpg`,
+      icon,
       requireInteraction: true,
       cta: { actionText: "NA", actionLink: storyUrl || slug, type: "EXTERNAL_URL", isPrime: true },
     },
@@ -39,7 +46,7 @@ async function createVariation({
   const appPushRequestPayload = [
     {
       sampling: 50,
-      layoutEId: "2341ifc5",
+      layoutEId: appPushTextLayoutId,
       title,
       message: message || subheadline,
       androidDetails: {
@@ -51,7 +58,7 @@ async function createVariation({
     },
     {
       sampling: 50,
-      layoutEId: "~20cc49c5",
+      layoutEId: appPushBannerLayoutId,
       experimentVariationStatus: "ACTIVE",
       title,
       message: message || subheadline,
@@ -67,14 +74,15 @@ async function createVariation({
       },
     },
   ];
+  const requestPayload = platform === "push-notifications" ? appPushRequestPayload : webRequestPayload;
+
   try {
-    await (
-      await fetch(url, {
-        method: "PUT",
-        body: JSON.stringify(platform === "push-notifications" ? appPushRequestPayload : webRequestPayload),
-        headers: webengageHeaders,
-      })
-    ).json();
+    const response = await fetch(url, {
+      method: "PUT",
+      body: JSON.stringify(requestPayload),
+      headers: webengageHeaders,
+    });
+    await response.json();
   } catch (e) {
     logger.error("Error handling Variation Creation : " + e);
     res.status(503).send({ error: { message: "Variation creation failure" } });
