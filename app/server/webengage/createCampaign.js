@@ -30,13 +30,6 @@ async function createCampaign({ res, webhookContent, platform, url, webengageHea
       headers: webengageHeaders,
     });
     const audienceCreationResponse = await apiResponse.json();
-    console.log(
-      "From createCampaign: Logs 111 aaa:",
-      platform,
-      apiResponse,
-      audienceCreationResponse,
-      get(audienceCreationResponse, ["response", "data", "id"])
-    );
     return get(audienceCreationResponse, ["response", "data", "id"]);
   } catch (e) {
     logger.error("Error handling Audience/Campaign Creation : " + e);
