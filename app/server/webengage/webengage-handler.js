@@ -17,7 +17,9 @@ const webengageHeaders = {
   "Content-Type": "application/json",
   Authorization: `Bearer ${apiKey}`,
 };
-const getUrl = (url, licenseCode, platform, path) => `${url}/${licenseCode}/${platform}/${path}`;
+const getUrl = (url, licenseCode, platform, path) => {
+  return path === "" ? `${url}/${licenseCode}/${platform}` : `${url}/${licenseCode}/${platform}/${path}`;
+};
 
 const sendWebPushNotification = async ({ res, webhookContent, cdnName, sketchesHost, eventType }) => {
   // Step 1 : AUDIENCE Selection
