@@ -1,10 +1,9 @@
 import get from "lodash/get";
 import {
-  licenseCode,
   webPushTextLayoutId,
   appPushTextLayoutId,
   appPushBannerLayoutId,
-  pnIcon,
+  icon,
 } from "../../../config/webengage-config";
 import fetch from "node-fetch";
 
@@ -30,7 +29,6 @@ async function createVariation({
     eventType === STORY_PUBLISH_EVENT
       ? `${cdnName}${get(webhookContent, ["v1", "data", "hero-image-s3-key"])}`
       : get(webhookContent, ["hero-image-url"], "");
-  const icon = `https://afiles.webengage.com/${licenseCode}/${pnIcon}`;
 
   const webRequestPayload = [
     {
