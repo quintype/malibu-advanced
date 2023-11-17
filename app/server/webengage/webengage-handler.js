@@ -25,7 +25,7 @@ const sendWebPushNotification = async ({ res, webhookContent, cdnName, sketchesH
     res,
     webhookContent,
     platform: WEB_PUSH_PLATFORM,
-    url: getUrl(`${BASE_URL}/api/v2/accounts`, licenseCode, WEB_PUSH_PLATFORM),
+    url: getUrl(`${BASE_URL}/api/v2/accounts`, licenseCode, WEB_PUSH_PLATFORM, ""),
     webengageHeaders,
     logger,
   });
@@ -90,7 +90,7 @@ const sendAppPushNotification = async ({ res, webhookContent, cdnName, sketchesH
     res,
     webhookContent,
     platform: APP_PUSH_PLATFORM,
-    url: getUrl(`${BASE_URL}/v2/accounts`, licenseCode, APP_PUSH_PLATFORM),
+    url: getUrl(`${BASE_URL}/v2/accounts`, licenseCode, APP_PUSH_PLATFORM, ""),
     webengageHeaders,
     logger,
   });
