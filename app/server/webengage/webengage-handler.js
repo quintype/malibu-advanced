@@ -17,8 +17,12 @@ const webengageHeaders = {
   "Content-Type": "application/json",
   Authorization: `Bearer ${apiKey}`,
 };
-const getUrl = (url, licenseCode, platform, path) => {
-  return path === "" ? `${url}/${licenseCode}/${platform}` : `${url}/${licenseCode}/${platform}/${path}`;
+const getUrl = (url, platform, path) => {
+  return path === ""
+    ? `${url}/${licenseCode}/${platform}`
+    : path === "conversions"
+    ? `${url}/${licenseCode}/${path}`
+    : `${url}/${licenseCode}/${platform}/${path}`;
 };
 
 const sendWebPushNotification = async ({ res, webhookContent, cdnName, sketchesHost, eventType }) => {
@@ -27,63 +31,46 @@ const sendWebPushNotification = async ({ res, webhookContent, cdnName, sketchesH
     res,
     webhookContent,
     platform: WEB_PUSH_PLATFORM,
-    url: getUrl(`${BASE_URL}/api/v2/accounts`, licenseCode, WEB_PUSH_PLATFORM, ""),
+    url: getUrl(`${BASE_URL}/api/v2/accounts`, WEB_PUSH_PLATFORM, ""),
     webengageHeaders,
     logger,
   });
-  console.log(
-    "Web ENgage Logs 111 :",
-    campaignId,
-    getUrl(`${BASE_URL}/api/v2/accounts`, licenseCode, WEB_PUSH_PLATFORM)
-  );
   // Step 2: Schedule campaign  -- WHEN
   await scheduleCampaign({
     res,
-    url: getUrl(`${BASE_URL}/api/v1/accounts`, licenseCode, WEB_PUSH_PLATFORM, `${campaignId}/targetingRule/schedule`),
+    url: getUrl(`${BASE_URL}/api/v1/accounts`, WEB_PUSH_PLATFORM, `${campaignId}/targetingRule/schedule`),
     webengageHeaders,
     logger,
   });
-  console.log(
-    "Web ENgage Logs 222 :",
-    getUrl(`${BASE_URL}/api/v1/accounts`, licenseCode, WEB_PUSH_PLATFORM, `${campaignId}/targetingRule/schedule`)
-  );
   // Step 3: Create variation either Text / Banner -- MESSAGE
   await createVariation({
     res,
     webhookContent,
     platform: WEB_PUSH_PLATFORM,
-    url: getUrl(`${BASE_URL}/api/v1/accounts`, licenseCode, WEB_PUSH_PLATFORM, `${campaignId}/variations`),
+    url: getUrl(`${BASE_URL}/api/v1/accounts`, WEB_PUSH_PLATFORM, `${campaignId}/variations`),
     sketchesHost,
     eventType,
     cdnName,
     webengageHeaders,
     logger,
   });
-  console.log(
-    "Web ENgage Logs 333 :",
-    getUrl(`${BASE_URL}/api/v1/accounts`, licenseCode, WEB_PUSH_PLATFORM, `${campaignId}/variations`)
-  );
+
   // Step 4: Conversion Tracking
   await createConversion({
     res,
     webhookContent,
-    url: `${BASE_URL}/api/v1/accounts/${licenseCode}/conversions`,
+    url: getUrl(`${BASE_URL}/api/v1/accounts`, WEB_PUSH_PLATFORM, `conversions`),
     campaignId,
     webengageHeaders,
     logger,
   });
-  console.log("Web ENgage Logs 444 :", `${BASE_URL}/api/v1/accounts/${licenseCode}/conversions`);
   // Step 5: Activate / Launch
   await launchCampaign({
     res,
-    url: getUrl(`${BASE_URL}/api/v1/accounts`, licenseCode, WEB_PUSH_PLATFORM, `${campaignId}/activate`),
+    url: getUrl(`${BASE_URL}/api/v1/accounts`, WEB_PUSH_PLATFORM, `${campaignId}/activate`),
     webengageHeaders,
     logger,
   });
-  console.log(
-    "Web ENgage Logs 555 :",
-    getUrl(`${BASE_URL}/api/v1/accounts`, licenseCode, WEB_PUSH_PLATFORM, `${campaignId}/activate`)
-  );
 };
 
 const sendAppPushNotification = async ({ res, webhookContent, cdnName, sketchesHost, eventType }) => {
@@ -92,14 +79,14 @@ const sendAppPushNotification = async ({ res, webhookContent, cdnName, sketchesH
     res,
     webhookContent,
     platform: APP_PUSH_PLATFORM,
-    url: getUrl(`${BASE_URL}/v2/accounts`, licenseCode, APP_PUSH_PLATFORM, ""),
+    url: getUrl(`${BASE_URL}/v2/accounts`, APP_PUSH_PLATFORM, ""),
     webengageHeaders,
     logger,
   });
   // Step 2: Schedule campaign  -- WHEN
   await scheduleCampaign({
     res,
-    url: getUrl(`${BASE_URL}/v1/accounts`, licenseCode, APP_PUSH_PLATFORM, `${campaignId}/targetingRule/schedule`),
+    url: getUrl(`${BASE_URL}/v1/accounts`, APP_PUSH_PLATFORM, `${campaignId}/targetingRule/schedule`),
     webengageHeaders,
     logger,
   });
@@ -109,7 +96,7 @@ const sendAppPushNotification = async ({ res, webhookContent, cdnName, sketchesH
     res,
     webhookContent,
     platform: APP_PUSH_PLATFORM,
-    url: getUrl(`${BASE_URL}/v1/accounts`, licenseCode, APP_PUSH_PLATFORM, `${campaignId}/variations`),
+    url: getUrl(`${BASE_URL}/v1/accounts`, APP_PUSH_PLATFORM, `${campaignId}/variations`),
     sketchesHost,
     eventType,
     cdnName,
@@ -121,7 +108,7 @@ const sendAppPushNotification = async ({ res, webhookContent, cdnName, sketchesH
   await createConversion({
     res,
     webhookContent,
-    url: `${BASE_URL}/v1/accounts/${licenseCode}/conversions`,
+    url: getUrl(`${BASE_URL}/v1/accounts`, APP_PUSH_PLATFORM, "conversions"),
     webengageHeaders,
     logger,
   });
@@ -129,7 +116,7 @@ const sendAppPushNotification = async ({ res, webhookContent, cdnName, sketchesH
   // Step 5: Activate / Launch
   await launchCampaign({
     res,
-    url: getUrl(`${BASE_URL}/v1/accounts`, licenseCode, APP_PUSH_PLATFORM, `${campaignId}/activate`),
+    url: getUrl(`${BASE_URL}/v1/accounts`, APP_PUSH_PLATFORM, `${campaignId}/activate`),
     webengageHeaders,
     logger,
   });
