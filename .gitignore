@@ -67,4 +67,3 @@ typings/
 
 .DS_Store
 stats.json
-/views/js/new-service-worker.ejs
