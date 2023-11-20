@@ -18,11 +18,17 @@ const webengageHeaders = {
   Authorization: `Bearer ${apiKey}`,
 };
 const getUrl = (url, platform, path) => {
-  return path === ""
-    ? `${url}/${licenseCode}/${platform}`
-    : path === "conversions"
-    ? `${url}/${licenseCode}/${path}`
-    : `${url}/${licenseCode}/${platform}/${path}`;
+  switch (path) {
+    case "":
+      console.log("LOGS 111 >>>:", path);
+      return `${url}/${licenseCode}/${platform}`;
+    case "conversions":
+      console.log("LOGS 222 >>>:", path);
+      return `${url}/${licenseCode}/${path}`;
+    default:
+      console.log("LOGS 333 >>>:", path);
+      return `${url}/${licenseCode}/${platform}/${path}`;
+  }
 };
 
 const sendWebPushNotification = async ({ res, webhookContent, cdnName, sketchesHost, eventType }) => {
