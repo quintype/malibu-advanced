@@ -60,7 +60,7 @@ export const GroupsAndPlansModal = ({ member, setActiveTab, setSelectedPlan, get
                       {groupName.price_currency}
                     </div>
                   )}
-                  <div className="options">
+                  <div>
                     {group.subscription_plans.map((plan, index) => (
                       <>
                         <div
