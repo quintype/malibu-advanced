@@ -43,26 +43,23 @@ export const GroupsAndPlansModal = ({ member, setActiveTab, setSelectedPlan, get
           const renderRichText = (richText) => {
             return <div dangerouslySetInnerHTML={{ __html: richText }} />;
           };
+          const groupName = selectedSubscriptions[group.name];
           return (
             <div key={id} styleName="group-card">
               <div styleName="group-name">{group.name}</div>
               <div styleName="plan-name">
                 <div>
-                  <div
-                    styleName="selected-option"
-                    onClick={() => handleOptionClick(group.name, selectedSubscriptions[group.name])}
-                  >
-                    {selectedSubscriptions[group.name]?.duration_length}&nbsp;
-                    {selectedSubscriptions[group.name]?.duration_length === 1
-                      ? selectedSubscriptions[group.name]?.duration_unit.substring(
-                          0,
-                          selectedSubscriptions[group.name]?.duration_unit.length - 1
-                        )
-                      : selectedSubscriptions[group.name]?.duration_unit}
-                    &nbsp;
-                    {selectedSubscriptions[group.name]?.price_cents / 100}&nbsp;
-                    {selectedSubscriptions[group.name]?.price_currency}
-                  </div>
+                  {groupName && (
+                    <div styleName="selected-option" onClick={() => handleOptionClick(group.name, groupName)}>
+                      {groupName.duration_length}&nbsp;
+                      {groupName.duration_length === 1
+                        ? groupName.duration_unit.substring(0, groupName.duration_unit.length - 1)
+                        : groupName.duration_unit}
+                      &nbsp;
+                      {groupName.price_cents / 100}&nbsp;
+                      {groupName.price_currency}
+                    </div>
+                  )}
                   <div className="options">
                     {group.subscription_plans.map((plan, index) => (
                       <>
