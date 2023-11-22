@@ -64,7 +64,7 @@
 
 .selected-option {
   height: 32px;
-  border: 1px solid rgba(var(--rgb-black));;
+  border: 1px solid rgba(var(--rgb-black));
   align-items: center;
   display: flex;
   justify-content: center;
