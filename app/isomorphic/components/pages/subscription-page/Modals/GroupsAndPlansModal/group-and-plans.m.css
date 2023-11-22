@@ -22,9 +22,9 @@
   display: flex;
   flex-direction: column;
   width: 280px;
-  height: 280px;
   border: 1px solid lightgray;
   padding: 16px;
+  justify-content: space-between;
 }
 
 .group-name{
@@ -35,12 +35,9 @@
 }
 
 .plan-name{
-  border: 1px solid lightgray;
-  height: 32px;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: space-between;
-  align-items: center;
   padding: 0 12px;
 }
 
@@ -60,4 +57,22 @@
 .select-option{
   border: none;
 }
+.option {
+  cursor: pointer;
+  margin-bottom: 12px;
+}
 
+.selected-option {
+  height: 32px;
+  border: 1px solid rgba(var(--rgb-black));;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+  font-weight: var(--bold);
+}
+
+.option-select {
+  color: var(--brand-primary-dark);
+  font-weight: var(--bold);
+}
