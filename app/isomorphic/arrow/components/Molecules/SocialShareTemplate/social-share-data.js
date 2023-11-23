@@ -9,7 +9,7 @@ const getSocialIcons = (color, iconType) => {
     case "plain-color-svg":
       return {
         facebook: <Facebook key={iconType} />,
-        twitter: <Twitter key={iconType} />,
+        twitter: <Twitter key={iconType} color={color} />,
         linkedin: <LinkedIn key={iconType} />,
         whatsapp: <WhatsApp key={iconType} />
       };

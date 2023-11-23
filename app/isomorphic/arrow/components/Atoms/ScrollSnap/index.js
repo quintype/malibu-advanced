@@ -33,7 +33,16 @@ const setIndicatorValue = (func, ms) => {
   };
 };
 
-export const ScrollSnap = ({ children, isArrow, interval, isInfinite, pauseOnHover, perView, slideIndicator }) => {
+export const ScrollSnap = ({
+  children,
+  isArrow,
+  interval,
+  isInfinite,
+  pauseOnHover,
+  perView,
+  slideIndicator,
+  sliderArrowStyles = {}
+}) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [autoScroll, setAutoScroll] = useState(false);
   const languageDirection = useSelector((state) => get(state, ["qt", "config", "language", "direction"], "ltr"));
@@ -127,6 +136,7 @@ export const ScrollSnap = ({ children, isArrow, interval, isInfinite, pauseOnHov
         </div>
         {isArrow && (
           <SliderArrow
+            sliderArrowStyles={sliderArrowStyles}
             noOfItems={noOfItems}
             perView={perView}
             previousClick={previousClick}

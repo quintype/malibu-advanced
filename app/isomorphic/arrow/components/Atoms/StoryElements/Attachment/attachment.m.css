@@ -22,6 +22,7 @@
   line-height: var(--arrow-lh-4);
   text-align: center;
   padding: 6px var(--arrow-spacing-m);
+  flex-shrink: 0;
   @media (min-width: tablet) {
     margin-left: var(--arrow-spacing-m);
   }
@@ -65,6 +66,7 @@
   align-items: center;
   justify-content: center;
   margin-right: var(--arrow-spacing-m);
+  flex-shrink: 0;
   @media (min-width: mobile) {
     width: 45px;
     height: 45px;

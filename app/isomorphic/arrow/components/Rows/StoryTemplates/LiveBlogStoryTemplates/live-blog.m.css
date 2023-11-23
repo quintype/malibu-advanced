@@ -148,9 +148,9 @@
     margin-top: 40px;
     grid-column: 10 / container-end;
     grid-row: 2 / auto;
-    @include desktop {
-      margin-top: 60px;
-    }
+  }
+  @include desktop {
+    margin-top: 60px;
   }
 }
 
@@ -236,15 +236,15 @@
   justify-self: flex-end;
   @include tablet {
     grid-column: 9 / grid-end;
-    @include desktop {
-      position: sticky;
-      position: -webkit-sticky;
-      grid-column: 3/4;
-      grid-row: 2/3;
-      align-self: flex-start;
-      margin-top: var(--arrow-spacing-xs);
-      top: 120px;
-    }
+  }
+  @include desktop {
+    position: sticky;
+    position: -webkit-sticky;
+    grid-column: 3/4;
+    grid-row: 2/3;
+    align-self: flex-start;
+    margin-top: var(--arrow-spacing-xs);
+    top: 120px;
   }
 }
 
@@ -256,9 +256,9 @@
   :global(.arr--share) {
     @include tablet {
       grid-column: 9/10;
-      @include desktop {
-        grid-column: grid-start/container-start;
-      }
+    }
+    @include desktop {
+      grid-column: grid-start/container-start;
     }
   }
 }
@@ -267,9 +267,9 @@
   :global(.arr--share) {
     @include tablet {
       grid-column: 8/9;
-      @include desktop {
-        grid-column: grid-start/container-start;
-      }
+    }
+    @include desktop {
+      grid-column: grid-start/container-start;
     }
   }
 }

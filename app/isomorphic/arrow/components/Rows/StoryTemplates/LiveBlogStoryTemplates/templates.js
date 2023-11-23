@@ -22,6 +22,7 @@ import { StoryReview } from "../../../Atoms/StoryReview";
 
 export const LiveBlogStoryTemplates = ({
   story = {},
+  accessLoading,
   config = {},
   storyElementsConfig,
   adComponent,
@@ -30,7 +31,9 @@ export const LiveBlogStoryTemplates = ({
   secondChild,
   timezone,
   enableDarkMode,
-  mountAt
+  mountAt,
+  loadRelatedStories,
+  visibleCardsRender = null
 }) => {
   const {
     theme = "",
@@ -159,9 +162,9 @@ export const LiveBlogStoryTemplates = ({
         </div>
         <StoryReview theme={theme} story={story} />
         {showKeyEvents()}
-        <StoryCards />
+        {visibleCardsRender ? visibleCardsRender(<StoryCards />, null) : <StoryCards />}
         <div styleName="space-32">
-          {firstChild}
+          {!accessLoading && firstChild}
           <StoryTags tags={story.tags} />
           <SlotAfterStory
             id={story.id}
@@ -196,8 +199,9 @@ export const LiveBlogStoryTemplates = ({
               sticky={true}
               enableKeyEvents={!isMobile}
               keyEventsData={{ story, config, showLoadMore: false }}
-              storyId={storyId}
+              story={story}
               opts={publishedDetails}
+              loadRelatedStories={loadRelatedStories}
             />
           )}
         </div>
@@ -226,8 +230,9 @@ export const LiveBlogStoryTemplates = ({
               {...asideCollection}
               adComponent={adComponent}
               widgetComp={widgetComp}
-              storyId={storyId}
+              story={story}
               opts={publishedDetails}
+              loadRelatedStories={loadRelatedStories}
             />
           </div>
         )}
@@ -256,8 +261,9 @@ export const LiveBlogStoryTemplates = ({
               {...asideCollection}
               adComponent={adComponent}
               widgetComp={widgetComp}
-              storyId={storyId}
+              story={story}
               opts={publishedDetails}
+              loadRelatedStories={loadRelatedStories}
             />
           </div>
         )}
@@ -288,8 +294,9 @@ export const LiveBlogStoryTemplates = ({
               sticky={true}
               enableKeyEvents={!isMobile}
               keyEventsData={{ story, config, showLoadMore: false }}
-              storyId={storyId}
+              story={story}
               opts={publishedDetails}
+              loadRelatedStories={loadRelatedStories}
             />
           )}
         </div>
@@ -316,8 +323,9 @@ export const LiveBlogStoryTemplates = ({
               {...asideCollection}
               adComponent={adComponent}
               widgetComp={widgetComp}
-              storyId={storyId}
+              story={story}
               opts={publishedDetails}
+              loadRelatedStories={loadRelatedStories}
             />
           </div>
         )}
@@ -346,8 +354,9 @@ export const LiveBlogStoryTemplates = ({
               {...asideCollection}
               adComponent={adComponent}
               widgetComp={widgetComp}
-              storyId={storyId}
+              story={story}
               opts={publishedDetails}
+              loadRelatedStories={loadRelatedStories}
             />
           </div>
         )}
@@ -377,6 +386,7 @@ export const LiveBlogStoryTemplates = ({
 
 LiveBlogStoryTemplates.propTypes = {
   story: PropTypes.object,
+  accessLoading: PropTypes.bool,
   config: PropTypes.shape({
     templateType: PropTypes.string,
     authorCard: PropTypes.object,
@@ -388,5 +398,8 @@ LiveBlogStoryTemplates.propTypes = {
   storyElementsConfig: PropTypes.object,
   adComponent: PropTypes.func,
   widgetComp: PropTypes.func,
-  enableDarkMode: PropTypes.bool
+  enableDarkMode: PropTypes.bool,
+  loadRelatedStories: PropTypes.func,
+  mountAt: PropTypes.string,
+  visibleCardsRender: PropTypes.func | undefined
 };

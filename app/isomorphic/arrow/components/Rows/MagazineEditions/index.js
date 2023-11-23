@@ -3,7 +3,14 @@ import PropTypes from "prop-types";
 import { useDispatch, useSelector } from "react-redux";
 import { MagazineCoverImageCard } from "../../Atoms/MagazineCoverImage";
 import { CollectionName } from "../../Atoms/CollectionName";
-import { generateNavigateSlug, getTextColor, getTimeStamp, navigateTo, timestampToFormat } from "../../../utils/utils";
+import {
+  generateNavigateSlug,
+  getTextColor,
+  getTimeStamp,
+  navigateTo,
+  timestampToFormat,
+  getTimeStampConfig
+} from "../../../utils/utils";
 import "./magazine-editions.m.css";
 import { StateProvider } from "../../SharedContext";
 import get from "lodash/get";
@@ -24,6 +31,7 @@ const MagazineEditions = ({ collection = [], config = {}, onClick, limit, showLo
   const qtConfig = useSelector((state) => get(state, ["qt", "config"], {}));
   const dispatch = useDispatch();
   const url = generateNavigateSlug(collection, { ...qtConfig, ...config });
+  const timeStampConfig = getTimeStampConfig(qtConfig);
 
   return (
     <div
@@ -43,10 +51,6 @@ const MagazineEditions = ({ collection = [], config = {}, onClick, limit, showLo
           {issues.slice(0, limit).map((issue, index) => {
             const { name, "created-at": createdAt, "collection-date": issueDate } = issue;
             const date = issueDate || createdAt;
-            const timeStampConfig = {
-              isUpperCase: true,
-              disableMeridiem: true
-            };
             return (
               <div key={index} data-test-id={`current-issue-${index}`}>
                 <MagazineCoverImageCard collection={issue} config={{ ...config, isArchivePage: false }} />

@@ -36,7 +36,6 @@ const OpinionCollection = ({ collection, config, getMoreStories, isLoadMoreVisib
     localizationConfig = {}
   } = config;
   const { type = "story", component = null } = get(slotConfig, [0], {});
-
   const dispatch = useDispatch();
   const qtConfig = useSelector((state) => get(state, ["qt", "config"], {}));
 
@@ -44,7 +43,6 @@ const OpinionCollection = ({ collection, config, getMoreStories, isLoadMoreVisib
   const borderStyle = border === "fullBorder" ? "border" : "";
   const slot = type === "ad" ? getSlot(type, component) : null;
   const adStyle = slot ? "custom-grid" : "";
-
   const getLoadMore = (opts) => {
     if (!isLoadMoreVisible) return null;
 
@@ -84,7 +82,7 @@ const OpinionCollection = ({ collection, config, getMoreStories, isLoadMoreVisib
           <Headline story={story} />
           <AuthorWithTime
             story={story}
-            config={{ ...config, ...localizationConfig, disableMeridiem: true, showAuthor: false }}
+            config={{ ...localizationConfig, showAuthor: false }}
             collectionId={collection.id}
           />
         </div>

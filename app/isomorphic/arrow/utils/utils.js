@@ -26,51 +26,58 @@ export const timestampToFormat = (value, unit, suffix, timestamp, config = {}, l
     isTimeFirst = false,
     isUpperCase = false,
     disableMeridiem = false,
-    timeFormat = "12hours",
-    localizedZeroToPad
+    dateFormat,
+    localizedMeridiem,
+    localizedMonths,
+    direction = "ltr"
   } = config;
+
   const monthList = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
   const dateTime = new Date(timestamp);
   const date = dateTime
     .getDate()
     .toString()
     .padStart(2, 0);
-
   const month = monthList[dateTime.getMonth()];
   let localizedMonth = month;
+
   if (isUpperCase) {
     localizedMonth = upperCase(month);
   }
+
   const year = dateTime.getFullYear();
-  const { localizedMeridiem, localizedMonths, direction = "ltr" } = config;
-  const time = formatAMPM(timestamp, timeFormat, localizedZeroToPad, languageCode);
-  let timeWithLocalizedMeridiem = time;
-  let timetoShow;
+  const rtlWithoutCustomLabels = direction === "rtl" && !localizedMeridiem && !localizedMonths;
+
+  const timeWithLocalizedMeridiem = formatAMPM(timestamp, languageCode, config);
+
+  let timetoShow = "";
+  let rtlTimetoShow = "";
+
+  if (showTime) {
+    timetoShow = `, ${timeWithLocalizedMeridiem}`;
+    rtlTimetoShow = `${timeWithLocalizedMeridiem} ,`;
+  }
 
   if (localizedMonths) {
     localizedMonth = get(localizedMonths, [lowerCase(month)]) || month;
   }
-  const localizedDate = Number(date).toLocaleString(languageCode);
+  const localizedDate = date.toLocaleString(languageCode);
   const localizedYear = year.toLocaleString(languageCode).replace(/,/g, "");
 
-  if (localizedMeridiem) {
-    const isAm = time.includes("am");
-    const { am = "am", pm = "pm" } = localizedMeridiem;
-    timeWithLocalizedMeridiem = (isAm ? time.replace("am", am) : time.replace("pm", pm)) || time;
-  }
-
-  if (direction === "rtl") {
-    timetoShow = showTime ? `, ${timeWithLocalizedMeridiem}` : "";
-    return `${localizedDate} ${localizedMonth}, ${localizedYear}${timetoShow} `;
-  } else {
-    if (disableMeridiem) {
-      return `${localizedMonth} ${localizedDate}, ${localizedYear}`;
-    } else if (isTimeFirst) {
-      return `${timeWithLocalizedMeridiem}, ${localizedDate} ${localizedMonth} ${localizedYear}`;
-    } else {
-      timetoShow = showTime ? `, ${timeWithLocalizedMeridiem}` : "";
-      return `${localizedDate} ${localizedMonth}, ${localizedYear}${timetoShow}`;
+  if (disableMeridiem) {
+    return `${localizedMonth} ${localizedDate}, ${localizedYear}`;
+  } else if (isTimeFirst) {
+    return `${timeWithLocalizedMeridiem}, ${localizedDate} ${localizedMonth} ${localizedYear}`;
+  } else if (dateFormat === "mon-dd-yyyy") {
+    if (rtlWithoutCustomLabels) {
+      return `${rtlTimetoShow}${localizedYear} ,${localizedDate} ${localizedMonth}`;
     }
+    return `${localizedMonth} ${localizedDate}, ${localizedYear}${timetoShow}`;
+  } else {
+    if (rtlWithoutCustomLabels) {
+      return `${rtlTimetoShow}${localizedYear} ${localizedMonth} ${localizedDate}`;
+    }
+    return `${localizedDate} ${localizedMonth} ${localizedYear}${timetoShow}`;
   }
 };
 
@@ -121,8 +128,14 @@ function monkeyPatchForArabic(timeStr = "") {
   return str;
 }
 
-function formatAMPM(timestamp, timeFormat = "12hours", localizedZeroToPad, languageCode) {
+function formatAMPM(timestamp, languageCode, config) {
+  const { timeFormat = "12hours", localizedZeroToPad, direction = "ltr", localizedMonths, localizedMeridiem } = config;
   const dateTime = new Date(timestamp);
+
+  if (timeFormat === "24hours") {
+    return dateTime.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  }
+
   let hours = dateTime.getHours();
   let minutes = dateTime.getMinutes();
   const ampm = hours >= 12 ? "pm" : "am";
@@ -130,10 +143,18 @@ function formatAMPM(timestamp, timeFormat = "12hours", localizedZeroToPad, langu
   hours = hours || 12;
   const padZero = languageCode.startsWith("en") ? "0" : localizedZeroToPad;
   minutes = minutes < 10 ? padZero + minutes.toLocaleString(languageCode) : minutes.toLocaleString(languageCode);
-  const strTime = hours.toLocaleString(languageCode) + ":" + minutes + " " + ampm.toLocaleString(languageCode);
-  if (timeFormat === "24hours") {
-    return dateTime.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  let updatedAmPm = ampm.toLocaleString(languageCode);
+
+  if (localizedMeridiem) {
+    const { am = "am", pm = "pm" } = localizedMeridiem;
+    updatedAmPm = ampm.toLocaleString(languageCode) === "am" ? am : pm;
   }
+
+  if (direction === "rtl" && !localizedMeridiem && !localizedMonths) {
+    const strTime = updatedAmPm + " " + hours.toLocaleString(languageCode) + ":" + minutes;
+    return strTime;
+  }
+  const strTime = hours.toLocaleString(languageCode) + ":" + minutes + " " + updatedAmPm;
   return strTime;
 }
 
@@ -400,4 +421,18 @@ export function getStoryTemplate(story, config) {
   const customStoryTemplate =
     isCustomStory && get(config, ["customStory", `${camelCase(storyTemplate)}-story`, "storyType"], "text");
   return isCustomStory ? kebabCase(customStoryTemplate) : storyTemplate;
+}
+
+export function getTimeStampConfig(qtConfig) {
+  const { dateFormat = "dd-mon-yyyy", localization = {} } = get(qtConfig, ["pagebuilder-config", "general"], {});
+  const { enableLocalization = false, localizedElements = {} } = localization;
+
+  const timeStampConfig = {
+    isUpperCase: false,
+    disableMeridiem: false,
+    dateFormat,
+    localizedMonths: enableLocalization && get(localizedElements, ["months"])
+  };
+
+  return timeStampConfig;
 }

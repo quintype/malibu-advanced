@@ -15,3 +15,7 @@
 .light {
   color: var(--arrow-c-invert-mono4);
 }
+
+.wrapper {
+  direction: ltr;
+}

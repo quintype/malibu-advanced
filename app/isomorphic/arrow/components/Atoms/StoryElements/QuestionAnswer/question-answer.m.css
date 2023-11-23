@@ -54,6 +54,16 @@
   border-radius: 2.8px;
 }
 
+.qa-default .q-element,
+.qa-default .a-element {
+  .light {
+    color: var(--arrow-c-light);
+  }
+  .dark {
+    color: var(--arrow-c-dark);
+  }
+}
+
 .qa-default .curveIcon {
   border-radius: 13.5px;
   @media (min-width: mobile) {
@@ -75,6 +85,22 @@
     width: 30px;
     height: 30px;
   }
+}
+
+.qa-withAuthorImage .fallbackImage svg {
+  width: 27px;
+  height: 27px;
+  position: relative;
+  top: var(--arrow-spacing-xs);
+  @media (min-width: mobile) {
+    width: 30px;
+    height: 30px;
+  }
+}
+
+.qa-withAuthorImage .fallbackAttribution {
+  display: inline-block;
+  width: 36px;
 }
 
 .qa-withAuthorImage:global(.arrow-component) .a-element .light p,

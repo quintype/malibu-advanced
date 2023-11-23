@@ -23,19 +23,25 @@ export const PublishDetails = ({ story, opts = {}, template = "", timezone = nul
 
   const config = useStateValue() || {};
   const { "first-published-at": firstPublishAt, "last-published-at": lastPublish } = story;
-  const { enableUpdatedTime, enablePublishedTime, showReadTime, localizedPublishedOn, localizedUpdatedOn } = opts;
+  const {
+    enableUpdatedTime,
+    enablePublishedTime,
+    showReadTime,
+    localizedPublishedOn,
+    localizedUpdatedOn,
+    localizedMonths,
+    localizedMeridiem
+  } = opts;
   const time = firstPublishAt || lastPublish;
   const textColor = getTextColor(config.theme);
-  const timeStampProps =
-    direction === "rtl"
-      ? { ...opts, direction: direction, isTimeFirst: true, showTime: true }
-      : { ...opts, direction: direction, showTime: true };
+  const timeStampProps = { ...opts, direction: direction, showTime: true };
+  const updatedStyle = direction === "rtl" && !localizedMonths && !localizedMeridiem ? "date wrapper" : "date";
   return (
     <div data-test-id="timeStamp" className="arrow-component arr--publish-details" styleName={`timeStamp ${textColor}`}>
       {enablePublishedTime && (
         <div data-test-id="publishDetails" styleName={`publish-details ${textColor}`}>
           {localizedPublishedOn || "Published on"} :&nbsp;
-          <div styleName="date">
+          <div styleName={updatedStyle}>
             {getTimeStamp(time, timestampToFormat, timeStampProps, languageCode, template, timezone)}
           </div>
           {!enableUpdatedTime && showReadTime && (
@@ -46,7 +52,7 @@ export const PublishDetails = ({ story, opts = {}, template = "", timezone = nul
       {enableUpdatedTime && (
         <div data-test-id="updateDetails" styleName={`update-details ${textColor}`}>
           {localizedUpdatedOn || "Updated on"} :&nbsp;
-          <div styleName="date">
+          <div styleName={updatedStyle}>
             {getTimeStamp(lastPublish, timestampToFormat, timeStampProps, languageCode, template, timezone)}
           </div>
           {showReadTime && <ReadTime story={story} opts={{ ...opts, showDotIndicator: enableUpdatedTime }} />}

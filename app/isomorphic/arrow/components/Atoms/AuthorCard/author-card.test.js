@@ -92,6 +92,6 @@ describe("default author card", () => {
         <AuthorCard story={singleAuthorStory} template="leftAligned" opts={{ showBio: false }} />
       </Provider>
     );
-    expect(wrapper.contains(<Twitter />)).toEqual(true);
+    expect(wrapper.contains(<Twitter color="#000" />)).toEqual(true);
   });
 });

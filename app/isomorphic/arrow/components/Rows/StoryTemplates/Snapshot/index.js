@@ -17,7 +17,7 @@ import { PublishDetails } from "../../../Atoms/PublishDetail";
 import { getTextColor } from "../../../../utils/utils";
 
 const Snapshot = ({ story = {}, config = {} }) => {
-  const { theme = "", publishedDetails = {}, premiumStoryIconConfig = {}, authorDetails = {} } = config;
+  const { theme = "", publishedDetails = {}, premiumStoryIconConfig = {}, authorDetails = {}, buttonText } = config;
 
   const textColor = getTextColor(config.theme);
   const timezone = useSelector((state) => get(state, ["qt", "data", "timezone"], null));
@@ -72,7 +72,7 @@ const Snapshot = ({ story = {}, config = {} }) => {
       )}
       <div styleName={`read-more-btn ${textColor}`}>
         <Link href={story.url} rel="noopener noreferrer" aria-label="read-button" styleName="hyperlink-button">
-          Read More
+          {buttonText || "Read More"}
         </Link>
       </div>
     </div>

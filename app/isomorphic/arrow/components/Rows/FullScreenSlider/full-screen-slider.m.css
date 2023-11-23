@@ -63,6 +63,10 @@
   }
 }
 
+.full-screen-slider-wrapper :global(.arr--story-content .arr--headline h1) {
+  text-transform: none;
+}
+
 .full-screen-slider {
   :global .left-arrow {
     @media (--viewport-medium) {

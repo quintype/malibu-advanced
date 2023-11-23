@@ -2,6 +2,7 @@ import { SocialShare } from "@quintype/components";
 import React from "react";
 import { useSelector } from "react-redux";
 import get from "lodash.get";
+import cloneDeep from "lodash/cloneDeep";
 import PropTypes from "prop-types";
 import { AuthorCard } from "../../../Atoms/AuthorCard";
 import { CaptionAttribution } from "../../../Atoms/CaptionAttribution";
@@ -17,16 +18,21 @@ import { StoryElementCard, SlotAfterStory } from "../../../Molecules/StoryElemen
 import { StoryTags } from "../../../Atoms/StoryTags";
 import AsideCollection from "../../AsideCollection";
 import { StoryReview } from "../../../Atoms/StoryReview";
+import { getTextColor } from "../../../../utils/utils";
+import { getTitleElementsIndex, isIntroCardPresent, getFirstDescriptionElementsIndex } from "./listicleUtils.js";
 
 const ListicleStoryTemplate = ({
   story = {},
+  accessLoading = false,
   config = {},
   storyElementsConfig,
   adComponent,
   widgetComp = () => {},
   firstChild,
   secondChild,
-  enableDarkMode
+  enableDarkMode,
+  loadRelatedStories,
+  visibleCardsRender = null
 }) => {
   const {
     theme = "",
@@ -45,10 +51,86 @@ const ListicleStoryTemplate = ({
   const { "bullet-type": storyBulletType = "" } = story;
   const storyId = get(story, ["id"], "");
   const isNumberedBullet = storyBulletType !== "bullets";
+  const ascendingNumbers = storyBulletType === "123";
+  const numberOfCards = visibledCards.length;
 
   const qtState = useSelector((state) => get(state, ["qt"], {}));
   const timezone = get(qtState, ["data", "timezone"], null);
   const mountAt = get(qtState, ["config", "mountAt"], "");
+
+  const introCardPresent = isIntroCardPresent(visibledCards);
+  const numberedBulletColor = getTextColor(theme) === "dark" ? "black" : "white";
+
+  const visibleCardsWithInlineBullets = visibledCards.map((card, index) => {
+    const titleElementsIndex = getTitleElementsIndex(card);
+    const isTitlePresent = titleElementsIndex > -1;
+    const titleCard = isTitlePresent ? cloneDeep(get(card, ["story-elements", titleElementsIndex], {})) : {};
+
+    if ((introCardPresent && index === 0) || !isTitlePresent) return card;
+    if (isNumberedBullet) {
+      const ascendingBulletNumber = introCardPresent ? index : index + 1;
+      const bulletNumber = ascendingNumbers ? ascendingBulletNumber : numberOfCards - index;
+      titleCard.text = `${bulletNumber}. ${titleCard.text}`;
+    } else {
+      titleCard.hasDashedBullet = true;
+    }
+
+    return {
+      ...card,
+      "story-elements": Object.assign([], card["story-elements"], { [titleElementsIndex]: titleCard })
+    };
+  });
+
+  function addNonInlineBullets(opts) {
+    const {
+      cardIndex,
+      introCardPresent,
+      isNumberedBullet,
+      numberedBulletColor,
+      ascendingNumbers,
+      numberOfCards
+    } = opts;
+    if (introCardPresent && cardIndex === 0) return;
+    if (!isNumberedBullet) return <div styleName="bullet-style-dash" />;
+    const ascendingBulletNumber = introCardPresent ? cardIndex : cardIndex + 1;
+    return (
+      <div styleName="bullet-style-number" style={{ color: numberedBulletColor }}>
+        {ascendingNumbers ? ascendingBulletNumber : numberOfCards - cardIndex}.
+      </div>
+    );
+  }
+
+  const visibleCards = visibleCardsWithInlineBullets.map((card, index) => {
+    const titleElementsIndex = getTitleElementsIndex(card);
+    const isTitlePresent = titleElementsIndex > -1;
+    const firstDescriptionElementsIndex = getFirstDescriptionElementsIndex(card);
+    const opts = {
+      isTitlePresent,
+      firstDescriptionElementsIndex,
+      cardIndex: index,
+      introCardPresent,
+      isNumberedBullet,
+      numberedBulletColor,
+      ascendingNumbers,
+      numberOfCards,
+      addNonInlineBullets
+    };
+
+    return (
+      <React.Fragment key={card.id}>
+        <StoryElementCard
+          story={story}
+          card={card}
+          key={card.id}
+          config={storyElementsConfig}
+          listicleBulletOpts={opts}
+          adComponent={adComponent}
+          widgetComp={widgetComp}
+          enableDarkMode={enableDarkMode}
+        />
+      </React.Fragment>
+    );
+  });
 
   // Content Blocks
   const HeroImageBlock = (settings) => {
@@ -103,27 +185,14 @@ const ListicleStoryTemplate = ({
     <>
       <StoryReview theme={theme} story={story} />
       <div styleName={`body-block ${isNumberedBullet ? "numbered-bullet-style" : ""}`}>
-        {visibledCards.map((card, index) => {
-          return (
-            <React.Fragment key={card.id}>
-              {!isNumberedBullet ? (
-                <div styleName="bullet-style-dash" />
-              ) : (
-                <div styleName="bullet-style-number">{index + 1}.</div>
-              )}
-              <StoryElementCard
-                story={story}
-                card={card}
-                key={card.id}
-                config={storyElementsConfig}
-                adComponent={adComponent}
-                widgetComp={widgetComp}
-                enableDarkMode={enableDarkMode}
-              />
-            </React.Fragment>
-          );
-        })}
-        {firstChild}
+        {visibleCardsRender ? (
+          visibleCardsRender(visibleCards, firstChild)
+        ) : (
+          <>
+            {visibleCards}
+            {firstChild}
+          </>
+        )}
         <div styleName="story-tags">
           <StoryTags tags={story.tags} />
           <SlotAfterStory
@@ -144,9 +213,25 @@ const ListicleStoryTemplate = ({
         adComponent={adComponent}
         widgetComp={widgetComp}
         sticky={true}
-        storyId={storyId}
+        story={story}
         opts={publishedDetails}
+        loadRelatedStories={loadRelatedStories}
       />
+    );
+
+  const HorizontalAsideCollection = () =>
+    asideCollection && (
+      <div styleName="horizontal-aside-collection">
+        <AsideCollection
+          horizontal={true}
+          {...asideCollection}
+          widgetComp={widgetComp}
+          adComponent={adComponent}
+          story={story}
+          opts={publishedDetails}
+          loadRelatedStories={loadRelatedStories}
+        />
+      </div>
     );
 
   // Templates
@@ -180,6 +265,7 @@ const ListicleStoryTemplate = ({
           <AuthorBlock />
           <BodyBlock />
         </div>
+        <HorizontalAsideCollection />
       </div>
     </div>
   );
@@ -215,6 +301,7 @@ const ListicleStoryTemplate = ({
           <AuthorBlock />
           <BodyBlock />
         </div>
+        <HorizontalAsideCollection />
       </div>
     </div>
   );
@@ -236,6 +323,7 @@ const ListicleStoryTemplate = ({
           <AuthorBlock />
           <BodyBlock />
         </div>
+        <HorizontalAsideCollection />
       </div>
     </div>
   );
@@ -255,6 +343,7 @@ const ListicleStoryTemplate = ({
           <AuthorBlock />
           <BodyBlock />
         </div>
+        <HorizontalAsideCollection />
       </div>
     </div>
   );
@@ -288,6 +377,7 @@ const ListicleStoryTemplate = ({
 
 ListicleStoryTemplate.propTypes = {
   story: PropTypes.object,
+  accessLoading: PropTypes.bool,
   config: PropTypes.shape({
     templateType: PropTypes.string,
     authorCard: PropTypes.object,
@@ -299,7 +389,9 @@ ListicleStoryTemplate.propTypes = {
   adComponent: PropTypes.func,
   widgetComp: PropTypes.func,
   premiumStoryIconConfig: PropTypes.object,
-  enableDarkMode: PropTypes.bool
+  enableDarkMode: PropTypes.bool,
+  loadRelatedStories: PropTypes.func,
+  visibleCardsRender: PropTypes.func | undefined
 };
 
 export default StateProvider(ListicleStoryTemplate);

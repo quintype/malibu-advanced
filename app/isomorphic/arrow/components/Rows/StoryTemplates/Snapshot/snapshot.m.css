@@ -56,11 +56,27 @@
   font-size: var(--arrow-fs-m);
 }
 
-.dark,
-.dark.hyperlink-button {
+.dark {
   color: var(--arrow-c-mono2);
 }
-.light,
+
+.light {
+  color: var(--arrow-c-invert-mono2);
+}
+
+.hyperlink-button {
+  border: 1px solid;
+  border-radius: 3px;
+  font-size: var(--arrow-fs-xs);
+  padding: 9px var(--arrow-spacing-l);
+}
+
+.dark.hyperlink-button {
+  color: var(--arrow-c-mono2);
+  border: 1px solid var(--arrow-c-mono2);
+}
+
 .light.hyperlink-button {
   color: var(--arrow-c-invert-mono2);
+  border: 1px solid var(--arrow-c-invert-mono2);
 }

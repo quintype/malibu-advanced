@@ -98,6 +98,24 @@ html[dir="rtl"] {
   }
 }
 
+.sticky.top-header-six > :last-child {
+  @include tablet {
+    top: 135px;
+    @include desktop {
+      top: 155px;
+    }
+  }
+}
+
+.sticky.top-header-five > :last-child {
+  @include tablet {
+    top: 55px;
+    @include desktop {
+      top: 120px;
+    }
+  }
+}
+
 .dark {
   color: var(--arrow-c-mono2);
 }

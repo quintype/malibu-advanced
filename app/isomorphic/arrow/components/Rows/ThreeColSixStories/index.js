@@ -52,6 +52,7 @@ const ThreeColSixStories = ({ collection = {}, config = {} }) => {
           border={border}
           borderColor={borderColor}
           config={config}
+          isHorizontalMobile
           collectionId={collection.id}
         />
       </StoryCard>
@@ -106,6 +107,7 @@ const ThreeColSixStories = ({ collection = {}, config = {} }) => {
                   headerLevel="5"
                   story={items[2]}
                   border={border}
+                  isHorizontalMobile
                   borderColor={borderColor}
                   config={config}
                   collectionId={collection.id}
@@ -124,6 +126,7 @@ const ThreeColSixStories = ({ collection = {}, config = {} }) => {
                   headerLevel="5"
                   story={story}
                   border={border}
+                  isHorizontalMobile
                   borderColor={borderColor}
                   config={config}
                   collectionId={collection.id}

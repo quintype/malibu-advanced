@@ -17,6 +17,7 @@
   color: var(--arrow-c-invert-mono4);
 }
 
+.update-details,
 .publish-details {
   display: flex;
   align-items: baseline;
@@ -24,9 +25,9 @@
 }
 
 .update-details {
-  display: flex;
   margin-top: var(--arrow-spacing-s);
 }
+
 .dot-indicator {
   display: flex;
   align-items: center;
@@ -45,4 +46,8 @@
 }
 .date.light {
   color: var(--arrow-c-invert-mono2);
+}
+
+.wrapper {
+  direction: ltr;
 }

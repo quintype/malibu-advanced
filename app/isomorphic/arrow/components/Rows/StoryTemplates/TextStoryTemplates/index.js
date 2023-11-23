@@ -15,7 +15,9 @@ const TextStoryTemplate = ({
   widgetComp,
   firstChild,
   secondChild,
-  enableDarkMode
+  enableDarkMode,
+  loadRelatedStories,
+  visibleCardsRender
 }) => {
   const {
     theme = "",
@@ -25,7 +27,6 @@ const TextStoryTemplate = ({
     verticalShare = ""
   } = config;
   const sortOption = templateType === "hero-vertical-priority" ? sort : "";
-
   const supportImageType = {
     default: imageRender,
     "hero-priority-center": imageRender,
@@ -57,6 +58,8 @@ const TextStoryTemplate = ({
         timezone={timezone}
         enableDarkMode={enableDarkMode}
         mountAt={mountAt}
+        loadRelatedStories={loadRelatedStories}
+        visibleCardsRender={visibleCardsRender}
       />
     </div>
   );
@@ -64,6 +67,7 @@ const TextStoryTemplate = ({
 
 TextStoryTemplate.propTypes = {
   story: PropTypes.object,
+  accessLoading: PropTypes.bool,
   config: PropTypes.shape({
     templateType: PropTypes.string,
     authorCard: PropTypes.object,
@@ -75,7 +79,9 @@ TextStoryTemplate.propTypes = {
   adComponent: PropTypes.func,
   widgetComp: PropTypes.func,
   enableDarkMode: PropTypes.bool,
-  mountAt: PropTypes.string
+  mountAt: PropTypes.string,
+  loadRelatedStories: PropTypes.func,
+  visibleCardsRender: PropTypes.func | undefined
 };
 
 export default StateProvider(TextStoryTemplate);

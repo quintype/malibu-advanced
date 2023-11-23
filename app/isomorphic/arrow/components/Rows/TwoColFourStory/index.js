@@ -89,7 +89,6 @@ export const TwoColFourStories = ({ collection, config = {} }) => {
                       <StorycardContent
                         theme={theme}
                         story={story}
-                        isHorizontal
                         borderColor={borderColor}
                         config={config}
                         collectionId={collection.id}

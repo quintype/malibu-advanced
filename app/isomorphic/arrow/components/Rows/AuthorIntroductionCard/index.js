@@ -26,7 +26,7 @@ const AuthorIntroductionCard = ({ data = {}, config = {}, template = "" }) => {
   const getIcon = (item) => {
     switch (item) {
       case "twitter":
-        return <Twitter />;
+        return <Twitter color={textColor === "dark" ? "#000" : "#fff"} />;
       case "facebook":
         return <Facebook />;
       case "youtube":

@@ -8,7 +8,8 @@ import {
   clientWidth,
   generateNavigateSlug,
   navigateTo,
-  timestampToFormat
+  timestampToFormat,
+  getTimeStampConfig
 } from "../../../utils/utils";
 import "../MagazineHeaderCard/magazine-cards.m.css";
 import { StateProvider } from "../../SharedContext";
@@ -38,10 +39,8 @@ const MagazineWidget = ({ collection = {}, config = {} }) => {
   });
   const sliceValue = 4;
   const isTablet = clientWidth("tablet");
-  const timeStampConfig = {
-    isUpperCase: true,
-    disableMeridiem: true
-  };
+  const timeStampConfig = getTimeStampConfig(qtConfig);
+
   const date = issueDate || createdAt;
 
   const storyCards = (items) => {
@@ -65,7 +64,7 @@ const MagazineWidget = ({ collection = {}, config = {} }) => {
           return (
             <>
               <StoryCard story={story} border={borderSettings} isHorizontal config={config}>
-                <HeroImage story={story} isHorizontal aspectRatio={[[16, 9]]} />
+                <HeroImage story={story} isHorizontal aspectRatio={[[16, 9]]} initialAltImage={true} />
                 <StorycardContent story={story} config={config}>
                   <Headline story={story} premiumStoryIconConfig={config} />
                   <AuthorWithTime config={localizationConfig} story={story} prefix="By" collectionId={id} />

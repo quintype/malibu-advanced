@@ -66,7 +66,7 @@ export const TwoColSevenStories = ({ collection, config = {} }) => {
               aspectRatio={[[16, 9], [16, 9]]}
               config={config}>
               <HeroImage config={config} story={items[0]} aspectRatio={[[16, 9], [16, 9]]} />
-              <StorycardContent story={items[0]} headerLevel="3" config={config}>
+              <StorycardContent story={items[0]} headerLevel="3" config={config} border={border}>
                 <SectionTag story={items[0]} borderColor={sectionTagBorderColor} />
                 <Headline premiumStoryIconConfig={config} story={items[0]} headerLevel={2} />
                 <Subheadline story={items[0]} />
@@ -85,7 +85,6 @@ export const TwoColSevenStories = ({ collection, config = {} }) => {
                       theme={theme}
                       border={border}
                       story={story}
-                      isHorizontalMobile
                       borderColor={borderColor}
                       config={config}
                       separator="dot"
@@ -106,7 +105,6 @@ export const TwoColSevenStories = ({ collection, config = {} }) => {
                         theme={theme}
                         border={border}
                         story={story}
-                        isHorizontalMobile
                         borderColor={borderColor}
                         config={config}
                         separator="dot"

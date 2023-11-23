@@ -163,10 +163,10 @@ const getElement = (story, element, config = {}, AdComponent, WidgetComp, index,
     case "image":
       return <Image element={element} />;
 
-    case "q-and-a":
+    case "q-and-a": {
       const {
         template: qaTemplate = "default",
-        css: { iconColor = "" } = {},
+        css: { iconColor = "", darkIconColor = "" } = {},
         opts: { defaultIconType = "edge" } = {}
       } = qaElement;
       return (
@@ -178,15 +178,16 @@ const getElement = (story, element, config = {}, AdComponent, WidgetComp, index,
           }}
           template={qaTemplate}
           css={{
-            iconColor: iconColor
+            iconColor: enableDarkMode ? darkIconColor : iconColor
           }}
         />
       );
+    }
 
-    case "question":
+    case "question": {
       const {
         template: questionTemplate = "default",
-        css: { questionIconColor = "" } = {},
+        css: { iconColor = "", darkIconColor = "" } = {},
         opts: { defaultQuestionIconType = "edge" } = {}
       } = questionElement;
       return (
@@ -198,15 +199,16 @@ const getElement = (story, element, config = {}, AdComponent, WidgetComp, index,
           }}
           template={questionTemplate}
           css={{
-            iconColor: questionIconColor
+            iconColor: enableDarkMode ? darkIconColor : iconColor
           }}
         />
       );
+    }
 
     case "answer":
       const {
         template: answerTemplate = "default",
-        css: { answerIconColor = "" } = {},
+        css: { iconColor = "", darkIconColor = "" } = {},
         opts: { defaultAnswerIconType = "edge" } = {}
       } = answerElement;
       return (
@@ -218,7 +220,7 @@ const getElement = (story, element, config = {}, AdComponent, WidgetComp, index,
           }}
           template={answerTemplate}
           css={{
-            iconColor: answerIconColor
+            iconColor: enableDarkMode ? darkIconColor : iconColor
           }}
         />
       );
@@ -311,6 +313,7 @@ export const StoryElementCard = ({
   heroVideoElementId = -1,
   config,
   isLive,
+  listicleBulletOpts = {},
   theme,
   adComponent,
   widgetComp,
@@ -319,6 +322,7 @@ export const StoryElementCard = ({
   const textColor = getTextColor(theme);
   const isLiveBlog = isLive ? "live-blog" : "";
   let shouldRunFBMobileVideoFix = true;
+  const { isTitlePresent, firstDescriptionElementsIndex, addNonInlineBullets } = listicleBulletOpts;
 
   return (
     <div className="arr--story-page-card-wrapper">
@@ -331,12 +335,15 @@ export const StoryElementCard = ({
         const tableStyle = element && element.subtype === "table" ? "table" : "";
         const cardId = get(card, ["id"], "");
         return (
-          <div
-            key={element.id}
-            className="arr--element-container"
-            styleName={`element-container ${isLiveBlog} ${tableStyle} ${textColor}`}>
-            {getElement(story, element, config, adComponent, widgetComp, index, cardId, enableDarkMode)}
-          </div>
+          <>
+            {!isTitlePresent && firstDescriptionElementsIndex === index && addNonInlineBullets(listicleBulletOpts)}
+            <div
+              key={element.id}
+              className="arr--element-container"
+              styleName={`element-container ${isLiveBlog} ${tableStyle} ${textColor}`}>
+              {getElement(story, element, config, adComponent, widgetComp, index, cardId, enableDarkMode)}
+            </div>
+          </>
         );
       })}
     </div>
@@ -348,6 +355,7 @@ StoryElementCard.propTypes = {
   heroVideoElementId: PropTypes.number,
   config: PropTypes.object,
   isLive: PropTypes.bool,
+  listicleBulletOpts: PropTypes.object,
   theme: PropTypes.string,
   adComponent: PropTypes.func,
   widgetComp: PropTypes.func,

@@ -97,6 +97,12 @@
   }
 }
 
+.horizontal-aside-collection {
+  @include tablet {
+    grid-column: 2/12;
+  }
+}
+
 .left-column {
   @include tablet {
     grid-column: 1 / 8;
@@ -239,9 +245,9 @@
   margin-bottom: var(--arrow-spacing-s);
   @include tablet {
     margin-bottom: var(--arrow-spacing-20);
-    @include desktop {
-      margin-top: var(--arrow-spacing-xxs);
-    }
+  }
+  @include desktop {
+    margin-top: var(--arrow-spacing-xxs);
   }
 }
 

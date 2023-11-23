@@ -8,13 +8,16 @@ import "./live-blog.m.css";
 
 const LiveBlogStoryTemplate = ({
   story = {},
+  accessLoading = false,
   config = {},
   storyElementsConfig,
   adComponent,
   widgetComp,
   firstChild,
   secondChild,
-  enableDarkMode
+  enableDarkMode,
+  loadRelatedStories,
+  visibleCardsRender = null
 }) => {
   const { theme = "", templateType = "default", verticalShare = "" } = config;
 
@@ -31,6 +34,7 @@ const LiveBlogStoryTemplate = ({
       styleName={`${containerClass} ${verticalShare} wrapper`}>
       <LiveBlogStoryTemplates
         templateType={templateType}
+        accessLoading={accessLoading}
         story={story}
         storyElementsConfig={storyElementsConfig}
         config={config}
@@ -41,6 +45,8 @@ const LiveBlogStoryTemplate = ({
         timezone={timezone}
         enableDarkMode={enableDarkMode}
         mountAt={mountAt}
+        loadRelatedStories={loadRelatedStories}
+        visibleCardsRender={visibleCardsRender}
       />
     </div>
   );
@@ -48,6 +54,7 @@ const LiveBlogStoryTemplate = ({
 
 LiveBlogStoryTemplate.propTypes = {
   story: PropTypes.object,
+  accessLoading: PropTypes.bool,
   config: PropTypes.shape({
     templateType: PropTypes.string
   }),
@@ -56,7 +63,9 @@ LiveBlogStoryTemplate.propTypes = {
   storyElementsConfig: PropTypes.object,
   adComponent: PropTypes.func,
   widgetComp: PropTypes.func,
-  enableDarkMode: PropTypes.bool
+  enableDarkMode: PropTypes.bool,
+  loadRelatedStories: PropTypes.func,
+  visibleCardsRender: PropTypes.func | undefined
 };
 
 export default StateProvider(LiveBlogStoryTemplate);

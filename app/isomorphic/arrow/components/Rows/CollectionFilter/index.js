@@ -95,7 +95,7 @@ const CollectionFilter = ({ collection, config = {} }) => {
         borderColor={borderColor}
         config={config}>
         <HeroImage story={story} isHorizontalMobile />
-        <StorycardContent story={story} border={border} borderColor={borderColor} config={config} />
+        <StorycardContent story={story} border={border} isHorizontalMobile borderColor={borderColor} config={config} />
       </StoryCard>
     </div>
   );
@@ -104,7 +104,7 @@ const CollectionFilter = ({ collection, config = {} }) => {
     <div styleName="card" key={index}>
       <StoryCard story={story} isHorizontal theme={theme} border={border} borderColor={borderColor} config={config}>
         <HeroImage story={story} isHorizontal aspectRatio={[[1, 1]]} />
-        <StorycardContent story={story} isHorizontal border={border} borderColor={borderColor} config={config} />
+        <StorycardContent story={story} isHorizontalMobile border={border} borderColor={borderColor} config={config} />
       </StoryCard>
     </div>
   );
@@ -123,7 +123,13 @@ const CollectionFilter = ({ collection, config = {} }) => {
                 borderColor={borderColor}
                 config={config}>
                 <HeroImage story={story} isHorizontal aspectRatio={[[1, 1]]} />
-                <StorycardContent story={story} border={border} borderColor={borderColor} config={config} />
+                <StorycardContent
+                  story={story}
+                  isHorizontalMobile
+                  border={border}
+                  borderColor={borderColor}
+                  config={config}
+                />
               </StoryCard>
             </div>
           );

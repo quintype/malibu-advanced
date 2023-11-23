@@ -1,0 +1,12 @@
+@import "../../../../../assets/stylesheets/mixins.scss";
+
+.bullet-style-dash {
+  width: 16px;
+  height: 16px;
+  background-color: var(--arrow-c-brand1);
+  margin-right: 5px;
+  display: inline-block;
+  @include tablet {
+    margin-bottom: 2px;
+  }
+}

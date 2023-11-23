@@ -25,7 +25,9 @@ const VideoStoryTemplate = ({
   adComponent,
   firstChild,
   secondChild,
-  enableDarkMode
+  enableDarkMode,
+  loadRelatedStories,
+  visibleCardsRender = null
 }) => {
   const heroVideo =
     story.cards
@@ -33,7 +35,8 @@ const VideoStoryTemplate = ({
       .find(
         ({ type, subtype }) =>
           type === "youtube-video" ||
-          (type === "jsembed" && (subtype === "dailymotion-video" || subtype === "dailymotion-embed-script"))
+          (type === "jsembed" && (subtype === "dailymotion-video" || subtype === "dailymotion-embed-script")) ||
+          subtype === "brightcove-video"
       ) || {};
 
   const {
@@ -92,6 +95,20 @@ const VideoStoryTemplate = ({
   };
 
   const StoryData = () => {
+    const visibleCards = visibledCards.map((card) => {
+      return (
+        <StoryElementCard
+          heroVideoElementId={heroVideo.id}
+          story={story}
+          card={card}
+          key={get(card, ["id"], "")}
+          config={storyElementsConfig}
+          adComponent={adComponent}
+          widgetComp={widgetComp}
+          enableDarkMode={enableDarkMode}
+        />
+      );
+    });
     return (
       <div styleName="story-details">
         <div styleName="author">
@@ -106,21 +123,14 @@ const VideoStoryTemplate = ({
           {!verticalShare && <SocialShareComponent />}
         </div>
         <StoryReview theme={theme} story={story} />
-        {visibledCards.map((card) => {
-          return (
-            <StoryElementCard
-              heroVideoElementId={heroVideo.id}
-              story={story}
-              card={card}
-              key={get(card, ["id"], "")}
-              config={storyElementsConfig}
-              adComponent={adComponent}
-              widgetComp={widgetComp}
-              enableDarkMode={enableDarkMode}
-            />
-          );
-        })}
-        {firstChild}
+        {visibleCardsRender ? (
+          visibleCardsRender(visibleCards, firstChild)
+        ) : (
+          <>
+            {visibleCards}
+            {firstChild}
+          </>
+        )}
         <div styleName="story-tags">
           <StoryTags tags={story.tags} />
           <SlotAfterStory
@@ -144,8 +154,9 @@ const VideoStoryTemplate = ({
             widgetComp={widgetComp}
             adComponent={adComponent}
             sticky={true}
-            storyId={storyId}
+            story={story}
             opts={publishedDetails}
+            loadRelatedStories={loadRelatedStories}
           />
         </div>
       )
@@ -168,8 +179,9 @@ const VideoStoryTemplate = ({
               {...asideCollection}
               widgetComp={widgetComp}
               adComponent={adComponent}
-              storyId={storyId}
+              story={story}
               opts={publishedDetails}
+              loadRelatedStories={loadRelatedStories}
             />
           </div>
         )}
@@ -236,6 +248,7 @@ const VideoStoryTemplate = ({
 
 VideoStoryTemplate.propTypes = {
   story: PropTypes.object,
+  accessLoading: PropTypes.bool,
   config: PropTypes.shape({
     templateType: PropTypes.string,
     authorCard: PropTypes.object,
@@ -246,7 +259,9 @@ VideoStoryTemplate.propTypes = {
   storyElementsConfig: PropTypes.object,
   adComponent: PropTypes.func,
   widgetComp: PropTypes.func,
-  enableDarkMode: PropTypes.bool
+  enableDarkMode: PropTypes.bool,
+  loadRelatedStories: PropTypes.func,
+  visibleCardsRender: PropTypes.func | undefined
 };
 
 export default StateProvider(VideoStoryTemplate);

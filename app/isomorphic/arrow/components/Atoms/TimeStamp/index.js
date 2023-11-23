@@ -18,11 +18,14 @@ export const TimeStamp = ({ story, config = {} }) => {
   const textColor = getTextColor(configState.theme);
   const qtConfig = useSelector((state) => get(state, ["qt", "config"], {}));
   const isLocalizedNumber = get(qtConfig, ["isLocalizedNumber"], false);
-
   const languageCode = get(qtConfig, ["language", "ietf-code"], "en");
-
+  const direction = get(qtConfig, ["language", "direction"], "ltr");
   const storyCardTime = get(qtConfig, ["pagebuilder-config", "general", "storyCardTime"], null);
   const storyTemplate = getStoryTemplate(story, get(qtConfig, ["pagebuilder-config"], {}));
+
+  const { localizedMeridiem, localizedMonths } = config;
+  const rtlWithoutCustomLabels = direction === "rtl" && !localizedMeridiem && !localizedMonths;
+  const updatedStyle = rtlWithoutCustomLabels ? `time ${textColor} wrapper` : `time ${textColor}`;
 
   if (storyCardTime) {
     const storyTime = storyTemplate === "live-blog" ? storyCardTime["liveBlog"] : storyCardTime["rest"];
@@ -36,12 +39,16 @@ export const TimeStamp = ({ story, config = {} }) => {
     ["pagebuilder-config", "general", "timeAgoFormat"],
     get(configState, ["timeAgoFormat"], "time unit ago")
   );
+  const dateFormat = get(qtConfig, ["pagebuilder-config", "general", "dateFormat"], "dd-mon-yyyy");
 
+  const updatedConfig = { direction, ...config, dateFormat };
   return (
     <>
       {isTime && (
-        <div className="time arr--publish-time" styleName={`time ${textColor}`} data-test-id="publish-time">
-          <div>{getTimeStamp(time, formatter, config, languageCode, "", "", isLocalizedNumber, timeAgoFormat)}</div>
+        <div className="time arr--publish-time" styleName={updatedStyle} data-test-id="publish-time">
+          <div>
+            {getTimeStamp(time, formatter, updatedConfig, languageCode, "", "", isLocalizedNumber, timeAgoFormat)}
+          </div>
         </div>
       )}
     </>

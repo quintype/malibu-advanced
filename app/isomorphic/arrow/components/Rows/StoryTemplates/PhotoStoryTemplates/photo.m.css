@@ -2,12 +2,15 @@
 
 .grid-col-full {
   grid-column: 1/5;
+
   @include tablet {
     grid-column: grid-start / grid-end;
   }
 }
+
 .grid-container {
   grid-column: 1/5;
+
   @include tablet {
     grid-column: container-start / container-end;
   }
@@ -15,31 +18,40 @@
 
 .grid-col-2-10 {
   grid-column: 1/5;
+
   @include tablet {
     grid-column: container-start / 9;
-    @include desktop {
-      grid-column: container-start / 10;
-    }
+  }
+
+  @include desktop {
+    grid-column: container-start / 10;
   }
 }
+
 .grid-col-10-14 {
   grid-column: 1/5;
+
   @include tablet {
     grid-column: 9 / container-end;
     grid-row: 2 / auto;
-    @include desktop {
-      grid-column: 10 / container-end;
-    }
+  }
+
+  @include desktop {
+    grid-column: 10 / container-end;
   }
 }
+
 .grid-col-4-12 {
   grid-column: 1/5;
+
   @include tablet {
     grid-column: 4 / 12;
   }
 }
+
 .grid-col-2-9 {
   grid-column: 1/5;
+
   @include tablet {
     grid-column: container-start / 9;
   }
@@ -47,28 +59,35 @@
 
 .grid-col-9-14 {
   grid-column: 1/5;
+
   @include tablet {
     grid-column: 9 / 14;
     grid-row: 2 / 6;
   }
 }
+
 .story-details {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: var(--arrow-spacing-l);
+
   @include tablet {
     margin-bottom: var(--arrow-spacing-xl);
   }
 }
+
 .side-space {
   margin-top: var(--arrow-spacing-m);
+
   @include tablet {
     margin-top: var(--arrow-spacing-l);
   }
 }
+
 :global(.gap-32) {
   margin-top: var(--arrow-spacing-l);
+
   @include tablet {
     margin-top: var(--arrow-spacing-xl);
   }
@@ -79,12 +98,15 @@
     font-size: var(--arrow-fs-s);
     font-style: italic;
     padding-right: 2px;
+
     @include tablet {
       font-size: var(--arrow-fs-m);
     }
   }
+
   .space-12 {
     margin-top: var(--arrow-spacing-m);
+
     @include tablet {
       margin-top: var(--arrow-spacing-xl);
     }
@@ -98,17 +120,19 @@
 .sticky :global(.arr--share) {
   grid-column: 4/5;
   justify-self: flex-end;
+
   @include tablet {
     grid-column: 8/9;
-    @include desktop {
-      position: sticky;
-      position: -webkit-sticky;
-      grid-column: grid-start/container-start;
-      grid-row: 2/3;
-      align-self: flex-start;
-      margin-top: var(--arrow-spacing-xs);
-      top: 120px;
-    }
+  }
+
+  @include desktop {
+    position: sticky;
+    position: -webkit-sticky;
+    grid-column: grid-start/container-start;
+    grid-row: 2/3;
+    align-self: flex-start;
+    margin-top: var(--arrow-spacing-xs);
+    top: 120px;
   }
 }
 
@@ -116,15 +140,17 @@
   :global(.arr--share) {
     @include tablet {
       grid-column: 9 / grid-end;
-      @include desktop {
-        grid-column: 3/4;
-      }
+    }
+
+    @include desktop {
+      grid-column: 3/4;
     }
   }
 }
 
 .sticky .index-2 {
   z-index: 2;
+
   @include desktop {
     z-index: unset;
   }
@@ -173,4 +199,12 @@
 
 .space-32 > * {
   margin-top: var(--arrow-spacing-l);
+}
+
+.container {
+  margin: var(--arrow-spacing-xs) 0 0 0;
+
+  @include tablet {
+    margin: var(--arrow-spacing-m) 0 0 0;
+  }
 }

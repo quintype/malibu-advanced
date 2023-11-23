@@ -8,7 +8,15 @@ import { useStateValue } from "../../../SharedContext";
 
 import "./slider-arrow.m.css";
 
-export const SliderArrow = ({ selectedIndex, previousClick, nextClick, noOfItems, perView, languageDirection }) => {
+export const SliderArrow = ({
+  selectedIndex,
+  previousClick,
+  nextClick,
+  noOfItems,
+  perView,
+  languageDirection,
+  sliderArrowStyles
+}) => {
   if (noOfItems < 1) {
     return null;
   }
@@ -28,6 +36,7 @@ export const SliderArrow = ({ selectedIndex, previousClick, nextClick, noOfItems
       {selectedIndex !== 0 ? (
         <button
           onClick={previousClick}
+          style={sliderArrowStyles}
           styleName={`arrow left-arrow-${textColor} ${getLeftArrowClassName}`}
           className={`left-arrow ${getLeftArrowClassName}`}>
           <LeftArrow color={textColor === "dark" ? "#fff" : "#333"} />
@@ -37,6 +46,7 @@ export const SliderArrow = ({ selectedIndex, previousClick, nextClick, noOfItems
       {selectedIndex < noOfItems - 1 && rightArrowView() ? (
         <button
           onClick={nextClick}
+          style={sliderArrowStyles}
           styleName={`arrow right-arrow-${textColor} ${getRightArrowClassName}`}
           className={`right-arrow ${getRightArrowClassName}`}>
           <RightArrow color={textColor === "dark" ? "#fff" : "#333"} />

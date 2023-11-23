@@ -21,13 +21,16 @@ import "./photo.m.css";
 
 const PhotoStory = ({
   story = {},
+  accessLoading = false,
   config = {},
   storyElementsConfig,
   widgetComp,
   adComponent,
   firstChild,
   secondChild,
-  enableDarkMode
+  enableDarkMode,
+  loadRelatedStories,
+  visibleCardsRender = null
 }) => {
   const {
     theme = "",
@@ -78,6 +81,20 @@ const PhotoStory = ({
   };
 
   const StoryData = () => {
+    const visibleCards = visibledCards.map((card) => {
+      return (
+        <PhotoStoryElement
+          story={story}
+          card={card}
+          key={get(card, ["id"], "")}
+          config={{ ...storyElementsConfig, theme }}
+          adComponent={adComponent}
+          widgetComp={widgetComp}
+          enableDarkMode={enableDarkMode}
+          theme={theme}
+        />
+      );
+    });
     return (
       <>
         {authorDetails && (
@@ -96,22 +113,9 @@ const PhotoStory = ({
           {!verticalShare && <SocialShareComponent />}
         </div>
         <StoryReview theme={theme} story={story} />
-        {visibledCards.map((card) => {
-          return (
-            <PhotoStoryElement
-              story={story}
-              card={card}
-              key={get(card, ["id"], "")}
-              config={{ ...storyElementsConfig, theme }}
-              adComponent={adComponent}
-              widgetComp={widgetComp}
-              enableDarkMode={enableDarkMode}
-              theme={theme}
-            />
-          );
-        })}
+        {visibleCardsRender ? visibleCardsRender(visibleCards, null) : visibleCards}
         <div styleName="space-32">
-          {firstChild}
+          {!accessLoading && firstChild}
           <StoryTags tags={story.tags} />
           <SlotAfterStory
             id={story.id}
@@ -155,8 +159,9 @@ const PhotoStory = ({
               widgetComp={widgetComp}
               adComponent={adComponent}
               sticky={true}
-              storyId={storyId}
+              story={story}
               opts={publishedDetails}
+              loadRelatedStories={loadRelatedStories}
             />
           </div>
         )}
@@ -183,8 +188,9 @@ const PhotoStory = ({
               {...asideCollection}
               widgetComp={widgetComp}
               adComponent={adComponent}
-              storyId={storyId}
+              story={story}
               opts={publishedDetails}
+              loadRelatedStories={loadRelatedStories}
             />
           </div>
         )}
@@ -213,8 +219,9 @@ const PhotoStory = ({
               widgetComp={widgetComp}
               adComponent={adComponent}
               sticky={true}
-              storyId={storyId}
+              story={story}
               opts={publishedDetails}
+              loadRelatedStories={loadRelatedStories}
             />
           </div>
         )}
@@ -242,7 +249,9 @@ const PhotoStory = ({
 
   return (
     <div
-      styleName={`${verticalShare} ${isFullBleed ? "fullBleed" : ""}`}
+      styleName={`${verticalShare} ${isFullBleed ? "fullBleed" : ""} ${
+        templateType !== "headline-priority" && !isFullBleed ? "container" : ""
+      }`}
       data-test-id={`photo-story-${templateType}-${kebabCase(imageRender)}`}
       className={`arrow-component arr-story-grid arr--content-wrapper arr--photo-story-template-wrapper ${templateType} `}
       style={{ backgroundColor: theme || "initial" }}>
@@ -253,6 +262,7 @@ const PhotoStory = ({
 
 PhotoStory.propTypes = {
   story: PropTypes.object,
+  accessLoading: PropTypes.bool,
   config: PropTypes.shape({
     templateType: PropTypes.string,
     asideCollection: PropTypes.object
@@ -262,7 +272,9 @@ PhotoStory.propTypes = {
   storyElementsConfig: PropTypes.object,
   adComponent: PropTypes.func,
   widgetComp: PropTypes.func,
-  enableDarkMode: PropTypes.bool
+  enableDarkMode: PropTypes.bool,
+  loadRelatedStories: PropTypes.func,
+  visibleCardsRender: PropTypes.func | undefined
 };
 
 export default StateProvider(PhotoStory);

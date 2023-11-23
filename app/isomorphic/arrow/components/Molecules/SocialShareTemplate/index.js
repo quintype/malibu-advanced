@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import { socialShareData } from "./social-share-data";
 import { SocialSharePopup } from "../../Atoms/SocialSharePopup";
 import "./social-share-template.m.css";
-import { CloseIcon } from "../../Svgs/close-icon";
 import { ShareIcon } from "../../Svgs/share-icon";
 import { getTextColor } from "../../../utils/utils";
 import camelcase from "lodash.camelcase";
@@ -24,9 +23,8 @@ ShareItem.propTypes = {
   dataTestId: PropTypes.string
 };
 
-function getActionIcon(open, color) {
-  if (!open) return <ShareIcon color={color} />;
-  return <CloseIcon color={color} />;
+function getActionIcon(color) {
+  return <ShareIcon color={color} />;
 }
 
 export const SocialShareTemplate = (props) => {
@@ -53,7 +51,7 @@ export const SocialShareTemplate = (props) => {
   const shareIcon = () => {
     return (
       <li styleName="icon" key="horizontal-0">
-        <div onClick={clickHandler}>{getActionIcon(isOpen, iconColor)}</div>
+        <div onClick={clickHandler}>{getActionIcon(iconColor)}</div>
       </li>
     );
   };

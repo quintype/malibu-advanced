@@ -4,9 +4,7 @@ import { SectionTag } from "../../Atoms/SectionTag";
 import { AuthorWithTime } from "../../Atoms/AuthorWithTimestamp";
 import { Subheadline } from "../../Atoms/Subheadline";
 import { rgbToHex } from "../../../utils/utils";
-
 import PropTypes from "prop-types";
-
 import "./storycardContent.m.css";
 
 export const StorycardContent = ({
@@ -24,7 +22,7 @@ export const StorycardContent = ({
   const borderOptions = ["full"];
   const SectionTagborderColor = rgbToHex(borderColor);
   const borderTemplate = borderOptions.includes(border) ? `border-${border}` : "";
-  const horizontalCard = isHorizontalMobile ? "horizontal-content-wrapper" : "";
+  const horizontalCard = isHorizontalMobile ? "horizontal-content-wrapper" : "content-wrapper";
   return (
     <div
       className="arr--content-wrapper"

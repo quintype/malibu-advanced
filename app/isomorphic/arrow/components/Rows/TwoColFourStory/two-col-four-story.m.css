@@ -4,6 +4,13 @@
   @media (--viewport-medium) {
     padding: 0;
   }
+
+  :global(.arr--story-card .arr--hero-image) {
+    flex-basis: 40%;
+  }
+  :global(.arr--story-card .arr--content-wrapper) {
+    flex-basis: 60%;
+  }
 }
 .wrapper {
   margin: var(--arrow-spacing-xs) 0;
@@ -15,28 +22,31 @@
   }
 }
 .first-card {
-  margin-bottom: 16px;
+  margin-bottom: var(--arrow-spacing-m);
   @media (--viewport-medium) {
     margin: 0;
   }
 }
 
 .first-card.border-box {
-  padding: 0;
+  padding: var(--arrow-spacing-m);
   margin-bottom: var(--arrow-fs-xs);
   @media (--viewport-medium) {
+    padding: var(--arrow-spacing-m) var(--arrow-spacing-m) 0;
     margin: 0;
   }
 }
 
+.storyCards.border-box {
+  padding: var(--arrow-spacing-m) var(--arrow-spacing-m) 0;
+}
+
 .border-box.dark {
   border: 1px solid var(--dark-border);
-  padding: 16px 16px 0;
 }
 
 .border-box.light {
   border: 1px solid var(--light-border);
-  padding: 16px 16px 0;
 }
 
 .storyCards > .card {
@@ -52,13 +62,5 @@
   margin-bottom: var(--arrow-spacing-m);
 }
 .first-card-border-box {
-  padding: 4px 12px 16px 10px;
-}
-.two-col-four-story {
-  :global(.arr--story-card .arr--hero-image) {
-    flex-basis: 40%;
-  }
-  :global(.arr--story-card .arr--content-wrapper) {
-    flex-basis: 60%;
-  }
+  padding: var(--arrow-spacing-xxs) var(--arrow-spacing-s) var(--arrow-spacing-m) 10px;
 }

@@ -2,7 +2,14 @@ import React from "react";
 import PropTypes from "prop-types";
 import { CollectionName } from "../../Atoms/CollectionName";
 import { LoadmoreButton } from "../../Atoms/Loadmore";
-import { generateNavigateSlug, getTextColor, getTimeStamp, navigateTo, timestampToFormat } from "../../../utils/utils";
+import {
+  generateNavigateSlug,
+  getTextColor,
+  getTimeStamp,
+  navigateTo,
+  timestampToFormat,
+  getTimeStampConfig
+} from "../../../utils/utils";
 import "./magazine-cards.m.css";
 import { StateProvider } from "../../SharedContext";
 import { MagazineCoverImageCard } from "../../Atoms/MagazineCoverImage";
@@ -18,10 +25,8 @@ const MagazineHeaderCard = ({ collection = {}, config = {} }) => {
   const qtConfig = useSelector((state) => get(state, ["qt", "config"], {}));
   const url = generateNavigateSlug(collection, qtConfig, customUrlPath);
   const date = issueDate || createdAt;
-  const timeStampConfig = {
-    isUpperCase: true,
-    disableMeridiem: true
-  };
+  const timeStampConfig = getTimeStampConfig(qtConfig);
+
   return (
     <div
       className="full-width-with-padding arrow-component"

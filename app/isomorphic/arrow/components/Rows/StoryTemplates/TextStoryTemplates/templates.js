@@ -26,7 +26,9 @@ export const StoryTemplate = ({
   secondChild,
   timezone,
   enableDarkMode,
-  mountAt
+  mountAt,
+  loadRelatedStories,
+  visibleCardsRender = null
 }) => {
   const {
     theme = "",
@@ -61,8 +63,9 @@ export const StoryTemplate = ({
             {...asideCollection}
             widgetComp={widgetComp}
             adComponent={adComponent}
-            storyId={storyId}
             opts={publishedDetails}
+            loadRelatedStories={loadRelatedStories}
+            story={story}
           />
         </div>
       )
@@ -86,6 +89,20 @@ export const StoryTemplate = ({
   };
 
   const StoryData = () => {
+    const visibleCards = visibledCards.map((card) => {
+      return (
+        <StoryElementCard
+          story={story}
+          card={card}
+          key={get(card, ["id"], "")}
+          config={storyElementsConfig}
+          adComponent={adComponent}
+          widgetComp={widgetComp}
+          enableDarkMode={enableDarkMode}
+        />
+      );
+    });
+
     return (
       <div styleName="gap-16">
         {authorDetails && (
@@ -98,20 +115,14 @@ export const StoryTemplate = ({
           {!verticalShare && <SocialShareComponent />}
         </div>
         <StoryReview theme={theme} story={story} />
-        {visibledCards.map((card) => {
-          return (
-            <StoryElementCard
-              story={story}
-              card={card}
-              key={get(card, ["id"], "")}
-              config={storyElementsConfig}
-              adComponent={adComponent}
-              widgetComp={widgetComp}
-              enableDarkMode={enableDarkMode}
-            />
-          );
-        })}
-        {firstChild}
+        {visibleCardsRender ? (
+          visibleCardsRender(visibleCards, firstChild)
+        ) : (
+          <>
+            {visibleCards}
+            {firstChild}
+          </>
+        )}
         <div styleName="story-tags">
           <StoryTags tags={story.tags} />
           <SlotAfterStory
@@ -135,8 +146,9 @@ export const StoryTemplate = ({
             widgetComp={widgetComp}
             adComponent={adComponent}
             sticky={true}
-            storyId={storyId}
             opts={publishedDetails}
+            loadRelatedStories={loadRelatedStories}
+            story={story}
           />
         </div>
       )
@@ -281,5 +293,7 @@ StoryTemplate.propTypes = {
   widgetComp: PropTypes.func,
   adComponent: PropTypes.func,
   enableDarkMode: PropTypes.bool,
-  mountAt: PropTypes.string
+  mountAt: PropTypes.string,
+  loadRelatedStories: PropTypes.func,
+  visibleCardsRender: PropTypes.func | undefined
 };

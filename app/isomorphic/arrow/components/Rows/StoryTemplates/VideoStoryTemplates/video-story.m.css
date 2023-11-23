@@ -5,9 +5,9 @@
 .headline-priority {
   @include tablet {
     margin: var(--arrow-spacing-l);
-    @include desktop {
-      margin: 40px 0;
-    }
+  }
+  @include desktop {
+    margin: 40px 0;
   }
 }
 
@@ -21,9 +21,9 @@
     height: 190px;
     @include tablet {
       height: 540px;
-      @include desktop {
-        height: 640px;
-      }
+    }
+    @include desktop {
+      height: 640px;
     }
   }
 }
@@ -121,19 +121,19 @@
   @include tablet {
     grid-column: 8/9;
     grid-row: 2/3;
-    @include desktop {
-      grid-column: grid-start / container-start;
-    }
+  }
+  @include desktop {
+    grid-column: grid-start / container-start;
   }
 }
 
 .sticky.headline-priority :global(.arr--share) {
   @include tablet {
     grid-column: 8/9;
-    @include desktop {
-      grid-row: 2/3;
-      grid-column: grid-start / container-start;
-    }
+  }
+  @include desktop {
+    grid-row: 2/3;
+    grid-column: grid-start / container-start;
   }
 }
 
@@ -141,10 +141,10 @@
   :global(.arr--share) {
     @include tablet {
       grid-column: 9 / grid-end;
-      @include desktop {
-        grid-column: 3/4;
-        grid-row: 2/3;
-      }
+    }
+    @include desktop {
+      grid-column: 3/4;
+      grid-row: 2/3;
     }
   }
 }
@@ -153,9 +153,9 @@
   grid-column: 1/5;
   @include tablet {
     grid-column: container-start / 9;
-    @include desktop {
-      grid-column: container-start / 10;
-    }
+  }
+  @include desktop {
+    grid-column: container-start / 10;
   }
 }
 
@@ -163,9 +163,9 @@
   grid-column: 1/5;
   @include tablet {
     grid-column: 9 / container-end;
-    @include tablet {
-      grid-column: 10 / container-end;
-    }
+  }
+  @include tablet {
+    grid-column: 10 / container-end;
   }
 }
 

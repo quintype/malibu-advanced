@@ -5,6 +5,7 @@ import { shapeConfig, shapeStory, updateContentLinks, getTextColor } from "../..
 import { withElementWrapper } from "../withElementWrapper";
 import "./question-answer.m.css";
 import { useStateValue } from "../../../SharedContext";
+import { UserFallbackIcon } from "../../../Svgs/user-fallback-icon";
 
 const supportedTemplates = (type, element) => {
   switch (type) {
@@ -60,14 +61,26 @@ const QuestionAnswerBase = ({
   const iconType = defaultIconType === "curve" ? "curveIcon" : "edgeIcon";
   const iconColorStyle = iconColor ? { backgroundColor: iconColor } : {};
 
+  function getFallBackAttributionImage() {
+    return (
+      <div styleName="fallbackAttribution">
+        <span styleName="fallbackImage">
+          <UserFallbackIcon />
+        </span>
+      </div>
+    );
+  }
+
   const supportQuestionElement = isAuthorImageTemplate ? (
-    questionAttribution && (
+    questionAttribution ? (
       <>
         <div styleName="labelAttribution">
           <img src={questionAttribution} loading="lazy" />
         </div>
         <span styleName="hidden"></span>
       </>
+    ) : (
+      getFallBackAttributionImage()
     )
   ) : (
     <div styleName={`${iconType} ${theme}`} data-test-id={iconType} style={iconColorStyle}>
@@ -78,13 +91,15 @@ const QuestionAnswerBase = ({
   // EMPTY SPAN FOR EXTRA SPACE
 
   const supportAnswerElement = isAuthorImageTemplate ? (
-    answerAttribution && (
+    answerAttribution ? (
       <>
         <div styleName="labelAttribution">
           <img src={answerAttribution} loading="lazy" />
         </div>
         <span styleName="hidden"></span>
       </>
+    ) : (
+      getFallBackAttributionImage()
     )
   ) : (
     <div styleName={`${iconType} ${theme}`} data-test-id={iconType} style={iconColorStyle}>

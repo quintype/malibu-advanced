@@ -54,6 +54,7 @@ const ThreeColSevenStory = ({ collection, config = {} }) => {
           story={story}
           borderColor={borderColor}
           config={config}
+          isHorizontalMobile
           collectionId={collection.id}
         />
       </StoryCard>

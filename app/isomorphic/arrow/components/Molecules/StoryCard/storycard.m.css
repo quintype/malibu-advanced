@@ -1,4 +1,5 @@
 @custom-media --viewport-medium (width >= 768px);
+@custom-media --viewport-small (width < 768px);
 
 .author-timestamp-wrapper {
   display: flex;
@@ -155,4 +156,35 @@
 
 .content-overlap {
   height: auto;
+}
+
+.border-full.horizontal-card,
+.border-full.horizontal-mob {
+  @media (--viewport-small) {
+    padding: 6px var(--arrow-spacing-xs) var(--arrow-spacing-xs);
+  }
+}
+
+.border-full .content {
+  @media (--viewport-small) {
+    padding: 0 var(--arrow-spacing-s) var(--arrow-spacing-s);
+  }
+}
+
+html[dir="ltr"] {
+  .border-full.horizontal-mob :global(.arr--hero-image),
+  .horizontal-card.border-full :global(.arr--hero-image) {
+    @media (--viewport-small) {
+      padding: 2px var(--arrow-spacing-xs) 0 0;
+    }
+  }
+}
+
+html[dir="rtl"] {
+  .border-full.horizontal-mob :global(.arr--hero-image),
+  .horizontal-card.border-full :global(.arr--hero-image) {
+    @media (--viewport-small) {
+      padding: 2px 0 0 var(--arrow-spacing-xs);
+    }
+  }
 }

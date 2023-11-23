@@ -63,7 +63,7 @@ const AuthorTwitter = ({ twitterUrl, textColor }) => {
     <>
       {twitterUrl && (
         <a href={twitterUrl} target="_blank" rel="noopener noreferrer">
-          <Twitter />
+          <Twitter color={textColor === "dark" ? "#000" : "#fff"} />
         </a>
       )}
     </>

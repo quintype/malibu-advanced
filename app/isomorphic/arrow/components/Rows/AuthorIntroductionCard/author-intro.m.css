@@ -60,11 +60,26 @@
   }
 }
 
+.small-circle .author-name {
+  color: var(--arrow-c-mono2);
+  font-size: var(--arrow-fs-s);
+  line-height: var(--arrow-lh-3);
+  font-weight: var(--arrow-fw-bold);
+  text-transform: capitalize;
+  @media (min-width: mobile) {
+    font-size: var(--arrow-fs-m);
+    margin-top: var(--arrow-spacing-m);
+  }
+}
+
 .default .introduction-card {
   display: flex;
   flex: 1;
   justify-content: center;
   flex-direction: column;
+  .author-name {
+    text-transform: capitalize;
+  }
   @media (min-width: mobile) {
     grid-column: 2/8;
   }
@@ -192,17 +207,6 @@
 .small-circle .social-wrapper {
   @media (min-width: mobile) {
     justify-content: center;
-  }
-}
-
-.small-circle .author-name {
-  color: var(--arrow-c-mono2);
-  font-size: var(--arrow-fs-s);
-  line-height: var(--arrow-lh-3);
-  font-weight: var(--arrow-fw-bold);
-  @media (min-width: mobile) {
-    font-size: var(--arrow-fs-m);
-    margin-top: var(--arrow-spacing-m);
   }
 }
 
