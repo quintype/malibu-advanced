@@ -123,6 +123,7 @@ ampRoutes(app, {
 });
 
 isomorphicRoutes(app, {
+  ampPageBasePath: () => "/amp",
   appVersion: require("../isomorphic/app-version"),
   logError: (error) => logger.error(error),
   generateRoutes: generateRoutes,
