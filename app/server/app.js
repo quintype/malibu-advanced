@@ -94,6 +94,7 @@ ampRoutes(app, {
   seo: generateSeo,
 
   featureConfig: {
+    ampPageBasePath: () => "/amp",
     subscriptions: {
       services: {
         authorizationUrl: ({ story, config }) => {
