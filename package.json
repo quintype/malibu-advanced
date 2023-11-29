@@ -16,7 +16,7 @@
     "@metype/components": "^2.3.3",
     "@quintype/bridgekeeper-js": "^2.8.2-feature-otp.1",
     "@quintype/components": "^3.4.2",
-    "@quintype/framework": "^7.22.0-config-amp-story-path.3",
+    "@quintype/framework": "^7.22.0-config-amp-story-path.6",
     "@quintype/seo": "^1.43.0-config-amp-story-path.1",
     "axios": "^0.24.0",
     "fontfaceobserver": "^2.1.0",
