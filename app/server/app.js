@@ -87,7 +87,7 @@ function generateSeo(config, pageType) {
     enableTwitterCards: true,
     enableOgTags: true,
     enableNews: true,
-    ampPageBasePath: () => "/amp",
+    ampPageBasePath: "/amp",
   });
 }
 
