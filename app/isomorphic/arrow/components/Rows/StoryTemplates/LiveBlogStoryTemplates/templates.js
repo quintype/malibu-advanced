@@ -7,18 +7,25 @@ import { SectionTag } from "../../../Atoms/SectionTag";
 import { Subheadline } from "../../../Atoms/Subheadline";
 import AsideCollection from "../../AsideCollection";
 import { AuthorCard } from "../../../Atoms/AuthorCard";
-import { StoryElementCard, SlotAfterStory } from "../../../Molecules/StoryElementCard";
+import { SlotAfterStory, LiveBlogStoryElement } from "../../../Molecules/StoryElementCard";
 import { PublishDetails } from "../../../Atoms/PublishDetail";
 import { StoryTags } from "../../../Atoms/StoryTags";
 import { HeroImage } from "../../../Atoms/HeroImage";
 import "./live-blog.m.css";
 import { CaptionAttribution } from "../../../Atoms/CaptionAttribution";
-import { clientWidth, getTextColor, getTimeStamp, timestampToFormat } from "../../../../utils/utils";
+import {
+  clientWidth,
+  getTextColor,
+  getTimeStamp,
+  timestampToFormat,
+  getTimeStampConfig
+} from "../../../../utils/utils";
 import LiveIcon from "../../../Svgs/liveicon";
 import KeyEvents from "../../../Molecules/KeyEvents";
 import { ClockIcon } from "../../../Svgs/clock-icon";
 import { StoryHeadline } from "../../../Atoms/StoryHeadline";
 import { StoryReview } from "../../../Atoms/StoryReview";
+import { useSelector } from "react-redux";
 
 export const LiveBlogStoryTemplates = ({
   story = {},
@@ -48,6 +55,10 @@ export const LiveBlogStoryTemplates = ({
     },
     premiumStoryIconConfig = {}
   } = config;
+
+  const qtConfig = useSelector((state) => get(state, ["qt", "config"], {}));
+  const timeStampConfig = getTimeStampConfig(qtConfig);
+  const direction = get(qtConfig, ["language", "direction"], "ltr");
 
   const visibleCards = noOfVisibleCards < 0 ? story.cards : story.cards.slice(0, noOfVisibleCards);
   const textColor = getTextColor(theme);
@@ -80,33 +91,49 @@ export const LiveBlogStoryTemplates = ({
       const borderBottom = index === visibleCards.length - 1 ? "" : `share-cards ${textColor}`;
       const cardId = get(card, ["id"], "");
       const { "card-added-at": cardAddedAt } = card;
-      return (
-        <div key={index} styleName={borderBottom}>
+
+      const storyUrl = new URL(story.url);
+      const shareUrl = encodeURI(storyUrl.origin + `${mountAt}${storyUrl.pathname}#${story.slug}-${cardId}`);
+
+      function CardShare() {
+        const rltDateTimeWithOutLocalization =
+          direction === "rtl" && !timeStampConfig.enableLocalization ? "rtl-date-time" : "";
+        return (
           <div styleName="card-share">
-            <div styleName={`time-wrapper ${textColor}`}>
+            <div styleName={`time-wrapper ${rltDateTimeWithOutLocalization} ${textColor}`}>
               <ClockIcon color={updateColor} />
-              {getTimeStamp(cardAddedAt, timestampToFormat, { isTimeFirst: true })}
+              {getTimeStamp(cardAddedAt, timestampToFormat, {
+                isTimeFirst: true,
+                ...timeStampConfig,
+                direction,
+                showTime: true
+              })}
             </div>
             <div id={`card-share-${cardId}_${storyId}`} className="content-style">
               <SocialShare
                 template={SocialShareTemplate}
-                fullUrl={encodeURI(story.url)}
+                fullUrl={shareUrl}
                 title={story.headline}
                 theme={theme}
                 iconType={shareIconType}
               />
             </div>
           </div>
-          <StoryElementCard
+        );
+      }
+
+      return (
+        <div key={index} styleName={borderBottom} id={`${story.slug}-${cardId}`} style={{ scrollMarginTop: "20vh" }}>
+          <LiveBlogStoryElement
             story={story}
             card={card}
             key={cardId}
             config={storyElementsConfig}
-            isLive
             theme={theme}
             adComponent={adComponent}
             widgetComp={widgetComp}
             enableDarkMode={enableDarkMode}
+            CardShare={CardShare}
           />
         </div>
       );
@@ -198,7 +225,7 @@ export const LiveBlogStoryTemplates = ({
               widgetComp={widgetComp}
               sticky={true}
               enableKeyEvents={!isMobile}
-              keyEventsData={{ story, config, showLoadMore: false }}
+              keyEventsData={{ story, config, showLoadMore: true }}
               story={story}
               opts={publishedDetails}
               loadRelatedStories={loadRelatedStories}
@@ -293,7 +320,7 @@ export const LiveBlogStoryTemplates = ({
               widgetComp={widgetComp}
               sticky={true}
               enableKeyEvents={!isMobile}
-              keyEventsData={{ story, config, showLoadMore: false }}
+              keyEventsData={{ story, config, showLoadMore: true }}
               story={story}
               opts={publishedDetails}
               loadRelatedStories={loadRelatedStories}

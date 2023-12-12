@@ -48,14 +48,16 @@ export const timestampToFormat = (value, unit, suffix, timestamp, config = {}, l
   const year = dateTime.getFullYear();
   const rtlWithoutCustomLabels = direction === "rtl" && !localizedMeridiem && !localizedMonths;
 
-  const timeWithLocalizedMeridiem = formatAMPM(timestamp, languageCode, config);
+  const timeWithLocalizedMeridiem = formatAMPM(timestamp, languageCode, config, isTimeFirst);
 
   let timetoShow = "";
   let rtlTimetoShow = "";
 
   if (showTime) {
     timetoShow = `, ${timeWithLocalizedMeridiem}`;
-    rtlTimetoShow = `${timeWithLocalizedMeridiem} ,`;
+    if (isTimeFirst && rtlWithoutCustomLabels) {
+      rtlTimetoShow = `${timeWithLocalizedMeridiem}`;
+    } else rtlTimetoShow = `${timeWithLocalizedMeridiem} ,`;
   }
 
   if (localizedMonths) {
@@ -67,6 +69,9 @@ export const timestampToFormat = (value, unit, suffix, timestamp, config = {}, l
   if (disableMeridiem) {
     return `${localizedMonth} ${localizedDate}, ${localizedYear}`;
   } else if (isTimeFirst) {
+    if (rtlWithoutCustomLabels) {
+      return `${localizedYear} ${localizedMonth} ${localizedDate}, ${rtlTimetoShow}`;
+    }
     return `${timeWithLocalizedMeridiem}, ${localizedDate} ${localizedMonth} ${localizedYear}`;
   } else if (dateFormat === "mon-dd-yyyy") {
     if (rtlWithoutCustomLabels) {
@@ -128,12 +133,13 @@ function monkeyPatchForArabic(timeStr = "") {
   return str;
 }
 
-function formatAMPM(timestamp, languageCode, config) {
+function formatAMPM(timestamp, languageCode, config, isTimeFirst) {
   const { timeFormat = "12hours", localizedZeroToPad, direction = "ltr", localizedMonths, localizedMeridiem } = config;
   const dateTime = new Date(timestamp);
 
   if (timeFormat === "24hours") {
-    return dateTime.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    //  'en-GB' formats the time in 24-hours format
+    return dateTime.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" });
   }
 
   let hours = dateTime.getHours();
@@ -151,6 +157,10 @@ function formatAMPM(timestamp, languageCode, config) {
   }
 
   if (direction === "rtl" && !localizedMeridiem && !localizedMonths) {
+    if (isTimeFirst) {
+      const strTime = hours.toLocaleString(languageCode) + ":" + minutes + " " + updatedAmPm;
+      return strTime;
+    }
     const strTime = updatedAmPm + " " + hours.toLocaleString(languageCode) + ":" + minutes;
     return strTime;
   }
@@ -380,7 +390,6 @@ export const getTimeStamp = (
   timeAgoFormat = ""
 ) => {
   const isRelatedCollection = get(config, ["isRelatedCollection"], false);
-
   if (timezone && template === "story") {
     const zonedTime = timezone && utcToZonedTime(date, timezone);
     const formatZonedTime = zonedTime && format(zonedTime, "yyyy-MM-dd'T'HH:mm:ssXXX", { timeZone: timezone });
@@ -394,9 +403,9 @@ export const getTimeStamp = (
       date={date}
       component={isRelatedCollection ? "div" : "time"}
       className="arr__timeago"
-      formatter={(value, unit, suffix, date) =>
-        formatter(value, unit, suffix, date, config, languageCode, isLocalizedNumber, timeAgoFormat)
-      }
+      formatter={(value, unit, suffix, date) => {
+        return formatter(value, unit, suffix, date, config, languageCode, isLocalizedNumber, timeAgoFormat);
+      }}
     />
   );
 };
@@ -424,14 +433,21 @@ export function getStoryTemplate(story, config) {
 }
 
 export function getTimeStampConfig(qtConfig) {
-  const { dateFormat = "dd-mon-yyyy", localization = {} } = get(qtConfig, ["pagebuilder-config", "general"], {});
+  const { dateFormat = "dd-mon-yyyy", localization = {}, timeFormat } = get(
+    qtConfig,
+    ["pagebuilder-config", "general"],
+    {}
+  );
   const { enableLocalization = false, localizedElements = {} } = localization;
 
   const timeStampConfig = {
     isUpperCase: false,
     disableMeridiem: false,
     dateFormat,
-    localizedMonths: enableLocalization && get(localizedElements, ["months"])
+    timeFormat,
+    localizedMonths: enableLocalization && get(localizedElements, ["months"]),
+    localizedMeridiem: enableLocalization && get(localizedElements, ["meridiem"], {}),
+    enableLocalization
   };
 
   return timeStampConfig;

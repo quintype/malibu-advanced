@@ -2,30 +2,45 @@ import React, { useState } from "react";
 import get from "lodash.get";
 import PropTypes from "prop-types";
 import { ClockIcon } from "../../Svgs/clock-icon";
-import { getTextColor, getTimeStamp, timestampToFormat } from "../../../utils/utils";
+import { getTextColor, getTimeStamp, timestampToFormat, getTimeStampConfig } from "../../../utils/utils";
 import { LoadmoreButton } from "../../Atoms/Loadmore";
 import { StateProvider } from "../../SharedContext";
 import "./key-events.m.css";
 import { useSelector } from "react-redux";
 
 const KeyEventCards = (props) => {
-  const { config, index, cardLength, card = {}, slug, loadCards, showLoadMore } = props;
+  const { config, index, cardLength, card = {}, slug, loadCards, showLoadMore, qtConfig } = props;
   const { "card-added-at": cardAddedAt, "story-elements": storyElements = [], id } = card;
-  const { theme, mountAt = "" } = config;
+  const { theme } = config;
   const textColor = getTextColor(theme);
   const dark = "#333";
   const light = "#fff";
   const updateColor = textColor === "dark" ? dark : light;
   const lastElement = index === cardLength - 1;
   const borderLeft = lastElement ? "borderNone" : "";
+  const timeStampConfig = getTimeStampConfig(qtConfig);
+  const direction = get(qtConfig, ["language", "direction"], "ltr");
 
+  function scrollToCard(event) {
+    event.preventDefault();
+    const cardToView = document.getElementById(`${slug}-${id}`);
+    cardToView.scrollIntoView();
+  }
+
+  const rltDateTimeWithOutLocalization =
+    direction === "rtl" && !timeStampConfig.enableLocalization ? "rtl-date-time" : "";
   return (
     <>
-      <div styleName={`time-wrapper ${textColor}`}>
+      <div styleName={`time-wrapper ${rltDateTimeWithOutLocalization} ${textColor}`}>
         <ClockIcon color={updateColor} />
-        {getTimeStamp(cardAddedAt, timestampToFormat, { showTime: true, isTimeFirst: true })}
+        {getTimeStamp(cardAddedAt, timestampToFormat, {
+          showTime: true,
+          isTimeFirst: true,
+          direction,
+          ...timeStampConfig
+        })}
       </div>
-      <a href={`${mountAt}/${slug}#${id}`} aria-label="event-title">
+      <a href="#" onClick={scrollToCard} aria-label="event-title">
         <div styleName={`event-title ${textColor} ${borderLeft}`}>
           {storyElements.map((element, index) => element.type === "title" && <h3 key={index}>{element.text}</h3>)}
           {showLoadMore && lastElement && loadCards && (
@@ -55,7 +70,8 @@ KeyEventCards.propTypes = {
   index: PropTypes.number,
   cardLength: PropTypes.number,
   loadCards: PropTypes.bool,
-  showLoadMore: PropTypes.bool
+  showLoadMore: PropTypes.bool,
+  qtConfig: PropTypes.object
 };
 
 const KeyEvents = ({ story = {}, config = {}, showLoadMore = true, publishedDetails = {} }) => {
@@ -88,6 +104,7 @@ const KeyEvents = ({ story = {}, config = {}, showLoadMore = true, publishedDeta
       index={index}
       loadCards={lastElement}
       showLoadMore={showLoadMore}
+      qtConfig={qtConfig}
     />
   ));
 

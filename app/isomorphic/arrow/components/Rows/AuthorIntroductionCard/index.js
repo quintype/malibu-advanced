@@ -67,7 +67,7 @@ const AuthorIntroductionCard = ({ data = {}, config = {}, template = "" }) => {
             <div styleName="social-connect-wrapper">
               {enableSocialLinks && social && (
                 <>
-                  {template !== "smallCircle" && <div styleName={`connect ${textColor}`}>Connect :</div>}
+                  {template !== "smallCircle" && <div styleName={`connect ${textColor}`}>Connect:</div>}
                   {Object.entries(social).map((item, index) =>
                     item.length > 0 && item[1] ? (
                       // can add Social Networks without the url so adding an additional check below

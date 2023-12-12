@@ -40,7 +40,7 @@ export const PublishDetails = ({ story, opts = {}, template = "", timezone = nul
     <div data-test-id="timeStamp" className="arrow-component arr--publish-details" styleName={`timeStamp ${textColor}`}>
       {enablePublishedTime && (
         <div data-test-id="publishDetails" styleName={`publish-details ${textColor}`}>
-          {localizedPublishedOn || "Published on"} :&nbsp;
+          {localizedPublishedOn || "Published on"}:&nbsp;
           <div styleName={updatedStyle}>
             {getTimeStamp(time, timestampToFormat, timeStampProps, languageCode, template, timezone)}
           </div>
@@ -51,7 +51,7 @@ export const PublishDetails = ({ story, opts = {}, template = "", timezone = nul
       )}
       {enableUpdatedTime && (
         <div data-test-id="updateDetails" styleName={`update-details ${textColor}`}>
-          {localizedUpdatedOn || "Updated on"} :&nbsp;
+          {localizedUpdatedOn || "Updated on"}:&nbsp;
           <div styleName={updatedStyle}>
             {getTimeStamp(lastPublish, timestampToFormat, timeStampProps, languageCode, template, timezone)}
           </div>

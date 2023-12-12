@@ -88,6 +88,13 @@
   position: relative;
 }
 
+.element-container :global(.story-element-jsembed > .jsembed-wrapper.facebook-jsembed) iframe {
+  max-width: 100%;
+  width: revert-layer;
+  display: block;
+  margin: auto;
+}
+
 .element-container :global(.dailymotion-embed-wrapper .dailymotion-player-root) {
   padding-bottom: 0 !important;
   position: absolute !important;

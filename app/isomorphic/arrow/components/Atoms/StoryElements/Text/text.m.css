@@ -50,9 +50,9 @@
 .textElement ul,
 .textElement ol {
   list-style: initial;
-  padding: var(--arrow-spacing-m) 0 0 var(--arrow-spacing-l);
+  padding: var(--arrow-spacing-m) var(--arrow-spacing-xl) 0 var(--arrow-spacing-l);
   @media (min-width: mobile) {
-    padding: var(--arrow-spacing-m) 0 0 var(--arrow-spacing-xl);
+    padding: var(--arrow-spacing-m) var(--arrow-spacing-xl) 0 var(--arrow-spacing-xl);
   }
 }
 

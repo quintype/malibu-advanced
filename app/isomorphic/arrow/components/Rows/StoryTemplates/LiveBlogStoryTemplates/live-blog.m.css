@@ -324,4 +324,10 @@ html[dir="rtl"] {
     direction: ltr;
     flex-direction: row-reverse;
   }
+  .time-wrapper > time {
+    direction: rtl;
+  }
+  .time-wrapper.rtl-date-time > time {
+    direction: ltr;
+  }
 }

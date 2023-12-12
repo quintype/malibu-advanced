@@ -278,6 +278,75 @@ const getElement = (story, element, config = {}, AdComponent, WidgetComp, index,
   }
 };
 
+export const LiveBlogStoryElement = ({
+  story,
+  card,
+  heroVideoElementId = -1,
+  config,
+  theme,
+  adComponent,
+  widgetComp,
+  enableDarkMode,
+  CardShare
+}) => {
+  const textColor = getTextColor(theme);
+  let shouldRunFBMobileVideoFix = true;
+  const storyElements = get(card, ["story-elements"], []);
+  const firstNonAdElementIndex = storyElements.findIndex(
+    (element) => element.type !== "ad" && element.type !== "widget"
+  );
+
+  const adElementsAbove = storyElements.slice(0, firstNonAdElementIndex);
+  const restElements = storyElements.slice(firstNonAdElementIndex);
+
+  function StoryElements(storyElements) {
+    return (
+      <div className="arr--story-page-card-wrapper">
+        {storyElements.map((element, index) => {
+          if (element.id === heroVideoElementId) return false;
+          if (element.subtype && element.subtype === "facebook-post" && shouldRunFBMobileVideoFix) {
+            facebookMobileVideoResizeFix();
+            shouldRunFBMobileVideoFix = false;
+          }
+          const tableStyle = element && element.subtype === "table" ? "table" : "";
+          const cardId = get(card, ["id"], "");
+
+          return (
+            <>
+              <div
+                key={element.id}
+                className="arr--element-container"
+                styleName={`element-container live-blog ${tableStyle} ${textColor}`}>
+                {getElement(story, element, config, adComponent, widgetComp, index, cardId, enableDarkMode)}
+              </div>
+            </>
+          );
+        })}
+      </div>
+    );
+  }
+
+  return (
+    <>
+      {StoryElements(adElementsAbove)}
+      <CardShare />
+      {StoryElements(restElements)}
+    </>
+  );
+};
+
+LiveBlogStoryElement.propTypes = {
+  story: PropTypes.object,
+  card: PropTypes.object,
+  heroVideoElementId: PropTypes.number,
+  config: PropTypes.object,
+  theme: PropTypes.string,
+  adComponent: PropTypes.func,
+  widgetComp: PropTypes.func,
+  enableDarkMode: PropTypes.bool,
+  CardShare: PropTypes.func
+};
+
 const MainImageWrapper = ({ imageElement, story, children, config, card }) => {
   return (
     <>

@@ -165,7 +165,7 @@ const DefaultTemplate = ({ authors, clazzName = "", opts = {}, mountAt = "", tex
       <div data-test-id={`author-card-${kebabCase(template)}`} className={`${!showImage ? "author-card-wrapper" : ""}`}>
         <div styleName={`author-card-wrapper ${template}`} className={clazzName}>
           {showLabels && mainAuthors.length > 0 && (showName || showImage) && (
-            <span styleName={`${textColor} author-card-label`}>{`${finalAuthorLabel}\xa0:`}</span>
+            <span styleName={`${textColor} author-card-label`}>{`${finalAuthorLabel}:`}</span>
           )}
           {showImage && <AuthorsImage authors={mainAuthors} mountAt={mountAt} />}
           {showName && <AuthorsName authors={mainAuthors} mountAt={mountAt} textColor={textColor} showTwitter={true} />}
@@ -178,7 +178,7 @@ const DefaultTemplate = ({ authors, clazzName = "", opts = {}, mountAt = "", tex
           styleName={`author-card-wrapper ${template} ${isGuestAuthorsPresent ? "guest-author-wrapper" : ""}`}
           className={clazzName}>
           {showLabels && isGuestAuthorsPresent && (showGuestAuthorName || showGuestAuthorImage) && (
-            <span styleName={`${textColor} author-card-label`}>{`${finalGuestAuthorLabel}\xa0:`}</span>
+            <span styleName={`${textColor} author-card-label`}>{`${finalGuestAuthorLabel}:`}</span>
           )}
           {showGuestAuthorImage && <AuthorsImage authors={guestAuthors} mountAt={mountAt} />}
           {showGuestAuthorName && (
