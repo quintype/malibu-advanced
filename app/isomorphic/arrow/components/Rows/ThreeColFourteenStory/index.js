@@ -1,13 +1,13 @@
 import React from "react";
 import PropTypes from "prop-types";
-import get from "lodash/get";
+import get from "lodash.get";
 import { collectionToStories } from "@quintype/components";
 
 import { CollectionName } from "../../Atoms/CollectionName";
 import { HeroImage } from "../../Atoms/HeroImage";
 import { StoryCard } from "../../Molecules/StoryCard";
 import { StateProvider } from "../../SharedContext";
-import { getTextColor, getSlot } from "../../../utils/utils";
+import { getSlot } from "../../../utils/utils";
 import { Headline } from "../../Atoms/Headline";
 import { Subheadline } from "../../Atoms/Subheadline/index";
 import { SectionTag } from "../../Atoms/SectionTag";
@@ -16,6 +16,8 @@ import "./three-col-fourteen-story.m.css";
 
 const ThreeColFourteenStories = ({ collection = {}, config = {} }) => {
   const items = collectionToStories(collection);
+  if (!items.length) return null;
+
   const {
     collectionNameBorderColor = "",
     borderColor = "",
@@ -25,12 +27,6 @@ const ThreeColFourteenStories = ({ collection = {}, config = {} }) => {
     slotConfig = [],
   } = config;
   const { type, component } = get(slotConfig, [0], {});
-
-  if (items.length < 1) {
-    return null;
-  }
-
-  const textColor = getTextColor(theme);
 
   const [firstStory, secondStory, ...restOftheStories] = items || [];
 
@@ -55,7 +51,7 @@ const ThreeColFourteenStories = ({ collection = {}, config = {} }) => {
     <div
       className="full-width-with-padding arrow-component"
       data-test-id="three-col-fourteen-stories"
-      style={{ backgroundColor: theme, color: textColor }}
+      style={{ backgroundColor: theme || "initial" }}
     >
       <div styleName="wrapper">
         <CollectionName

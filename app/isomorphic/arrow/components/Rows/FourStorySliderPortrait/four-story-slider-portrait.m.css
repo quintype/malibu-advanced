@@ -1,8 +1,8 @@
-/*eslint-disable no-descending-specificity, scss/operator-no-unspaced */
 @custom-media --viewport-medium (width >=768px);
 @custom-media --viewport-desktop (width >=992px);
 @custom-media --viewport-mobile (width >=400px);
 
+/* stylelint-disable no-descending-specificity */
 .four-story-slider-portrait-wrapper {
   position: relative;
   margin: 0 0 var(--arrow-spacing-m) var(--arrow-spacing-s);

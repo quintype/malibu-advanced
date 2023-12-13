@@ -131,7 +131,7 @@
     display: block;
     font-size: var(--arrow-fs-s);
     line-height: var(--arrow-lh-2);
-    overflow: none;
+    overflow: unset;
   }
 }
 

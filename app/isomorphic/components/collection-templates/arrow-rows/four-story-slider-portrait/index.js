@@ -1,10 +1,10 @@
 import React from "react";
-import FourColTwelveStories from "../../../../arrow/components/Rows/FourColTwelveStory";
+import FourStorySliderPortrait from "../../../../arrow/components/Rows/FourStorySliderPortrait";
 import { object } from "prop-types";
 import get from "lodash.get";
 import { collectionToStories } from "@quintype/components";
 
-export const ArrowFourColTwelveStories = ({ collection }) => {
+export const ArrowFourStorySliderPortrait = ({ collection }) => {
   const items = collectionToStories(collection);
 
   if (items.length < 1) {
@@ -44,12 +44,13 @@ export const ArrowFourColTwelveStories = ({ collection }) => {
     showReadTime: !hideReadTime,
     showLiveIcon: true,
     showSubheadline: true,
+    numberOfStoriesToShow: 10,
   };
-  return <FourColTwelveStories collection={collection} config={config} />;
+  return <FourStorySliderPortrait collection={collection} config={config} />;
 };
 
-ArrowFourColTwelveStories.propTypes = {
+ArrowFourStorySliderPortrait.propTypes = {
   collection: object,
 };
 
-ArrowFourColTwelveStories.storyLimit = 12;
+ArrowFourStorySliderPortrait.storyLimit = 14;

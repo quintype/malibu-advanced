@@ -1,10 +1,10 @@
 import React from "react";
-import FourColTwelveStories from "../../../../arrow/components/Rows/FourColTwelveStory";
+import AlternateCollectionFilter from "../../../../arrow/components/Rows/AlternateCollectionFilter";
 import { object } from "prop-types";
 import get from "lodash.get";
 import { collectionToStories } from "@quintype/components";
 
-export const ArrowFourColTwelveStories = ({ collection }) => {
+export const ArrowAlternateCollectionFilter = ({ collection }) => {
   const items = collectionToStories(collection);
 
   if (items.length < 1) {
@@ -45,11 +45,11 @@ export const ArrowFourColTwelveStories = ({ collection }) => {
     showLiveIcon: true,
     showSubheadline: true,
   };
-  return <FourColTwelveStories collection={collection} config={config} />;
+  return <AlternateCollectionFilter collection={collection} config={config} />;
 };
 
-ArrowFourColTwelveStories.propTypes = {
+ArrowAlternateCollectionFilter.propTypes = {
   collection: object,
 };
 
-ArrowFourColTwelveStories.storyLimit = 12;
+ArrowAlternateCollectionFilter.storyLimit = 14;

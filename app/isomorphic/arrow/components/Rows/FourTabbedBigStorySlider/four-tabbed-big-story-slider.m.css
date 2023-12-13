@@ -1,4 +1,3 @@
-/* eslint-disable scss/at-rule-no-unknown, no-descending-specificity */
 @value viewports: "../../../../../assets/arrow/stylesheets/viewports.m.css";
 @value mobile from viewports;
 @value desktop from viewports;
@@ -39,7 +38,7 @@
       bottom: 10px;
       left: 10px;
       z-index: var(--z-index-1);
-      @media (--viewport-mobile) {
+      @media (max-width: mobile) {
         height: 24px;
         width: 24px;
       }

@@ -17,7 +17,7 @@ import { CollectionName } from "../../Atoms/CollectionName";
 import { LoadmoreButton } from "../../Atoms/Loadmore";
 import { StoryCard } from "../../Molecules/StoryCard";
 import { HeroImage } from "../../Atoms/HeroImage";
-import { StorycardContent } from "../../../components/Molecules/StorycardContent";
+import { StorycardContent } from "../../Molecules/StorycardContent";
 import { SectionTag } from "../../Atoms/SectionTag";
 import { Headline } from "../../Atoms/Headline";
 import { AuthorWithTime } from "../../Atoms/AuthorWithTimestamp";
@@ -68,7 +68,7 @@ export const FourTabbedBigStorySlider = ({ collection, config = {} }) => {
     <div
       className="full-width-with-padding arrow-component"
       data-test-id="two-col-three-stories"
-      style={{ backgroundColor: theme, color: textColor }}
+      style={{ backgroundColor: theme || "initial" }}
     >
       <div styleName={`four-tabbed-big-story-slider ${getCustomStyleName}`}>
         <CollectionName
@@ -116,12 +116,12 @@ export const FourTabbedBigStorySlider = ({ collection, config = {} }) => {
   );
 };
 
-const DefaultStoryCardContent = ({ story, config = {}, borderColor, showSubheadline }) => {
-  const SectionTagborderColor = rgbToHex(borderColor);
+const DefaultStoryCardContentBase = ({ story, config = {}, borderColor, showSubheadline }) => {
+  const SectionTagBorderColor = rgbToHex(borderColor);
   const { localizationConfig = {} } = config;
   return (
     <div>
-      <SectionTag story={story} borderColor={SectionTagborderColor} isLightTheme />
+      <SectionTag story={story} borderColor={SectionTagBorderColor} isLightTheme />
       <Headline story={story} premiumStoryIconConfig={config} />
       <AuthorWithTime config={localizationConfig} story={story} isLightTheme />
       {showSubheadline && (
@@ -138,6 +138,7 @@ const DefaultStoryCardContent = ({ story, config = {}, borderColor, showSubheadl
 };
 
 export default StateProvider(FourTabbedBigStorySlider);
+const DefaultStoryCardContent = StateProvider(DefaultStoryCardContentBase);
 
 FourTabbedBigStorySlider.propTypes = {
   /**  collection is the array of objects which is returning by API  */
@@ -153,7 +154,7 @@ FourTabbedBigStorySlider.propTypes = {
   }),
 };
 
-DefaultStoryCardContent.propTypes = {
+DefaultStoryCardContentBase.propTypes = {
   story: PropTypes.object.isRequired,
   config: PropTypes.object,
   borderColor: PropTypes.string,

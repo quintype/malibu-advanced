@@ -1,10 +1,10 @@
 import React from "react";
-import FourColTwelveStories from "../../../../arrow/components/Rows/FourColTwelveStory";
+import FourTabbedBigStorySlider from "../../../../arrow/components/Rows/FourTabbedBigStorySlider";
 import { object } from "prop-types";
 import get from "lodash.get";
 import { collectionToStories } from "@quintype/components";
 
-export const ArrowFourColTwelveStories = ({ collection }) => {
+export const ArrowFourTabbedBigStorySlider = ({ collection }) => {
   const items = collectionToStories(collection);
 
   if (items.length < 1) {
@@ -45,11 +45,11 @@ export const ArrowFourColTwelveStories = ({ collection }) => {
     showLiveIcon: true,
     showSubheadline: true,
   };
-  return <FourColTwelveStories collection={collection} config={config} />;
+  return <FourTabbedBigStorySlider collection={collection} config={config} />;
 };
 
-ArrowFourColTwelveStories.propTypes = {
+ArrowFourTabbedBigStorySlider.propTypes = {
   collection: object,
 };
 
-ArrowFourColTwelveStories.storyLimit = 12;
+ArrowFourTabbedBigStorySlider.storyLimit = 14;
