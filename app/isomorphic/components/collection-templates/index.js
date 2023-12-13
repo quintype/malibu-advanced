@@ -9,7 +9,32 @@ import {
   ArrowOneColStoryList,
   ArrowThreeColGrid,
   ArrowThreeColSevenStories,
-  ArrowTwoColFourStories
+  ArrowTwoColFourStories,
+  ArrowTwoColThreeStories,
+  ArrowTwoColSevenStories,
+  ArrowThreeColSixStories,
+  ArrowHalfScreenSlider,
+  ArrowFourStorySlider,
+  ArrowFourStorySliderPortrait,
+  ArrowFourColSixteenStories,
+  ArrowFourColFiveStories,
+  ArrowTwoColSixStories,
+  ArrowThreeColFlexStories,
+  ArrowSixColSixStories,
+  ArrowTwoColTenStoriesSidebar,
+  ArrowThreeColTwelveStories,
+  ArrowThreeColFourteenStories,
+  ArrowTwoColFourStoryHighlight,
+  ArrowFourTabbedBigStorySlider,
+  ArrowFourColPortraitStories,
+  ArrowCollectionFilter,
+  ArrowAlternateCollectionFilter,
+  ArrowAstrologyCollection,
+  ArrowOpinionCollection,
+  ArrowListicles,
+  ArrowMagazineWidget,
+  ArrowMagazineEditions,
+  ArrowListComponent,
 } from "./arrow-rows";
 
 // This should not be needed anymore as we are using Gumlet
@@ -17,7 +42,7 @@ function wrapEager(f) {
   const wrappedComponent = function WrapEager(props) {
     if (props.index === 0) {
       return (
-        <EagerLoadImages predicate={token => token === "above-fold"}>{React.createElement(f, props)}</EagerLoadImages>
+        <EagerLoadImages predicate={(token) => token === "above-fold"}>{React.createElement(f, props)}</EagerLoadImages>
       );
     } else {
       return React.createElement(f, props);
@@ -45,5 +70,30 @@ export default {
   ArrowFullScreenSlider: wrapEager(wrapCollectionLayout(ArrowFullScreenSlider)),
   ArrowOneColStoryList: wrapEager(wrapCollectionLayout(ArrowOneColStoryList)),
   ArrowThreeColSevenStories: wrapEager(wrapCollectionLayout(ArrowThreeColSevenStories)),
-  defaultTemplate: wrapEager(wrapCollectionLayout(FourColGrid))
+  ArrowTwoColThreeStories: wrapEager(wrapCollectionLayout(ArrowTwoColThreeStories)),
+  ArrowTwoColSevenStories: wrapEager(wrapCollectionLayout(ArrowTwoColSevenStories)),
+  ArrowThreeColSixStories: wrapEager(wrapCollectionLayout(ArrowThreeColSixStories)),
+  ArrowHalfScreenSlider: wrapEager(wrapCollectionLayout(ArrowHalfScreenSlider)),
+  ArrowFourStorySlider: wrapEager(wrapCollectionLayout(ArrowFourStorySlider)),
+  ArrowFourStorySliderPortrait: wrapEager(wrapCollectionLayout(ArrowFourStorySliderPortrait)),
+  ArrowThreeColFourteenStories: wrapEager(wrapCollectionLayout(ArrowThreeColFourteenStories)),
+  ArrowFourColSixteenStories: wrapEager(wrapCollectionLayout(ArrowFourColSixteenStories)),
+  ArrowFourColFiveStories: wrapEager(wrapCollectionLayout(ArrowFourColFiveStories)),
+  ArrowTwoColSixStories: wrapEager(wrapCollectionLayout(ArrowTwoColSixStories)),
+  ArrowTwoColFourStoryHighlight: wrapEager(wrapCollectionLayout(ArrowTwoColFourStoryHighlight)),
+  ArrowThreeColFlexStories: wrapEager(wrapCollectionLayout(ArrowThreeColFlexStories)),
+  ArrowSixColSixStories: wrapEager(wrapCollectionLayout(ArrowSixColSixStories)),
+  ArrowTwoColTenStoriesSidebar: wrapEager(wrapCollectionLayout(ArrowTwoColTenStoriesSidebar)),
+  ArrowThreeColTwelveStories: wrapEager(wrapCollectionLayout(ArrowThreeColTwelveStories)),
+  ArrowFourTabbedBigStorySlider: wrapEager(wrapCollectionLayout(ArrowFourTabbedBigStorySlider)),
+  ArrowFourColPortraitStories: wrapEager(wrapCollectionLayout(ArrowFourColPortraitStories)),
+  ArrowCollectionFilter: wrapEager(wrapCollectionLayout(ArrowCollectionFilter)),
+  ArrowAlternateCollectionFilter: wrapEager(wrapCollectionLayout(ArrowAlternateCollectionFilter)),
+  ArrowAstrologyCollection: wrapEager(wrapCollectionLayout(ArrowAstrologyCollection)),
+  ArrowOpinionCollection: wrapEager(wrapCollectionLayout(ArrowOpinionCollection)),
+  ArrowListicles: wrapEager(wrapCollectionLayout(ArrowListicles)),
+  ArrowMagazineWidget: wrapEager(wrapCollectionLayout(ArrowMagazineWidget)),
+  ArrowMagazineEditions: wrapEager(wrapCollectionLayout(ArrowMagazineEditions)),
+  ArrowListComponent: wrapEager(wrapCollectionLayout(ArrowListComponent)),
+  defaultTemplate: wrapEager(wrapCollectionLayout(FourColGrid)),
 };
