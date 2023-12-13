@@ -87,7 +87,6 @@ function generateSeo(config, pageType) {
     enableTwitterCards: true,
     enableOgTags: true,
     enableNews: true,
-    ampPageBasePath: "/amp",
   });
 }
 
@@ -95,7 +94,6 @@ ampRoutes(app, {
   seo: generateSeo,
 
   featureConfig: {
-    ampPageBasePath: () => "/amp",
     subscriptions: {
       services: {
         authorizationUrl: ({ story, config }) => {
@@ -124,7 +122,6 @@ ampRoutes(app, {
 });
 
 isomorphicRoutes(app, {
-  ampPageBasePath: () => "/amp",
   appVersion: require("../isomorphic/app-version"),
   logError: (error) => logger.error(error),
   generateRoutes: generateRoutes,
