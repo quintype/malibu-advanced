@@ -44,6 +44,10 @@ export const GroupsAndPlansModal = ({ member, setActiveTab, setSelectedPlan, get
             return <div dangerouslySetInnerHTML={{ __html: richText }} />;
           };
           const groupName = selectedSubscriptions[group.name];
+          const groupDurationLength = groupName && groupName.duration_length;
+          const groupDurationUnit = groupName && groupName.duration_unit;
+          const planDurationLength = group.subscription_plans.map((plan, index) => get(plan, ["duration_length"], ""));
+          const planDurationUnit = group.subscription_plans.map((plan, index) => get(plan, ["duration_unit"], ""));
           return (
             <div key={id} styleName="group-card">
               <div styleName="group-name">{group.name}</div>
@@ -51,10 +55,10 @@ export const GroupsAndPlansModal = ({ member, setActiveTab, setSelectedPlan, get
                 <div>
                   {groupName && (
                     <div styleName="selected-option" onClick={() => handleOptionClick(group.name, groupName)}>
-                      {groupName.duration_length}&nbsp;
-                      {groupName.duration_length === 1
-                        ? groupName.duration_unit.substring(0, groupName.duration_unit.length - 1)
-                        : groupName.duration_unit}
+                      {groupDurationLength}&nbsp;
+                      {groupDurationLength === 1
+                        ? groupDurationUnit.substring(0, groupDurationUnit.length - 1)
+                        : groupDurationUnit}
                       &nbsp;
                       {groupName.price_cents / 100}&nbsp;
                       {groupName.price_currency}
@@ -69,10 +73,10 @@ export const GroupsAndPlansModal = ({ member, setActiveTab, setSelectedPlan, get
                           onClick={() => handleOptionClick(group.name, plan)}
                         >
                           {1 + index})&nbsp;
-                          {plan.duration_length}&nbsp;
-                          {plan.duration_length === 1
-                            ? plan.duration_unit.substring(0, plan.duration_unit.length - 1)
-                            : plan.duration_unit}
+                          {planDurationLength}&nbsp;
+                          {planDurationLength === 1
+                            ? planDurationUnit.substring(0, planDurationUnit.length - 1)
+                            : planDurationUnit}
                           &nbsp;
                           {plan.price_cents / 100}&nbsp;
                           {plan.price_currency} &nbsp;
