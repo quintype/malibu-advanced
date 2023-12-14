@@ -17,7 +17,8 @@ const TextStoryTemplate = ({
   secondChild,
   enableDarkMode,
   loadRelatedStories,
-  visibleCardsRender
+  visibleCardsRender,
+  hasAccess,
 }) => {
   const {
     theme = "",
@@ -60,6 +61,8 @@ const TextStoryTemplate = ({
         mountAt={mountAt}
         loadRelatedStories={loadRelatedStories}
         visibleCardsRender={visibleCardsRender}
+        storyAccess={story.access}
+        hasAccess={hasAccess}
       />
     </div>
   );
@@ -81,7 +84,8 @@ TextStoryTemplate.propTypes = {
   enableDarkMode: PropTypes.bool,
   mountAt: PropTypes.string,
   loadRelatedStories: PropTypes.func,
-  visibleCardsRender: PropTypes.func | undefined
+  visibleCardsRender: PropTypes.func | undefined,
+  hasAccess: PropTypes.bool,
 };
 
 export default StateProvider(TextStoryTemplate);

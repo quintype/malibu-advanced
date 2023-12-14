@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { func, bool } from "prop-types";
+import { func, bool, string } from "prop-types";
 
 import { sendOtp } from "@quintype/bridgekeeper-js";
 
@@ -12,7 +12,7 @@ import { ForgotPassword } from "../../molecules/forms/forgot-password";
 import "./account-modal.m.css";
 import PhoneLogin from "../../molecules/forms/phoneLogin";
 
-const AccountModal = ({ onClose, isPopup = true }) => {
+const AccountModal = ({ onClose, isPopup = true, customCallbackUrl }) => {
   const [activeTab, setActiveTab] = useState("login");
   const [member, setMember] = useState(null);
   const [otpToken, setOtpToken] = useState(null);
@@ -50,6 +50,7 @@ const AccountModal = ({ onClose, isPopup = true }) => {
             onLogin={(member, res) => otpHandler(member, res)}
             forgotPassword={() => setActiveTab("forgot-password")}
             setLoginOption={setActiveTab}
+            customCallbackUrl={customCallbackUrl}
           />
         );
       case "phone":
@@ -61,6 +62,7 @@ const AccountModal = ({ onClose, isPopup = true }) => {
             onLogin={() => {
               setActiveTab("login");
             }}
+            customCallbackUrl={customCallbackUrl}
           />
         );
       case "otp":
@@ -114,6 +116,7 @@ const AccountModal = ({ onClose, isPopup = true }) => {
 AccountModal.propTypes = {
   onClose: func,
   isPopup: bool,
+  customCallbackUrl: string,
 };
 
 export default AccountModal;

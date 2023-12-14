@@ -79,6 +79,36 @@
   text-align: center;
 }
 
+.active-plan-label {
+  font-size: 20px;
+  font-weight: bold;
+  margin: 12px 0;
+}
+
+.end-date-text {
+  font-weight: bold;
+  color: var(--brand-primary-dark);
+  font-size: var(--base-smaller);
+}
+
+.hidden {
+  display: none;
+}
+
+.shown {
+  display: flex;
+}
+
+.plan {
+  margin-bottom: 10px;
+}
+
+.plan-name {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
 .malibu-form-link {
   overflow: auto;
   min-width: 60vw;

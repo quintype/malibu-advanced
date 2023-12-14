@@ -1,3 +1,5 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable react/no-unknown-property */
 import { SocialShare } from "@quintype/components";
 import React from "react";
 import { useSelector } from "react-redux";
@@ -20,8 +22,11 @@ import AsideCollection from "../../AsideCollection";
 import { StoryReview } from "../../../Atoms/StoryReview";
 import { getTextColor } from "../../../../utils/utils";
 import { getTitleElementsIndex, isIntroCardPresent, getFirstDescriptionElementsIndex } from "./listicleUtils.js";
+import { Paywall } from "../../Paywall";
+import { MetypeCommentsWidget } from "../../../../../components/Metype/commenting-widget";
+import { MetypeReactionsWidget } from "../../../../../components/Metype/reaction-widget";
 
-const ListicleStoryTemplate = ({
+const StoryTemplateListicle = ({
   story = {},
   accessLoading = false,
   config = {},
@@ -32,7 +37,8 @@ const ListicleStoryTemplate = ({
   secondChild,
   enableDarkMode,
   loadRelatedStories,
-  visibleCardsRender = null
+  visibleCardsRender = null,
+  hasAccess,
 }) => {
   const {
     theme = "",
@@ -131,6 +137,13 @@ const ListicleStoryTemplate = ({
       </React.Fragment>
     );
   });
+
+  // Metype widgets
+  const metypeConfig = useSelector((state) => get(state, ["qt", "config", "publisher-attributes", "metypeConfig"], {}));
+  const isMetypeEnabled = useSelector((state) =>
+    get(state, ["qt", "config", "publisher-attributes", "enableMetype"], true)
+  );
+  const jwtToken = useSelector((state) => get(state, ["userReducer", "jwt_token"], null));
 
   // Content Blocks
   const HeroImageBlock = (settings) => {
@@ -235,7 +248,7 @@ const ListicleStoryTemplate = ({
     );
 
   // Templates
-  const DefaultTemplate = () => (
+  const defaultTemplate = ({ hasAccess }) => (
     <>
       <HeroImageBlock aspectRatio={[[16, 9], [16, 6]]} />
       <div styleName="grid-container">
@@ -245,7 +258,28 @@ const ListicleStoryTemplate = ({
         <div data-type-column="left" styleName="left-column">
           <HeadlineBlock />
           <AuthorBlock />
-          <BodyBlock />
+          <BodyBlock hasAccess={hasAccess} />
+          {isMetypeEnabled && (
+            <>
+              <MetypeReactionsWidget
+                host={metypeConfig.metypeHost}
+                accountId={metypeConfig.metypeAccountId}
+                storyUrl={story.url}
+                storyId={story.id}
+              />
+              <MetypeCommentsWidget
+                host={metypeConfig.metypeHost}
+                accountId={metypeConfig.metypeAccountId}
+                pageURL={story.url}
+                primaryColor={metypeConfig.primaryColor}
+                className={metypeConfig.className}
+                jwt={jwtToken}
+                fontUrl={metypeConfig.fontFamilyUrl}
+                fontFamily={metypeConfig.fontFamily}
+                storyId={story.id}
+              />
+            </>
+          )}
         </div>
         <div data-type-column="right" styleName="right-column">
           <SideColumnBlock />
@@ -253,7 +287,7 @@ const ListicleStoryTemplate = ({
       </div>
     </>
   );
-  const HeroPriority = () => (
+  const heroPriority = ({ hasAccess }) => (
     <div styleName="hero-priority-template">
       <div styleName="grid-container">
         <div styleName="full-grid">
@@ -263,13 +297,34 @@ const ListicleStoryTemplate = ({
           <CaptionAttributionBlock />
           <HeadlineBlock />
           <AuthorBlock />
-          <BodyBlock />
+          <BodyBlock hasAccess={hasAccess} />
+          {isMetypeEnabled && (
+            <>
+              <MetypeReactionsWidget
+                host={metypeConfig.metypeHost}
+                accountId={metypeConfig.metypeAccountId}
+                storyUrl={story.url}
+                storyId={story.id}
+              />
+              <MetypeCommentsWidget
+                host={metypeConfig.metypeHost}
+                accountId={metypeConfig.metypeAccountId}
+                pageURL={story.url}
+                primaryColor={metypeConfig.primaryColor}
+                className={metypeConfig.className}
+                jwt={jwtToken}
+                fontUrl={metypeConfig.fontFamilyUrl}
+                fontFamily={metypeConfig.fontFamily}
+                storyId={story.id}
+              />
+            </>
+          )}
         </div>
         <HorizontalAsideCollection />
       </div>
     </div>
   );
-  const HeadlinePriority = () => (
+  const headlinePriority = ({ hasAccess }) => (
     <div styleName="headline-priority-template">
       <div styleName="grid-container">
         <div styleName="headline-priority-grid">
@@ -278,8 +333,29 @@ const ListicleStoryTemplate = ({
         <div styleName="left-column">
           <HeroImageBlock />
           <CaptionAttributionBlock />
-          <AuthorBlock />
-          <BodyBlock />
+          <AuthourBlock />
+          <BodyBlock hasAccess={hasAccess} />
+          {isMetypeEnabled && (
+            <>
+              <MetypeReactionsWidget
+                host={metypeConfig.metypeHost}
+                accountId={metypeConfig.metypeAccountId}
+                storyUrl={story.url}
+                storyId={story.id}
+              />
+              <MetypeCommentsWidget
+                host={metypeConfig.metypeHost}
+                accountId={metypeConfig.metypeAccountId}
+                pageURL={story.url}
+                primaryColor={metypeConfig.primaryColor}
+                className={metypeConfig.className}
+                jwt={jwtToken}
+                fontUrl={metypeConfig.fontFamilyUrl}
+                fontFamily={metypeConfig.fontFamily}
+                storyId={story.id}
+              />
+            </>
+          )}
         </div>
         <div styleName="right-column">
           <SideColumnBlock />
@@ -287,7 +363,7 @@ const ListicleStoryTemplate = ({
       </div>
     </div>
   );
-  const HeadlineHeroPriority = () => (
+  const headlineHeroPriority = ({ hasAccess }) => (
     <div styleName="headline-hero-priority-template">
       <div styleName="grid-container">
         <div styleName="center-column">
@@ -298,14 +374,35 @@ const ListicleStoryTemplate = ({
         </div>
         <div styleName="center-column">
           <CaptionAttributionBlock />
-          <AuthorBlock />
-          <BodyBlock />
+          <AuthourBlock />
+          <BodyBlock hasAccess={hasAccess} />
+          {isMetypeEnabled && (
+            <>
+              <MetypeReactionsWidget
+                host={metypeConfig.metypeHost}
+                accountId={metypeConfig.metypeAccountId}
+                storyUrl={story.url}
+                storyId={story.id}
+              />
+              <MetypeCommentsWidget
+                host={metypeConfig.metypeHost}
+                accountId={metypeConfig.metypeAccountId}
+                pageURL={story.url}
+                primaryColor={metypeConfig.primaryColor}
+                className={metypeConfig.className}
+                jwt={jwtToken}
+                fontUrl={metypeConfig.fontFamilyUrl}
+                fontFamily={metypeConfig.fontFamily}
+                storyId={story.id}
+              />
+            </>
+          )}
         </div>
         <HorizontalAsideCollection />
       </div>
     </div>
   );
-  const HeroOverlay = () => (
+  const heroOverlay = ({ hasAccess }) => (
     <div styleName="hero-overlay-template">
       <div styleName="grid-container">
         <div styleName="full-grid hero-faded-relative">
@@ -320,14 +417,35 @@ const ListicleStoryTemplate = ({
       <div styleName="grid-container">
         <div styleName="center-column">
           <CaptionAttributionBlock />
-          <AuthorBlock />
-          <BodyBlock />
+          <AuthourBlock />
+          <BodyBlock hasAccess={hasAccess} />
+          {isMetypeEnabled && (
+            <>
+              <MetypeReactionsWidget
+                host={metypeConfig.metypeHost}
+                accountId={metypeConfig.metypeAccountId}
+                storyUrl={story.url}
+                storyId={story.id}
+              />
+              <MetypeCommentsWidget
+                host={metypeConfig.metypeHost}
+                accountId={metypeConfig.metypeAccountId}
+                pageURL={story.url}
+                primaryColor={metypeConfig.primaryColor}
+                className={metypeConfig.className}
+                jwt={jwtToken}
+                fontUrl={metypeConfig.fontFamilyUrl}
+                fontFamily={metypeConfig.fontFamily}
+                storyId={story.id}
+              />
+            </>
+          )}
         </div>
         <HorizontalAsideCollection />
       </div>
     </div>
   );
-  const HeadlineSideway = () => (
+  const headlineSideway = ({ hasAccess }) => (
     <div styleName="headline-sideway-template">
       <div styleName="sideway-grid">
         <div styleName="sideway-headline">
@@ -340,30 +458,81 @@ const ListicleStoryTemplate = ({
       </div>
       <div styleName="grid-container">
         <div styleName="center-column">
-          <AuthorBlock />
-          <BodyBlock />
+          <AuthourBlock />
+          <BodyBlock hasAccess={hasAccess} />
+          {isMetypeEnabled && (
+            <>
+              <MetypeReactionsWidget
+                host={metypeConfig.metypeHost}
+                accountId={metypeConfig.metypeAccountId}
+                storyUrl={story.url}
+                storyId={story.id}
+              />
+              <MetypeCommentsWidget
+                host={metypeConfig.metypeHost}
+                accountId={metypeConfig.metypeAccountId}
+                pageURL={story.url}
+                primaryColor={metypeConfig.primaryColor}
+                className={metypeConfig.className}
+                jwt={jwtToken}
+                fontUrl={metypeConfig.fontFamilyUrl}
+                fontFamily={metypeConfig.fontFamily}
+                storyId={story.id}
+              />
+            </>
+          )}
         </div>
         <HorizontalAsideCollection />
       </div>
     </div>
   );
 
-  const renderTemplate = () => {
+  const renderTemplate = (templateType, { story, config }, hasAccess) => {
     switch (templateType) {
       case "hero-priority":
-        return <HeroPriority />;
+        return heroPriority({ story, config }, hasAccess);
       case "headline-priority":
-        return <HeadlinePriority />;
+        return headlinePriority({ story, config }, hasAccess);
       case "headline-hero-priority":
-        return <HeadlineHeroPriority />;
+        return headlineHeroPriority({ story, config }, hasAccess);
       case "hero-overlay":
-        return <HeroOverlay />;
+        return heroOverlay({ story, config }, hasAccess);
       case "headline-sideway":
-        return <HeadlineSideway />;
+        return headlineSideway({ story, config }, hasAccess);
       default:
-        return <DefaultTemplate />;
+        return defaultTemplate();
     }
   };
+  return <>{renderTemplate(templateType, { story, config }, hasAccess)}</>;
+};
+
+StoryTemplateListicle.propTypes = {
+  story: PropTypes.object,
+  config: PropTypes.shape({
+    templateType: PropTypes.string,
+    authorCard: PropTypes.object,
+    asideCollection: PropTypes.object,
+  }),
+  firstChild: PropTypes.node,
+  secondChild: PropTypes.node,
+  storyElementsConfig: PropTypes.object,
+  adComponent: PropTypes.func,
+  widgetComp: PropTypes.func,
+  premiumStoryIconConfig: PropTypes.object,
+  hasAccess: PropTypes.func,
+};
+
+const ListicleStoryTemplate = ({
+  story = {},
+  config = {},
+  storyElementsConfig,
+  adComponent,
+  widgetComp = () => {},
+  firstChild,
+  secondChild,
+}) => {
+  const { theme = "", templateType = "" } = config;
+  const timezone = useSelector((state) => get(state, ["qt", "data", "timezone"], null));
   const dataTestId = templateType ? `listicle-story-${templateType}` : "listicle-story";
   return (
     <div
@@ -374,7 +543,6 @@ const ListicleStoryTemplate = ({
     </div>
   );
 };
-
 ListicleStoryTemplate.propTypes = {
   story: PropTypes.object,
   accessLoading: PropTypes.bool,
@@ -393,5 +561,4 @@ ListicleStoryTemplate.propTypes = {
   loadRelatedStories: PropTypes.func,
   visibleCardsRender: PropTypes.func | undefined
 };
-
-export default StateProvider(ListicleStoryTemplate);
+export default StateProvider(ListicleStoryTemplate, StoryTemplateListicle);

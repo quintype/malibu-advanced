@@ -11,7 +11,7 @@ import Button from "../../atoms/Button";
 import { SvgIconHandler } from "../../atoms/svg-icon-hadler";
 import "./social-login.m.css";
 
-export const SocialLoginBase = ({ loginOption, setLoginOption, googleAppId, facebookAppId }) => {
+export const SocialLoginBase = ({ loginOption, setLoginOption, googleAppId, facebookAppId, customCallbackUrl }) => {
   const [redirectUrl, setRedirectUrl] = useState("/");
   const publisherAttributes = useSelector((state) => get(state, ["qt", "config", "publisher-attributes"], {}));
   const currentPath = useSelector((state) => get(state, ["qt", "currentPath"], ""));
@@ -20,12 +20,12 @@ export const SocialLoginBase = ({ loginOption, setLoginOption, googleAppId, face
 
   useEffect(() => {
     const params = parseUrl(currentPath);
-    const getCallbackUrl = get(params, ["query", "callback_uri"], global.location && global.location.origin);
+    const getCallbackUrl =
+      customCallbackUrl || get(params, ["query", "callback_uri"], global.location && global.location.origin);
     const getRedirectUrl =
       get(params, ["query", "redirect_uri"]) || get(publisherAttributes, ["sso_login", "redirect_Url"], "");
     const location = new URL(window.location.href);
-    const oauthAuthorize = `${location.origin}/api/auth/v1/oauth/authorize?redirect_uri=${getRedirectUrl}
-    &client_id=${clientId}&callback_uri=${getCallbackUrl}&response_type=code`;
+    const oauthAuthorize = `${location.origin}/api/auth/v1/oauth/authorize?redirect_uri=${getRedirectUrl}&client_id=${clientId}&callback_uri=${getCallbackUrl}&response_type=code`;
     setRedirectUrl(ssoLoginIsEnable ? oauthAuthorize : `${location.origin}${location.pathname}`);
   }, []);
 
@@ -127,6 +127,7 @@ SocialLoginBase.propTypes = {
   setLoginOption: func,
   googleAppId: string,
   facebookAppId: string,
+  customCallbackUrl: string,
 };
 
 const mapStateToProps = (state) => ({

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import get from "lodash/get";
 import { connect, useDispatch, useSelector } from "react-redux";
-import { func, bool } from "prop-types";
+import { func, bool, string } from "prop-types";
 import { parseUrl } from "query-string";
 
 import { SocialLogin } from "../SocialLogin";
@@ -11,7 +11,7 @@ import { IS_OPEN_LOGIN_FORM, MEMBER_UPDATED } from "../../store/actions";
 
 import "./forms.m.css";
 
-const LoginBase = ({ onLogin, forgotPassword, manageLoginForm, setLoginOption }) => {
+const LoginBase = ({ onLogin, forgotPassword, manageLoginForm, setLoginOption, customCallbackUrl }) => {
   const [user, setUser] = useState({
     email: "",
     password: "",
@@ -70,7 +70,9 @@ const LoginBase = ({ onLogin, forgotPassword, manageLoginForm, setLoginOption })
           console.log("loged in successfully");
           const params = parseUrl(currentPath);
           const callbackUrl =
-            get(params, ["query", "callback_uri"]) || get(publisherAttributes, ["sso_login", "callback_Url"], "");
+            customCallbackUrl ||
+            get(params, ["query", "callback_uri"]) ||
+            get(publisherAttributes, ["sso_login", "callback_Url"], "");
           const redirectUrl =
             get(params, ["query", "redirect_uri"]) || get(publisherAttributes, ["sso_login", "redirect_Url"], "");
           const allowAjax = true;
@@ -102,7 +104,12 @@ const LoginBase = ({ onLogin, forgotPassword, manageLoginForm, setLoginOption })
           </button>
         </div>
       </form>
-      <SocialLogin getCurrentUser={getCurrentUser} loginOption={"Phone"} setLoginOption={setLoginOption} />
+      <SocialLogin
+        customCallbackUrl={customCallbackUrl}
+        getCurrentUser={getCurrentUser}
+        loginOption={"Phone"}
+        setLoginOption={setLoginOption}
+      />
     </React.Fragment>
   );
 };
@@ -113,6 +120,7 @@ LoginBase.propTypes = {
   manageLoginForm: func,
   isLoginOpen: bool,
   setLoginOption: func,
+  customCallbackUrl: string,
 };
 
 const mapStateToProps = (state) => ({

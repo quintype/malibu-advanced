@@ -222,6 +222,8 @@ export const AuthorCard = ({ story = {}, template = "default", clazzName = "", o
       <DefaultTemplate authors={authors} clazzName={clazzName} opts={opts} mountAt={mountAt} textColor={textColor} />
     );
 
+  const flexType = authors.length > 1 ? "column" : "row";
+
   return (
     <div
       data-test-id={`author-card-${kebabCase(template)}`}

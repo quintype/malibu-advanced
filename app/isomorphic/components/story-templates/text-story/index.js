@@ -1,8 +1,8 @@
 import React from "react";
 import TextStoryTemplate from "../../../arrow/components/Rows/StoryTemplates/TextStoryTemplates";
-import { object, func } from "prop-types";
+import { object, func, bool } from "prop-types";
 
-const TextStory = ({ story, config, adWidget, adPlaceholder }) => {
+const TextStory = ({ story, config, adWidget, adPlaceholder, hasAccess }) => {
   const templateSpecific = {};
   return (
     <TextStoryTemplate
@@ -12,6 +12,7 @@ const TextStory = ({ story, config, adWidget, adPlaceholder }) => {
       widgetComp={adWidget}
       firstChild={adPlaceholder}
       secondChild={adPlaceholder}
+      hasAccess={hasAccess}
     />
   );
 };
@@ -21,6 +22,7 @@ TextStory.propTypes = {
   config: object,
   adWidget: func,
   adPlaceholder: object,
+  hasAccess: bool,
 };
 
 export default TextStory;

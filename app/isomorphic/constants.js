@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 export const PAGE_TYPE = Object.freeze({
   HOME_PAGE: "home-page",
   SECTION_PAGE: "section-page",
@@ -12,10 +13,12 @@ export const PAGE_TYPE = Object.freeze({
   STATIC_PAGE: "static-page",
   FORM_PAGE: "form-page",
   AUTHOR_PAGE: "author-page",
+  SUBSCRIPTION_PAGE: "subscription-page",
   RESET_PASSWORD_PAGE: "reset-password-page",
   PROFILE_PAGE: "profile-page",
   USER_LOGIN: "user-login",
   VISUAL_STORY: "visual-story",
+  UGC_PAGE: "ugc-page",
 });
 export const TAG_PAGE_URL_PREFIX = "/topic/";
 

@@ -17,7 +17,8 @@ const LiveBlogStoryTemplate = ({
   secondChild,
   enableDarkMode,
   loadRelatedStories,
-  visibleCardsRender = null
+  visibleCardsRender = null,
+  hasAccess,
 }) => {
   const { theme = "", templateType = "default", verticalShare = "" } = config;
 
@@ -47,6 +48,7 @@ const LiveBlogStoryTemplate = ({
         mountAt={mountAt}
         loadRelatedStories={loadRelatedStories}
         visibleCardsRender={visibleCardsRender}
+        hasAccess={hasAccess}
       />
     </div>
   );
@@ -65,7 +67,8 @@ LiveBlogStoryTemplate.propTypes = {
   widgetComp: PropTypes.func,
   enableDarkMode: PropTypes.bool,
   loadRelatedStories: PropTypes.func,
-  visibleCardsRender: PropTypes.func | undefined
+  visibleCardsRender: PropTypes.func | undefined,
+  hasAccess: PropTypes.func,
 };
 
 export default StateProvider(LiveBlogStoryTemplate);
