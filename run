@@ -1,6 +1,12 @@
 #!/bin/bash -e
 
 npm install
+# npm run copy-arrow
+# comment the above line for copying the arrow source code
+
+# Do not overwrite the import in line 1 of isomorphic/arrow/components/Molecules/fullscreenimages.scss file
+
+
 npm run compile
 supervisord -n -c <(cat <<EOF
 [supervisord]

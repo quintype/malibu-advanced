@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import upperCase from "lodash/upperCase";
 import { useDispatch, useSelector } from "react-redux";
-import get from "lodash/get";
+import get from "lodash.get";
 import { getTextColor, navigateTo, generateNavigateSlug } from "../../../utils/utils";
 import "./page-intro-card.m.css";
 import { LoadmoreButton } from "../../Atoms/Loadmore";
@@ -14,7 +14,7 @@ export const PageIntroductionCard = ({ config = {} }) => {
     theme = "#131922",
     showButton = false,
     enableBorder = false,
-    customUrlPath,
+    customUrlPath
   } = config;
   const textColor = getTextColor(theme);
   const borderBottom = enableBorder ? "borderBottom" : "";
@@ -26,8 +26,7 @@ export const PageIntroductionCard = ({ config = {} }) => {
     <div
       styleName="author-page-wrapper"
       className="arrow-component full-width-with-padding"
-      style={{ background: theme }}
-    >
+      style={{ background: theme || "initial" }}>
       <h2 styleName={`pageTitle ${textColor} ${borderBottom}`} data-test-id="page-title">
         {upperCase(pageTitle)}
       </h2>
@@ -47,5 +46,5 @@ export const PageIntroductionCard = ({ config = {} }) => {
 };
 
 PageIntroductionCard.propTypes = {
-  config: PropTypes.shape({ theme: PropTypes.string, pageTitle: PropTypes.string, pageDescription: PropTypes.string }),
+  config: PropTypes.shape({ theme: PropTypes.string, pageTitle: PropTypes.string, pageDescription: PropTypes.string })
 };

@@ -2,10 +2,10 @@ import React, { Fragment } from "react";
 import { StoryCard } from "../../Molecules/StoryCard";
 import { StorycardContent } from "../../Molecules/StorycardContent";
 import { HeroImage } from "../../Atoms/HeroImage";
-import get from "lodash/get";
+import get from "lodash.get";
 import { CollectionName } from "../../Atoms/CollectionName";
 import { LoadmoreButton } from "../../Atoms/Loadmore";
-import { generateNavigateSlug, getTextColor, navigateTo } from "../../../utils/utils";
+import { generateNavigateSlug, navigateTo } from "../../../utils/utils";
 import { collectionToStories } from "@quintype/components";
 import PropTypes from "prop-types";
 import { StateProvider } from "../../SharedContext";
@@ -32,7 +32,7 @@ const FourColGrid = ({ collection, config = {}, getMoreStories, isLoadMoreVisibl
     footerButton = "",
     customCollectionName,
     navigate = true,
-    subsequentLoadCount = 4,
+    subsequentLoadCount = 4
   } = config;
   const storyItems = collectionToStories(collection);
 
@@ -40,7 +40,6 @@ const FourColGrid = ({ collection, config = {}, getMoreStories, isLoadMoreVisibl
 
   const { footerSlot } = footerSlotConfig;
   const footerSlotComp = footerSlot ? footerSlot() : null;
-  const textColor = getTextColor(theme);
 
   const dispatch = useDispatch();
   const qtConfig = useSelector((state) => get(state, ["qt", "config"], {}));
@@ -55,6 +54,7 @@ const FourColGrid = ({ collection, config = {}, getMoreStories, isLoadMoreVisibl
           componentName={"FourColGrid"}
           offset={storyItems.length}
           limit={subsequentLoadCount}
+          theme={theme}
         />
       );
     }
@@ -78,8 +78,7 @@ const FourColGrid = ({ collection, config = {}, getMoreStories, isLoadMoreVisibl
     <div
       className="full-width-with-padding arrow-component"
       data-test-id="four-col-grid"
-      style={{ backgroundColor: theme, color: textColor }}
-    >
+      style={{ backgroundColor: theme || "initial" }}>
       <div styleName="four-col-grid">
         <CollectionName
           collection={collection}
@@ -102,6 +101,7 @@ const FourColGrid = ({ collection, config = {}, getMoreStories, isLoadMoreVisibl
                       story={story}
                       isHorizontalMobile
                       config={config}
+                      collectionId={collection.id}
                     />
                   </StoryCard>
                 </div>
@@ -128,18 +128,18 @@ FourColGrid.propTypes = {
     collectionNameTemplate: PropTypes.string,
     footerButton: PropTypes.string,
     collectionNameBorderColor: PropTypes.string,
-    subsequentLoadCount: PropTypes.number,
+    subsequentLoadCount: PropTypes.number
   }),
   getMoreStories: PropTypes.func,
   isLoadMoreVisible: PropTypes.bool,
   isLoading: PropTypes.bool,
-  isolatedLoadMore: PropTypes.bool,
+  isolatedLoadMore: PropTypes.bool
 };
 
 FourColGrid.defaultProps = {
   getMoreStories: () => {},
   isLoadMoreVisible: true,
-  isLoading: false,
+  isLoading: false
 };
 
 export default StateProvider(FourColGrid);

@@ -15,6 +15,7 @@ import { HeroImage } from "../../../Atoms/HeroImage";
 import { PublishDetails } from "../../../Atoms/PublishDetail";
 import { StoryTags } from "../../../Atoms/StoryTags";
 import { StoryElementCard, SlotAfterStory } from "../../../Molecules/StoryElementCard";
+import { StoryReview } from "../../../Atoms/StoryReview";
 import { MetypeCommentsWidget } from "../../../../../components/Metype/commenting-widget";
 import { MetypeReactionsWidget } from "../../../../../components/Metype/reaction-widget";
 
@@ -30,20 +31,22 @@ export const StoryTemplate = ({
   firstChild,
   secondChild,
   timezone,
+  enableDarkMode,
+  mountAt,
+  loadRelatedStories,
+  visibleCardsRender = null,
   hasAccess,
 }) => {
   const {
     theme = "",
     asideCollection = {},
     templateType = "default",
-    noOfVisibleCards = -1,
+    noOfVisibleCards = 0,
     publishedDetails = {},
-    authorDetails = {
-      template: "default",
-    },
+    authorDetails = {},
     verticalShare = "",
     shareIconType = "plain-color-svg",
-    premiumStoryIconConfig = {},
+    premiumStoryIconConfig = {}
   } = config;
   const metypeConfig = useSelector((state) => get(state, ["qt", "config", "publisher-attributes", "metypeConfig"], {}));
   const isMetypeEnabled = useSelector((state) =>
@@ -71,8 +74,9 @@ export const StoryTemplate = ({
             {...asideCollection}
             widgetComp={widgetComp}
             adComponent={adComponent}
-            storyId={storyId}
             opts={publishedDetails}
+            loadRelatedStories={loadRelatedStories}
+            story={story}
           />
         </div>
       )
@@ -100,9 +104,13 @@ export const StoryTemplate = ({
 
     return (
       <div styleName="gap-16">
-        {authorDetails && <AuthorCard story={story} template={authorDetails.template} opts={authorDetails.opts} />}
+        {authorDetails && (
+          <AuthorCard story={story} template={authorDetails.template} opts={authorDetails.opts} mountAt={mountAt} />
+        )}
         <div styleName="timestamp-social-share">
-          <PublishDetails story={story} opts={publishedDetails} template="story" timezone={timezone} />
+          <div id={`publish-details-container-${storyId}`}>
+            <PublishDetails story={story} opts={publishedDetails} template="story" timezone={timezone} />
+          </div>
           {!verticalShare && <SocialShareComponent />}
         </div>
         {isStoryBehindPaywall ? (
@@ -154,8 +162,9 @@ export const StoryTemplate = ({
             widgetComp={widgetComp}
             adComponent={adComponent}
             sticky={true}
-            storyId={storyId}
             opts={publishedDetails}
+            loadRelatedStories={loadRelatedStories}
+            story={story}
           />
         </div>
       )
@@ -358,15 +367,7 @@ export const StoryTemplate = ({
     return (
       <>
         <div styleName="hero-image index-2" data-test-id="headline-overlay-hero-image">
-          <HeroImage
-            story={story}
-            FullBleed={false}
-            aspectRatio={[
-              [3, 4],
-              [16, 9],
-            ]}
-            isStoryPageImage
-          />
+          <HeroImage story={story} FullBleed={false} aspectRatio={[[3, 4], [16, 9]]} isStoryPageImage />
         </div>
         <HeaderCard />
         <div styleName="story-content-inner-wrapper">
@@ -424,7 +425,7 @@ StoryTemplate.propTypes = {
   config: PropTypes.shape({
     templateType: PropTypes.string,
     authorDetails: PropTypes.object,
-    asideCollection: PropTypes.object,
+    asideCollection: PropTypes.object
   }),
   firstChild: PropTypes.node,
   secondChild: PropTypes.node,
@@ -432,5 +433,9 @@ StoryTemplate.propTypes = {
   storyElementsConfig: PropTypes.object,
   widgetComp: PropTypes.func,
   adComponent: PropTypes.func,
+  enableDarkMode: PropTypes.bool,
+  mountAt: PropTypes.string,
+  loadRelatedStories: PropTypes.func,
+  visibleCardsRender: PropTypes.func | undefined,
   hasAccess: PropTypes.bool,
 };

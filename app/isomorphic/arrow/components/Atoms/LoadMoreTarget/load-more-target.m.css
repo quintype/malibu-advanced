@@ -1,0 +1,7 @@
+.light :global(.arr--button) {
+  color: var(--arrow-c-invert-mono2);
+}
+
+.dark :global(.arr--button) {
+  color: var(--arrow-c-mono2);
+}

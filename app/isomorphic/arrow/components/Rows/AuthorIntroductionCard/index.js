@@ -26,7 +26,7 @@ const AuthorIntroductionCard = ({ data = {}, config = {}, template = "" }) => {
   const getIcon = (item) => {
     switch (item) {
       case "twitter":
-        return <Twitter />;
+        return <Twitter color={textColor === "dark" ? "#000" : "#fff"} />;
       case "facebook":
         return <Facebook />;
       case "youtube":
@@ -47,11 +47,10 @@ const AuthorIntroductionCard = ({ data = {}, config = {}, template = "" }) => {
       data-test-id="author-intro"
       className={`${isFullWidth} arrow-component arr--author-intro-card`}
       styleName={`${authorCardStyle} ${supportBorder} ${textColor}`}
-      style={{ backgroundColor: theme, color: textColor }}
-    >
+      style={{ backgroundColor: theme || "initial" }}>
       <div styleName={`wrapper ${textColor}`} className="arrow-author-intro-wrapper">
         <div styleName="introduction-card" className="arrow-author-introduction-card">
-          {isSmallCircle && isMobile ? null : <h2 styleName={`author-name ${textColor}`}>{name}</h2>}
+          {isSmallCircle && isMobile ? null : <h1 styleName={`author-name ${textColor}`}>{name}</h1>}
           {enableBio && bio && (
             <div data-test-id="author-bio" styleName={`author-description ${textColor}`}>
               {bio}
@@ -59,9 +58,8 @@ const AuthorIntroductionCard = ({ data = {}, config = {}, template = "" }) => {
                 <div
                   styleName="fade-out"
                   style={{
-                    backgroundImage: `linear-gradient(to right, transparent, ${theme})`,
-                  }}
-                ></div>
+                    backgroundImage: `linear-gradient(to right, transparent, ${theme})` || "initial"
+                  }}></div>
               )}
             </div>
           )}
@@ -69,7 +67,7 @@ const AuthorIntroductionCard = ({ data = {}, config = {}, template = "" }) => {
             <div styleName="social-connect-wrapper">
               {enableSocialLinks && social && (
                 <>
-                  {template !== "smallCircle" && <div styleName={`connect ${textColor}`}>Connect :</div>}
+                  {template !== "smallCircle" && <div styleName={`connect ${textColor}`}>Connect:</div>}
                   {Object.entries(social).map((item, index) =>
                     item.length > 0 && item[1] ? (
                       // can add Social Networks without the url so adding an additional check below
@@ -80,8 +78,7 @@ const AuthorIntroductionCard = ({ data = {}, config = {}, template = "" }) => {
                           key={`${item}-${index}`}
                           rel="noopener noreferrer"
                           target="_blank"
-                          styleName="social-share"
-                        >
+                          styleName="social-share">
                           {getIcon(item[0])}
                         </a>
                       ) : null
@@ -103,7 +100,7 @@ const AuthorIntroductionCard = ({ data = {}, config = {}, template = "" }) => {
         </div>
         <div styleName="author-image" className="arrow-author-image">
           <AuthorImage author={data} template={template} />
-          {isSmallCircle && isMobile && <h2 styleName={`author-name ${textColor}`}>{name}</h2>}
+          {isSmallCircle && isMobile && <h1 styleName={`author-name ${textColor}`}>{name}</h1>}
         </div>
       </div>
     </div>
@@ -116,8 +113,8 @@ AuthorIntroductionCard.propTypes = {
     theme: PropTypes.string,
     enableBio: PropTypes.bool,
     enableSocialLinks: PropTypes.bool,
-    borderSupport: PropTypes.bool,
+    borderSupport: PropTypes.bool
   }),
-  template: PropTypes.string,
+  template: PropTypes.string
 };
 export default AuthorIntroductionCard;

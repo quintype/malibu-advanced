@@ -28,6 +28,7 @@ const StoryCardBase = ({
   prefix,
   config,
   isHorizontalWithImageLast,
+  collectionId
 }) => {
   if (!story || isEmpty(story)) return <div />;
   const borderOptions = ["default", "full", "bottom", "boxShadow"];
@@ -57,15 +58,15 @@ const StoryCardBase = ({
       prefix={prefix}
       config={config}
       isHorizontalWithImageLast={isHorizontalWithImageLast}
+      collectionId={collectionId}
     />
   );
   return (
     <div
       className="arr--story-card"
       data-test-id="story-card"
-      style={{ backgroundColor: theme, color: textColor }}
-      styleName={`card ${horizontalCardStyle} ${borderTemplate} ${textColor} ${bgImageClasses} ${bgImgContentOverlapClass} ${horizontalMobileClasses}`}
-    >
+      style={{ backgroundColor: theme || "initial" }}
+      styleName={`card ${horizontalCardStyle} ${borderTemplate} ${textColor} ${bgImageClasses} ${bgImgContentOverlapClass} ${horizontalMobileClasses}`}>
       {children || defaultStorycard}
     </div>
   );
@@ -84,6 +85,7 @@ const DefaultStoryCard = ({
   prefix,
   isHorizontalWithImageLast,
   config,
+  collectionId
 }) => {
   const alignment = centerAlign ? "center-align" : "";
   const SectionTagborderColor = rgbToHex(borderColor);
@@ -119,6 +121,7 @@ const DefaultStoryCard = ({
           isBottom
           prefix={prefix}
           hideAuthorImage={hideAuthorImage}
+          collectionId={collectionId}
         />
         <Subheadline story={story} />
       </div>
@@ -140,6 +143,7 @@ DefaultStoryCard.propTypes = {
   prefix: PropTypes.string,
   config: PropTypes.object,
   isHorizontalWithImageLast: PropTypes.bool,
+  collectionId: PropTypes.number
 };
 
 StoryCardBase.propTypes = {
@@ -170,6 +174,7 @@ StoryCardBase.propTypes = {
   prefix: PropTypes.string,
   config: PropTypes.object,
   isHorizontalWithImageLast: PropTypes.bool,
+  collectionId: PropTypes.number
 };
 
 StoryCardBase.defaultProps = {
@@ -179,7 +184,7 @@ StoryCardBase.defaultProps = {
   theme: "",
   centerAlign: false,
   borderColor: "",
-  isHorizontalWithImageLast: false,
+  isHorizontalWithImageLast: false
 };
 
 export const StoryCard = StateProvider(StoryCardBase);

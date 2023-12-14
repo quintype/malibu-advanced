@@ -1,21 +1,27 @@
 @custom-media --viewport-medium (width >= 768px);
+@custom-media --viewport-small (width < 768px);
 
 .wrapper {
-  flex-basis: 70%;
+  flex-basis: 60%;
   @media (--viewport-medium) {
     flex-basis: 100%;
   }
 }
 .horizontal-content-wrapper.border-full {
-  padding: 16px 16px 16px 0;
+  padding: 0;
   @media (--viewport-medium) {
-    padding: 0 16px 16px 16px;
+    padding: 0 var(--arrow-spacing-m) var(--arrow-spacing-m);
   }
 }
 
 .border-full {
-  padding: 12px 0 0 0;
   @media (--viewport-medium) {
-    padding: 0 16px 16px 16px;
+    padding: 0 var(--arrow-spacing-m) var(--arrow-spacing-m);
+  }
+}
+
+.border-full.content-wrapper {
+  @media (--viewport-small) {
+    padding: 0 var(--arrow-spacing-s) var(--arrow-spacing-s);
   }
 }

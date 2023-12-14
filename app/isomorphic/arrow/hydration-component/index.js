@@ -33,5 +33,5 @@ export const ProgressiveHydration = (props) => {
 };
 
 ProgressiveHydration.propTypes = {
-  children: PropTypes.element,
+  children: PropTypes.element
 };

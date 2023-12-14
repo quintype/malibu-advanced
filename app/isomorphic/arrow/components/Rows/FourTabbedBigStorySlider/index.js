@@ -11,7 +11,7 @@ import {
   getTextColor,
   isExternalStory,
   navigateTo,
-  rgbToHex,
+  rgbToHex
 } from "../../../utils/utils";
 import { CollectionName } from "../../Atoms/CollectionName";
 import { LoadmoreButton } from "../../Atoms/Loadmore";
@@ -38,7 +38,7 @@ export const FourTabbedBigStorySlider = ({ collection, config = {} }) => {
     footerButton = "",
     borderColor = "",
     showSubheadline = true,
-    showButton = true,
+    showButton = true
   } = config;
   const { footerSlot } = footerSlotConfig;
   const qtConfig = useSelector((state) => get(state, ["qt", "config"], {}));
@@ -68,8 +68,7 @@ export const FourTabbedBigStorySlider = ({ collection, config = {} }) => {
     <div
       className="full-width-with-padding arrow-component"
       data-test-id="two-col-three-stories"
-      style={{ backgroundColor: theme, color: textColor }}
-    >
+      style={{ backgroundColor: theme || "initial" }}>
       <div styleName={`four-tabbed-big-story-slider ${getCustomStyleName}`}>
         <CollectionName
           collection={collection}
@@ -97,8 +96,7 @@ export const FourTabbedBigStorySlider = ({ collection, config = {} }) => {
               )}`}
               onClick={() => updateActiveTab(story, index)}
               key={story.id}
-              className={`story-headline-container ${getActiveIndexStylename(index === active)}`}
-            >
+              className={`story-headline-container ${getActiveIndexStylename(index === active)}`}>
               <Headline story={story} premiumStoryIconConfig={config} isLink={false} />
             </div>
           ))}
@@ -116,20 +114,19 @@ export const FourTabbedBigStorySlider = ({ collection, config = {} }) => {
   );
 };
 
-const DefaultStoryCardContent = ({ story, config = {}, borderColor, showSubheadline }) => {
-  const SectionTagborderColor = rgbToHex(borderColor);
+const DefaultStoryCardContentBase = ({ story, config = {}, borderColor, showSubheadline }) => {
+  const SectionTagBorderColor = rgbToHex(borderColor);
   const { localizationConfig = {} } = config;
   return (
     <div>
-      <SectionTag story={story} borderColor={SectionTagborderColor} isLightTheme />
+      <SectionTag story={story} borderColor={SectionTagBorderColor} isLightTheme />
       <Headline story={story} premiumStoryIconConfig={config} />
       <AuthorWithTime config={localizationConfig} story={story} isLightTheme />
       {showSubheadline && (
         <Link
           href={getStoryUrl(story, `/${story.slug}`)}
           externalLink={isExternalStory(story)}
-          aria-label="sub-headline"
-        >
+          aria-label="sub-headline">
           <Subheadline story={story} />
         </Link>
       )}
@@ -138,6 +135,7 @@ const DefaultStoryCardContent = ({ story, config = {}, borderColor, showSubheadl
 };
 
 export default StateProvider(FourTabbedBigStorySlider);
+const DefaultStoryCardContent = StateProvider(DefaultStoryCardContentBase);
 
 FourTabbedBigStorySlider.propTypes = {
   /**  collection is the array of objects which is returning by API  */
@@ -149,13 +147,13 @@ FourTabbedBigStorySlider.propTypes = {
     border: PropTypes.string,
     footerButton: PropTypes.string,
     collectionNameTemplate: PropTypes.string,
-    collectionNameBorderColor: PropTypes.string,
-  }),
+    collectionNameBorderColor: PropTypes.string
+  })
 };
 
-DefaultStoryCardContent.propTypes = {
+DefaultStoryCardContentBase.propTypes = {
   story: PropTypes.object.isRequired,
   config: PropTypes.object,
   borderColor: PropTypes.string,
-  showSubheadline: PropTypes.bool,
+  showSubheadline: PropTypes.bool
 };

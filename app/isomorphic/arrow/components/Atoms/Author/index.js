@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import get from "lodash/get";
+import get from "lodash.get";
 import { useStateValue } from "../../SharedContext";
 import { ResponsiveImage, Link } from "@quintype/components";
 import { getTextColor } from "../../../utils/utils";
@@ -11,13 +11,11 @@ import "./author.m.css";
 const AuthorBase = ({ story, hideAuthorImage, isBottom, prefix = "", config = {} }) => {
   const configData = useStateValue() || {};
   const isAuthor = get(configData, ["showAuthor"], true);
-  const {
-    "avatar-url": avatarUrl,
-    "avatar-s3-key": avatarS3Key,
-    name: authorName,
-    slug,
-  } = get(story, ["authors", "0"], "");
-  const isBottomClasses = isBottom ? "bottom-fix" : "";
+  const { "avatar-url": avatarUrl, "avatar-s3-key": avatarS3Key, name: authorName, slug } = get(
+    story,
+    ["authors", "0"],
+    ""
+  );
   const textColor = getTextColor(configData.theme);
   const mountAt = get(config, ["mountAt"], "");
 
@@ -26,18 +24,18 @@ const AuthorBase = ({ story, hideAuthorImage, isBottom, prefix = "", config = {}
       return null;
     }
     return (
-      <div styleName={`author-image ${dir}-image`} data-test-id="author-image">
+      <div styleName={`author-image ${dir}-image`} data-test-id="author-image" className="arr--author-image">
         <figure>
           {avatarS3Key ? (
             <ResponsiveImage
               slug={avatarS3Key}
-              aspect-ratio={[1, 1]}
+              aspectRatio={[1, 1]}
               defaultWidth={400}
               imgParams={{ auto: ["format", "compress"] }}
               alt={authorName}
             />
           ) : (
-            <img src={avatarUrl} />
+            <img src={avatarUrl} alt={authorName} />
           )}
         </figure>
       </div>
@@ -59,9 +57,8 @@ const AuthorBase = ({ story, hideAuthorImage, isBottom, prefix = "", config = {}
         <Link
           className="author-name arr-author-name arrow-component"
           href={`${mountAt}/author/` + slug}
-          styleName={`author ${isBottomClasses}`}
-          aria-label="author-name"
-        >
+          styleName="author"
+          aria-label="author-name">
           {isPrefix("ltr")}
           <div className="author-name" styleName={`author-name ${textColor}`} data-test-id="author-name">
             {authorName || story["author-name"]}
@@ -75,7 +72,7 @@ const AuthorBase = ({ story, hideAuthorImage, isBottom, prefix = "", config = {}
 
 function mapStateToProps(state) {
   return {
-    config: get(state, ["qt", "config"], {}),
+    config: get(state, ["qt", "config"], {})
   };
 }
 
@@ -90,11 +87,11 @@ AuthorBase.propTypes = {
   isBottom: PropTypes.bool,
   // fix prefix before the author name
   prefix: PropTypes.string,
-  config: PropTypes.object,
+  config: PropTypes.object
 };
 
 AuthorBase.defaultProps = {
   hideAuthorImage: false,
   isBottom: false,
-  prefix: "",
+  prefix: ""
 };

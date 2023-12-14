@@ -1,19 +1,15 @@
 import React from "react";
-import get from "lodash/get";
+import get from "lodash.get";
 import { LazyLoadImages, Link, ResponsiveImage } from "@quintype/components";
 import { withElementWrapper } from "../withElementWrapper";
 import PropTypes from "prop-types";
 import { FallbackImage } from "../../FallbackImage";
-import { clientWidth, isEmpty, shapeConfig, getTextColor } from "../../../../utils/utils";
+import { isEmpty, shapeConfig, getTextColor } from "../../../../utils/utils";
 import { useStateValue } from "../../../SharedContext";
 import "./also-read.m.css";
 
-const DisplayImage = ({ story, linkedImage, template, isRightAlign }) => {
-  const isLeftAlign = template === "textLeftAlign";
-  const isMobile = clientWidth("mobile");
-  const rightAlignAspectRatio = isRightAlign && isMobile ? [4, 3] : [16, 9];
-  const imageAspectRatio = isLeftAlign ? [16, 9] : rightAlignAspectRatio;
-  const alternateText = story["hero-image-caption"] || story.headline;
+const DisplayImage = ({ story, linkedImage }) => {
+  const alternateText = story["hero-image-caption"] || story["headline"];
 
   return (
     <div styleName="card-image-wrapper">
@@ -22,7 +18,7 @@ const DisplayImage = ({ story, linkedImage, template, isRightAlign }) => {
           <LazyLoadImages>
             <ResponsiveImage
               slug={linkedImage}
-              aspect-ratio={imageAspectRatio}
+              aspectRatio={[16, 9]}
               defaultWidth={480}
               widths={[250, 480, 640]}
               imgParams={{ auto: ["format", "compress"] }}
@@ -41,9 +37,7 @@ const DisplayImage = ({ story, linkedImage, template, isRightAlign }) => {
 
 DisplayImage.propTypes = {
   story: PropTypes.shape({ "hero-image-caption": PropTypes.string, headline: PropTypes.string }),
-  linkedImage: PropTypes.string,
-  template: PropTypes.string,
-  isRightAlign: PropTypes.bool,
+  linkedImage: PropTypes.string
 };
 
 const AlsoReadBase = ({
@@ -67,8 +61,7 @@ const AlsoReadBase = ({
   const configData = useStateValue() || {};
   const textInvertColor = getTextColor(configData.theme);
   const { title = "" } = opts;
-  const { textColor } = css;
-
+  const { textColor = "" } = css;
   const displayTitle = title || "Also Read";
   const isDefault = template === "" || template === "default";
   const isRightAlign = template === "imageRightAlign";
@@ -81,19 +74,16 @@ const AlsoReadBase = ({
       data-test-id="also-read"
       href={storyUrl}
       aria-label="also-read"
-      {...restProps}
-    >
+      {...restProps}>
       {!isDefault && <div styleName={`default-text ${textInvertColor}`}>{displayTitle}</div>}
-      {isDefault && (
-        <DisplayImage story={story} linkedImage={linkedImage} template={template} isRightAlign={isRightAlign} />
-      )}
+      {isDefault && <DisplayImage story={story} linkedImage={linkedImage} />}
       <div styleName="content-wrapper">
         <div
-          styleName="headline"
-          style={textColor ? { color: textColor } : { color: textInvertColor }}
+          styleName={`headline ${textInvertColor}`}
+          style={{ color: textColor || "initial" }}
           dangerouslySetInnerHTML={{ __html: content }}
         />
-        {isRightAlign && <DisplayImage story={story} linkedImage={linkedImage} template={template} />}
+        {isRightAlign && <DisplayImage story={story} linkedImage={linkedImage} />}
       </div>
     </Link>
   );
@@ -106,13 +96,13 @@ AlsoReadBase.propTypes = {
   element: PropTypes.shape({
     text: PropTypes.string,
     metadata: PropTypes.shape({
-      linkedStoryId: PropTypes.shape({ url: PropTypes.string, "hero-image-s3-key": PropTypes.string }),
-    }),
+      linkedStoryId: PropTypes.shape({ url: PropTypes.string, "hero-image-s3-key": PropTypes.string })
+    })
   }),
   opts: PropTypes.shape({ title: PropTypes.string }),
   config: shapeConfig,
   render: PropTypes.func,
-  css: PropTypes.object,
+  css: PropTypes.object
 };
 
 export const AlsoRead = withElementWrapper(AlsoReadBase);

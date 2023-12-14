@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import React, { useState, useEffect } from "react";
 
 import { CollectionName } from "../../Atoms/CollectionName";
-import { getTextColor, getNumberOfStoriesToShow, navigateTo, generateNavigateSlug } from "../../../utils/utils";
+import { getNumberOfStoriesToShow, navigateTo, generateNavigateSlug } from "../../../utils/utils";
 import { HeroImage } from "../../Atoms/HeroImage";
 import { LoadmoreButton } from "../../Atoms/Loadmore";
 import { ScrollSnap } from "../../Atoms/ScrollSnap";
@@ -16,6 +16,21 @@ import { StorycardContent } from "../../Molecules/StorycardContent";
 import "./four-story-slider-portrait.m.css";
 
 const FourStorySliderPortrait = ({ collection, config = {} }) => {
+  const [perView, setPerView] = useState(1);
+
+  useEffect(() => {
+    const deviceWidth = get(global, ["innerWidth"], 480);
+    if (deviceWidth > 992) setPerView(4);
+    else if (deviceWidth > 764) setPerView(3);
+    else setPerView(1);
+  }, []);
+
+  const items = collectionToStories(collection);
+  const dispatch = useDispatch();
+  const qtConfig = useSelector((state) => get(state, ["qt", "config"], {}));
+  if (items.length < 1) {
+    return null;
+  }
   const {
     collectionNameBorderColor = "",
     borderColor = "",
@@ -27,29 +42,13 @@ const FourStorySliderPortrait = ({ collection, config = {} }) => {
     footerSlotConfig = {},
     navigationArrows = true,
     slideIndicator = "none",
-    isInfinite = false,
+    isInfinite = false
   } = config;
   const { footerSlot } = footerSlotConfig;
-  const items = collectionToStories(collection);
-  if (items.length < 1) {
-    return null;
-  }
-
-  const dispatch = useDispatch();
-  const qtConfig = useSelector((state) => get(state, ["qt", "config"], {}));
   const url = generateNavigateSlug(collection, qtConfig);
-  const [perView, setPerView] = useState(1);
 
   const showNumberOfStoriesToShow = getNumberOfStoriesToShow(numberOfStoriesToShow);
-  const textColor = getTextColor(theme);
   const footerSlotComp = footerSlot ? footerSlot() : null;
-
-  useEffect(() => {
-    const deviceWidth = get(global, ["innerWidth"], 480);
-    if (deviceWidth > 992) setPerView(4);
-    else if (deviceWidth > 764) setPerView(3);
-    else setPerView(1);
-  }, []);
 
   const getItems = () => {
     return items.slice(0, showNumberOfStoriesToShow).map((story, index) => {
@@ -66,8 +65,7 @@ const FourStorySliderPortrait = ({ collection, config = {} }) => {
     <div
       className="full-width-with-padding arrow-component"
       data-test-id="four-story-slider-portrait"
-      style={{ backgroundColor: theme, color: textColor }}
-    >
+      style={{ backgroundColor: theme || "initial" }}>
       <div styleName="four-story-slider-portrait-wrapper">
         <CollectionName
           collection={collection}
@@ -79,8 +77,7 @@ const FourStorySliderPortrait = ({ collection, config = {} }) => {
             isArrow={navigationArrows}
             perView={perView}
             slideIndicator={slideIndicator}
-            isInfinite={isInfinite}
-          >
+            isInfinite={isInfinite}>
             {getItems()}
           </ScrollSnap>
         ) : (
@@ -118,14 +115,14 @@ FourStorySliderPortrait.propTypes = {
     // speed of the slider(ms)
     numberOfStoriesToShow: PropTypes.number,
     // no of slides in slider
-    collectionNameBorderColor: PropTypes.string,
-  }),
+    collectionNameBorderColor: PropTypes.string
+  })
 };
 
 FourStorySliderPortrait.defaultProps = {
   theme: "#ffffff",
   slotConfig: "story",
-  border: "",
+  border: ""
 };
 
 export default StateProvider(FourStorySliderPortrait);

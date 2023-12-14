@@ -1,5 +1,5 @@
-@custom-media --viewport-medium (width >= 768px);
-@custom-media --viewport-small (width < 768px);
+@custom-media --viewport-medium (width >= 992px);
+@custom-media --viewport-small (width < 992px);
 
 .eleven-stories {
   padding: 0 var(--arrow-spacing-s);
@@ -22,7 +22,7 @@
   margin: var(--arrow-spacing-xs) 0;
   @media (--viewport-medium) {
     display: grid;
-    grid-template-columns: 1fr 1px 2fr 1px 1fr;
+    grid-template-columns: minmax(300px, 1fr) 1px 2fr 1px minmax(300px, 1fr);
     grid-gap: var(--arrow-spacing-l);
     margin: var(--arrow-spacing-m) 0;
   }

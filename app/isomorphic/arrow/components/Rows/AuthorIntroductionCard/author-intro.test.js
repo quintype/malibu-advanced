@@ -9,7 +9,7 @@ describe("Author Intro component", () => {
     const contextConfig = {
       theme: "#ffffff",
       enableBio: true,
-      enableSocialLinks: true,
+      enableSocialLinks: true
     };
     const wrapper = mount(
       <Provider store={generateStore}>
@@ -25,7 +25,7 @@ describe("Author Intro component", () => {
     const contextConfig = {
       theme: "#ffffff",
       enableBio: false,
-      enableSocialLinks: false,
+      enableSocialLinks: false
     };
     const wrapper = mount(
       <Provider store={generateStore}>
@@ -41,7 +41,7 @@ describe("Author Intro component", () => {
     const contextConfig = {
       theme: "#ffffff",
       enableBio: true,
-      enableSocialLinks: true,
+      enableSocialLinks: true
     };
     const wrapper = mount(
       <Provider store={generateStore}>
@@ -57,7 +57,7 @@ describe("Author Intro component", () => {
     const contextConfig = {
       theme: "#ffffff",
       enableBio: false,
-      enableSocialLinks: false,
+      enableSocialLinks: false
     };
     const wrapper = mount(
       <Provider store={generateStore}>
@@ -74,7 +74,7 @@ describe("Author Intro component", () => {
       theme: "#ffffff",
       enableBio: true,
       enableSocialLinks: true,
-      borderSupport: true,
+      borderSupport: true
     };
     const wrapper = mount(
       <Provider store={generateStore}>
@@ -92,7 +92,7 @@ describe("Author Intro component", () => {
       theme: "#ffffff",
       enableBio: false,
       enableSocialLinks: false,
-      borderSupport: false,
+      borderSupport: false
     };
     const wrapper = mount(
       <Provider store={generateStore}>

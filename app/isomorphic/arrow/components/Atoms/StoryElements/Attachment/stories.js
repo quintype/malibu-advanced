@@ -16,9 +16,9 @@ const doc = {
   "s3-key": "ace/2019-08/21f3a19b-1d98-46bc-95e3-a5bdc9045ae9/document__7___1_.docx",
   "content-type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
   metadata: {
-    "file-size": 8209,
+    "file-size": 8209
   },
-  subtype: "attachment",
+  subtype: "attachment"
 };
 
 const pdf = {
@@ -33,9 +33,9 @@ const pdf = {
   "s3-key": "ace/2019-07/6dcf2021-615b-43e6-85f3-21acb8953cea/resume_samples.pdf",
   "content-type": "application/pdf",
   metadata: {
-    "file-size": 301808,
+    "file-size": 301808
   },
-  subtype: "attachment",
+  subtype: "attachment"
 };
 const element = generateStoryElementData("attachment");
 withStore("Atoms/Story Elements/Attachment", Readme)

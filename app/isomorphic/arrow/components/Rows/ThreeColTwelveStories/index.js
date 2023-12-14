@@ -8,13 +8,13 @@ import { Headline } from "../../Atoms/Headline";
 import { AuthorWithTime } from "../../Atoms/AuthorWithTimestamp";
 import { HeroImage } from "../../Atoms/HeroImage";
 import "./three-col-twelve-stories.m.css";
-import { generateNavigateSlug, getTextColor, navigateTo, rgbToHex } from "../../../utils/utils";
+import { generateNavigateSlug, navigateTo, rgbToHex } from "../../../utils/utils";
 import { StateProvider } from "../../SharedContext";
 import { LoadmoreButton } from "../../Atoms/Loadmore";
 import { useDispatch, useSelector } from "react-redux";
 import { SectionTag } from "../../Atoms/SectionTag";
 
-const getChildCollectionData = (collection = {}, config = {}, collectionIndex, qtConfig) => {
+const getChildCollectionData = (collection = {}, config = {}, collectionIndex, qtConfig, parentCollectionId) => {
   const stories = collectionToStories(collection);
   if (!stories.length) return null;
   const [firstStory, ...otherStories] = stories;
@@ -25,12 +25,14 @@ const getChildCollectionData = (collection = {}, config = {}, collectionIndex, q
     footerButton = "",
     localizationConfig = {},
     collectionNameBorderColor = "",
-    borderColor = "",
+    borderColor = ""
   } = config;
 
   const sectionTagBorderColor = rgbToHex(borderColor);
   const dispatch = useDispatch();
   const url = generateNavigateSlug(collection, qtConfig);
+  const languageDirection = get(qtConfig, ["language", "direction"], "ltr");
+  const customClassName = languageDirection === "rtl" ? "rtl-threeColTwelveStories" : "ltr-threeColTwelveStories";
 
   return (
     <div styleName="column" style={{ order: collectionIndex }}>
@@ -49,7 +51,12 @@ const getChildCollectionData = (collection = {}, config = {}, collectionIndex, q
               <div styleName="big-card-content">
                 <SectionTag story={firstStory} borderColor={sectionTagBorderColor} />
                 <Headline story={firstStory} premiumStoryIconConfig={config} />
-                <AuthorWithTime config={localizationConfig} story={firstStory} hideAuthorImage={true} />
+                <AuthorWithTime
+                  config={localizationConfig}
+                  story={firstStory}
+                  hideAuthorImage={true}
+                  collectionId={`${parentCollectionId}-${collection.id}`}
+                />
               </div>
             </div>
           </StoryCard>
@@ -58,15 +65,20 @@ const getChildCollectionData = (collection = {}, config = {}, collectionIndex, q
           <div styleName="small-card" key={story.id}>
             <StoryCard story={story} theme={theme} border={withSeparator ? "bottom" : ""} config={config}>
               <div styleName="small-card-top-row">
-                <div styleName="small-card-content">
+                <div styleName="small-card-content" className={`${customClassName}`}>
                   <SectionTag story={story} borderColor={sectionTagBorderColor} />
                   <Headline story={story} premiumStoryIconConfig={config} />
+                  <AuthorWithTime
+                    config={localizationConfig}
+                    story={story}
+                    hideAuthorImage={true}
+                    collectionId={`${parentCollectionId}-${collection.id}`}
+                  />
                 </div>
                 <div styleName="small-card-hero-image">
                   <HeroImage story={story} aspectRatio={[[16, 9]]} />
                 </div>
               </div>
-              <AuthorWithTime config={localizationConfig} story={story} hideAuthorImage={true} />
             </StoryCard>
           </div>
         ))}
@@ -89,19 +101,19 @@ function ThreeColTwelveStories({ collection, config = {} }) {
   const { theme = "", slotConfig = [] } = config;
   const isSlotTypeStory = get(slotConfig, [0, "type"], "story") === "story";
   const collectionCount = isSlotTypeStory ? 3 : 2;
-  const textColor = getTextColor(theme);
   const qtConfig = useSelector((state) => get(state, ["qt", "config"], {}));
   const adWidgetComponent = get(slotConfig, [0, "component"]);
   return (
     <div
       className="full-width-with-padding arrow-component arr--three-col-twelve-stories"
       data-test-id="three-col-twelve-stories"
-      style={{ backgroundColor: theme, color: textColor }}
-    >
+      style={{ backgroundColor: theme || "initial" }}>
       <div styleName="wrapper">
         {childCollections
           .slice(0, collectionCount)
-          .map((childCollection, index) => getChildCollectionData(childCollection, config, index, qtConfig))}
+          .map((childCollection, index) =>
+            getChildCollectionData(childCollection, config, index, qtConfig, collection.id)
+          )}
         {!isSlotTypeStory && adWidgetComponent && <div styleName="ad-widget-container">{adWidgetComponent()}</div>}
       </div>
     </div>
@@ -117,8 +129,8 @@ ThreeColTwelveStories.propTypes = {
     slotConfig: PropTypes.array,
     footerButton: PropTypes.string,
     collectionNameTemplate: PropTypes.string,
-    collectionNameBorderColor: PropTypes.string,
-  }),
+    collectionNameBorderColor: PropTypes.string
+  })
 };
 
 export default StateProvider(ThreeColTwelveStories);

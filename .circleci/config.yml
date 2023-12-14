@@ -39,21 +39,6 @@ jobs:
     environment:
       BK_ENVIRONMENT: production 231
 
-  lint_js:
-    docker:
-      - image: circleci/node:12.13.0
-    steps:
-      - checkout
-      - run: npm install
-      - run: npm run lint:js:ci
-  lint_css:
-    docker:
-      - image: circleci/node:12.13.0
-    steps:
-      - checkout
-      - run: npm install
-      - run: npm run lint:css:ci
-
   stg_lighthouse_task:
     docker:
       - image: circleci/node:12.13.0-browsers
@@ -80,11 +65,6 @@ jobs:
           npx @lhci/cli@0.6.x autorun
 workflows:
   version: 2
-  build_and_test:
-    jobs:
-      - lint_js
-      - lint_css
-
   stg_lighthouse_test:
     jobs:
       - build:

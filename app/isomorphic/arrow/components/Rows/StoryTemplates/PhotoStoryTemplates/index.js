@@ -4,9 +4,9 @@
 import { SocialShare } from "@quintype/components";
 import PropTypes from "prop-types";
 import React from "react";
-import get from "lodash/get";
+import get from "lodash.get";
 import { useSelector } from "react-redux";
-import kebabCase from "lodash/kebabCase";
+import kebabCase from "lodash.kebabcase";
 import { AuthorCard } from "../../../Atoms/AuthorCard";
 import { CaptionAttribution } from "../../../Atoms/CaptionAttribution";
 import { SocialShareTemplate } from "../../../Molecules/SocialShareTemplate";
@@ -17,6 +17,7 @@ import { HeroImage } from "../../../Atoms/HeroImage";
 import { PublishDetails } from "../../../Atoms/PublishDetail";
 import { StoryTags } from "../../../Atoms/StoryTags";
 import { PhotoStoryElement, SlotAfterStory } from "../../../Molecules/StoryElementCard";
+import { StoryReview } from "../../../Atoms/StoryReview";
 import { StateProvider } from "../../../SharedContext";
 import AsideCollection from "../../AsideCollection";
 import { MetypeCommentsWidget } from "../../../../../components/Metype/commenting-widget";
@@ -26,12 +27,16 @@ import { Paywall } from "../../Paywall";
 
 const StoryTemplatePhoto = ({
   story = {},
+  accessLoading = false,
   config = {},
   storyElementsConfig,
   widgetComp,
   adComponent,
   firstChild,
   secondChild,
+  enableDarkMode,
+  loadRelatedStories,
+  visibleCardsRender = null,
   hasAccess,
 }) => {
   const {
@@ -43,10 +48,10 @@ const StoryTemplatePhoto = ({
     verticalShare = "",
     shareIconType = "plain-color-svg",
     authorDetails = {
-      template: "default",
+      template: "default"
     },
     imageRender = "fullBleed",
-    premiumStoryIconConfig = {},
+    premiumStoryIconConfig = {}
   } = config;
 
   const metypeConfig = useSelector((state) => get(state, ["qt", "config", "publisher-attributes", "metypeConfig"], {}));
@@ -57,7 +62,10 @@ const StoryTemplatePhoto = ({
 
   const visibledCards = noOfVisibleCards < 0 ? story.cards : story.cards.slice(0, noOfVisibleCards);
   const storyId = get(story, ["id"], "");
-  const timezone = useSelector((state) => get(state, ["qt", "data", "timezone"], null));
+
+  const qtState = useSelector((state) => get(state, ["qt"], {}));
+  const timezone = get(qtState, ["data", "timezone"], null);
+  const mountAt = get(qtState, ["config", "mountAt"], "");
 
   const HeaderCard = () => {
     return (
@@ -153,15 +161,7 @@ const StoryTemplatePhoto = ({
     return (
       <>
         <div data-test-id="hero-image" styleName={`${renderImages(imageRender)} index-2`}>
-          <HeroImage
-            story={story}
-            aspectRatio={[
-              [16, 9],
-              [8, 3],
-            ]}
-            defaultFallback={false}
-            isStoryPageImage
-          />
+          <HeroImage story={story} aspectRatio={[[16, 9], [8, 3]]} defaultFallback={false} isStoryPageImage />
         </div>
         <div styleName="grid-col-2-10 space-12">
           <CaptionAttribution story={story} config={config} />
@@ -197,8 +197,9 @@ const StoryTemplatePhoto = ({
               widgetComp={widgetComp}
               adComponent={adComponent}
               sticky={true}
-              storyId={storyId}
+              story={story}
               opts={publishedDetails}
+              loadRelatedStories={loadRelatedStories}
             />
           </div>
         )}
@@ -246,8 +247,9 @@ const StoryTemplatePhoto = ({
               {...asideCollection}
               widgetComp={widgetComp}
               adComponent={adComponent}
-              storyId={storyId}
+              story={story}
               opts={publishedDetails}
+              loadRelatedStories={loadRelatedStories}
             />
           </div>
         )}
@@ -297,8 +299,9 @@ const StoryTemplatePhoto = ({
               widgetComp={widgetComp}
               adComponent={adComponent}
               sticky={true}
-              storyId={storyId}
+              story={story}
               opts={publishedDetails}
+              loadRelatedStories={loadRelatedStories}
             />
           </div>
         )}
@@ -355,7 +358,9 @@ const PhotoStoryTemplate = ({
   const timezone = useSelector((state) => get(state, ["qt", "data", "timezone"], null));
   return (
     <div
-      styleName={`${verticalShare} ${isFullBleed ? "fullBleed" : ""}`}
+      styleName={`${verticalShare} ${isFullBleed ? "fullBleed" : ""} ${
+        templateType !== "headline-priority" && !isFullBleed ? "container" : ""
+      }`}
       data-test-id={`photo-story-${templateType}-${kebabCase(imageRender)}`}
       className={`arrow-component arr-story-grid arr--content-wrapper arr--photo-story-template-wrapper ${templateType} `}
       style={{ backgroundColor: theme }}
@@ -376,15 +381,19 @@ const PhotoStoryTemplate = ({
 };
 PhotoStoryTemplate.propTypes = {
   story: PropTypes.object,
+  accessLoading: PropTypes.bool,
   config: PropTypes.shape({
     templateType: PropTypes.string,
-    asideCollection: PropTypes.object,
+    asideCollection: PropTypes.object
   }),
   firstChild: PropTypes.node,
   secondChild: PropTypes.node,
   storyElementsConfig: PropTypes.object,
   adComponent: PropTypes.func,
   widgetComp: PropTypes.func,
+  enableDarkMode: PropTypes.bool,
+  loadRelatedStories: PropTypes.func,
+  visibleCardsRender: PropTypes.func | undefined
 };
 
 export default StateProvider(PhotoStoryTemplate, StoryTemplatePhoto);

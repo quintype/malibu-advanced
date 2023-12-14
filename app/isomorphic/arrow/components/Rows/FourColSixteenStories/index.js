@@ -6,7 +6,7 @@ import {
   generateNavigateSlug,
   navigateTo,
   rgbToHex,
-  getNumberOfStoriesToShow,
+  getNumberOfStoriesToShow
 } from "../../../utils/utils";
 import { collectionToStories } from "@quintype/components";
 import { StateProvider } from "../../SharedContext";
@@ -20,7 +20,7 @@ import { SectionTag } from "../../Atoms/SectionTag/index";
 import { LoadmoreButton } from "../../Atoms/Loadmore";
 import "./four-col-sixteen-stories.m.css";
 
-const getChildCollectionData = (collection, config, index) => {
+const getChildCollectionData = (collection, config, index, parentCollectionId) => {
   const stories = collectionToStories(collection);
   if (!stories.length) return null;
 
@@ -33,7 +33,7 @@ const getChildCollectionData = (collection, config, index) => {
     footerButton = "",
     localizationConfig = {},
     collectionNameBorderColor = "",
-    numberOfStoriesToShowInEachColumn = 4,
+    numberOfStoriesToShowInEachColumn = 4
   } = config;
   const dispatch = useDispatch();
   const qtConfig = useSelector((state) => get(state, ["qt", "config"], {}));
@@ -59,26 +59,28 @@ const getChildCollectionData = (collection, config, index) => {
             border={withSeparator ? "bottom" : ""}
             theme={theme}
             config={config}
-            headerLevel="6"
-          >
-            <HeroImage
-              config={config}
-              story={firstStory}
-              aspectRatio={[
-                [16, 9],
-                [16, 9],
-              ]}
-            />
+            headerLevel="6">
+            <HeroImage config={config} story={firstStory} aspectRatio={[[16, 9], [16, 9]]} />
             <SectionTag story={firstStory} borderColor={SectionTagBorderColor} />
             <Headline story={firstStory} premiumStoryIconConfig={config} />
-            <AuthorWithTime config={localizationConfig} story={firstStory} hideAuthorImage={true} />
+            <AuthorWithTime
+              config={localizationConfig}
+              story={firstStory}
+              hideAuthorImage={true}
+              collectionId={`${parentCollectionId}-${collection.id}`}
+            />
           </StoryCard>
           {otherStories.slice(0, showNumberOfStoriesInEachColumn).map((story, index) => {
             return (
               <StoryCard key={index} story={story} theme={theme} border={withSeparator ? "bottom" : ""} config={config}>
                 <SectionTag story={story} borderColor={SectionTagBorderColor} />
                 <Headline story={story} premiumStoryIconConfig={config} />
-                <AuthorWithTime config={localizationConfig} story={story} hideAuthorImage={true} />
+                <AuthorWithTime
+                  config={localizationConfig}
+                  story={story}
+                  hideAuthorImage={true}
+                  collectionId={`${parentCollectionId}-${collection.id}`}
+                />
               </StoryCard>
             );
           })}
@@ -107,9 +109,10 @@ const FourColSixteenStories = ({ collection, config = {} }) => {
       className="full-width-with-padding arrow-component arr--four-col-sixteen-stories"
       data-test-id="four-col-sixteen-stories"
       styleName={`componentWrapper ${textColor}`}
-      style={{ backgroundColor: theme, color: textColor }}
-    >
-      {childCollections.slice(0, 4).map((collection, index) => getChildCollectionData(collection, config, index))}
+      style={{ backgroundColor: theme || "initial" }}>
+      {childCollections
+        .slice(0, 4)
+        .map((childCollection, index) => getChildCollectionData(childCollection, config, index, collection.id))}
     </div>
   );
 };
@@ -117,8 +120,8 @@ const FourColSixteenStories = ({ collection, config = {} }) => {
 FourColSixteenStories.propTypes = {
   collection: PropTypes.object.isRequired,
   config: PropTypes.shape({
-    theme: PropTypes.string,
-  }),
+    theme: PropTypes.string
+  })
 };
 
 export default StateProvider(FourColSixteenStories);

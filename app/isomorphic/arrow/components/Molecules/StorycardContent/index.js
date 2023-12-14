@@ -2,10 +2,9 @@ import React from "react";
 import { Headline } from "../../Atoms/Headline";
 import { SectionTag } from "../../Atoms/SectionTag";
 import { AuthorWithTime } from "../../Atoms/AuthorWithTimestamp";
-import { getTextColor, rgbToHex } from "../../../utils/utils";
-
+import { Subheadline } from "../../Atoms/Subheadline";
+import { rgbToHex } from "../../../utils/utils";
 import PropTypes from "prop-types";
-
 import "./storycardContent.m.css";
 
 export const StorycardContent = ({
@@ -17,19 +16,19 @@ export const StorycardContent = ({
   headerLevel,
   borderColor,
   config,
+  showSubheadline,
+  collectionId
 }) => {
-  const textColor = getTextColor(theme);
   const borderOptions = ["full"];
   const SectionTagborderColor = rgbToHex(borderColor);
   const borderTemplate = borderOptions.includes(border) ? `border-${border}` : "";
-  const horizontalCard = isHorizontalMobile ? "horizontal-content-wrapper" : "";
+  const horizontalCard = isHorizontalMobile ? "horizontal-content-wrapper" : "content-wrapper";
   return (
     <div
       className="arr--content-wrapper"
       data-test-id="story-card-content"
       styleName={`wrapper ${borderTemplate} ${horizontalCard}`}
-      style={{ backgroundColor: theme, color: textColor }}
-    >
+      style={{ backgroundColor: theme || "initial" }}>
       {children || (
         <DefaultStoryCardContent
           story={story}
@@ -37,20 +36,23 @@ export const StorycardContent = ({
           isHorizontalMobile={isHorizontalMobile}
           borderColor={SectionTagborderColor}
           config={config}
+          showSubheadline={showSubheadline}
+          collectionId={collectionId}
         />
       )}
     </div>
   );
 };
 
-const DefaultStoryCardContent = ({ story, headerLevel, borderColor, config = {} }) => {
+const DefaultStoryCardContent = ({ story, headerLevel, borderColor, config = {}, showSubheadline, collectionId }) => {
   const SectionTagborderColor = rgbToHex(borderColor);
   const { localizationConfig = {} } = config;
   return (
     <div>
       <SectionTag story={story} borderColor={SectionTagborderColor} />
       <Headline story={story} headerLevel={headerLevel} premiumStoryIconConfig={config} />
-      <AuthorWithTime config={localizationConfig} story={story} />
+      {showSubheadline && <Subheadline story={story} truncateChars={200} />}
+      <AuthorWithTime config={localizationConfig} story={story} collectionId={collectionId} />
     </div>
   );
 };
@@ -63,6 +65,8 @@ DefaultStoryCardContent.propTypes = {
   headerLevel: PropTypes.string,
   borderColor: PropTypes.string,
   config: PropTypes.object,
+  showSubheadline: PropTypes.bool,
+  collectionId: PropTypes.number
 };
 
 StorycardContent.propTypes = {
@@ -74,4 +78,6 @@ StorycardContent.propTypes = {
   headerLevel: PropTypes.string,
   borderColor: PropTypes.string,
   config: PropTypes.object,
+  showSubheadline: PropTypes.bool,
+  collectionId: PropTypes.number
 };

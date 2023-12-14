@@ -16,21 +16,20 @@ const SummaryBase = ({
   render,
   ...restProps
 }) => {
-  const configData = useStateValue() || {};
-  const textInvertColor = getTextColor(configData.theme);
   const content = element.text;
   if (!content) return null;
-
+  const configData = useStateValue() || {};
+  const textInvertColor = getTextColor(configData.theme);
   const { headerBgColor } = css;
   const { isExternalLink = true, headline = "Summary", hideHeadline = false } = opts;
-  const text = (isExternalLink && updateContentLinks(content)) || content;
+  let text = (isExternalLink && updateContentLinks(content)) || content;
 
   const supportedTemplates = ["header", "border"];
   const templateStyle = supportedTemplates.includes(template) ? `summary-${template}` : "summary";
 
   const contentBorder = hideHeadline ? `content-border` : "";
   const renderTemplate = template === "header" || template === "border";
-  const updateHeaderColor = renderTemplate ? `${headerBgColor}` : "";
+  const updateHeaderColor = renderTemplate ? headerBgColor : "initial";
   const textColor = renderTemplate ? getTextColor(headerBgColor) : "";
   const updateContentColor = template === "header" ? "" : textInvertColor;
 
@@ -39,8 +38,7 @@ const SummaryBase = ({
       className="arrow-component arr--summary-element arr-custom-style"
       styleName={templateStyle}
       data-test-id="summary"
-      {...restProps}
-    >
+      {...restProps}>
       {!hideHeadline && (
         <div styleName={`heading-wrapper ${textInvertColor}`} data-test-id="summary-headline">
           <div styleName={`headline ${textColor} ${textInvertColor}`} style={{ backgroundColor: updateHeaderColor }}>
@@ -63,7 +61,7 @@ SummaryBase.propTypes = {
   story: shapeStory,
   config: shapeConfig,
   render: PropTypes.func,
-  css: PropTypes.shape({ headerBgColor: PropTypes.string }),
+  css: PropTypes.shape({ headerBgColor: PropTypes.string })
 };
 
 export const Summary = withElementWrapper(SummaryBase);

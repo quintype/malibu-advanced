@@ -1,10 +1,15 @@
 import get from "lodash/get";
+import camelCase from "lodash.camelcase";
+import kebabCase from "lodash.kebabcase";
 import PropTypes from "prop-types";
 import upperCase from "lodash/upperCase";
 import Timeago from "react-timeago";
 import React from "react";
 import lowerCase from "lodash/lowerCase";
 import { format, utcToZonedTime } from "date-fns-tz";
+import { Dot } from "../components/Atoms/Dot/dot";
+import { Divider } from "../components/Atoms/Divider/";
+import { STORY_TEMPLATES } from "../constants";
 
 const canUseDOM = !!(typeof window !== "undefined" && window.document && window.document.createElement);
 
@@ -15,88 +20,151 @@ export function truncate(string = "", limit = 60, ellipsis = true) {
   return typeof string === "string" && string.length > limit ? string.substring(0, limit) + putEllipsis : string;
 }
 
-export const timestampToFormat = (value, unit, suffix, timestamp, config = {}, languageCode = "en") => {
+export const timestampToFormat = (value, unit, suffix, timestamp, config = {}, languageCode = "en-IN") => {
   const {
     showTime = false,
     isTimeFirst = false,
     isUpperCase = false,
     disableMeridiem = false,
-    timeFormat = "12hours",
-    localizedZeroToPad,
+    dateFormat,
+    localizedMeridiem,
+    localizedMonths,
+    direction = "ltr"
   } = config;
+
   const monthList = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
   const dateTime = new Date(timestamp);
-  const date = dateTime.getDate().toString().padStart(2, 0);
-
+  const date = dateTime
+    .getDate()
+    .toString()
+    .padStart(2, 0);
   const month = monthList[dateTime.getMonth()];
   let localizedMonth = month;
+
   if (isUpperCase) {
     localizedMonth = upperCase(month);
   }
 
   const year = dateTime.getFullYear();
-  const { localizedMeridiem, localizedMonths, direction = "ltr" } = config;
-  const time = formatAMPM(timestamp, timeFormat, localizedZeroToPad, languageCode);
-  let timeWithLocalizedMeridiem = time;
-  let timetoShow;
+  const rtlWithoutCustomLabels = direction === "rtl" && !localizedMeridiem && !localizedMonths;
+
+  const timeWithLocalizedMeridiem = formatAMPM(timestamp, languageCode, config, isTimeFirst);
+
+  let timetoShow = "";
+  let rtlTimetoShow = "";
+
+  if (showTime) {
+    timetoShow = `, ${timeWithLocalizedMeridiem}`;
+    if (isTimeFirst && rtlWithoutCustomLabels) {
+      rtlTimetoShow = `${timeWithLocalizedMeridiem}`;
+    } else rtlTimetoShow = `${timeWithLocalizedMeridiem} ,`;
+  }
 
   if (localizedMonths) {
     localizedMonth = get(localizedMonths, [lowerCase(month)]) || month;
   }
-  const localizedDate = Number(date).toLocaleString(languageCode);
+  const localizedDate = date.toLocaleString(languageCode);
   const localizedYear = year.toLocaleString(languageCode).replace(/,/g, "");
 
-  if (localizedMeridiem) {
-    const isAm = time.includes("am");
-    const { am = "am", pm = "pm" } = localizedMeridiem;
-    timeWithLocalizedMeridiem = (isAm ? time.replace("am", am) : time.replace("pm", pm)) || time;
-  }
-
-  if (direction === "rtl") {
-    timetoShow = showTime ? `${timeWithLocalizedMeridiem}` : "";
-    return `${localizedDate} ${localizedMonth}, ${localizedYear} ${timetoShow} `;
-  } else {
-    if (disableMeridiem) {
-      return `${localizedMonth} ${localizedDate}, ${localizedYear}`;
-    } else if (isTimeFirst) {
-      return `${timeWithLocalizedMeridiem}, ${localizedDate} ${localizedMonth} ${localizedYear}`;
-    } else {
-      timetoShow = showTime ? `, ${timeWithLocalizedMeridiem}` : "";
-      return `${localizedDate} ${localizedMonth}, ${localizedYear}${timetoShow}`;
+  if (disableMeridiem) {
+    return `${localizedMonth} ${localizedDate}, ${localizedYear}`;
+  } else if (isTimeFirst) {
+    if (rtlWithoutCustomLabels) {
+      return `${localizedYear} ${localizedMonth} ${localizedDate}, ${rtlTimetoShow}`;
     }
+    return `${timeWithLocalizedMeridiem}, ${localizedDate} ${localizedMonth} ${localizedYear}`;
+  } else if (dateFormat === "mon-dd-yyyy") {
+    if (rtlWithoutCustomLabels) {
+      return `${rtlTimetoShow}${localizedYear} ,${localizedDate} ${localizedMonth}`;
+    }
+    return `${localizedMonth} ${localizedDate}, ${localizedYear}${timetoShow}`;
+  } else {
+    if (rtlWithoutCustomLabels) {
+      return `${rtlTimetoShow}${localizedYear} ${localizedMonth} ${localizedDate}`;
+    }
+    return `${localizedDate} ${localizedMonth} ${localizedYear}${timetoShow}`;
   }
 };
 
-export function formatter(value, unit, suffix, date, config, languageCode) {
+export function formatter(value, unit, suffix, date, config, languageCode, isLocalizedNumber, timeAgoFormat) {
   const showDateForUnits = ["day", "week", "month", "year"];
   // suffix here refers to ago
   // unit here refers to seconds, minute, minutes,...
   const localizedSuffix = get(config, ["localizedPublishTime", suffix]) || suffix;
   let localizedUnitOfTime;
 
+  const localeDateLanguageCode = isLocalizedNumber ? languageCode : "en";
+
+  const timeFormatObj = {
+    time: value.toLocaleString(localeDateLanguageCode),
+    unit: localizedUnitOfTime,
+    ago: localizedSuffix,
+    since: get(config, ["localizedPublishTime", "since"]) || "since"
+  };
+
+  const getFormattedDate = (timeFormat) => {
+    const timeStr = timeAgoFormat.replace(/time|unit|ago|since/gi, (item) => timeFormat[item]);
+    return monkeyPatchForArabic(timeStr);
+  };
+
   if ((unit === "hour" && value > 23) || showDateForUnits.indexOf(unit) !== -1) {
-    return timestampToFormat(value, unit, suffix, date, config, languageCode);
+    return timestampToFormat(value, unit, suffix, date, config, localeDateLanguageCode);
   } else if (value > 1) {
     localizedUnitOfTime = get(config, ["localizedPublishTime", `${unit}s`]) || `${unit}s`;
-    return `${value.toLocaleString(languageCode)} ${localizedUnitOfTime} ${localizedSuffix}`;
+    timeFormatObj["unit"] = localizedUnitOfTime;
+    return getFormattedDate(timeFormatObj);
   }
   localizedUnitOfTime = get(config, ["localizedPublishTime", unit]) || unit;
-  return `${value.toLocaleString(languageCode)} ${localizedUnitOfTime} ${localizedSuffix} `;
+  timeFormatObj["unit"] = localizedUnitOfTime;
+
+  return getFormattedDate(timeFormatObj);
 }
 
-function formatAMPM(timestamp, timeFormat = "12hours", localizedZeroToPad, languageCode) {
+function monkeyPatchForArabic(timeStr = "") {
+  const replacements = {
+    "منذ 2 ثواني": "منذ ثانيتان",
+    "منذ 1 دقيقة": "منذ دقيقة",
+    "منذ 2 دقائق": "منذ دقيقتان",
+    "منذ 1 ساعة": "منذ ساعة",
+    "منذ 2 ساعات": "منذ ساعتان"
+  };
+  const re = new RegExp(Object.keys(replacements).join("|"), "gi");
+  const str = timeStr.replace(re, (match) => replacements[match]);
+  return str;
+}
+
+function formatAMPM(timestamp, languageCode, config, isTimeFirst) {
+  const { timeFormat = "12hours", localizedZeroToPad, direction = "ltr", localizedMonths, localizedMeridiem } = config;
   const dateTime = new Date(timestamp);
+
+  if (timeFormat === "24hours") {
+    //  'en-GB' formats the time in 24-hours format
+    return dateTime.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" });
+  }
+
   let hours = dateTime.getHours();
   let minutes = dateTime.getMinutes();
   const ampm = hours >= 12 ? "pm" : "am";
   hours = hours % 12;
   hours = hours || 12;
-  const padZero = languageCode === "en" ? "0" : localizedZeroToPad;
+  const padZero = languageCode.startsWith("en") ? "0" : localizedZeroToPad;
   minutes = minutes < 10 ? padZero + minutes.toLocaleString(languageCode) : minutes.toLocaleString(languageCode);
-  const strTime = hours.toLocaleString(languageCode) + ":" + minutes + " " + ampm.toLocaleString(languageCode);
-  if (timeFormat === "24hours") {
-    return dateTime.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  let updatedAmPm = ampm.toLocaleString(languageCode);
+
+  if (localizedMeridiem) {
+    const { am = "am", pm = "pm" } = localizedMeridiem;
+    updatedAmPm = ampm.toLocaleString(languageCode) === "am" ? am : pm;
   }
+
+  if (direction === "rtl" && !localizedMeridiem && !localizedMonths) {
+    if (isTimeFirst) {
+      const strTime = hours.toLocaleString(languageCode) + ":" + minutes + " " + updatedAmPm;
+      return strTime;
+    }
+    const strTime = updatedAmPm + " " + hours.toLocaleString(languageCode) + ":" + minutes;
+    return strTime;
+  }
+  const strTime = hours.toLocaleString(languageCode) + ":" + minutes + " " + updatedAmPm;
   return strTime;
 }
 
@@ -113,7 +181,7 @@ export const getLuminanceOfColor = (hex) => {
 };
 
 export const rgbToHex = (color = "rgba(255, 255, 255, 0)") => {
-  const rgba = color.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
+  let rgba = color.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
   return rgba && rgba.length === 4
     ? "#" +
         ("0" + parseInt(rgba[1], 10).toString(16)).slice(-2) +
@@ -124,7 +192,7 @@ export const rgbToHex = (color = "rgba(255, 255, 255, 0)") => {
 
 const clientWidths = {
   mobile: 767,
-  tablet: 1024,
+  tablet: 1024
 };
 
 export const clientWidth = (device) => {
@@ -208,19 +276,24 @@ export const isEmpty = (value) => {
 export const shapeConfig = PropTypes.shape({
   "sketches-host": PropTypes.string,
   "cdn-name": PropTypes.string,
-  "cdn-image": PropTypes.string,
+  "cdn-image": PropTypes.string
 });
 
 export const shapeStory = PropTypes.shape({
   headline: PropTypes.string,
   "last-published-at": PropTypes.number,
-  subheadline: PropTypes.string,
+  subheadline: PropTypes.string
 });
 
-export const getStoryUrl = (story, defaultValue = "") => {
-  return get(story, ["story-template"]) === "news-elsewhere"
-    ? get(story, ["metadata", "reference-url"], "")
-    : story.url || defaultValue;
+export const getStoryUrl = (story, defaultValue = "", queryParam = {}) => {
+  const param = new URLSearchParams(queryParam);
+  const searchParam = param.toString();
+  if (get(story, ["story-template"]) === "news-elsewhere") {
+    const referenceUrl = get(story, ["metadata", "reference-url"], "");
+    return searchParam ? `${referenceUrl}?${searchParam}` : referenceUrl;
+  }
+  const storyUrl = story.url || defaultValue;
+  return searchParam ? `${storyUrl}?${searchParam}` : storyUrl;
 };
 
 export const detectComponent = (component, adComponent, widgetComp) => {
@@ -275,9 +348,9 @@ export const generateNavigateSlug = (collection = {}, config = {}, customUrlPath
 
 export const getCollectionData = async (collectionSlug, mountAtPrefix = "") => {
   try {
-    const result = await (
-      await fetch(`${mountAtPrefix}/api/v1/collections/${collectionSlug}?item-type=story&limit=6`)
-    ).json();
+    const result = await (await fetch(
+      `${mountAtPrefix}/api/v1/collections/${collectionSlug}?item-type=story&limit=6`
+    )).json();
     return result;
   } catch (err) {
     // eslint-disable-next-line no-console
@@ -306,18 +379,33 @@ export function getAuthorTwitterUrl(author) {
   return "";
 }
 
-export const getTimeStamp = (date, formatter, config = {}, languageCode, template, timezone = null) => {
+export const getTimeStamp = (
+  date,
+  formatter,
+  config = {},
+  languageCode,
+  template,
+  timezone = null,
+  isLocalizedNumber,
+  timeAgoFormat = ""
+) => {
+  const isRelatedCollection = get(config, ["isRelatedCollection"], false);
   if (timezone && template === "story") {
     const zonedTime = timezone && utcToZonedTime(date, timezone);
     const formatZonedTime = zonedTime && format(zonedTime, "yyyy-MM-dd'T'HH:mm:ssXXX", { timeZone: timezone });
-    const timeStamp = timestampToFormat("", "", "", date, config);
+    const localeDateLanguageCode = isLocalizedNumber ? languageCode : "en";
+    const timeStamp = timestampToFormat("", "", "", date, config, localeDateLanguageCode);
     return <time dateTime={formatZonedTime}>{timeStamp}</time>;
   }
 
   return (
     <Timeago
       date={date}
-      formatter={(value, unit, suffix, date) => formatter(value, unit, suffix, date, config, languageCode)}
+      component={isRelatedCollection ? "div" : "time"}
+      className="arr__timeago"
+      formatter={(value, unit, suffix, date) => {
+        return formatter(value, unit, suffix, date, config, languageCode, isLocalizedNumber, timeAgoFormat);
+      }}
     />
   );
 };
@@ -327,4 +415,40 @@ export function removeHtmlTags(str) {
   else str = str.toString();
 
   return str.replace(/(<([^>]+)>)/gi, "");
+}
+
+export const getSeparator = (separator, textColor) => {
+  if (separator === "divider") {
+    return <Divider color={textColor} />;
+  }
+  return <Dot color={textColor} />;
+};
+
+export function getStoryTemplate(story, config) {
+  const { "story-template": storyTemplate } = story;
+  const isCustomStory = !STORY_TEMPLATES.includes(storyTemplate);
+  const customStoryTemplate =
+    isCustomStory && get(config, ["customStory", `${camelCase(storyTemplate)}-story`, "storyType"], "text");
+  return isCustomStory ? kebabCase(customStoryTemplate) : storyTemplate;
+}
+
+export function getTimeStampConfig(qtConfig) {
+  const { dateFormat = "dd-mon-yyyy", localization = {}, timeFormat } = get(
+    qtConfig,
+    ["pagebuilder-config", "general"],
+    {}
+  );
+  const { enableLocalization = false, localizedElements = {} } = localization;
+
+  const timeStampConfig = {
+    isUpperCase: false,
+    disableMeridiem: false,
+    dateFormat,
+    timeFormat,
+    localizedMonths: enableLocalization && get(localizedElements, ["months"]),
+    localizedMeridiem: enableLocalization && get(localizedElements, ["meridiem"], {}),
+    enableLocalization
+  };
+
+  return timeStampConfig;
 }

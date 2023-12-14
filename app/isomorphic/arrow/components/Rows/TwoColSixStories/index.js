@@ -26,7 +26,7 @@ const TwoColSixStories = ({ collection, config = {} }) => {
     collectionNameTemplate = "",
     border = "fullBorder",
     borderColor = "",
-    localizationConfig = {},
+    localizationConfig = {}
   } = config;
   const { type = "story", component } = get(slotConfig, [0], {});
   const textColor = getTextColor(theme);
@@ -35,16 +35,23 @@ const TwoColSixStories = ({ collection, config = {} }) => {
   const qtConfig = useSelector((state) => get(state, ["qt", "config"], {}));
   const url = generateNavigateSlug(collection, qtConfig);
   const sectionTagBorderColor = rgbToHex(borderColor);
-
+  const languageDirection = get(qtConfig, ["language", "direction"], "ltr");
+  const customClassName = languageDirection === "rtl" ? "rtl-twoColSixStories" : "ltr-twoColSixStories";
   const [firstStory, ...otherStories] = stories || [];
 
   const storySlot = () =>
     otherStories.slice(3, 5).map((story, index) => {
       return (
-        <div styleName={`card ${borderStyle} ${textColor}`} key={index} className="card">
+        <div styleName={`card ${borderStyle} ${textColor}`} key={index} className={`card ${customClassName}`}>
           <StoryCard story={story} theme={theme} headerLevel="4" isHorizontalWithImageLast config={config}>
             <HeroImage config={config} story={story} isHorizontalWithImageLast aspectRatio={[[16, 9]]} />
-            <StorycardContent theme={theme} story={story} config={config} borderColor={sectionTagBorderColor} />
+            <StorycardContent
+              theme={theme}
+              story={story}
+              config={config}
+              borderColor={sectionTagBorderColor}
+              collectionId={collection.id}
+            />
           </StoryCard>
         </div>
       );
@@ -55,9 +62,8 @@ const TwoColSixStories = ({ collection, config = {} }) => {
     <div
       className="full-width-with-padding arrow-component"
       data-test-id="two-col-six-stories"
-      style={{ backgroundColor: theme, color: textColor }}
-    >
-      <div styleName="two-col-six-stories" style={{ backgroundColor: theme, color: textColor }}>
+      style={{ backgroundColor: theme || "initial" }}>
+      <div styleName="two-col-six-stories" style={{ backgroundColor: theme || "initial" }}>
         <CollectionName
           collection={collection}
           collectionNameTemplate={collectionNameTemplate}
@@ -72,12 +78,12 @@ const TwoColSixStories = ({ collection, config = {} }) => {
                 <SectionTag story={firstStory} borderColor={sectionTagBorderColor} />
                 <Headline premiumStoryIconConfig={config} story={firstStory} headerLevel={2} />
                 <Subheadline story={firstStory} />
-                <AuthorWithTime story={firstStory} config={localizationConfig} />
+                <AuthorWithTime story={firstStory} config={localizationConfig} collectionId={collection.id} />
               </StorycardContent>
             </StoryCard>
           </div>
           <div styleName="other-cards" className="other-cards">
-            <div className="first-set">
+            <div className={`first-set ${customClassName}`}>
               {otherStories.slice(0, 3).map((story, index) => {
                 return (
                   <div styleName={`card ${borderStyle} ${textColor}`} key={index} className="card">
@@ -89,6 +95,7 @@ const TwoColSixStories = ({ collection, config = {} }) => {
                         config={config}
                         headerLevel={6}
                         borderColor={sectionTagBorderColor}
+                        collectionId={collection.id}
                       />
                     </StoryCard>
                   </div>
@@ -112,7 +119,7 @@ const TwoColSixStories = ({ collection, config = {} }) => {
 
 TwoColSixStories.propTypes = {
   collection: PropTypes.object,
-  config: PropTypes.object,
+  config: PropTypes.object
 };
 
 export default StateProvider(TwoColSixStories);

@@ -5,7 +5,7 @@ import { collectionToStories } from "@quintype/components";
 
 import { CollectionName } from "../../Atoms/CollectionName";
 import { StateProvider } from "../../SharedContext";
-import { getTextColor, getNumberOfStoriesToShow, navigateTo, generateNavigateSlug } from "../../../utils/utils";
+import { getNumberOfStoriesToShow, navigateTo, generateNavigateSlug } from "../../../utils/utils";
 import { StoryCard } from "../../Molecules/StoryCard";
 import { HeroImage } from "../../Atoms/HeroImage";
 import { StorycardContent } from "../../Molecules/StorycardContent";
@@ -27,7 +27,7 @@ const FourStorySlider = ({ collection, config = {} }) => {
     footerSlotConfig = {},
     navigationArrows = true,
     slideIndicator = "none",
-    isInfinite = false,
+    isInfinite = false
   } = config;
   const { footerSlot } = footerSlotConfig;
   const items = collectionToStories(collection);
@@ -41,7 +41,6 @@ const FourStorySlider = ({ collection, config = {} }) => {
   const [perView, setPerView] = useState(1);
 
   const showNumberOfStoriesToShow = getNumberOfStoriesToShow(numberOfStoriesToShow);
-  const textColor = getTextColor(theme);
   const footerSlotComp = footerSlot ? footerSlot() : null;
 
   useEffect(() => {
@@ -66,8 +65,7 @@ const FourStorySlider = ({ collection, config = {} }) => {
     <div
       className="full-width-with-padding arrow-component"
       data-test-id="four-story-slider"
-      style={{ backgroundColor: theme, color: textColor }}
-    >
+      style={{ backgroundColor: theme || "initial" }}>
       <div styleName="four-story-slider-wrapper">
         <CollectionName
           collection={collection}
@@ -79,8 +77,7 @@ const FourStorySlider = ({ collection, config = {} }) => {
             isArrow={navigationArrows}
             perView={perView}
             slideIndicator={slideIndicator}
-            isInfinite={isInfinite}
-          >
+            isInfinite={isInfinite}>
             {getItems()}
           </ScrollSnap>
         ) : (
@@ -116,14 +113,14 @@ FourStorySlider.propTypes = {
     // speed of the slider(ms)
     numberOfStoriesToShow: PropTypes.number,
     // no of slides in slider
-    collectionNameBorderColor: PropTypes.string,
-  }),
+    collectionNameBorderColor: PropTypes.string
+  })
 };
 
 FourStorySlider.defaultProps = {
   theme: "#ffffff",
   slotConfig: "story",
-  border: "",
+  border: ""
 };
 
 export default StateProvider(FourStorySlider);

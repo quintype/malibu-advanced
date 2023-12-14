@@ -5,7 +5,7 @@ import {
   optionalSelect,
   sectionTagTemplates,
   collectionNameTemplates,
-  footerButton,
+  footerButton
 } from "../../../../storybook";
 import ThreeColSevenStory from "./index";
 import { AdPlaceholder } from "../../Atoms/AdPlaceholder";
@@ -26,7 +26,7 @@ const sectionTagDefaultvalue = "#3a9fdd";
 
 const borderTemplate = {
   default: "",
-  border: "bottom",
+  border: "bottom"
 };
 
 const configurableSlot = () => {
@@ -40,9 +40,9 @@ withStore(
   {
     qt: {
       config: {
-        "cdn-image": "thumbor-stg.assettype.com",
-      },
-    },
+        "cdn-image": "thumbor-stg.assettype.com"
+      }
+    }
   },
   Readme
 )
@@ -64,8 +64,40 @@ withStore(
       slotConfig: [{ type: "story", component: configurableSlot }],
       footerSlotConfig: { footerSlot: footerSlot },
       showButton: boolean("Show button", true),
-      showReadTime: boolean("Read time", true),
+      showReadTime: boolean("Read time", true)
     };
-
+    return <ThreeColSevenStory collection={collection} config={contextConfig} />;
+  });
+withStore(
+  "Rows/Three Col Seven Stories ",
+  {
+    qt: {
+      config: {
+        "cdn-image": "thumbor-stg.assettype.com"
+      }
+    }
+  },
+  Readme
+)
+  .addDecorator((story) => <div style={{ maxWidth: "1000px", margin: "auto" }}>{story()}</div>)
+  .add("With Ad", () => {
+    const contextConfig = {
+      collectionNameBorderColor: color(collectionNameBorderColorLabel, collectionNameDefaultValue),
+      borderColor: color(sectionTagBorderColor, sectionTagDefaultvalue),
+      theme: color(label, defaultvalue),
+      border: optionalSelect("Border", borderTemplate),
+      collectionNameTemplate: optionalSelect("Collection Name Templates", collectionNameTemplates),
+      sectionTagTemplate: optionalSelect("Section Tag Templates", sectionTagTemplates),
+      showSection: boolean("section disable", true),
+      showAuthor: boolean("Author disable", true),
+      showTime: boolean("Timestamp disable", true),
+      footerButton: optionalSelect("Footer Button", footerButton),
+      buttonText: text("Footer text", "Read More"),
+      showRowTitle: boolean("Row title", true),
+      slotConfig: [{ type: "ad", component: configurableSlot }],
+      footerSlotConfig: { footerSlot: footerSlot },
+      showButton: boolean("Show button", true),
+      showReadTime: boolean("Read time", true)
+    };
     return <ThreeColSevenStory collection={collection} config={contextConfig} />;
   });

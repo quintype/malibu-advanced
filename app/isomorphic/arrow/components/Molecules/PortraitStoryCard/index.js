@@ -17,6 +17,7 @@ const PortraitStoryCard = ({
   separator = "",
   config = {},
   borderColor = "",
+  collectionId
 }) => {
   if (isEmpty(story)) return null;
 
@@ -30,6 +31,7 @@ const PortraitStoryCard = ({
           separator={separator}
           borderColor={borderColor}
           headerLevel={headerLevel}
+          collectionId={collectionId}
         />
       </StoryCard>
     </div>
@@ -44,6 +46,7 @@ PortraitStoryCard.propTypes = {
   borderColor: PropTypes.string,
   config: PropTypes.object,
   story: PropTypes.object,
+  collectionId: PropTypes.number
 };
 
 export default StateProvider(PortraitStoryCard);

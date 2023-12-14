@@ -14,7 +14,7 @@ const templateStyles = {
   Default: "",
   Solid: "solid",
   "Border Bottom Small": "borderBottomSml",
-  "Border Left": "borderLeft",
+  "Border Left": "borderLeft"
 };
 
 withStore("Atoms/SectionTag", {}, Readme).add("Default", () => (

@@ -1,5 +1,5 @@
 import React from "react";
-import get from "lodash/get";
+import get from "lodash.get";
 import { Link } from "@quintype/components";
 import { useStateValue } from "../../SharedContext";
 import PropTypes from "prop-types";
@@ -27,23 +27,23 @@ export const SectionTag = ({ story, template = "", borderColor = "", isLightThem
   if (!isSection) return null;
   return (
     <Link href={getUrl} className="arrow-component arr--section-name" aria-label="section-name">
-      <div
+      <span
         data-test-id="sectionTag"
         className="section-tag arrow-component"
         styleName={`${textColor} ${templateStyle}`}
         style={{
-          backgroundColor: templateStyle.includes("section-solid") ? sectionTagBorderColor : "",
-        }}
-      >
+          backgroundColor: templateStyle.includes("section-solid") ? sectionTagBorderColor : "initial"
+        }}>
         {templateStyle.includes("section-borderLeft") && (
-          <span styleName="border-left" style={{ color: sectionTagBorderColor }}></span>
+          <span styleName="border-left" style={{ color: sectionTagBorderColor || "initial" }}></span>
         )}
-        {section["display-name"] || section.name}
+        {section["display-name"] || section["name"]}
         <div
           styleName="border-bottom"
-          style={{ backgroundColor: `${template === "solid" ? "" : sectionTagBorderColor}` }}
-        ></div>
-      </div>
+          style={{
+            backgroundColor: template !== "solid" && sectionTagBorderColor ? sectionTagBorderColor : "initial"
+          }}></div>
+      </span>
     </Link>
   );
 };
@@ -54,10 +54,10 @@ SectionTag.propTypes = {
   template: PropTypes.oneOf(["", "borderBottomSml", "borderLeft", "solid"]),
   borderColor: PropTypes.string,
   solidBorderColor: PropTypes.string,
-  isLightTheme: PropTypes.bool,
+  isLightTheme: PropTypes.bool
 };
 
 SectionTag.defaultProps = {
   template: "",
-  isLightTheme: false,
+  isLightTheme: false
 };

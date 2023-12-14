@@ -2,11 +2,6 @@
 
 .time {
   display: flex;
-  margin-bottom: 2px;
-}
-
-.time-wrapper {
-  margin-bottom: var(--arrow-spacing-xxs);
 }
 
 .bottom-fix {
@@ -19,4 +14,8 @@
 
 .light {
   color: var(--arrow-c-invert-mono4);
+}
+
+.wrapper {
+  direction: ltr;
 }

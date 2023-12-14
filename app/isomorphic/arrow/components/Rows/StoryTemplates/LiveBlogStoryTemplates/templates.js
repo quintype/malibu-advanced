@@ -9,23 +9,31 @@ import { SectionTag } from "../../../Atoms/SectionTag";
 import { Subheadline } from "../../../Atoms/Subheadline";
 import AsideCollection from "../../AsideCollection";
 import { AuthorCard } from "../../../Atoms/AuthorCard";
-import { StoryElementCard, SlotAfterStory } from "../../../Molecules/StoryElementCard";
+import { SlotAfterStory, LiveBlogStoryElement } from "../../../Molecules/StoryElementCard";
 import { PublishDetails } from "../../../Atoms/PublishDetail";
 import { StoryTags } from "../../../Atoms/StoryTags";
 import { HeroImage } from "../../../Atoms/HeroImage";
 import "./live-blog.m.css";
 import { CaptionAttribution } from "../../../Atoms/CaptionAttribution";
-import { clientWidth, getTextColor, getTimeStamp, timestampToFormat } from "../../../../utils/utils";
+import {
+  clientWidth,
+  getTextColor,
+  getTimeStamp,
+  timestampToFormat,
+  getTimeStampConfig
+} from "../../../../utils/utils";
 import LiveIcon from "../../../Svgs/liveicon";
 import KeyEvents from "../../../Molecules/KeyEvents";
 import { ClockIcon } from "../../../Svgs/clock-icon";
 import { StoryHeadline } from "../../../Atoms/StoryHeadline";
+import { StoryReview } from "../../../Atoms/StoryReview";
 import { Paywall } from "../../Paywall";
 import { MetypeCommentsWidget } from "../../../../../components/Metype/commenting-widget";
 import { MetypeReactionsWidget } from "../../../../../components/Metype/reaction-widget";
 
 export const LiveBlogStoryTemplates = ({
   story = {},
+  accessLoading,
   config = {},
   storyElementsConfig,
   adComponent,
@@ -33,21 +41,29 @@ export const LiveBlogStoryTemplates = ({
   firstChild,
   secondChild,
   timezone,
+  enableDarkMode,
+  mountAt,
+  loadRelatedStories,
+  visibleCardsRender = null,
   hasAccess,
 }) => {
   const {
     theme = "",
     asideCollection = {},
     templateType,
-    noOfVisibleCards = -1,
+    noOfVisibleCards = 0,
     publishedDetails = {},
     verticalShare = "",
     shareIconType = "plain-color-svg",
     authorDetails = {
-      template: "default",
+      template: "default"
     },
-    premiumStoryIconConfig = {},
+    premiumStoryIconConfig = {}
   } = config;
+
+  const qtConfig = useSelector((state) => get(state, ["qt", "config"], {}));
+  const timeStampConfig = getTimeStampConfig(qtConfig);
+  const direction = get(qtConfig, ["language", "direction"], "ltr");
 
   const visibleCards = noOfVisibleCards < 0 ? story.cards : story.cards.slice(0, noOfVisibleCards);
   const textColor = getTextColor(theme);
@@ -169,15 +185,24 @@ export const LiveBlogStoryTemplates = ({
   const StoryData = ({ hasAccess }) => {
     return (
       <>
-        <AuthorCard clazzName="gap-32" story={story} template={authorDetails.template} opts={authorDetails.opts} />
+        <AuthorCard
+          clazzName="gap-32"
+          story={story}
+          template={authorDetails.template}
+          opts={authorDetails.opts}
+          mountAt={mountAt}
+        />
         <div styleName="timestamp-social-share">
-          <PublishDetails story={story} opts={publishedDetails} template="story" timezone={timezone} />
+          <div id={`publish-details-container-${storyId}`}>
+            <PublishDetails story={story} opts={publishedDetails} template="story" timezone={timezone} />
+          </div>
           {!verticalShare && <SocialShareComponent />}
         </div>
+        <StoryReview theme={theme} story={story} />
         {showKeyEvents()}
         <StoryCards hasAccess={hasAccess} />
         <div styleName="space-32">
-          {firstChild}
+          {!accessLoading && firstChild}
           <StoryTags tags={story.tags} />
           <SlotAfterStory
             id={story.id}
@@ -195,14 +220,7 @@ export const LiveBlogStoryTemplates = ({
     return (
       <>
         <div data-test-id="hero-image" styleName="grid-col-full index-2">
-          <HeroImage
-            story={story}
-            aspectRatio={[
-              [16, 9],
-              [8, 3],
-            ]}
-            isStoryPageImage
-          />
+          <HeroImage story={story} aspectRatio={[[16, 9], [8, 3]]} isStoryPageImage />
         </div>
         <div styleName="header-wrapper">
           <CaptionAttribution story={story} config={config} />
@@ -239,9 +257,10 @@ export const LiveBlogStoryTemplates = ({
               widgetComp={widgetComp}
               sticky={true}
               enableKeyEvents={!isMobile}
-              keyEventsData={{ story, config, showLoadMore: false }}
-              storyId={storyId}
+              keyEventsData={{ story, config, showLoadMore: true }}
+              story={story}
               opts={publishedDetails}
+              loadRelatedStories={loadRelatedStories}
             />
           )}
         </div>
@@ -252,15 +271,8 @@ export const LiveBlogStoryTemplates = ({
   const HeroOverlay = (story, hasAccess) => {
     return (
       <>
-        <div styleName="overlay-hero index-2">
-          <HeroImage
-            story={story}
-            aspectRatio={[
-              [1, 2],
-              [16, 9],
-            ]}
-            isStoryPageImage
-          />
+        <div styleName="overlay-hero  index-2">
+          <HeroImage story={story} aspectRatio={[[1, 2], [16, 9]]} isStoryPageImage />
         </div>
         <div styleName="overlay-grid">
           <HeaderCard />
@@ -298,8 +310,9 @@ export const LiveBlogStoryTemplates = ({
               {...asideCollection}
               adComponent={adComponent}
               widgetComp={widgetComp}
-              storyId={storyId}
+              story={story}
               opts={publishedDetails}
+              loadRelatedStories={loadRelatedStories}
             />
           </div>
         )}
@@ -349,8 +362,9 @@ export const LiveBlogStoryTemplates = ({
               {...asideCollection}
               adComponent={adComponent}
               widgetComp={widgetComp}
-              storyId={storyId}
+              story={story}
               opts={publishedDetails}
+              loadRelatedStories={loadRelatedStories}
             />
           </div>
         )}
@@ -401,9 +415,10 @@ export const LiveBlogStoryTemplates = ({
               widgetComp={widgetComp}
               sticky={true}
               enableKeyEvents={!isMobile}
-              keyEventsData={{ story, config, showLoadMore: false }}
-              storyId={storyId}
+              keyEventsData={{ story, config, showLoadMore: true }}
+              story={story}
               opts={publishedDetails}
+              loadRelatedStories={loadRelatedStories}
             />
           )}
         </div>
@@ -451,8 +466,9 @@ export const LiveBlogStoryTemplates = ({
               {...asideCollection}
               adComponent={adComponent}
               widgetComp={widgetComp}
-              storyId={storyId}
+              story={story}
               opts={publishedDetails}
+              loadRelatedStories={loadRelatedStories}
             />
           </div>
         )}
@@ -502,8 +518,9 @@ export const LiveBlogStoryTemplates = ({
               {...asideCollection}
               adComponent={adComponent}
               widgetComp={widgetComp}
-              storyId={storyId}
+              story={story}
               opts={publishedDetails}
+              loadRelatedStories={loadRelatedStories}
             />
           </div>
         )}
@@ -533,10 +550,11 @@ export const LiveBlogStoryTemplates = ({
 
 LiveBlogStoryTemplates.propTypes = {
   story: PropTypes.object,
+  accessLoading: PropTypes.bool,
   config: PropTypes.shape({
     templateType: PropTypes.string,
     authorCard: PropTypes.object,
-    asideCollection: PropTypes.object,
+    asideCollection: PropTypes.object
   }),
   timezone: PropTypes.string,
   firstChild: PropTypes.node,
@@ -544,5 +562,9 @@ LiveBlogStoryTemplates.propTypes = {
   storyElementsConfig: PropTypes.object,
   adComponent: PropTypes.func,
   widgetComp: PropTypes.func,
+  enableDarkMode: PropTypes.bool,
+  loadRelatedStories: PropTypes.func,
+  mountAt: PropTypes.string,
+  visibleCardsRender: PropTypes.func | undefined,
   hasAccess: PropTypes.bool,
 };

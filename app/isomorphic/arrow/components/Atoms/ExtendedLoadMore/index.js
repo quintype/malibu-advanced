@@ -50,9 +50,9 @@ export const ExtendedLoadMore = ({ config, componentName, WithArrowConfig, withS
 
     const Component = getTemplate(componentName);
 
-    const { items } = await (
-      await fetch(`/api/v1/collections/${collectionSlug}?item-type=story&offset=${offset}&limit=${limit}`)
-    ).json();
+    const { items } = await (await fetch(
+      `/api/v1/collections/${collectionSlug}?item-type=story&offset=${offset}&limit=${limit}`
+    )).json();
 
     if (items.length) {
       const updatedOffset = parseInt(offset) + parseInt(limit);
@@ -69,13 +69,13 @@ export const ExtendedLoadMore = ({ config, componentName, WithArrowConfig, withS
         Component: WithArrowConfig(withSubsequentLoad(Component, limit || 10, true)),
         props: {
           collection: {
-            items,
+            items
           },
           isLoadMoreVisible: false,
-          config,
+          config
         },
-        componentName,
-      },
+        componentName
+      }
     ];
 
     setComponents(updatedCompList);
@@ -99,8 +99,7 @@ export const ExtendedLoadMore = ({ config, componentName, WithArrowConfig, withS
         className="arr--button"
         styleName={`button ${textColor} default`}
         style={componentStyles(componentName)}
-        onClick={addComponent}
-      >
+        onClick={addComponent}>
         {btnText}
       </div>
     </>
@@ -111,5 +110,5 @@ ExtendedLoadMore.propTypes = {
   componentName: PropTypes.string,
   config: PropTypes.object,
   WithArrowConfig: PropTypes.func,
-  withSubsequentLoad: PropTypes.func,
+  withSubsequentLoad: PropTypes.func
 };

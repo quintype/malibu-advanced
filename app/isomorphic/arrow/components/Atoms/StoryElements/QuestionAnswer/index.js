@@ -1,11 +1,11 @@
-/* eslint-disable no-case-declarations */
 import React from "react";
 import PropTypes from "prop-types";
-import get from "lodash/get";
+import get from "lodash.get";
 import { shapeConfig, shapeStory, updateContentLinks, getTextColor } from "../../../../utils/utils";
 import { withElementWrapper } from "../withElementWrapper";
 import "./question-answer.m.css";
 import { useStateValue } from "../../../SharedContext";
+import { UserFallbackIcon } from "../../../Svgs/user-fallback-icon";
 
 const supportedTemplates = (type, element) => {
   switch (type) {
@@ -17,21 +17,21 @@ const supportedTemplates = (type, element) => {
         question: qaQuestion,
         answer: qaAnswer,
         questionAttribution: qaQuestionAttribution,
-        answerAttribution: qaAnswerAttribution,
+        answerAttribution: qaAnswerAttribution
       };
     case "question":
       const qQuestion = get(element, ["text"]);
       const qAttribution = get(element, ["metadata", "interviewer", "avatar-url"]);
       return {
         question: qQuestion,
-        questionAttribution: qAttribution,
+        questionAttribution: qAttribution
       };
     case "answer":
       const aAnswer = get(element, ["text"]);
       const aAttribution = get(element, ["metadata", "interviewee", "avatar-url"]);
       return {
         answer: aAnswer,
-        answerAttribution: aAttribution,
+        answerAttribution: aAttribution
       };
   }
 };
@@ -59,18 +59,31 @@ const QuestionAnswerBase = ({
   const isAuthorImageTemplate = template === "withAuthorImage";
   const templateStyle = isAuthorImageTemplate ? "qa-withAuthorImage" : "qa-default";
   const iconType = defaultIconType === "curve" ? "curveIcon" : "edgeIcon";
+  const iconColorStyle = iconColor ? { backgroundColor: iconColor } : {};
+
+  function getFallBackAttributionImage() {
+    return (
+      <div styleName="fallbackAttribution">
+        <span styleName="fallbackImage">
+          <UserFallbackIcon />
+        </span>
+      </div>
+    );
+  }
 
   const supportQuestionElement = isAuthorImageTemplate ? (
-    questionAttribution && (
+    questionAttribution ? (
       <>
         <div styleName="labelAttribution">
           <img src={questionAttribution} loading="lazy" />
         </div>
         <span styleName="hidden"></span>
       </>
+    ) : (
+      getFallBackAttributionImage()
     )
   ) : (
-    <div styleName={`${iconType} ${theme}`} data-test-id={iconType} style={{ backgroundColor: iconColor }}>
+    <div styleName={`${iconType} ${theme}`} data-test-id={iconType} style={iconColorStyle}>
       Q
     </div>
   );
@@ -78,16 +91,18 @@ const QuestionAnswerBase = ({
   // EMPTY SPAN FOR EXTRA SPACE
 
   const supportAnswerElement = isAuthorImageTemplate ? (
-    answerAttribution && (
+    answerAttribution ? (
       <>
         <div styleName="labelAttribution">
           <img src={answerAttribution} loading="lazy" />
         </div>
         <span styleName="hidden"></span>
       </>
+    ) : (
+      getFallBackAttributionImage()
     )
   ) : (
-    <div styleName={`${iconType} ${theme}`} data-test-id={iconType} style={{ backgroundColor: iconColor }}>
+    <div styleName={`${iconType} ${theme}`} data-test-id={iconType} style={iconColorStyle}>
       A
     </div>
   );
@@ -97,8 +112,7 @@ const QuestionAnswerBase = ({
       className="arrow-component arr-custom-style arr--qa-element"
       data-test-id="question-answer"
       styleName={templateStyle}
-      {...restProps}
-    >
+      {...restProps}>
       {type !== "answer" && (
         <div styleName="q-element" data-test-id="question">
           {supportQuestionElement}
@@ -121,16 +135,16 @@ QuestionAnswerBase.propTypes = {
       interviewer: PropTypes.shape({ "avatar-url": PropTypes.string }),
       interviewee: PropTypes.shape({ "avatar-url": PropTypes.string }),
       question: PropTypes.string,
-      answer: PropTypes.string,
+      answer: PropTypes.string
     }),
-    text: PropTypes.string,
+    text: PropTypes.string
   }),
   opts: PropTypes.shape({ type: PropTypes.string, defaultIconType: PropTypes.string, isExternalLink: PropTypes.bool }),
   template: PropTypes.string,
   css: PropTypes.object,
   config: shapeConfig,
   story: shapeStory,
-  render: PropTypes.func,
+  render: PropTypes.func
 };
 
 export const QuestionAnswer = withElementWrapper(QuestionAnswerBase);

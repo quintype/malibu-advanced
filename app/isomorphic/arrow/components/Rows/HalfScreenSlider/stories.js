@@ -4,7 +4,7 @@ import {
   optionalSelect,
   sectionTagTemplates,
   collectionNameTemplates,
-  footerButton,
+  footerButton
 } from "../../../../storybook";
 import { color, boolean, text, number } from "@storybook/addon-knobs";
 import HalfScreenSlider from "./index";
@@ -25,13 +25,13 @@ const sectionTagDefaultvalue = "#3a9fdd";
 
 const borderTemplate = {
   default: " ",
-  border: "full",
+  border: "full"
 };
 
 const navigationStyle = {
   defaultvalue: "none",
   dots: "dots",
-  dashes: "dashes",
+  dashes: "dashes"
 };
 const footerSlot = () => {
   return <AdPlaceholder />;
@@ -42,9 +42,9 @@ withStore(
   {
     qt: {
       config: {
-        "cdn-image": "thumbor-stg.assettype.com",
-      },
-    },
+        "cdn-image": "thumbor-stg.assettype.com"
+      }
+    }
   },
   Readme
 )
@@ -69,7 +69,7 @@ withStore(
       numberOfStoriesToShow: number("Number of slide to show", 3),
       footerSlotConfig: { footerSlot: footerSlot },
       showButton: boolean("Show button", true),
-      showReadTime: boolean("Read time", true),
+      showReadTime: boolean("Read time", true)
     };
     return <HalfScreenSlider collection={collection} config={contextConfig} />;
   });
@@ -81,10 +81,10 @@ withStore(
       config: {
         "cdn-image": "thumbor-stg.assettype.com",
         language: {
-          direction: "rtl",
-        },
-      },
-    },
+          direction: "rtl"
+        }
+      }
+    }
   },
   Readme
 )
@@ -109,7 +109,7 @@ withStore(
       numberOfStoriesToShow: number("Number of slide to show", 3),
       footerSlotConfig: { footerSlot: footerSlot },
       showButton: boolean("Show button", true),
-      showReadTime: boolean("Read time", true),
+      showReadTime: boolean("Read time", true)
     };
     return <HalfScreenSlider collection={collection} config={contextConfig} />;
   });

@@ -1,5 +1,4 @@
-/* eslint-disable scss/at-rule-no-unknown */
-@value viewports: "../../../../../../assets/arrow/stylesheets/viewports.m.css";
+@value viewports: "../../../../../assets/stylesheets/viewports.m.css";
 @value mobile from viewports;
 
 .headline {
@@ -36,6 +35,11 @@
 }
 .light {
   color: var(--arrow-c-invert-mono1);
+}
+
+.light a {
+  color: var(--arrow-c-invert-mono1);
+  border-bottom: 1px solid var(--arrow-c-invert-mono1);
 }
 
 /* default template */

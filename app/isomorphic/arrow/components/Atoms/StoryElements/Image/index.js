@@ -20,19 +20,19 @@ const ImageBase = ({ element, opts = {}, story = {}, config = {}, caption = true
         <ResponsiveImage
           slug={element["image-s3-key"]}
           metadata={element["image-metadata"]}
-          alt={element.title}
+          alt={element["title"]}
           aspectRatio={null}
           defaultWidth={640}
           widths={opts.imageWidths || [360, 640, 1200]}
           imgParams={{ auto: ["format", "compress"] }}
         />
       </figure>
-      {element.hyperlink && <HyperLink hyperLink={element.hyperlink} />}
+      {element["hyperlink"] && <HyperLink hyperLink={element["hyperlink"]} />}
     </div>
   );
 
   ImageTemplate.propTypes = {
-    onClick: PropTypes.func,
+    onClick: PropTypes.func
   };
 
   return (
@@ -49,12 +49,12 @@ ImageBase.propTypes = {
     "image-metadata": PropTypes.object,
     "image-attribution": PropTypes.string,
     title: PropTypes.string,
-    hyperlink: PropTypes.string,
+    hyperlink: PropTypes.string
   }),
   caption: PropTypes.bool,
   opts: PropTypes.shape({ imageWidths: PropTypes.array }),
   story: shapeStory,
-  config: shapeConfig,
+  config: shapeConfig
 };
 
 export const Image = withElementWrapper(ImageBase);

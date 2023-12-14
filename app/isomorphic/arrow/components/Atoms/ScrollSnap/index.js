@@ -11,7 +11,7 @@ import "./scroll-snap.m.css";
 const smoothScroll = (node, topOrLeft, horizontal) => {
   node.scrollTo({
     [horizontal ? "left" : "top"]: topOrLeft,
-    behavior: "smooth",
+    behavior: "smooth"
   });
 };
 
@@ -33,7 +33,16 @@ const setIndicatorValue = (func, ms) => {
   };
 };
 
-export const ScrollSnap = ({ children, isArrow, interval, isInfinite, pauseOnHover, perView, slideIndicator }) => {
+export const ScrollSnap = ({
+  children,
+  isArrow,
+  interval,
+  isInfinite,
+  pauseOnHover,
+  perView,
+  slideIndicator,
+  sliderArrowStyles = {}
+}) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [autoScroll, setAutoScroll] = useState(false);
   const languageDirection = useSelector((state) => get(state, ["qt", "config", "language", "direction"], "ltr"));
@@ -121,13 +130,13 @@ export const ScrollSnap = ({ children, isArrow, interval, isInfinite, pauseOnHov
         styleName="wrapper"
         className="scroll-snap-wrapper"
         onMouseEnter={pauseAutoPlay}
-        onMouseLeave={pauseAutoPlay}
-      >
+        onMouseLeave={pauseAutoPlay}>
         <div ref={scroller} styleName="carousel" className="scroll-snap-carousel">
           {children}
         </div>
         {isArrow && (
           <SliderArrow
+            sliderArrowStyles={sliderArrowStyles}
             noOfItems={noOfItems}
             perView={perView}
             previousClick={previousClick}
@@ -156,7 +165,7 @@ ScrollSnap.defaultProps = {
   interval: 4000,
   pauseOnHover: true,
   perView: 1,
-  slideIndicator: "dots",
+  slideIndicator: "dots"
 };
 
 ScrollSnap.propTypes = {
@@ -166,5 +175,5 @@ ScrollSnap.propTypes = {
   interval: number,
   pauseOnHover: bool,
   perView: number,
-  slideIndicator: string,
+  slideIndicator: string
 };
