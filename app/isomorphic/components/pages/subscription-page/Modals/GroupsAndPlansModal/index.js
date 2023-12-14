@@ -48,6 +48,9 @@ export const GroupsAndPlansModal = ({ member, setActiveTab, setSelectedPlan, get
           const groupDurationUnit = groupName && groupName.duration_unit;
           const planDurationLength = group.subscription_plans.map((plan, index) => get(plan, ["duration_length"], ""));
           const planDurationUnit = group.subscription_plans.map((plan, index) => get(plan, ["duration_unit"], ""));
+          const planCustomAttributes = group.subscription_plans.map((plan, index) =>
+            get(plan, ["custom_attributes"], "")
+          );
           return (
             <div key={id} styleName="group-card">
               <div styleName="group-name">{group.name}</div>
@@ -80,8 +83,8 @@ export const GroupsAndPlansModal = ({ member, setActiveTab, setSelectedPlan, get
                           &nbsp;
                           {plan.price_cents / 100}&nbsp;
                           {plan.price_currency} &nbsp;
-                          {plan.custom_attributes &&
-                            plan.custom_attributes.map((attribute, index) => (
+                          {planCustomAttributes &&
+                            planCustomAttributes.map((attribute, index) => (
                               <div key={index}>{attribute.value && renderRichText(attribute.value)}</div>
                             ))}
                         </div>
