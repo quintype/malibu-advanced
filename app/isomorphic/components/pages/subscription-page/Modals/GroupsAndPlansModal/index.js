@@ -46,11 +46,6 @@ export const GroupsAndPlansModal = ({ member, setActiveTab, setSelectedPlan, get
           const groupName = selectedSubscriptions[group.name];
           const groupDurationLength = groupName && groupName.duration_length;
           const groupDurationUnit = groupName && groupName.duration_unit;
-          const planDurationLength = group.subscription_plans.map((plan, index) => get(plan, ["duration_length"], ""));
-          const planDurationUnit = group.subscription_plans.map((plan, index) => get(plan, ["duration_unit"], ""));
-          const planCustomAttributes = group.subscription_plans.map((plan, index) =>
-            get(plan, ["custom_attributes"], "")
-          );
           return (
             <div key={id} styleName="group-card">
               <div styleName="group-name">{group.name}</div>
@@ -58,38 +53,44 @@ export const GroupsAndPlansModal = ({ member, setActiveTab, setSelectedPlan, get
                 <div>
                   {groupName && (
                     <div styleName="selected-option" onClick={() => handleOptionClick(group.name, groupName)}>
-                      {groupDurationLength}&nbsp;
-                      {groupDurationLength === 1
-                        ? groupDurationUnit.substring(0, groupDurationUnit.length - 1)
-                        : groupDurationUnit}
-                      &nbsp;
-                      {groupName.price_cents / 100}&nbsp;
+                      <span styleName="right-spacer">{groupDurationLength}</span>
+                      <span styleName="right-spacer">
+                        {groupDurationLength === 1
+                          ? groupDurationUnit.substring(0, groupDurationUnit.length - 1)
+                          : groupDurationUnit}
+                      </span>
+                      <span>{groupName.price_cents / 100}</span>
                       {groupName.price_currency}
                     </div>
                   )}
                   <div>
-                    {group.subscription_plans.map((plan, index) => (
-                      <>
-                        <div
-                          key={index}
-                          styleName={`option ${selectedOption === plan ? "option-select" : ""}`}
-                          onClick={() => handleOptionClick(group.name, plan)}
-                        >
-                          {1 + index})&nbsp;
-                          {planDurationLength}&nbsp;
-                          {planDurationLength === 1
-                            ? planDurationUnit.substring(0, planDurationUnit.length - 1)
-                            : planDurationUnit}
-                          &nbsp;
-                          {plan.price_cents / 100}&nbsp;
-                          {plan.price_currency} &nbsp;
-                          {planCustomAttributes &&
-                            planCustomAttributes.map((attribute, index) => (
-                              <div key={index}>{attribute.value && renderRichText(attribute.value)}</div>
-                            ))}
-                        </div>
-                      </>
-                    ))}
+                    {group.subscription_plans.map((plan, index) => {
+                      const durationUnit = plan && plan.duration_unit;
+                      const durationLength = plan && plan.duration_length;
+                      return (
+                        <>
+                          <div
+                            key={index}
+                            styleName={`option ${selectedOption === plan ? "option-select" : ""}`}
+                            onClick={() => handleOptionClick(group.name, plan)}
+                          >
+                            <span styleName="right-spacer">{1 + index}.</span>
+                            <span styleName="right-spacer">{durationLength}</span>
+                            <span styleName="right-spacer">
+                              {durationLength === 1 ? durationUnit.substring(0, durationUnit.length - 1) : durationUnit}
+                            </span>
+                            <span>{plan.price_cents / 100}</span>
+                            <span styleName="right-spacer">{plan.price_currency} </span>
+                            {plan.custom_attributes &&
+                              plan.custom_attributes.map((attribute) => (
+                                <div styleName="left-spacer" key={1}>
+                                  {attribute.value && renderRichText(attribute.value)}
+                                </div>
+                              ))}
+                          </div>
+                        </>
+                      );
+                    })}
                   </div>
                 </div>
               </div>

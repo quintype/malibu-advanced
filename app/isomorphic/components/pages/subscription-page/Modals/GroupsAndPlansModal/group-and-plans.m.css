@@ -76,3 +76,11 @@
   color: var(--brand-primary-dark);
   font-weight: var(--bold);
 }
+
+.right-spacer {
+  margin-right: 8px;
+}
+
+.left-spacer {
+  margin-left: 20px;
+}
