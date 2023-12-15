@@ -1,10 +1,10 @@
 import React from "react";
-import FourColGrid from "../../../../arrow/components/Rows/FourColGrid";
+import ThreeColSixStories from "../../../../arrow/components/Rows/ThreeColSixStories";
 import { object } from "prop-types";
-import get from "lodash.get";
 import { collectionToStories } from "@quintype/components";
+import get from "lodash.get";
 
-export const ArrowFourColGrid = ({ collection }) => {
+export const ArrowThreeColSixStories = ({ collection }) => {
   const items = collectionToStories(collection);
 
   if (items.length < 1) {
@@ -32,7 +32,7 @@ export const ArrowFourColGrid = ({ collection }) => {
     collectionNameBorderColor: collectionNameBorderColor,
     borderColor: sectionBorderColor,
     theme: backgroundColor,
-    border: "full",
+    border: "",
     collectionNameTemplate: "borderLeft",
     sectionTagTemplate: "borderLeft",
     showSection: !hideSectionTag,
@@ -43,11 +43,11 @@ export const ArrowFourColGrid = ({ collection }) => {
     showButton: !hideButton,
     showReadTime: !hideReadTime,
   };
-  return <FourColGrid collection={collection} config={config} />;
+  return <ThreeColSixStories collection={collection} config={config} />;
 };
 
-ArrowFourColGrid.propTypes = {
+ArrowThreeColSixStories.propTypes = {
   collection: object,
 };
 
-ArrowFourColGrid.storyLimit = 12;
+ArrowThreeColSixStories.storyLimit = 6;
