@@ -135,6 +135,6 @@ isomorphicRoutes(app, {
   preloadJs: true,
   oneSignalServiceWorkers: true,
   prerenderServiceUrl: "https://prerender.quintype.io",
-  externalIdPattern: "/a/b/EXTERNAL_ID/c/d",
+  externalIdPattern: "/EXTERNAL_ID",
   enableExternalStories: true,
 });
