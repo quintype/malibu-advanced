@@ -65,7 +65,9 @@ function storyPageLoadItems(pageNumber) {
       offset: 5 * pageNumber,
     })
     .get()
-    .json((response) => response.stories.map((story) => ({ story, currentPath: story.slug, otherProp: "value" })));
+    .json((response) =>
+      response.stories.map((story) => ({ story, currentPath: `/${story.slug}`, otherProp: "value" }))
+    );
 }
 
 export function StoryPage(props) {
