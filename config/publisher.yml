@@ -1,5 +1,5 @@
 asset_host: http://localhost:8080
-sketches_host: https://wtkora.com
+sketches_host: https://malibu-advanced-web.qtstage.io
 host_to_api_host:
   help.lvh.me: https://user-documentation.quintype.io
 host_to_automatic_api_host:
@@ -42,12 +42,12 @@ publisher:
   should_use_collection: true
   enableMetype: true
   metypeConfig:
-    metypeHost: "https://www.metype.com/"
-    metypeAccountId: "1003587"
-    primaryColor: "#000"
-    backgroundColor: "#2cc7a4"
-    className: "story-commenting-widget"
-    name: "Malibu"
+      metypeHost: "https://www.metype.com/"
+      metypeAccountId: "1003587"
+      primaryColor: "#000"
+      backgroundColor: "#2cc7a4"
+      className: "story-commenting-widget"
+      name: "Malibu"
   google_app_id: ""
   facebook_app_id: ""
   is_verification_link_flow: true
