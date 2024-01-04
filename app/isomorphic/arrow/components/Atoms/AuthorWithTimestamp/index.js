@@ -16,8 +16,7 @@ export const AuthorWithTime = ({ story, separator, isBottom, hideAuthorImage, pr
   const isAuthor = get(config, ["showAuthor"], get(configState, ["showAuthor"], true));
   const isTime = get(config, ["showTime"], get(configState, ["showTime"], true));
   const isReadTime = get(configState, ["showReadTime"], true);
-  const isBottomClasses = isBottom ? "bottom-fix" : "";
-  const seperatorStyle = separator === "dot" ? "dot" : "dash";
+  const separatorStyle = separator === "dot" ? "dot" : "dash";
   const textColor = isLightTheme ? "light" : getTextColor(configState.theme);
 
   const getSeparator = () => {
@@ -26,13 +25,13 @@ export const AuthorWithTime = ({ story, separator, isBottom, hideAuthorImage, pr
     }
     return <Dot color={textColor} />;
   };
+  const isSeparatorEnabled = isAuthor && (isTime || isReadTime);
 
   const getTimeStamp = () => {
-    if (!isTime) return null;
     return (
       <>
-        {isAuthor && (
-          <span className="arr-separator" styleName={`${seperatorStyle}`}>
+        {isSeparatorEnabled && (
+          <span className="arr-separator" styleName={separatorStyle}>
             {getSeparator()}
           </span>
         )}
@@ -43,7 +42,7 @@ export const AuthorWithTime = ({ story, separator, isBottom, hideAuthorImage, pr
   };
 
   return (
-    <div className="arr--author-time" styleName={`author-time-wrapper ${isBottomClasses}`}>
+    <div className="arr--author-time" styleName="author-time-wrapper">
       {isAuthor ? (
         <>
           <Author story={story} isBottom hideAuthorImage={hideAuthorImage} prefix={prefix} />

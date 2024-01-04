@@ -1,0 +1,640 @@
+collection-layouts:
+  - name: ArrowHalfScreenSlider
+    display: Half Screen Slider
+    options:
+      - default: null
+        name: ad_above_component
+        type: string
+      - default: "#FFFFFF"
+        name: row_background_color
+        type: string
+      - default: false
+        name: hide_row_title
+        type: boolean
+      - default: "#e43232"
+        name: collection_name_border_color
+        type: string
+      - default: false
+        name: hide_section_tag
+        type: boolean
+      - default: "#e43232"
+        name: section_border_color
+        type: string
+      - default: false
+        name: hide_author
+        type: boolean
+      - default: false
+        name: hide_timestamp
+        type: boolean
+      - default: false
+        name: hide_read_time
+        type: boolean
+      - default: false
+        name: hide_button
+        type: boolean
+      - default: "Read More"
+        name: button_text
+        type: string
+      - default: null
+        name: widget_above_component
+        type: string
+      - default: null
+        name: alternative_collection_title
+        type: string
+  - name: ArrowFourStorySliderPortrait
+    display: Four Story Slider Portrait
+    options:
+      - default: null
+        name: ad_above_component
+        type: string
+      - default: "#FFFFFF"
+        name: row_background_color
+        type: string
+      - default: false
+        name: hide_row_title
+        type: boolean
+      - default: "#e43232"
+        name: collection_name_border_color
+        type: string
+      - default: false
+        name: hide_section_tag
+        type: boolean
+      - default: "#e43232"
+        name: section_border_color
+        type: string
+      - default: false
+        name: hide_author
+        type: boolean
+      - default: false
+        name: hide_timestamp
+        type: boolean
+      - default: false
+        name: hide_read_time
+        type: boolean
+      - default: false
+        name: hide_button
+        type: boolean
+      - default: "Read More"
+        name: button_text
+        type: string
+      - default: null
+        name: widget_above_component
+        type: string
+      - default: null
+        name: alternative_collection_title
+        type: string
+  - name: ArrowFourTabbedBigStorySlider
+    display: Four Tabbed Big Story With Scroll
+    options:
+      - default: null
+        name: ad_above_component
+        type: string
+      - default: "#FFFFFF"
+        name: row_background_color
+        type: string
+      - default: false
+        name: hide_row_title
+        type: boolean
+      - default: "#e43232"
+        name: collection_name_border_color
+        type: string
+      - default: false
+        name: hide_section_tag
+        type: boolean
+      - default: "#e43232"
+        name: section_border_color
+        type: string
+      - default: false
+        name: hide_author
+        type: boolean
+      - default: false
+        name: hide_timestamp
+        type: boolean
+      - default: false
+        name: hide_read_time
+        type: boolean
+      - default: false
+        name: hide_button
+        type: boolean
+      - default: "Read More"
+        name: button_text
+        type: string
+      - default: null
+        name: widget_above_component
+        type: string
+      - default: null
+        name: alternative_collection_title
+        type: string
+  - name: ArrowAlternateCollectionFilter
+    display: Collection filter
+    options:
+      - default: null
+        name: ad_above_component
+        type: string
+      - default: "#FFFFFF"
+        name: row_background_color
+        type: string
+      - default: false
+        name: hide_row_title
+        type: boolean
+      - default: "#e43232"
+        name: collection_name_border_color
+        type: string
+      - default: false
+        name: hide_section_tag
+        type: boolean
+      - default: "#e43232"
+        name: section_border_color
+        type: string
+      - default: false
+        name: hide_author
+        type: boolean
+      - default: false
+        name: hide_timestamp
+        type: boolean
+      - default: false
+        name: hide_read_time
+        type: boolean
+      - default: false
+        name: hide_button
+        type: boolean
+      - default: "Read More"
+        name: button_text
+        type: string
+      - default: null
+        name: widget_above_component
+        type: string
+      - default: null
+        name: alternative_collection_title
+        type: string
+  - name: ArrowFourColFiveStories
+    display: Four Col Five Stories
+    options:
+      - default: null
+        name: ad_above_component
+        type: string
+      - default: "#FFFFFF"
+        name: row_background_color
+        type: string
+      - default: false
+        name: hide_row_title
+        type: boolean
+      - default: "#e43232"
+        name: collection_name_border_color
+        type: string
+      - default: false
+        name: hide_section_tag
+        type: boolean
+      - default: "#e43232"
+        name: section_border_color
+        type: string
+      - default: false
+        name: hide_author
+        type: boolean
+      - default: false
+        name: hide_timestamp
+        type: boolean
+      - default: false
+        name: hide_read_time
+        type: boolean
+      - default: false
+        name: hide_button
+        type: boolean
+      - default: "Read More"
+        name: button_text
+        type: string
+      - default: null
+        name: widget_above_component
+        type: string
+      - default: null
+        name: alternative_collection_title
+        type: string
+  - name: ArrowTwoColSixStories
+    display: Two Column Six Stories
+    options:
+      - default: null
+        name: ad_above_component
+        type: string
+      - default: null
+        name: ad_inside_component
+        type: string
+      - default: null
+        name: widget_inside_component
+        type: string
+      - default: "#FFFFFF"
+        name: row_background_color
+        type: string
+      - default: false
+        name: hide_row_title
+        type: boolean
+      - default: "#e43232"
+        name: collection_name_border_color
+        type: string
+      - default: false
+        name: hide_section_tag
+        type: boolean
+      - default: "#e43232"
+        name: section_border_color
+        type: string
+      - default: false
+        name: hide_author
+        type: boolean
+      - default: false
+        name: hide_timestamp
+        type: boolean
+      - default: false
+        name: hide_read_time
+        type: boolean
+      - default: false
+        name: hide_button
+        type: boolean
+      - default: "Read More"
+        name: button_text
+        type: string
+      - default: null
+        name: widget_above_component
+        type: string
+      - default: null
+        name: alternative_collection_title
+        type: string
+  - name: ArrowListicles
+    display: Listicles
+    options:
+      - default: null
+        name: ad_above_component
+        type: string
+      - default: null
+        name: ad_inside_component
+        type: string
+      - default: null
+        name: widget_inside_component
+        type: string
+      - default: "#FFFFFF"
+        name: row_background_color
+        type: string
+      - default: false
+        name: hide_row_title
+        type: boolean
+      - default: "#e43232"
+        name: collection_name_border_color
+        type: string
+      - default: null
+        name: widget_above_component
+        type: string
+      - default: null
+        name: alternative_collection_title
+        type: string
+  - name: ArrowOpinionCollection
+    display: Opinion Collection
+    options:
+      - default: null
+        name: ad_above_component
+        type: string
+      - default: null
+        name: ad_inside_component
+        type: string
+      - default: null
+        name: widget_inside_component
+        type: string
+      - default: "#FFFFFF"
+        name: row_background_color
+        type: string
+      - default: false
+        name: hide_row_title
+        type: boolean
+      - default: "#e43232"
+        name: collection_name_border_color
+        type: string
+      - default: false
+        name: hide_author
+        type: boolean
+      - default: false
+        name: hide_timestamp
+        type: boolean
+      - default: false
+        name: hide_read_time
+        type: boolean
+      - default: false
+        name: hide_button
+        type: boolean
+      - default: "Read More"
+        name: button_text
+        type: string
+      - default: null
+        name: widget_above_component
+        type: string
+      - default: null
+        name: alternative_collection_title
+        type: string
+  - name: ArrowFourStorySlider
+    display: Four Story Slider
+    options:
+      - default: null
+        name: ad_above_component
+        type: string
+      - default: "#FFFFFF"
+        name: row_background_color
+        type: string
+      - default: false
+        name: hide_row_title
+        type: boolean
+      - default: "#e43232"
+        name: collection_name_border_color
+        type: string
+      - default: false
+        name: hide_section_tag
+        type: boolean
+      - default: "#e43232"
+        name: section_border_color
+        type: string
+      - default: false
+        name: hide_author
+        type: boolean
+      - default: false
+        name: hide_timestamp
+        type: boolean
+      - default: false
+        name: hide_read_time
+        type: boolean
+      - default: null
+        name: widget_above_component
+        type: string
+      - default: null
+        name: alternative_collection_title
+        type: string
+  - name: ArrowTwoColSevenStories
+    display: Two Column Seven Stories
+    options:
+      - default: null
+        name: ad_above_component
+        type: string
+      - default: null
+        name: ad_inside_component
+        type: string
+      - default: null
+        name: widget_inside_component
+        type: string
+      - default: "#FFFFFF"
+        name: row_background_color
+        type: string
+      - default: false
+        name: hide_row_title
+        type: boolean
+      - default: "#e43232"
+        name: collection_name_border_color
+        type: string
+      - default: false
+        name: hide_section_tag
+        type: boolean
+      - default: "#e43232"
+        name: section_border_color
+        type: string
+      - default: false
+        name: hide_author
+        type: boolean
+      - default: false
+        name: hide_timestamp
+        type: boolean
+      - default: false
+        name: hide_read_time
+        type: boolean
+      - default: false
+        name: hide_button
+        type: boolean
+      - default: "Read More"
+        name: button_text
+        type: string
+      - default: null
+        name: widget_above_component
+        type: string
+      - default: null
+        name: alternative_collection_title
+        type: string
+  - name: ArrowFourColTwelveStories
+    display: Four Column Twelve Stories
+    options:
+      - default: null
+        name: ad_above_component
+        type: string
+      - default: "#FFFFFF"
+        name: row_background_color
+        type: string
+      - default: false
+        name: hide_row_title
+        type: boolean
+      - default: "#e43232"
+        name: collection_name_border_color
+        type: string
+      - default: false
+        name: hide_section_tag
+        type: boolean
+      - default: "#e43232"
+        name: section_border_color
+        type: string
+      - default: false
+        name: hide_author
+        type: boolean
+      - default: false
+        name: hide_timestamp
+        type: boolean
+      - default: false
+        name: hide_read_time
+        type: boolean
+      - default: false
+        name: hide_button
+        type: boolean
+      - default: "Read More"
+        name: button_text
+        type: string
+      - default: null
+        name: widget_above_component
+        type: string
+      - default: null
+        name: alternative_collection_title
+        type: string
+  - name: ArrowFullScreenSlider
+    display: Full Screen Slider
+    options:
+      - default: null
+        name: ad_above_component
+        type: string
+      - default: "#FFFFFF"
+        name: row_background_color
+        type: string
+      - default: false
+        name: hide_row_title
+        type: boolean
+      - default: "#e43232"
+        name: collection_name_border_color
+        type: string
+      - default: false
+        name: hide_section_tag
+        type: boolean
+      - default: "#e43232"
+        name: section_border_color
+        type: string
+      - default: false
+        name: hide_author
+        type: boolean
+      - default: false
+        name: hide_timestamp
+        type: boolean
+      - default: false
+        name: hide_read_time
+        type: boolean
+      - default: false
+        name: hide_button
+        type: boolean
+      - default: false
+        name: hide_subheadline
+        type: boolean
+      - default: "Read More"
+        name: button_text
+        type: string
+      - default: null
+        name: widget_above_component
+        type: string
+      - default: null
+        name: alternative_collection_title
+        type: string
+  - name: NewspaperThreeColFiveStories
+    display: Newspaper Three Column Five Stories
+    options:
+      - default: "#FFFFFF"
+        name: row_background_color
+        type: string
+      - default: false
+        name: hide_author
+        type: boolean
+      - default: false
+        name: hide_timestamp
+        type: boolean
+      - default: false
+        name: hide_read_time
+        type: boolean
+      - default: false
+        name: hide_button
+        type: boolean
+      - default: "Read More"
+        name: button_text
+        type: string
+      - default: ""
+        name: row_title
+        type: string
+      - default: ""
+        name: row_subtitle
+        type: string
+      - default: null
+        name: widget_above_component
+        type: string
+      - default: null
+        name: widget_inside_component
+        type: string
+  - name: ArrowFourColGrid
+    display: Four Col Grid
+    options:
+      - default: null
+        name: ad_above_component
+        type: string
+      - default: "#FFFFFF"
+        name: row_background_color
+        type: string
+      - default: false
+        name: hide_author
+        type: boolean
+      - default: false
+        name: hide_timestamp
+        type: boolean
+      - default: false
+        name: hide_read_time
+        type: boolean
+      - default: false
+        name: hide_button
+        type: boolean
+      - default: "Load More"
+        name: button_text
+        type: string
+      - default: ""
+        name: row_title
+        type: string
+      - default: ""
+        name: row_subtitle
+        type: string
+      - default: null
+        name: widget_above_component
+        type: string
+      - default: null
+        name: alternative_collection_title
+        type: string
+      - default: null
+        name: hide_section_tag
+        type: boolean
+  - name: NewTwoColTenStoriesSidebar
+    display: Two Column Ten Stories Sidebar
+    options:
+      - default: null
+        name: ad_above_component
+        type: string
+      - default: null
+        name: ad_inside_component
+        type: string
+      - default: null
+        name: widget_inside_component
+        type: string
+      - default: "#FFFFFF"
+        name: row_background_color
+        type: string
+      - default: false
+        name: hide_row_title
+        type: boolean
+      - default: "#e43232"
+        name: collection_name_border_color
+        type: string
+      - default: false
+        name: hide_section_tag
+        type: boolean
+      - default: "#e43232"
+        name: section_border_color
+        type: string
+      - default: false
+        name: hide_author
+        type: boolean
+      - default: false
+        name: hide_timestamp
+        type: boolean
+      - default: false
+        name: hide_read_time
+        type: boolean
+      - default: false
+        name: hide_button
+        type: boolean
+      - default: "Read More"
+        name: button_text
+        type: string
+      - default: null
+        name: widget_above_component
+        type: string
+      - default: null
+        name: alternative_collection_title
+        type: string
+  - name: SixteenStories
+    display: Sixteen Stories
+    options:
+      - default: "#FFFFFF"
+        name: row_background_color
+        type: string
+      - default: false
+        name: hide_author
+        type: boolean
+      - default: false
+        name: hide_timestamp
+        type: boolean
+      - default: false
+        name: hide_read_time
+        type: boolean
+      - default: false
+        name: hide_button
+        type: boolean
+      - default: "Read More"
+        name: button_text
+        type: string

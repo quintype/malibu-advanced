@@ -5,7 +5,6 @@ import { useSelector } from "react-redux";
 import { getTextColor } from "../../../utils/utils";
 import { useStateValue } from "../../SharedContext";
 import "./read-time.m.css";
-import { Dot } from "../Dot/dot";
 
 export const ReadTime = ({ story, opts = {}, isLightTheme = false }) => {
   const config = useStateValue() || {};
@@ -30,9 +29,6 @@ export const ReadTime = ({ story, opts = {}, isLightTheme = false }) => {
         styleName={`read-time-wrapper ${textColor}`}
         data-test-id="read-time"
       >
-        <span styleName="dot-indicator" className="read-time-indicator">
-          <Dot color={textColor} />
-        </span>
         <span>
           {readTime.toLocaleString(`${languageCode}`)} {timeToRead}
         </span>

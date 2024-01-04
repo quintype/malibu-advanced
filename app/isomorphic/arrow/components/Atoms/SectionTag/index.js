@@ -24,6 +24,7 @@ export const SectionTag = ({ story, template = "", borderColor = "", isLightThem
       : "section";
   }
 
+  console.log(sectionTagBorderColor);
   if (!isSection) return null;
   return (
     <Link href={getUrl} className="arrow-component arr--section-name" aria-label="section-name">
@@ -41,7 +42,12 @@ export const SectionTag = ({ story, template = "", borderColor = "", isLightThem
         {section["display-name"] || section.name}
         <div
           styleName="border-bottom"
-          style={{ backgroundColor: `${template === "solid" ? "" : sectionTagBorderColor}` }}
+          style={{
+            height: "4px",
+            marginTop: "4px",
+            width: "20px",
+            backgroundColor: `${template === "solid" ? "" : sectionTagBorderColor}`,
+          }}
         ></div>
       </div>
     </Link>
