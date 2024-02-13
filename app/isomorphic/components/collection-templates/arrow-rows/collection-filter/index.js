@@ -1,10 +1,10 @@
 import React from "react";
-import FourColGrid from "../../../../arrow/components/Rows/FourColGrid";
+import CollectionFilter from "../../../../arrow/components/Rows/CollectionFilter";
 import { object } from "prop-types";
 import get from "lodash.get";
 import { collectionToStories } from "@quintype/components";
 
-export const ArrowFourColGrid = ({ collection }) => {
+export const ArrowCollectionFilter = ({ collection }) => {
   const items = collectionToStories(collection);
 
   if (items.length < 1) {
@@ -32,7 +32,7 @@ export const ArrowFourColGrid = ({ collection }) => {
     collectionNameBorderColor: collectionNameBorderColor,
     borderColor: sectionBorderColor,
     theme: backgroundColor,
-    border: "full",
+    border: "",
     collectionNameTemplate: "borderLeft",
     sectionTagTemplate: "borderLeft",
     showSection: !hideSectionTag,
@@ -42,12 +42,14 @@ export const ArrowFourColGrid = ({ collection }) => {
     buttonText: buttonText,
     showButton: !hideButton,
     showReadTime: !hideReadTime,
+    showLiveIcon: true,
+    showSubheadline: true,
   };
-  return <FourColGrid collection={collection} config={config} />;
+  return <CollectionFilter collection={collection} config={config} />;
 };
 
-ArrowFourColGrid.propTypes = {
+ArrowCollectionFilter.propTypes = {
   collection: object,
 };
 
-ArrowFourColGrid.storyLimit = 12;
+ArrowCollectionFilter.storyLimit = 4;
