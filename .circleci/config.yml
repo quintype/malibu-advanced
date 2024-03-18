@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/node:20.11.1
+      - image: circleci/node:latest
     steps:
       - setup_remote_docker:
           docker_layer_caching: true
@@ -41,14 +41,14 @@ jobs:
 
   lint_js:
     docker:
-      - image: circleci/node:20.11.1
+      - image: circleci/node:latest
     steps:
       - checkout
       - run: npm install
       - run: npm run lint:js:ci
   lint_css:
     docker:
-      - image: circleci/node:20.11.1
+      - image: circleci/node:latest
     steps:
       - checkout
       - run: npm install
@@ -56,7 +56,7 @@ jobs:
 
   stg_lighthouse_task:
     docker:
-      - image: circleci/node:20.11.1-browsers
+      - image: circleci/node:latest-browsers
     steps:
       - checkout
       - run: |
@@ -64,7 +64,7 @@ jobs:
           npx @lhci/cli@0.6.x autorun
   prod_lighthouse_task:
     docker:
-      - image: circleci/node:20.11.1-browsers
+      - image: circleci/node:latest-browsers
     steps:
       - checkout
       - run: |
@@ -72,7 +72,7 @@ jobs:
           npx @lhci/cli@0.6.x autorun
   perf_prod_lighthouse_task:
     docker:
-      - image: circleci/node:20.11.1-browsers
+      - image: circleci/node:latest-browsers
     steps:
       - checkout
       - run: |
