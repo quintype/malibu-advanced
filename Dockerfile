@@ -11,7 +11,7 @@ RUN apk --no-cache --virtual build-dependencies add \
     python3 \
     make \
     g++
-RUN npm install --omit=optional
+RUN npm install --legacy-peer-deps
 
 # Environment variables for compile phase here
 ENV MINIFY_CSS_CLASSNAMES true
