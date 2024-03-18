@@ -7,8 +7,8 @@
   "author": "Tejas Dinkar <tejas@gja.in>",
   "license": "MIT",
   "engines": {
-    "node": "^16.14.2",
-    "npm": "^8.5.0"
+    "node": "^20.11.1",
+    "npm": "^10.2.4"
   },
   "dependencies": {
     "@loadable/component": "^5.14.1",
@@ -16,7 +16,7 @@
     "@metype/components": "^2.3.3",
     "@quintype/bridgekeeper-js": "^2.8.2-feature-otp.1",
     "@quintype/components": "^3.5.0",
-    "@quintype/framework": "^7.25.0",
+    "@quintype/framework": "7.26.0-update-node20-branch.0",
     "@quintype/seo": "^1.44.1",
     "axios": "^0.24.0",
     "fontfaceobserver": "^2.1.0",
@@ -37,7 +37,7 @@
   "devDependencies": {
     "@babel/eslint-parser": "^7.15.8",
     "@lhci/cli": "^0.8.0",
-    "@quintype/build": "^4.0.0",
+    "@quintype/build": "4.0.1-update-node20-branch.0",
     "babel-eslint": "^10.0.3",
     "check-node-version": "^4.1.0",
     "cosmiconfig": "^7.0.0",
@@ -67,11 +67,7 @@
     "stylelint-scss": "^4.0.0",
     "svg-sprite-loader": "^6.0.10",
     "svg-transform-loader": "^2.0.13",
-    "svgo-loader": "^3.0.0",
-    "webpack": "^5.59.1",
-    "webpack-bundle-analyzer": "^4.5.0",
-    "webpack-cli": "^5.0.1",
-    "webpack-dev-server": "^4.3.1"
+    "svgo-loader": "^3.0.0"
   },
   "babel": {
     "env": {
@@ -98,7 +94,7 @@
     "lint:css": "npx stylelint './app/**/*.{scss,css}'",
     "lint:css:ci": "npx stylelint $(git diff --pretty='' --diff-filter=d --name-only origin/master...HEAD -- '*.css' '*.scss') ./app/assets/stylesheets/app.scss",
     "lint:ci": "npm run lint:js:ci && npm run lint:css:ci",
-    "check-node-npm": "check-node-version --node '>= 12.13.0' --npm '^6.14.0'"
+    "check-node-npm": "check-node-version --node '= 20.11.1' --npm '= 10.2.4'"
   },
   "husky": {
     "hooks": {

@@ -1,4 +1,4 @@
-FROM node-16.14.2-alpine3.15
+FROM node-20.11.1-alpine3.19
 # the node version here should match with node version in the main DockerFile
 
 RUN apk update && \
