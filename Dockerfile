@@ -20,7 +20,6 @@ ENV MINIFY_CSS_CLASSNAMES true
 
 COPY . /app/
 RUN git log -n1 --pretty="Commit Date: %aD%nBuild Date: `date --rfc-2822`%n%h %an%n%s%n" > public/round-table.txt && \
-    npm config set unsafe-perm true && \
     ./node_modules/.bin/quintype-build
 
 FROM quay.io/quintype/public-base:node-20.11.1-alpine3.19
