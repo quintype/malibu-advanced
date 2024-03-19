@@ -44,7 +44,7 @@ jobs:
       - image: cimg/node:20.11.1
     steps:
       - checkout
-      - run: npm install
+      - run: npm install --legacy-peer-deps
       - run: npm run lint:js:ci
   lint_css:
     docker:
