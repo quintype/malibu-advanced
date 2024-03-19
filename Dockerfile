@@ -19,8 +19,7 @@ ENV MINIFY_CSS_CLASSNAMES true
 # Everything above should be cached by docker. The below should run on every build
 
 COPY . /app/
-RUN git log -n1 --pretty="Commit Date: %aD%nBuild Date: `date --rfc-2822`%n%h %an%n%s%n" > public/round-table.txt && \
-    ./node_modules/.bin/quintype-build
+RUN git log -n1 --pretty="Commit Date: %aD%nBuild Date: `date --rfc-2822`%n%h %an%n%s%n" > public/round-table.txt
 
 FROM quay.io/quintype/public-base:node-20.11.1-alpine3.19
 MAINTAINER Quintype Developers <dev-core@quintype.com>
