@@ -47,6 +47,11 @@ const ISOMORPHIC_ROUTES = [
     exact: true,
   },
   {
+    path: "/sports-page",
+    pageType: PAGE_TYPE.SPORTS_PAGE,
+    exact: true,
+  },
+  {
     path: `${TAG_PAGE_URL_PREFIX}:tagSlug`,
     pageType: PAGE_TYPE.TAG_PAGE,
     exact: true,

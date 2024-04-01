@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-npm install
+npm i --legacy-peer-deps
 npm run compile
 supervisord -n -c <(cat <<EOF
 [supervisord]

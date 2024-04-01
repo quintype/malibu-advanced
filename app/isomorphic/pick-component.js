@@ -20,6 +20,7 @@ const { pickComponent, getChunkName } = pickComponentHelper(
     [PAGE_TYPE.PROFILE_PAGE]: { chunk: "list", component: "ProfilePage" },
     [PAGE_TYPE.USER_LOGIN]: { chunk: "list", component: "UserLoginPage" },
     [PAGE_TYPE.UGC_PAGE]: { chunk: "list", component: "UgcPage" },
+    [PAGE_TYPE.SPORTS_PAGE]: { chunk: "list", component: "SportsPage" },
     default: { chunk: "list", component: "NotFoundPage" },
   },
   {
