@@ -15,7 +15,7 @@ export const StoryCardWithBulletPoint = ({ story, config, bulletValue, collectio
       <StoryCard story={story} bgImgContentOverlap config={config} theme={theme}>
         <StorycardContent>
           <Headline story={story} headerLevel="6" premiumStoryIconConfig={config} />
-          <AuthorWithTime config={localizationConfig} story={story} prefix="By" collectionId={collectionId} />
+          <AuthorWithTime config={localizationConfig} story={story} collectionId={collectionId} />
         </StorycardContent>
       </StoryCard>
     </div>

@@ -1,5 +1,4 @@
 .bullet {
-  margin-right: var(--arrow-spacing-l);
   font-size: var(--arrow-fs-huge);
   font-weight: var(--arrow-fw-bold);
   line-height: var(--arrow-lh-3);
@@ -11,4 +10,16 @@
 
 .light {
   color: var(--arrow-c-invert-mono6);
+}
+
+html[dir="ltr"] {
+  .bullet {
+    margin-right: var(--arrow-spacing-l);
+  }
+}
+
+html[dir="rtl"] {
+  .bullet {
+    margin-left: var(--arrow-spacing-l);
+  }
 }

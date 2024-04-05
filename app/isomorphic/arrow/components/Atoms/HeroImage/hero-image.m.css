@@ -34,20 +34,6 @@
   background-color: lightgray;
 }
 
-html[dir="rtl"] {
-  .right-padding,
-  .right-padding-mob {
-    padding-right: 0;
-    padding-left: var(--arrow-spacing-s);
-  }
-
-  .right-padding-mob {
-    @media (--viewport-medium) {
-      padding-left: 0;
-    }
-  }
-}
-
 .hero-image-mob {
   margin-bottom: var(--arrow-spacing-xs);
   padding-right: 0;
@@ -91,6 +77,18 @@ html[dir="rtl"] {
 }
 
 html[dir="rtl"] {
+  .right-padding,
+  .right-padding-mob {
+    padding-right: 0;
+    padding-left: var(--arrow-spacing-s);
+  }
+
+  .right-padding-mob {
+    @media (--viewport-medium) {
+      padding-left: 0;
+    }
+  }
+
   .icon-wrapper {
     position: absolute;
     top: 4px;

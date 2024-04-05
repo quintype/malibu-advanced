@@ -59,10 +59,6 @@
   margin-bottom: var(--arrow-spacing-s);
 }
 
-.small-card-content {
-  padding-right: var(--arrow-spacing-s);
-}
-
 .small-card :global(.arr--story-card) {
   padding-bottom: var(--arrow-spacing-xs);
 }
@@ -98,4 +94,16 @@
 .small-card {
   padding-top: var(--arrow-spacing-s);
   margin-bottom: var(--arrow-spacing-xs);
+}
+
+html[dir="ltr"] {
+  .small-card-content {
+    padding-right: var(--arrow-spacing-s);
+  }
+}
+
+html[dir="rtl"] {
+  .small-card-content {
+    padding-left: var(--arrow-spacing-s);
+  }
 }
