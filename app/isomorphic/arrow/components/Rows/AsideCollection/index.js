@@ -1,4 +1,3 @@
-/* eslint-disable react/display-name */
 import get from "lodash.get";
 import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
@@ -99,7 +98,7 @@ StoryCollection.propTypes = {
   slotData: PropTypes.object,
   opts: PropTypes.object,
   loadRelatedStories: PropTypes.func,
-  story: PropTypes.object,
+  story: PropTypes.object
 };
 
 // memoized below AsideCollection to avoid widget and Ad re-renderings
@@ -116,7 +115,7 @@ const AsideCollection = React.memo(
     widgetComp,
     opts = {},
     loadRelatedStories,
-    story,
+    story
   }) => {
     const { theme, stickyTopStyle } = config;
     const isHorizontal = horizontal ? "horizontal-wrapper" : "";
@@ -128,8 +127,7 @@ const AsideCollection = React.memo(
           style={{ backgroundColor: theme || "initial" }}
           data-test-id="aside-collection"
           data-nosnippet
-          id={`aside-collection-${story?.id}`}
-        >
+          id={`aside-collection-${story?.id}`}>
           <StoryCollection
             data={data}
             horizontal={horizontal}
@@ -182,8 +180,7 @@ const AsideCollection = React.memo(
         styleName={["wrapper", isHorizontal, isSticky, stickyTopStyle].join(" ")}
         style={{ backgroundColor: theme || "initial" }}
         data-nosnippet
-        data-test-id="aside-collection"
-      >
+        data-test-id="aside-collection">
         {enableKeyEvents && (
           <KeyEvents
             story={keyEventsData.story}
@@ -211,10 +208,10 @@ AsideCollection.propTypes = {
   keyEventsData: PropTypes.shape({
     story: PropTypes.object,
     config: PropTypes.object,
-    showLoadMore: PropTypes.boolean,
+    showLoadMore: PropTypes.boolean
   }),
   enableKeyEvents: PropTypes.boolean,
-  loadRelatedStories: PropTypes.func,
+  loadRelatedStories: PropTypes.func
 };
 
 export default StateProvider(AsideCollection);

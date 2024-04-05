@@ -10,7 +10,7 @@ const element = generateStoryElementData("summary");
 const summaryTemplate = {
   default: "",
   header: "header",
-  border: "border",
+  border: "border"
 };
 
 withStore("Atoms/Story Elements/Summary", {}, Readme)
@@ -22,7 +22,7 @@ withStore("Atoms/Story Elements/Summary", {}, Readme)
       opts={{
         isExternalLink: boolean("External Link", true),
         headline: text("Headline", "Summary"),
-        hideHeadline: boolean("Hide Headline", false),
+        hideHeadline: boolean("Hide Headline", false)
       }}
     />
   ))

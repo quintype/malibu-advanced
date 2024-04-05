@@ -28,7 +28,7 @@ const ThreeColSevenStory = ({ collection, config = {} }) => {
     customCollectionName,
     navigate = true,
     isHorizontal = true,
-    horizontalImageLast = false,
+    horizontalImageLast = false
   } = config;
   const { footerSlot } = footerSlotConfig;
   const { type = "story", component } = get(slotConfig, [0], {});
@@ -46,16 +46,8 @@ const ThreeColSevenStory = ({ collection, config = {} }) => {
         border={border}
         config={config}
         isHorizontal={isHorizontal}
-        isHorizontalWithImageLast={horizontalImageLast}
-      >
-        <HeroImage
-          story={story}
-          isHorizontal
-          aspectRatio={[
-            [16, 9],
-            [16, 9],
-          ]}
-        />
+        isHorizontalWithImageLast={horizontalImageLast}>
+        <HeroImage story={story} isHorizontal aspectRatio={[[16, 9], [16, 9]]} />
         <StorycardContent
           theme={theme}
           border={border}
@@ -76,16 +68,8 @@ const ThreeColSevenStory = ({ collection, config = {} }) => {
         theme={theme}
         config={config}
         isHorizontal={isHorizontal}
-        isHorizontalWithImageLast={horizontalImageLast}
-      >
-        <HeroImage
-          story={story}
-          isHorizontal
-          aspectRatio={[
-            [16, 9],
-            [16, 9],
-          ]}
-        />
+        isHorizontalWithImageLast={horizontalImageLast}>
+        <HeroImage story={story} isHorizontal aspectRatio={[[16, 9], [16, 9]]} />
         <StorycardContent
           theme={theme}
           story={story}
@@ -105,8 +89,7 @@ const ThreeColSevenStory = ({ collection, config = {} }) => {
             <div
               styleName={`${borderBottomStyle}`}
               key={`default-${index}`}
-              className="three-col-seven-story_three-col-storycard-wrapper"
-            >
+              className="three-col-seven-story_three-col-storycard-wrapper">
               {storyCardComponent(story)}
             </div>
           );
@@ -116,8 +99,7 @@ const ThreeColSevenStory = ({ collection, config = {} }) => {
             <div
               styleName={`${borderBottomStyle}`}
               key={`default-${index}`}
-              className="three-col-seven-story_three-col-storycard-wrapper"
-            >
+              className="three-col-seven-story_three-col-storycard-wrapper">
               {storyCardWidthoutBorder(story)}
             </div>
           );
@@ -135,8 +117,7 @@ const ThreeColSevenStory = ({ collection, config = {} }) => {
     <div
       className="full-width-with-padding arrow-component"
       data-test-id="three-col-seven-stories"
-      style={{ backgroundColor: theme || "initial" }}
-    >
+      style={{ backgroundColor: theme || "initial" }}>
       <div styleName="wrapper">
         <CollectionName
           collection={collection}
@@ -152,15 +133,11 @@ const ThreeColSevenStory = ({ collection, config = {} }) => {
                 <div
                   styleName={`${borderBottomStyle}`}
                   key={`default-${index}`}
-                  className="three-col-seven-story_three-col-storycard-wrapper"
-                >
+                  className="three-col-seven-story_three-col-storycard-wrapper">
                   <StoryCard
                     story={story}
                     theme={theme}
-                    aspectRatio={[
-                      [16, 9],
-                      [16, 9],
-                    ]}
+                    aspectRatio={[[16, 9], [16, 9]]}
                     headerLevel="5"
                     borderColor={borderColor}
                     config={config}
@@ -177,8 +154,7 @@ const ThreeColSevenStory = ({ collection, config = {} }) => {
                 <div
                   styleName={`${borderBottomStyle}`}
                   key={`default-${index}`}
-                  className="three-col-seven-story_three-col-storycard-wrapper"
-                >
+                  className="three-col-seven-story_three-col-storycard-wrapper">
                   {storyCardComponent(story)}
                 </div>
               );
@@ -188,8 +164,7 @@ const ThreeColSevenStory = ({ collection, config = {} }) => {
                 <div
                   styleName={`${borderBottomStyle}`}
                   key={`default-${index}`}
-                  className="three-col-seven-story_three-col-storycard-wrapper"
-                >
+                  className="three-col-seven-story_three-col-storycard-wrapper">
                   {storyCardWidthoutBorder(story)}
                 </div>
               );
@@ -201,8 +176,7 @@ const ThreeColSevenStory = ({ collection, config = {} }) => {
                 <div
                   styleName={`${borderBottomStyle} ${lastCardBorderBottom}`}
                   key={`default-${index}`}
-                  className="three-col-seven-story_three-col-storycard-wrapper"
-                >
+                  className="three-col-seven-story_three-col-storycard-wrapper">
                   {storyCardComponent(story)}
                 </div>
               );
@@ -237,8 +211,8 @@ ThreeColSevenStory.propTypes = {
     footerButton: PropTypes.string,
     collectionNameTemplate: PropTypes.string,
     collectionNameBorderColor: PropTypes.string,
-    horizontalImageLast: PropTypes.bool,
-  }),
+    horizontalImageLast: PropTypes.bool
+  })
 };
 
 export default StateProvider(ThreeColSevenStory);

@@ -15,7 +15,7 @@ export const MagazineCoverImageCard = ({ collection, config = {} }) => {
   const {
     "cover-image-url": coverUrl,
     "cover-image-s3-key": covers3Key,
-    "cover-image-metadata": coverImageMetaData,
+    "cover-image-metadata": coverImageMetaData
   } = coverImageData;
 
   const slug = magazineSlug && collection && getSlug(collection, config);
@@ -61,9 +61,9 @@ MagazineCoverImageCard.propTypes = {
     "cover-image-url": PropTypes.string,
     "cover-image-s3-key": PropTypes.string,
     "cover-image-metadata": PropTypes.string,
-    slug: PropTypes.string,
+    slug: PropTypes.string
   }),
   config: PropTypes.shape({
-    magazineSlug: PropTypes.string,
-  }),
+    magazineSlug: PropTypes.string
+  })
 };

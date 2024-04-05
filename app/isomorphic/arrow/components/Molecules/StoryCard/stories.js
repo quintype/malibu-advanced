@@ -25,7 +25,7 @@ const aspectRatioOptions = {
   "[8,3]": [8, 3],
   "[1,1]": [1, 1],
   "[4, 3]": [4, 3],
-  "[2, 3]": [2, 3],
+  "[2, 3]": [2, 3]
 };
 const label = "color";
 const defaultvalue = "#929292";
@@ -38,9 +38,9 @@ withStore(
     qt: {
       config: {
         "cdn-image": "thumbor-stg.assettype.com",
-        mountAt: "/sub-directory",
-      },
-    },
+        mountAt: "/sub-directory"
+      }
+    }
   },
   Readme
 )
@@ -135,9 +135,9 @@ withStore(
   {
     qt: {
       config: {
-        "cdn-image": "thumbor-stg.assettype.com",
-      },
-    },
+        "cdn-image": "thumbor-stg.assettype.com"
+      }
+    }
   },
   ReadmeForBorder
 )
@@ -202,9 +202,9 @@ withStore(
   {
     qt: {
       config: {
-        "cdn-image": "thumbor-stg.assettype.com",
-      },
-    },
+        "cdn-image": "thumbor-stg.assettype.com"
+      }
+    }
   },
   ReadmeForBgImage
 )

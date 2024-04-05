@@ -23,7 +23,7 @@ export const SocialSharePopup = ({
   whatsappUrl = "",
   theme,
   closePopup = "",
-  iconType = "plain-color-svg",
+  iconType = "plain-color-svg"
 }) => {
   const textColor = getTextColor(theme);
   const iconColor = textColor === "dark" ? "#000000" : "#ffffff";
@@ -57,5 +57,5 @@ SocialSharePopup.propTypes = {
   primaryColor: PropTypes.string,
   closePopup: PropTypes.bool,
   theme: PropTypes.string,
-  iconType: PropTypes.string,
+  iconType: PropTypes.string
 };

@@ -34,7 +34,7 @@ TextBase.propTypes = {
   opts: PropTypes.shape({ isExternalLink: PropTypes.bool }),
   css: PropTypes.shape({ hyperlinkColor: PropTypes.string, textColor: PropTypes.string }),
   story: shapeStory,
-  config: shapeConfig,
+  config: shapeConfig
 };
 
 export const Text = withElementWrapper(TextBase);

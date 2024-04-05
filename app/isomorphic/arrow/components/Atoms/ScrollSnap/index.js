@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import React, { useEffect, useState, useRef } from "react";
 import { useSelector } from "react-redux";
 import { array, number, bool, string } from "prop-types";
@@ -12,7 +11,7 @@ import "./scroll-snap.m.css";
 const smoothScroll = (node, topOrLeft, horizontal) => {
   node.scrollTo({
     [horizontal ? "left" : "top"]: topOrLeft,
-    behavior: "smooth",
+    behavior: "smooth"
   });
 };
 
@@ -42,7 +41,7 @@ export const ScrollSnap = ({
   pauseOnHover,
   perView,
   slideIndicator,
-  sliderArrowStyles = {},
+  sliderArrowStyles = {}
 }) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [autoScroll, setAutoScroll] = useState(false);
@@ -131,8 +130,7 @@ export const ScrollSnap = ({
         styleName="wrapper"
         className="scroll-snap-wrapper"
         onMouseEnter={pauseAutoPlay}
-        onMouseLeave={pauseAutoPlay}
-      >
+        onMouseLeave={pauseAutoPlay}>
         <div ref={scroller} styleName="carousel" className="scroll-snap-carousel">
           {children}
         </div>
@@ -167,7 +165,7 @@ ScrollSnap.defaultProps = {
   interval: 4000,
   pauseOnHover: true,
   perView: 1,
-  slideIndicator: "dots",
+  slideIndicator: "dots"
 };
 
 ScrollSnap.propTypes = {
@@ -177,5 +175,5 @@ ScrollSnap.propTypes = {
   interval: number,
   pauseOnHover: bool,
   perView: number,
-  slideIndicator: string,
+  slideIndicator: string
 };

@@ -1,4 +1,3 @@
-/* eslint-disable prefer-regex-literals */
 import React from "react";
 import { color, boolean } from "@storybook/addon-knobs";
 import { withStore, optionalSelect, collectionNameTemplates } from "../../../../storybook";
@@ -31,9 +30,9 @@ withStore(
     qt: {
       config: {
         "cdn-image": "thumbor-stg.assettype.com",
-        mountAt: "/sub-directory",
-      },
-    },
+        mountAt: "/sub-directory"
+      }
+    }
   },
   Readme
 )
@@ -44,7 +43,7 @@ withStore(
       theme: color("color", defaultvalue),
       collectionNameTemplate: optionalSelect("Collection Name Templates", collectionNameTemplates),
       slotConfig: configurableSlot,
-      showRowTitle: boolean("Row title", true),
+      showRowTitle: boolean("Row title", true)
     };
 
     mock.onGet(API_REQUEST).reply(200, nestedCollection);
@@ -58,7 +57,7 @@ withStore(
       collectionNameTemplate: optionalSelect("Collection Name Templates", collectionNameTemplates),
       slotConfig: configurableSlot,
       showRowTitle: boolean("Row title", true),
-      localizedNumbers: ["১", "২", "৩", "৪", "৫", "৬", "৭", "৮", "৯"],
+      localizedNumbers: ["১", "২", "৩", "৪", "৫", "৬", "৭", "৮", "৯"]
     };
 
     mock.onGet(API_REQUEST).reply(200, nestedCollection);

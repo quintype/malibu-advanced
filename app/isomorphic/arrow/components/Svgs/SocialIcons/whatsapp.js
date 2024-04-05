@@ -15,5 +15,5 @@ export const WhatsApp = ({ color = "#25D366" }) => {
 };
 
 WhatsApp.propTypes = {
-  color: PropTypes.string,
+  color: PropTypes.string
 };

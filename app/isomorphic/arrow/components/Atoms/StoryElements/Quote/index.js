@@ -36,7 +36,7 @@ QuoteBase.propTypes = {
   story: shapeStory,
   config: shapeConfig,
   render: PropTypes.func,
-  css: PropTypes.object,
+  css: PropTypes.object
 };
 
 export const Quote = withElementWrapper(QuoteBase);

@@ -37,7 +37,7 @@ const KeyEventCards = (props) => {
           showTime: true,
           isTimeFirst: true,
           direction,
-          ...timeStampConfig,
+          ...timeStampConfig
         })}
       </div>
       <a href="#" onClick={scrollToCard} aria-label="event-title">
@@ -47,7 +47,7 @@ const KeyEventCards = (props) => {
             <div
               styleName="fade-out"
               style={{
-                backgroundImage: `linear-gradient(to bottom, transparent, ${theme})` || "none",
+                backgroundImage: `linear-gradient(to bottom, transparent, ${theme})` || "none"
               }}
             />
           )}
@@ -61,7 +61,7 @@ KeyEventCards.propTypes = {
   card: PropTypes.shape({
     "card-added-at": PropTypes.number,
     "story-elements": PropTypes.array,
-    id: PropTypes.string,
+    id: PropTypes.string
   }),
   config: PropTypes.object,
   slug: PropTypes.string,
@@ -71,7 +71,7 @@ KeyEventCards.propTypes = {
   cardLength: PropTypes.number,
   loadCards: PropTypes.bool,
   showLoadMore: PropTypes.bool,
-  qtConfig: PropTypes.object,
+  qtConfig: PropTypes.object
 };
 
 const KeyEvents = ({ story = {}, config = {}, showLoadMore = true, publishedDetails = {} }) => {
@@ -123,7 +123,7 @@ KeyEvents.propTypes = {
   story: PropTypes.object,
   config: PropTypes.object,
   showLoadMore: PropTypes.bool,
-  publishedDetails: PropTypes.object,
+  publishedDetails: PropTypes.object
 };
 
 export default StateProvider(KeyEvents);

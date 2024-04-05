@@ -18,16 +18,14 @@ const AuthorsList = ({ data = [], config = {}, getMoreData, hideLoadmore = false
     <div
       data-test-id="authors-list"
       className="full-width-with-padding arrow-component arr--authors-list"
-      style={{ background: theme || "initial" }}
-    >
+      style={{ background: theme || "initial" }}>
       <div styleName="wrapper">
         {data.slice(0, limit).map((author, index) => (
           <Link
             href={`${mountAt}/author/` + author.slug}
             key={`author-list-${index}`}
             styleName="linkWrapper"
-            aria-label="author"
-          >
+            aria-label="author">
             <AuthorIntroductionCard data={author} config={config} template="smallCircle" />
           </Link>
         ))}
@@ -44,7 +42,7 @@ AuthorsList.propTypes = {
   config: PropTypes.shape({ enableBio: PropTypes.bool, theme: PropTypes.string }),
   getMoreData: PropTypes.object.isRequired,
   limit: PropTypes.number,
-  hideLoadmore: PropTypes.bool,
+  hideLoadmore: PropTypes.bool
 };
 
 export default StateProvider(AuthorsList);

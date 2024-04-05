@@ -30,7 +30,7 @@ export const TwoColTenStoriesSidebar = ({ collection, config = {} }) => {
     collectionNameBorderColor = "",
     theme = "",
     slotConfig = [],
-    collectionNameTemplate = "",
+    collectionNameTemplate = ""
   } = config;
 
   const dispatch = useDispatch();
@@ -50,8 +50,7 @@ export const TwoColTenStoriesSidebar = ({ collection, config = {} }) => {
       className="full-width-with-padding arrow-component"
       data-test-id="two-col-ten-stories-sidebar"
       style={{ backgroundColor: theme || "initial" }}
-      styleName="component-wrapper"
-    >
+      styleName="component-wrapper">
       <div styleName="collection-wrapper">
         <CollectionName
           collection={childCollections[0]}
@@ -66,18 +65,11 @@ export const TwoColTenStoriesSidebar = ({ collection, config = {} }) => {
               theme={theme}
               headerLevel="3"
               bgImgContentOverlap
-              aspectRatio={[
-                [16, 9],
-                [16, 9],
-              ]}
-              config={config}
-            >
+              aspectRatio={[[16, 9], [16, 9]]}
+              config={config}>
               <HeroImage
                 story={firstCollectionStories[0]}
-                aspectRatio={[
-                  [16, 9],
-                  [16, 9],
-                ]}
+                aspectRatio={[[16, 9], [16, 9]]}
                 widths={[250, 480, 640, 1200]}
               />
               <StorycardContent
@@ -102,20 +94,9 @@ export const TwoColTenStoriesSidebar = ({ collection, config = {} }) => {
                   headerLevel="4"
                   isHorizontal
                   border={border}
-                  aspectRatio={[
-                    [16, 9],
-                    [16, 9],
-                  ]}
-                  config={config}
-                >
-                  <HeroImage
-                    story={story}
-                    isHorizontal
-                    aspectRatio={[
-                      [16, 9],
-                      [16, 9],
-                    ]}
-                  />
+                  aspectRatio={[[16, 9], [16, 9]]}
+                  config={config}>
+                  <HeroImage story={story} isHorizontal aspectRatio={[[16, 9], [16, 9]]} />
                   <StorycardContent
                     theme={theme}
                     story={story}
@@ -205,6 +186,6 @@ TwoColTenStoriesSidebar.propTypes = {
     slotConfig: PropTypes.array,
     collectionNameBorderColor: PropTypes.string,
     borderColor: PropTypes.string,
-    localizationConfig: PropTypes.object,
-  }),
+    localizationConfig: PropTypes.object
+  })
 };

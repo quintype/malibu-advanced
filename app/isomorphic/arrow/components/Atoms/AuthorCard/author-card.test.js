@@ -18,20 +18,21 @@ const singleAuthorStory = {
       social: {
         twitter: {
           url: "https://www.twitter.com/sabqorg",
-          handle: "elonmusk",
-        },
+          handle: "elonmusk"
+        }
       },
       "avatar-url":
         "https://lh5.googleusercontent.com/-NhNrHEp1w4M/AAAAAAAAAAI/AAAAAAAAAAs/lzYwVY1BQdQ/photo.jpg?sz=50",
       "avatar-s3-key": null,
       "twitter-handle": null,
-      bio: "William Shakespeare was an English poet, playwright, and actor, widely regarded as the greatest writer in the English language and the world’s greatest dramatist. He is often called England’s national poet and the “Bard of Avon”",
+      bio:
+        "William Shakespeare was an English poet, playwright, and actor, widely regarded as the greatest writer in the English language and the world’s greatest dramatist. He is often called England’s national poet and the “Bard of Avon”",
       "contributor-role": {
         id: 873,
-        name: "Author",
-      },
-    },
-  ],
+        name: "Author"
+      }
+    }
+  ]
 };
 
 describe("default author card", () => {

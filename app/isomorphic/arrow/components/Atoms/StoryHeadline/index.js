@@ -31,6 +31,6 @@ StoryHeadline.propTypes = {
   premiumStoryIconConfig: PropTypes.shape({
     iconColor: PropTypes.string,
     iconType: PropTypes.string,
-    enablePremiumStoryIcon: PropTypes.bool,
-  }),
+    enablePremiumStoryIcon: PropTypes.bool
+  })
 };

@@ -20,7 +20,7 @@ const sectionTagDefaultvalue = "#3a9fdd";
 
 const borderOptions = {
   "No Value": "",
-  bottom: "bottom",
+  bottom: "bottom"
 };
 
 const configurableSlot = () => {
@@ -32,9 +32,9 @@ withStore(
   {
     qt: {
       config: {
-        "cdn-image": "thumbor-stg.assettype.com",
-      },
-    },
+        "cdn-image": "thumbor-stg.assettype.com"
+      }
+    }
   },
   Readme
 )
@@ -53,7 +53,7 @@ withStore(
       showRowTitle: boolean("Row title", true),
       showSubheadline: boolean("show sub headline", false),
       slotConfig: [{ type: "ad", component: configurableSlot }],
-      showReadTime: boolean("Read time", true),
+      showReadTime: boolean("Read time", true)
     };
 
     return <ThreeColFourteenStories collection={collection} config={contextConfig} />;

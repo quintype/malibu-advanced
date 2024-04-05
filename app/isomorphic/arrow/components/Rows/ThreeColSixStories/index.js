@@ -26,7 +26,7 @@ const ThreeColSixStories = ({ collection = {}, config = {} }) => {
     slotConfig = [],
     collectionNameTemplate = "",
     footerSlotConfig = {},
-    footerButton = "",
+    footerButton = ""
   } = config;
   const { type = "story", component } = get(slotConfig, [0], {});
   const { footerSlot } = footerSlotConfig;
@@ -47,14 +47,7 @@ const ThreeColSixStories = ({ collection = {}, config = {} }) => {
   const storySlot = () => {
     return (
       <StoryCard story={items[1]} headerLevel="5" theme={theme} border={border} isHorizontalMobile config={config}>
-        <HeroImage
-          story={items[1]}
-          isHorizontalMobile
-          aspectRatio={[
-            [16, 9],
-            [16, 9],
-          ]}
-        />
+        <HeroImage story={items[1]} isHorizontalMobile aspectRatio={[[16, 9], [16, 9]]} />
         <StorycardContent
           theme={theme}
           headerLevel="5"
@@ -74,8 +67,7 @@ const ThreeColSixStories = ({ collection = {}, config = {} }) => {
     <div
       className="full-width-with-padding arrow-component"
       data-test-id="three-col-six-stories"
-      style={{ backgroundColor: theme || "initial" }}
-    >
+      style={{ backgroundColor: theme || "initial" }}>
       <div styleName="wrapper">
         <CollectionName
           collection={collection}
@@ -89,21 +81,10 @@ const ThreeColSixStories = ({ collection = {}, config = {} }) => {
               headerLevel="2"
               theme={theme}
               border={border}
-              aspectRatio={[
-                [16, 9],
-                [16, 9],
-              ]}
+              aspectRatio={[[16, 9], [16, 9]]}
               config={config}
-              roundedCorners={roundedCorners}
-            >
-              <HeroImage
-                story={items[0]}
-                aspectRatio={[
-                  [16, 9],
-                  [16, 9],
-                ]}
-                widths={[250, 480, 640, 1200]}
-              />
+              roundedCorners={roundedCorners}>
+              <HeroImage story={items[0]} aspectRatio={[[16, 9], [16, 9]]} widths={[250, 480, 640, 1200]} />
               <StorycardContent
                 story={items[0]}
                 headerLevel="2"
@@ -125,16 +106,8 @@ const ThreeColSixStories = ({ collection = {}, config = {} }) => {
                 theme={theme}
                 border={border}
                 isHorizontalMobile
-                config={config}
-              >
-                <HeroImage
-                  story={items[2]}
-                  isHorizontalMobile
-                  aspectRatio={[
-                    [16, 9],
-                    [16, 9],
-                  ]}
-                />
+                config={config}>
+                <HeroImage story={items[2]} isHorizontalMobile aspectRatio={[[16, 9], [16, 9]]} />
                 <StorycardContent
                   theme={theme}
                   headerLevel="5"
@@ -154,14 +127,7 @@ const ThreeColSixStories = ({ collection = {}, config = {} }) => {
           {items.slice(3, 6).map((story, index) => (
             <div styleName="card" key={index}>
               <StoryCard story={story} headerLevel="5" theme={theme} border={border} isHorizontalMobile config={config}>
-                <HeroImage
-                  story={story}
-                  isHorizontalMobile
-                  aspectRatio={[
-                    [16, 9],
-                    [16, 9],
-                  ]}
-                />
+                <HeroImage story={story} isHorizontalMobile aspectRatio={[[16, 9], [16, 9]]} />
                 <StorycardContent
                   theme={theme}
                   headerLevel="5"
@@ -202,6 +168,6 @@ ThreeColSixStories.propTypes = {
     slotConfig: PropTypes.array,
     footerButton: PropTypes.string,
     collectionNameTemplate: PropTypes.string,
-    collectionNameBorderColor: PropTypes.string,
-  }),
+    collectionNameBorderColor: PropTypes.string
+  })
 };

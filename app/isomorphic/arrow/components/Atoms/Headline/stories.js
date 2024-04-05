@@ -15,14 +15,14 @@ const headerLevelOptions = {
   h3: 3,
   h4: 4,
   h5: 5,
-  h6: 6,
+  h6: 6
 };
 
 const iconType = {
   Star: "star",
   Crown: "crown",
   Lock: "lock",
-  Key: "key",
+  Key: "key"
 };
 
 withStore(
@@ -30,9 +30,9 @@ withStore(
   {
     qt: {
       config: {
-        "cdn-image": "thumbor-stg.assettype.com",
-      },
-    },
+        "cdn-image": "thumbor-stg.assettype.com"
+      }
+    }
   },
   Readme
 ).add(
@@ -44,7 +44,7 @@ withStore(
       premiumStoryIconConfig={{
         iconColor: color("Icon color", "#F7B500"),
         iconStyle: optionalSelect("Icon Types", iconType),
-        enablePremiumStoryIcon: boolean("Enable Premium Icon", true),
+        enablePremiumStoryIcon: boolean("Enable Premium Icon", true)
       }}
     />
   ),

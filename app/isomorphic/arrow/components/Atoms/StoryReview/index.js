@@ -31,9 +31,9 @@ StoryReview.propTypes = {
     metadata: PropTypes.shape({
       "review-title": PropTypes.string,
       "review-rating": PropTypes.shape({
-        value: PropTypes.string,
-      }),
-    }),
+        value: PropTypes.string
+      })
+    })
   }),
-  theme: PropTypes.string,
+  theme: PropTypes.string
 };

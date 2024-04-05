@@ -63,7 +63,7 @@ export function StoryDemarcationIcon({ storyTemplate, rowsConfig = {}, enableDar
     videoDemarcationIcon = {},
     visualStoryDemarcationIcon = {},
     iconColor,
-    darkIconColor,
+    darkIconColor
   } = rowsConfig || {};
 
   switch (storyTemplate) {
@@ -102,26 +102,26 @@ export function StoryDemarcationIcon({ storyTemplate, rowsConfig = {}, enableDar
 StoryDemarcationIcon.propTypes = {
   storyTemplate: PropTypes.string,
   rowsConfig: PropTypes.object,
-  enableDarkMode: PropTypes.bool,
+  enableDarkMode: PropTypes.bool
 };
 
 VideoDemarcationIcon.propTypes = {
   iconConfig: PropTypes.object,
   enableDarkMode: PropTypes.bool,
   iconColor: PropTypes.string,
-  darkIconColor: PropTypes.string,
+  darkIconColor: PropTypes.string
 };
 
 VisualStoryDemarcationIcon.propTypes = {
   iconConfig: PropTypes.object,
   enableDarkMode: PropTypes.bool,
   iconColor: PropTypes.string,
-  darkIconColor: PropTypes.string,
+  darkIconColor: PropTypes.string
 };
 
 PhotoDemarcationIcon.propTypes = {
   iconConfig: PropTypes.object,
   enableDarkMode: PropTypes.bool,
   iconColor: PropTypes.string,
-  darkIconColor: PropTypes.string,
+  darkIconColor: PropTypes.string
 };

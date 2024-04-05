@@ -16,7 +16,7 @@ export const Headline = ({
   isLink,
   queryParam = {},
   layout,
-  enableDarkModePreview = false,
+  enableDarkModePreview = false
 }) => {
   const configData = useStateValue() || {};
   const { iconColor = "#F7B500", iconStyle = "star", enablePremiumStoryIcon = false } = premiumStoryIconConfig;
@@ -69,8 +69,7 @@ export const Headline = ({
         <Link
           href={getStoryUrl(story, `/${story.slug}`, queryParam)}
           externalLink={isExternalStory(story)}
-          aria-label="headline"
-        >
+          aria-label="headline">
           <HeaderTag styleName={`headline ${textColor}`}>{headline}</HeaderTag>
         </Link>
       ) : (
@@ -88,18 +87,18 @@ Headline.propTypes = {
   premiumStoryIconConfig: PropTypes.shape({
     iconColor: PropTypes.string,
     iconType: PropTypes.string,
-    enablePremiumStoryIcon: PropTypes.bool,
+    enablePremiumStoryIcon: PropTypes.bool
   }),
   isLink: PropTypes.bool,
   queryParam: PropTypes.shape({
-    utmContent: PropTypes.string,
+    utmContent: PropTypes.string
   }),
   layout: PropTypes.string,
-  enableDarkModePreview: PropTypes.bool,
+  enableDarkModePreview: PropTypes.bool
 };
 
 Headline.defaultProps = {
   headerLevel: "6",
   isLink: true,
-  layout: "",
+  layout: ""
 };

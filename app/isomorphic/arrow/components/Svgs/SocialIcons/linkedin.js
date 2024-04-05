@@ -12,5 +12,5 @@ export const LinkedIn = ({ color = "#2867B2" }) => {
   );
 };
 LinkedIn.propTypes = {
-  color: PropTypes.string,
+  color: PropTypes.string
 };

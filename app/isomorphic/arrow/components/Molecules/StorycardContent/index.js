@@ -18,7 +18,7 @@ export const StorycardContent = ({
   config,
   showSubheadline,
   collectionId,
-  roundedCorners = "",
+  roundedCorners = ""
 }) => {
   const borderOptions = ["full"];
   const SectionTagborderColor = rgbToHex(borderColor);
@@ -29,8 +29,7 @@ export const StorycardContent = ({
       className={`arr--content-wrapper ${roundedCorners}`}
       data-test-id="story-card-content"
       styleName={`wrapper ${borderTemplate} ${horizontalCard}`}
-      style={{ backgroundColor: theme || "initial" }}
-    >
+      style={{ backgroundColor: theme || "initial" }}>
       {children || (
         <DefaultStoryCardContent
           story={story}
@@ -68,7 +67,7 @@ DefaultStoryCardContent.propTypes = {
   borderColor: PropTypes.string,
   config: PropTypes.object,
   showSubheadline: PropTypes.bool,
-  collectionId: PropTypes.number,
+  collectionId: PropTypes.number
 };
 
 StorycardContent.propTypes = {
@@ -82,5 +81,5 @@ StorycardContent.propTypes = {
   config: PropTypes.object,
   showSubheadline: PropTypes.bool,
   collectionId: PropTypes.number,
-  roundedCorners: PropTypes.string,
+  roundedCorners: PropTypes.string
 };

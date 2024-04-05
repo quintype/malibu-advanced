@@ -18,7 +18,7 @@ import {
   getTextColor,
   getTimeStamp,
   timestampToFormat,
-  getTimeStampConfig,
+  getTimeStampConfig
 } from "../../../../utils/utils";
 import LiveIcon from "../../../Svgs/liveicon";
 import KeyEvents from "../../../Molecules/KeyEvents";
@@ -41,7 +41,7 @@ export const LiveBlogStoryTemplates = ({
   mountAt,
   loadRelatedStories,
   visibleCardsRender = null,
-  meteringIndicator,
+  meteringIndicator
 }) => {
   const {
     theme = "",
@@ -52,9 +52,9 @@ export const LiveBlogStoryTemplates = ({
     verticalShare = "",
     shareIconType = "plain-color-svg",
     authorDetails = {
-      template: "default",
+      template: "default"
     },
-    premiumStoryIconConfig = {},
+    premiumStoryIconConfig = {}
   } = config;
 
   const qtConfig = useSelector((state) => get(state, ["qt", "config"], {}));
@@ -107,7 +107,7 @@ export const LiveBlogStoryTemplates = ({
                 isTimeFirst: true,
                 ...timeStampConfig,
                 direction,
-                showTime: true,
+                showTime: true
               })}
             </div>
             <div id={`card-share-${cardId}_${storyId}`} className="content-style">
@@ -231,15 +231,7 @@ export const LiveBlogStoryTemplates = ({
     return (
       <>
         <div data-test-id="hero-image" styleName="grid-col-full index-2">
-          <HeroImage
-            story={story}
-            aspectRatio={[
-              [16, 9],
-              [8, 3],
-            ]}
-            isStoryPageImage
-            isFullWidthImage
-          />
+          <HeroImage story={story} aspectRatio={[[16, 9], [8, 3]]} isStoryPageImage isFullWidthImage />
         </div>
         <div styleName="header-wrapper">
           <CaptionAttribution story={story} config={config} />
@@ -271,15 +263,7 @@ export const LiveBlogStoryTemplates = ({
     return (
       <>
         <div styleName="overlay-hero  index-2">
-          <HeroImage
-            story={story}
-            aspectRatio={[
-              [1, 2],
-              [16, 9],
-            ]}
-            isStoryPageImage
-            isFullWidthImage
-          />
+          <HeroImage story={story} aspectRatio={[[1, 2], [16, 9]]} isStoryPageImage isFullWidthImage />
         </div>
         <div styleName="overlay-grid">
           <HeaderCard />
@@ -394,7 +378,7 @@ LiveBlogStoryTemplates.propTypes = {
   config: PropTypes.shape({
     templateType: PropTypes.string,
     authorCard: PropTypes.object,
-    asideCollection: PropTypes.object,
+    asideCollection: PropTypes.object
   }),
   timezone: PropTypes.string,
   firstChild: PropTypes.node,
@@ -406,5 +390,5 @@ LiveBlogStoryTemplates.propTypes = {
   loadRelatedStories: PropTypes.func,
   mountAt: PropTypes.string,
   visibleCardsRender: PropTypes.func | undefined,
-  meteringIndicator: PropTypes.node | undefined,
+  meteringIndicator: PropTypes.node | undefined
 };

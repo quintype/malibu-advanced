@@ -22,23 +22,22 @@ const ImageGalleryBase = ({ element, template = "", opts = {}, story = {}, confi
 
   const ImageGalleryImagesTemplate = ({ onClickHandler }) => {
     const images = renderImage.map((image, index) => (
-      <div key={index} styleName={hyperlinkClass(image.hyperlink)}>
+      <div key={index} styleName={hyperlinkClass(image["hyperlink"])}>
         <figure
           key={index}
           data-text-id={`image-${index}`}
           styleName={`image ${classes}`}
-          onClick={() => onClickHandler && onClickHandler(index)}
-        >
+          onClick={() => onClickHandler && onClickHandler(index)}>
           <ResponsiveImage
             slug={image["image-s3-key"]}
             metadata={image["image-metadata"]}
-            alt={image.title}
+            alt={image["title"]}
             aspectRatio={[1, 1]}
             defaultWidth={640}
             imgParams={{ auto: ["format", "compress"] }}
           />
         </figure>
-        {image.hyperlink && <HyperLink hyperLink={image.hyperlink} />}
+        {image["hyperlink"] && <HyperLink hyperLink={image["hyperlink"]} />}
       </div>
     ));
 
@@ -47,15 +46,14 @@ const ImageGalleryBase = ({ element, template = "", opts = {}, story = {}, confi
         styleName="image-gallery"
         className=" arrow-component arr--image-element"
         {...restProps}
-        data-test-id="image-gallery"
-      >
+        data-test-id="image-gallery">
         {images}
       </div>
     );
   };
 
   ImageGalleryImagesTemplate.propTypes = {
-    onClickHandler: PropTypes.func,
+    onClickHandler: PropTypes.func
   };
 
   return <FullScreenImages template={ImageGalleryImagesTemplate} element={element} />;
@@ -63,12 +61,12 @@ const ImageGalleryBase = ({ element, template = "", opts = {}, story = {}, confi
 
 ImageGalleryBase.propTypes = {
   element: PropTypes.shape({
-    "story-elements": PropTypes.array,
+    "story-elements": PropTypes.array
   }),
   opts: PropTypes.shape({ imageWidths: PropTypes.array }),
   story: shapeStory,
   config: shapeConfig,
-  template: PropTypes.string,
+  template: PropTypes.string
 };
 
 export const ImageGallery = withElementWrapper(ImageGalleryBase);

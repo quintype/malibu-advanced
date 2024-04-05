@@ -14,7 +14,7 @@ export const Subheadline = ({
   lineClamp,
   clazzName = "",
   forceShowAtom,
-  showFullContent,
+  showFullContent
 }) => {
   const config = useStateValue() || {};
   const subheadline = forceShowAtom || get(config, ["showSubheadline"], true);
@@ -25,11 +25,10 @@ export const Subheadline = ({
     <div
       className={`p-alt arr--sub-headline arrow-component ${clazzName}`}
       style={{
-        WebkitLineClamp: lineClamp || "none",
+        WebkitLineClamp: lineClamp || "none"
       }}
       styleName={`subheadline ${textColor}`}
-      data-test-id="subheadline"
-    >
+      data-test-id="subheadline">
       {showFullContent || typeof lineClamp === "number"
         ? story.subheadline
         : truncate(story.subheadline, truncateChars, true)}
@@ -46,10 +45,10 @@ Subheadline.propTypes = {
   truncateChars: PropTypes.number,
   clazzName: PropTypes.string,
   forceShowAtom: PropTypes.bool,
-  showFullContent: PropTypes.bool,
+  showFullContent: PropTypes.bool
 };
 
 Subheadline.defaultProps = {
   forceShowAtom: false,
-  showFullContent: false,
+  showFullContent: false
 };

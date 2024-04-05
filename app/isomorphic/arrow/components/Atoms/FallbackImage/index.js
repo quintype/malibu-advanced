@@ -30,5 +30,5 @@ export const FallbackImage = ({ slug, roundedCorners = "" }) => {
 
 FallbackImage.propTypes = {
   slug: PropTypes.string,
-  roundedCorners: PropTypes.string,
+  roundedCorners: PropTypes.string
 };

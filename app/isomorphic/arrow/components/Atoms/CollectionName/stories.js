@@ -14,7 +14,7 @@ const collectionTemplates = {
   borderBottom: "borderBottom",
   borderLeft: "borderLeft",
   crossLine: "crossLine",
-  borderBottomFull: "borderBottomFull",
+  borderBottomFull: "borderBottomFull"
 };
 
 withStore(
@@ -34,13 +34,13 @@ withStore(
             collection: {
               slug: "health",
               name: "Health",
-              id: 15603,
+              id: 15603
             },
-            data: null,
-          },
-        ],
-      },
-    },
+            data: null
+          }
+        ]
+      }
+    }
   },
   Readme
 ).add("default", () => (

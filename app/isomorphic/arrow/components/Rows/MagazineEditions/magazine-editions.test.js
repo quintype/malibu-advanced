@@ -15,7 +15,7 @@ describe("MagazineEditions component", () => {
       footerButton: "",
       editionsTitle: "",
       enableEditionsTitle: true,
-      title: "",
+      title: ""
     };
     const wrapper = mount(
       <Provider store={generateStore}>

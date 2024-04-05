@@ -30,7 +30,7 @@ export const TwoColFourStoryHighlight = ({ collection, config = {}, enableDarkMo
     showBullet = true,
     customBulletColor = "",
     darkCustomBulletColor = "",
-    localizationConfig = {},
+    localizationConfig = {}
   } = config;
   const textColor = getTextColor(theme);
   const [firstStory, ...restStories] = items;
@@ -47,8 +47,7 @@ export const TwoColFourStoryHighlight = ({ collection, config = {}, enableDarkMo
       className="full-width-with-padding arrow-component arr--two-col-four-story-highlight"
       data-test-id="two-col-four-story-highlight"
       style={{ backgroundColor: theme || "initial" }}
-      styleName={`componentWrapper ${showBullet ? "bulletStyle" : ""}`}
-    >
+      styleName={`componentWrapper ${showBullet ? "bulletStyle" : ""}`}>
       <div styleName="highlightWrapper">
         <CollectionName
           collection={collection}
@@ -70,8 +69,7 @@ export const TwoColFourStoryHighlight = ({ collection, config = {}, enableDarkMo
                 bgImgContentOverlap
                 config={config}
                 border={showBorder ? "bottom" : ""}
-                theme={theme}
-              >
+                theme={theme}>
                 <StorycardContent
                   config={config}
                   story={story}
@@ -102,8 +100,7 @@ export const TwoColFourStoryHighlight = ({ collection, config = {}, enableDarkMo
           bgImgContentOverlap
           config={config}
           border={showBorder ? "full" : ""}
-          theme={theme}
-        >
+          theme={theme}>
           <HeroImage story={firstStory} />
           <div style={{ backgroundColor: theme || "initial" }} className={roundedCorners}>
             <SectionTag story={firstStory} borderColor={SectionTagBorderColor} />
@@ -129,6 +126,6 @@ TwoColFourStoryHighlight.propTypes = {
     collectionNameBorderColor: PropTypes.string,
     borderColor: PropTypes.string,
     showBullet: PropTypes.bool,
-    localizationConfig: PropTypes.object,
-  }),
+    localizationConfig: PropTypes.object
+  })
 };

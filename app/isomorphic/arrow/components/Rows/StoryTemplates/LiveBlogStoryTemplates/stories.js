@@ -18,7 +18,7 @@ const storyElementsConfig = {
   "also-read": {},
   "q-and-a": {},
   question: {},
-  answer: {},
+  answer: {}
 };
 
 const label = "BG Color";
@@ -27,7 +27,7 @@ const defaultvalue = "#ffffff";
 const authorTemplate = {
   default: "default",
   leftAligned: "leftAligned",
-  centerAligned: "centerAligned",
+  centerAligned: "centerAligned"
 };
 
 const iconTypeOptions = {
@@ -35,12 +35,12 @@ const iconTypeOptions = {
   "Circular Plain Svg": "circular-plain-svg",
   "Plain Svg": "plain-svg",
   "Plain Color Svg": "plain-color-svg",
-  "Square Svg": "square-svg",
+  "Square Svg": "square-svg"
 };
 
 const shareType = {
   "Vertical Share": "sticky",
-  "Horizontal Share": "",
+  "Horizontal Share": ""
 };
 
 const templateTypes = {
@@ -49,7 +49,7 @@ const templateTypes = {
   "Headline Sideway": "headline-sideway",
   "Hero Priority": "hero-priority",
   "Headline Priority": "headline-priority",
-  "Headline Hero Priority": "headline-hero-priority",
+  "Headline Hero Priority": "headline-hero-priority"
 };
 
 const configurableSlot = () => {
@@ -62,9 +62,9 @@ withStore(
     qt: {
       config: {
         "cdn-image": "thumbor-stg.assettype.com",
-        mountAt: "/sub-directory",
-      },
-    },
+        mountAt: "/sub-directory"
+      }
+    }
   },
   Readme
 ).add("Default", () => {
@@ -80,7 +80,7 @@ withStore(
     publishedDetails: {
       enablePublishedTime: boolean("Show Published Time", true),
       enableUpdatedTime: boolean("Show Updated Time", false),
-      showReadTime: boolean("Read time", false),
+      showReadTime: boolean("Read time", false)
     },
     authorDetails: {
       template: optionalSelect("Author templates", authorTemplate),
@@ -90,13 +90,13 @@ withStore(
         showName: boolean("Author Name", true),
         showLabels: boolean("show labels", true),
         showGuestAuthorName: boolean("show guest author name", false),
-        showGuestAuthorImage: boolean("show guest author image", false),
-      },
+        showGuestAuthorImage: boolean("show guest author image", false)
+      }
     },
     premiumStoryIconConfig: {
       iconColor: "#F7B500",
       iconType: "star",
-      enablePremiumStoryIcon: true,
+      enablePremiumStoryIcon: true
     },
     asideCollection: {
       data: collection,
@@ -104,10 +104,10 @@ withStore(
         title: text("Aside Collection Title", "Trending"),
         theme: color(label, defaultvalue),
         showAuthor: boolean("Show Author", true),
-        showTime: boolean("Show Timestamp", true),
+        showTime: boolean("Show Timestamp", true)
       },
-      slots: slotData,
-    },
+      slots: slotData
+    }
   };
   return (
     <LiveBlog

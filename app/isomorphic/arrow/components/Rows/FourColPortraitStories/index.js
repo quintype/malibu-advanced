@@ -28,7 +28,7 @@ const FourColPortraitStories = ({
   getMoreStories,
   isLoadMoreVisible,
   isLoading,
-  isolatedLoadMore,
+  isolatedLoadMore
 }) => {
   const storyItems = collectionToStories(collection);
 
@@ -44,7 +44,7 @@ const FourColPortraitStories = ({
     footerButton = "",
     customCollectionName,
     navigate = true,
-    subsequentLoadCount = 4,
+    subsequentLoadCount = 4
   } = config;
 
   const { footerSlot } = footerSlotConfig;
@@ -87,8 +87,7 @@ const FourColPortraitStories = ({
     <div
       className="full-width-with-padding arrow-component"
       data-test-id="four-col-portrait-stories"
-      style={{ backgroundColor: theme || "initial" }}
-    >
+      style={{ backgroundColor: theme || "initial" }}>
       <div styleName="four-col-portrait">
         <CollectionName
           collection={collection}
@@ -130,18 +129,18 @@ FourColPortraitStories.propTypes = {
     collectionNameTemplate: PropTypes.string,
     footerButton: PropTypes.string,
     collectionNameBorderColor: PropTypes.string,
-    subsequentLoadCount: PropTypes.number,
+    subsequentLoadCount: PropTypes.number
   }),
   getMoreStories: PropTypes.func,
   isLoadMoreVisible: PropTypes.bool,
   isLoading: PropTypes.bool,
-  isolatedLoadMore: PropTypes.bool,
+  isolatedLoadMore: PropTypes.bool
 };
 
 FourColPortraitStories.defaultProps = {
   getMoreStories: () => {},
   isLoadMoreVisible: true,
-  isLoading: false,
+  isLoading: false
 };
 
 export default StateProvider(FourColPortraitStories);

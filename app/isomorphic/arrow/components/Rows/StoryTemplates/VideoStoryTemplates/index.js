@@ -29,7 +29,7 @@ const VideoStoryTemplate = ({
   enableDarkMode,
   loadRelatedStories,
   visibleCardsRender = null,
-  meteringIndicator,
+  meteringIndicator
 }) => {
   const heroVideo =
     story.cards
@@ -51,7 +51,7 @@ const VideoStoryTemplate = ({
     publishedDetails = {},
     verticalShare = "",
     shareIconType = "plain-color-svg",
-    premiumStoryIconConfig = {},
+    premiumStoryIconConfig = {}
   } = config;
 
   const visibledCards = noOfVisibleCards < 0 ? story.cards : story.cards.slice(0, noOfVisibleCards);
@@ -247,8 +247,7 @@ const VideoStoryTemplate = ({
       data-test-id={dataTestId}
       className="arrow-component arr--content-wrapper arr-story-grid arr--video-story-template-wrapper"
       styleName={`${templateClass} ${verticalShare}`}
-      style={{ backgroundColor: theme || "initial" }}
-    >
+      style={{ backgroundColor: theme || "initial" }}>
       {getStoryTemplate(templateType)}
     </div>
   );
@@ -261,7 +260,7 @@ VideoStoryTemplate.propTypes = {
   config: PropTypes.shape({
     templateType: PropTypes.string,
     authorCard: PropTypes.object,
-    asideCollection: PropTypes.object,
+    asideCollection: PropTypes.object
   }),
   firstChild: PropTypes.node,
   secondChild: PropTypes.node,
@@ -271,7 +270,7 @@ VideoStoryTemplate.propTypes = {
   enableDarkMode: PropTypes.bool,
   loadRelatedStories: PropTypes.func,
   visibleCardsRender: PropTypes.func | undefined,
-  meteringIndicator: PropTypes.node | undefined,
+  meteringIndicator: PropTypes.node | undefined
 };
 
 export default StateProvider(VideoStoryTemplate);

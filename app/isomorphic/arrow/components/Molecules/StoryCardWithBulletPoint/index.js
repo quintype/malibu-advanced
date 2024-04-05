@@ -26,8 +26,8 @@ StoryCardWithBulletPoint.propTypes = {
   story: PropTypes.object.isRequired,
   config: PropTypes.shape({
     theme: PropTypes.string,
-    localizationConfig: PropTypes.object,
+    localizationConfig: PropTypes.object
   }),
   bulletValue: PropTypes.string,
-  collectionId: PropTypes.number,
+  collectionId: PropTypes.number
 };

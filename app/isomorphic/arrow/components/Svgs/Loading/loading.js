@@ -10,8 +10,7 @@ export const Loading = ({ width = 40, height = 30, iconColor = "#99B0CB" }) => {
         height="40"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 100 100"
-        preserveAspectRatio="xMidYMid"
-      >
+        preserveAspectRatio="xMidYMid">
         <circle cx="84" cy="50" r="0" fill="currentColor">
           <animate
             attributeName="r"
@@ -130,5 +129,5 @@ export const Loading = ({ width = 40, height = 30, iconColor = "#99B0CB" }) => {
 Loading.propTypes = {
   width: PropTypes.object,
   height: PropTypes.object,
-  iconColor: PropTypes.object,
+  iconColor: PropTypes.object
 };

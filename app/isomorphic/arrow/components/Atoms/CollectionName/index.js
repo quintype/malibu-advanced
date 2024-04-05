@@ -15,7 +15,7 @@ export const CollectionNameBase = ({
   collectionNameTemplate,
   headerLevel,
   customCollectionName = "",
-  navigate = true,
+  navigate = true
 }) => {
   const collectionTitle = useStateValue() || {};
   const showRowTitle = get(collectionTitle, ["showRowTitle"], true);
@@ -39,9 +39,8 @@ export const CollectionNameBase = ({
       <div
         styleName="border-bottom"
         style={{
-          borderBottom: CollectionNameBorderColor ? `4px solid ${CollectionNameBorderColor}` : "none",
-        }}
-      ></div>
+          borderBottom: CollectionNameBorderColor ? `4px solid ${CollectionNameBorderColor}` : "none"
+        }}></div>
     ) : (
       ""
     );
@@ -93,19 +92,17 @@ export const CollectionNameBase = ({
           className={`arr--collection-name arrow-component ${templateStyle}`}
           styleName={`collection ${templateStyle} ${textColor}`}
           style={{
-            borderBottom: borderBottomFullStyle,
+            borderBottom: borderBottomFullStyle
           }}
-          data-test-id="collection-name"
-        >
+          data-test-id="collection-name">
           {templateStyle.includes("collection-borderLeft") && (
             <span
               styleName="border-left"
               className="arr-collection-name-border-left"
               style={{
                 color: CollectionNameBorderColor || "initial",
-                fontSize: getBorderHeight(),
-              }}
-            ></span>
+                fontSize: getBorderHeight()
+              }}></span>
           )}
           {slug && !slug.includes(undefined) ? (
             <Link href={slug} aria-label="collection-name">
@@ -133,17 +130,17 @@ CollectionNameBase.propTypes = {
   /** Header tags ranging h1-h6, where h[headerLevel] */
   headerLevel: PropTypes.string,
   customCollectionName: PropTypes.string,
-  navigate: PropTypes.bool,
+  navigate: PropTypes.bool
 };
 
 CollectionNameBase.defaultProps = {
   collectionNameTemplate: "",
-  headerLevel: "2",
+  headerLevel: "2"
 };
 
 function mapStateToProps(state) {
   return {
-    config: get(state, ["qt", "config"], {}),
+    config: get(state, ["qt", "config"], {})
   };
 }
 

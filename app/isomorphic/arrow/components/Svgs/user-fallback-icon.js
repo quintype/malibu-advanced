@@ -15,5 +15,5 @@ export const UserFallbackIcon = ({ width = 120, height = 120 }) => {
 
 UserFallbackIcon.propTypes = {
   width: PropTypes.object,
-  height: PropTypes.object,
+  height: PropTypes.object
 };

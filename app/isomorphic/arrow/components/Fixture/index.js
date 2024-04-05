@@ -20,12 +20,12 @@ export const generateStory = (storyType, data = {}) => {
 };
 
 export const generateCollection = ({ stories = 0, subCollections = [], itemMeta = {} } = {}) => {
-  const items = subCollections;
+  let items = subCollections;
   Array(stories)
     .fill({ type: "story", ...itemMeta })
     .forEach((item, index) => {
       const story = generateStory();
-      const itm = Object.assign({}, item, { id: story.id, story });
+      let itm = Object.assign({}, item, { id: story.id, story });
       items.push(itm);
     });
   return {
@@ -44,21 +44,21 @@ export const generateCollection = ({ stories = 0, subCollections = [], itemMeta 
           height: 1200,
           "mime-type": "image/jpeg",
           "file-size": 179037,
-          "file-name": "fortune.jpg",
+          "file-name": "fortune.jpg"
         },
         "cover-image-s3-key": "ace/2020-08/f71dd527-cbc6-4cc9-94c2-8feee917f7e9/fortune.jpg",
-        caption: "Some Politician",
+        caption: "Some Politician"
       },
-      section: [{ id: 11181, name: "Health", "parent-id": null, "tree-ids": [11181] }],
+      section: [{ id: 11181, name: "Health", "parent-id": null, "tree-ids": [11181] }]
     },
     summary:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer aliquam felis sed tellus mattis ultricies. Maecenas accumsan hendrerit turpis, a sollicitudin velit viverra nec. Praesent pretium, orci ac sodales volutpat, tellus orci rutrum metus.",
-    items: items,
+    items: items
   };
 };
 
 export const generateCollections = (count = 0) => {
-  const collections = [];
+  let collections = [];
   Array(count)
     .fill(0)
     .forEach(() => {
@@ -79,23 +79,23 @@ export const generateCollections = (count = 0) => {
           width: 600,
           height: 600,
           "mime-type": "image/jpeg",
-          "focus-point": [355, 204],
+          "focus-point": [355, 204]
         },
         "cover-image-s3-key": "vikatan/2019-01/f0b702ac-bfd1-4dd6-8e33-52cbb0bb3153/143203_thumb.jpg",
-        caption: "Some Politician",
+        caption: "Some Politician"
       },
-      section: [{ id: 11181, name: "Health", "parent-id": null, "tree-ids": [11181] }],
+      section: [{ id: 11181, name: "Health", "parent-id": null, "tree-ids": [11181] }]
     },
     summary: "This is a collection concerned with politics",
-    items: collections,
+    items: collections
   };
 };
 
 export const generateCollectionsWithStories = (count = 0) => {
-  const items = generateCollection({ stories: 12 });
-  const collec = generateCollections(2);
-  const collections = [];
-  const merged = items.items.concat(collec.items);
+  let items = generateCollection({ stories: 12 });
+  let collec = generateCollections(2);
+  let collections = [];
+  let merged = items.items.concat(collec.items);
 
   Array(count)
     .fill(0)
@@ -117,15 +117,15 @@ export const generateCollectionsWithStories = (count = 0) => {
           width: 600,
           height: 600,
           "mime-type": "image/jpeg",
-          "focus-point": [355, 204],
+          "focus-point": [355, 204]
         },
         "cover-image-s3-key": "vikatan/2019-01/f0b702ac-bfd1-4dd6-8e33-52cbb0bb3153/143203_thumb.jpg",
-        caption: "Some Politician",
+        caption: "Some Politician"
       },
-      section: [{ id: 11181, name: "Health", "parent-id": null, "tree-ids": [11181] }],
+      section: [{ id: 11181, name: "Health", "parent-id": null, "tree-ids": [11181] }]
     },
     summary: "This is a collection concerned with politics",
-    items: merged,
+    items: merged
   };
 };
 
@@ -145,7 +145,7 @@ export const generateSubMenu = () => {
         url: "https://vikatan-web.qtstage.io/section/gurupeyarchi",
         "section-name": "அமெரிக்காவில்",
         data: {
-          color: "#c7c7c7",
+          color: "#c7c7c7"
         },
         items: [
           {
@@ -161,8 +161,8 @@ export const generateSubMenu = () => {
             url: "https://vikatan-web.qtstage.io/section/cinema",
             "section-name": "அமெரிக்காவில்",
             data: {
-              color: "#f7f7f7",
-            },
+              color: "#f7f7f7"
+            }
           },
           {
             "tag-name": null,
@@ -177,12 +177,12 @@ export const generateSubMenu = () => {
             url: "https://vikatan-web.qtstage.io/section/dry6feb2019",
             "section-name": "அமெரிக்காவில்",
             data: {
-              color: "#000000",
-            },
-          },
-        ],
-      },
-    ],
+              color: "#000000"
+            }
+          }
+        ]
+      }
+    ]
   };
 };
 export const authorData = {
@@ -191,42 +191,43 @@ export const authorData = {
   social: {
     twitter: {
       url: "https://twitter.com/Reena00659364",
-      handle: "Twitter",
+      handle: "Twitter"
     },
     youtube: {
       url: "https://www.facebook.com/people/Reena-Singh/100005438855189",
-      handle: "Youtube",
+      handle: "Youtube"
     },
     facebook: {
       url: "https://www.facebook.com/people/Reena-Singh/100005438855189",
-      handle: "Facebook",
+      handle: "Facebook"
     },
     linkedin: {
       url: "https://www.facebook.com/people/Reena-Singh/100005438855189",
-      handle: "LinkedIn",
+      handle: "LinkedIn"
     },
     whatsapp: {
       url: "https://www.facebook.com/people/Reena-Singh/100005438855189",
-      handle: "Whatsapp",
+      handle: "Whatsapp"
     },
     instagram: {
       url: "https://www.facebook.com/people/Reena-Singh/100005438855189",
-      handle: "Instagram",
+      handle: "Instagram"
     },
     pinterest: {
       url: "https://www.facebook.com/people/Reena-Singh/100005438855189",
-      handle: "Pinterest",
-    },
+      handle: "Pinterest"
+    }
   },
-  bio: "Lucy Douglas is a freelance journalist based in London. She has a particular interest in small business, startups and the founders behind them and, in a previous life, was an assistant-editor at Professional Beauty magazine, where she road-tested spas up and down the country and checked out the latest advances.",
+  bio:
+    "Lucy Douglas is a freelance journalist based in London. She has a particular interest in small business, startups and the founders behind them and, in a previous life, was an assistant-editor at Professional Beauty magazine, where she road-tested spas up and down the country and checked out the latest advances.",
   id: 94985,
   "avatar-url": "https://thumbor-stg.assettype.com/ace/2019-08/145ab200-429f-44ac-8618-00c6e4643e31/cat.jpeg",
   "avatar-s3-key": "ace/2019-08/145ab200-429f-44ac-8618-00c6e4643e31/cat.jpeg",
   "twitter-handle": "quintype_inc",
   stats: {
-    contributions: null,
+    contributions: null
   },
-  metadata: {},
+  metadata: {}
 };
 
 export const generateStoryElementData = (elementType) => {
@@ -248,22 +249,23 @@ export const generateMagazineIssues = () => {
         metadata: {
           "cover-image": {
             success: true,
-            url: "https://stg-quintype-dropbox.s3-accelerate.amazonaws.com/ace.staging.quintype.com/2020-09-09/874/aleksandra_tanasienko_oQi_UdQDkzw_unsplash.jpg",
+            url:
+              "https://stg-quintype-dropbox.s3-accelerate.amazonaws.com/ace.staging.quintype.com/2020-09-09/874/aleksandra_tanasienko_oQi_UdQDkzw_unsplash.jpg",
             metadata: {
               width: 4000,
               height: 6000,
               "mime-type": "image/jpeg",
               "file-size": 2574353,
-              "file-name": "aleksandra-tanasienko-oQi_UdQDkzw-unsplash.jpg",
+              "file-name": "aleksandra-tanasienko-oQi_UdQDkzw-unsplash.jpg"
             },
             "extracted-data": {
-              artist: "",
+              artist: ""
             },
             attribution: "",
             "cover-image-url":
               "https://thumbor-stg.assettype.com/ace/2020-09/f20cecc2-2466-4e3d-8b04-f013d880a9d0/aleksandra_tanasienko_oQi_UdQDkzw_unsplash.jpg",
             "cover-image-s3-key":
-              "ace/2020-09/f20cecc2-2466-4e3d-8b04-f013d880a9d0/aleksandra_tanasienko_oQi_UdQDkzw_unsplash.jpg",
+              "ace/2020-09/f20cecc2-2466-4e3d-8b04-f013d880a9d0/aleksandra_tanasienko_oQi_UdQDkzw_unsplash.jpg"
           },
           entities: {
             collectionEntities: {
@@ -272,18 +274,18 @@ export const generateMagazineIssues = () => {
                   id: 199563,
                   name: "New Magazine",
                   type: "magazine",
-                  "entity-type-id": 382,
-                },
-              ],
-            },
-          },
+                  "entity-type-id": 382
+                }
+              ]
+            }
+          }
         },
         "collection-date": null,
         slug: "manifique",
         template: "collection",
         "data-source": "manual",
-        "created-at": 1599639879798,
-      },
+        "created-at": 1599639879798
+      }
     },
     {
       collection: {
@@ -292,22 +294,23 @@ export const generateMagazineIssues = () => {
         metadata: {
           "cover-image": {
             success: true,
-            url: "https://stg-quintype-dropbox.s3-accelerate.amazonaws.com/ace.staging.quintype.com/2020-09-28/294/da90b29ce035b5a3a134da39e94d654c.jpg",
+            url:
+              "https://stg-quintype-dropbox.s3-accelerate.amazonaws.com/ace.staging.quintype.com/2020-09-28/294/da90b29ce035b5a3a134da39e94d654c.jpg",
             metadata: {
               width: 474,
               height: 581,
               "mime-type": "image/jpeg",
               "file-size": 49921,
-              "file-name": "da90b29ce035b5a3a134da39e94d654c.jpg",
+              "file-name": "da90b29ce035b5a3a134da39e94d654c.jpg"
             },
             "extracted-data": {
-              artist: "",
+              artist: ""
             },
             attribution: "",
             "cover-image-url":
               "https://thumbor-stg.assettype.com/ace/2020-09/92f5453c-4477-40d3-9a44-3cf0c245b268/da90b29ce035b5a3a134da39e94d654c.jpg",
             "cover-image-s3-key":
-              "ace/2020-09/92f5453c-4477-40d3-9a44-3cf0c245b268/da90b29ce035b5a3a134da39e94d654c.jpg",
+              "ace/2020-09/92f5453c-4477-40d3-9a44-3cf0c245b268/da90b29ce035b5a3a134da39e94d654c.jpg"
           },
           entities: {
             collectionEntities: {
@@ -316,18 +319,18 @@ export const generateMagazineIssues = () => {
                   id: 199563,
                   name: "New Magazine",
                   type: "magazine",
-                  "entity-type-id": 382,
-                },
-              ],
-            },
-          },
+                  "entity-type-id": 382
+                }
+              ]
+            }
+          }
         },
         "collection-date": null,
         slug: "high-times",
         template: "collection",
         "data-source": "manual",
-        "created-at": 1599639711992,
-      },
+        "created-at": 1599639711992
+      }
     },
     {
       collection: {
@@ -336,23 +339,24 @@ export const generateMagazineIssues = () => {
         metadata: {
           "cover-image": {
             success: true,
-            url: "https://stg-quintype-dropbox.s3-accelerate.amazonaws.com/ace.staging.quintype.com/2020-09-09/1200/alexis_zacharko_07rXq3YroVM_unsplash.jpg",
+            url:
+              "https://stg-quintype-dropbox.s3-accelerate.amazonaws.com/ace.staging.quintype.com/2020-09-09/1200/alexis_zacharko_07rXq3YroVM_unsplash.jpg",
             metadata: {
               width: 3456,
               height: 5184,
               "mime-type": "image/jpeg",
               "file-size": 3084612,
               "file-name": "alexis-zacharko-07rXq3YroVM-unsplash.jpg",
-              "focus-point": [2154, 2269],
+              "focus-point": [2154, 2269]
             },
             "extracted-data": {
-              artist: "",
+              artist: ""
             },
             attribution: "",
             "cover-image-url":
               "https://thumbor-stg.assettype.com/ace/2020-09/ed79b1ed-5d63-4ec1-8a4b-da87d8ed7edc/alexis_zacharko_07rXq3YroVM_unsplash.jpg",
             "cover-image-s3-key":
-              "ace/2020-09/ed79b1ed-5d63-4ec1-8a4b-da87d8ed7edc/alexis_zacharko_07rXq3YroVM_unsplash.jpg",
+              "ace/2020-09/ed79b1ed-5d63-4ec1-8a4b-da87d8ed7edc/alexis_zacharko_07rXq3YroVM_unsplash.jpg"
           },
           entities: {
             collectionEntities: {
@@ -361,18 +365,18 @@ export const generateMagazineIssues = () => {
                   id: 199563,
                   name: "New Magazine",
                   type: "magazine",
-                  "entity-type-id": 382,
-                },
-              ],
-            },
-          },
+                  "entity-type-id": 382
+                }
+              ]
+            }
+          }
         },
         "collection-date": null,
         slug: "new-magazine-issue",
         template: "collection",
         "data-source": "manual",
-        "created-at": 1599616208142,
-      },
+        "created-at": 1599616208142
+      }
     },
     {
       collection: {
@@ -387,11 +391,11 @@ export const generateMagazineIssues = () => {
               width: 6000,
               "file-size": 10319729,
               "file-name": "evil caat.jpg",
-              height: 4000,
+              height: 4000
             },
             caption: null,
             "cover-image-url":
-              "https://thumbor-stg.assettype.com/ace/2020-07/3e3dc7df-8a1c-462d-a236-265d45c28651/evil_caat.jpg",
+              "https://thumbor-stg.assettype.com/ace/2020-07/3e3dc7df-8a1c-462d-a236-265d45c28651/evil_caat.jpg"
           },
           entities: {
             collectionEntities: {
@@ -400,19 +404,19 @@ export const generateMagazineIssues = () => {
                   id: 199563,
                   name: "New Magazine",
                   type: "magazine",
-                  "entity-type-id": 382,
-                },
-              ],
-            },
-          },
+                  "entity-type-id": 382
+                }
+              ]
+            }
+          }
         },
         "collection-date": null,
         slug: "first-magazine-collection",
         template: "collection",
         "data-source": "automated",
-        "created-at": 1599571645414,
-      },
-    },
+        "created-at": 1599571645414
+      }
+    }
   ];
 };
 

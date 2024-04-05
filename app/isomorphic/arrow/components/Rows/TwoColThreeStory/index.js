@@ -24,7 +24,7 @@ export const TwoColThreeStories = ({ collection, config = {} }) => {
     theme = "",
     collectionNameTemplate = "",
     footerSlotConfig = {},
-    footerButton = "",
+    footerButton = ""
   } = config;
   const { footerSlot } = footerSlotConfig;
 
@@ -44,8 +44,7 @@ export const TwoColThreeStories = ({ collection, config = {} }) => {
     <div
       className="full-width-with-padding arrow-component"
       data-test-id="two-col-three-stories"
-      style={{ backgroundColor: theme || "initial" }}
-    >
+      style={{ backgroundColor: theme || "initial" }}>
       <div styleName="two-col-three-story">
         <CollectionName
           collection={collection}
@@ -60,21 +59,10 @@ export const TwoColThreeStories = ({ collection, config = {} }) => {
               border={border}
               bgImgContentOverlap
               headerLevel="2"
-              aspectRatio={[
-                [16, 9],
-                [16, 9],
-              ]}
+              aspectRatio={[[16, 9], [16, 9]]}
               config={config}
-              roundedCorners={roundedCorners}
-            >
-              <HeroImage
-                story={items[0]}
-                aspectRatio={[
-                  [16, 9],
-                  [16, 9],
-                ]}
-                widths={[250, 480, 640, 1200]}
-              />
+              roundedCorners={roundedCorners}>
+              <HeroImage story={items[0]} aspectRatio={[[16, 9], [16, 9]]} widths={[250, 480, 640, 1200]} />
               <StorycardContent
                 story={items[0]}
                 headerLevel="2"
@@ -94,14 +82,7 @@ export const TwoColThreeStories = ({ collection, config = {} }) => {
                 return (
                   <div key={index}>
                     <StoryCard story={story} border={border} theme={theme} isHorizontalMobile config={config}>
-                      <HeroImage
-                        story={story}
-                        isHorizontalMobile
-                        aspectRatio={[
-                          [16, 9],
-                          [16, 9],
-                        ]}
-                      />
+                      <HeroImage story={story} isHorizontalMobile aspectRatio={[[16, 9], [16, 9]]} />
                       <StorycardContent
                         theme={theme}
                         border={border}
@@ -119,14 +100,7 @@ export const TwoColThreeStories = ({ collection, config = {} }) => {
                 return (
                   <div styleName="storycard" key={index}>
                     <StoryCard story={story} border={border} theme={theme} isHorizontalMobile config={config}>
-                      <HeroImage
-                        story={story}
-                        isHorizontalMobile
-                        aspectRatio={[
-                          [16, 9],
-                          [16, 9],
-                        ]}
-                      />
+                      <HeroImage story={story} isHorizontalMobile aspectRatio={[[16, 9], [16, 9]]} />
                       <StorycardContent
                         theme={theme}
                         border={border}
@@ -168,6 +142,6 @@ TwoColThreeStories.propTypes = {
     border: PropTypes.string,
     footerButton: PropTypes.string,
     collectionNameTemplate: PropTypes.string,
-    collectionNameBorderColor: PropTypes.string,
-  }),
+    collectionNameBorderColor: PropTypes.string
+  })
 };

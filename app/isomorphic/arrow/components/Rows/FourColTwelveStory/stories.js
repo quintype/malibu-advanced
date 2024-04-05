@@ -15,12 +15,12 @@ const defaultvalue = "#ffffff";
 
 const borderOptions = {
   "No Value": "",
-  bottom: "bottom",
+  bottom: "bottom"
 };
 
 const otherTextPositionOptions = {
   top: "top",
-  bottom: "bottom",
+  bottom: "bottom"
 };
 
 const footerSlot = () => {
@@ -31,7 +31,7 @@ const IconComp = (_) => (
   <img
     src={Carat}
     style={{
-      width: "18px",
+      width: "18px"
     }}
     alt="caret"
   />
@@ -55,13 +55,13 @@ withStore(
             collection: {
               slug: "health",
               name: "Health",
-              id: 15603,
+              id: 15603
             },
-            data: null,
-          },
-        ],
-      },
-    },
+            data: null
+          }
+        ]
+      }
+    }
   },
   Readme
 )
@@ -71,7 +71,7 @@ withStore(
       text: "hello",
       textColor: color(" text color", "#345678"),
       contentPosition: optionalSelect("Other text Position", otherTextPositionOptions),
-      Icon: IconComp,
+      Icon: IconComp
     };
 
     const publisherConfig = {
@@ -87,11 +87,11 @@ withStore(
           collection: {
             slug: "health",
             name: "Health",
-            id: 15603,
+            id: 15603
           },
-          data: null,
-        },
-      ],
+          data: null
+        }
+      ]
     };
 
     const contextConfig = {
@@ -104,7 +104,7 @@ withStore(
       showRowTitle: boolean("Row title", true),
       collectionNameTemplate: optionalSelect("Collection row Templates", collectionNameTemplates),
       showSubheadline: boolean("Subheadline", true),
-      showReadTime: boolean("Read time", true),
+      showReadTime: boolean("Read time", true)
     };
     return (
       <FourColTwelveStory

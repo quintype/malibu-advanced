@@ -19,21 +19,21 @@ const TextStoryTemplate = ({
   enableDarkMode,
   loadRelatedStories,
   visibleCardsRender,
-  meteringIndicator,
+  meteringIndicator
 }) => {
   const {
     theme = "",
     templateType = "default",
     imageRender = "fullBleed",
     sort = "headline-first",
-    verticalShare = "",
+    verticalShare = ""
   } = config;
   const sortOption = templateType === "hero-vertical-priority" ? sort : "";
   const supportImageType = {
     default: imageRender,
     "hero-priority-center": imageRender,
     "headline-hero-priority": imageRender,
-    "hero-vertical-priority": imageRender,
+    "hero-vertical-priority": imageRender
   };
 
   const qtState = useSelector((state) => get(state, ["qt"], {}));
@@ -48,8 +48,7 @@ const TextStoryTemplate = ({
       data-test-id={dataTestId}
       className="arrow-component arr-story-grid arr--content-wrapper arr--text-story-template-wrapper"
       styleName={`${templateType} ${verticalShare} ${supportImageType[templateType] || ""} ${sortOption}`}
-      style={{ backgroundColor: theme || "initial" }}
-    >
+      style={{ backgroundColor: theme || "initial" }}>
       <StoryTemplate
         storyAccess={storyAccess}
         story={story}
@@ -77,7 +76,7 @@ TextStoryTemplate.propTypes = {
   config: PropTypes.shape({
     templateType: PropTypes.string,
     authorCard: PropTypes.object,
-    asideCollection: PropTypes.object,
+    asideCollection: PropTypes.object
   }),
   firstChild: PropTypes.node,
   secondChild: PropTypes.node,
@@ -88,7 +87,7 @@ TextStoryTemplate.propTypes = {
   mountAt: PropTypes.string,
   loadRelatedStories: PropTypes.func,
   visibleCardsRender: PropTypes.func | undefined,
-  meteringIndicator: PropTypes.node | undefined,
+  meteringIndicator: PropTypes.node | undefined
 };
 
 export default StateProvider(TextStoryTemplate);

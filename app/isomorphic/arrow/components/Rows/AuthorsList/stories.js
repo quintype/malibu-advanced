@@ -12,16 +12,16 @@ AuthorsData.push({
   social: {
     twitter: {
       url: "https://twitter.com/Reena00659364",
-      handle: "Twitter",
+      handle: "Twitter"
     },
     youtube: {
       url: "https://www.facebook.com/people/Reena-Singh/100005438855189",
-      handle: "Youtube",
+      handle: "Youtube"
     },
     facebook: {
       url: "https://www.facebook.com/people/Reena-Singh/100005438855189",
-      handle: "Facebook",
-    },
+      handle: "Facebook"
+    }
   },
   bio: "",
   id: 94985,
@@ -29,9 +29,9 @@ AuthorsData.push({
   "avatar-s3-key": "",
   "twitter-handle": "quintype_inc",
   stats: {
-    contributions: null,
+    contributions: null
   },
-  metadata: {},
+  metadata: {}
 });
 
 const getMoreData = () => {
@@ -44,9 +44,9 @@ withStore(
     qt: {
       config: {
         "cdn-image": "thumbor-stg.assettype.com",
-        mountAt: "/sub-directory",
-      },
-    },
+        mountAt: "/sub-directory"
+      }
+    }
   },
   Readme
 ).add("Default", () => {
@@ -55,7 +55,7 @@ withStore(
     buttonText: text("Footer text", "Load More"),
     theme: color("color", "#ffffff"),
     enableSocialLinks: boolean("Enable Social Links", true),
-    borderSupport: boolean("With Border", true),
+    borderSupport: boolean("With Border", true)
   };
   return <AuthorsList data={AuthorsData} config={config} getMoreData={getMoreData} hideLoadmore={false} limit={9} />;
 });

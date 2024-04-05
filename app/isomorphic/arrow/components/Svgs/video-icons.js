@@ -81,21 +81,21 @@ export function VideoIcon5({ background }) {
 }
 
 VideoIcon1.propTypes = {
-  background: PropTypes.string,
+  background: PropTypes.string
 };
 
 VideoIcon2.propTypes = {
-  background: PropTypes.string,
+  background: PropTypes.string
 };
 
 VideoIcon3.propTypes = {
-  background: PropTypes.string,
+  background: PropTypes.string
 };
 
 VideoIcon4.propTypes = {
-  background: PropTypes.string,
+  background: PropTypes.string
 };
 
 VideoIcon5.propTypes = {
-  background: PropTypes.string,
+  background: PropTypes.string
 };

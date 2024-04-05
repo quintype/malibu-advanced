@@ -33,7 +33,7 @@ const HalfScreenSlider = ({ collection, config = {} }) => {
     footerSlotConfig = {},
     navigationArrows = true,
     slideIndicator = "none",
-    isInfinite = false,
+    isInfinite = false
   } = config;
   const { footerSlot } = footerSlotConfig;
   const textColor = getTextColor(theme);
@@ -53,8 +53,7 @@ const HalfScreenSlider = ({ collection, config = {} }) => {
     <div
       className="full-width-with-padding arrow-component"
       data-test-id="half-screen-slider"
-      style={{ backgroundColor: theme || "initial" }}
-    >
+      style={{ backgroundColor: theme || "initial" }}>
       <div styleName="half-screen-slider">
         <CollectionName
           collection={collection}
@@ -108,5 +107,5 @@ HalfScreenSlider.propTypes = {
   collectionTemplate: PropTypes.string,
   collectionNameBorderColor: PropTypes.string,
   // section tag border color
-  borderColor: PropTypes.string,
+  borderColor: PropTypes.string
 };

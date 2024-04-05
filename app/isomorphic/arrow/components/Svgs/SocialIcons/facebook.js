@@ -12,5 +12,5 @@ export const Facebook = ({ color = "#1877F2" }) => {
   );
 };
 Facebook.propTypes = {
-  color: PropTypes.string,
+  color: PropTypes.string
 };

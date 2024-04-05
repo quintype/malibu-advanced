@@ -35,7 +35,7 @@ const ThreeColGrid = ({ collection, config = {}, getMoreStories, isLoadMoreVisib
     collectionNameTemplate = "",
     footerSlotConfig = {},
     footerButton = "",
-    subsequentLoadCount = 3,
+    subsequentLoadCount = 3
   } = config;
 
   const { footerSlot } = footerSlotConfig;
@@ -102,8 +102,7 @@ const ThreeColGrid = ({ collection, config = {}, getMoreStories, isLoadMoreVisib
     <div
       className="full-width-with-padding arrow-component"
       data-test-id="three-col-grid"
-      style={{ backgroundColor: theme || "initial" }}
-    >
+      style={{ backgroundColor: theme || "initial" }}>
       <div styleName="three-col-grid">
         <CollectionName
           collection={collection}
@@ -138,18 +137,18 @@ ThreeColGrid.propTypes = {
     footerButton: PropTypes.string,
     collectionNameTemplate: PropTypes.string,
     collectionNameBorderColor: PropTypes.string,
-    subsequentLoadCount: PropTypes.number,
+    subsequentLoadCount: PropTypes.number
   }),
   getMoreStories: PropTypes.func,
   isLoadMoreVisible: PropTypes.bool,
   isLoading: PropTypes.bool,
-  isolatedLoadMore: PropTypes.bool,
+  isolatedLoadMore: PropTypes.bool
 };
 
 ThreeColGrid.defaultProps = {
   getMoreStories: () => {},
   isLoadMoreVisible: true,
-  isLoading: false,
+  isLoading: false
 };
 
 export default StateProvider(ThreeColGrid);

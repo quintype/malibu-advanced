@@ -12,20 +12,11 @@ withStore(
   {
     qt: {
       config: {
-        "cdn-image": "thumbor-stg.assettype.com",
-      },
-    },
+        "cdn-image": "thumbor-stg.assettype.com"
+      }
+    }
   },
   Readme
 )
   .add("Full Bleed Image", () => <HeroImage story={story} />)
-  .add("With Padding Image", () => (
-    <HeroImage
-      story={story}
-      FullBleed={false}
-      aspectRatio={[
-        [1, 1],
-        [16, 9],
-      ]}
-    />
-  ));
+  .add("With Padding Image", () => <HeroImage story={story} FullBleed={false} aspectRatio={[[1, 1], [16, 9]]} />);
