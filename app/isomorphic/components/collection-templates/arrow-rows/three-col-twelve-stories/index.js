@@ -13,4 +13,4 @@ ArrowThreeColTwelveStories.propTypes = {
   collection: object,
 };
 
-ArrowThreeColTwelveStories.storyLimit = 7;
+ArrowThreeColTwelveStories.storyLimit = 12;
