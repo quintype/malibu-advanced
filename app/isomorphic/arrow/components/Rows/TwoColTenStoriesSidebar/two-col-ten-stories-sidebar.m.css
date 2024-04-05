@@ -1,5 +1,4 @@
-/* eslint-disable scss/at-rule-no-unknown */
-@value viewports: "../../../../../assets/arrow/stylesheets/viewports.m.css";
+@value viewports: "../../../../assets/stylesheets/viewports.m.css";
 @value mobile from viewports;
 @value desktop from viewports;
 
@@ -17,14 +16,6 @@
   padding: 0 var(--arrow-spacing-s);
   @media (min-width: desktop) {
     padding: 0;
-  }
-}
-
-.sidebar-collection-wrapper {
-  padding: 0 var(--arrow-spacing-s);
-  @media (min-width: desktop) {
-    padding: 0;
-    padding-left: var(--arrow-spacing-m);
   }
 }
 
@@ -50,4 +41,24 @@
 
 .sidebar-cards-container .card {
   margin-bottom: var(--arrow-spacing-m);
+}
+
+html[dir="ltr"] {
+  .sidebar-collection-wrapper {
+    padding: 0 var(--arrow-spacing-s);
+    @media (min-width: desktop) {
+      padding: 0;
+      padding-left: var(--arrow-spacing-m);
+    }
+  }
+}
+
+html[dir="rtl"] {
+  .sidebar-collection-wrapper {
+    padding: 0 var(--arrow-spacing-s);
+    @media (min-width: desktop) {
+      padding: 0;
+      padding-right: var(--arrow-spacing-m);
+    }
+  }
 }
