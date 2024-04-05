@@ -93,7 +93,7 @@
     "prune-packages": "rm -rf node_modules && npm install && npm dedupe",
     "start": "BABEL_TARGET=node node start.js webpack serve",
     "test": "BABEL_TARGET=node jest",
-    "lint:js": "npx eslint './app/**/*.{js,jsx}'",
+    "lint:js": "npx eslint './app/**/*.{js,jsx}' --fix",
     "lint:js:ci": "npx eslint $(git diff --pretty='' --diff-filter=d --name-only origin/master...HEAD -- '*.js' '*.jsx') ./start.js",
     "lint:css": "npx stylelint './app/**/*.{scss,css}'",
     "lint:css:ci": "npx stylelint $(git diff --pretty='' --diff-filter=d --name-only origin/master...HEAD -- '*.css' '*.scss') ./app/assets/stylesheets/app.scss",
