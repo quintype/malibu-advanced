@@ -1,4 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
+import get from "lodash/get";
+import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import { withElementWrapper } from "../withElementWrapper";
 import { updateContentLinks, shapeStory, shapeConfig, getTextColor } from "../../../../utils/utils";
@@ -6,24 +8,19 @@ import "./blurb.m.css";
 import { useStateValue } from "../../../SharedContext";
 
 const BlurbBase = ({ element, template = "", opts = {}, css = {}, story = {}, config = {}, render, ...restProps }) => {
-  const content = element.text;
   const { borderColor } = css;
-  const initBorderDirection =
-    template === "withBorder" ? { border: `solid 2px ${borderColor}` } : { borderLeft: `solid 2px ${borderColor}` };
-  const [borderDirection, setBorderDirection] = useState(initBorderDirection);
+  const languageDirection = useSelector((state) => get(state, ["qt", "config", "language", "direction"], "ltr"));
+  const content = element.text;
   if (!content) return null;
-
-  useEffect(() => {
-    const htmlElement = document.getElementsByTagName("HTML");
-    if (htmlElement && htmlElement.length) {
-      if (htmlElement[0].dir.toLowerCase() === "rtl" && template !== "withBorder") {
-        setBorderDirection({ borderRight: `solid 2px ${borderColor}` });
-      }
-    }
-  }, []);
+  const initBorderDirection =
+    template === "withBorder"
+      ? { border: `2px solid ${borderColor || "unset"}` }
+      : languageDirection === "rtl"
+      ? { borderRight: `2px solid ${borderColor || "unset"}` }
+      : { borderLeft: `2px solid ${borderColor || "unset"}` };
 
   const { isExternalLink = true } = opts;
-  const text = (isExternalLink && updateContentLinks(content)) || content;
+  let text = (isExternalLink && updateContentLinks(content)) || content;
   const templateStyle = template ? `blurb-${template}` : "blurb";
   const configData = useStateValue() || {};
   const textInvertColor = getTextColor(configData.theme);
@@ -32,7 +29,7 @@ const BlurbBase = ({ element, template = "", opts = {}, css = {}, story = {}, co
       className="arrow-component arr-custom-style arr--blurb-element"
       styleName={`${templateStyle} ${textInvertColor}`}
       data-test-id="blurb"
-      style={borderColor && borderDirection}
+      style={initBorderDirection}
       dangerouslySetInnerHTML={{ __html: text }}
       {...restProps}
     />
@@ -47,7 +44,7 @@ BlurbBase.propTypes = {
   story: shapeStory,
   config: shapeConfig,
   render: PropTypes.func,
-  css: PropTypes.object,
+  css: PropTypes.object
 };
 
 export const Blurb = withElementWrapper(BlurbBase);

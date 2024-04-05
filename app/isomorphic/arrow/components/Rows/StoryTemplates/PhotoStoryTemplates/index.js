@@ -1,12 +1,9 @@
-/* eslint-disable react/prop-types */
-/* eslint-disable react/no-unknown-property */
-/* eslint-disable max-len */
 import { SocialShare } from "@quintype/components";
 import PropTypes from "prop-types";
-import React from "react";
-import get from "lodash/get";
+import React, { useCallback } from "react";
+import get from "lodash.get";
 import { useSelector } from "react-redux";
-import kebabCase from "lodash/kebabCase";
+import kebabCase from "lodash.kebabcase";
 import { AuthorCard } from "../../../Atoms/AuthorCard";
 import { CaptionAttribution } from "../../../Atoms/CaptionAttribution";
 import { SocialShareTemplate } from "../../../Molecules/SocialShareTemplate";
@@ -17,14 +14,13 @@ import { HeroImage } from "../../../Atoms/HeroImage";
 import { PublishDetails } from "../../../Atoms/PublishDetail";
 import { StoryTags } from "../../../Atoms/StoryTags";
 import { PhotoStoryElement, SlotAfterStory } from "../../../Molecules/StoryElementCard";
+import { StoryReview } from "../../../Atoms/StoryReview";
 import { StateProvider } from "../../../SharedContext";
 import AsideCollection from "../../AsideCollection";
-import { MetypeCommentsWidget } from "../../../../../components/Metype/commenting-widget";
-import { MetypeReactionsWidget } from "../../../../../components/Metype/reaction-widget";
 import "./photo.m.css";
-import { Paywall } from "../../Paywall";
 
-const StoryTemplatePhoto = ({
+const PhotoStory = ({
+  storyAccess = null,
   story = {},
   config = {},
   storyElementsConfig,
@@ -32,7 +28,10 @@ const StoryTemplatePhoto = ({
   adComponent,
   firstChild,
   secondChild,
-  hasAccess,
+  enableDarkMode,
+  loadRelatedStories,
+  visibleCardsRender = null,
+  meteringIndicator
 }) => {
   const {
     theme = "",
@@ -43,21 +42,18 @@ const StoryTemplatePhoto = ({
     verticalShare = "",
     shareIconType = "plain-color-svg",
     authorDetails = {
-      template: "default",
+      template: "default"
     },
     imageRender = "fullBleed",
-    premiumStoryIconConfig = {},
+    premiumStoryIconConfig = {}
   } = config;
-
-  const metypeConfig = useSelector((state) => get(state, ["qt", "config", "publisher-attributes", "metypeConfig"], {}));
-  const isMetypeEnabled = useSelector((state) =>
-    get(state, ["qt", "config", "publisher-attributes", "enableMetype"], true)
-  );
-  const jwtToken = useSelector((state) => get(state, ["userReducer", "jwt_token"], null));
-
+  const isFullBleed = imageRender === "fullBleed";
   const visibledCards = noOfVisibleCards < 0 ? story.cards : story.cards.slice(0, noOfVisibleCards);
   const storyId = get(story, ["id"], "");
-  const timezone = useSelector((state) => get(state, ["qt", "data", "timezone"], null));
+
+  const qtState = useSelector((state) => get(state, ["qt"], {}));
+  const timezone = get(qtState, ["data", "timezone"], null);
+  const mountAt = get(qtState, ["config", "mountAt"], "");
 
   const HeaderCard = () => {
     return (
@@ -85,47 +81,48 @@ const StoryTemplatePhoto = ({
     );
   };
 
-  const StoryData = ({ hasAccess }) => {
-    const isStoryBehindPaywall = story.access === "subscription" && hasAccess === false;
-
+  const StoryData = () => {
+    const visibleCards = visibledCards.map((card) => {
+      return (
+        <PhotoStoryElement
+          story={story}
+          card={card}
+          key={get(card, ["id"], "")}
+          config={{ ...storyElementsConfig, theme }}
+          adComponent={adComponent}
+          widgetComp={widgetComp}
+          enableDarkMode={enableDarkMode}
+          theme={theme}
+        />
+      );
+    });
+    const accessGranted = storyAccess?.accessGranted;
+    const accessLoading = accessGranted === null;
+    const showPaywallBanner = !accessLoading && !accessGranted;
     return (
       <>
         {authorDetails && (
-          <AuthorCard clazzName="gap-32" story={story} template={authorDetails.template} opts={authorDetails.opts} />
+          <AuthorCard
+            clazzName="gap-32"
+            story={story}
+            template={authorDetails.template}
+            opts={authorDetails.opts}
+            mountAt={mountAt}
+          />
         )}
         <div styleName="story-details">
-          <PublishDetails story={story} opts={publishedDetails} template="story" timezone={timezone} />
+          <div id={`publish-details-container-${storyId}`}>
+            <PublishDetails story={story} opts={publishedDetails} template="story" timezone={timezone} />
+          </div>
           {!verticalShare && <SocialShareComponent />}
         </div>
-        {isStoryBehindPaywall ? (
-          <>
-            <PhotoStoryElement
-              story={story}
-              card={visibledCards[0]}
-              key={get(visibledCards[0], ["id"], "")}
-              config={{ ...storyElementsConfig, theme }}
-              adComponent={adComponent}
-              widgetComp={widgetComp}
-            />
-            <Paywall />
-          </>
-        ) : (
-          visibledCards.map((card) => {
-            return (
-              <PhotoStoryElement
-                story={story}
-                card={card}
-                key={get(card, ["id"], "")}
-                config={{ ...storyElementsConfig, theme }}
-                adComponent={adComponent}
-                widgetComp={widgetComp}
-              />
-            );
-          })
-        )}
+        {meteringIndicator}
+        <StoryReview theme={theme} story={story} />
+        {visibleCardsRender ? visibleCardsRender(visibleCards, null, storyAccess) : visibleCards}
         <div styleName="space-32">
-          {firstChild}
+          {showPaywallBanner && firstChild}
           <StoryTags tags={story.tags} />
+          {meteringIndicator}
           <SlotAfterStory
             id={story.id}
             element={story.customSlotAfterStory}
@@ -149,242 +146,180 @@ const StoryTemplatePhoto = ({
     }
   };
 
-  const defaultTemplate = ({ story, config, hasAccess }) => {
+  const DefaultTemplateSideColumn = () => {
+    return (
+      asideCollection && (
+        <div styleName="grid-col-10-14 space-12">
+          <AsideCollection
+            {...asideCollection}
+            widgetComp={widgetComp}
+            adComponent={adComponent}
+            sticky={true}
+            story={story}
+            opts={publishedDetails}
+            loadRelatedStories={loadRelatedStories}
+          />
+        </div>
+      )
+    );
+  };
+
+  // Caching is done to avoid widget and Ad re-renderings
+  const CachedDefaultSideColumn = useCallback(DefaultTemplateSideColumn, [templateType, story["story-template"]]);
+
+  const defaultTemplate = () => {
     return (
       <>
         <div data-test-id="hero-image" styleName={`${renderImages(imageRender)} index-2`}>
           <HeroImage
             story={story}
-            aspectRatio={[
-              [16, 9],
-              [8, 3],
-            ]}
+            widths={[250, 480, 640, 1200]}
+            aspectRatio={[[16, 9], [8, 3]]}
             defaultFallback={false}
             isStoryPageImage
+            isFullWidthImage
           />
         </div>
         <div styleName="grid-col-2-10 space-12">
           <CaptionAttribution story={story} config={config} />
           <HeaderCard />
-          <StoryData hasAccess={hasAccess} />
-          {isMetypeEnabled && (
-            <>
-              <MetypeCommentsWidget
-                host={metypeConfig.metypeHost}
-                accountId={metypeConfig.metypeAccountId}
-                pageURL={story.url}
-                primaryColor={metypeConfig.primaryColor}
-                className={metypeConfig.className}
-                jwt={jwtToken}
-                fontUrl={metypeConfig.fontFamilyUrl}
-                fontFamily={metypeConfig.fontFamily}
-                storyId={story.id}
-              />
-              <MetypeReactionsWidget
-                host={metypeConfig.metypeHost}
-                accountId={metypeConfig.metypeAccountId}
-                storyUrl={story.url}
-                storyId={story.id}
-              />
-            </>
-          )}
+          <StoryData />
         </div>
         {verticalShare && <SocialShareComponent />}
-        {asideCollection && (
-          <div styleName="grid-col-10-14 space-12">
-            <AsideCollection
-              {...asideCollection}
-              widgetComp={widgetComp}
-              adComponent={adComponent}
-              sticky={true}
-              storyId={storyId}
-              opts={publishedDetails}
-            />
-          </div>
-        )}
+        <CachedDefaultSideColumn />
       </>
     );
   };
 
-  const heroPriority = ({ story, config, hasAccess }) => {
+  const HeroPrioritySideColumn = () => {
+    return (
+      asideCollection && (
+        <div styleName="grid-container space-12 tablet-index-2">
+          <AsideCollection
+            horizontal={true}
+            {...asideCollection}
+            widgetComp={widgetComp}
+            adComponent={adComponent}
+            story={story}
+            opts={publishedDetails}
+            loadRelatedStories={loadRelatedStories}
+          />
+        </div>
+      )
+    );
+  };
+
+  const CachedHeroPrioritySideColumn = useCallback(HeroPrioritySideColumn, [templateType, story["story-template"]]);
+
+  const heroPriority = () => {
     return (
       <>
         <div data-test-id="hero-image" styleName={`${renderImages(imageRender)} index-2`}>
-          <HeroImage story={story} aspectRatio={[[16, 9]]} defaultFallback={false} isStoryPageImage />
+          <HeroImage
+            widths={[250, 480, 640, 1200]}
+            story={story}
+            aspectRatio={[[16, 9]]}
+            defaultFallback={false}
+            isStoryPageImage
+            isFullWidthImage
+          />
         </div>
         <div styleName="grid-col-4-12 space-12">
           <CaptionAttribution story={story} config={config} />
           <HeaderCard />
-          <StoryData hasAccess={hasAccess} />
-          {isMetypeEnabled && (
-            <>
-              <MetypeReactionsWidget
-                host={metypeConfig.metypeHost}
-                accountId={metypeConfig.metypeAccountId}
-                storyUrl={story.url}
-                storyId={story.id}
-              />
-              <MetypeCommentsWidget
-                host={metypeConfig.metypeHost}
-                accountId={metypeConfig.metypeAccountId}
-                pageURL={story.url}
-                primaryColor={metypeConfig.primaryColor}
-                className={metypeConfig.className}
-                jwt={jwtToken}
-                fontUrl={metypeConfig.fontFamilyUrl}
-                fontFamily={metypeConfig.fontFamily}
-                storyId={story.id}
-              />
-            </>
-          )}
+          <StoryData />
         </div>
         {verticalShare && <SocialShareComponent />}
-        {asideCollection && (
-          <div styleName="grid-container space-12 tablet-index-2">
-            <AsideCollection
-              horizontal={true}
-              {...asideCollection}
-              widgetComp={widgetComp}
-              adComponent={adComponent}
-              storyId={storyId}
-              opts={publishedDetails}
-            />
-          </div>
-        )}
+        <CachedHeroPrioritySideColumn />
       </>
     );
   };
 
-  const headlinePriority = ({ story, config, hasAccess }) => {
+  const HeadlinePrioritySideColumn = () => {
+    return (
+      asideCollection && (
+        <div styleName="grid-col-9-14">
+          <AsideCollection
+            {...asideCollection}
+            widgetComp={widgetComp}
+            adComponent={adComponent}
+            sticky={true}
+            story={story}
+            opts={publishedDetails}
+            loadRelatedStories={loadRelatedStories}
+          />
+        </div>
+      )
+    );
+  };
+
+  const CachedHeadlinePrioritySideColumn = useCallback(HeadlinePrioritySideColumn, [templateType]);
+
+  const headlinePriority = () => {
     return (
       <>
         <div styleName="grid-container side-space">
           <HeaderCard />
         </div>
         <div styleName="grid-col-2-9 side-space index-2">
-          <HeroImage story={story} aspectRatio={[[16, 9]]} defaultFallback={false} isStoryPageImage />
+          <HeroImage
+            widths={[250, 480, 640, 1200]}
+            story={story}
+            aspectRatio={[[16, 9]]}
+            defaultFallback={false}
+            isStoryPageImage
+          />
         </div>
         <div styleName="grid-col-2-9 side-space">
           <CaptionAttribution story={story} config={config} />
-          <StoryData hasAccess={hasAccess} />
-          {isMetypeEnabled && (
-            <>
-              <MetypeReactionsWidget
-                host={metypeConfig.metypeHost}
-                accountId={metypeConfig.metypeAccountId}
-                storyUrl={story.url}
-                storyId={story.id}
-              />
-              <MetypeCommentsWidget
-                host={metypeConfig.metypeHost}
-                accountId={metypeConfig.metypeAccountId}
-                pageURL={story.url}
-                primaryColor={metypeConfig.primaryColor}
-                className={metypeConfig.className}
-                jwt={jwtToken}
-                fontUrl={metypeConfig.fontFamilyUrl}
-                fontFamily={metypeConfig.fontFamily}
-                storyId={story.id}
-              />
-            </>
-          )}
+          <StoryData />
         </div>
         {verticalShare && <SocialShareComponent />}
-        {asideCollection && (
-          <div styleName="grid-col-9-14">
-            <AsideCollection
-              {...asideCollection}
-              widgetComp={widgetComp}
-              adComponent={adComponent}
-              sticky={true}
-              storyId={storyId}
-              opts={publishedDetails}
-            />
-          </div>
-        )}
+        <CachedHeadlinePrioritySideColumn />
       </>
     );
   };
 
-  const getStoryTemplate = (templateType, { story, config }, hasAccess) => {
+  const getStoryTemplate = (templateType) => {
     switch (templateType) {
       case "hero-priority-center":
-        return heroPriority({ story, config, hasAccess });
+        return heroPriority();
       case "headline-priority":
-        return headlinePriority({ story, config, hasAccess });
+        return headlinePriority();
       default:
-        return defaultTemplate({ story, config, hasAccess });
+        return defaultTemplate();
     }
   };
-  return <>{getStoryTemplate(templateType, { story, config }, hasAccess)}</>;
-};
 
-StoryTemplatePhoto.propTypes = {
-  story: PropTypes.object,
-  config: PropTypes.shape({
-    templateType: PropTypes.string,
-    asideCollection: PropTypes.object,
-  }),
-  firstChild: PropTypes.node,
-  secondChild: PropTypes.node,
-  storyElementsConfig: PropTypes.object,
-  adComponent: PropTypes.func,
-  widgetComp: PropTypes.func,
-  hasAccess: PropTypes.func,
-};
-
-const PhotoStoryTemplate = ({
-  story = {},
-  config = {},
-  storyElementsConfig,
-  widgetComp,
-  adComponent,
-  firstChild,
-  secondChild,
-}) => {
-  const {
-    theme = "",
-    templateType = "default",
-    verticalShare = "",
-
-    imageRender = "fullBleed",
-  } = config;
-
-  const isFullBleed = imageRender === "fullBleed";
-
-  const timezone = useSelector((state) => get(state, ["qt", "data", "timezone"], null));
   return (
     <div
-      styleName={`${verticalShare} ${isFullBleed ? "fullBleed" : ""}`}
+      styleName={`${verticalShare} ${isFullBleed ? "fullBleed" : ""} ${
+        templateType !== "headline-priority" && !isFullBleed ? "container" : ""
+      }`}
       data-test-id={`photo-story-${templateType}-${kebabCase(imageRender)}`}
       className={`arrow-component arr-story-grid arr--content-wrapper arr--photo-story-template-wrapper ${templateType} `}
-      style={{ backgroundColor: theme }}
-    >
-      <StoryTemplatePhoto
-        story={story}
-        config={config}
-        templateType={templateType}
-        adComponent={adComponent}
-        widgetComp={widgetComp}
-        firstChild={firstChild}
-        secondChild={secondChild}
-        timezone={timezone}
-        storyElementsConfig={storyElementsConfig}
-      />
+      style={{ backgroundColor: theme || "initial" }}>
+      {getStoryTemplate(templateType)}
     </div>
   );
 };
-PhotoStoryTemplate.propTypes = {
+
+PhotoStory.propTypes = {
+  storyAccess: PropTypes.object,
   story: PropTypes.object,
   config: PropTypes.shape({
     templateType: PropTypes.string,
-    asideCollection: PropTypes.object,
+    asideCollection: PropTypes.object
   }),
   firstChild: PropTypes.node,
   secondChild: PropTypes.node,
   storyElementsConfig: PropTypes.object,
   adComponent: PropTypes.func,
   widgetComp: PropTypes.func,
+  enableDarkMode: PropTypes.bool,
+  loadRelatedStories: PropTypes.func,
+  visibleCardsRender: PropTypes.func | undefined,
+  meteringIndicator: PropTypes.node | undefined
 };
 
-export default StateProvider(PhotoStoryTemplate, StoryTemplatePhoto);
+export default StateProvider(PhotoStory);

@@ -15,5 +15,5 @@ export const BulletPoint = ({ bulletValue = "" }) => {
 };
 
 BulletPoint.propTypes = {
-  bulletValue: PropTypes.string,
+  bulletValue: PropTypes.string
 };

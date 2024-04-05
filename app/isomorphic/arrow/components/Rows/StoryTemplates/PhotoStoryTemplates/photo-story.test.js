@@ -22,7 +22,7 @@ const storyElementsConfig = {
   "also-read": {},
   "q-and-a": {},
   question: {},
-  answer: {},
+  answer: {}
 };
 
 const templateConfig = {
@@ -31,7 +31,7 @@ const templateConfig = {
   publishedDetails: {
     enablePublishedTime: true,
     enableUpdatedTime: false,
-    showReadTime: true,
+    showReadTime: true
   },
   asideCollection: {
     data: collection,
@@ -39,9 +39,9 @@ const templateConfig = {
       collectionNameBorderColor: "#3a9fdd",
       title: "Trending",
       theme: "#ffffff",
-      adSlot: [{ type: "ad", component: configurableSlot }],
-    },
-  },
+      adSlot: [{ type: "ad", component: configurableSlot }]
+    }
+  }
 };
 
 beforeEach(() => {

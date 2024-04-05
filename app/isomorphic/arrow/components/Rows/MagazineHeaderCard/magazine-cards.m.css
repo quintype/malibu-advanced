@@ -1,5 +1,4 @@
-/* eslint-disable scss/at-rule-no-unknown */
-@value viewports: "../../../../../assets/arrow/stylesheets/viewports.m.css";
+@value viewports: "../../../../assets/stylesheets/viewports.m.css";
 @value mobile from viewports;
 @value tablet from viewports;
 
@@ -46,8 +45,8 @@
     grid-gap: var(--arrow-spacing-l);
   }
   :global(.arr--story-card) {
-    display: grid;
     grid-template-columns: 1fr 4fr;
+    text-align: initial;
   }
 }
 

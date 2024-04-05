@@ -7,12 +7,13 @@ import { HeroImage } from "../../Atoms/HeroImage";
 import { StorycardContent } from "../../Molecules/StorycardContent";
 import { StoryCard } from "../../Molecules/StoryCard";
 import { StateProvider } from "../../SharedContext";
-import { generateNavigateSlug, getTextColor, navigateTo } from "../../../utils/utils";
+import { generateNavigateSlug, navigateTo } from "../../../utils/utils";
 import { LoadmoreButton } from "../../Atoms/Loadmore";
+import { roundedCornerClass } from "../../../constants";
 
 import "./two-col-three-story.m.css";
 import { useDispatch, useSelector } from "react-redux";
-import get from "lodash/get";
+import get from "lodash.get";
 
 export const TwoColThreeStories = ({ collection, config = {} }) => {
   const items = collectionToStories(collection);
@@ -23,7 +24,7 @@ export const TwoColThreeStories = ({ collection, config = {} }) => {
     theme = "",
     collectionNameTemplate = "",
     footerSlotConfig = {},
-    footerButton = "",
+    footerButton = ""
   } = config;
   const { footerSlot } = footerSlotConfig;
 
@@ -35,14 +36,15 @@ export const TwoColThreeStories = ({ collection, config = {} }) => {
   const qtConfig = useSelector((state) => get(state, ["qt", "config"], {}));
   const url = generateNavigateSlug(collection, qtConfig);
 
-  const textColor = getTextColor(theme);
+  const enableRoundedCorners = get(qtConfig, ["pagebuilder-config", "general", "enableRoundedCorners"], false);
+  const roundedCorners = enableRoundedCorners ? roundedCornerClass : "";
+
   const footerSlotComp = footerSlot ? footerSlot() : null;
   return (
     <div
       className="full-width-with-padding arrow-component"
       data-test-id="two-col-three-stories"
-      style={{ backgroundColor: theme, color: textColor }}
-    >
+      style={{ backgroundColor: theme || "initial" }}>
       <div styleName="two-col-three-story">
         <CollectionName
           collection={collection}
@@ -57,19 +59,10 @@ export const TwoColThreeStories = ({ collection, config = {} }) => {
               border={border}
               bgImgContentOverlap
               headerLevel="2"
-              aspectRatio={[
-                [16, 9],
-                [16, 9],
-              ]}
+              aspectRatio={[[16, 9], [16, 9]]}
               config={config}
-            >
-              <HeroImage
-                story={items[0]}
-                aspectRatio={[
-                  [16, 9],
-                  [16, 9],
-                ]}
-              />
+              roundedCorners={roundedCorners}>
+              <HeroImage story={items[0]} aspectRatio={[[16, 9], [16, 9]]} widths={[250, 480, 640, 1200]} />
               <StorycardContent
                 story={items[0]}
                 headerLevel="2"
@@ -77,6 +70,8 @@ export const TwoColThreeStories = ({ collection, config = {} }) => {
                 theme={theme}
                 borderColor={borderColor}
                 config={config}
+                collectionId={collection.id}
+                roundedCorners={roundedCorners}
               />
             </StoryCard>
           </div>
@@ -87,7 +82,7 @@ export const TwoColThreeStories = ({ collection, config = {} }) => {
                 return (
                   <div key={index}>
                     <StoryCard story={story} border={border} theme={theme} isHorizontalMobile config={config}>
-                      <HeroImage story={story} isHorizontalMobile />
+                      <HeroImage story={story} isHorizontalMobile aspectRatio={[[16, 9], [16, 9]]} />
                       <StorycardContent
                         theme={theme}
                         border={border}
@@ -95,6 +90,8 @@ export const TwoColThreeStories = ({ collection, config = {} }) => {
                         isHorizontalMobile
                         borderColor={borderColor}
                         config={config}
+                        collectionId={collection.id}
+                        roundedCorners={roundedCorners}
                       />
                     </StoryCard>
                   </div>
@@ -103,7 +100,7 @@ export const TwoColThreeStories = ({ collection, config = {} }) => {
                 return (
                   <div styleName="storycard" key={index}>
                     <StoryCard story={story} border={border} theme={theme} isHorizontalMobile config={config}>
-                      <HeroImage story={story} isHorizontalMobile />
+                      <HeroImage story={story} isHorizontalMobile aspectRatio={[[16, 9], [16, 9]]} />
                       <StorycardContent
                         theme={theme}
                         border={border}
@@ -111,6 +108,8 @@ export const TwoColThreeStories = ({ collection, config = {} }) => {
                         isHorizontalMobile
                         borderColor={borderColor}
                         config={config}
+                        collectionId={collection.id}
+                        roundedCorners={roundedCorners}
                       />
                     </StoryCard>
                   </div>
@@ -143,6 +142,6 @@ TwoColThreeStories.propTypes = {
     border: PropTypes.string,
     footerButton: PropTypes.string,
     collectionNameTemplate: PropTypes.string,
-    collectionNameBorderColor: PropTypes.string,
-  }),
+    collectionNameBorderColor: PropTypes.string
+  })
 };

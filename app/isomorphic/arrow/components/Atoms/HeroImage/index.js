@@ -1,5 +1,5 @@
-import { Link, ResponsiveHeroImage } from "@quintype/components";
-import get from "lodash/get";
+import { Link, ResponsiveImage, ResponsiveHeroImage } from "@quintype/components";
+import get from "lodash.get";
 import PropTypes from "prop-types";
 import React from "react";
 import { useSelector } from "react-redux";
@@ -7,6 +7,8 @@ import { clientWidth, isExternalStory, getStoryUrl, removeHtmlTags } from "../..
 import { useStateValue } from "../../SharedContext";
 import { FallbackImage } from "../FallbackImage";
 import { HyperLink } from "../Hyperlink";
+import { StoryDemarcationIcon } from "../StoryDemarcationIcon";
+import { roundedCornerClass } from "../../../constants";
 import "./hero-image.m.css";
 
 export const HeroImage = ({
@@ -21,6 +23,10 @@ export const HeroImage = ({
   defaultFallback,
   isStoryPageImage,
   config,
+  queryParam = {},
+  initialAltImage,
+  isFullWidthImage,
+  isCircularImage = false
 }) => {
   const { fallbackImageUrl = "" } = useStateValue() || {};
   const { StoryTemplateIcon = () => null } = config;
@@ -49,65 +55,117 @@ export const HeroImage = ({
   const isMobile = clientWidth("mobile");
 
   const imageAspectRatio = isMobile ? mobileAspectRatio : desktopAspectRatio;
+
   const imagePadding = isMobile ? getPadding(mobileAspectRatio) : getPadding(desktopAspectRatio);
   const slug =
-    get(story, ["hero-image-s3-key"]) ||
-    get(story, ["alternative", "home", "default", "hero-image", "hero-image-s3-key"]);
+    get(story, ["alternative", "home", "default", "hero-image", "hero-image-s3-key"]) ||
+    get(story, ["hero-image-s3-key"]);
   const hyperLink = get(story, ["hero-image-hyperlink"], "");
   const imageCaption = get(story, ["hero-image-caption"], "");
   const imageAltText = imageCaption ? removeHtmlTags(imageCaption) : get(story, ["headline"], "");
+
+  const rowsConfig = useSelector((state) => get(state, ["qt", "config", "pagebuilder-config", "general", "rows"], {}));
+  const enableRoundedCorners = useSelector((state) =>
+    get(state, ["qt", "config", "pagebuilder-config", "general", "enableRoundedCorners"], false)
+  );
+
+  const enableDarkMode = useSelector((state) => get(state, ["header", "isDarkModeEnabled"], false));
+
+  const roundedCorners = enableRoundedCorners && !isFullWidthImage && !isCircularImage ? roundedCornerClass : "";
+
+  const storyTemplate = story?.["story-template"];
 
   const fallbackImage = () => {
     if (!slug) {
       if (fallbackImageUrl && !isStoryPageImage) {
         return (
-          <figure
-            styleName={`image ${getPlaceholderStyleName}`}
-            className="arr--responsive-hero-image"
-            style={{
-              paddingTop: imagePadding + `%`,
-            }}
-          >
-            <img className="qt-image" data-src={`${fallbackImageUrl}`} alt="image-fallback"></img>
-          </figure>
+          <div styleName="image-wrapper">
+            <figure
+              styleName={`image ${getPlaceholderStyleName}`}
+              className="arr--responsive-hero-image"
+              style={{
+                paddingTop: imagePadding + `%`
+              }}>
+              <img className="qt-image" src={fallbackImageUrl} data-src={fallbackImageUrl} alt="image-fallback" />
+            </figure>
+            <div styleName="icon-wrapper">
+              {!isStoryPageImage && !isCircularImage && (
+                <StoryDemarcationIcon
+                  storyTemplate={storyTemplate}
+                  rowsConfig={rowsConfig}
+                  enableDarkMode={enableDarkMode}
+                />
+              )}
+            </div>
+          </div>
         );
       }
-
       return (
         <>
           {defaultFallback ? (
             <div
-              styleName={`image ${getPlaceholderStyleName}`}
+              styleName={`image ${getPlaceholderStyleName} image-wrapper`}
               className="arr--fallback-hero-image"
               data-test-id="arr--fallback-hero-image"
               style={{
-                paddingTop: imagePadding + `%`,
-              }}
-            >
+                paddingTop: imagePadding + `%`
+              }}>
               <StoryTemplateIcon storyTemplate={story["story-template"]} />
-              <FallbackImage />
+              <FallbackImage roundedCorners={roundedCorners} />
+              <div styleName="icon-wrapper">
+                {!isStoryPageImage && !isCircularImage && (
+                  <StoryDemarcationIcon
+                    storyTemplate={storyTemplate}
+                    rowsConfig={rowsConfig}
+                    enableDarkMode={enableDarkMode}
+                  />
+                )}
+              </div>
             </div>
           ) : null}
         </>
       );
     }
+
     return (
       <>
-        <figure
-          styleName={`image ${getPlaceholderStyleName}`}
-          className="arr--responsive-hero-image"
-          style={{ paddingTop: imagePadding + `%` }}
-        >
-          <StoryTemplateIcon storyTemplate={story["story-template"]} />
-          <ResponsiveHeroImage
-            story={story}
-            aspectRatio={imageAspectRatio}
-            defaultWidth={defaultWidth}
-            widths={widths}
-            imgParams={{ auto: ["format", "compress"], fit: "max" }}
-            alt={imageAltText}
-          />
-        </figure>
+        <div styleName="image-wrapper">
+          <figure
+            styleName={`image ${getPlaceholderStyleName}`}
+            className={`arr--responsive-hero-image ${roundedCorners}`}
+            style={{ paddingTop: imagePadding + `%` }}>
+            <StoryTemplateIcon storyTemplate={story["story-template"]} />
+            {initialAltImage ? (
+              <ResponsiveImage
+                slug={slug}
+                metadata={story["hero-image-metadata"]}
+                alt={imageAltText}
+                aspectRatio={imageAspectRatio}
+                defaultWidth={defaultWidth}
+                widths={widths}
+                imgParams={{ auto: ["format", "compress"], fit: "max" }}
+              />
+            ) : (
+              <ResponsiveHeroImage
+                story={story}
+                aspectRatio={imageAspectRatio}
+                defaultWidth={defaultWidth}
+                widths={widths}
+                imgParams={{ auto: ["format", "compress"], fit: "max" }}
+                alt={imageAltText}
+              />
+            )}
+          </figure>
+          <div styleName="icon-wrapper">
+            {!isStoryPageImage && !isCircularImage && (
+              <StoryDemarcationIcon
+                storyTemplate={storyTemplate}
+                rowsConfig={rowsConfig}
+                enableDarkMode={enableDarkMode}
+              />
+            )}
+          </div>
+        </div>
         {isStoryPageImage && hyperLink && <HyperLink hyperLink={hyperLink} />}
       </>
     );
@@ -117,21 +175,19 @@ export const HeroImage = ({
     story &&
     (isStoryPageImage ? (
       <div
-        className="arr--hero-image"
+        className={`arr--hero-image ${roundedCorners}`}
         data-test-id="arr--hero-image"
-        styleName={`${heroImageClass} ${fullBleed} ${heroImageMobClasses}`}
-      >
+        styleName={`${heroImageClass} ${fullBleed} ${heroImageMobClasses} `}>
         {fallbackImage()}
       </div>
     ) : (
       <Link
-        className="arr--hero-image"
+        className={`arr--hero-image ${roundedCorners}`}
         data-test-id="arr--hero-image"
-        href={getStoryUrl(story, `/${story.slug}`)}
+        href={getStoryUrl(story, `/${story.slug}`, queryParam)}
         externalLink={isExternalStory(story)}
         styleName={`${heroImageClass} ${fullBleed} ${heroImageMobClasses}`}
-        aria-label="fallback-hero-image"
-      >
+        aria-label="fallback-hero-image">
         {fallbackImage()}
       </Link>
     ))
@@ -160,14 +216,17 @@ HeroImage.propTypes = {
   isHorizontalWithImageLast: PropTypes.bool,
   isStoryPageImage: PropTypes.bool,
   config: PropTypes.object,
+  queryParam: PropTypes.shape({
+    utmContent: PropTypes.string
+  }),
+  initialAltImage: PropTypes.bool,
+  isFullWidthImage: PropTypes.bool,
+  isCircularImage: PropTypes.bool
 };
 
 HeroImage.defaultProps = {
   FullBleed: true,
-  aspectRatio: [
-    [1, 1],
-    [16, 9],
-  ],
+  aspectRatio: [[1, 1], [16, 9]],
   defaultWidth: 480,
   widths: [250, 480, 640],
   isHorizontal: false,
@@ -176,4 +235,7 @@ HeroImage.defaultProps = {
   isStoryPageImage: false,
   isHorizontalWithImageLast: false,
   config: {},
+  initialAltImage: false,
+  isFullWidthImage: false,
+  isCircularImage: false
 };

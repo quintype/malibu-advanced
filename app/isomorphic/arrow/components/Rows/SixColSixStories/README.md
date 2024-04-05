@@ -25,6 +25,8 @@ const contextConfig = {
   showFooterButton: false,
   buttonText: "Read More",
   border: "fullBorder"
+  showCardBgColor: false,
+  cardBgColor: "#ffffff"
 };
 ```
 

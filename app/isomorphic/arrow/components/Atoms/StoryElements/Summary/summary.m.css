@@ -1,5 +1,4 @@
-/* eslint-disable scss/at-rule-no-unknown */
-@value viewports: "../../../../../../assets/arrow/stylesheets/viewports.m.css";
+@value viewports: "../../../../../assets/stylesheets/viewports.m.css";
 @value mobile from viewports;
 
 .headline {
@@ -12,6 +11,42 @@
 
 .summary:global(.arrow-component) .content p {
   font-style: italic;
+  margin-bottom: 15px;
+}
+
+.summary:global(.arrow-component) .content > ul,
+.summary-header:global(.arrow-component) .content > ul,
+.summary-border:global(.arrow-component) .content > ul {
+  list-style: initial;
+  padding: var(--arrow-spacing-m) var(--arrow-spacing-xl) 0 var(--arrow-spacing-xl);
+}
+
+.summary:global(.arrow-component) .content > ol,
+.summary-header:global(.arrow-component) .content > ol,
+.summary-border:global(.arrow-component) .content > ol {
+  list-style: auto;
+  padding: var(--arrow-spacing-m) var(--arrow-spacing-xl) 0 var(--arrow-spacing-xl);
+}
+
+.summary:global(.arrow-component) .content li,
+.summary-header:global(.arrow-component) .content li,
+.summary-border:global(.arrow-component) .content li {
+  display: list-item;
+  font-size: var(--arrow-fs-m);
+  margin-bottom: 15px;
+}
+
+.summary:global(.arrow-component) .content li > p,
+.summary-header:global(.arrow-component) .content li > p,
+.summary-border:global(.arrow-component) .content li > p {
+  margin-bottom: unset;
+}
+
+.summary:global(.arrow-component) .content a,
+.summary-header:global(.arrow-component) .content a,
+.summary-border:global(.arrow-component) .content a {
+  color: var(--textElementHyperlinkColor);
+  border-bottom: 1px solid var(--textElementHyperlinkColor);
 }
 
 .summary:global(.arrow-component) .content > p,
@@ -25,10 +60,17 @@
   }
 }
 
+.summary:global(.arrow-component) .content > p,
+.summary-header:global(.arrow-component) .content > p,
+.summary-border:global(.arrow-component) .content > p {
+  margin-bottom: 15px;
+}
+
 .summary:global(.arrow-component) .content.light > p,
 .summary-header:global(.arrow-component) .content.light > p,
 .summary-border:global(.arrow-component) .content.light > p {
   color: var(--arrow-c-light);
+  margin-bottom: 15px;
 }
 
 .dark {
@@ -36,6 +78,11 @@
 }
 .light {
   color: var(--arrow-c-invert-mono1);
+}
+
+.light a {
+  color: var(--arrow-c-invert-mono1);
+  border-bottom: 1px solid var(--arrow-c-invert-mono1);
 }
 
 /* default template */

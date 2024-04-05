@@ -5,7 +5,7 @@ import {
   optionalSelect,
   sectionTagTemplates,
   collectionNameTemplates,
-  footerButton,
+  footerButton
 } from "../../../../storybook";
 import TwoColFourStories from "./index";
 import Readme from "./README.md";
@@ -26,7 +26,7 @@ const sectionTagDefaultvalue = "#3a9fdd";
 
 const borderTemplate = {
   default: "",
-  border: "bottom",
+  border: "bottom"
 };
 
 const footerSlot = () => {
@@ -38,9 +38,9 @@ withStore(
   {
     qt: {
       config: {
-        "cdn-image": "thumbor-stg.assettype.com",
-      },
-    },
+        "cdn-image": "thumbor-stg.assettype.com"
+      }
+    }
   },
   Readme
 )
@@ -61,7 +61,7 @@ withStore(
       showRowTitle: boolean("Row title", true),
       footerSlotConfig: { footerSlot: footerSlot },
       showButton: boolean("Show button", true),
-      showReadTime: boolean("Read time", true),
+      showReadTime: boolean("Read time", true)
     };
 
     return <TwoColFourStories collection={collection} config={contextConfig} />;

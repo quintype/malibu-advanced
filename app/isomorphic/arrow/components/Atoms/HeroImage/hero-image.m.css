@@ -1,11 +1,12 @@
 @custom-media --viewport-medium (width >= 768px);
 
 .hero-image {
-  margin: var(--arrow-spacing-xs) 0;
+  margin-bottom: var(--arrow-spacing-xs);
   padding-right: 0;
   flex-grow: 1;
   position: relative;
 }
+
 .right-padding {
   margin-bottom: 0;
   padding-right: var(--arrow-spacing-s);
@@ -69,4 +70,32 @@ html[dir="rtl"] {
   left: 0;
   right: 0;
   height: 100%;
+}
+
+.image-wrapper {
+  position: relative;
+}
+
+.icon-wrapper {
+  position: absolute;
+  top: var(--arrow-spacing-xxs);
+  right: var(--arrow-spacing-xxs);
+  width: 95%;
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+.icon-wrapper svg {
+  max-width: var(--arrow-fs-xxl);
+  min-width: var(--arrow-spacing-20);
+}
+
+html[dir="rtl"] {
+  .icon-wrapper {
+    position: absolute;
+    top: 4px;
+    right: 0;
+    left: 4px;
+    width: unset;
+  }
 }

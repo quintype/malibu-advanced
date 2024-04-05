@@ -12,9 +12,9 @@ withStore(
     qt: {
       config: {
         "cdn-image": "thumbor-stg.assettype.com",
-        mountAt: "/sub-directory",
-      },
-    },
+        mountAt: "/sub-directory"
+      }
+    }
   },
   Readme
 )

@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { useDispatch, useSelector } from "react-redux";
-import get from "lodash/get";
+import get from "lodash.get";
 
 import { collectionToStories } from "@quintype/components";
 import { CollectionName } from "../../Atoms/CollectionName";
@@ -10,10 +10,18 @@ import { SliderHorizontalCard } from "../../Molecules/SliderHorizontalCard";
 import { StateProvider } from "../../SharedContext";
 import { getTextColor, getNumberOfStoriesToShow, generateNavigateSlug, navigateTo } from "../../../utils/utils";
 import { ScrollSnap } from "../../Atoms/ScrollSnap";
+import { roundedCornerClass } from "../../../constants";
 
 import "./half-screen-slider.m.css";
 
 const HalfScreenSlider = ({ collection, config = {} }) => {
+  const dispatch = useDispatch();
+  const qtConfig = useSelector((state) => get(state, ["qt", "config"], {}));
+
+  const items = collectionToStories(collection);
+  if (items.length < 1) {
+    return null;
+  }
   const {
     collectionNameBorderColor = "",
     borderColor = "",
@@ -25,36 +33,34 @@ const HalfScreenSlider = ({ collection, config = {} }) => {
     footerSlotConfig = {},
     navigationArrows = true,
     slideIndicator = "none",
-    isInfinite = false,
+    isInfinite = false
   } = config;
   const { footerSlot } = footerSlotConfig;
-  const items = collectionToStories(collection);
   const textColor = getTextColor(theme);
   const isBorderEnable = border === "full" ? "border" : "";
-  if (items.length < 1) {
-    return null;
-  }
 
   const footerSlotComp = footerSlot ? footerSlot() : null;
   const showNumberOfStoriesToShow = getNumberOfStoriesToShow(numberOfStoriesToShow);
 
-  const dispatch = useDispatch();
-  const qtConfig = useSelector((state) => get(state, ["qt", "config"], {}));
   const url = generateNavigateSlug(collection, qtConfig);
+
+  const enableRoundedCorners = useSelector((state) =>
+    get(qtConfig, ["pagebuilder-config", "general", "enableRoundedCorners"], false)
+  );
+  const roundedCorners = isBorderEnable && enableRoundedCorners ? roundedCornerClass : "";
 
   return (
     <div
       className="full-width-with-padding arrow-component"
       data-test-id="half-screen-slider"
-      style={{ backgroundColor: theme, color: textColor }}
-    >
+      style={{ backgroundColor: theme || "initial" }}>
       <div styleName="half-screen-slider">
         <CollectionName
           collection={collection}
           collectionNameTemplate={collectionNameTemplate}
           collectionNameBorderColor={collectionNameBorderColor}
         />
-        <div styleName={`wrapper ${isBorderEnable} ${textColor}`}>
+        <div className={roundedCorners} styleName={`wrapper ${isBorderEnable} ${textColor}`}>
           <ScrollSnap isArrow={navigationArrows} slideIndicator={slideIndicator} isInfinite={isInfinite}>
             {items.slice(0, showNumberOfStoriesToShow).map((story, index) => {
               return (
@@ -101,5 +107,5 @@ HalfScreenSlider.propTypes = {
   collectionTemplate: PropTypes.string,
   collectionNameBorderColor: PropTypes.string,
   // section tag border color
-  borderColor: PropTypes.string,
+  borderColor: PropTypes.string
 };

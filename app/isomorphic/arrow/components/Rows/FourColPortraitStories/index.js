@@ -7,7 +7,7 @@ import { collectionToStories } from "@quintype/components";
 
 import { CollectionName } from "../../Atoms/CollectionName";
 import { LoadmoreButton } from "../../Atoms/Loadmore";
-import { generateNavigateSlug, getTextColor, navigateTo } from "../../../utils/utils";
+import { generateNavigateSlug, navigateTo } from "../../../utils/utils";
 import { StateProvider } from "../../SharedContext";
 import { ProgressiveHydration } from "../../../hydration-component";
 import { LoadMoreTarget } from "../../Atoms/LoadMoreTarget";
@@ -28,7 +28,7 @@ const FourColPortraitStories = ({
   getMoreStories,
   isLoadMoreVisible,
   isLoading,
-  isolatedLoadMore,
+  isolatedLoadMore
 }) => {
   const storyItems = collectionToStories(collection);
 
@@ -44,12 +44,11 @@ const FourColPortraitStories = ({
     footerButton = "",
     customCollectionName,
     navigate = true,
-    subsequentLoadCount = 4,
+    subsequentLoadCount = 4
   } = config;
 
   const { footerSlot } = footerSlotConfig;
   const footerSlotComp = typeof footerSlot === "function" ? footerSlot() : null;
-  const textColor = getTextColor(theme);
 
   const dispatch = useDispatch();
   const qtConfig = useSelector((state) => get(state, ["qt", "config"], {}));
@@ -64,6 +63,7 @@ const FourColPortraitStories = ({
           componentName={"FourColPortraitStories"}
           offset={storyItems.length}
           limit={subsequentLoadCount}
+          theme={theme}
         />
       );
     }
@@ -87,8 +87,7 @@ const FourColPortraitStories = ({
     <div
       className="full-width-with-padding arrow-component"
       data-test-id="four-col-portrait-stories"
-      style={{ backgroundColor: theme, color: textColor }}
-    >
+      style={{ backgroundColor: theme || "initial" }}>
       <div styleName="four-col-portrait">
         <CollectionName
           collection={collection}
@@ -107,6 +106,7 @@ const FourColPortraitStories = ({
                 config={Object.assign({ showSection: false, showAuthor: false, showReadTime: false }, config)}
                 borderColor={borderColor}
                 key={`story-card-${index}`}
+                collectionId={collection.id}
               />
             );
           })}
@@ -129,18 +129,18 @@ FourColPortraitStories.propTypes = {
     collectionNameTemplate: PropTypes.string,
     footerButton: PropTypes.string,
     collectionNameBorderColor: PropTypes.string,
-    subsequentLoadCount: PropTypes.number,
+    subsequentLoadCount: PropTypes.number
   }),
   getMoreStories: PropTypes.func,
   isLoadMoreVisible: PropTypes.bool,
   isLoading: PropTypes.bool,
-  isolatedLoadMore: PropTypes.bool,
+  isolatedLoadMore: PropTypes.bool
 };
 
 FourColPortraitStories.defaultProps = {
   getMoreStories: () => {},
   isLoadMoreVisible: true,
-  isLoading: false,
+  isLoading: false
 };
 
 export default StateProvider(FourColPortraitStories);

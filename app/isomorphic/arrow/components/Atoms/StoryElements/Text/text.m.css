@@ -1,5 +1,4 @@
-/* eslint-disable scss/at-rule-no-unknown */
-@value viewports: "../../../../../../assets/arrow/stylesheets/viewports.m.css";
+@value viewports: "../../../../../assets/stylesheets/viewports.m.css";
 @value mobile from viewports;
 
 .promotionalMessage p {
@@ -20,17 +19,17 @@
   }
 }
 
-.promotionalMessage a,
-.textElement a {
+.promotionalMessage a {
   color: var(--textElementHyperlinkColor);
 }
 
-.textElement a:hover {
+.textElement a {
+  color: var(--textElementHyperlinkColor);
   border-bottom: 1px solid var(--textElementHyperlinkColor);
   transition: border 0.3s ease;
 }
 
-.textElement.light p {
+.textElement.light {
   color: var(--arrow-c-invert-mono2);
 }
 
@@ -51,9 +50,9 @@
 .textElement ul,
 .textElement ol {
   list-style: initial;
-  padding: var(--arrow-spacing-m) 0 0 var(--arrow-spacing-l);
+  padding: var(--arrow-spacing-m) var(--arrow-spacing-xl) 0 var(--arrow-spacing-l);
   @media (min-width: mobile) {
-    padding: var(--arrow-spacing-m) 0 0 var(--arrow-spacing-xl);
+    padding: var(--arrow-spacing-m) var(--arrow-spacing-xl) 0 var(--arrow-spacing-xl);
   }
 }
 
@@ -61,11 +60,21 @@
   list-style: auto;
 }
 
+.textElement li {
+  font-size: var(--arrow-fs-m);
+  margin-bottom: 15px;
+}
+
+.textElement ul li p,
+.textElement ol li p {
+  margin-bottom: unset;
+}
+
 .textElement :global .cta-anchor {
   background-color: var(--arrow-c-brand1);
   color: var(--arrow-c-light);
   border-radius: var(--arrow-spacing-xxs);
-  box-shadow: 0 var(--arrow-spacing-xxs) var(-arrow-spacing-xs) 0 var(--arrow-c-mono6);
+  box-shadow: 0 var(--arrow-spacing-xxs) var(--arrow-spacing-xs) 0 var(--arrow-c-mono6);
   font-size: var(--arrow-fs-s);
   padding: var(--arrow-spacing-s) var(--arrow-spacing-m);
   display: block;

@@ -13,16 +13,16 @@ withStore(
     qt: {
       config: {
         "cdn-image": "thumbor-stg.assettype.com",
-        mountAt: "/sub-directory",
-      },
-    },
+        mountAt: "/sub-directory"
+      }
+    }
   },
   Readme
 ).add("Key Events", () => {
   const config = {
     theme: color("Color", "#ffffff"),
     initialLoadCount: text("Initial Load Count", 4),
-    buttonText: text("Button text", "Load More"),
+    buttonText: text("Button text", "Load More")
   };
   return <KeyEvents story={story} config={config} />;
 });

@@ -6,7 +6,7 @@ import {
   optionalSelect,
   collectionNameTemplates,
   footerButton,
-  sectionTagTemplates,
+  sectionTagTemplates
 } from "../../../../storybook";
 import Readme from "./README.md";
 import ThreeColTwelveStories from "./index";
@@ -23,9 +23,9 @@ withStore(
   {
     qt: {
       config: {
-        "cdn-image": "thumbor-stg.assettype.com",
-      },
-    },
+        "cdn-image": "thumbor-stg.assettype.com"
+      }
+    }
   },
   Readme
 )
@@ -44,7 +44,7 @@ withStore(
       buttonText: text("Footer text", "Read More"),
       showButton: boolean("Show button", true),
       showReadTime: boolean("Read time", true),
-      slotConfig: [{ type: "story", component: configurableSlot }],
+      slotConfig: [{ type: "story", component: configurableSlot }]
     };
 
     return <ThreeColTwelveStories collection={collection} config={contextConfig} />;

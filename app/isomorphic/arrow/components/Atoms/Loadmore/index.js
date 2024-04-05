@@ -10,7 +10,7 @@ export const LoadmoreButton = ({
   template = "SubsequentLoadCount",
   onClick,
   navigate,
-  qtConfig,
+  qtConfig
 }) => {
   const { showButton = true, buttonText = "Read More", theme = "", customUrlPath = "" } = config;
   if (!showButton) return null;
@@ -37,5 +37,5 @@ LoadmoreButton.propTypes = {
   config: PropTypes.object,
   onClick: PropTypes.func,
   navigate: PropTypes.func,
-  qtConfig: PropTypes.object,
+  qtConfig: PropTypes.object
 };

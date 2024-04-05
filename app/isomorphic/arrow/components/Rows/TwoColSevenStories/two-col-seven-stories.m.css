@@ -106,7 +106,14 @@
       }
     }
     :global .arr--content-wrapper {
-      margin-bottom: var(--arrow-spacing-l);
+      @media (--viewport-medium) {
+        margin-bottom: var(--arrow-spacing-l);
+      }
+    }
+    :global .arr--story-card {
+      @media (--viewport-small) {
+        margin-bottom: var(--arrow-spacing-l);
+      }
     }
   }
 

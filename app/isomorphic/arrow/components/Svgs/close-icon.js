@@ -11,5 +11,5 @@ export const CloseIcon = ({ color = "#333" }) => {
   );
 };
 CloseIcon.propTypes = {
-  color: PropTypes.string,
+  color: PropTypes.string
 };

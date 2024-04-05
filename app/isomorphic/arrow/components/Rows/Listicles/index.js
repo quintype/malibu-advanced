@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import PropTypes from "prop-types";
-import get from "lodash/get";
+import get from "lodash.get";
 import { collectionToStories } from "@quintype/components";
 
 import { CollectionName } from "../../Atoms/CollectionName";
@@ -13,28 +13,10 @@ import { Headline } from "../../Atoms/Headline";
 import "./listicles.m.css";
 
 const Listicles = ({ collection, config = {} }) => {
-  const {
-    collectionNameBorderColor = "",
-    theme = "",
-    collectionNameTemplate = "",
-    slotConfig = null,
-    localizedNumbers = null,
-  } = config;
-
   const [subCollectionStories, handleApiData] = useState([]);
   const [cachedStories, updateCachedStories] = useState({});
   const [active, handleActive] = useState(0);
   const [loading, handleLoading] = useState(true);
-
-  const getFilteredCollection = get(collection, ["items"], []).filter(
-    (collections) => collections.type === "collection"
-  );
-
-  if (getFilteredCollection.length < 1) {
-    return null;
-  }
-
-  const filteredCollectionids = getFilteredCollection.map((subCol) => subCol.id);
 
   const memoizeStories = (id, data) => {
     updateCachedStories((cachedStories) => ({ ...cachedStories, [id]: data }));
@@ -45,7 +27,7 @@ const Listicles = ({ collection, config = {} }) => {
     try {
       let data = {};
       if (!(id in cachedStories)) {
-        const res = await axios.get(`/api/v1/collections/${id}?limit=9`);
+        let res = await axios.get(`/api/v1/collections/${id}?limit=9`);
         data = res.data;
       } else data = cachedStories[id];
       memoizeStories(id, data);
@@ -63,13 +45,31 @@ const Listicles = ({ collection, config = {} }) => {
     fetchSubCollectionData(id);
   }, []);
 
+  const getFilteredCollection = get(collection, ["items"], []).filter(
+    (collections) => collections.type === "collection"
+  );
+
+  if (getFilteredCollection.length < 1) {
+    return null;
+  }
+
+  const {
+    collectionNameBorderColor = "",
+    theme = "",
+    collectionNameTemplate = "",
+    slotConfig = null,
+    localizedNumbers = null
+  } = config;
+
+  const filteredCollectionids = getFilteredCollection.map((subCol) => subCol.id);
+
   const items = subCollectionStories.slice(0, 9);
   const textColor = getTextColor(theme);
 
   const openChildCollectionItems = (event, index, slug) => {
     event.stopPropagation();
     fetchSubCollectionData(slug);
-    const activeIndex = active === index ? 0 : index;
+    let activeIndex = active === index ? 0 : index;
     handleActive(activeIndex);
   };
 
@@ -109,8 +109,7 @@ const Listicles = ({ collection, config = {} }) => {
     <div
       className="full-width-with-padding arrow-component"
       data-test-id="collection-filter"
-      style={{ backgroundColor: theme, color: textColor }}
-    >
+      style={{ backgroundColor: theme || "initial" }}>
       <div styleName={`wrapper ${getCustomStyleName}`}>
         <CollectionName
           collection={collection}
@@ -123,12 +122,10 @@ const Listicles = ({ collection, config = {} }) => {
               <div
                 key={index}
                 className={index === active ? "open-subchild" : ""}
-                styleName={`child-collection-wrapper ${index === active ? "open-subchild" : ""}`}
-              >
+                styleName={`child-collection-wrapper ${index === active ? "open-subchild" : ""}`}>
                 <div
                   styleName={`child-collection ${textColor}`}
-                  onClick={(event) => openChildCollectionItems(event, index, subCollections.id)}
-                >
+                  onClick={(event) => openChildCollectionItems(event, index, subCollections.id)}>
                   {subCollections.name}
                 </div>
               </div>
@@ -154,12 +151,12 @@ Listicles.propTypes = {
     // configure ad slot widget and story
     slotConfig: PropTypes.func,
     collectionNameTemplate: PropTypes.string,
-    collectionNameBorderColor: PropTypes.string,
-  }),
+    collectionNameBorderColor: PropTypes.string
+  })
 };
 
 Listicles.defaultProps = {
   theme: "#ffffff",
   slotConfig: "story",
-  border: "",
+  border: ""
 };

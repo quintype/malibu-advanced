@@ -1,4 +1,5 @@
 @custom-media --viewport-medium (width >= 768px);
+@custom-media --viewport-small (width < 768px);
 
 .author-timestamp-wrapper {
   display: flex;
@@ -44,8 +45,8 @@
     width: calc(100% - 32px);
     background-color: var(--arrow-c-light);
     padding: var(--arrow-spacing-m);
-    position: absolute;
-    bottom: 0;
+    position: relative;
+    top: -56px;
   }
 }
 .content-overlap img {
@@ -57,11 +58,11 @@
 
 /* TODO: Refactor targetting of child  */
 .horizontal-card > div:first-child {
-  flex-basis: 30%;
+  flex-basis: 40%;
 }
 
 .horizontal-card > div:nth-child(2) {
-  flex-basis: 70%;
+  flex-basis: 60%;
 }
 
 .border-full.light {
@@ -88,16 +89,12 @@
 .center-align {
   display: flex;
   flex-direction: column;
-  align-items: left;
   @media (--viewport-medium) {
     align-items: center;
     text-align: center;
   }
 }
 
-.content-bottom {
-  /* padding: 0 0 0 8px; */
-}
 .content-full,
 .content-boxShadow {
   padding: var(--arrow-spacing-xs) var(--arrow-spacing-m);
@@ -124,13 +121,13 @@
   }
 }
 .horizontal-mob .hero-image {
-  flex-basis: 30%;
+  flex-basis: 40%;
   @media (--viewport-medium) {
     flex-basis: 100%;
   }
 }
 .horizontal-mob .content {
-  flex-basis: 70%;
+  flex-basis: 60%;
   @media (--viewport-medium) {
     flex-basis: 100%;
   }
@@ -150,9 +147,44 @@
 }
 
 .horizontal-image-last > div:first-child {
-  flex-basis: 30%;
+  flex-basis: 40%;
 }
 
 .horizontal-image-last > div:nth-child(2) {
-  flex-basis: 70%;
+  flex-basis: 60%;
+}
+
+.content-overlap {
+  height: auto;
+}
+
+.border-full.horizontal-card,
+.border-full.horizontal-mob {
+  @media (--viewport-small) {
+    padding: 6px var(--arrow-spacing-xs) var(--arrow-spacing-xs);
+  }
+}
+
+.border-full .content {
+  @media (--viewport-small) {
+    padding: 0 var(--arrow-spacing-s) var(--arrow-spacing-s);
+  }
+}
+
+html[dir="ltr"] {
+  .border-full.horizontal-mob :global(.arr--hero-image),
+  .horizontal-card.border-full :global(.arr--hero-image) {
+    @media (--viewport-small) {
+      padding: 2px var(--arrow-spacing-xs) 0 0;
+    }
+  }
+}
+
+html[dir="rtl"] {
+  .border-full.horizontal-mob :global(.arr--hero-image),
+  .horizontal-card.border-full :global(.arr--hero-image) {
+    @media (--viewport-small) {
+      padding: 2px 0 0 var(--arrow-spacing-xs);
+    }
+  }
 }

@@ -8,15 +8,22 @@ import { StorycardContent } from "../../Molecules/StorycardContent";
 import { StoryCard } from "../../Molecules/StoryCard";
 import { StateProvider } from "../../SharedContext";
 import { generateNavigateSlug, getTextColor, navigateTo } from "../../../utils/utils";
-
+import { roundedCornerClass } from "../../../constants";
 import { LoadmoreButton } from "../../Atoms/Loadmore";
 
 import "./two-col-four-story.m.css";
 import { useDispatch, useSelector } from "react-redux";
-import get from "lodash/get";
+import get from "lodash.get";
 
 export const TwoColFourStories = ({ collection, config = {} }) => {
+  const dispatch = useDispatch();
+  const qtConfig = useSelector((state) => get(state, ["qt", "config"], {}));
+  const enableRoundedCorners = get(qtConfig, ["pagebuilder-config", "general", "enableRoundedCorners"], false);
+  const roundedCorners = enableRoundedCorners ? roundedCornerClass : "";
+
   const items = collectionToStories(collection);
+  if (!items.length) return null;
+
   const {
     border = "",
     borderColor = "",
@@ -24,18 +31,12 @@ export const TwoColFourStories = ({ collection, config = {} }) => {
     theme = "",
     collectionNameTemplate = "",
     footerSlotConfig = {},
-    footerButton = "",
+    footerButton = ""
   } = config;
   const { footerSlot } = footerSlotConfig;
   const borderStyle = border === "bottom" ? "border-box" : "";
   const firstCardBorderStyle = border === "bottom" ? "first-card-border-box" : "";
 
-  if (items.length < 1) {
-    return null;
-  }
-
-  const dispatch = useDispatch();
-  const qtConfig = useSelector((state) => get(state, ["qt", "config"], {}));
   const url = generateNavigateSlug(collection, qtConfig);
 
   const textColor = getTextColor(theme);
@@ -44,34 +45,23 @@ export const TwoColFourStories = ({ collection, config = {} }) => {
     <div
       className="full-width-with-padding arrow-component"
       data-test-id="two-col-four-stories"
-      style={{ backgroundColor: theme, color: textColor }}
-    >
-      <div styleName="two-col-four-story" style={{ backgroundColor: theme, color: textColor }}>
+      style={{ backgroundColor: theme || "initial" }}>
+      <div styleName="two-col-four-story" style={{ backgroundColor: theme || "initial" }}>
         <CollectionName
           collection={collection}
           collectionNameTemplate={collectionNameTemplate}
           collectionNameBorderColor={collectionNameBorderColor}
         />
         <div styleName="wrapper">
-          <div styleName={`first-card ${borderStyle} ${textColor}`}>
+          <div className={roundedCorners} styleName={`first-card ${borderStyle} ${textColor}`}>
             <StoryCard
               story={items[0]}
               theme={theme}
               headerLevel="3"
               bgImgContentOverlap
-              aspectRatio={[
-                [16, 9],
-                [16, 9],
-              ]}
-              config={config}
-            >
-              <HeroImage
-                story={items[0]}
-                aspectRatio={[
-                  [16, 9],
-                  [16, 9],
-                ]}
-              />
+              aspectRatio={[[16, 9], [16, 9]]}
+              config={config}>
+              <HeroImage story={items[0]} aspectRatio={[[16, 9], [16, 9]]} />
               <StorycardContent
                 styleName={firstCardBorderStyle}
                 story={items[0]}
@@ -80,11 +70,13 @@ export const TwoColFourStories = ({ collection, config = {} }) => {
                 isHorizontal
                 borderColor={borderColor}
                 config={config}
+                collectionId={collection.id}
+                roundedCorners={roundedCorners}
               />
             </StoryCard>
           </div>
 
-          <div styleName={`storyCards ${borderStyle} ${textColor}`}>
+          <div className={roundedCorners} styleName={`storyCards ${borderStyle} ${textColor}`}>
             {items.slice(1, 4).map((story, index) => {
               if (index === 2) {
                 return (
@@ -94,26 +86,16 @@ export const TwoColFourStories = ({ collection, config = {} }) => {
                       theme={theme}
                       headerLevel="4"
                       isHorizontal
-                      aspectRatio={[
-                        [16, 9],
-                        [16, 9],
-                      ]}
-                      config={config}
-                    >
-                      <HeroImage
-                        story={story}
-                        isHorizontal
-                        aspectRatio={[
-                          [16, 9],
-                          [16, 9],
-                        ]}
-                      />
+                      aspectRatio={[[16, 9], [16, 9]]}
+                      config={config}>
+                      <HeroImage story={story} isHorizontal aspectRatio={[[16, 9], [16, 9]]} />
                       <StorycardContent
                         theme={theme}
                         story={story}
-                        isHorizontal
                         borderColor={borderColor}
                         config={config}
+                        collectionId={collection.id}
+                        roundedCorners={roundedCorners}
                       />
                     </StoryCard>
                   </div>
@@ -127,26 +109,16 @@ export const TwoColFourStories = ({ collection, config = {} }) => {
                     headerLevel="4"
                     isHorizontal
                     border={border}
-                    aspectRatio={[
-                      [16, 9],
-                      [16, 9],
-                    ]}
-                    config={config}
-                  >
-                    <HeroImage
-                      story={story}
-                      isHorizontal
-                      aspectRatio={[
-                        [16, 9],
-                        [16, 9],
-                      ]}
-                    />
+                    aspectRatio={[[16, 9], [16, 9]]}
+                    config={config}>
+                    <HeroImage story={story} isHorizontal aspectRatio={[[16, 9], [16, 9]]} />
                     <StorycardContent
                       theme={theme}
                       story={story}
                       isHorizontal
                       borderColor={borderColor}
                       config={config}
+                      collectionId={collection.id}
                     />
                   </StoryCard>
                 </div>
@@ -179,6 +151,6 @@ TwoColFourStories.propTypes = {
     border: PropTypes.string,
     footerButton: PropTypes.string,
     collectionNameTemplate: PropTypes.string,
-    collectionNameBorderColor: PropTypes.string,
-  }),
+    collectionNameBorderColor: PropTypes.string
+  })
 };

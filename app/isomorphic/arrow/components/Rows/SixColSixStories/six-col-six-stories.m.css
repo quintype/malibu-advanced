@@ -1,5 +1,4 @@
-/* eslint-disable scss/at-rule-no-unknown */
-@value viewports: "../../../../../assets/arrow/stylesheets/viewports.m.css";
+@value viewports: "../../../../assets/stylesheets/viewports.m.css";
 @value mobile from viewports;
 @value desktop from viewports;
 
@@ -73,4 +72,20 @@
 
 .content-wrapper {
   height: 100%;
+}
+
+.around-border-wrapper {
+  grid-column-gap: 10px;
+}
+
+.card-wrapper.around-border.light {
+  padding: 10px;
+  margin-bottom: 10px;
+  border: solid 1px var(--light-border);
+}
+
+.card-wrapper.around-border.dark {
+  padding: 10px;
+  margin-bottom: 10px;
+  border: solid 1px var(--dark-border);
 }

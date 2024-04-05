@@ -6,6 +6,9 @@ import { HeroImage } from "../../Atoms/HeroImage/index";
 import { SectionTag } from "../../Atoms/SectionTag/index";
 import { getTextColor, isEmpty, rgbToHex } from "../../../utils/utils";
 import { StateProvider } from "../../SharedContext";
+import { useSelector } from "react-redux";
+import { roundedCornerClass } from "../../../constants";
+import get from "lodash.get";
 
 import PropTypes from "prop-types";
 
@@ -28,6 +31,10 @@ const StoryCardBase = ({
   prefix,
   config,
   isHorizontalWithImageLast,
+  collectionId,
+  widths,
+  isFullWidthImage = false,
+  isCircularImage = false
 }) => {
   if (!story || isEmpty(story)) return <div />;
   const borderOptions = ["default", "full", "bottom", "boxShadow"];
@@ -43,6 +50,12 @@ const StoryCardBase = ({
   const textColor = getTextColor(theme);
   const horizontalMobileClasses = isHorizontalMobile ? "horizontal-mob" : "";
 
+  const enableRoundedCorners = useSelector((state) =>
+    get(state, ["qt", "config", "pagebuilder-config", "general", "enableRoundedCorners"], false)
+  );
+
+  const roundedCorners = enableRoundedCorners ? roundedCornerClass : "";
+
   const defaultStorycard = (
     <DefaultStoryCard
       story={story}
@@ -57,15 +70,18 @@ const StoryCardBase = ({
       prefix={prefix}
       config={config}
       isHorizontalWithImageLast={isHorizontalWithImageLast}
+      collectionId={collectionId}
+      widths={widths}
+      isFullWidthImage={isFullWidthImage}
+      isCircularImage={isCircularImage}
     />
   );
   return (
     <div
-      className="arr--story-card"
+      className={`arr--story-card ${roundedCorners}`}
       data-test-id="story-card"
-      style={{ backgroundColor: theme, color: textColor }}
-      styleName={`card ${horizontalCardStyle} ${borderTemplate} ${textColor} ${bgImageClasses} ${bgImgContentOverlapClass} ${horizontalMobileClasses}`}
-    >
+      style={{ backgroundColor: theme || "initial" }}
+      styleName={`card ${horizontalCardStyle} ${borderTemplate} ${textColor} ${bgImageClasses} ${bgImgContentOverlapClass} ${horizontalMobileClasses}`}>
       {children || defaultStorycard}
     </div>
   );
@@ -84,6 +100,10 @@ const DefaultStoryCard = ({
   prefix,
   isHorizontalWithImageLast,
   config,
+  collectionId,
+  widths,
+  isFullWidthImage = false,
+  isCircularImage = false
 }) => {
   const alignment = centerAlign ? "center-align" : "";
   const SectionTagborderColor = rgbToHex(borderColor);
@@ -98,6 +118,9 @@ const DefaultStoryCard = ({
           isHorizontal
           isHorizontalMobile={isHorizontalMobile}
           aspectRatio={aspectRatio}
+          widths={widths}
+          isFullWidthImage={isFullWidthImage}
+          isCircularImage={isCircularImage}
         />
       ) : isHorizontalWithImageLast ? (
         <HeroImage
@@ -106,9 +129,20 @@ const DefaultStoryCard = ({
           isHorizontalWithImageLast
           isHorizontalMobile={isHorizontalMobile}
           aspectRatio={aspectRatio}
+          widths={widths}
+          isFullWidthImage={isFullWidthImage}
+          isCircularImage={isCircularImage}
         />
       ) : (
-        <HeroImage story={story} config={config} isHorizontalMobile={isHorizontalMobile} aspectRatio={aspectRatio} />
+        <HeroImage
+          story={story}
+          config={config}
+          isHorizontalMobile={isHorizontalMobile}
+          aspectRatio={aspectRatio}
+          widths={widths}
+          isFullWidthImage={isFullWidthImage}
+          isCircularImage={isCircularImage}
+        />
       )}
       <div className="arr--story-content" styleName={`content ${alignment}`}>
         <SectionTag story={story} borderColor={SectionTagborderColor} />
@@ -119,6 +153,7 @@ const DefaultStoryCard = ({
           isBottom
           prefix={prefix}
           hideAuthorImage={hideAuthorImage}
+          collectionId={collectionId}
         />
         <Subheadline story={story} />
       </div>
@@ -140,6 +175,10 @@ DefaultStoryCard.propTypes = {
   prefix: PropTypes.string,
   config: PropTypes.object,
   isHorizontalWithImageLast: PropTypes.bool,
+  collectionId: PropTypes.number,
+  widths: PropTypes.array,
+  isFullWidthImage: PropTypes.bool,
+  isCircularImage: PropTypes.bool
 };
 
 StoryCardBase.propTypes = {
@@ -170,6 +209,10 @@ StoryCardBase.propTypes = {
   prefix: PropTypes.string,
   config: PropTypes.object,
   isHorizontalWithImageLast: PropTypes.bool,
+  collectionId: PropTypes.number,
+  widths: PropTypes.array,
+  isFullWidthImage: PropTypes.bool,
+  isCircularImage: PropTypes.bool
 };
 
 StoryCardBase.defaultProps = {
@@ -180,6 +223,8 @@ StoryCardBase.defaultProps = {
   centerAlign: false,
   borderColor: "",
   isHorizontalWithImageLast: false,
+  isFullWidthImage: false,
+  isCircularImage: false
 };
 
 export const StoryCard = StateProvider(StoryCardBase);

@@ -12,8 +12,7 @@ const TagIntroductionCard = ({ data, config = {} }) => {
     <div
       className="full-width-with-padding arrow-component"
       styleName={`wrapper ${textColor}`}
-      style={{ backgroundColor: theme, color: textColor }}
-    >
+      style={{ backgroundColor: theme || "initial" }}>
       <h1 styleName={textColor}>{tagName}</h1>
       <div styleName={`description ${textColor}`}>{tagDescription}</div>
     </div>
@@ -22,6 +21,6 @@ const TagIntroductionCard = ({ data, config = {} }) => {
 
 TagIntroductionCard.propTypes = {
   data: PropTypes.shape({ tagName: PropTypes.string, tagDescription: PropTypes.string }),
-  config: PropTypes.shape({ theme: PropTypes.string }),
+  config: PropTypes.shape({ theme: PropTypes.string })
 };
 export default TagIntroductionCard;

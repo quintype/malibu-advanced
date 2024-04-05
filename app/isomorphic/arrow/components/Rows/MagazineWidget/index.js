@@ -9,6 +9,7 @@ import {
   generateNavigateSlug,
   navigateTo,
   timestampToFormat,
+  getTimeStampConfig
 } from "../../../utils/utils";
 import "../MagazineHeaderCard/magazine-cards.m.css";
 import { StateProvider } from "../../SharedContext";
@@ -19,10 +20,10 @@ import { Headline } from "../../Atoms/Headline";
 import { AuthorWithTime } from "../../Atoms/AuthorWithTimestamp";
 import { MagazineCoverImageCard } from "../../Atoms/MagazineCoverImage";
 import { useDispatch, useSelector } from "react-redux";
-import get from "lodash/get";
+import get from "lodash.get";
 
 const MagazineWidget = ({ collection = {}, config = {} }) => {
-  const { "created-at": createdAt, "collection-date": issueDate, summary, items, metadata = {} } = collection;
+  const { "created-at": createdAt, "collection-date": issueDate, summary, items, metadata = {}, id } = collection;
   const { theme = "", footerButton = "", border, localizationConfig = {}, navigate = true, magazineSlug = "" } = config;
   const textColor = getTextColor(theme);
   const dispatch = useDispatch();
@@ -34,14 +35,12 @@ const MagazineWidget = ({ collection = {}, config = {} }) => {
 
   const url = generateNavigateSlug(collection, {
     ...qtConfig,
-    ...updatedConfig,
+    ...updatedConfig
   });
   const sliceValue = 4;
   const isTablet = clientWidth("tablet");
-  const timeStampConfig = {
-    isUpperCase: true,
-    disableMeridiem: true,
-  };
+  const timeStampConfig = getTimeStampConfig(qtConfig);
+
   const date = issueDate || createdAt;
 
   const storyCards = (items) => {
@@ -65,10 +64,10 @@ const MagazineWidget = ({ collection = {}, config = {} }) => {
           return (
             <>
               <StoryCard story={story} border={borderSettings} isHorizontal config={config}>
-                <HeroImage story={story} isHorizontal aspectRatio={[[4, 3]]} />
+                <HeroImage story={story} isHorizontal aspectRatio={[[16, 9]]} initialAltImage={true} />
                 <StorycardContent story={story} config={config}>
                   <Headline story={story} premiumStoryIconConfig={config} />
-                  <AuthorWithTime config={localizationConfig} story={story} prefix="By" />
+                  <AuthorWithTime config={localizationConfig} story={story} prefix="By" collectionId={id} />
                 </StorycardContent>
               </StoryCard>
             </>
@@ -95,9 +94,8 @@ const MagazineWidget = ({ collection = {}, config = {} }) => {
   return (
     <div
       className="full-width-with-padding arrow-component"
-      style={{ backgroundColor: theme }}
-      data-test-id="magazine-widget"
-    >
+      style={{ backgroundColor: theme || "initial" }}
+      data-test-id="magazine-widget">
       <div className="arr-magazine-widget" styleName="magazine-header widget-button">
         <MagazineCoverImageCard collection={collection} config={updatedConfig} />
         <div styleName="content">
@@ -120,9 +118,9 @@ MagazineWidget.propTypes = {
   collection: PropTypes.shape({
     "created-at": PropTypes.number,
     summary: PropTypes.string,
-    items: PropTypes.array,
+    items: PropTypes.array
   }),
-  config: PropTypes.shape({ theme: PropTypes.string, footerButton: PropTypes.string, border: PropTypes.string }),
+  config: PropTypes.shape({ theme: PropTypes.string, footerButton: PropTypes.string, border: PropTypes.string })
 };
 
 export default StateProvider(MagazineWidget);

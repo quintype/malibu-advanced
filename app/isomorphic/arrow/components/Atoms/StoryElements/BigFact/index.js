@@ -15,8 +15,7 @@ const BigFactBase = ({ element, story, config, ...restProps }) => {
       className="arrow-component arr--bigfact-element"
       data-test-id="bigfact"
       styleName={`bigfact-element ${textInvertColor}`}
-      {...restProps}
-    >
+      {...restProps}>
       <div styleName="content">{content}</div>
       <div styleName={`attribution ${textInvertColor}`} data-test-id="attribution">
         {attribution}
@@ -28,7 +27,7 @@ const BigFactBase = ({ element, story, config, ...restProps }) => {
 BigFactBase.propTypes = {
   element: PropTypes.shape({ metadata: PropTypes.shape({ content: PropTypes.string, attribution: PropTypes.string }) }),
   story: PropTypes.object,
-  config: PropTypes.object,
+  config: PropTypes.object
 };
 
 export const BigFact = withElementWrapper(BigFactBase);

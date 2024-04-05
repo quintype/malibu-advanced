@@ -9,12 +9,12 @@ const collection = generateCollection({ stories: 4 });
 
 const footerButton = {
   NavigateToPage: "NavigateToPage",
-  CustomUrlPath: "CustomUrlPath",
+  CustomUrlPath: "CustomUrlPath"
 };
 
 const border = {
   default: "borderNone",
-  borderBottom: "borderBottom",
+  borderBottom: "borderBottom"
 };
 
 withStore(
@@ -23,9 +23,9 @@ withStore(
     qt: {
       config: {
         "cdn-image": "thumbor-stg.assettype.com",
-        mountAt: "/sub-directory",
-      },
-    },
+        mountAt: "/sub-directory"
+      }
+    }
   },
   Readme
 ).add("Magazine Widget", () => {
@@ -37,7 +37,7 @@ withStore(
     customUrlPath: text("Custom URL", ""),
     showAuthor: boolean("Show Author", true),
     showTime: boolean("Show Time", true),
-    border: optionalSelect("Border settings", border),
+    border: optionalSelect("Border settings", border)
   };
   return <MagazineHeaderCard collection={collection} config={contextConfig} isWidget />;
 });

@@ -1,22 +1,25 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import { Link } from "@quintype/components";
 import { useStateValue } from "../../SharedContext";
-import get from "lodash/get";
-import { getTextColor, isExternalStory, getStoryUrl } from "../../../utils/utils";
+import get from "lodash.get";
+import { getTextColor, isExternalStory, getStoryUrl, getTheme } from "../../../utils/utils";
 import { PremiumStoryIcon } from "../PremiumStoryIcon";
-import LiveIcon from "../../Svgs/liveicon";
 
 import "./headline.m.css";
 
-export const Headline = ({ story, headerLevel, premiumStoryIconConfig = {}, isLink }) => {
+export const Headline = ({
+  story,
+  headerLevel,
+  premiumStoryIconConfig = {},
+  isLink,
+  queryParam = {},
+  layout,
+  enableDarkModePreview = false
+}) => {
   const configData = useStateValue() || {};
-  const {
-    iconColor = "#F7B500",
-    iconStyle = "star",
-    enablePremiumStoryIcon = false,
-    showLiveIcon = false,
-  } = premiumStoryIconConfig;
+  const { iconColor = "#F7B500", iconStyle = "star", enablePremiumStoryIcon = false } = premiumStoryIconConfig;
   const alternateHeadline = get(story, ["alternative", "home", "default", "headline"]);
   const premiumStory = enablePremiumStoryIcon && get(story, ["access"]) === "subscription";
   const headline = alternateHeadline || story.headline;
@@ -36,37 +39,41 @@ export const Headline = ({ story, headerLevel, premiumStoryIconConfig = {}, isLi
         return "6px";
     }
   };
-
-  const textColor = getTextColor(configData.theme);
-  const wrapperClass = premiumStory ? "wrapper" : "";
+  const theme = getTheme(configData, layout, enableDarkModePreview);
+  const textColor = getTextColor(theme);
   const iconSize = "24px";
-
+  const getLiveIconConfig = useSelector((state) => get(state, ["qt", "data", "showLiveIcon"], false));
+  const showLiveIcon = get(premiumStoryIconConfig, ["showLiveIcon"], getLiveIconConfig);
   const enableLiveIcon =
     showLiveIcon && story["story-template"] === "live-blog" && !get(story, ["metadata", "is-closed"], false);
+  const liveIconStyle = premiumStory ? { position: "relative", top: positionHeadline() } : {};
+  const wrapperClass = premiumStory || enableLiveIcon ? "wrapper" : "";
 
   return (
     <div className="arrow-component arr--headline" styleName={wrapperClass} data-test-id="headline">
-      {premiumStory && (
-        <PremiumStoryIcon
-          width={iconSize}
-          height={iconSize}
-          color={iconColor}
-          iconType={iconStyle}
-          positionTop={positionHeadline()}
-        />
+      {(enableLiveIcon || premiumStory) && (
+        <span styleName="icon-wrapper">
+          {premiumStory && (
+            <PremiumStoryIcon
+              width={iconSize}
+              height={iconSize}
+              color={iconColor}
+              iconType={iconStyle}
+              positionTop={positionHeadline()}
+            />
+          )}
+          {enableLiveIcon && <span style={liveIconStyle} styleName="live-icon"></span>}
+        </span>
       )}
       {isLink ? (
-        <Link href={getStoryUrl(story, `/${story.slug}`)} externalLink={isExternalStory(story)} aria-label="headline">
-          <HeaderTag styleName={`headline ${textColor}`}>
-            {enableLiveIcon && <LiveIcon />}
-            {headline}
-          </HeaderTag>
+        <Link
+          href={getStoryUrl(story, `/${story.slug}`, queryParam)}
+          externalLink={isExternalStory(story)}
+          aria-label="headline">
+          <HeaderTag styleName={`headline ${textColor}`}>{headline}</HeaderTag>
         </Link>
       ) : (
-        <HeaderTag styleName={`headline ${textColor}`}>
-          {enableLiveIcon && <LiveIcon />}
-          {headline}
-        </HeaderTag>
+        <HeaderTag styleName={`headline ${textColor}`}>{headline}</HeaderTag>
       )}
     </div>
   );
@@ -80,12 +87,18 @@ Headline.propTypes = {
   premiumStoryIconConfig: PropTypes.shape({
     iconColor: PropTypes.string,
     iconType: PropTypes.string,
-    enablePremiumStoryIcon: PropTypes.bool,
+    enablePremiumStoryIcon: PropTypes.bool
   }),
   isLink: PropTypes.bool,
+  queryParam: PropTypes.shape({
+    utmContent: PropTypes.string
+  }),
+  layout: PropTypes.string,
+  enableDarkModePreview: PropTypes.bool
 };
 
 Headline.defaultProps = {
   headerLevel: "6",
   isLink: true,
+  layout: ""
 };

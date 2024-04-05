@@ -1,5 +1,4 @@
-/* eslint-disable scss/at-rule-no-unknown */
-@value viewports: "../../../../../assets/arrow/stylesheets/viewports.m.css";
+@value viewports: "../../../../assets/stylesheets/viewports.m.css";
 @value mobile from viewports;
 @value desktop from viewports;
 
@@ -49,9 +48,7 @@
     margin-bottom: var(--arrow-spacing-l);
   }
 }
-.card .card-content {
-  margin-left: var(--arrow-spacing-s);
-}
+
 .ad-wrapper {
   align-self: center;
   margin-bottom: var(--arrow-spacing-m);

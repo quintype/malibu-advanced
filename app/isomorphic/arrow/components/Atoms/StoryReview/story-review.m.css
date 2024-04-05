@@ -1,0 +1,27 @@
+.wrapper {
+  display: flex;
+  align-items: center;
+  margin: var(--arrow-spacing-l) 0;
+}
+
+.wrapper:global(.arr--story-review) .title {
+  font-size: var(--arrow-fs-m);
+}
+
+.value {
+  font-style: italic;
+  font-weight: var(--arrow-fw-normal);
+  margin: 0 0 0 var(--arrow-spacing-xxs);
+}
+
+.wrapper:global(.arr--story-review .review-rating) {
+  margin: 0 var(--arrow-spacing-m);
+}
+
+.dark {
+  color: var(--arrow-c-mono2);
+}
+
+.light {
+  color: var(--arrow-c-invert-mono2);
+}

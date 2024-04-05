@@ -1,16 +1,18 @@
-/* eslint-disable scss/at-rule-no-unknown */
-@value viewports: "../../../../../assets/arrow/stylesheets/viewports.m.css";
+@value viewports: "../../../../assets/stylesheets/viewports.m.css";
 @value mobile from viewports;
 @value desktop from viewports;
 
 .two-col-six-stories {
   padding: 0 var(--arrow-spacing-s);
+
   @media (min-width: desktop) {
     padding: 0;
   }
 }
+
 .wrapper {
   margin: var(--arrow-spacing-xs) 0;
+
   @media (min-width: desktop) {
     display: grid;
     grid-template-columns: 2fr 1fr;
@@ -22,30 +24,26 @@
 .first-card {
   margin-bottom: var(--arrow-spacing-xs);
   padding-bottom: var(--arrow-spacing-xs);
+
   @media (min-width: desktop) {
     margin: 0;
-    padding-right: var(--arrow-spacing-l);
     padding-bottom: 0;
   }
 }
 
 .first-card.border.light {
   border-bottom: 1px solid var(--light-border);
+
   @media (min-width: mobile) {
     border-bottom: none;
-  }
-  @media (min-width: desktop) {
-    border-right: 1px solid var(--light-border);
   }
 }
 
 .first-card.border.dark {
   border-bottom: 1px solid var(--dark-border);
+
   @media (min-width: mobile) {
     border-bottom: none;
-  }
-  @media (min-width: desktop) {
-    border-right: 1px solid var(--dark-border);
   }
 }
 
@@ -55,17 +53,16 @@
     grid-template-columns: 1fr 1fr;
     grid-column-gap: var(--arrow-spacing-l);
   }
+
   @media (min-width: desktop) {
     grid-template-columns: 1fr;
   }
 }
 
 .card {
-  :global(.arr--hero-image) {
-    margin-top: var(--arrow-spacing-l);
-  }
   margin-bottom: var(--arrow-spacing-xs);
   padding-bottom: var(--arrow-spacing-xs);
+
   @media (min-width: desktop) {
     padding-bottom: var(--arrow-spacing-xs);
   }
@@ -88,7 +85,8 @@
     bottom: 10px;
     left: 10px;
     z-index: var(--z-index-1);
-    @media (--viewport-small) {
+
+    @media (max-width: mobile) {
       height: 24px;
       width: 24px;
     }
@@ -132,5 +130,45 @@
 
   100% {
     opacity: 0;
+  }
+}
+
+html[dir="rtl"] {
+  .first-card {
+    @media (min-width: desktop) {
+      padding-left: var(--arrow-spacing-l);
+    }
+  }
+
+  .first-card.border.dark {
+    @media (min-width: desktop) {
+      border-left: 1px solid var(--dark-border);
+    }
+  }
+
+  .first-card.border.light {
+    @media (min-width: desktop) {
+      border-left: 1px solid var(--light-border);
+    }
+  }
+}
+
+html[dir="ltr"] {
+  .first-card {
+    @media (min-width: desktop) {
+      padding-right: var(--arrow-spacing-l);
+    }
+  }
+
+  .first-card.border.dark {
+    @media (min-width: desktop) {
+      border-right: 1px solid var(--dark-border);
+    }
+  }
+
+  .first-card.border.light {
+    @media (min-width: desktop) {
+      border-right: 1px solid var(--light-border);
+    }
   }
 }

@@ -1,31 +1,55 @@
 import React from "react";
-import get from "lodash/get";
+import get from "lodash.get";
 import { useSelector } from "react-redux";
 import { useStateValue } from "../../SharedContext";
-import { formatter, getTextColor, getTimeStamp } from "../../../utils/utils";
+import { formatter, getStoryTemplate, getTextColor, getTheme, getTimeStamp } from "../../../utils/utils";
 import PropTypes from "prop-types";
 import "./timestamp.m.css";
 
-export const TimeStamp = ({ story, isBottom, config = {} }) => {
+const timeMapping = {
+  published: "first-published-at",
+  updated: "last-published-at"
+};
+
+export const TimeStamp = ({ story, config = {}, layout, enableDarkModePreview = false }) => {
   const configState = useStateValue() || {};
   const isTime = get(config, ["showTime"], get(configState, ["showTime"], true));
-  const time = story["last-published-at"] || story["first-published-at"];
-  const isBottomClasses = isBottom ? "bottom-fix" : "";
-  const textColor = getTextColor(configState.theme);
-  const isLocalizedNumber = useSelector((state) => get(state, ["qt", "config", "isLocalizedNumber"], false));
-  const languageCode = isLocalizedNumber
-    ? useSelector((state) => get(state, ["qt", "config", "language", "ietf-code"], "en"))
-    : "en";
+  let time = story["first-published-at"] || story["last-published-at"];
+  const theme = getTheme(configState, layout, enableDarkModePreview);
+  const textColor = getTextColor(theme);
+  const qtConfig = useSelector((state) => get(state, ["qt", "config"], {}));
+  const isLocalizedNumber = get(qtConfig, ["isLocalizedNumber"], false);
+  const languageCode = get(qtConfig, ["language", "ietf-code"], "en");
+  const direction = get(qtConfig, ["language", "direction"], "ltr");
+  const storyCardTime = get(qtConfig, ["pagebuilder-config", "general", "storyCardTime"], null);
+  const storyTemplate = getStoryTemplate(story, get(qtConfig, ["pagebuilder-config"], {}));
 
+  const { localizedMeridiem, localizedMonths } = config;
+  const rtlWithoutCustomLabels = direction === "rtl" && !localizedMeridiem && !localizedMonths;
+  const updatedStyle = rtlWithoutCustomLabels ? `time ${textColor} wrapper` : `time ${textColor}`;
+
+  if (storyCardTime) {
+    const storyTime = storyTemplate === "live-blog" ? storyCardTime["liveBlog"] : storyCardTime["rest"];
+    if (storyTime) {
+      const mappedTime = timeMapping[storyTime];
+      time = story[mappedTime] || time;
+    }
+  }
+  const timeAgoFormat = get(
+    qtConfig,
+    ["pagebuilder-config", "general", "timeAgoFormat"],
+    get(configState, ["timeAgoFormat"], "time unit ago")
+  );
+  const dateFormat = get(qtConfig, ["pagebuilder-config", "general", "dateFormat"], "dd-mon-yyyy");
+
+  const updatedConfig = { direction, ...config, dateFormat };
   return (
     <>
       {isTime && (
-        <div
-          className="time arr--publish-time"
-          styleName={`time  ${textColor} ${isBottomClasses}`}
-          data-test-id="publish-time"
-        >
-          <div styleName="time-wrapper">{getTimeStamp(time, formatter, config, languageCode)}</div>
+        <div className="time arr--publish-time" styleName={updatedStyle} data-test-id="publish-time">
+          <div>
+            {getTimeStamp(time, formatter, updatedConfig, languageCode, "", "", isLocalizedNumber, timeAgoFormat)}
+          </div>
         </div>
       )}
     </>
@@ -35,7 +59,7 @@ export const TimeStamp = ({ story, isBottom, config = {} }) => {
 TimeStamp.propTypes = {
   /** The Story Object from the API response */
   story: PropTypes.object,
-  isBottom: PropTypes.bool,
   config: PropTypes.object,
-  languageCode: PropTypes.string,
+  layout: PropTypes.string,
+  enableDarkModePreview: PropTypes.bool
 };

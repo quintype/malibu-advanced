@@ -1,5 +1,5 @@
 import React from "react";
-import get from "lodash/get";
+import get from "lodash.get";
 import PropTypes from "prop-types";
 import { clientWidth, getTextColor, shapeConfig, shapeStory } from "../../../../utils/utils";
 import { withElementWrapper } from "../withElementWrapper";
@@ -43,7 +43,7 @@ export const BlockQuoteBase = ({ element, template, css = {}, story = {}, config
     return template === "withBorder" ? (
       <div styleName="icon-border">
         <div styleName="icon">{SelectionOfIcon(iconType, template, blockQuoteColor, textColor)}</div>
-        <div styleName="border" style={blockQuoteColor && { backgroundColor: blockQuoteColor }} />
+        <div styleName="border" style={{ backgroundColor: blockQuoteColor || "initial" }} />
       </div>
     ) : (
       <div styleName="icon">{SelectionOfIcon(iconType, template, blockQuoteColor, textColor)}</div>
@@ -56,11 +56,10 @@ export const BlockQuoteBase = ({ element, template, css = {}, story = {}, config
       data-test-id="blockquote"
       styleName={`${templateStyle} ${textColor}`}
       style={theme}
-      {...restProps}
-    >
+      {...restProps}>
       <div styleName="quote-wrapper">
         {updateStructure()}
-        <div styleName="wrapper" style={blockQuoteColor && { borderColor: blockQuoteColor }}>
+        <div styleName="wrapper" style={{ borderColor: blockQuoteColor || "unset" }}>
           <div styleName={`content ${textInvertColor}`} dangerouslySetInnerHTML={{ __html: content }} />
           <div styleName={`attribution ${textInvertColor}`} dangerouslySetInnerHTML={{ __html: attribution }} />
         </div>
@@ -71,13 +70,13 @@ export const BlockQuoteBase = ({ element, template, css = {}, story = {}, config
 
 BlockQuoteBase.propTypes = {
   element: PropTypes.shape({
-    metadata: PropTypes.shape({ content: PropTypes.string, attribution: PropTypes.string }),
+    metadata: PropTypes.shape({ content: PropTypes.string, attribution: PropTypes.string })
   }),
   template: PropTypes.string,
   story: shapeStory,
   config: shapeConfig,
   render: PropTypes.func,
-  css: PropTypes.object,
+  css: PropTypes.object
 };
 
 export const BlockQuote = withElementWrapper(BlockQuoteBase);

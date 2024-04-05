@@ -1,9 +1,8 @@
-/* eslint-disable react/no-unknown-property */
 import { SocialShare } from "@quintype/components";
 import PropTypes from "prop-types";
-import React from "react";
+import React, { useCallback } from "react";
 import { useSelector } from "react-redux";
-import get from "lodash/get";
+import get from "lodash.get";
 import { SocialShareTemplate } from "../../../Molecules/SocialShareTemplate";
 import { SectionTag } from "../../../Atoms/SectionTag";
 import { StoryHeadline } from "../../../Atoms/StoryHeadline";
@@ -13,14 +12,13 @@ import AsideCollection from "../../AsideCollection";
 import { AuthorCard } from "../../../Atoms/AuthorCard";
 import { PublishDetails } from "../../../Atoms/PublishDetail";
 import { StoryTags } from "../../../Atoms/StoryTags";
+import { StoryReview } from "../../../Atoms/StoryReview";
 import { StoryElementCard, SlotAfterStory } from "../../../Molecules/StoryElementCard";
 import { StateProvider } from "../../../SharedContext";
-import { MetypeCommentsWidget } from "../../../../../components/Metype/commenting-widget";
-import { MetypeReactionsWidget } from "../../../../../components/Metype/reaction-widget";
 import "./video-story.m.css";
-import { Paywall } from "../../Paywall";
 
 const VideoStoryTemplate = ({
+  storyAccess = null,
   story = {},
   config = {},
   storyElementsConfig,
@@ -28,44 +26,46 @@ const VideoStoryTemplate = ({
   adComponent,
   firstChild,
   secondChild,
-  hasAccess,
+  enableDarkMode,
+  loadRelatedStories,
+  visibleCardsRender = null,
+  meteringIndicator
 }) => {
   const heroVideo =
     story.cards
       .flatMap((card) => card["story-elements"])
       .find(
-        ({ type, subtype }) => type === "youtube-video" || (type === "jsembed" && subtype === "dailymotion-video")
+        ({ type, subtype }) =>
+          type === "youtube-video" ||
+          (type === "jsembed" && (subtype === "dailymotion-video" || subtype === "dailymotion-embed-script")) ||
+          subtype === "brightcove-video"
       ) || {};
 
   const {
     theme = "",
     authorCard = {},
-    authorDetails = {
-      template: "default",
-    },
+    authorDetails = {},
     asideCollection = {},
     templateType = "",
-    noOfVisibleCards = -1,
+    noOfVisibleCards = 0,
     publishedDetails = {},
     verticalShare = "",
     shareIconType = "plain-color-svg",
-    premiumStoryIconConfig = {},
+    premiumStoryIconConfig = {}
   } = config;
 
   const visibledCards = noOfVisibleCards < 0 ? story.cards : story.cards.slice(0, noOfVisibleCards);
   const storyId = get(story, ["id"], "");
-  const timezone = useSelector((state) => get(state, ["qt", "data", "timezone"], null));
 
-  const metypeConfig = useSelector((state) => get(state, ["qt", "config", "publisher-attributes", "metypeConfig"], {}));
-  const isMetypeEnabled = useSelector((state) =>
-    get(state, ["qt", "config", "publisher-attributes", "enableMetype"], true)
-  );
-  const jwtToken = useSelector((state) => get(state, ["userReducer", "jwt_token"], null));
+  const qtState = useSelector((state) => get(state, ["qt"], {}));
+  const timezone = get(qtState, ["data", "timezone"], null);
+  const mountAt = get(qtState, ["config", "mountAt"], "");
 
   const HeroVideo = () => {
+    const lazyLoad = get(storyElementsConfig, ["jsEmbed", "lazyLoad"], true);
     return (
       <div styleName="hero-video index-2" id={`video-${get(heroVideo, ["id"])}`}>
-        <Video element={heroVideo} loadIframeOnClick={true} />
+        <Video element={heroVideo} loadIframeOnClick={lazyLoad} />
       </div>
     );
   };
@@ -96,49 +96,47 @@ const VideoStoryTemplate = ({
     );
   };
 
-  const StoryData = ({ hasAccess }) => {
-    const isStoryBehindPaywall = story.access === "subscription" && hasAccess === false;
-
+  const StoryData = () => {
+    const visibleCards = visibledCards.map((card) => {
+      return (
+        <StoryElementCard
+          heroVideoElementId={heroVideo.id}
+          story={story}
+          card={card}
+          key={get(card, ["id"], "")}
+          config={storyElementsConfig}
+          adComponent={adComponent}
+          widgetComp={widgetComp}
+          enableDarkMode={enableDarkMode}
+        />
+      );
+    });
     return (
       <div styleName="story-details">
         <div styleName="author">
-          {authorCard && <AuthorCard story={story} template={authorDetails.template} opts={authorDetails.opts} />}
+          {authorCard && (
+            <AuthorCard story={story} template={authorDetails.template} opts={authorDetails.opts} mountAt={mountAt} />
+          )}
         </div>
         <div styleName="timestamp-social-share">
-          <PublishDetails story={story} opts={publishedDetails} template="story" timezone={timezone} />
+          <div id={`publish-details-container-${storyId}`}>
+            <PublishDetails story={story} opts={publishedDetails} template="story" timezone={timezone} />
+          </div>
           {!verticalShare && <SocialShareComponent />}
         </div>
-        {isStoryBehindPaywall ? (
-          <>
-            <StoryElementCard
-              heroVideoElementId={heroVideo.id}
-              story={story}
-              card={visibledCards[0]}
-              key={get(visibledCards[0], ["id"], "")}
-              config={storyElementsConfig}
-              adComponent={adComponent}
-              widgetComp={widgetComp}
-            />
-            <Paywall />
-          </>
+        <StoryReview theme={theme} story={story} />
+        {meteringIndicator}
+        {visibleCardsRender ? (
+          visibleCardsRender(visibleCards, firstChild, storyAccess)
         ) : (
-          visibledCards.map((card) => {
-            return (
-              <StoryElementCard
-                heroVideoElementId={heroVideo.id}
-                story={story}
-                card={card}
-                key={get(card, ["id"], "")}
-                config={storyElementsConfig}
-                adComponent={adComponent}
-                widgetComp={widgetComp}
-              />
-            );
-          })
+          <>
+            {visibleCards}
+            {firstChild}
+          </>
         )}
-        {firstChild}
         <div styleName="story-tags">
           <StoryTags tags={story.tags} />
+          {meteringIndicator}
           <SlotAfterStory
             id={story.id}
             element={story.customSlotAfterStory}
@@ -151,10 +149,6 @@ const VideoStoryTemplate = ({
     );
   };
 
-  StoryData.propTypes = {
-    hasAccess: PropTypes.bool,
-  };
-
   const SideColumn = () => {
     return (
       asideCollection && (
@@ -164,42 +158,25 @@ const VideoStoryTemplate = ({
             widgetComp={widgetComp}
             adComponent={adComponent}
             sticky={true}
-            storyId={storyId}
+            story={story}
             opts={publishedDetails}
+            loadRelatedStories={loadRelatedStories}
           />
         </div>
       )
     );
   };
 
-  const heroPriorityTemplate = (hasAccess) => {
+  // caching is done to avoid widget and Ad re-renderings
+  const CachedSideColumn = useCallback(SideColumn, [templateType, story["story-template"]]);
+
+  const heroPriorityTemplate = () => {
     return (
       <>
         <HeroVideo />
         <div styleName="story-content-wrapper">
           <HeaderCard />
-          <StoryData hasAccess={hasAccess} />
-          {isMetypeEnabled && (
-            <>
-              <MetypeReactionsWidget
-                host={metypeConfig.metypeHost}
-                accountId={metypeConfig.metypeAccountId}
-                storyUrl={story.url}
-                storyId={story.id}
-              />
-              <MetypeCommentsWidget
-                host={metypeConfig.metypeHost}
-                accountId={metypeConfig.metypeAccountId}
-                pageURL={story.url}
-                primaryColor={metypeConfig.primaryColor}
-                className={metypeConfig.className}
-                jwt={jwtToken}
-                fontUrl={metypeConfig.fontFamilyUrl}
-                fontFamily={metypeConfig.fontFamily}
-                storyId={story.id}
-              />
-            </>
-          )}
+          <StoryData />
         </div>
         {verticalShare && <SocialShareComponent />}
         {asideCollection && (
@@ -209,8 +186,9 @@ const VideoStoryTemplate = ({
               {...asideCollection}
               widgetComp={widgetComp}
               adComponent={adComponent}
-              storyId={storyId}
+              story={story}
               opts={publishedDetails}
+              loadRelatedStories={loadRelatedStories}
             />
           </div>
         )}
@@ -218,7 +196,7 @@ const VideoStoryTemplate = ({
     );
   };
 
-  const headlinePriorityTemplate = (hasAccess) => {
+  const headlinePriorityTemplate = () => {
     return (
       <>
         <div styleName="story-content-wrapper">
@@ -228,79 +206,37 @@ const VideoStoryTemplate = ({
           <HeroVideo />
         </div>
         <div styleName="story-content-wrapper">
-          <StoryData hasAccess={hasAccess} />
-          {isMetypeEnabled && (
-            <>
-              <MetypeReactionsWidget
-                host={metypeConfig.metypeHost}
-                accountId={metypeConfig.metypeAccountId}
-                storyUrl={story.url}
-                storyId={story.id}
-              />
-              <MetypeCommentsWidget
-                host={metypeConfig.metypeHost}
-                accountId={metypeConfig.metypeAccountId}
-                pageURL={story.url}
-                primaryColor={metypeConfig.primaryColor}
-                className={metypeConfig.className}
-                jwt={jwtToken}
-                fontUrl={metypeConfig.fontFamilyUrl}
-                fontFamily={metypeConfig.fontFamily}
-                storyId={story.id}
-              />
-            </>
-          )}
+          <StoryData />
         </div>
         {verticalShare && <SocialShareComponent />}
-        <SideColumn />
+        <CachedSideColumn />
       </>
     );
   };
 
-  const defaultTemplate = (hasAccess) => {
+  const defaultTemplate = () => {
     return (
       <>
         <HeroVideo />
         <div styleName="story-content-wrapper">
           <HeaderCard />
-          <StoryData hasAccess={hasAccess} />
-          {isMetypeEnabled && (
-            <>
-              <MetypeReactionsWidget
-                host={metypeConfig.metypeHost}
-                accountId={metypeConfig.metypeAccountId}
-                storyUrl={story.url}
-                storyId={story.id}
-              />
-              <MetypeCommentsWidget
-                host={metypeConfig.metypeHost}
-                accountId={metypeConfig.metypeAccountId}
-                pageURL={story.url}
-                primaryColor={metypeConfig.primaryColor}
-                className={metypeConfig.className}
-                jwt={jwtToken}
-                fontUrl={metypeConfig.fontFamilyUrl}
-                fontFamily={metypeConfig.fontFamily}
-                storyId={story.id}
-              />
-            </>
-          )}
+          <StoryData />
         </div>
 
         {verticalShare && <SocialShareComponent />}
-        <SideColumn />
+        <CachedSideColumn />
       </>
     );
   };
 
-  const getStoryTemplate = (templateType, hasAccess) => {
+  const getStoryTemplate = (templateType) => {
     switch (templateType) {
       case "hero-priority":
-        return heroPriorityTemplate(hasAccess);
+        return heroPriorityTemplate();
       case "headline-priority":
-        return headlinePriorityTemplate(hasAccess);
+        return headlinePriorityTemplate();
       default:
-        return defaultTemplate(hasAccess);
+        return defaultTemplate();
     }
   };
 
@@ -311,26 +247,30 @@ const VideoStoryTemplate = ({
       data-test-id={dataTestId}
       className="arrow-component arr--content-wrapper arr-story-grid arr--video-story-template-wrapper"
       styleName={`${templateClass} ${verticalShare}`}
-      style={{ backgroundColor: theme }}
-    >
-      {getStoryTemplate(templateType, hasAccess)}
+      style={{ backgroundColor: theme || "initial" }}>
+      {getStoryTemplate(templateType)}
     </div>
   );
 };
 
 VideoStoryTemplate.propTypes = {
+  storyAccess: PropTypes.object,
   story: PropTypes.object,
+  accessLoading: PropTypes.bool,
   config: PropTypes.shape({
     templateType: PropTypes.string,
     authorCard: PropTypes.object,
-    asideCollection: PropTypes.object,
+    asideCollection: PropTypes.object
   }),
   firstChild: PropTypes.node,
   secondChild: PropTypes.node,
   storyElementsConfig: PropTypes.object,
   adComponent: PropTypes.func,
   widgetComp: PropTypes.func,
-  hasAccess: PropTypes.func,
+  enableDarkMode: PropTypes.bool,
+  loadRelatedStories: PropTypes.func,
+  visibleCardsRender: PropTypes.func | undefined,
+  meteringIndicator: PropTypes.node | undefined
 };
 
 export default StateProvider(VideoStoryTemplate);

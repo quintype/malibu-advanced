@@ -20,12 +20,12 @@ function getEntryPoints() {
     {
       // this is the main bundle containing all components. It's name must be "index"
       name: "index",
-      path: path.resolve(path.join(__dirname, "/index.js")),
+      path: path.resolve(path.join(__dirname, "/index.js"))
     },
     ...storyElementsEntryPoints(),
     ...atomsEntryPoints(),
     ...moleculesEntryPoints(),
-    ...rowsEntryPoints(),
+    ...rowsEntryPoints()
   ];
   return entryPoints.reduce((accumulator, currentBundle) => {
     accumulator[currentBundle.name] = currentBundle.path;
@@ -38,64 +38,64 @@ function storyElementsEntryPoints() {
   return [
     {
       name: "Text",
-      path: `${basePath}/Text`,
+      path: `${basePath}/Text`
     },
     {
       name: "Quote",
-      path: `${basePath}/Quote`,
+      path: `${basePath}/Quote`
     },
     {
       name: "Blurb",
-      path: `${basePath}/Blurb`,
+      path: `${basePath}/Blurb`
     },
     {
       name: "AlsoRead",
-      path: `${basePath}/AlsoRead`,
+      path: `${basePath}/AlsoRead`
     },
     {
       name: "Summary",
-      path: `${basePath}/Summary`,
+      path: `${basePath}/Summary`
     },
     {
       name: "BlockQuote",
-      path: `${basePath}/BlockQuote`,
+      path: `${basePath}/BlockQuote`
     },
     {
       name: "Image",
-      path: `${basePath}/Image`,
+      path: `${basePath}/Image`
     },
     {
       name: "Video",
-      path: `${basePath}/Video`,
+      path: `${basePath}/Video`
     },
     {
       name: "BigFact",
-      path: `${basePath}/BigFact`,
+      path: `${basePath}/BigFact`
     },
     {
       name: "StoryElement",
-      path: `${basePath}/StoryElement`,
+      path: `${basePath}/StoryElement`
     },
     {
       name: "QuestionAnswer",
-      path: `${basePath}/QuestionAnswer`,
+      path: `${basePath}/QuestionAnswer`
     },
     {
       name: "ImageGallery",
-      path: `${basePath}/imageGallery`,
+      path: `${basePath}/imageGallery`
     },
     {
       name: "Reference",
-      path: `${basePath}/Reference`,
+      path: `${basePath}/Reference`
     },
     {
       name: "Attachment",
-      path: `${basePath}/Attachment`,
+      path: `${basePath}/Attachment`
     },
     {
       name: "ImageSlideshow",
-      path: `${basePath}/ImageSlideshow`,
-    },
+      path: `${basePath}/ImageSlideshow`
+    }
   ];
 }
 
@@ -104,44 +104,48 @@ function atomsEntryPoints() {
   return [
     {
       name: "Author",
-      path: `${basePath}/Author`,
+      path: `${basePath}/Author`
     },
     {
       name: "AuthorWithTime",
-      path: `${basePath}/AuthorWithTimestamp`,
+      path: `${basePath}/AuthorWithTimestamp`
     },
     {
       name: "CollectionName",
-      path: `${basePath}/CollectionName`,
+      path: `${basePath}/CollectionName`
     },
     {
       name: "Headline",
-      path: `${basePath}/Headline`,
+      path: `${basePath}/Headline`
     },
     {
       name: "HeroImage",
-      path: `${basePath}/HeroImage`,
+      path: `${basePath}/HeroImage`
     },
     {
       name: "LoadmoreButton",
-      path: `${basePath}/Loadmore`,
+      path: `${basePath}/Loadmore`
     },
     {
       name: "SectionTag",
-      path: `${basePath}/SectionTag`,
+      path: `${basePath}/SectionTag`
     },
     {
       name: "Subheadline",
-      path: `${basePath}/Subheadline`,
+      path: `${basePath}/Subheadline`
     },
     {
       name: "TimeStamp",
-      path: `${basePath}/TimeStamp`,
+      path: `${basePath}/TimeStamp`
     },
     {
       name: "ScrollSnap",
-      path: `${basePath}/ScrollSnap`,
+      path: `${basePath}/ScrollSnap`
     },
+    {
+      name: "PublishDetails",
+      path: `${basePath}/PublishDetail`
+    }
   ];
 }
 
@@ -150,28 +154,28 @@ function moleculesEntryPoints() {
   return [
     {
       name: "StoryCard",
-      path: `${basePath}/StoryCard`,
+      path: `${basePath}/StoryCard`
     },
     {
       name: "StorycardContent",
-      path: `${basePath}/StorycardContent`,
+      path: `${basePath}/StorycardContent`
     },
     {
       name: "StoryElementCard",
-      path: `${basePath}/StoryElementCard`,
+      path: `${basePath}/StoryElementCard`
     },
     {
       name: "KeyEvents",
-      path: `${basePath}/KeyEvents`,
+      path: `${basePath}/KeyEvents`
     },
     {
       name: "SocialShareTemplate",
-      path: `${basePath}/SocialShareTemplate`,
+      path: `${basePath}/SocialShareTemplate`
     },
     {
       name: "PageIntroductionCard",
-      path: `${basePath}/PageIntroductionCard`,
-    },
+      path: `${basePath}/PageIntroductionCard`
+    }
   ];
 }
 
@@ -180,180 +184,181 @@ function rowsEntryPoints() {
   return [
     {
       name: "FourColGrid",
-      path: `${basePath}/FourColGrid`,
+      path: `${basePath}/FourColGrid`
     },
     {
       name: "OneColStoryList",
-      path: `${basePath}/OneColStoryList`,
+      path: `${basePath}/OneColStoryList`
     },
     {
       name: "ThreeColGrid",
-      path: `${basePath}/ThreeColGrid`,
+      path: `${basePath}/ThreeColGrid`
     },
     {
       name: "TwoColFourStories",
-      path: `${basePath}/TwoColFourStory`,
+      path: `${basePath}/TwoColFourStory`
     },
     {
       name: "TwoColThreeStories",
-      path: `${basePath}/TwoColThreeStory`,
+      path: `${basePath}/TwoColThreeStory`
     },
     {
       name: "TwoColSevenStories",
-      path: `${basePath}/TwoColSevenStories`,
+      path: `${basePath}/TwoColSevenStories`
     },
     {
       name: "ThreeColSixStories",
-      path: `${basePath}/ThreeColSixStories`,
+      path: `${basePath}/ThreeColSixStories`
     },
     {
       name: "ThreeColSevenStory",
-      path: `${basePath}/ThreeColSevenStory`,
+      path: `${basePath}/ThreeColSevenStory`
     },
     {
       name: "ElevenStories",
-      path: `${basePath}/ElevenStories`,
+      path: `${basePath}/ElevenStories`
     },
     {
       name: "CollectionFilter",
-      path: `${basePath}/CollectionFilter`,
+      path: `${basePath}/CollectionFilter`
     },
     {
       name: "HalfScreenSlider",
-      path: `${basePath}/HalfScreenSlider`,
+      path: `${basePath}/HalfScreenSlider`
     },
     {
       name: "FourStorySlider",
-      path: `${basePath}/FourStorySlider`,
+      path: `${basePath}/FourStorySlider`
     },
     {
       name: "FourStorySliderPortrait",
-      path: `${basePath}/FourStorySliderPortrait`,
+      path: `${basePath}/FourStorySliderPortrait`
     },
     {
       name: "FullScreenSlider",
-      path: `${basePath}/FullScreenSlider`,
+      path: `${basePath}/FullScreenSlider`
     },
     {
       name: "ThreeColFourteenStories",
-      path: `${basePath}/ThreeColFourteenStory`,
+      path: `${basePath}/ThreeColFourteenStory`
     },
     {
       name: "FourColTwelveStories",
-      path: `${basePath}/FourColTwelveStory`,
+      path: `${basePath}/FourColTwelveStory`
     },
     {
       name: "TagIntroductionCard",
-      path: `${basePath}/TagIntroductionCard`,
+      path: `${basePath}/TagIntroductionCard`
     },
     {
       name: "AuthorIntroductionCard",
-      path: `${basePath}/AuthorIntroductionCard`,
+      path: `${basePath}/AuthorIntroductionCard`
     },
     {
       name: "AsideCollection",
-      path: `${basePath}/AsideCollection`,
+      path: `${basePath}/AsideCollection`
     },
     {
       name: "StoryCollection",
-      path: `${basePath}/AsideCollection`,
+      path: `${basePath}/AsideCollection`
+    },
+    {
+      name: "Snapshot",
+      path: `${basePath}/StoryTemplates/Snapshot`
     },
     {
       name: "VideoStoryTemplate",
-      path: `${basePath}/StoryTemplates/VideoStoryTemplates`,
+      path: `${basePath}/StoryTemplates/VideoStoryTemplates`
     },
     {
       name: "TextStoryTemplate",
-      path: `${basePath}/StoryTemplates/TextStoryTemplates`,
+      path: `${basePath}/StoryTemplates/TextStoryTemplates`
     },
     {
       name: "LiveBlogStoryTemplate",
-      path: `${basePath}/StoryTemplates/LiveBlogStorytemplates`,
+      path: `${basePath}/StoryTemplates/LiveBlogStorytemplates`
     },
     {
       name: "ListicleStoryTemplate",
-      path: `${basePath}/StoryTemplates/ListicleStoryTemplates`,
+      path: `${basePath}/StoryTemplates/ListicleStoryTemplates`
     },
     {
       name: "ListComponent",
-      path: `${basePath}/ListComponent`,
+      path: `${basePath}/ListComponent`
     },
     {
       name: "MagazineEditions",
-      path: `${basePath}/MagazineEditions`,
+      path: `${basePath}/MagazineEditions`
     },
     {
       name: "MagazineWidget",
-      path: `${basePath}/MagazineWidget`,
+      path: `${basePath}/MagazineWidget`
     },
     {
       name: "MagazineHeaderCard",
-      path: `${basePath}/MagazineHeaderCard`,
+      path: `${basePath}/MagazineHeaderCard`
     },
     {
       name: "PhotoStoryTemplate",
-      path: `${basePath}/StoryTemplates/PhotoStoryTemplates`,
+      path: `${basePath}/StoryTemplates/PhotoStoryTemplates`
     },
     {
       name: "AuthorsList",
-      path: `${basePath}/AuthorsList`,
+      path: `${basePath}/AuthorsList`
     },
     {
       name: "FourColSixteenStories",
-      path: `${basePath}/FourColSixteenStories`,
+      path: `${basePath}/FourColSixteenStories`
     },
     {
       name: "FourColFiveStories",
-      path: `${basePath}/FourColFiveStories`,
+      path: `${basePath}/FourColFiveStories`
     },
     {
       name: "TwoColSixStories",
-      path: `${basePath}/TwoColSixStories`,
+      path: `${basePath}/TwoColSixStories`
     },
     {
       name: "TwoColFourStoryHighlight",
-      path: `${basePath}/TwoColFourStoryHighlight`,
+      path: `${basePath}/TwoColFourStoryHighlight`
     },
-    {
-      name: "OpinionCollection",
-      path: `${basePath}/OpinionCollection`,
-    },
+    { name: "OpinionCollection", path: `${basePath}/OpinionCollection` },
     {
       name: "ThreeColFlexStories",
-      path: `${basePath}/ThreeColFlexStories`,
+      path: `${basePath}/ThreeColFlexStories`
     },
     {
       name: "SixColSixStories",
-      path: `${basePath}/SixColSixStories`,
+      path: `${basePath}/SixColSixStories`
     },
     {
       name: "TwoColTenStoriesSidebar",
-      path: `${basePath}/TwoColTenStoriesSidebar`,
+      path: `${basePath}/TwoColTenStoriesSidebar`
     },
     {
       name: "ThreeColTwelveStories",
-      path: `${basePath}/ThreeColTwelveStories`,
+      path: `${basePath}/ThreeColTwelveStories`
     },
     {
       name: "FourTabbedBigStorySlider",
-      path: `${basePath}/FourTabbedBigStorySlider`,
+      path: `${basePath}/FourTabbedBigStorySlider`
     },
     {
       name: "AlternateCollectionFilter",
-      path: `${basePath}/AlternateCollectionFilter`,
+      path: `${basePath}/AlternateCollectionFilter`
     },
     {
       name: "Listicles",
-      path: `${basePath}/Listicles`,
+      path: `${basePath}/Listicles`
     },
     {
       name: "FourColPortraitStories",
-      path: `${basePath}/FourColPortraitStories`,
+      path: `${basePath}/FourColPortraitStories`
     },
     {
       name: "AstrologyCollection",
-      path: `${basePath}/AstrologyCollection`,
-    },
+      path: `${basePath}/AstrologyCollection`
+    }
   ];
 }
 

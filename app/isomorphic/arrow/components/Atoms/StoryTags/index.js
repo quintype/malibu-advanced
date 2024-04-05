@@ -1,5 +1,5 @@
 import React from "react";
-import get from "lodash/get";
+import get from "lodash.get";
 import PropTypes, { string } from "prop-types";
 import { useStateValue } from "../../SharedContext";
 import { Link } from "@quintype/components";
@@ -16,7 +16,7 @@ export const StoryTags = ({ tags = [], template = "", config, borderColor = "" }
       {tags.length > 0 &&
         tags.map((tag, index) => (
           <div styleName={`tags ${templateStyle} ${textColor}`} key={index} data-test-id="story-tag">
-            <Link href={`${mountAt}/topic/` + tag.slug} aria-label="story-tag-name">
+            <Link href={`${mountAt}/topic/` + encodeURIComponent(tag.slug)} aria-label="story-tag-name">
               {tag.name}
             </Link>
           </div>
@@ -29,5 +29,5 @@ StoryTags.propTypes = {
   tags: PropTypes.array,
   borderColor: PropTypes.string,
   config: PropTypes.object,
-  template: string,
+  template: string
 };

@@ -17,7 +17,7 @@ withStore("Molecules/Social Share Template", {}, Readme)
       publisherUrl: undefined,
       theme: "#ffffff",
       title: "Ready Player One review – Spielberg ",
-      twitterUrl: "https://twitter.com",
+      twitterUrl: "https://twitter.com"
     };
     return <SocialShareTemplate {...props} open={boolean("open", false)} />;
   })
@@ -34,7 +34,7 @@ withStore("Molecules/Social Share Template", {}, Readme)
       theme: "#ffffff",
       title: "Ready Player One review – Spielberg ",
       twitterUrl: "https://twitter.com",
-      vertical: true,
+      vertical: true
     };
     return <SocialShareTemplate {...props} open={boolean("open", false)} />;
   });

@@ -1,10 +1,10 @@
 import { collectionToStories } from "@quintype/components";
-import get from "lodash/get";
+import get from "lodash.get";
 import PropTypes from "prop-types";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ProgressiveHydration } from "../../../hydration-component";
-import { generateNavigateSlug, getSlot, getTextColor, navigateTo } from "../../../utils/utils";
+import { generateNavigateSlug, getSlot, navigateTo } from "../../../utils/utils";
 import { AuthorWithTime } from "../../Atoms/AuthorWithTimestamp";
 import { CollectionName } from "../../Atoms/CollectionName";
 import { Headline } from "../../Atoms/Headline";
@@ -31,7 +31,7 @@ const OneColStoryList = ({
   getMoreStories,
   isLoadMoreVisible,
   isLoading,
-  isolatedLoadMore,
+  isolatedLoadMore
 }) => {
   const storyItems = collectionToStories(collection);
   if (!storyItems.length) return null;
@@ -45,7 +45,7 @@ const OneColStoryList = ({
     footerSlotConfig = {},
     footerButton = "",
     localizationConfig = {},
-    subsequentLoadCount = 8,
+    subsequentLoadCount = 8
   } = config;
 
   const { footerSlot } = footerSlotConfig;
@@ -63,6 +63,7 @@ const OneColStoryList = ({
           componentName={"OneColStoryList"}
           offset={storyItems.length}
           limit={subsequentLoadCount}
+          theme={theme}
         />
       );
     }
@@ -90,37 +91,34 @@ const OneColStoryList = ({
             <StoryCard
               story={story}
               theme={theme}
-              headerLevel="4"
+              headerLevel="6"
               isHorizontal
               border={border}
-              aspectRatio={[
-                [1, 1],
-                [4, 3],
-              ]}
+              aspectRatio={[[16, 9]]}
               borderColor={borderColor}
               prefix="By"
               config={config}
+              collectionId={collection.id}
             />
           </div>
         );
       case "full":
         return (
           <div styleName="one-col-border-full">
-            <StoryCard story={story} border={border} theme={theme} isHorizontal borderColor={borderColor}>
-              <HeroImage
-                story={story}
-                isHorizontal
-                aspectRatio={[
-                  [1, 1],
-                  [4, 3],
-                ]}
-              />
+            <StoryCard
+              config={config}
+              story={story}
+              border={border}
+              theme={theme}
+              isHorizontal
+              borderColor={borderColor}>
+              <HeroImage story={story} isHorizontal aspectRatio={[[16, 9]]} />
               <div styleName="story-card-content-wrapper">
                 <StorycardContent story={story} borderColor={borderColor} config={config}>
                   <SectionTag story={story} />
-                  <Headline story={story} headerLevel="4" premiumStoryIconConfig={config} />
+                  <Headline story={story} headerLevel="6" premiumStoryIconConfig={config} />
                   <Subheadline story={story} />
-                  <AuthorWithTime config={localizationConfig} story={story} prefix="By" />
+                  <AuthorWithTime config={localizationConfig} story={story} prefix="By" collectionId={collection.id} />
                 </StorycardContent>
               </div>
             </StoryCard>
@@ -132,36 +130,32 @@ const OneColStoryList = ({
             <StoryCard
               story={story}
               theme={theme}
-              headerLevel="4"
+              headerLevel="6"
               isHorizontal
               border={border}
-              aspectRatio={[
-                [1, 1],
-                [4, 3],
-              ]}
+              aspectRatio={[[16, 9]]}
               borderColor={borderColor}
               prefix="By"
               config={config}
+              collectionId={collection.id}
             />
           </div>
         );
     }
   };
 
-  const textColor = getTextColor(theme);
   return (
     <div
       className="full-width-with-padding arrow-component"
       data-test-id="one-col-story-list"
-      style={{ backgroundColor: theme, color: textColor }}
-    >
+      style={{ backgroundColor: theme || "initial" }}>
       <div styleName="one-col-story-list-wrapper ">
         <CollectionName
           collection={collection}
           collectionNameTemplate={collectionNameTemplate}
           collectionNameBorderColor={collectionNameBorderColor}
         />
-        <div styleName="wrapper" style={{ backgroundColor: theme, color: textColor }}>
+        <div styleName="wrapper" style={{ backgroundColor: theme || "initial" }}>
           <div styleName="one-col-first-story">
             {storyItems.slice(0, 1).map((story, index) => {
               return <div key={`default-${index}`}>{borderHandler(story)}</div>;
@@ -172,14 +166,7 @@ const OneColStoryList = ({
               return <div key={`default-${index}`}>{borderHandler(story)}</div>;
             })}
           </div>
-          <div styleName="one-col-ads">
-            {getSlot(
-              type,
-              component,
-              () => null,
-              () => null
-            )}
-          </div>
+          <div styleName="one-col-ads">{getSlot(type, component, () => null, () => null)}</div>
         </div>
         <div styleName="footer-ad-wrapper">
           {getLoadMore({ isLoading, storyItems, getMoreStories, subsequentLoadCount })}
@@ -202,18 +189,18 @@ OneColStoryList.propTypes = {
     collectionNameTemplate: PropTypes.string,
     // row title style colour
     collectionNameBorderColor: PropTypes.string,
-    subsequentLoadCount: PropTypes.number,
+    subsequentLoadCount: PropTypes.number
   }),
   getMoreStories: PropTypes.func,
   isLoadMoreVisible: PropTypes.bool,
   isLoading: PropTypes.bool,
-  isolatedLoadMore: PropTypes.bool,
+  isolatedLoadMore: PropTypes.bool
 };
 
 OneColStoryList.defaultProps = {
   getMoreStories: () => {},
   isLoadMoreVisible: true,
-  isLoading: false,
+  isLoading: false
 };
 
 export default StateProvider(OneColStoryList);

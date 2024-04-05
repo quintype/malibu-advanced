@@ -5,7 +5,7 @@ import {
   optionalSelect,
   sectionTagTemplates,
   collectionNameTemplates,
-  footerButton,
+  footerButton
 } from "../../../../storybook";
 import SixColSixStories from "./index";
 import Readme from "./README.md";
@@ -27,6 +27,7 @@ const sectionTagDefaultvalue = "#ff5858";
 const borderTemplate = {
   default: "noBorder",
   verticalBorder: "fullBorder",
+  aroundBorder: "aroundBorder"
 };
 
 const footerSlot = () => {
@@ -42,9 +43,9 @@ withStore(
   {
     qt: {
       config: {
-        "cdn-image": "thumbor-stg.assettype.com",
-      },
-    },
+        "cdn-image": "thumbor-stg.assettype.com"
+      }
+    }
   },
   Readme
 )
@@ -67,6 +68,8 @@ withStore(
       footerSlotConfig: { footerSlot: footerSlot },
       showButton: boolean("Show button", true),
       showReadTime: boolean("Read time", true),
+      showCardBgColor: boolean("Story Card Background Color", true),
+      cardBgColor: boolean("Story Card Background", "#ffffff")
     };
 
     return <SixColSixStories collection={collection} config={contextConfig} />;

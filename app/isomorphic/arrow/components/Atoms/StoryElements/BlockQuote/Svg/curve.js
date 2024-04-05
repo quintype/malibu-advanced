@@ -5,8 +5,9 @@ import "./icon.m.css";
 export const CurveIcon = ({ width, height, color, opacity }) => {
   const lightColor = color === "light" && "#ffffff";
   const darkColor = color === "dark" && "#0d0d0d";
+  const fillColor = lightColor || darkColor || color;
   return (
-    <div styleName="curve-wrapper" style={{ fill: `${lightColor || darkColor || color}` }}>
+    <div styleName="curve-wrapper" style={fillColor ? { fill: fillColor } : {}}>
       <svg xmlns="http://www.w3.org/2000/svg" width={width} height={height} viewBox="0 0 64 64">
         <path
           fill="inherit"
@@ -22,5 +23,5 @@ CurveIcon.propTypes = {
   width: PropTypes.string,
   height: PropTypes.string,
   color: PropTypes.string,
-  opacity: PropTypes.string,
+  opacity: PropTypes.string
 };

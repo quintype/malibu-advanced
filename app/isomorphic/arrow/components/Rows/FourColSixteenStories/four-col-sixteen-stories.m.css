@@ -1,5 +1,4 @@
-/* eslint-disable scss/at-rule-no-unknown */
-@value viewports: "../../../../../assets/arrow/stylesheets/viewports.m.css";
+@value viewports: "../../../../assets/stylesheets/viewports.m.css";
 @value mobile from viewports;
 @value desktop from viewports;
 
@@ -78,9 +77,14 @@
 
 .contentWrapper {
   @media (min-width: mobile) {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-row: span 3;
+    grid-template-rows: subgrid;
   }
+}
+
+.contentWrapper :global(.arrow-component) a > h2 {
+  font-size: var(--arrow-fs-l);
 }
 
 .componentWrapper:global(.arrow-component.full-width-with-padding) {
@@ -113,7 +117,7 @@
     bottom: 10px;
     left: 10px;
     z-index: var(--z-index-1);
-    @media (--viewport-small) {
+    @media (max-width: mobile) {
       height: 24px;
       width: 24px;
     }

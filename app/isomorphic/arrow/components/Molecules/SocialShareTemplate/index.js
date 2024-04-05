@@ -3,10 +3,9 @@ import PropTypes from "prop-types";
 import { socialShareData } from "./social-share-data";
 import { SocialSharePopup } from "../../Atoms/SocialSharePopup";
 import "./social-share-template.m.css";
-import { CloseIcon } from "../../Svgs/close-icon";
 import { ShareIcon } from "../../Svgs/share-icon";
 import { getTextColor } from "../../../utils/utils";
-import camelcase from "lodash/camelCase";
+import camelcase from "lodash.camelcase";
 
 const ShareItem = ({ name, url, icon, dataTestId }) => {
   return url ? (
@@ -21,12 +20,11 @@ ShareItem.propTypes = {
   name: PropTypes.string,
   url: PropTypes.string,
   icon: PropTypes.node,
-  dataTestId: PropTypes.string,
+  dataTestId: PropTypes.string
 };
 
-function getActionIcon(open, color) {
-  if (!open) return <ShareIcon color={color} />;
-  return <CloseIcon color={color} />;
+function getActionIcon(color) {
+  return <ShareIcon color={color} />;
 }
 
 export const SocialShareTemplate = (props) => {
@@ -38,7 +36,7 @@ export const SocialShareTemplate = (props) => {
     vertical = false,
     theme,
     iconType = "plain-color-svg",
-    open = false,
+    open = false
   } = props;
   if (!fbUrl && !twitterUrl && !linkedinUrl && !whatsappUrl) return null;
   const iconShade = getTextColor(theme);
@@ -53,7 +51,7 @@ export const SocialShareTemplate = (props) => {
   const shareIcon = () => {
     return (
       <li styleName="icon" key="horizontal-0">
-        <div onClick={clickHandler}>{getActionIcon(isOpen, iconColor)}</div>
+        <div onClick={clickHandler}>{getActionIcon(iconColor)}</div>
       </li>
     );
   };
@@ -95,8 +93,7 @@ export const SocialShareTemplate = (props) => {
         <ul
           data-test-id={camelcase(iconType)}
           className="desktop-share-wrapper"
-          styleName={`wrapper ${isOpen ? "open" : ""}`}
-        >
+          styleName={`wrapper ${isOpen ? "open" : ""}`}>
           {shareIcon()}
           {iconsList.map((iconData, index) => (
             <ShareItem {...iconData} key={iconData.name} dataTestId={`card-share-${index}`} />
@@ -116,5 +113,5 @@ SocialShareTemplate.propTypes = {
   vertical: PropTypes.bool,
   theme: PropTypes.string,
   iconType: PropTypes.string,
-  open: PropTypes.boolean,
+  open: PropTypes.boolean
 };

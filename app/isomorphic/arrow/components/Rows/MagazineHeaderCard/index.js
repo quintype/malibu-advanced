@@ -2,7 +2,14 @@ import React from "react";
 import PropTypes from "prop-types";
 import { CollectionName } from "../../Atoms/CollectionName";
 import { LoadmoreButton } from "../../Atoms/Loadmore";
-import { generateNavigateSlug, getTextColor, getTimeStamp, navigateTo, timestampToFormat } from "../../../utils/utils";
+import {
+  generateNavigateSlug,
+  getTextColor,
+  getTimeStamp,
+  navigateTo,
+  timestampToFormat,
+  getTimeStampConfig
+} from "../../../utils/utils";
 import "./magazine-cards.m.css";
 import { StateProvider } from "../../SharedContext";
 import { MagazineCoverImageCard } from "../../Atoms/MagazineCoverImage";
@@ -18,16 +25,13 @@ const MagazineHeaderCard = ({ collection = {}, config = {} }) => {
   const qtConfig = useSelector((state) => get(state, ["qt", "config"], {}));
   const url = generateNavigateSlug(collection, qtConfig, customUrlPath);
   const date = issueDate || createdAt;
-  const timeStampConfig = {
-    isUpperCase: true,
-    disableMeridiem: true,
-  };
+  const timeStampConfig = getTimeStampConfig(qtConfig);
+
   return (
     <div
       className="full-width-with-padding arrow-component"
-      style={{ backgroundColor: theme }}
-      data-test-id="magazine-header-card"
-    >
+      style={{ backgroundColor: theme || "initial" }}
+      data-test-id="magazine-header-card">
       <div className="arr-magazine-card" styleName="magazine-header intro-button">
         <MagazineCoverImageCard collection={collection} config={{ ...config, magazineSlug }} />
         <div styleName="content">
@@ -59,15 +63,15 @@ MagazineHeaderCard.propTypes = {
   collection: PropTypes.shape({
     "created-at": PropTypes.number,
     summary: PropTypes.string,
-    items: PropTypes.array,
+    items: PropTypes.array
   }),
   config: PropTypes.shape({
     theme: PropTypes.string,
     footerButton: PropTypes.string,
     magazineTitle: PropTypes.string,
     magazinePageUrl: PropTypes.string,
-    customUrlPath: PropTypes.string,
-  }),
+    customUrlPath: PropTypes.string
+  })
 };
 
 export default StateProvider(MagazineHeaderCard);

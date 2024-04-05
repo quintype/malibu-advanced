@@ -14,7 +14,7 @@ const getIntersectionObserver = () => {
 // options for intersection observer in order to improve the effect
 const intersectionObserverOptions = {
   root: null, // windows viewport will be used
-  rootMargin: "200px 0px 0px 0px",
+  rootMargin: "200px 0px 0px 0px"
 };
 
 const handleIntersect = (entries, observer) => {

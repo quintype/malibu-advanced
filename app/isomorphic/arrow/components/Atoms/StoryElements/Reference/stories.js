@@ -12,7 +12,7 @@ withStore("Atoms/Story Elements/Reference", {}, Readme).add("Default", () => (
     element={element}
     opts={{
       showHeadline: boolean("Show Headline", true),
-      headlineText: text("Headline", "References"),
+      headlineText: text("Headline", "References")
     }}
   />
 ));

@@ -7,7 +7,7 @@ import { LoadmoreButton } from "../../Atoms/Loadmore";
 import { StoryCard } from "../../Molecules/StoryCard";
 import { collectionToStories } from "@quintype/components";
 import PropTypes from "prop-types";
-import { getTextColor, getNumberOfStoriesToShow, generateNavigateSlug, navigateTo } from "../../../utils/utils";
+import { getNumberOfStoriesToShow, generateNavigateSlug, navigateTo } from "../../../utils/utils";
 import { StateProvider } from "../../SharedContext";
 import { ScrollSnap } from "../../Atoms/ScrollSnap";
 
@@ -27,10 +27,7 @@ const FullScreenSlider = ({ collection = {}, config = {} }) => {
     navigationArrows = true,
     slideIndicator = "none",
     isInfinite = false,
-    aspectRatio = [
-      [16, 9],
-      [4, 2],
-    ],
+    aspectRatio = [[16, 9]]
   } = config;
   const { footerSlot } = footerSlotConfig;
   const items = collectionToStories(collection);
@@ -46,28 +43,23 @@ const FullScreenSlider = ({ collection = {}, config = {} }) => {
   const url = generateNavigateSlug(collection, qtConfig);
 
   const showNumberOfStoriesToShow = getNumberOfStoriesToShow(numberOfStoriesToShow);
-  const textColor = getTextColor(theme);
   const footerSlotComp = footerSlot ? footerSlot() : null;
-  const imageAspectRatio = aspectRatio || [
-    [16, 9],
-    [4, 2],
-  ];
+  const imageAspectRatio = aspectRatio || [[16, 9]];
   return (
     <div
       className={`arrow-component full-width-with-padding ${containerStyle}`}
       data-test-id="full-screen-slider"
       styleName="full-screen-slider-wrapper"
-      style={{ backgroundColor: theme, color: textColor }}
-    >
+      style={{ backgroundColor: theme || "initial" }}>
       <div styleName={`full-screen-slider ${containerStyle}`}>
-        <span styleName={`${containerStyle}`}>
+        <div styleName={containerStyle}>
           <CollectionName
             styleName={`${containerStyle}`}
             collection={collection}
             collectionNameTemplate={collectionNameTemplate}
             collectionNameBorderColor={collectionNameBorderColor}
           />
-        </span>
+        </div>
         <div styleName={`wrapper ${containerStyle} ${alignment}`}>
           <ScrollSnap isArrow={navigationArrows} slideIndicator={slideIndicator} isInfinite={isInfinite}>
             {items.slice(0, showNumberOfStoriesToShow).map((story, index) => {
@@ -80,6 +72,8 @@ const FullScreenSlider = ({ collection = {}, config = {} }) => {
                   headerLevel={"1"}
                   borderColor={borderColor}
                   config={config}
+                  widths={[250, 480, 640, 1200]}
+                  isFullWidthImage={true}
                 />
               );
             })}
@@ -118,8 +112,8 @@ FullScreenSlider.propTypes = {
     footerButton: PropTypes.string,
     collectionNameBorderColor: PropTypes.string,
     // aspect ratio of the image
-    aspectRatio: PropTypes.array,
-  }),
+    aspectRatio: PropTypes.array
+  })
 };
 
 export default StateProvider(FullScreenSlider);

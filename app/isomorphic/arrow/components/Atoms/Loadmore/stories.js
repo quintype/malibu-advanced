@@ -9,7 +9,7 @@ const collection = generateCollection();
 const buttonOptions = {
   NavigateToPage: "NavigateToPage",
   SubsequentLoadCount: "SubsequentLoadCount",
-  CustomUrlPath: "CustomUrlPath",
+  CustomUrlPath: "CustomUrlPath"
 };
 
 withStore("Atoms/Button", {}, Readme).add("Buttons Options", () => (

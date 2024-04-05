@@ -4,7 +4,7 @@ import {
   optionalSelect,
   sectionTagTemplates,
   collectionNameTemplates,
-  footerButton,
+  footerButton
 } from "../../../../storybook";
 import FullScreenSlider from "./index";
 import { generateCollection } from "../../Fixture/";
@@ -26,11 +26,11 @@ const sectionTagDefaultvalue = "#3a9fdd";
 const navigationStyle = {
   defaultvalue: "none",
   dots: "dots",
-  dashes: "dashes",
+  dashes: "dashes"
 };
 const contentAlignment = {
   defaultvalue: "left",
-  center: "center",
+  center: "center"
 };
 
 const footerSlot = () => {
@@ -42,9 +42,9 @@ withStore(
   {
     qt: {
       config: {
-        "cdn-image": "thumbor-stg.assettype.com",
-      },
-    },
+        "cdn-image": "thumbor-stg.assettype.com"
+      }
+    }
   },
   Readme
 ).add("Default", () => {
@@ -68,7 +68,7 @@ withStore(
     footerButton: optionalSelect("Footer Button", footerButton),
     footerSlotConfig: { footerSlot: footerSlot },
     showButton: boolean("Show button", true),
-    showReadTime: boolean("Read time", true),
+    showReadTime: boolean("Read time", true)
   };
   return <FullScreenSlider collection={collection} config={contextConfig} />;
 });
@@ -80,10 +80,10 @@ withStore(
       config: {
         "cdn-image": "thumbor-stg.assettype.com",
         language: {
-          direction: "rtl",
-        },
-      },
-    },
+          direction: "rtl"
+        }
+      }
+    }
   },
   Readme
 )
@@ -109,7 +109,7 @@ withStore(
       footerButton: optionalSelect("Footer Button", footerButton),
       footerSlotConfig: { footerSlot: footerSlot },
       showButton: boolean("Show button", true),
-      showReadTime: boolean("Read time", true),
+      showReadTime: boolean("Read time", true)
     };
     return <FullScreenSlider collection={collection} config={contextConfig} />;
   });

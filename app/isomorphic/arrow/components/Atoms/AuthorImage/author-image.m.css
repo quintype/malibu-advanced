@@ -1,5 +1,4 @@
-/* eslint-disable scss/at-rule-no-unknown */
-@value viewports: "../../../../../assets/arrow/stylesheets/viewports.m.css";
+@value viewports: "../../../../assets/stylesheets/viewports.m.css";
 @value mobile from viewports;
 @value tablet from viewports;
 
@@ -23,6 +22,7 @@
     height: 224px;
     @media (min-width: tablet) {
       width: 364px;
+      height: 364px;
     }
   }
 }

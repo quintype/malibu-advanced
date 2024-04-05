@@ -21,13 +21,11 @@ export const SliderIndicator = ({ indicatorItems, indicatorClick, selectedIndex,
           key={`slider-${index}`}
           styleName="indicator"
           className="indicator"
-          onClick={(e) => indicatorClick(e, index)}
-        >
+          onClick={(e) => indicatorClick(e, index)}>
           <button
             styleName={`indicator-button indicator-${indicatorType} indicator-${indicatorType}-${textColor}`}
             className={`indicator-button indicator-${indicatorType}`}
-            aria-pressed={selectedIndex === index ? "true" : "false"}
-          ></button>
+            aria-pressed={selectedIndex === index ? "true" : "false"}></button>
         </li>
       ))}
     </ul>
@@ -39,5 +37,5 @@ SliderIndicator.propTypes = {
   perView: number,
   indicatorType: string,
   indicatorClick: func,
-  selectedIndex: number,
+  selectedIndex: number
 };

@@ -1,8 +1,8 @@
-/* eslint-disable scss/at-rule-no-unknown */
-@value viewports: "../../../../../assets/arrow/stylesheets/viewports.m.css";
+@value viewports: "../../../../assets/stylesheets/viewports.m.css";
 @value mobile from viewports;
 
 .timeStamp {
+  margin-top: var(--arrow-spacing-m);
   font-size: var(--arrow-fs-tiny);
   @media (min-width: mobile) {
     font-size: var(--arrow-fs-xs);
@@ -17,6 +17,7 @@
   color: var(--arrow-c-invert-mono4);
 }
 
+.update-details,
 .publish-details {
   display: flex;
   align-items: baseline;
@@ -24,11 +25,9 @@
 }
 
 .update-details {
-  display: flex;
-  margin-top: var(--arrow-spacing-xs);
-  align-items: baseline;
-  flex-wrap: wrap;
+  margin-top: var(--arrow-spacing-s);
 }
+
 .dot-indicator {
   display: flex;
   align-items: center;
@@ -47,4 +46,8 @@
 }
 .date.light {
   color: var(--arrow-c-invert-mono2);
+}
+
+.wrapper {
+  direction: ltr;
 }

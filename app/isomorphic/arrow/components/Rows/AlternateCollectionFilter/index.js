@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import PropTypes from "prop-types";
-import get from "lodash/get";
+import get from "lodash.get";
 import { useDispatch, useSelector } from "react-redux";
 import { collectionToStories } from "@quintype/components";
 
@@ -25,7 +25,7 @@ const AlternateCollectionFilter = ({ collection, config = {} }) => {
     collectionNameTemplate = "",
     footerSlotConfig = {},
     footerButton = "",
-    showButton = true,
+    showButton = true
   } = config;
   const { footerSlot } = footerSlotConfig;
 
@@ -53,7 +53,7 @@ const AlternateCollectionFilter = ({ collection, config = {} }) => {
     try {
       let data = {};
       if (!(id in cachedStories)) {
-        const res = await axios.get(`/api/v1/collections/${id}?limit=7`);
+        let res = await axios.get(`/api/v1/collections/${id}?limit=7`);
         data = res.data;
       } else data = cachedStories[id];
       memoizeStories(id, data);
@@ -81,7 +81,7 @@ const AlternateCollectionFilter = ({ collection, config = {} }) => {
   const openChildCollectionItems = (event, index, slug) => {
     event.stopPropagation();
     fetchSubCollectionData(slug);
-    const activeIndex = active === index ? 0 : index;
+    let activeIndex = active === index ? 0 : index;
     handleActive(activeIndex);
   };
 
@@ -93,8 +93,7 @@ const AlternateCollectionFilter = ({ collection, config = {} }) => {
     <div
       className="full-width-with-padding arrow-component"
       data-test-id="collection-filter"
-      style={{ backgroundColor: theme, color: textColor }}
-    >
+      style={{ backgroundColor: theme || "initial" }}>
       <div styleName={`wrapper ${getCustomStyleName}`}>
         <CollectionName
           collection={collection}
@@ -108,12 +107,10 @@ const AlternateCollectionFilter = ({ collection, config = {} }) => {
                 <div
                   key={index}
                   className={`child-collection-wrapper ${index === active ? "open-subchild" : ""}`}
-                  styleName={`child-collection-wrapper ${index === active ? "open-subchild" : ""}`}
-                >
+                  styleName={`child-collection-wrapper ${index === active ? "open-subchild" : ""}`}>
                   <div
                     styleName={`child-collection ${textColor}`}
-                    onClick={(event) => openChildCollectionItems(event, index, subCollections.id)}
-                  >
+                    onClick={(event) => openChildCollectionItems(event, index, subCollections.id)}>
                     {subCollections.name}
                   </div>
                   <span className={`navigator ${textColor}`} styleName={`navigator ${textColor}`} />
@@ -171,12 +168,12 @@ AlternateCollectionFilter.propTypes = {
     collectionNameTemplate: PropTypes.string,
     footerSlotConfig: PropTypes.object,
     footerButton: PropTypes.string,
-    collectionNameBorderColor: PropTypes.string,
-  }),
+    collectionNameBorderColor: PropTypes.string
+  })
 };
 
 AlternateCollectionFilter.defaultProps = {
   theme: "#ffffff",
   slotConfig: "story",
-  border: "",
+  border: ""
 };

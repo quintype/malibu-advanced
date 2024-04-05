@@ -1,4 +1,3 @@
-/* eslint-disable prefer-regex-literals */
 import React from "react";
 import { color, boolean, text } from "@storybook/addon-knobs";
 import {
@@ -6,7 +5,7 @@ import {
   optionalSelect,
   sectionTagTemplates,
   collectionNameTemplates,
-  footerButton,
+  footerButton
 } from "../../../../storybook";
 import AlternateCollectionFilter from "./index";
 import { AdPlaceholder } from "../../Atoms/AdPlaceholder";
@@ -30,7 +29,7 @@ const sectionTagDefaultvalue = "#3a9fdd";
 
 const borderTemplate = {
   default: "",
-  border: "full",
+  border: "full"
 };
 
 const footerSlot = () => {
@@ -43,9 +42,9 @@ withStore(
     qt: {
       config: {
         "cdn-image": "thumbor-stg.assettype.com",
-        mountAt: "/sub-directory",
-      },
-    },
+        mountAt: "/sub-directory"
+      }
+    }
   },
   Readme
 )
@@ -66,7 +65,7 @@ withStore(
       buttonText: text("Footer text", "Read More"),
       footerSlotConfig: { footerSlot: footerSlot },
       showButton: boolean("Show button", true),
-      showReadTime: boolean("Read time", true),
+      showReadTime: boolean("Read time", true)
     };
 
     mock.onGet(API_REQUEST).reply(200, nestedCollection);

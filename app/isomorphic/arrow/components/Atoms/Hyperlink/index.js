@@ -13,13 +13,12 @@ export const HyperLink = ({ hyperLink = "" }) => {
       className="arr--hyperlink-button"
       target="_blank"
       rel="noopener noreferrer"
-      styleName="hyperlink-button"
-    >
+      styleName="hyperlink-button">
       <HyperLinkIcon />
     </Link>
   );
 };
 
 HyperLink.propTypes = {
-  hyperLink: PropTypes.string,
+  hyperLink: PropTypes.string
 };

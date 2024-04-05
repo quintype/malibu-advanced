@@ -1,6 +1,6 @@
 import React, { Fragment } from "react";
 import PropTypes from "prop-types";
-import get from "lodash/get";
+import get from "lodash.get";
 import { collectionToStories } from "@quintype/components";
 import { StoryCard } from "../../Molecules/StoryCard";
 import { Headline } from "../../Atoms/Headline";
@@ -26,11 +26,11 @@ const ElevenStories = ({ collection, config = {} }) => {
     borderColor = "",
     theme = "",
     slotConfig = [],
-    withseparator,
+    withseparator = true,
     collectionNameTemplate = "",
     footerSlotConfig = {},
     footerButton = "",
-    localizationConfig = {},
+    localizationConfig = {}
   } = config;
   const { type = "story", component } = get(slotConfig, [0], {});
   const { footerSlot } = footerSlotConfig;
@@ -41,6 +41,7 @@ const ElevenStories = ({ collection, config = {} }) => {
 
   const textColor = getTextColor(theme);
   const SectionTagborderColor = rgbToHex(borderColor);
+  const borderValue = withseparator ? "bottom" : "";
   const getChildCollectionData = () => {
     const filterCollection = get(collection, ["items"], []).find((collections) => collections.type === "collection");
     return (
@@ -49,10 +50,15 @@ const ElevenStories = ({ collection, config = {} }) => {
         {storyItems.slice(0, 1).map((story, index) => {
           return (
             <div styleName="first-story-card" key={`story-${index}`}>
-              <StoryCard story={story} theme={theme} headerLevel="4" border={withseparator ? "bottom" : ""}>
+              <StoryCard story={story} theme={theme} headerLevel="4" border={borderValue} config={config}>
                 <SectionTag story={story} borderColor={SectionTagborderColor} />
                 <Headline story={story} premiumStoryIconConfig={config} />
-                <AuthorWithTime config={localizationConfig} story={story} hideAuthorImage={false} />
+                <AuthorWithTime
+                  config={localizationConfig}
+                  story={story}
+                  hideAuthorImage={false}
+                  collectionId={collection.id}
+                />
                 <Subheadline story={story} />
               </StoryCard>
             </div>
@@ -61,10 +67,15 @@ const ElevenStories = ({ collection, config = {} }) => {
         {storyItems.slice(1, 4).map((story, index) => {
           return (
             <div styleName="story-card" key={`story-${index}`}>
-              <StoryCard story={story} theme={theme} border={withseparator ? "bottom" : ""}>
+              <StoryCard story={story} theme={theme} border={borderValue} config={config}>
                 <SectionTag story={story} borderColor={SectionTagborderColor} />
                 <Headline story={story} premiumStoryIconConfig={config} />
-                <AuthorWithTime config={localizationConfig} story={story} hideAuthorImage={false} />
+                <AuthorWithTime
+                  config={localizationConfig}
+                  story={story}
+                  hideAuthorImage={false}
+                  collectionId={collection.id}
+                />
               </StoryCard>
             </div>
           );
@@ -72,10 +83,15 @@ const ElevenStories = ({ collection, config = {} }) => {
         {storyItems.slice(4, 5).map((story, index) => {
           return (
             <div styleName="story-card" key={`story-${index}`}>
-              <StoryCard story={story} theme={theme}>
+              <StoryCard story={story} theme={theme} config={config}>
                 <SectionTag story={story} borderColor={SectionTagborderColor} />
                 <Headline story={story} premiumStoryIconConfig={config} />
-                <AuthorWithTime config={localizationConfig} story={story} hideAuthorImage={false} />
+                <AuthorWithTime
+                  config={localizationConfig}
+                  story={story}
+                  hideAuthorImage={false}
+                  collectionId={collection.id}
+                />
               </StoryCard>
             </div>
           );
@@ -90,10 +106,15 @@ const ElevenStories = ({ collection, config = {} }) => {
         {storyItems.slice(6, 7).map((story, index) => {
           return (
             <div styleName="first-story-card" key={`story-${index}`}>
-              <StoryCard story={story} theme={theme} border={withseparator ? "bottom" : ""}>
+              <StoryCard story={story} theme={theme} border={borderValue} config={config}>
                 <SectionTag story={story} borderColor={SectionTagborderColor} />
                 <Headline story={story} premiumStoryIconConfig={config} />
-                <AuthorWithTime config={localizationConfig} story={story} hideAuthorImage={false} />
+                <AuthorWithTime
+                  config={localizationConfig}
+                  story={story}
+                  hideAuthorImage={false}
+                  collectionId={collection.id}
+                />
                 <Subheadline story={story} clazzName="arr-hidden-mob" />
               </StoryCard>
             </div>
@@ -102,10 +123,15 @@ const ElevenStories = ({ collection, config = {} }) => {
         {storyItems.slice(7, 10).map((story, index) => {
           return (
             <div styleName="story-card" key={`story-${index}`}>
-              <StoryCard story={story} theme={theme} border={withseparator ? "bottom" : ""}>
+              <StoryCard story={story} theme={theme} border={borderValue} config={config}>
                 <SectionTag story={story} borderColor={SectionTagborderColor} />
                 <Headline story={story} premiumStoryIconConfig={config} />
-                <AuthorWithTime config={localizationConfig} story={story} hideAuthorImage={false} />
+                <AuthorWithTime
+                  config={localizationConfig}
+                  story={story}
+                  hideAuthorImage={false}
+                  collectionId={collection.id}
+                />
               </StoryCard>
             </div>
           );
@@ -113,10 +139,15 @@ const ElevenStories = ({ collection, config = {} }) => {
         {storyItems.slice(10, 11).map((story, index) => {
           return (
             <div styleName="story-card" key={`story-${index}`}>
-              <StoryCard story={story} theme={theme}>
+              <StoryCard story={story} theme={theme} config={config}>
                 <SectionTag story={story} borderColor={SectionTagborderColor} />
                 <Headline story={story} premiumStoryIconConfig={config} />
-                <AuthorWithTime config={localizationConfig} story={story} hideAuthorImage={false} />
+                <AuthorWithTime
+                  config={localizationConfig}
+                  story={story}
+                  hideAuthorImage={false}
+                  collectionId={collection.id}
+                />
               </StoryCard>
             </div>
           );
@@ -129,178 +160,114 @@ const ElevenStories = ({ collection, config = {} }) => {
   const footerSlotComp = footerSlot ? footerSlot() : null;
 
   const getColumn = () => {
-    if (withseparator) {
-      return (
-        <>
-          <div styleName="wrapper-with-divider">
-            <div styleName="column-one">
-              {storyItems.slice(2, 3).map((story, index) => {
-                return (
+    return (
+      <>
+        <div styleName={withseparator ? "wrapper-with-divider" : "wrapper"}>
+          <div styleName="column-one">
+            {storyItems.slice(2, 3).map((story, index) => {
+              return (
+                <div styleName="story-card" key={`story-${index}`}>
+                  <StoryCard
+                    story={story}
+                    theme={theme}
+                    border={borderValue}
+                    isHorizontalMobile
+                    borderColor={SectionTagborderColor}
+                    config={config}
+                    aspectRatio={[[16, 9], [16, 9]]}
+                    hideAuthorImage={false}
+                    headerLevel="5"
+                    collectionId={collection.id}
+                  />
+                </div>
+              );
+            })}
+            {storyItems.slice(3, 5).map((story, index) => {
+              return (
+                <Fragment key={`story-col-${index}-${get(story, ["id"], "0")}`}>
                   <div styleName="story-card" key={`story-${index}`}>
-                    <StoryCard
-                      story={story}
-                      theme={theme}
-                      border="bottom"
-                      isHorizontalMobile
-                      borderColor={SectionTagborderColor}
-                      config={config}
-                      hideAuthorImage={false}
-                      headerLevel="5"
-                    />
+                    <StoryCard story={story} theme={theme} border={borderValue} config={config}>
+                      <SectionTag story={story} borderColor={SectionTagborderColor} />
+                      <Headline story={story} premiumStoryIconConfig={config} />
+                      <AuthorWithTime
+                        config={localizationConfig}
+                        story={story}
+                        hideAuthorImage={false}
+                        collectionId={collection.id}
+                      />
+                    </StoryCard>
                   </div>
-                );
-              })}
-              {storyItems.slice(3, 5).map((story, index) => {
-                return (
-                  <Fragment key={`story-col-${index}-${get(story, ["id"], "0")}`}>
-                    <div styleName="story-card" key={`story-${index}`}>
-                      <StoryCard story={story} theme={theme} border={withseparator ? "bottom" : ""}>
-                        <SectionTag story={story} borderColor={SectionTagborderColor} />
-                        <Headline story={story} premiumStoryIconConfig={config} />
-                        <AuthorWithTime config={localizationConfig} story={story} hideAuthorImage={false} />
-                      </StoryCard>
-                    </div>
-                  </Fragment>
-                );
-              })}
-              {storyItems.slice(5, 6).map((story, index) => {
-                return (
-                  <Fragment key={`story-col2-${index}-${get(story, ["id"], "0")}`}>
-                    <div styleName="story-card" key={`story-${index}`}>
-                      <StoryCard story={story} theme={theme}>
-                        <SectionTag story={story} borderColor={SectionTagborderColor} />
-                        <Headline story={story} premiumStoryIconConfig={config} />
-                        <AuthorWithTime config={localizationConfig} story={story} hideAuthorImage={false} />
-                      </StoryCard>
-                    </div>
-                  </Fragment>
-                );
-              })}
-            </div>
-            <div styleName={`divider ${textColor}`} />
-            <div styleName="column-two">
-              {storyItems.slice(0, 1).map((story, index) => {
-                return (
+                </Fragment>
+              );
+            })}
+            {storyItems.slice(5, 6).map((story, index) => {
+              return (
+                <Fragment key={`story-col2-${index}-${get(story, ["id"], "0")}`}>
                   <div styleName="story-card" key={`story-${index}`}>
-                    <StoryCard
-                      story={story}
-                      theme={theme}
-                      borderColor={SectionTagborderColor}
-                      centerAlign
-                      border="bottom"
-                      headerLevel="3"
-                      aspectRatio={[
-                        [16, 9],
-                        [16, 9],
-                      ]}
-                      hideAuthorImage={false}
-                      config={config}
-                    />
+                    <StoryCard story={story} theme={theme} config={config}>
+                      <SectionTag story={story} borderColor={SectionTagborderColor} />
+                      <Headline story={story} premiumStoryIconConfig={config} />
+                      <AuthorWithTime
+                        config={localizationConfig}
+                        story={story}
+                        hideAuthorImage={false}
+                        collectionId={collection.id}
+                      />
+                    </StoryCard>
                   </div>
-                );
-              })}
-              {storyItems.slice(1, 2).map((story, index) => {
-                return (
-                  <div styleName="story-card" key={`story-${index}`}>
-                    <StoryCard
-                      story={story}
-                      isHorizontal
-                      theme={theme}
-                      borderColor={SectionTagborderColor}
-                      hideAuthorImage={false}
-                      headerLevel="5"
-                      config={config}
-                    />
-                  </div>
-                );
-              })}
-            </div>
-            <div styleName={`divider ${textColor}`} />
-            {slot}
+                </Fragment>
+              );
+            })}
           </div>
-        </>
-      );
-    } else
-      return (
-        <>
-          <div styleName="wrapper">
-            <div styleName="column-one">
-              {storyItems.slice(2, 3).map((story, index) => {
-                return (
-                  <div styleName="story-card" key={`story-${index}`}>
-                    <StoryCard
-                      story={story}
-                      theme={theme}
-                      borderColor={SectionTagborderColor}
-                      isHorizontalMobile
-                      headerLevel="5"
-                      hideAuthorImage={false}
-                      config={config}
-                    />
-                  </div>
-                );
-              })}
-              {storyItems.slice(3, 6).map((story, index) => {
-                return (
-                  <Fragment key={`story-col1-${get(story, ["id"], "0")}`}>
-                    <div styleName="story-card" key={`story-${index}`}>
-                      <StoryCard story={story} theme={theme} config={config}>
-                        <SectionTag story={story} borderColor={SectionTagborderColor} />
-                        <Headline story={story} premiumStoryIconConfig={config} />
-                        <AuthorWithTime config={localizationConfig} story={story} hideAuthorImage={false} />
-                      </StoryCard>
-                    </div>
-                  </Fragment>
-                );
-              })}
-            </div>
-            <div styleName="column-two">
-              {storyItems.slice(0, 1).map((story, index) => {
-                return (
-                  <div styleName="story-card" key={`story-${index}`}>
-                    <StoryCard
-                      story={story}
-                      borderColor={SectionTagborderColor}
-                      theme={theme}
-                      headerLevel="3"
-                      centerAlign
-                      aspectRatio={[
-                        [16, 9],
-                        [16, 9],
-                      ]}
-                      hideAuthorImage={false}
-                      config={config}
-                    />
-                  </div>
-                );
-              })}
-              {storyItems.slice(1, 2).map((story, index) => {
-                return (
-                  <div styleName="story-card" key={`story-${index}`}>
-                    <StoryCard
-                      story={story}
-                      isHorizontal
-                      theme={theme}
-                      borderColor={SectionTagborderColor}
-                      hideAuthorImage={false}
-                      headerLevel="5"
-                      config={config}
-                    />
-                  </div>
-                );
-              })}
-            </div>
-            {slot}
+          {withseparator && <div styleName={`divider ${textColor}`} />}
+          <div styleName="column-two">
+            {storyItems.slice(0, 1).map((story, index) => {
+              return (
+                <div styleName="story-card" key={`story-${index}`}>
+                  <StoryCard
+                    story={story}
+                    theme={theme}
+                    borderColor={SectionTagborderColor}
+                    centerAlign
+                    border={borderValue}
+                    headerLevel="3"
+                    aspectRatio={[[16, 9], [16, 9]]}
+                    hideAuthorImage={false}
+                    config={config}
+                    collectionId={collection.id}
+                  />
+                </div>
+              );
+            })}
+            {storyItems.slice(1, 2).map((story, index) => {
+              return (
+                <div styleName="story-card" key={`story-${index}`}>
+                  <StoryCard
+                    story={story}
+                    isHorizontal
+                    theme={theme}
+                    borderColor={SectionTagborderColor}
+                    hideAuthorImage={false}
+                    headerLevel="5"
+                    aspectRatio={[[16, 9], [16, 9]]}
+                    config={config}
+                    collectionId={collection.id}
+                  />
+                </div>
+              );
+            })}
           </div>
-        </>
-      );
+          {withseparator && <div styleName={`divider ${textColor}`} />}
+          {slot}
+        </div>
+      </>
+    );
   };
   return (
     <div
       className="full-width-with-padding arrow-component"
       data-test-id="eleven-stories"
-      style={{ backgroundColor: theme, color: textColor }}
-    >
+      style={{ backgroundColor: theme || "initial" }}>
       <div styleName="eleven-stories">
         <CollectionName
           collection={collection}
@@ -332,8 +299,8 @@ ElevenStories.propTypes = {
     slotConfig: PropTypes.array,
     withseparator: PropTypes.bool,
     collectionNameTemplate: PropTypes.string,
-    collectionNameBorderColor: PropTypes.string,
-  }),
+    collectionNameBorderColor: PropTypes.string
+  })
 };
 
 export default StateProvider(ElevenStories);

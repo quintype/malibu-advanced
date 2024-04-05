@@ -1,5 +1,4 @@
-/* eslint-disable scss/at-rule-no-unknown */
-@value viewports: "../../../../../../assets/arrow/stylesheets/viewports.m.css";
+@value viewports: "../../../../../assets/stylesheets/viewports.m.css";
 @value mobile from viewports;
 
 .qa-withAuthorImage:global(.arrow-component) .a-element p,
@@ -10,11 +9,58 @@
   font-size: var(--arrow-fs-s);
   font-weight: var(--arrow-fw-bold);
   line-height: var(--arrow-lh-5);
-  display: inline;
   color: var(--arrow-c-mono2);
   @media (min-width: mobile) {
     font-size: var(--arrow-fs-m);
   }
+}
+
+.qa-withAuthorImage:global(.arrow-component) .a-element p,
+.qa-default:global(.arrow-component) .a-element p,
+.qa-withAuthorImage:global(.arrow-component) .q-element p,
+.qa-default:global(.arrow-component) .q-element p {
+  margin-bottom: 15px;
+}
+
+.qa-withAuthorImage:global(.arrow-component) .a-element ul,
+.qa-default:global(.arrow-component) .a-element ul,
+.qa-withAuthorImage:global(.arrow-component) .q-element ul,
+.qa-default:global(.arrow-component) .q-element ul {
+  list-style: initial;
+  padding: var(--arrow-spacing-m) var(--arrow-spacing-xl) 0 var(--arrow-spacing-xl);
+}
+
+.qa-withAuthorImage:global(.arrow-component) .a-element ol,
+.qa-default:global(.arrow-component) .a-element ol,
+.qa-withAuthorImage:global(.arrow-component) .q-element ol,
+.qa-default:global(.arrow-component) .q-element ol {
+  list-style: auto;
+  padding: var(--arrow-spacing-m) var(--arrow-spacing-xl) 0 var(--arrow-spacing-xl);
+}
+
+.qa-withAuthorImage:global(.arrow-component) .a-element li,
+.qa-default:global(.arrow-component) .a-element li,
+.qa-withAuthorImage:global(.arrow-component) .q-element li,
+.qa-default:global(.arrow-component) .q-element li {
+  display: list-item;
+  font-size: var(--arrow-fs-m);
+  margin-bottom: 15px;
+}
+
+.qa-withAuthorImage:global(.arrow-component) .a-element li > p,
+.qa-default:global(.arrow-component) .a-element li > p,
+.qa-withAuthorImage:global(.arrow-component) .q-element li > p,
+.qa-default:global(.arrow-component) .q-element li > p {
+  margin-bottom: unset;
+}
+
+.qa-withAuthorImage:global(.arrow-component) .a-element a,
+.qa-default:global(.arrow-component) .a-element a,
+.qa-withAuthorImage:global(.arrow-component) .q-element a,
+.qa-default:global(.arrow-component) .q-element a {
+  color: var(--textElementHyperlinkColor);
+  border-bottom: 1px solid var(--textElementHyperlinkColor);
+  transition: border 0.3s ease;
 }
 
 .q-element {
@@ -57,6 +103,16 @@
   border-radius: 2.8px;
 }
 
+.qa-default .q-element,
+.qa-default .a-element {
+  .light {
+    color: var(--arrow-c-light);
+  }
+  .dark {
+    color: var(--arrow-c-dark);
+  }
+}
+
 .qa-default .curveIcon {
   border-radius: 13.5px;
   @media (min-width: mobile) {
@@ -80,19 +136,32 @@
   }
 }
 
+.qa-withAuthorImage .fallbackImage svg {
+  width: 27px;
+  height: 27px;
+  position: relative;
+  top: var(--arrow-spacing-xs);
+  @media (min-width: mobile) {
+    width: 30px;
+    height: 30px;
+  }
+}
+
+.qa-withAuthorImage .fallbackAttribution {
+  display: inline-block;
+  width: 36px;
+}
+
 .qa-withAuthorImage:global(.arrow-component) .a-element .light p,
 .qa-default:global(.arrow-component) .a-element .light p,
 .qa-withAuthorImage:global(.arrow-component) .q-element .light p,
 .qa-default:global(.arrow-component) .q-element .light p {
   color: var(--arrow-c-invert-mono1);
+  margin-bottom: 15px;
   a {
     color: var(--arrow-c-invert-mono2);
     border-bottom: 1px solid var(--arrow-c-invert-mono2);
   }
-}
-
-.content {
-  display: inline;
 }
 
 html[dir="rtl"] {
@@ -104,4 +173,13 @@ html[dir="rtl"] {
     margin-right: 0;
     margin-left: var(--arrow-spacing-xs);
   }
+}
+
+.content,
+.content :first-child {
+  display: inline;
+}
+
+.content p:nth-child(2) {
+  margin-top: 15px;
 }

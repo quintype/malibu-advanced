@@ -73,6 +73,13 @@ html[dir="rtl"] {
       margin-left: var(--arrow-spacing-xxs);
     }
   }
+  .time-wrapper > time {
+    direction: rtl;
+  }
+
+  .rtl-date-time.time-wrapper > time {
+    direction: ltr;
+  }
 
   .event-title.dark,
   .event-title.light {
