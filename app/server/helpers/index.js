@@ -62,6 +62,8 @@ export async function getArrowCss(state, { qtAssetHelpers = require("@quintype/f
       return getAsset("arrowThreeColGridCssChunk.css", qtAssetHelpers);
     case "ArrowThreeColSevenStories":
       return getAsset("arrowThreeColSevenStoryCssChunk.css", qtAssetHelpers);
+    case "ArrowThreeColTwelveStories":
+      return getAsset("arrowThreeColTwelveStoriesCssChunk.css", qtAssetHelpers);
     case "ArrowTwoColFourStories":
       return getAsset("arrowTwoColFourStoriesCssChunk.css", qtAssetHelpers);
     default:
