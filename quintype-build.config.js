@@ -14,6 +14,7 @@ const loadableConfigObj = {
       arrowOneColStoryListCssChunk: "./app/isomorphic/arrow/components/Rows/OneColStoryList",
       arrowThreeColGridCssChunk: "./app/isomorphic/arrow/components/Rows/ThreeColGrid",
       arrowThreeColSevenStoryCssChunk: "./app/isomorphic/arrow/components/Rows/ThreeColSevenStory",
+      arrowThreeColTwelveStoriesCssChunk: "./app/isomorphic/arrow/components/Rows/ThreeColTwelveStories",
       arrowTwoColFourStoriesCssChunk: "./app/isomorphic/arrow/components/Rows/TwoColFourStory",
       authorPage: "./app/isomorphic/components/pages/author-page/index.js",
       arrowTextStoryCssChunk: "./app/isomorphic/arrow/components/Rows/StoryTemplates/TextStoryTemplates",
