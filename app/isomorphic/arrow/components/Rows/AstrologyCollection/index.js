@@ -23,7 +23,7 @@ const AstrologyCollection = ({ collection, config = {} }) => {
     border = "",
     collectionNameTemplate = "",
     footerButton = "",
-    slotConfig = []
+    slotConfig = [],
   } = config;
 
   const [subCollectionStories, handleApiData] = useState([]);
@@ -54,7 +54,7 @@ const AstrologyCollection = ({ collection, config = {} }) => {
     try {
       let data = {};
       if (!(id in cachedStories)) {
-        let res = await axios.get(`/api/v1/collections/${id}?limit=12`);
+        const res = await axios.get(`/api/v1/collections/${id}?limit=12`);
 
         data = res.data;
       } else data = cachedStories[id];
@@ -83,7 +83,7 @@ const AstrologyCollection = ({ collection, config = {} }) => {
   const openChildCollectionItems = (event, index, slug) => {
     event.stopPropagation();
     fetchSubCollectionData(slug);
-    let activeIndex = active === index ? 0 : index;
+    const activeIndex = active === index ? 0 : index;
     handleActive(activeIndex);
   };
 
@@ -91,7 +91,8 @@ const AstrologyCollection = ({ collection, config = {} }) => {
     <div
       className="full-width-with-padding arrow-component"
       data-test-id="astrology-collection"
-      style={{ backgroundColor: theme || "initial" }}>
+      style={{ backgroundColor: theme || "initial" }}
+    >
       <div styleName="wrapper">
         <CollectionName
           collection={collection}
@@ -111,7 +112,8 @@ const AstrologyCollection = ({ collection, config = {} }) => {
                   key={`tab-${index}`}
                   styleName={`child-collection ${textColor} ${index === active ? "open-subchild" : ""}`}
                   onClick={(event) => openChildCollectionItems(event, index, subCollections.id)}
-                  data-test-id={subCollections.name}>
+                  data-test-id={subCollections.name}
+                >
                   {subCollections.name}
                 </li>
               );
@@ -165,12 +167,12 @@ AstrologyCollection.propTypes = {
     border: PropTypes.string,
     collectionNameTemplate: PropTypes.string,
     footerButton: PropTypes.string,
-    collectionNameBorderColor: PropTypes.string
-  })
+    collectionNameBorderColor: PropTypes.string,
+  }),
 };
 
 AstrologyCollection.defaultProps = {
   theme: "#ffffff",
   slotConfig: "story",
-  border: ""
+  border: "",
 };

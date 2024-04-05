@@ -48,7 +48,8 @@ const Snapshot = ({ story = {}, config = {} }) => {
       data-test-id="snapshot-template"
       className="arrow-component arr--content-wrapper arr--snapshot-story"
       style={{ backgroundColor: theme }}
-      styleName={`wrapper ${textColor}`}>
+      styleName={`wrapper ${textColor}`}
+    >
       <HeroImage story={story} aspectRatio={[[16, 9]]} />
       <SectionTag story={story} />
       <StoryHeadline story={story} premiumStoryIconConfig={premiumStoryIconConfig} />
@@ -64,7 +65,7 @@ const Snapshot = ({ story = {}, config = {} }) => {
             <div
               styleName="content-overlay"
               style={{
-                backgroundImage: `linear-gradient(180deg,hsla(0,0%,100%,0), ${config.theme})`
+                backgroundImage: `linear-gradient(180deg,hsla(0,0%,100%,0), ${config.theme})`,
               }}
             />
           </div>
@@ -84,13 +85,13 @@ Snapshot.propTypes = {
   config: PropTypes.shape({
     templateType: PropTypes.string,
     authorCard: PropTypes.object,
-    asideCollection: PropTypes.object
+    asideCollection: PropTypes.object,
   }),
   firstChild: PropTypes.node,
   secondChild: PropTypes.node,
   storyElementsConfig: PropTypes.object,
   adComponent: PropTypes.func,
-  widgetComp: PropTypes.func
+  widgetComp: PropTypes.func,
 };
 
 export default StateProvider(Snapshot);

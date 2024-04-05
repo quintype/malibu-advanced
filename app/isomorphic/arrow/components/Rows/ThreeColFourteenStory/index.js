@@ -24,7 +24,7 @@ const ThreeColFourteenStories = ({ collection = {}, config = {} }) => {
     border = "",
     theme = "",
     collectionNameTemplate = "",
-    slotConfig = []
+    slotConfig = [],
   } = config;
   const { type, component } = get(slotConfig, [0], {});
 
@@ -32,7 +32,18 @@ const ThreeColFourteenStories = ({ collection = {}, config = {} }) => {
 
   const storyCallBack = (restOftheStories = []) => {
     return restOftheStories.slice(10, 13).map((item) => {
-      return <StoryCard key={item} story={item} isHorizontal aspectRatio={[[1, 1], [4, 3]]} border={border} />;
+      return (
+        <StoryCard
+          key={item}
+          story={item}
+          isHorizontal
+          aspectRatio={[
+            [1, 1],
+            [4, 3],
+          ]}
+          border={border}
+        />
+      );
     });
   };
 
@@ -40,7 +51,8 @@ const ThreeColFourteenStories = ({ collection = {}, config = {} }) => {
     <div
       className="full-width-with-padding arrow-component"
       data-test-id="three-col-fourteen-stories"
-      style={{ backgroundColor: theme || "initial" }}>
+      style={{ backgroundColor: theme || "initial" }}
+    >
       <div styleName="wrapper">
         <CollectionName
           collection={collection}
@@ -53,9 +65,19 @@ const ThreeColFourteenStories = ({ collection = {}, config = {} }) => {
               story={firstStory}
               headerLevel="2"
               theme={theme}
-              aspectRatio={[[16, 9], [16, 9]]}
-              config={config}>
-              <HeroImage story={firstStory} aspectRatio={[[16, 9], [16, 9]]} />
+              aspectRatio={[
+                [16, 9],
+                [16, 9],
+              ]}
+              config={config}
+            >
+              <HeroImage
+                story={firstStory}
+                aspectRatio={[
+                  [16, 9],
+                  [16, 9],
+                ]}
+              />
               <div className="card-content">
                 <SectionTag story={firstStory} borderColor={borderColor} />
                 <Headline story={firstStory} headerLevel="2" premiumStoryIconConfig={config} />
@@ -67,7 +89,10 @@ const ThreeColFourteenStories = ({ collection = {}, config = {} }) => {
                 border={border}
                 story={secondStory}
                 isHorizontal
-                aspectRatio={[[1, 1], [4, 3]]}
+                aspectRatio={[
+                  [1, 1],
+                  [4, 3],
+                ]}
                 borderColor={borderColor}
                 config={config}
               />
@@ -82,7 +107,10 @@ const ThreeColFourteenStories = ({ collection = {}, config = {} }) => {
                     story={item}
                     isHorizontal
                     theme={theme}
-                    aspectRatio={[[1, 1], [4, 3]]}
+                    aspectRatio={[
+                      [1, 1],
+                      [4, 3],
+                    ]}
                     border={border}
                     borderColor={borderColor}
                     config={config}
@@ -99,7 +127,10 @@ const ThreeColFourteenStories = ({ collection = {}, config = {} }) => {
                     story={item}
                     isHorizontal
                     theme={theme}
-                    aspectRatio={[[1, 1], [4, 3]]}
+                    aspectRatio={[
+                      [1, 1],
+                      [4, 3],
+                    ]}
                     border={border}
                     borderColor={borderColor}
                     config={config}
@@ -124,8 +155,8 @@ ThreeColFourteenStories.propTypes = {
     slotConfig: PropTypes.array,
     collectionNameTemplate: PropTypes.string,
     collectionNameBorderColor: PropTypes.string,
-    borderColor: PropTypes.string
-  })
+    borderColor: PropTypes.string,
+  }),
 };
 
 export default StateProvider(ThreeColFourteenStories);

@@ -15,7 +15,7 @@ const storyElementsConfig = {
   "q-and-a": {},
   question: {},
   answer: {},
-  references: {}
+  references: {},
 };
 
 beforeEach(() => {
@@ -26,7 +26,7 @@ describe("Listicle Story Templates", () => {
   it("Should render listicle story template with section tag", () => {
     const templateConfig = {
       templateType: "default",
-      showSection: true
+      showSection: true,
     };
     const wrapper = shallow(
       <ListicleStoryTemplate story={story} config={templateConfig} storyElementsConfig={storyElementsConfig} />
@@ -37,7 +37,7 @@ describe("Listicle Story Templates", () => {
   it("Should render listicle story template without section tag", () => {
     const templateConfig = {
       templateType: "default",
-      showSection: false
+      showSection: false,
     };
     const wrapper = shallow(
       <ListicleStoryTemplate story={story} config={templateConfig} storyElementsConfig={storyElementsConfig} />

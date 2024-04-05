@@ -1,3 +1,5 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable react/display-name */
 import React from "react";
 import PropTypes from "prop-types";
 
@@ -9,5 +11,5 @@ export const withElementWrapper = (StoryElement) => (props) => {
 };
 
 withElementWrapper.propTypes = {
-  StoryElement: PropTypes.element
+  StoryElement: PropTypes.element,
 };

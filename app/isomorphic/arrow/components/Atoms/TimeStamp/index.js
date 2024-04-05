@@ -8,7 +8,7 @@ import "./timestamp.m.css";
 
 const timeMapping = {
   published: "first-published-at",
-  updated: "last-published-at"
+  updated: "last-published-at",
 };
 
 export const TimeStamp = ({ story, config = {}, layout, enableDarkModePreview = false }) => {
@@ -29,7 +29,7 @@ export const TimeStamp = ({ story, config = {}, layout, enableDarkModePreview = 
   const updatedStyle = rtlWithoutCustomLabels ? `time ${textColor} wrapper` : `time ${textColor}`;
 
   if (storyCardTime) {
-    const storyTime = storyTemplate === "live-blog" ? storyCardTime["liveBlog"] : storyCardTime["rest"];
+    const storyTime = storyTemplate === "live-blog" ? storyCardTime.liveBlog : storyCardTime.rest;
     if (storyTime) {
       const mappedTime = timeMapping[storyTime];
       time = story[mappedTime] || time;
@@ -61,5 +61,5 @@ TimeStamp.propTypes = {
   story: PropTypes.object,
   config: PropTypes.object,
   layout: PropTypes.string,
-  enableDarkModePreview: PropTypes.bool
+  enableDarkModePreview: PropTypes.bool,
 };

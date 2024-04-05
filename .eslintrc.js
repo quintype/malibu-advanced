@@ -21,9 +21,7 @@ module.exports = {
       configFile: "./babel.config.js",
     },
   },
-  rules: {
-    "max-len": ["warn", { code: 120 }],
-  },
+  rules: {},
   settings: {
     react: {
       version: "16.2",

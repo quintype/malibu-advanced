@@ -29,7 +29,8 @@ export const ReadTime = ({ story, opts = {}, isLightTheme = false, layout, enabl
       <div
         className="arrow-component arr--read-time"
         styleName={`read-time-wrapper ${textColor}`}
-        data-test-id="read-time">
+        data-test-id="read-time"
+      >
         {showDotIndicator && (
           <div styleName={separatorStyle} className="read-time-indicator">
             {getSeparator(separator, textColor)}
@@ -45,13 +46,13 @@ export const ReadTime = ({ story, opts = {}, isLightTheme = false, layout, enabl
 
 ReadTime.propTypes = {
   story: PropTypes.shape({
-    "read-time": PropTypes.number
+    "read-time": PropTypes.number,
   }),
   opts: PropTypes.shape({
-    showReadTime: PropTypes.bool
+    showReadTime: PropTypes.bool,
   }),
   isLightTheme: PropTypes.bool,
   languageCode: PropTypes.string,
   layout: PropTypes.string,
-  enableDarkModePreview: PropTypes.bool
+  enableDarkModePreview: PropTypes.bool,
 };

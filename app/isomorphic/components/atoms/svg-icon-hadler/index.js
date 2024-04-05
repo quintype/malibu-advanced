@@ -5,7 +5,7 @@ import { string, object } from "prop-types";
 
 if (require.context) {
   const req = require.context("../../../../assets/icons/", true, /\.svg$/);
-  req.keys().forEach(filename => req(filename));
+  req.keys().forEach((filename) => req(filename));
 }
 
 export const SvgIconHandler = ({
@@ -14,9 +14,9 @@ export const SvgIconHandler = ({
   iconStyle = {},
   width = "16",
   height = "16",
-  viewBox = "0 0 16 16"
+  viewBox = "0 0 16 16",
 }) => {
-  const svgSpritePath = useSelector(state => get(state, ["qt", "config", "svgSpritePath"], ""));
+  const svgSpritePath = useSelector((state) => get(state, ["qt", "config", "svgSpritePath"], ""));
 
   return (
     <svg className={className} style={iconStyle} width={width} height={height} viewBox={viewBox}>
@@ -31,5 +31,5 @@ SvgIconHandler.propTypes = {
   iconStyle: object,
   width: string,
   height: string,
-  viewBox: string
+  viewBox: string,
 };

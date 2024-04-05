@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React from "react";
 import { SearchBox } from "@quintype/components";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,17 +16,17 @@ function DrawForm({ children }) {
     </label>,
     <button aria-label="search-button" type="submit" styleName="search__form-submit" key="2">
       <SvgIconHandler type="search" />
-    </button>
+    </button>,
   ];
 }
 
 const NavbarSearch = () => {
   const dispatch = useDispatch();
-  const isSearchBarOpen = useSelector(state => get(state, ["isSearchBarOpen"], false));
+  const isSearchBarOpen = useSelector((state) => get(state, ["isSearchBarOpen"], false));
   const toggleSearchForm = () => {
     dispatch({
       type: OPEN_SEARCHBAR,
-      isSearchBarOpen: !isSearchBarOpen
+      isSearchBarOpen: !isSearchBarOpen,
     });
     document.getElementById("searchForm").focus();
   };
@@ -33,12 +34,12 @@ const NavbarSearch = () => {
   const closeSearchBar = () => {
     dispatch({
       type: OPEN_SEARCHBAR,
-      isSearchBarOpen: false
+      isSearchBarOpen: false,
     });
   };
 
   const formStyle = {
-    transform: isSearchBarOpen ? "translate(0, 0)" : ""
+    transform: isSearchBarOpen ? "translate(0, 0)" : "",
   };
 
   return (

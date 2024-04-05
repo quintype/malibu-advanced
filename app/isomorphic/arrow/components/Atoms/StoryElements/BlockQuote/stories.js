@@ -8,12 +8,12 @@ import { color } from "@storybook/addon-knobs";
 const templateStyle = {
   Default: "default",
   "With Background": "withBackground",
-  "With Border": "withBorder"
+  "With Border": "withBorder",
 };
 const element = generateStoryElementData("blockquote");
 const iconStyle = {
   "Curve Icon": "curveIcon",
-  "Edge Icon": "edgeIcon"
+  "Edge Icon": "edgeIcon",
 };
 
 withStore("Atoms/Story Elements/Block Quote", {}, Readme)
@@ -24,7 +24,7 @@ withStore("Atoms/Story Elements/Block Quote", {}, Readme)
       css={{
         blockQuoteColor: color("Block quote color", "#ff214b"),
         backgroundShade: color("Background color", "#ff214b"),
-        iconType: optionalSelect("Icon Types", iconStyle)
+        iconType: optionalSelect("Icon Types", iconStyle),
       }}
     />
   ))

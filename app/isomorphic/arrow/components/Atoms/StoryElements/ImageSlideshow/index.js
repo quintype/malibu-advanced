@@ -23,7 +23,7 @@ const ImageSlideshowBase = (props) => {
       metadata,
       title,
       hyperlink = "",
-      "image-attribution": attribution = ""
+      "image-attribution": attribution = "",
     } = image;
     return (
       <div styleName="slide" key={id}>
@@ -71,7 +71,8 @@ const ImageSlideshowBase = (props) => {
         ref={scrollContainerRef}
         className="arr--image-slideshow-element"
         styleName="slideshow"
-        data-test-id="image-slideshow">
+        data-test-id="image-slideshow"
+      >
         <ScrollSnap slideIndicator={"none"} sliderArrowStyles={{ top: `${Math.round(containerWidth / 2)}px` }}>
           {storyElements.map((image, index) => Slide(image, index, onClickHandler))}
         </ScrollSnap>
@@ -80,7 +81,7 @@ const ImageSlideshowBase = (props) => {
   };
 
   ImageSlideshowTemplate.propTypes = {
-    onClickHandler: PropTypes.func
+    onClickHandler: PropTypes.func,
   };
 
   return <FullScreenImages template={ImageSlideshowTemplate} element={props.element} />;
@@ -88,9 +89,9 @@ const ImageSlideshowBase = (props) => {
 
 ImageSlideshowBase.propTypes = {
   element: PropTypes.shape({
-    "story-elements": PropTypes.array
+    "story-elements": PropTypes.array,
   }),
-  story: shapeStory
+  story: shapeStory,
 };
 
 export const ImageSlideshow = withElementWrapper(ImageSlideshowBase);

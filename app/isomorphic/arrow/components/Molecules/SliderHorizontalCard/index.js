@@ -16,14 +16,21 @@ export const SliderHorizontalCard = ({
   theme = "",
   headerLevel,
   borderColor = "",
-  config = {}
+  config = {},
 }) => {
   if (!story || isEmpty(story)) return <div />;
   const borderStyle = border === "full" ? "border" : "";
   const { localizationConfig = {} } = config;
   return (
     <div styleName={`horizontal ${borderStyle}`} style={{ backgroundColor: theme || "initial" }}>
-      <HeroImage config={config} story={story} aspectRatio={[[4, 3], [16, 9]]} />
+      <HeroImage
+        config={config}
+        story={story}
+        aspectRatio={[
+          [4, 3],
+          [16, 9],
+        ]}
+      />
       <div className="arr--content" styleName="content">
         <SectionTag story={story} borderColor={borderColor} />
         <Headline story={story} headerLevel={headerLevel} premiumStoryIconConfig={config} />
@@ -40,5 +47,5 @@ SliderHorizontalCard.propTypes = {
   theme: PropTypes.string,
   headerLevel: PropTypes.string,
   borderColor: PropTypes.string,
-  config: PropTypes.object
+  config: PropTypes.object,
 };

@@ -56,7 +56,8 @@ export const BlockQuoteBase = ({ element, template, css = {}, story = {}, config
       data-test-id="blockquote"
       styleName={`${templateStyle} ${textColor}`}
       style={theme}
-      {...restProps}>
+      {...restProps}
+    >
       <div styleName="quote-wrapper">
         {updateStructure()}
         <div styleName="wrapper" style={{ borderColor: blockQuoteColor || "unset" }}>
@@ -70,13 +71,13 @@ export const BlockQuoteBase = ({ element, template, css = {}, story = {}, config
 
 BlockQuoteBase.propTypes = {
   element: PropTypes.shape({
-    metadata: PropTypes.shape({ content: PropTypes.string, attribution: PropTypes.string })
+    metadata: PropTypes.shape({ content: PropTypes.string, attribution: PropTypes.string }),
   }),
   template: PropTypes.string,
   story: shapeStory,
   config: shapeConfig,
   render: PropTypes.func,
-  css: PropTypes.object
+  css: PropTypes.object,
 };
 
 export const BlockQuote = withElementWrapper(BlockQuoteBase);

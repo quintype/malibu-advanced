@@ -13,9 +13,9 @@ withStore(
     qt: {
       config: {
         "cdn-image": "thumbor-stg.assettype.com",
-        mountAt: "/sub-directory"
-      }
-    }
+        mountAt: "/sub-directory",
+      },
+    },
   },
   Readme
 ).add("Default", () => {
@@ -24,7 +24,7 @@ withStore(
     showSection: boolean("Show Section", true),
     showAuthor: boolean("Show Author", true),
     showTime: boolean("Show Time", true),
-    showReadTime: boolean("Read time", true)
+    showReadTime: boolean("Read time", true),
   };
 
   return <StoryCardWithBulletPoint story={story} bulletValue={"1"} config={contextConfig} />;

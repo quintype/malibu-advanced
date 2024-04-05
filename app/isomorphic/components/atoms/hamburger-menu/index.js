@@ -16,7 +16,7 @@ export const HamburgerMenu = ({ onMenuToggle, isMegaMenuOpen }) => (
 
 HamburgerMenu.propTypes = {
   onMenuToggle: PT.func,
-  isMegaMenuOpen: PT.bool
+  isMegaMenuOpen: PT.bool,
 };
 
 export default HamburgerMenu;

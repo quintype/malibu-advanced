@@ -27,7 +27,7 @@ const FullScreenSlider = ({ collection = {}, config = {} }) => {
     navigationArrows = true,
     slideIndicator = "none",
     isInfinite = false,
-    aspectRatio = [[16, 9]]
+    aspectRatio = [[16, 9]],
   } = config;
   const { footerSlot } = footerSlotConfig;
   const items = collectionToStories(collection);
@@ -50,7 +50,8 @@ const FullScreenSlider = ({ collection = {}, config = {} }) => {
       className={`arrow-component full-width-with-padding ${containerStyle}`}
       data-test-id="full-screen-slider"
       styleName="full-screen-slider-wrapper"
-      style={{ backgroundColor: theme || "initial" }}>
+      style={{ backgroundColor: theme || "initial" }}
+    >
       <div styleName={`full-screen-slider ${containerStyle}`}>
         <div styleName={containerStyle}>
           <CollectionName
@@ -112,8 +113,8 @@ FullScreenSlider.propTypes = {
     footerButton: PropTypes.string,
     collectionNameBorderColor: PropTypes.string,
     // aspect ratio of the image
-    aspectRatio: PropTypes.array
-  })
+    aspectRatio: PropTypes.array,
+  }),
 };
 
 export default StateProvider(FullScreenSlider);

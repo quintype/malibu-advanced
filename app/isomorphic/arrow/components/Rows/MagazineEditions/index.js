@@ -9,7 +9,7 @@ import {
   getTimeStamp,
   navigateTo,
   timestampToFormat,
-  getTimeStampConfig
+  getTimeStampConfig,
 } from "../../../utils/utils";
 import "./magazine-editions.m.css";
 import { StateProvider } from "../../SharedContext";
@@ -24,10 +24,10 @@ const MagazineEditions = ({ collection = [], config = {}, onClick, limit, showLo
     showRowTitle = true,
     rowTitle = "Other Issues",
     editionNameFormat = "magazineDate",
-    template = "NavigateToPage"
+    template = "NavigateToPage",
   } = config;
   const textColor = getTextColor(theme);
-  let issues = collection.map((issue) => issue.collection) || [];
+  const issues = collection.map((issue) => issue.collection) || [];
   const qtConfig = useSelector((state) => get(state, ["qt", "config"], {}));
   const dispatch = useDispatch();
   const url = generateNavigateSlug(collection, { ...qtConfig, ...config });
@@ -37,7 +37,8 @@ const MagazineEditions = ({ collection = [], config = {}, onClick, limit, showLo
     <div
       className="full-width-with-padding arrow-component arr-magazine-issues"
       style={{ backgroundColor: theme || "initial" }}
-      data-test-id="editions">
+      data-test-id="editions"
+    >
       <div styleName={`container ${textColor}`}>
         {showRowTitle && (
           <CollectionName
@@ -85,11 +86,11 @@ MagazineEditions.propTypes = {
     collectionNameBorderColor: PropTypes.string,
     theme: PropTypes.string,
     editionNameFormat: PropTypes.string,
-    showRowTitle: PropTypes.bool
+    showRowTitle: PropTypes.bool,
   }),
   onClick: PropTypes.func,
   limit: PropTypes.number,
-  showLoadmore: PropTypes.bool
+  showLoadmore: PropTypes.bool,
 };
 
 export default StateProvider(MagazineEditions);

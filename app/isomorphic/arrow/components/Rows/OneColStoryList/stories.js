@@ -18,11 +18,11 @@ const collection = generateCollection({ stories: 10 });
 const borderOptions = {
   "No Value": "",
   bottom: "bottom",
-  full: "full"
+  full: "full",
 };
 const footerButton = {
   SubsequentLoadCount: "SubsequentLoadCount",
-  NavigateToPage: "NavigateToPage"
+  NavigateToPage: "NavigateToPage",
 };
 const configurableSlot = () => {
   return <AdPlaceholder height="600px" width="300px" />;
@@ -33,9 +33,9 @@ const footerSlot = () => {
 withStore("Rows/One Col Story List ", {
   qt: {
     config: {
-      "cdn-image": "thumbor-stg.assettype.com"
-    }
-  }
+      "cdn-image": "thumbor-stg.assettype.com",
+    },
+  },
 })
   .addDecorator((story) => <div style={{ maxWidth: "1000px", margin: "auto" }}>{story()}</div>)
   .add("Default", () => {
@@ -55,7 +55,7 @@ withStore("Rows/One Col Story List ", {
       showRowTitle: boolean("Row title", true),
       footerSlotConfig: { footerSlot: footerSlot },
       showButton: boolean("Show button", true),
-      showReadTime: boolean("Read time", true)
+      showReadTime: boolean("Read time", true),
     };
     return <OneColStoryList collection={collection} config={contextConfig} />;
   });

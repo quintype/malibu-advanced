@@ -26,7 +26,7 @@ export const HeroImage = ({
   queryParam = {},
   initialAltImage,
   isFullWidthImage,
-  isCircularImage = false
+  isCircularImage = false,
 }) => {
   const { fallbackImageUrl = "" } = useStateValue() || {};
   const { StoryTemplateIcon = () => null } = config;
@@ -84,8 +84,9 @@ export const HeroImage = ({
               styleName={`image ${getPlaceholderStyleName}`}
               className="arr--responsive-hero-image"
               style={{
-                paddingTop: imagePadding + `%`
-              }}>
+                paddingTop: imagePadding + `%`,
+              }}
+            >
               <img className="qt-image" src={fallbackImageUrl} data-src={fallbackImageUrl} alt="image-fallback" />
             </figure>
             <div styleName="icon-wrapper">
@@ -108,8 +109,9 @@ export const HeroImage = ({
               className="arr--fallback-hero-image"
               data-test-id="arr--fallback-hero-image"
               style={{
-                paddingTop: imagePadding + `%`
-              }}>
+                paddingTop: imagePadding + `%`,
+              }}
+            >
               <StoryTemplateIcon storyTemplate={story["story-template"]} />
               <FallbackImage roundedCorners={roundedCorners} />
               <div styleName="icon-wrapper">
@@ -133,7 +135,8 @@ export const HeroImage = ({
           <figure
             styleName={`image ${getPlaceholderStyleName}`}
             className={`arr--responsive-hero-image ${roundedCorners}`}
-            style={{ paddingTop: imagePadding + `%` }}>
+            style={{ paddingTop: imagePadding + `%` }}
+          >
             <StoryTemplateIcon storyTemplate={story["story-template"]} />
             {initialAltImage ? (
               <ResponsiveImage
@@ -177,7 +180,8 @@ export const HeroImage = ({
       <div
         className={`arr--hero-image ${roundedCorners}`}
         data-test-id="arr--hero-image"
-        styleName={`${heroImageClass} ${fullBleed} ${heroImageMobClasses} `}>
+        styleName={`${heroImageClass} ${fullBleed} ${heroImageMobClasses} `}
+      >
         {fallbackImage()}
       </div>
     ) : (
@@ -187,7 +191,8 @@ export const HeroImage = ({
         href={getStoryUrl(story, `/${story.slug}`, queryParam)}
         externalLink={isExternalStory(story)}
         styleName={`${heroImageClass} ${fullBleed} ${heroImageMobClasses}`}
-        aria-label="fallback-hero-image">
+        aria-label="fallback-hero-image"
+      >
         {fallbackImage()}
       </Link>
     ))
@@ -217,16 +222,19 @@ HeroImage.propTypes = {
   isStoryPageImage: PropTypes.bool,
   config: PropTypes.object,
   queryParam: PropTypes.shape({
-    utmContent: PropTypes.string
+    utmContent: PropTypes.string,
   }),
   initialAltImage: PropTypes.bool,
   isFullWidthImage: PropTypes.bool,
-  isCircularImage: PropTypes.bool
+  isCircularImage: PropTypes.bool,
 };
 
 HeroImage.defaultProps = {
   FullBleed: true,
-  aspectRatio: [[1, 1], [16, 9]],
+  aspectRatio: [
+    [1, 1],
+    [16, 9],
+  ],
   defaultWidth: 480,
   widths: [250, 480, 640],
   isHorizontal: false,
@@ -237,5 +245,5 @@ HeroImage.defaultProps = {
   config: {},
   initialAltImage: false,
   isFullWidthImage: false,
-  isCircularImage: false
+  isCircularImage: false,
 };

@@ -8,7 +8,7 @@ import "./reset-password.m.css";
 const ResetPasswordPage = () => {
   const [user, setUser] = useState({
     newPassword: "",
-    confirmPassword: ""
+    confirmPassword: "",
   });
   const [error, setError] = useState(null);
   const [token, setToken] = useState(null); // Store the token which is received in the query params
@@ -26,14 +26,14 @@ const ResetPasswordPage = () => {
     }
   }, []);
 
-  const setData = e => {
+  const setData = (e) => {
     const userObj = { ...user };
     const id = e.target.id;
     userObj[id] = e.target.value;
     setUser(userObj);
   };
 
-  const resetPasswordHandler = async e => {
+  const resetPasswordHandler = async (e) => {
     e.preventDefault();
     e.stopPropagation();
     if (user.newPassword !== user.confirmPassword) {
@@ -47,7 +47,7 @@ const ResetPasswordPage = () => {
     const reqObj = {
       "new-password": user.newPassword,
       "confirm-password": user.confirmPassword,
-      token
+      token,
     };
     const { error } = await resetPasswordWithToken(reqObj);
     if (error) {
@@ -83,7 +83,7 @@ const ResetPasswordPage = () => {
         styleName="password"
       />
       {error && <span styleName="error">{error}</span>}
-      <span onClick={e => resetPasswordHandler(e)}>
+      <span onClick={(e) => resetPasswordHandler(e)}>
         <Button styleName="reset-password">Reset Password</Button>
       </span>
       {message && <span styleName="success">{message}</span>}

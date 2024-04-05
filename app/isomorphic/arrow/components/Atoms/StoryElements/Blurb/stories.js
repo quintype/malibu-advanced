@@ -7,7 +7,7 @@ import { color, boolean } from "@storybook/addon-knobs";
 
 const templateStyle = {
   Default: "default",
-  "Blurb with Border": "withBorder"
+  "Blurb with Border": "withBorder",
 };
 
 const element = generateStoryElementData("blurb");

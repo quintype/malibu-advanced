@@ -19,12 +19,12 @@ const sectionTagDefaultvalue = "#3a9fdd";
 
 const borderTemplate = {
   default: "",
-  border: "full"
+  border: "full",
 };
 
 const footerButton = {
   SubsequentLoadCount: "SubsequentLoadCount",
-  NavigateToPage: "NavigateToPage"
+  NavigateToPage: "NavigateToPage",
 };
 
 const configurableSlot = () => {
@@ -39,9 +39,9 @@ withStore(
   {
     qt: {
       config: {
-        "cdn-image": "thumbor-stg.assettype.com"
-      }
-    }
+        "cdn-image": "thumbor-stg.assettype.com",
+      },
+    },
   },
   Readme
 )
@@ -63,7 +63,7 @@ withStore(
       buttonText: text("Footer text", "Read More"),
       footerSlotConfig: { footerSlot: footerSlot },
       showButton: boolean("Show button", true),
-      showReadTime: boolean("Read time", true)
+      showReadTime: boolean("Read time", true),
     };
 
     return <ThreeColGrid collection={collection} config={contextConfig} />;

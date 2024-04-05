@@ -23,5 +23,5 @@ PremiumStoryIcon.propTypes = {
   height: PropTypes.string,
   color: PropTypes.string,
   iconType: PropTypes.string,
-  positionTop: PropTypes.string
+  positionTop: PropTypes.string,
 };

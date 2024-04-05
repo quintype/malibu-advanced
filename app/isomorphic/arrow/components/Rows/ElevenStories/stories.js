@@ -3,7 +3,7 @@ import {
   optionalSelect,
   sectionTagTemplates,
   collectionNameTemplates,
-  footerButton
+  footerButton,
 } from "../../../../storybook";
 import Readme from "./README.md";
 import { color, boolean, text } from "@storybook/addon-knobs";
@@ -30,7 +30,7 @@ const footerSlot = () => {
 // TODO: Add Ad/Widget Slot Config Option
 const slotConfigOptions = {
   Stories: [{ type: "story" }],
-  Collection: [{ type: "collection" }]
+  Collection: [{ type: "collection" }],
 };
 
 withStore(
@@ -39,9 +39,9 @@ withStore(
     qt: {
       config: {
         "cdn-image": "thumbor-stg.assettype.com",
-        mountAt: "/sub-directory"
-      }
-    }
+        mountAt: "/sub-directory",
+      },
+    },
   },
   Readme
 )
@@ -64,7 +64,7 @@ withStore(
       slotConfig: optionalSelect("Slot Config", slotConfigOptions, [{ type: "story" }]),
       footerSlotConfig: { footerSlot: footerSlot },
       showButton: boolean("Show button", true),
-      showReadTime: boolean("Read time", true)
+      showReadTime: boolean("Read time", true),
     };
     return <ElevenStories collection={collection} config={contextConfig} />;
   });

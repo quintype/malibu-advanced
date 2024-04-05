@@ -68,17 +68,17 @@ export function PhotoIcon4({ background }) {
 }
 
 PhotoIcon1.propTypes = {
-  background: PropTypes.string
+  background: PropTypes.string,
 };
 
 PhotoIcon2.propTypes = {
-  background: PropTypes.string
+  background: PropTypes.string,
 };
 
 PhotoIcon3.propTypes = {
-  background: PropTypes.string
+  background: PropTypes.string,
 };
 
 PhotoIcon4.propTypes = {
-  background: PropTypes.string
+  background: PropTypes.string,
 };

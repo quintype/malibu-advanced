@@ -8,7 +8,7 @@ import { getAdSlots } from "../utils";
 import "./dfp-component.m.css";
 
 const DfpComponent = ({ adStyleName, id, size, path, type = "", viewPortSizeMapping }) => {
-  const qtState = useSelector(state => get(state, ["qt"], {}));
+  const qtState = useSelector((state) => get(state, ["qt"], {}));
   const adsConfig = get(qtState, ["config", "ads-config", "dfp_ads"], {});
   const loadAdsSynchronously = get(adsConfig, ["load_ads_synchronously"], null);
   const enableAds = get(adsConfig, ["enable_ads"], null);
@@ -28,7 +28,7 @@ const DfpComponent = ({ adStyleName, id, size, path, type = "", viewPortSizeMapp
       type,
       viewPortSizeMapping,
       loadAdsSynchronously,
-      delayPeriod: delayAdLoad * 1000
+      delayPeriod: delayAdLoad * 1000,
     });
   }, [currentPath]);
 
@@ -41,7 +41,7 @@ DfpComponent.propTypes = {
   size: array,
   path: string,
   type: string,
-  viewPortSizeMapping: array
+  viewPortSizeMapping: array,
 };
 
 export { DfpComponent };

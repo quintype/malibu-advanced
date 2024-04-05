@@ -8,7 +8,8 @@ export const CrownIcon = ({ height, width, color = "#D8D8D8", positionTop }) => 
       width={width}
       height={height}
       viewBox="0 0 40 40"
-      style={{ position: "relative", top: positionTop }}>
+      style={{ position: "relative", top: positionTop }}
+    >
       <g fill="none" fillRule="evenodd" stroke="none" strokeWidth="1">
         <g>
           <g transform="translate(8 8)">
@@ -27,5 +28,5 @@ CrownIcon.propTypes = {
   height: PropTypes.string,
   width: PropTypes.string,
   color: PropTypes.string,
-  positionTop: PropTypes.string
+  positionTop: PropTypes.string,
 };

@@ -47,7 +47,8 @@ const AuthorIntroductionCard = ({ data = {}, config = {}, template = "" }) => {
       data-test-id="author-intro"
       className={`${isFullWidth} arrow-component arr--author-intro-card`}
       styleName={`${authorCardStyle} ${supportBorder} ${textColor}`}
-      style={{ backgroundColor: theme || "initial" }}>
+      style={{ backgroundColor: theme || "initial" }}
+    >
       <div styleName={`wrapper ${textColor}`} className="arrow-author-intro-wrapper">
         <div styleName="introduction-card" className="arrow-author-introduction-card">
           {isSmallCircle && isMobile ? null : <h1 styleName={`author-name ${textColor}`}>{name}</h1>}
@@ -58,8 +59,9 @@ const AuthorIntroductionCard = ({ data = {}, config = {}, template = "" }) => {
                 <div
                   styleName="fade-out"
                   style={{
-                    backgroundImage: `linear-gradient(to right, transparent, ${theme})` || "initial"
-                  }}></div>
+                    backgroundImage: `linear-gradient(to right, transparent, ${theme})` || "initial",
+                  }}
+                ></div>
               )}
             </div>
           )}
@@ -78,7 +80,8 @@ const AuthorIntroductionCard = ({ data = {}, config = {}, template = "" }) => {
                           key={`${item}-${index}`}
                           rel="noopener noreferrer"
                           target="_blank"
-                          styleName="social-share">
+                          styleName="social-share"
+                        >
                           {getIcon(item[0])}
                         </a>
                       ) : null
@@ -113,8 +116,8 @@ AuthorIntroductionCard.propTypes = {
     theme: PropTypes.string,
     enableBio: PropTypes.bool,
     enableSocialLinks: PropTypes.bool,
-    borderSupport: PropTypes.bool
+    borderSupport: PropTypes.bool,
   }),
-  template: PropTypes.string
+  template: PropTypes.string,
 };
 export default AuthorIntroductionCard;

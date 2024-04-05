@@ -12,7 +12,7 @@ withStore("Atoms/Read Time", {}, Readme).add("default", () => {
     <ReadTime
       story={story}
       opts={{
-        showReadTime: boolean("Show Read Time", true)
+        showReadTime: boolean("Show Read Time", true),
       }}
     />
   );

@@ -11,9 +11,9 @@ withStore(
   {
     qt: {
       config: {
-        "cdn-image": "thumbor-stg.assettype.com"
-      }
-    }
+        "cdn-image": "thumbor-stg.assettype.com",
+      },
+    },
   },
   Readme
 ).add("Default", () => <ImageSlideshow element={element} />);
@@ -25,10 +25,10 @@ withStore(
       config: {
         "cdn-image": "thumbor-stg.assettype.com",
         language: {
-          direction: "rtl"
-        }
-      }
-    }
+          direction: "rtl",
+        },
+      },
+    },
   },
   Readme
 ).add("Support Rtl", () => <ImageSlideshow element={element} />);

@@ -33,7 +33,7 @@ const ListicleStoryTemplate = ({
   enableDarkMode,
   loadRelatedStories,
   visibleCardsRender = null,
-  meteringIndicator
+  meteringIndicator,
 }) => {
   const {
     theme = "",
@@ -41,12 +41,12 @@ const ListicleStoryTemplate = ({
     publishedDetails = {},
     templateType = "",
     authorDetails = {
-      template: "default"
+      template: "default",
     },
     asideCollection = {},
     showSection,
     sectionTagSettings,
-    premiumStoryIconConfig = {}
+    premiumStoryIconConfig = {},
   } = config;
   const visibledCards = noOfVisibleCards < 0 ? story.cards : story.cards.slice(0, noOfVisibleCards);
   const { "bullet-type": storyBulletType = "" } = story;
@@ -78,19 +78,13 @@ const ListicleStoryTemplate = ({
 
     return {
       ...card,
-      "story-elements": Object.assign([], card["story-elements"], { [titleElementsIndex]: titleCard })
+      "story-elements": Object.assign([], card["story-elements"], { [titleElementsIndex]: titleCard }),
     };
   });
 
   function addNonInlineBullets(opts) {
-    const {
-      cardIndex,
-      introCardPresent,
-      isNumberedBullet,
-      numberedBulletColor,
-      ascendingNumbers,
-      numberOfCards
-    } = opts;
+    const { cardIndex, introCardPresent, isNumberedBullet, numberedBulletColor, ascendingNumbers, numberOfCards } =
+      opts;
     if (introCardPresent && cardIndex === 0) return;
     if (!isNumberedBullet) return <div styleName="bullet-style-dash" />;
     const ascendingBulletNumber = introCardPresent ? cardIndex : cardIndex + 1;
@@ -114,7 +108,7 @@ const ListicleStoryTemplate = ({
       numberedBulletColor,
       ascendingNumbers,
       numberOfCards,
-      addNonInlineBullets
+      addNonInlineBullets,
     };
 
     return (
@@ -247,13 +241,19 @@ const ListicleStoryTemplate = ({
   // Caching is done to avoid widget and Ad re-renderings
   const CachedHorizontalAsideCollection = useCallback(HorizontalAsideCollection, [
     templateType,
-    story["story-template"]
+    story["story-template"],
   ]);
 
   // Templates
   const defaultTemplate = () => (
     <>
-      <HeroImageBlock aspectRatio={[[16, 9], [16, 6]]} isFullWidthImage={true} />
+      <HeroImageBlock
+        aspectRatio={[
+          [16, 9],
+          [16, 6],
+        ]}
+        isFullWidthImage={true}
+      />
       <div styleName="grid-container">
         <div styleName="full-grid">
           <CaptionAttributionBlock />
@@ -334,7 +334,13 @@ const ListicleStoryTemplate = ({
               <HeadlineBlock />
             </div>
           </div>
-          <HeroImageBlock aspectRatio={[[2, 3], [16, 9]]} isFullWidthImage={true} />
+          <HeroImageBlock
+            aspectRatio={[
+              [2, 3],
+              [16, 9],
+            ]}
+            isFullWidthImage={true}
+          />
         </div>
       </div>
       <div styleName="grid-container">
@@ -355,7 +361,12 @@ const ListicleStoryTemplate = ({
           <HeadlineBlock />
         </div>
         <div styleName="sideway-hero">
-          <HeroImageBlock aspectRatio={[[16, 9], [4, 3]]} />
+          <HeroImageBlock
+            aspectRatio={[
+              [16, 9],
+              [4, 3],
+            ]}
+          />
           <CaptionAttributionBlock />
         </div>
       </div>
@@ -390,7 +401,8 @@ const ListicleStoryTemplate = ({
     <div
       data-test-id={dataTestId}
       className="arrow-component arr--content-wrapper arr--listicle-story-template-wrapper"
-      style={{ backgroundColor: theme || "initial" }}>
+      style={{ backgroundColor: theme || "initial" }}
+    >
       {renderTemplate(templateType)}
     </div>
   );
@@ -402,7 +414,7 @@ ListicleStoryTemplate.propTypes = {
   config: PropTypes.shape({
     templateType: PropTypes.string,
     authorCard: PropTypes.object,
-    asideCollection: PropTypes.object
+    asideCollection: PropTypes.object,
   }),
   firstChild: PropTypes.node,
   secondChild: PropTypes.node,
@@ -413,7 +425,7 @@ ListicleStoryTemplate.propTypes = {
   enableDarkMode: PropTypes.bool,
   loadRelatedStories: PropTypes.func,
   visibleCardsRender: PropTypes.func | undefined,
-  meteringIndicator: PropTypes.node | undefined
+  meteringIndicator: PropTypes.node | undefined,
 };
 
 export default StateProvider(ListicleStoryTemplate);

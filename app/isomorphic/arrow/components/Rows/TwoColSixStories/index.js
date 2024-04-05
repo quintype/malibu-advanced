@@ -26,7 +26,7 @@ const TwoColSixStories = ({ collection, config = {} }) => {
     collectionNameTemplate = "",
     border = "fullBorder",
     borderColor = "",
-    localizationConfig = {}
+    localizationConfig = {},
   } = config;
   const { type = "story", component } = get(slotConfig, [0], {});
   const textColor = getTextColor(theme);
@@ -62,7 +62,8 @@ const TwoColSixStories = ({ collection, config = {} }) => {
     <div
       className="full-width-with-padding arrow-component"
       data-test-id="two-col-six-stories"
-      style={{ backgroundColor: theme || "initial" }}>
+      style={{ backgroundColor: theme || "initial" }}
+    >
       <div styleName="two-col-six-stories" style={{ backgroundColor: theme || "initial" }}>
         <CollectionName
           collection={collection}
@@ -93,7 +94,8 @@ const TwoColSixStories = ({ collection, config = {} }) => {
                       headerLevel="4"
                       isHorizontalWithImageLast
                       config={config}
-                      widths={[250, 480, 640, 1200]}>
+                      widths={[250, 480, 640, 1200]}
+                    >
                       <HeroImage config={config} story={story} isHorizontalWithImageLast aspectRatio={[[16, 9]]} />
                       <StorycardContent
                         theme={theme}
@@ -125,7 +127,7 @@ const TwoColSixStories = ({ collection, config = {} }) => {
 
 TwoColSixStories.propTypes = {
   collection: PropTypes.object,
-  config: PropTypes.object
+  config: PropTypes.object,
 };
 
 export default StateProvider(TwoColSixStories);

@@ -30,7 +30,7 @@ export const StoryTemplate = ({
   mountAt,
   loadRelatedStories,
   visibleCardsRender = null,
-  meteringIndicator
+  meteringIndicator,
 }) => {
   const {
     theme = "",
@@ -41,7 +41,7 @@ export const StoryTemplate = ({
     authorDetails = {},
     verticalShare = "",
     shareIconType = "plain-color-svg",
-    premiumStoryIconConfig = {}
+    premiumStoryIconConfig = {},
   } = config;
 
   const visibledCards = noOfVisibleCards < 0 ? story.cards : story.cards.slice(0, noOfVisibleCards);
@@ -298,7 +298,10 @@ export const StoryTemplate = ({
             story={story}
             widths={[250, 480, 640, 1200]}
             FullBleed={false}
-            aspectRatio={[[3, 4], [16, 9]]}
+            aspectRatio={[
+              [3, 4],
+              [16, 9],
+            ]}
             isStoryPageImage
             isFullWidthImage
           />
@@ -340,7 +343,7 @@ StoryTemplate.propTypes = {
   config: PropTypes.shape({
     templateType: PropTypes.string,
     authorDetails: PropTypes.object,
-    asideCollection: PropTypes.object
+    asideCollection: PropTypes.object,
   }),
   firstChild: PropTypes.node,
   secondChild: PropTypes.node,
@@ -352,5 +355,5 @@ StoryTemplate.propTypes = {
   mountAt: PropTypes.string,
   loadRelatedStories: PropTypes.func,
   visibleCardsRender: PropTypes.func | undefined,
-  meteringIndicator: PropTypes.node | undefined
+  meteringIndicator: PropTypes.node | undefined,
 };

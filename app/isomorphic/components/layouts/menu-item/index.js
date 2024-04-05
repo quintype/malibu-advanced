@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React from "react";
 import PT from "prop-types";
 import { Link } from "@quintype/components";
@@ -37,7 +38,7 @@ const MenuItem = ({ item, toggleHandler, menuStyle = "menu-link" }) => {
 
 MenuItem.propTypes = {
   item: PT.object,
-  showIcon: PT.bool
+  showIcon: PT.bool,
 };
 
 export { MenuItem };

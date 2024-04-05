@@ -14,14 +14,14 @@ withStore(
     qt: {
       config: {
         "cdn-image": "thumbor-stg.assettype.com",
-        mountAt: "/sub-directory"
-      }
-    }
+        mountAt: "/sub-directory",
+      },
+    },
   },
   Readme
 ).add("Default", () => {
   const config = {
-    theme: color("Background Color", "#fff")
+    theme: color("Background Color", "#fff"),
   };
   return <StoryElementCard story={story} card={cards[0]} config={config} />;
 });

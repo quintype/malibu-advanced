@@ -21,7 +21,14 @@ const FlexCard = ({ story = {}, config = {}, collectionId }) => {
   return (
     <div styleName="card">
       <StoryCard story={story} isHorizontal theme={theme} border={border} borderColor={borderColor} config={config}>
-        <HeroImage isHorizontal story={story} aspectRatio={[[9, 5], [9, 5]]} />
+        <HeroImage
+          isHorizontal
+          story={story}
+          aspectRatio={[
+            [9, 5],
+            [9, 5],
+          ]}
+        />
         <div className="small-card-container">
           <SectionTag story={story} borderColor={borderColor} />
           <Headline story={story} headerLevel="6" premiumStoryIconConfig={config} />
@@ -46,7 +53,7 @@ const ThreeColFlexStories = ({
   isLoadMoreVisible,
   isLoading,
   isolatedLoadMore,
-  hideFirstCard
+  hideFirstCard,
 }) => {
   const collectionItems = collectionToStories(collection);
   if (!collectionItems.length) return null;
@@ -57,7 +64,7 @@ const ThreeColFlexStories = ({
     slotConfig = [],
     collectionNameTemplate = "",
     footerButton = "",
-    subsequentLoadCount = 3
+    subsequentLoadCount = 3,
   } = config;
   const { type = "story", component } = get(slotConfig, [0], {});
   const isAdWidgetEnabled = type === "ad" || type === "widget";
@@ -102,7 +109,8 @@ const ThreeColFlexStories = ({
     <div
       className="full-width-with-padding arrow-component"
       data-test-id="three-col-flex-stories"
-      style={{ backgroundColor: theme || "initial" }}>
+      style={{ backgroundColor: theme || "initial" }}
+    >
       <div styleName="wrapper">
         <CollectionName
           collection={collection}
@@ -152,13 +160,13 @@ ThreeColFlexStories.propTypes = {
     footerButton: PropTypes.string,
     collectionNameTemplate: PropTypes.string,
     collectionNameBorderColor: PropTypes.string,
-    subsequentLoadCount: PropTypes.number
+    subsequentLoadCount: PropTypes.number,
   }),
   getMoreStories: PropTypes.func,
   isLoadMoreVisible: PropTypes.bool,
   isLoading: PropTypes.bool,
   isolatedLoadMore: PropTypes.bool,
-  hideFirstCard: PropTypes.bool
+  hideFirstCard: PropTypes.bool,
 };
 
 FlexCard.propTypes = {
@@ -168,13 +176,13 @@ FlexCard.propTypes = {
     borderColor: PropTypes.string,
     theme: PropTypes.string,
     border: PropTypes.string,
-    localizationConfig: PropTypes.object
-  })
+    localizationConfig: PropTypes.object,
+  }),
 };
 
 ThreeColFlexStories.defaultProps = {
   getMoreStories: () => {},
   isLoadMoreVisible: true,
   isLoading: false,
-  hideFirstCard: false
+  hideFirstCard: false,
 };

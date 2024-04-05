@@ -24,7 +24,7 @@ const CollectionFilter = ({ collection, config = {} }) => {
     border = "",
     collectionNameTemplate = "",
     footerSlotConfig = {},
-    footerButton = ""
+    footerButton = "",
   } = config;
   const { type = "story", component } = get(slotConfig, [0], {});
   const { footerSlot } = footerSlotConfig;
@@ -53,7 +53,7 @@ const CollectionFilter = ({ collection, config = {} }) => {
     try {
       let data = {};
       if (!(id in cachedStories)) {
-        let res = await axios.get(`/api/v1/collections/${id}`);
+        const res = await axios.get(`/api/v1/collections/${id}`);
         data = res.data;
       } else data = cachedStories[id];
       memoizeStories(id, data);
@@ -81,7 +81,7 @@ const CollectionFilter = ({ collection, config = {} }) => {
   const openChildCollectionItems = (event, index, slug) => {
     event.stopPropagation();
     fetchSubCollectionData(slug);
-    let activeIndex = active === index ? 0 : index;
+    const activeIndex = active === index ? 0 : index;
     handleActive(activeIndex);
   };
 
@@ -93,7 +93,8 @@ const CollectionFilter = ({ collection, config = {} }) => {
         theme={theme}
         border={border}
         borderColor={borderColor}
-        config={config}>
+        config={config}
+      >
         <HeroImage story={story} isHorizontalMobile />
         <StorycardContent story={story} border={border} isHorizontalMobile borderColor={borderColor} config={config} />
       </StoryCard>
@@ -121,7 +122,8 @@ const CollectionFilter = ({ collection, config = {} }) => {
                 theme={theme}
                 border={border}
                 borderColor={borderColor}
-                config={config}>
+                config={config}
+              >
                 <HeroImage story={story} isHorizontal aspectRatio={[[1, 1]]} />
                 <StorycardContent
                   story={story}
@@ -143,7 +145,8 @@ const CollectionFilter = ({ collection, config = {} }) => {
     <div
       className="full-width-with-padding arrow-component"
       data-test-id="collection-filter"
-      style={{ backgroundColor: theme || "initial" }}>
+      style={{ backgroundColor: theme || "initial" }}
+    >
       <div styleName="wrapper">
         <CollectionName
           collection={collection}
@@ -157,7 +160,8 @@ const CollectionFilter = ({ collection, config = {} }) => {
                 <div key={index} styleName={`child-collection-wrapper ${index === active ? "open-subchild" : ""}`}>
                   <div
                     styleName={`child-collection ${textColor}`}
-                    onClick={(event) => openChildCollectionItems(event, index, subCollections.id)}>
+                    onClick={(event) => openChildCollectionItems(event, index, subCollections.id)}
+                  >
                     {subCollections.name}
                   </div>
                   <span styleName={`navigator ${textColor}`} />
@@ -227,12 +231,12 @@ CollectionFilter.propTypes = {
     collectionNameTemplate: PropTypes.string,
     footerSlotConfig: PropTypes.object,
     footerButton: PropTypes.string,
-    collectionNameBorderColor: PropTypes.string
-  })
+    collectionNameBorderColor: PropTypes.string,
+  }),
 };
 
 CollectionFilter.defaultProps = {
   theme: "#ffffff",
   slotConfig: "story",
-  border: ""
+  border: "",
 };

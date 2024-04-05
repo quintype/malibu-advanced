@@ -8,7 +8,7 @@ const story = generateStory();
 
 const templateStyles = {
   default: "",
-  "Round corners": "roundCorners"
+  "Round corners": "roundCorners",
 };
 
 withStore(
@@ -17,9 +17,9 @@ withStore(
     qt: {
       config: {
         "cdn-image": "thumbor-stg.assettype.com",
-        mountAt: "/sub-directory"
-      }
-    }
+        mountAt: "/sub-directory",
+      },
+    },
   },
   Readme
 ).add("Default", () => <StoryTags tags={story.tags} template={optionalSelect("Tag Styles", templateStyles)} />);

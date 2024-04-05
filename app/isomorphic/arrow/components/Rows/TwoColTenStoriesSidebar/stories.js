@@ -17,9 +17,9 @@ withStore(
   {
     qt: {
       config: {
-        "cdn-image": "thumbor-stg.assettype.com"
-      }
-    }
+        "cdn-image": "thumbor-stg.assettype.com",
+      },
+    },
   },
   Readme
 )
@@ -38,7 +38,7 @@ withStore(
       showRowTitle: boolean("Row title", true),
       showButton: boolean("Show button", true),
       showReadTime: boolean("Read time", true),
-      slotConfig: [{ type: "ad", component: configurableSlot }]
+      slotConfig: [{ type: "ad", component: configurableSlot }],
     };
 
     return <TwoColTenStoriesHighlight collection={collection} config={contextConfig} />;

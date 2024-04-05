@@ -11,9 +11,9 @@ withStore(
   {
     qt: {
       config: {
-        "cdn-image": "gumlet.assettype.com"
-      }
-    }
+        "cdn-image": "gumlet.assettype.com",
+      },
+    },
   },
   Readme
 )

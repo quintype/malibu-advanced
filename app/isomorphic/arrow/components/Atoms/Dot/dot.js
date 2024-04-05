@@ -16,5 +16,5 @@ Dot.propTypes = {
   /** height , width and color of the dot icon */
   color: PropTypes.string,
   width: PropTypes.string,
-  height: PropTypes.string
+  height: PropTypes.string,
 };

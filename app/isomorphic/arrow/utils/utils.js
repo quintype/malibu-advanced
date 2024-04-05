@@ -29,15 +29,12 @@ export const timestampToFormat = (value, unit, suffix, timestamp, config = {}, l
     dateFormat,
     localizedMeridiem,
     localizedMonths,
-    direction = "ltr"
+    direction = "ltr",
   } = config;
 
   const monthList = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
   const dateTime = new Date(timestamp);
-  const date = dateTime
-    .getDate()
-    .toString()
-    .padStart(2, 0);
+  const date = dateTime.getDate().toString().padStart(2, 0);
   const month = monthList[dateTime.getMonth()];
   let localizedMonth = month;
 
@@ -99,7 +96,7 @@ export function formatter(value, unit, suffix, date, config, languageCode, isLoc
     time: value.toLocaleString(localeDateLanguageCode),
     unit: localizedUnitOfTime,
     ago: localizedSuffix,
-    since: get(config, ["localizedPublishTime", "since"]) || "since"
+    since: get(config, ["localizedPublishTime", "since"]) || "since",
   };
 
   const getFormattedDate = (timeFormat) => {
@@ -111,11 +108,11 @@ export function formatter(value, unit, suffix, date, config, languageCode, isLoc
     return timestampToFormat(value, unit, suffix, date, config, localeDateLanguageCode);
   } else if (value > 1) {
     localizedUnitOfTime = get(config, ["localizedPublishTime", `${unit}s`]) || `${unit}s`;
-    timeFormatObj["unit"] = localizedUnitOfTime;
+    timeFormatObj.unit = localizedUnitOfTime;
     return getFormattedDate(timeFormatObj);
   }
   localizedUnitOfTime = get(config, ["localizedPublishTime", unit]) || unit;
-  timeFormatObj["unit"] = localizedUnitOfTime;
+  timeFormatObj.unit = localizedUnitOfTime;
 
   return getFormattedDate(timeFormatObj);
 }
@@ -126,7 +123,7 @@ function monkeyPatchForArabic(timeStr = "") {
     "منذ 1 دقيقة": "منذ دقيقة",
     "منذ 2 دقائق": "منذ دقيقتان",
     "منذ 1 ساعة": "منذ ساعة",
-    "منذ 2 ساعات": "منذ ساعتان"
+    "منذ 2 ساعات": "منذ ساعتان",
   };
   const re = new RegExp(Object.keys(replacements).join("|"), "gi");
   const str = timeStr.replace(re, (match) => replacements[match]);
@@ -181,7 +178,7 @@ export const getLuminanceOfColor = (hex) => {
 };
 
 export const rgbToHex = (color = "rgba(255, 255, 255, 0)") => {
-  let rgba = color.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
+  const rgba = color.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
   return rgba && rgba.length === 4
     ? "#" +
         ("0" + parseInt(rgba[1], 10).toString(16)).slice(-2) +
@@ -192,7 +189,7 @@ export const rgbToHex = (color = "rgba(255, 255, 255, 0)") => {
 
 const clientWidths = {
   mobile: 767,
-  tablet: 1024
+  tablet: 1024,
 };
 
 export const clientWidth = (device) => {
@@ -276,13 +273,13 @@ export const isEmpty = (value) => {
 export const shapeConfig = PropTypes.shape({
   "sketches-host": PropTypes.string,
   "cdn-name": PropTypes.string,
-  "cdn-image": PropTypes.string
+  "cdn-image": PropTypes.string,
 });
 
 export const shapeStory = PropTypes.shape({
   headline: PropTypes.string,
   "last-published-at": PropTypes.number,
-  subheadline: PropTypes.string
+  subheadline: PropTypes.string,
 });
 
 export const getStoryUrl = (story, defaultValue = "", queryParam = {}) => {
@@ -348,9 +345,9 @@ export const generateNavigateSlug = (collection = {}, config = {}, customUrlPath
 
 export const getCollectionData = async (collectionSlug, mountAtPrefix = "") => {
   try {
-    const result = await (await fetch(
-      `${mountAtPrefix}/api/v1/collections/${collectionSlug}?item-type=story&limit=6`
-    )).json();
+    const result = await (
+      await fetch(`${mountAtPrefix}/api/v1/collections/${collectionSlug}?item-type=story&limit=6`)
+    ).json();
     return result;
   } catch (err) {
     // eslint-disable-next-line no-console
@@ -433,11 +430,11 @@ export function getStoryTemplate(story, config) {
 }
 
 export function getTimeStampConfig(qtConfig) {
-  const { dateFormat = "dd-mon-yyyy", localization = {}, timeFormat } = get(
-    qtConfig,
-    ["pagebuilder-config", "general"],
-    {}
-  );
+  const {
+    dateFormat = "dd-mon-yyyy",
+    localization = {},
+    timeFormat,
+  } = get(qtConfig, ["pagebuilder-config", "general"], {});
   const { enableLocalization = false, localizedElements = {} } = localization;
 
   const timeStampConfig = {
@@ -447,7 +444,7 @@ export function getTimeStampConfig(qtConfig) {
     timeFormat,
     localizedMonths: enableLocalization && get(localizedElements, ["months"]),
     localizedMeridiem: enableLocalization && get(localizedElements, ["meridiem"], {}),
-    enableLocalization
+    enableLocalization,
   };
 
   return timeStampConfig;

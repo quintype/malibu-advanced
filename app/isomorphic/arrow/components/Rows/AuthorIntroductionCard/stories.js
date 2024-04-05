@@ -10,9 +10,9 @@ withStore(
   {
     qt: {
       config: {
-        "cdn-image": "thumbor-stg.assettype.com"
-      }
-    }
+        "cdn-image": "thumbor-stg.assettype.com",
+      },
+    },
   },
   Readme
 )
@@ -20,7 +20,7 @@ withStore(
     const contextConfig = {
       theme: color("Color", "#ffffff"),
       enableBio: boolean("Enable Bio", true),
-      enableSocialLinks: boolean("Enable Social Links", true)
+      enableSocialLinks: boolean("Enable Social Links", true),
     };
     return <AuthorIntroductionCard data={authorData} config={contextConfig} />;
   })
@@ -28,7 +28,7 @@ withStore(
     const contextConfig = {
       theme: color("Color", "#ffffff"),
       enableBio: boolean("Enable Bio", true),
-      enableSocialLinks: boolean("Enable Social Links", true)
+      enableSocialLinks: boolean("Enable Social Links", true),
     };
     return <AuthorIntroductionCard data={authorData} config={contextConfig} template="square" />;
   })
@@ -37,7 +37,7 @@ withStore(
       theme: color("Color", "#ffffff"),
       enableBio: boolean("Enable Bio", true),
       enableSocialLinks: boolean("Enable Social Links", true),
-      borderSupport: boolean("With Border", true)
+      borderSupport: boolean("With Border", true),
     };
     return <AuthorIntroductionCard data={authorData} config={contextConfig} template="smallCircle" />;
   });

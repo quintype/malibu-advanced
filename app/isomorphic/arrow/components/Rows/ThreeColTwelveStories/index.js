@@ -26,7 +26,7 @@ const getChildCollectionData = (collection = {}, config = {}, collectionIndex, q
     footerButton = "",
     localizationConfig = {},
     collectionNameBorderColor = "",
-    borderColor = ""
+    borderColor = "",
   } = config;
 
   const sectionTagBorderColor = rgbToHex(borderColor);
@@ -114,7 +114,8 @@ function ThreeColTwelveStories({ collection, config = {} }) {
     <div
       className="full-width-with-padding arrow-component arr--three-col-twelve-stories"
       data-test-id="three-col-twelve-stories"
-      style={{ backgroundColor: theme || "initial" }}>
+      style={{ backgroundColor: theme || "initial" }}
+    >
       <div styleName="wrapper">
         {childCollections
           .slice(0, collectionCount)
@@ -136,8 +137,8 @@ ThreeColTwelveStories.propTypes = {
     slotConfig: PropTypes.array,
     footerButton: PropTypes.string,
     collectionNameTemplate: PropTypes.string,
-    collectionNameBorderColor: PropTypes.string
-  })
+    collectionNameBorderColor: PropTypes.string,
+  }),
 };
 
 export default StateProvider(ThreeColTwelveStories);

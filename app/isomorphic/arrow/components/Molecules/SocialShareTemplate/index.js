@@ -20,7 +20,7 @@ ShareItem.propTypes = {
   name: PropTypes.string,
   url: PropTypes.string,
   icon: PropTypes.node,
-  dataTestId: PropTypes.string
+  dataTestId: PropTypes.string,
 };
 
 function getActionIcon(color) {
@@ -36,7 +36,7 @@ export const SocialShareTemplate = (props) => {
     vertical = false,
     theme,
     iconType = "plain-color-svg",
-    open = false
+    open = false,
   } = props;
   if (!fbUrl && !twitterUrl && !linkedinUrl && !whatsappUrl) return null;
   const iconShade = getTextColor(theme);
@@ -93,7 +93,8 @@ export const SocialShareTemplate = (props) => {
         <ul
           data-test-id={camelcase(iconType)}
           className="desktop-share-wrapper"
-          styleName={`wrapper ${isOpen ? "open" : ""}`}>
+          styleName={`wrapper ${isOpen ? "open" : ""}`}
+        >
           {shareIcon()}
           {iconsList.map((iconData, index) => (
             <ShareItem {...iconData} key={iconData.name} dataTestId={`card-share-${index}`} />
@@ -113,5 +114,5 @@ SocialShareTemplate.propTypes = {
   vertical: PropTypes.bool,
   theme: PropTypes.string,
   iconType: PropTypes.string,
-  open: PropTypes.boolean
+  open: PropTypes.boolean,
 };

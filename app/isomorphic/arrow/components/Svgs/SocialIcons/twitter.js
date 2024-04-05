@@ -13,5 +13,5 @@ export const Twitter = ({ color = "#000" }) => {
 };
 
 Twitter.propTypes = {
-  color: PropTypes.string
+  color: PropTypes.string,
 };

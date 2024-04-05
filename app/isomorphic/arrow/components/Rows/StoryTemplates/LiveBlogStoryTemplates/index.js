@@ -18,7 +18,7 @@ const LiveBlogStoryTemplate = ({
   enableDarkMode,
   loadRelatedStories,
   visibleCardsRender = null,
-  meteringIndicator
+  meteringIndicator,
 }) => {
   const { theme = "", templateType = "default", verticalShare = "" } = config;
 
@@ -32,7 +32,8 @@ const LiveBlogStoryTemplate = ({
       data-test-id={`live-blog-${templateType}`}
       className={`arrow-component arr--content-wrapper arr-story-grid arr--live-blog-story-template-wrapper ${templateType}`}
       style={{ backgroundColor: theme || "initial" }}
-      styleName={`${containerClass} ${verticalShare} wrapper`}>
+      styleName={`${containerClass} ${verticalShare} wrapper`}
+    >
       <LiveBlogStoryTemplates
         storyAccess={storyAccess}
         templateType={templateType}
@@ -58,7 +59,7 @@ LiveBlogStoryTemplate.propTypes = {
   story: PropTypes.object,
   storyAccess: PropTypes.object,
   config: PropTypes.shape({
-    templateType: PropTypes.string
+    templateType: PropTypes.string,
   }),
   firstChild: PropTypes.node,
   secondChild: PropTypes.node,
@@ -68,7 +69,7 @@ LiveBlogStoryTemplate.propTypes = {
   enableDarkMode: PropTypes.bool,
   loadRelatedStories: PropTypes.func,
   visibleCardsRender: PropTypes.func | undefined,
-  meteringIndicator: PropTypes.node | undefined
+  meteringIndicator: PropTypes.node | undefined,
 };
 
 export default StateProvider(LiveBlogStoryTemplate);

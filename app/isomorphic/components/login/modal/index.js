@@ -24,7 +24,7 @@ const Modal = ({ onClose, children, hideCloseIcon }) => {
 Modal.propTypes = {
   onClose: func,
   children: object,
-  hideCloseIcon: bool
+  hideCloseIcon: bool,
 };
 
 export default Modal;

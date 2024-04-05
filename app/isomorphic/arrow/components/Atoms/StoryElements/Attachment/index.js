@@ -22,7 +22,8 @@ const AttachmentBase = ({ element = {}, render, ...restProps }) => {
       data-test-id="attachment"
       className="arrow-component arr--attachment-element"
       styleName={textColor}
-      {...restProps}>
+      {...restProps}
+    >
       <div styleName="headline">Attachment</div>
       <div styleName="wrapper">
         {isPdf ? (
@@ -42,7 +43,8 @@ const AttachmentBase = ({ element = {}, render, ...restProps }) => {
             target="_blank"
             rel="noopener noreferrer"
             download
-            aria-label="button">
+            aria-label="button"
+          >
             {isPdf ? "Preview" : "Download"}
           </Link>
         </div>
@@ -55,8 +57,8 @@ AttachmentBase.propTypes = {
   element: PropTypes.shape({
     url: PropTypes.string,
     fileName: PropTypes.string,
-    contentType: PropTypes.string
+    contentType: PropTypes.string,
   }),
-  render: PropTypes.func
+  render: PropTypes.func,
 };
 export const Attachment = withElementWrapper(AttachmentBase);

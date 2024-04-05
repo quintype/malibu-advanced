@@ -31,7 +31,7 @@ const PhotoStory = ({
   enableDarkMode,
   loadRelatedStories,
   visibleCardsRender = null,
-  meteringIndicator
+  meteringIndicator,
 }) => {
   const {
     theme = "",
@@ -42,10 +42,10 @@ const PhotoStory = ({
     verticalShare = "",
     shareIconType = "plain-color-svg",
     authorDetails = {
-      template: "default"
+      template: "default",
     },
     imageRender = "fullBleed",
-    premiumStoryIconConfig = {}
+    premiumStoryIconConfig = {},
   } = config;
   const isFullBleed = imageRender === "fullBleed";
   const visibledCards = noOfVisibleCards < 0 ? story.cards : story.cards.slice(0, noOfVisibleCards);
@@ -174,7 +174,10 @@ const PhotoStory = ({
           <HeroImage
             story={story}
             widths={[250, 480, 640, 1200]}
-            aspectRatio={[[16, 9], [8, 3]]}
+            aspectRatio={[
+              [16, 9],
+              [8, 3],
+            ]}
             defaultFallback={false}
             isStoryPageImage
             isFullWidthImage
@@ -298,7 +301,8 @@ const PhotoStory = ({
       }`}
       data-test-id={`photo-story-${templateType}-${kebabCase(imageRender)}`}
       className={`arrow-component arr-story-grid arr--content-wrapper arr--photo-story-template-wrapper ${templateType} `}
-      style={{ backgroundColor: theme || "initial" }}>
+      style={{ backgroundColor: theme || "initial" }}
+    >
       {getStoryTemplate(templateType)}
     </div>
   );
@@ -309,7 +313,7 @@ PhotoStory.propTypes = {
   story: PropTypes.object,
   config: PropTypes.shape({
     templateType: PropTypes.string,
-    asideCollection: PropTypes.object
+    asideCollection: PropTypes.object,
   }),
   firstChild: PropTypes.node,
   secondChild: PropTypes.node,
@@ -319,7 +323,7 @@ PhotoStory.propTypes = {
   enableDarkMode: PropTypes.bool,
   loadRelatedStories: PropTypes.func,
   visibleCardsRender: PropTypes.func | undefined,
-  meteringIndicator: PropTypes.node | undefined
+  meteringIndicator: PropTypes.node | undefined,
 };
 
 export default StateProvider(PhotoStory);

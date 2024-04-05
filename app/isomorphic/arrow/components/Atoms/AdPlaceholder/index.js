@@ -16,10 +16,10 @@ AdPlaceholder.propTypes = {
   // height of ad
   height: PropTypes.string,
   // width of ad
-  width: PropTypes.string
+  width: PropTypes.string,
 };
 
 AdPlaceholder.defaultProps = {
   width: "720px",
-  height: "90px"
+  height: "90px",
 };

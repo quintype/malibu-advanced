@@ -19,7 +19,7 @@ export const AuthorWithTime = ({
   isLightTheme,
   collectionId,
   layout,
-  enableDarkModePreview = false
+  enableDarkModePreview = false,
 }) => {
   const configState = useStateValue() || {};
   const isAuthor = get(config, ["showAuthor"], get(configState, ["showAuthor"], true));
@@ -94,7 +94,7 @@ AuthorWithTime.propTypes = {
   isLightTheme: PropTypes.bool,
   collectionId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   layout: PropTypes.string,
-  enableDarkModePreview: PropTypes.bool
+  enableDarkModePreview: PropTypes.bool,
 };
 
 AuthorWithTime.defaultProps = {
@@ -103,5 +103,5 @@ AuthorWithTime.defaultProps = {
   hideAuthorImage: true,
   prefix: "",
   isLightTheme: false,
-  layout: ""
+  layout: "",
 };

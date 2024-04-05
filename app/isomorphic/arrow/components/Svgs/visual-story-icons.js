@@ -61,17 +61,17 @@ export function VisualStoryIcon4({ background }) {
 }
 
 VisualStoryIcon1.propTypes = {
-  background: PropTypes.string
+  background: PropTypes.string,
 };
 
 VisualStoryIcon2.propTypes = {
-  background: PropTypes.string
+  background: PropTypes.string,
 };
 
 VisualStoryIcon3.propTypes = {
-  background: PropTypes.string
+  background: PropTypes.string,
 };
 
 VisualStoryIcon4.propTypes = {
-  background: PropTypes.string
+  background: PropTypes.string,
 };

@@ -12,7 +12,7 @@ export const SectionTag = ({
   borderColor = "",
   isLightTheme,
   layout,
-  enableDarkModePreview = false
+  enableDarkModePreview = false,
 }) => {
   const config = useStateValue() || {};
   const isSection = get(config, ["showSection"], true);
@@ -40,17 +40,19 @@ export const SectionTag = ({
         className="section-tag arrow-component"
         styleName={`${textColor} ${templateStyle}`}
         style={{
-          backgroundColor: templateStyle.includes("section-solid") ? sectionTagBorderColor : "initial"
-        }}>
+          backgroundColor: templateStyle.includes("section-solid") ? sectionTagBorderColor : "initial",
+        }}
+      >
         {templateStyle.includes("section-borderLeft") && (
           <span styleName="border-left" style={{ color: sectionTagBorderColor || "initial" }}></span>
         )}
-        {section["display-name"] || section["name"]}
+        {section["display-name"] || section.name}
         <div
           styleName="border-bottom"
           style={{
-            backgroundColor: template !== "solid" && sectionTagBorderColor ? sectionTagBorderColor : "initial"
-          }}></div>
+            backgroundColor: template !== "solid" && sectionTagBorderColor ? sectionTagBorderColor : "initial",
+          }}
+        ></div>
       </span>
     </Link>
   );
@@ -64,11 +66,11 @@ SectionTag.propTypes = {
   solidBorderColor: PropTypes.string,
   isLightTheme: PropTypes.bool,
   layout: PropTypes.string,
-  enableDarkModePreview: PropTypes.bool
+  enableDarkModePreview: PropTypes.bool,
 };
 
 SectionTag.defaultProps = {
   template: "",
   isLightTheme: false,
-  layout: ""
+  layout: "",
 };

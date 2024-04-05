@@ -9,7 +9,7 @@ const collection = generateCollection({ stories: 4 });
 
 const bulletColorTypeTemplates = {
   default: "Default",
-  custom: "Custom"
+  custom: "Custom",
 };
 
 withStore(
@@ -17,9 +17,9 @@ withStore(
   {
     qt: {
       config: {
-        "cdn-image": "thumbor-stg.assettype.com"
-      }
-    }
+        "cdn-image": "thumbor-stg.assettype.com",
+      },
+    },
   },
   Readme
 )
@@ -41,7 +41,7 @@ withStore(
       showReadTime: boolean("Read time", true),
       showBullet: boolean("Show Bullet", true),
       customBulletColor: color("Bullet Color", ""),
-      bulletColorType: optionalSelect("Bullet Color Type", bulletColorTypeTemplates)
+      bulletColorType: optionalSelect("Bullet Color Type", bulletColorTypeTemplates),
     };
 
     return <TwoColFourStoryHighlight collection={collection} config={contextConfig} />;

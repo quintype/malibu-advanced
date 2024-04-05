@@ -30,7 +30,7 @@ const ElevenStories = ({ collection, config = {} }) => {
     collectionNameTemplate = "",
     footerSlotConfig = {},
     footerButton = "",
-    localizationConfig = {}
+    localizationConfig = {},
   } = config;
   const { type = "story", component } = get(slotConfig, [0], {});
   const { footerSlot } = footerSlotConfig;
@@ -174,7 +174,10 @@ const ElevenStories = ({ collection, config = {} }) => {
                     isHorizontalMobile
                     borderColor={SectionTagborderColor}
                     config={config}
-                    aspectRatio={[[16, 9], [16, 9]]}
+                    aspectRatio={[
+                      [16, 9],
+                      [16, 9],
+                    ]}
                     hideAuthorImage={false}
                     headerLevel="5"
                     collectionId={collection.id}
@@ -231,7 +234,10 @@ const ElevenStories = ({ collection, config = {} }) => {
                     centerAlign
                     border={borderValue}
                     headerLevel="3"
-                    aspectRatio={[[16, 9], [16, 9]]}
+                    aspectRatio={[
+                      [16, 9],
+                      [16, 9],
+                    ]}
                     hideAuthorImage={false}
                     config={config}
                     collectionId={collection.id}
@@ -249,7 +255,10 @@ const ElevenStories = ({ collection, config = {} }) => {
                     borderColor={SectionTagborderColor}
                     hideAuthorImage={false}
                     headerLevel="5"
-                    aspectRatio={[[16, 9], [16, 9]]}
+                    aspectRatio={[
+                      [16, 9],
+                      [16, 9],
+                    ]}
                     config={config}
                     collectionId={collection.id}
                   />
@@ -267,7 +276,8 @@ const ElevenStories = ({ collection, config = {} }) => {
     <div
       className="full-width-with-padding arrow-component"
       data-test-id="eleven-stories"
-      style={{ backgroundColor: theme || "initial" }}>
+      style={{ backgroundColor: theme || "initial" }}
+    >
       <div styleName="eleven-stories">
         <CollectionName
           collection={collection}
@@ -299,8 +309,8 @@ ElevenStories.propTypes = {
     slotConfig: PropTypes.array,
     withseparator: PropTypes.bool,
     collectionNameTemplate: PropTypes.string,
-    collectionNameBorderColor: PropTypes.string
-  })
+    collectionNameBorderColor: PropTypes.string,
+  }),
 };
 
 export default StateProvider(ElevenStories);

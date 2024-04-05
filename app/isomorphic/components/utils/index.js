@@ -1,7 +1,8 @@
 import { getCollectionitems, getSearchPageItems, getStories, getAuthorStories } from "../../../api/utils";
 
-export const isValidEmail = email => {
-  const re = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
+export const isValidEmail = (email) => {
+  const re =
+    /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
   if (!re.test(email)) return false;
   if (email.length > 150 || email.length < 6) return false;
   return true;
@@ -19,7 +20,7 @@ export const getLoadMoreStories = async ({
   setStoriesToRender,
   stories,
   isSectionPage,
-  authorId
+  authorId,
 }) => {
   if (isSearchPage) {
     const loadMoreStories = await getSearchPageItems(slug, offset, limit);

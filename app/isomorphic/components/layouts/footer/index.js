@@ -29,7 +29,7 @@ const MenuGroup = ({ menus }) => {
 };
 
 const FooterBase = ({ menu }) => {
-  const placeholderMenus = menu.filter(item => (item["item-type"] = "placeholder"));
+  const placeholderMenus = menu.filter((item) => (item["item-type"] = "placeholder"));
   return (
     <div className="container">
       <div styleName="footer">
@@ -44,12 +44,12 @@ const FooterBase = ({ menu }) => {
 
 function mapStateToProps(state) {
   return {
-    menu: get(state, ["qt", "data", "navigationMenu", "footer"], [])
+    menu: get(state, ["qt", "data", "navigationMenu", "footer"], []),
   };
 }
 
 FooterBase.propTypes = {
-  menu: object
+  menu: object,
 };
 
 export const Footer = connect(mapStateToProps, null)(FooterBase);

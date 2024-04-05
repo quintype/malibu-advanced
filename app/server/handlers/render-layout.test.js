@@ -198,7 +198,7 @@ const mock = `.app-logo-m__publisher-logo__3FL5U {
 }`;
 
 test("Extract critical css", () => {
-  return getCriticalCss().then(data => {
+  return getCriticalCss().then((data) => {
     expect(mock).toEqual(data.trim());
   });
 });

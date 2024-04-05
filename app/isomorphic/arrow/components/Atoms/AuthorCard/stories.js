@@ -9,7 +9,7 @@ const authorTemplate = {
   "No value": "",
   default: "default",
   leftAligned: "leftAligned",
-  centerAligned: "centerAligned"
+  centerAligned: "centerAligned",
 };
 
 const story = generateStory();
@@ -24,21 +24,20 @@ const singleAuthorStory = {
       social: {
         twitter: {
           url: "https://www.twitter.com/sabqorg",
-          handle: "elonmusk"
-        }
+          handle: "elonmusk",
+        },
       },
       "avatar-url":
         "https://lh5.googleusercontent.com/-NhNrHEp1w4M/AAAAAAAAAAI/AAAAAAAAAAs/lzYwVY1BQdQ/photo.jpg?sz=50",
       "avatar-s3-key": null,
       "twitter-handle": "quintype_inc",
-      bio:
-        "William Shakespeare was an English poet, playwright, and actor, widely regarded as the greatest writer in the English language and the world’s greatest dramatist. He is often called England’s national poet and the “Bard of Avon”",
+      bio: "William Shakespeare was an English poet, playwright, and actor, widely regarded as the greatest writer in the English language and the world’s greatest dramatist. He is often called England’s national poet and the “Bard of Avon”",
       "contributor-role": {
         id: 873,
-        name: "Author"
-      }
-    }
-  ]
+        name: "Author",
+      },
+    },
+  ],
 };
 
 const multipleAuthorsStory = {
@@ -52,19 +51,18 @@ const multipleAuthorsStory = {
       social: {
         twitter: {
           url: "https://www.twitter.com/sabqorg",
-          handle: "elonmusk"
-        }
+          handle: "elonmusk",
+        },
       },
       "avatar-url":
         "https://lh5.googleusercontent.com/-NhNrHEp1w4M/AAAAAAAAAAI/AAAAAAAAAAs/lzYwVY1BQdQ/photo.jpg?sz=50",
       "avatar-s3-key": null,
       "twitter-handle": "quintype_inc",
-      bio:
-        "William Shakespeare was an English poet, playwright, and actor, widely regarded as the greatest writer in the English language and the world’s greatest dramatist. He is often called England’s national poet and the “Bard of Avon”",
+      bio: "William Shakespeare was an English poet, playwright, and actor, widely regarded as the greatest writer in the English language and the world’s greatest dramatist. He is often called England’s national poet and the “Bard of Avon”",
       "contributor-role": {
         id: 873,
-        name: "Author"
-      }
+        name: "Author",
+      },
     },
     {
       id: 123982,
@@ -73,19 +71,18 @@ const multipleAuthorsStory = {
       social: {
         twitter: {
           url: "https://www.twitter.com/sabqorg",
-          handle: "elonmusk"
-        }
+          handle: "elonmusk",
+        },
       },
       "avatar-url":
         "https://lh5.googleusercontent.com/-NhNrHEp1w4M/AAAAAAAAAAI/AAAAAAAAAAs/lzYwVY1BQdQ/photo.jpg?sz=50",
       "avatar-s3-key": null,
       "twitter-handle": "quintype_inc",
-      bio:
-        "William Shakespeare was an English poet, playwright, and actor, widely regarded as the greatest writer in the English language and the world’s greatest dramatist. He is often called England’s national poet and the “Bard of Avon”",
+      bio: "William Shakespeare was an English poet, playwright, and actor, widely regarded as the greatest writer in the English language and the world’s greatest dramatist. He is often called England’s national poet and the “Bard of Avon”",
       "contributor-role": {
         id: 874,
-        name: "Author"
-      }
+        name: "Author",
+      },
     },
     {
       id: 123985,
@@ -94,21 +91,20 @@ const multipleAuthorsStory = {
       social: {
         twitter: {
           url: "https://www.twitter.com/sabqorg",
-          handle: "elonmusk"
-        }
+          handle: "elonmusk",
+        },
       },
       "avatar-url":
         "https://lh5.googleusercontent.com/-NhNrHEp1w4M/AAAAAAAAAAI/AAAAAAAAAAs/lzYwVY1BQdQ/photo.jpg?sz=50",
       "avatar-s3-key": null,
       "twitter-handle": "quintype_inc",
-      bio:
-        "William Shakespeare was an English poet, playwright, and actor, widely regarded as the greatest writer in the English language and the world’s greatest dramatist. He is often called England’s national poet and the “Bard of Avon”",
+      bio: "William Shakespeare was an English poet, playwright, and actor, widely regarded as the greatest writer in the English language and the world’s greatest dramatist. He is often called England’s national poet and the “Bard of Avon”",
       "contributor-role": {
         id: 879,
-        name: "Author"
-      }
-    }
-  ]
+        name: "Author",
+      },
+    },
+  ],
 };
 
 withStore(
@@ -116,9 +112,9 @@ withStore(
   {
     qt: {
       config: {
-        "cdn-image": "thumbor-stg.assettype.com"
-      }
-    }
+        "cdn-image": "thumbor-stg.assettype.com",
+      },
+    },
   },
   Readme
 )
@@ -132,7 +128,7 @@ withStore(
         showImage: boolean("image", true),
         showLabels: boolean("show labels", false),
         showGuestAuthorName: boolean("show guest author name", false),
-        showGuestAuthorImage: boolean("show guest author image", false)
+        showGuestAuthorImage: boolean("show guest author image", false),
       }}
     />
   ))
@@ -145,7 +141,7 @@ withStore(
         showImage: boolean("image", true),
         showLabels: boolean("show labels", true),
         showGuestAuthorName: boolean("show guest author name", false),
-        showGuestAuthorImage: boolean("show guest author image", false)
+        showGuestAuthorImage: boolean("show guest author image", false),
       }}
     />
   ))
@@ -158,7 +154,7 @@ withStore(
         showImage: boolean("image", true),
         showLabels: boolean("show labels", true),
         showGuestAuthorName: boolean("show guest author name", false),
-        showGuestAuthorImage: boolean("show guest author image", false)
+        showGuestAuthorImage: boolean("show guest author image", false),
       }}
     />
   ));

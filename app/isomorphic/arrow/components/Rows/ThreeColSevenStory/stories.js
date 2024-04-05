@@ -5,7 +5,7 @@ import {
   optionalSelect,
   sectionTagTemplates,
   collectionNameTemplates,
-  footerButton
+  footerButton,
 } from "../../../../storybook";
 import ThreeColSevenStory from "./index";
 import { AdPlaceholder } from "../../Atoms/AdPlaceholder";
@@ -26,7 +26,7 @@ const sectionTagDefaultvalue = "#3a9fdd";
 
 const borderTemplate = {
   default: "",
-  border: "bottom"
+  border: "bottom",
 };
 
 const configurableSlot = () => {
@@ -40,9 +40,9 @@ withStore(
   {
     qt: {
       config: {
-        "cdn-image": "thumbor-stg.assettype.com"
-      }
-    }
+        "cdn-image": "thumbor-stg.assettype.com",
+      },
+    },
   },
   Readme
 )
@@ -64,7 +64,7 @@ withStore(
       slotConfig: [{ type: "story", component: configurableSlot }],
       footerSlotConfig: { footerSlot: footerSlot },
       showButton: boolean("Show button", true),
-      showReadTime: boolean("Read time", true)
+      showReadTime: boolean("Read time", true),
     };
     return <ThreeColSevenStory collection={collection} config={contextConfig} />;
   });
@@ -73,9 +73,9 @@ withStore(
   {
     qt: {
       config: {
-        "cdn-image": "thumbor-stg.assettype.com"
-      }
-    }
+        "cdn-image": "thumbor-stg.assettype.com",
+      },
+    },
   },
   Readme
 )
@@ -97,7 +97,7 @@ withStore(
       slotConfig: [{ type: "ad", component: configurableSlot }],
       footerSlotConfig: { footerSlot: footerSlot },
       showButton: boolean("Show button", true),
-      showReadTime: boolean("Read time", true)
+      showReadTime: boolean("Read time", true),
     };
     return <ThreeColSevenStory collection={collection} config={contextConfig} />;
   });

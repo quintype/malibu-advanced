@@ -23,5 +23,5 @@ CurveIcon.propTypes = {
   width: PropTypes.string,
   height: PropTypes.string,
   color: PropTypes.string,
-  opacity: PropTypes.string
+  opacity: PropTypes.string,
 };

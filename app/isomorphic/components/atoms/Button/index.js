@@ -30,7 +30,7 @@ Button.propTypes = {
   color: string,
   flat: bool,
   socialButton: bool,
-  onClick: func
+  onClick: func,
 };
 
 export default Button;

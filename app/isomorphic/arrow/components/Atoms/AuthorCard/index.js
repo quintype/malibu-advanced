@@ -43,7 +43,8 @@ const AuthorsImage = ({ authors, mountAt = "" }) => {
               <div
                 styleName={`author-image ${!index ? "first-author-image" : ""} ${
                   !isSingleAuthor ? "multi-author-image" : ""
-                }`}>
+                }`}
+              >
                 {authorImage(author)}
               </div>
             </Link>
@@ -56,7 +57,7 @@ const AuthorsImage = ({ authors, mountAt = "" }) => {
 
 AuthorsImage.propTypes = {
   authors: PropTypes.array,
-  mountAt: PropTypes.string
+  mountAt: PropTypes.string,
 };
 
 const AuthorTwitter = ({ twitterUrl, textColor }) => {
@@ -73,7 +74,7 @@ const AuthorTwitter = ({ twitterUrl, textColor }) => {
 
 AuthorTwitter.propTypes = {
   twitterUrl: PropTypes.string,
-  textColor: PropTypes.string
+  textColor: PropTypes.string,
 };
 
 const AuthorBio = ({ author, textColor }) => {
@@ -86,7 +87,7 @@ const AuthorBio = ({ author, textColor }) => {
 
 AuthorBio.propTypes = {
   author: PropTypes.object,
-  textColor: PropTypes.string
+  textColor: PropTypes.string,
 };
 
 const AuthorsName = ({ authors, mountAt = "", textColor, showTwitter = false }) => {
@@ -101,7 +102,8 @@ const AuthorsName = ({ authors, mountAt = "", textColor, showTwitter = false }) 
     <div
       data-test-id="author-name"
       styleName={["author-name-share", singleAuthorStyle].join(" ")}
-      className="arr-name-share">
+      className="arr-name-share"
+    >
       {authors.map((author, index) => {
         const spaceHolder = `,\xa0`;
         return (
@@ -111,7 +113,8 @@ const AuthorsName = ({ authors, mountAt = "", textColor, showTwitter = false }) 
               <Link
                 href={`${mountAt}/author/` + author.slug}
                 aria-label="author-name"
-                styleName={`multiple-author-style ${textColor}`}>
+                styleName={`multiple-author-style ${textColor}`}
+              >
                 {author.name}
               </Link>
             </span>
@@ -131,7 +134,7 @@ AuthorsName.propTypes = {
   authors: PropTypes.array,
   mountAt: PropTypes.string,
   textColor: PropTypes.string,
-  showTwitter: PropTypes.boolean
+  showTwitter: PropTypes.boolean,
 };
 
 const DefaultTemplate = ({ authors, clazzName = "", opts = {}, mountAt = "", textColor }) => {
@@ -146,7 +149,7 @@ const DefaultTemplate = ({ authors, clazzName = "", opts = {}, mountAt = "", tex
     showGuestAuthorName = false,
     showGuestAuthorImage = false,
     localizedAuthorLabel,
-    localizedGuestAuthorLabel
+    localizedGuestAuthorLabel,
   } = opts;
 
   const finalAuthorLabel = localizedAuthorLabel || "Author";
@@ -174,10 +177,12 @@ const DefaultTemplate = ({ authors, clazzName = "", opts = {}, mountAt = "", tex
       </div>
       <div
         data-test-id={`author-card-${kebabCase(template)}`}
-        className={`${!showGuestAuthorImage ? "author-card-wrapper" : ""}`}>
+        className={`${!showGuestAuthorImage ? "author-card-wrapper" : ""}`}
+      >
         <div
           styleName={`author-card-wrapper ${template} ${isGuestAuthorsPresent ? "guest-author-wrapper" : ""}`}
-          className={clazzName}>
+          className={clazzName}
+        >
           {showLabels && isGuestAuthorsPresent && (showGuestAuthorName || showGuestAuthorImage) && (
             <span styleName={`${textColor} author-card-label`}>{`${finalGuestAuthorLabel}:`}</span>
           )}
@@ -200,12 +205,12 @@ DefaultTemplate.propTypes = {
     showGuestAuthorName: PropTypes.bool,
     showGuestAuthorImage: PropTypes.bool,
     localizedAuthorLabel: PropTypes.string,
-    localizedGuestAuthorLabel: PropTypes.string
+    localizedGuestAuthorLabel: PropTypes.string,
   }),
   mountAt: PropTypes.string,
   clazzName: PropTypes.string,
   textColor: PropTypes.string,
-  authors: PropTypes.array
+  authors: PropTypes.array,
 };
 
 export const AuthorCard = ({ story = {}, template = "default", clazzName = "", opts = {}, mountAt = "" }) => {
@@ -227,7 +232,8 @@ export const AuthorCard = ({ story = {}, template = "default", clazzName = "", o
     <div
       data-test-id={`author-card-${kebabCase(template)}`}
       className={clazzName}
-      styleName={`author-card-wrapper ${template}`}>
+      styleName={`author-card-wrapper ${template}`}
+    >
       {showImage && <AuthorsImage authors={authors} mountAt={mountAt} />}
       {showName && (
         <AuthorsName
@@ -244,7 +250,7 @@ export const AuthorCard = ({ story = {}, template = "default", clazzName = "", o
 
 AuthorCard.propTypes = {
   story: PropTypes.shape({
-    authors: PropTypes.array
+    authors: PropTypes.array,
   }),
   template: PropTypes.string,
   opts: PropTypes.shape({
@@ -255,8 +261,8 @@ AuthorCard.propTypes = {
     showGuestAuthorName: PropTypes.bool,
     showGuestAuthorImage: PropTypes.bool,
     localizedAuthorLabel: PropTypes.string,
-    localizedGuestAuthorLabel: PropTypes.string
+    localizedGuestAuthorLabel: PropTypes.string,
   }),
   mountAt: PropTypes.string,
-  clazzName: PropTypes.string
+  clazzName: PropTypes.string,
 };
