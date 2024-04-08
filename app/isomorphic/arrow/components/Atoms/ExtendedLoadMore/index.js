@@ -16,6 +16,8 @@ const getTemplate = (templateName) => {
       return lazy(() => import("../../Rows/FourColGrid"));
     case "ArrowThreeColGrid":
       return lazy(() => import("../../Rows/ThreeColGrid"));
+    case "ArrowThreeColTwelveStories":
+      return lazy(() => import("../../Rows/ArrowThreeColTwelveStories"));
     case "ArrowOneColStoryList":
       return lazy(() => import("../../Rows/OneColStoryList"));
     case "ArrowFourColFiveStories":
