@@ -11,7 +11,7 @@ import "./blank.m.css";
 function StoryCard(props) {
   return (
     <div styleName="story-card">
-      {props.card["story-elements"].map(element => {
+      {props.card["story-elements"].map((element) => {
         if (element.type === "image" || element.type === "jsembed" || element.type === "youtube-video") {
           return (
             <WithLazy margin="50px">
@@ -27,17 +27,17 @@ function StoryCard(props) {
 
 StoryCard.propTypes = {
   card: PT.object,
-  story: PT.object
+  story: PT.object,
 };
 
-const BlankStoryTemplate = props => {
-  const qtState = useSelector(state => get(state, ["qt"], {}));
+const BlankStoryTemplate = (props) => {
+  const qtState = useSelector((state) => get(state, ["qt"], {}));
   const adsConfig = get(qtState, ["config", "ads-config"], {});
   const enableAds = get(adsConfig, ["dfp_ads", "enable_ads"]);
   const adConfig = get(adsConfig, ["slots", "story_page_ads"], {});
   const loadAdsSynchronously = get(adsConfig, ["dfp_ads", "load_ads_synchronously"], null);
 
-  const showImagePlaceholder = useSelector(state => get(state, ["qt", "config", "showPlaceholder"]));
+  const showImagePlaceholder = useSelector((state) => get(state, ["qt", "config", "showPlaceholder"]));
   const getPlaceholderStyleName = showImagePlaceholder ? "placeholder" : "";
 
   useEffect(() => {
@@ -52,7 +52,7 @@ const BlankStoryTemplate = props => {
         storySectionSlug: sectionSlug,
         refreshAdUnit: true,
         loadAdsSynchronously,
-        delayPeriod: 4000
+        delayPeriod: 4000,
       });
     }
   }, [props.story]);
@@ -94,7 +94,7 @@ const BlankStoryTemplate = props => {
 
 BlankStoryTemplate.propTypes = {
   card: PT.object,
-  story: PT.object
+  story: PT.object,
 };
 
 function BlankStory(props) {
@@ -106,7 +106,7 @@ function BlankStory(props) {
 }
 
 BlankStory.propTypes = {
-  story: PT.object
+  story: PT.object,
 };
 
 export { BlankStory };

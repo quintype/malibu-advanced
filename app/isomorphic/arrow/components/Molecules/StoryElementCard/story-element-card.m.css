@@ -59,7 +59,26 @@
     max-width: calc(100vw - var(--arrow-spacing-l));
   }
 }
-
+:global .story-element-jsembed-dailymotion-video {
+  position: relative;
+  padding-bottom: 56.25%;
+  padding-top: 30px;
+  height: 0;
+  overflow: hidden;
+  margin: 0 0 20px 0;
+  border-radius: 8px;
+  > div {
+    > iframe {
+      background-image: var(--video-story-background);
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 8px;
+    }
+  }
+}
 .table :global(.story-element-data-table) {
   max-width: calc(100vw - 24px);
   @include tablet {

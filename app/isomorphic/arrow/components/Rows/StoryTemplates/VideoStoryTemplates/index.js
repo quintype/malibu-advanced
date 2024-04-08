@@ -65,7 +65,7 @@ const VideoStoryTemplate = ({
   const HeroVideo = () => {
     return (
       <div styleName="hero-video index-2" id={`video-${get(heroVideo, ["id"])}`}>
-        <Video element={heroVideo} loadIframeOnClick={true} />
+        <Video element={heroVideo} loadIframeOnClick={false} />
       </div>
     );
   };

@@ -201,7 +201,7 @@ const getElement = (story, element, config = {}, AdComponent, WidgetComp, index,
     case "dailymotion-video":
       return (
         <div className="content-style" id={`video-${storyElementId}`}>
-          <Video element={element} story={story} loadIframeOnClick={true} />
+          <Video element={element} story={story} loadIframeOnClick={false} />
         </div>
       );
     case "attachment":
