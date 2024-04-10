@@ -2,6 +2,12 @@ collection-layouts:
 - name: FourColGrid
   display: Default Malibu Widget
   options: []
+- name: ThreeColNineteenStories
+  display: Three Column Nineteen Stories
+  options:
+    - default: "#FFFFFF"
+      name: row_background_color
+      type: string
 - name: ArrowThreeColGrid
   display: Arrow Three Col Grid
   options: []
