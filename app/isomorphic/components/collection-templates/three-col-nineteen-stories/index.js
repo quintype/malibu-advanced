@@ -34,13 +34,13 @@ const getLabel = (story) => {
   return get(story, ["metadata", "story-attributes", "label", "0"], null);
 };
 
-const MainStory = ({ story }) => {
+const MainStory = ({ story, showHeroImage = true }) => {
   const headline = getHeadline(story);
   const label = getLabel(story);
   const readTime = get(story, ["read-time"], null);
   return (
     <Link href={`/${story.slug}`}>
-      <div styleName="main-story">
+      <div styleName={`main-story ${showHeroImage ? "" : "hide-hero-image"}`}>
         {label && label !== "Sponser Content" && <p styleName="label">{label}</p>}
         <h2 styleName="main-story-headline">{headline}</h2>
         {story.subheadline && <p styleName="subheadline">{story.subheadline}</p>}
@@ -53,7 +53,7 @@ const MainStory = ({ story }) => {
           ) : null}
           {readTime && <span>{readTime} MIN READ</span>}
         </div>
-        <HeroImage story={story} headline={headline} aspectRatio={[4, 3]} />
+        {showHeroImage && <HeroImage story={story} headline={headline} aspectRatio={[4, 3]} />}
       </div>
     </Link>
   );
@@ -61,6 +61,7 @@ const MainStory = ({ story }) => {
 
 MainStory.propTypes = {
   story: object,
+  showHeroImage: bool,
 };
 
 const HeadlineImage = ({ headline, showThumbnail, showLabel, story }) => {
@@ -123,12 +124,12 @@ CommonStory.propTypes = {
   showThumbnail: bool,
 };
 
-const MainColumn = ({ stories, isFirstVariation }) => {
+const MainColumn = ({ stories, showHeroImage }) => {
   const [firstStory, ...remainingStories] = stories;
 
   return (
-    <div styleName={isFirstVariation ? "first-column" : "second-column"}>
-      <MainStory story={firstStory} />
+    <div styleName="first-column">
+      <MainStory story={firstStory} showHeroImage={showHeroImage} />
       {remainingStories.map((story) => (
         <div key={story.id}>
           <CommonStory story={story} showThumbnail={true} />
@@ -140,7 +141,7 @@ const MainColumn = ({ stories, isFirstVariation }) => {
 
 MainColumn.propTypes = {
   stories: array,
-  isFirstVariation: bool,
+  showHeroImage: bool,
 };
 
 const TopComponentAd = () => {
@@ -161,7 +162,7 @@ const TopComponentAd = () => {
 
 const SecondaryColumn = ({ stories, isFirstVariation, showAd }) => {
   return (
-    <div styleName={isFirstVariation ? "second-column" : "first-column"}>
+    <div styleName="second-column">
       {showAd && <TopComponentAd />}
       {stories.map((story) => (
         <div key={story.id}>
@@ -218,11 +219,18 @@ ThirdColumn.propTypes = {
 };
 
 export const ThreeColNineteenStories = ({ collection, stories }) => {
-  const { primary_in_first_column, photos_label } = get(collection, ["associated-metadata"], {});
-
+  const { primary_in_first_column, photos_label, show_main_story_hero_image } = get(
+    collection,
+    ["associated-metadata"],
+    {}
+  );
   return (
-    <div styleName="three-col-nine-stories">
-      <MainColumn isFirstVariation={primary_in_first_column} stories={stories.slice(0, 5)} />
+    <div styleName={`three-col-nine-stories ${primary_in_first_column ? "first-variation" : "second-variation"}`}>
+      <MainColumn
+        isFirstVariation={primary_in_first_column}
+        showHeroImage={show_main_story_hero_image}
+        stories={stories.slice(0, 5)}
+      />
       <SecondaryColumn isFirstVariation={primary_in_first_column} stories={stories.slice(5, 13)} showAd={false} />
       <ThirdColumn stories={stories.slice(13, 19)} photos_label={photos_label} showAd={true} />
     </div>

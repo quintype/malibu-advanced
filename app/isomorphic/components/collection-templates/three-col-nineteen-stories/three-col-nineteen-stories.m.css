@@ -5,18 +5,6 @@
   padding-bottom: 16px;
 }
 
-.first-column {
-  order: 1;
-}
-
-.second-column {
-  order: 2;
-}
-
-.third-column {
-  order: 3;
-}
-
 .main-story-headline {
   font-size: 28px;
   color: #191e21;
@@ -25,7 +13,7 @@
 
 .headline {
   font-size: 16px;
-  color: #0C1215;
+  color: #0c1215;
 }
 
 .subheadline {
@@ -126,6 +114,19 @@
   padding: 8px;
 }
 
+.hide-hero-image {
+  .main-story-headline {
+    font-size: 64px;
+    line-height: 64px;
+    font-weight: 700;
+  }
+  .subheadline {
+    font-size: 24px;
+    line-height: 30px;
+    font-weight: 500;
+  }
+}
+
 @media only screen and (min-width: 768px) and (max-width: 1200px) {
   .three-col-nine-stories {
     display: flex;
@@ -188,19 +189,38 @@
   .first-column {
     border-right: 1px solid lightgray;
     width: 460px;
-    padding-right: 16px;
-  }
-  .common-story {
-    padding: 16px 0;
   }
   .second-column {
-    padding: 0 14px;
     width: 285px;
     border-right: 1px solid lightgray;
+  }
+  .first-variation {
+    .first-column {
+      order: 1;
+      padding-right: 16px;
+    }
+    .second-column {
+      order: 2;
+      padding: 0 14px;
+    }
+  }
+  .second-variation {
+    .first-column {
+      order: 2;
+      padding: 0 14px;
+    }
+    .second-column {
+      order: 1;
+      padding-right: 16px;
+    }
   }
   .third-column {
     width: 365px;
     padding-left: 16px;
+    order: 3;
+  }
+  .common-story {
+    padding: 16px 0;
   }
   .second-card {
     display: flex;
