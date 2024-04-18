@@ -9,7 +9,7 @@
 @import "../arrow/stylesheets/app.scss";
 
 :root {
-  --container-width: 1280px;
+  --container-width: 1110px;
   --profile-card-width: 360px;
 }
 
@@ -63,8 +63,14 @@ a {
 .container {
   max-width: var(--container-width);
   margin: 0 auto;
-  padding: 0 16px;
 }
+
+@media screen and (max-width: 1200px) {
+  .container{
+    padding: 0 16px;
+  }
+}
+
 
 .app-loading {
   width: 100%;

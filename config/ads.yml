@@ -23,6 +23,14 @@ slots:
         sizes: [[728, 90]]
       - viewport: [0, 0]
         sizes: [[300, 250]]
+  top_component_ad:
+    ad_unit: ""
+    sizes: [[728, 90], [300, 250]]
+    view_port_size_mapping:
+      - viewport: [728, 0]
+        sizes: [[728, 90]]
+      - viewport: [0, 0]
+        sizes: [[300, 250]]
   story_page_ads:
     ad_unit: ""
     sizes: [[728, 90], [300, 250]]

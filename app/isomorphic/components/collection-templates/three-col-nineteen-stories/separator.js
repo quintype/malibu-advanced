@@ -3,7 +3,7 @@ import { string } from "prop-types";
 import "./three-col-nineteen-stories.m.css";
 
 const Divider = ({ width = "1", height = "10", color = "light" }) => {
-  return <hr width={width} height={height} styleName={color}></hr>;
+  return <hr styleName={color}></hr>;
 };
 
 Divider.propTypes = {
@@ -14,8 +14,8 @@ Divider.propTypes = {
 
 const Dot = ({ width = "3px", height = "3px", color = "light" }) => {
   return (
-    <span styleName={color}>
-      <svg xmlns="http://www.w3.org/2000/svg" width={width} height={height} viewBox="0 0 3 3">
+    <span style={{ verticalAlign: "sub", marginLeft: "2px" }} styleName={color}>
+      <svg xmlns="http://www.w3.org/2000/svg" width={width} height={height} viewBox="0 0 4 4">
         <circle cx="87" cy="9" r="1" fill="inherit" fillRule="nonzero" transform="translate(-86 -8)" />
       </svg>
     </span>

@@ -1,7 +1,8 @@
 .three-col-nine-stories {
   display: flex;
   flex-direction: column;
-  border: 2px solid darkslateblue;
+  border-bottom: 1px solid lightgray;
+  padding-bottom: 16px;
 }
 
 .first-column {
@@ -12,24 +13,28 @@
   order: 2;
 }
 
-.third-column{
+.third-column {
   order: 3;
-  border-top: 2px solid lightcoral;
 }
 
 .main-story-headline {
-  font-size: 36px;
+  font-size: 28px;
   color: #191e21;
-  font-weight: 700;
+  font-weight: 600;
+}
+
+.headline {
+  font-size: 16px;
+  color: #0C1215;
 }
 
 .subheadline {
-  font-size: 18px;
-  font-weight: 500;
+  font-size: 16px;
+  font-weight: 400;
 }
 
 .dark {
-  fill: black;
+  fill: #596e79;
 }
 .light {
   fill: white;
@@ -45,6 +50,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  gap: 8px;
 }
 
 .left-column.show-thumbnail {
@@ -57,35 +63,174 @@
 
 .label {
   color: #013d6c;
-  font-weight: bold;
+  font-weight: 500;
   text-transform: uppercase;
+  font-family: "Montserrat";
+  font-size: 12px;
 }
 
 .time-container {
   display: flex;
-  gap: 8px;
+  font-size: 12px;
+  font-weight: 500;
 }
 
 .hero-image {
-  background-color: darkgray;
   grid-column: 3 / 4;
   aspect-ratio: 4 / 3;
   align-content: center;
+  background-color: lightgray;
 }
 
-.common-story{
-  border: 1px solid transparent;
+.common-story {
+  border-bottom: 1px solid lightgray;
 }
 
-.photos-label{
+.photos-label {
   text-align: center;
   margin-bottom: 2rem;
 }
 
-.wrapper{
-  border: 1px solid red;
+.ad-label {
+  margin-left: 25px;
 }
 
-.dot{
+.wrapper {
+  width: 100%;
+  height: auto;
+}
+
+.dot {
   margin-left: 4px;
+}
+
+.main-story {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-bottom: 1px solid lightgray;
+}
+
+.photos-container {
+  display: flex;
+}
+
+.photo-card {
+  width: 160px;
+  aspect-ratio: 4 / 3;
+  background-color: lightgray;
+}
+
+.publish-time {
+  padding: 8px;
+}
+
+@media only screen and (min-width: 768px) and (max-width: 1200px) {
+  .three-col-nine-stories {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  .first-column {
+    padding-right: 16px;
+    border-right: 1px solid lightgray;
+    width: calc(65% + 16px);
+  }
+  .second-column {
+    width: calc(35% - 16px);
+    padding-left: 16px;
+  }
+  .left-column.show-thumbnail {
+    grid-column: 1/4;
+  }
+  .left-column.hide-thumbnail {
+    grid-column: 1/6;
+  }
+  .hero-image {
+    grid-column: 4 / 6;
+    aspect-ratio: 4 / 3;
+    align-content: center;
+  }
+  .second-card {
+    grid-template-columns: repeat(5, 1fr);
+  }
+  .first-column {
+    .left-column.show-thumbnail {
+      grid-column: 1/5;
+    }
+    .left-column.hide-thumbnail {
+      grid-column: 1/6;
+    }
+    .hero-image {
+      grid-column: 5 / 6;
+    }
+  }
+  .third-column-stories {
+    display: flex;
+  }
+  .first-column div:last-child .common-story {
+    border: none;
+  }
+  .second-column div:last-child .common-story {
+    border: none;
+  }
+  .third-column div:last-child .common-story {
+    border: none;
+  }
+  .common-story {
+    padding: 16px 0;
+  }
+}
+
+@media only screen and (min-width: 1200px) {
+  .three-col-nine-stories {
+    flex-direction: row;
+  }
+  .first-column {
+    border-right: 1px solid lightgray;
+    width: 460px;
+    padding-right: 16px;
+  }
+  .main-story {
+    padding-bottom: 16px;
+  }
+  .common-story {
+    padding: 16px 0;
+  }
+  .second-column {
+    padding: 0 14px;
+    width: 285px;
+    border-right: 1px solid lightgray;
+  }
+  .third-column {
+    width: 365px;
+    padding-left: 16px;
+  }
+  .second-card {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  .left-column.hide-thumbnail {
+    width: 100%;
+  }
+  .hero-image {
+    width: 87px;
+    height: 65px;
+    margin-left: 8px;
+  }
+  .photo-card {
+    width: 160px;
+    aspect-ratio: 4 / 3;
+    background-color: lightgray;
+  }
+  .first-column div:last-child .common-story {
+    border: none;
+  }
+  .second-column div:last-child .common-story {
+    border: none;
+  }
+  .third-column div:last-child .common-story {
+    border: none;
+  }
 }

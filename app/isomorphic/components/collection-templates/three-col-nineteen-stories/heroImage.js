@@ -1,10 +1,11 @@
 import React from "react";
 import { array, object, string, number } from "prop-types";
 import { ResponsiveHeroImage } from "@quintype/components";
+import "./three-col-nineteen-stories.m.css";
 
-export const HeroImage = ({ story, headline, aspectRatio, widths, defaultWidth }) => {
+export const HeroImage = ({ story, headline, aspectRatio, widths, defaultWidth, styles }) => {
   return (
-    <figure>
+    <figure styleName={styles}>
       <ResponsiveHeroImage
         story={story}
         aspectRatio={aspectRatio}
@@ -23,6 +24,7 @@ HeroImage.propTypes = {
   aspectRatio: array,
   widths: array,
   defaultWidth: number,
+  styles: string,
 };
 
 HeroImage.defaultProps = {

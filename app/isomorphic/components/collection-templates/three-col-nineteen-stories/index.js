@@ -19,9 +19,9 @@ const getStoryDate = (timestamp) => {
   if (minutesDifference < 5) {
     return "Just Now";
   } else if (minutesDifference < 60) {
-    return `${minutesDifference} min ago`;
+    return `${minutesDifference} min`;
   } else {
-    return `${hourDifference} ${hourDifference > 1 ? "hours" : "hour"} ago`;
+    return `${hourDifference} ${hourDifference > 1 ? "hours" : "hour"}`;
   }
 };
 
@@ -32,24 +32,26 @@ const getHeadline = (story) => {
 
 const MainStory = ({ story }) => {
   const headline = getHeadline(story);
+  const label = get(story, ["metadata", "story-attributes", "label", "0"], null);
   const readTime = get(story, ["read-time"], null);
   return (
-    <div>
-      <Link href={`/${story.slug}`}>
+    <Link href={`/${story.slug}`}>
+      <div styleName="main-story">
+        {label && <p styleName="label">{label}</p>}
         <h2 styleName="main-story-headline">{headline}</h2>
         {story.subheadline && <p styleName="subheadline">{story.subheadline}</p>}
         <div styleName="time-container">
           {getStoryDate(story["updated-at"] || story["last-published-at"]) ? (
-            <span>
+            <span styleName="publish-time">
               {getStoryDate(story["updated-at"] || story["last-published-at"])}
-              <Separator type="dot" width="10px" height="10px" color="dark" />
+              <Separator type="dot" width="12px" height="12px" color="dark" />
             </span>
           ) : null}
           {readTime && <span>{readTime} MIN READ</span>}
         </div>
         <HeroImage story={story} headline={headline} aspectRatio={[4, 3]} />
-      </Link>
-    </div>
+      </div>
+    </Link>
   );
 };
 
@@ -67,12 +69,12 @@ const HeadlineImage = ({ headline, showThumbnail, story }) => {
     <div styleName="second-card">
       <div styleName={`left-column ${headlineStyleName}`}>
         {label && <p styleName="label">{label}</p>}
-        <h2>{headline}</h2>
+        <h2 styleName="headline">{headline}</h2>
         <div styleName="time-container">
           {getStoryDate(story["updated-at"] || story["last-published-at"]) ? (
             <span>
               {getStoryDate(story["updated-at"] || story["last-published-at"])}
-              <Separator type="dot" width="10px" height="10px" color="dark" />
+              <Separator type="dot" width="12px" height="12px" color="dark" />
             </span>
           ) : null}
           {readTime && <span>{readTime} MIN READ</span>}
@@ -102,7 +104,6 @@ const CommonStory = ({ story, showThumbnail }) => {
       <Link href={`/${story.slug}`}>
         <HeadlineImage headline={headline} showThumbnail={showThumbnail || isPartneredContent} story={story} />
       </Link>
-      <Separator type={"line"} width="100%" color="dark" />
     </div>
   );
 };
@@ -118,9 +119,10 @@ const MainColumn = ({ stories, isFirstVariation }) => {
   return (
     <div styleName={isFirstVariation ? "first-column" : "second-column"}>
       <MainStory story={firstStory} />
-      <Separator type={"line"} width="100%" height="10px" color="dark" />
       {remainingStories.map((story) => (
-        <CommonStory key={story.id} story={story} showThumbnail={true} />
+        <div key={story.id}>
+          <CommonStory story={story} showThumbnail={true} />
+        </div>
       ))}
     </div>
   );
@@ -135,7 +137,7 @@ const TopComponentAd = () => {
   const adConfig = useSelector((state) => get(state, ["qt", "config", "ads-config", "slots", "top_component_ad"], {}));
   return (
     <div styleName="wrapper">
-      <span>Advertisement</span>
+      <span styleName="ad-label">Advertisement</span>
       <DfpComponent
         adStyleName="ad-slot-size-300x250"
         id={`ThreeColNineteenStories-ad`}
@@ -152,7 +154,9 @@ const SecondaryColumn = ({ stories, isFirstVariation, showAd }) => {
     <div styleName={isFirstVariation ? "second-column" : "first-column"}>
       {showAd && <TopComponentAd />}
       {stories.map((story) => (
-        <CommonStory key={story.id} story={story} showThumbnail={false} />
+        <div key={story.id}>
+          <CommonStory story={story} showThumbnail={false} />
+        </div>
       ))}
     </div>
   );
@@ -168,20 +172,29 @@ const ThirdColumn = ({ stories, photos_label, showAd }) => {
   return (
     <div styleName="third-column">
       {showAd && <TopComponentAd />}
-      {stories.slice(0, 4).map((story) => (
-        <CommonStory key={story.id} story={story} showThumbnail={false} />
-      ))}
-      <div>
-        <p styleName="photos-label">{photos_label}</p>
-        <div style={{ display: "flex", gap: "1rem" }}>
-          {stories.slice(4, 6).map((story) => {
-            return (
-              <div key={story.id} style={{ maxWidth: "50%" }}>
-                <HeroImage story={story} headline={story.headline} aspectRatio={[4, 3]} />
-                <h2>{getHeadline(story)}</h2>
-              </div>
-            );
-          })}
+      <div styleName="third-column-stories">
+        <div>
+          {stories.slice(0, 3).map((story) => (
+            <div key={story.id}>
+              <CommonStory story={story} showThumbnail={false} />
+            </div>
+          ))}
+        </div>
+        <div>
+          <div>
+            <CommonStory story={stories[3]} showThumbnail={false} />
+          </div>
+          <p styleName="photos-label">{photos_label}</p>
+          <div styleName="photos-container">
+            {stories.slice(4, 6).map((story) => {
+              return (
+                <div key={story.id}>
+                  <HeroImage story={story} headline={story.headline} aspectRatio={[4, 3]} styles="photo-card" />
+                  <h2 styleName="headline">{getHeadline(story)}</h2>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
     </div>
@@ -196,11 +209,12 @@ ThirdColumn.propTypes = {
 
 export const ThreeColNineteenStories = ({ collection, stories }) => {
   const { primary_in_first_column, photos_label } = get(collection, ["associated-metadata"], {});
+
   return (
     <div styleName="three-col-nine-stories">
       <MainColumn isFirstVariation={primary_in_first_column} stories={stories.slice(0, 5)} />
-      <SecondaryColumn isFirstVariation={primary_in_first_column} stories={stories.slice(5, 13)} showAd={true} />
-      <ThirdColumn stories={stories.slice(13, 19)} photos_label={photos_label} showAd={false} />
+      <SecondaryColumn isFirstVariation={primary_in_first_column} stories={stories.slice(5, 13)} showAd={false} />
+      <ThirdColumn stories={stories.slice(13, 19)} photos_label={photos_label} showAd={true} />
     </div>
   );
 };
