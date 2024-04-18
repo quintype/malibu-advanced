@@ -30,14 +30,18 @@ const getHeadline = (story) => {
   return headline || story.headline;
 };
 
+const getLabel = (story) => {
+  return get(story, ["metadata", "story-attributes", "label", "0"], null);
+};
+
 const MainStory = ({ story }) => {
   const headline = getHeadline(story);
-  const label = get(story, ["metadata", "story-attributes", "label", "0"], null);
+  const label = getLabel(story);
   const readTime = get(story, ["read-time"], null);
   return (
     <Link href={`/${story.slug}`}>
       <div styleName="main-story">
-        {label && <p styleName="label">{label}</p>}
+        {label && label !== "Sponser Content" && <p styleName="label">{label}</p>}
         <h2 styleName="main-story-headline">{headline}</h2>
         {story.subheadline && <p styleName="subheadline">{story.subheadline}</p>}
         <div styleName="time-container">
@@ -59,16 +63,16 @@ MainStory.propTypes = {
   story: object,
 };
 
-const HeadlineImage = ({ headline, showThumbnail, story }) => {
+const HeadlineImage = ({ headline, showThumbnail, showLabel, story }) => {
   const readTime = get(story, ["read-time"], null);
-  const label = get(story, ["metadata", "story-attributes", "label", "0"], null);
+  const label = getLabel(story);
 
   const headlineStyleName = showThumbnail ? "show-thumbnail" : "hide-thumbnail"; // Full width if no image
 
   return (
     <div styleName="second-card">
       <div styleName={`left-column ${headlineStyleName}`}>
-        {label && <p styleName="label">{label}</p>}
+        {showLabel && label && <p styleName="label">{label}</p>}
         <h2 styleName="headline">{headline}</h2>
         <div styleName="time-container">
           {getStoryDate(story["updated-at"] || story["last-published-at"]) ? (
@@ -92,17 +96,23 @@ const HeadlineImage = ({ headline, showThumbnail, story }) => {
 HeadlineImage.propTypes = {
   headline: string,
   showThumbnail: bool,
+  showLabel: bool,
   story: object,
 };
 
 const CommonStory = ({ story, showThumbnail }) => {
-  const label = get(story, ["metadata", "story-attributes", "label", "0"], null);
+  const label = getLabel(story);
   const headline = getHeadline(story);
   const isPartneredContent = label && (label === "Partner Content" || label === "Sponser Content");
   return (
     <div styleName="common-story" key={story.id}>
       <Link href={`/${story.slug}`}>
-        <HeadlineImage headline={headline} showThumbnail={showThumbnail || isPartneredContent} story={story} />
+        <HeadlineImage
+          headline={headline}
+          showThumbnail={showThumbnail || isPartneredContent}
+          story={story}
+          showLabel={label !== "Sponser Content"}
+        />
       </Link>
     </div>
   );
