@@ -198,9 +198,13 @@ const ThirdColumn = ({ stories, photos_label, showAd }) => {
           <p styleName="photos-label">{photos_label}</p>
           <div styleName="photos-container">
             {stories.slice(4, 6).map((story) => {
+              const label = getLabel(story);
+              const showLabel = label !== "Sponser Content";
+
               return (
-                <div key={story.id}>
+                <div styleName="photo-story" key={story.id}>
                   <HeroImage story={story} headline={story.headline} aspectRatio={[4, 3]} styles="photo-card" />
+                  {showLabel && label && <p styleName="label">{label}</p>}
                   <h2 styleName="headline">{getHeadline(story)}</h2>
                 </div>
               );

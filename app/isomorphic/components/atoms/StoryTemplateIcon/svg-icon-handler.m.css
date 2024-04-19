@@ -1,0 +1,14 @@
+.story-icon {
+  height: 24px;
+  width: 24px;
+  position: absolute;
+  bottom: 4px;
+  left: 4px;
+  z-index: 1;
+}
+
+.story-icon.center {
+  left: calc(50% - 12px);
+  bottom: calc(50% - 12px);
+}
+

@@ -1,11 +1,14 @@
 import React from "react";
 import { array, object, string, number } from "prop-types";
 import { ResponsiveHeroImage } from "@quintype/components";
+import { StoryTemplateIcon } from "../../atoms/StoryTemplateIcon";
+
 import "./three-col-nineteen-stories.m.css";
 
-export const HeroImage = ({ story, headline, aspectRatio, widths, defaultWidth, styles }) => {
+export const HeroImage = ({ story, headline, aspectRatio, widths, defaultWidth, styles = "" }) => {
   return (
-    <figure styleName={styles}>
+    <figure styleName={`hero-image-container ${styles}`}>
+      <StoryTemplateIcon storyTemplate={story["story-template"]} />
       <ResponsiveHeroImage
         story={story}
         aspectRatio={aspectRatio}

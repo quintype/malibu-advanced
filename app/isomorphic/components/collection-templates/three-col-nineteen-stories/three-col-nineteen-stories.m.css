@@ -86,6 +86,8 @@
 .wrapper {
   width: 100%;
   height: auto;
+  padding: 16px 0;
+  border-bottom: 1px solid lightgray;
 }
 
 .dot {
@@ -98,6 +100,10 @@
   gap: 8px;
   border-bottom: 1px solid lightgray;
   padding-bottom: 16px;
+  .story-icon {
+    width: 64px;
+    height: 64px;
+  }
 }
 
 .photos-container {
@@ -105,7 +111,6 @@
 }
 
 .photo-card {
-  width: 160px;
   aspect-ratio: 4 / 3;
   background-color: lightgray;
 }
@@ -125,6 +130,23 @@
     line-height: 30px;
     font-weight: 500;
   }
+}
+
+.hero-image-container {
+  position: relative;
+}
+
+.photo-story{
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.photo-story:nth-of-type(1){
+  padding-right: 16px;
+  border-right: 1px solid lightgray;
+}
+.photo-story:nth-of-type(2){
+  padding-left: 16px;
 }
 
 @media only screen and (min-width: 768px) and (max-width: 1200px) {
