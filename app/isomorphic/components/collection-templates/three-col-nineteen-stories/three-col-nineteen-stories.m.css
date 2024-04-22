@@ -1,24 +1,53 @@
 .three-col-nine-stories {
+
+  --spacing-xxs: 4px;
+  --spacing-xs: 8px;
+  --spacing-s: 12px;
+  --spacing-m: 16px;
+  --spacing-l: 20px;
+  --spacing-xl: 24px;
+  --spacing-xxl: 28px;
+
+  --font-xxs: 4px;
+  --font-xs: 8px;
+  --font-s: 12px;
+  --font-m: 16px;
+  --font-l: 20px;
+  --font-xl: 24px;
+  --font-xxl: 28px;
+
+  --border-color: #DEE3E6;
+
+  --font1: "Roboto";
+  --font5: "Montserrat";
+
+  --semibold: 600;
+  --regular: 400;
+
   display: flex;
   flex-direction: column;
-  border-bottom: 1px solid lightgray;
-  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: var(--spacing-m);
 }
 
 .main-story-headline {
-  font-size: 28px;
+  font-size: var(--font-xxl);
+  font-family: var(--font1);
   color: #191e21;
-  font-weight: 600;
+  font-weight: var(--semibold);
 }
 
 .headline {
-  font-size: 16px;
+  font-size: var(--font-m);
+  font-family: var(--font1);
   color: #0c1215;
+  font-weight: var(--semibold);
 }
 
 .subheadline {
-  font-size: 16px;
-  font-weight: 400;
+  font-size: var(--font-m);
+  font-family: var(--font1);
+  font-weight: var(--semibold);
 }
 
 .dark {
@@ -38,7 +67,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 8px;
+  gap:var(--spacing-xs);
 }
 
 .left-column.show-thumbnail {
@@ -51,27 +80,29 @@
 
 .label {
   color: #013d6c;
-  font-weight: 500;
+  font-weight: var(--regular);
   text-transform: uppercase;
-  font-size: 12px;
+  font-family: var(--content-font);
+  font-size: var(--font-s);
 }
 
 .time-container {
   display: flex;
-  font-size: 12px;
-  font-weight: 500;
+  font-size: var(--font-s);
+  font-weight: 200;
+  font-family: var(--font5);
 }
 
 .hero-image {
   grid-column: 3 / 4;
   aspect-ratio: 4 / 3;
   align-content: center;
-  background-color: lightgray;
+  background-color: var(--border-color);
 }
 
 .common-story {
-  border-bottom: 1px solid lightgray;
-  padding: 16px 0;
+  border-bottom: 1px solid var(--border-color);
+  padding: var(--spacing-m) 0;
 }
 
 .common-story.no-border{
@@ -85,8 +116,8 @@
 .ad-wrapper {
   width: 100%;
   height: auto;
-  padding: 16px 0;
-  border-bottom: 1px solid lightgray;
+  padding: var(--spacing-m) 0;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .dot {
@@ -96,9 +127,9 @@
 .main-story {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  border-bottom: 1px solid lightgray;
-  padding-bottom: 16px;
+  gap:var(--spacing-xs);
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: var(--spacing-m);
   .story-icon {
     width: 64px;
     height: 64px;
@@ -111,11 +142,11 @@
 
 .photo-card {
   aspect-ratio: 4 / 3;
-  background-color: lightgray;
+  background-color: var(--border-color);
 }
 
 .publish-time {
-  padding: 8px;
+  padding:var(--spacing-xs);
 }
 
 .hide-hero-image {
@@ -125,7 +156,7 @@
     font-weight: 700;
   }
   .subheadline {
-    font-size: 24px;
+    font-size: var(--font-xl);
     line-height: 30px;
     font-weight: 500;
   }
@@ -138,21 +169,23 @@
 .photo-story {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap:var(--spacing-xs);
 }
 .photo-story:nth-of-type(1) {
-  padding-right: 16px;
-  border-right: 1px solid lightgray;
+  padding-right: var(--spacing-m);
+  border-right: 1px solid var(--border-color);
 }
 .photo-story:nth-of-type(2) {
-  padding-left: 16px;
+  padding-left: var(--spacing-m);
 }
 
 .text-with-line {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 16px;
+  margin-bottom: var(--spacing-m);
+  font-family: var(--font1);
+  font-weight: var(--regular);
 }
 
 .text-with-line::before,
@@ -160,13 +193,18 @@
   content: "";
   flex-grow: 1;
   height: 1px;
-  background-color: lightgray;
+  background-color: var(--border-color);
 }
 .text-with-line::before {
-  margin-right: 8px;
+  margin-right:var(--spacing-xs);
 }
 .text-with-line::after {
-  margin-left: 8px;
+  margin-left:var(--spacing-xs);
+}
+
+.left-stories{
+  border-right: 1px solid var(--border-color);
+  padding-right: var(--spacing-m);
 }
 
 @media only screen and (min-width: 768px) and (max-width: 1200px) {
@@ -176,13 +214,13 @@
     flex-wrap: wrap;
   }
   .first-column {
-    padding-right: 16px;
-    border-right: 1px solid lightgray;
-    width: calc(65% + 16px);
+    padding-right: var(--spacing-m);
+    border-right: 1px solid var(--border-color);
+    width: calc(65% + var(--spacing-m));
   }
   .second-column {
-    width: calc(35% - 16px);
-    padding-left: 16px;
+    width: calc(35% - var(--spacing-m));
+    padding-left: var(--spacing-m);
   }
   .left-column.show-thumbnail {
     grid-column: 1/4;
@@ -212,7 +250,7 @@
   .third-column-stories {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 16px;
+    gap: var(--spacing-m);
   }
   .first-column div:last-child .common-story {
     border: none;
@@ -221,7 +259,7 @@
     border: none;
   }
   .common-story {
-    padding: 16px 0;
+    padding: var(--spacing-m) 0;
   }
   .ad-wrapper{
     border-bottom: none;
@@ -233,17 +271,17 @@
     flex-direction: row;
   }
   .first-column {
-    border-right: 1px solid lightgray;
+    border-right: 1px solid var(--border-color);
     width: 460px;
   }
   .second-column {
     width: 285px;
-    border-right: 1px solid lightgray;
+    border-right: 1px solid var(--border-color);
   }
   .first-variation {
     .first-column {
       order: 1;
-      padding-right: 16px;
+      padding-right: var(--spacing-m);
     }
     .second-column {
       order: 2;
@@ -257,16 +295,16 @@
     }
     .second-column {
       order: 1;
-      padding-right: 16px;
+      padding-right: var(--spacing-m);
     }
   }
   .third-column {
     width: 365px;
-    padding-left: 16px;
+    padding-left: var(--spacing-m);
     order: 3;
   }
   .common-story {
-    padding: 16px 0;
+    padding: var(--spacing-m) 0;
   }
   .second-card {
     display: flex;
@@ -279,12 +317,12 @@
   .hero-image {
     width: 87px;
     height: 65px;
-    margin-left: 8px;
+    margin-left:var(--spacing-xs);
   }
   .photo-card {
     width: 160px;
     aspect-ratio: 4 / 3;
-    background-color: lightgray;
+    background-color: var(--border-color);
   }
   .first-column div:last-child .common-story {
     border: none;

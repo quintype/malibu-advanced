@@ -157,7 +157,7 @@ const TopComponentAd = () => {
   const adConfig = useSelector((state) => get(state, ["qt", "config", "ads-config", "slots", "top_component_ad"], {}));
   return (
     <div styleName="ad-wrapper">
-      <span styleName="ad-label">Advertisement</span>
+      <div styleName="ad-label">Advertisement</div>
       <DfpComponent
         adStyleName="ad-slot-size-300x250"
         id={`ThreeColNineteenStories-ad`}
@@ -192,7 +192,7 @@ const ThirdColumn = ({ stories, photos_label, showAd }) => {
     <div styleName="third-column">
       {showAd && <TopComponentAd />}
       <div styleName="third-column-stories">
-        <div>
+        <div styleName="left-stories">
           {stories.slice(0, 3).map((story, index) => (
             <div key={story.id}>
               <CommonStory story={story} showThumbnail={false} showBorder={index !== 2} />

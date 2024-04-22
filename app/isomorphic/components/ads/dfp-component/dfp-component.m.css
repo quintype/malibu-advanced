@@ -18,7 +18,8 @@
 .ad-slot-size-300x250 {
   width: 300px;
   height: 250px;
-  border: 1px solid lightgray;
+  border: 1px solid #DEE3E6;
+  background-color: #DEE3E6;
   margin: 0 auto;
   margin-bottom: 8px;
 }
