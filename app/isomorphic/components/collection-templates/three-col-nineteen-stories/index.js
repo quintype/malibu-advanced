@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import React from "react";
+import React, { useEffect, useState } from "react";
 import get from "lodash/get";
 import { array, object, bool, string } from "prop-types";
 import { useSelector } from "react-redux";
@@ -9,6 +9,14 @@ import { Separator } from "./separator";
 import { HeroImage } from "./heroImage";
 import { DfpComponent } from "../../ads/dfp-component";
 import "./three-col-nineteen-stories.m.css";
+
+const PhotosLabelWithLine = ({ label }) => {
+  return <div styleName="text-with-line">{label}</div>;
+};
+
+PhotosLabelWithLine.propTypes = {
+  label: string,
+};
 
 const getStoryDate = (timestamp) => {
   const hourDifference = differenceInHours(new Date(), new Date(timestamp));
@@ -101,12 +109,12 @@ HeadlineImage.propTypes = {
   story: object,
 };
 
-const CommonStory = ({ story, showThumbnail }) => {
+const CommonStory = ({ story, showThumbnail, showBorder }) => {
   const label = getLabel(story);
   const headline = getHeadline(story);
   const isPartneredContent = label && (label === "Partner Content" || label === "Sponser Content");
   return (
-    <div styleName="common-story" key={story.id}>
+    <div styleName={`common-story ${showBorder ? "" : "no-border"}`} key={story.id}>
       <Link href={`/${story.slug}`}>
         <HeadlineImage
           headline={headline}
@@ -122,6 +130,7 @@ const CommonStory = ({ story, showThumbnail }) => {
 CommonStory.propTypes = {
   story: object,
   showThumbnail: bool,
+  showBorder: bool,
 };
 
 const MainColumn = ({ stories, showHeroImage }) => {
@@ -130,9 +139,9 @@ const MainColumn = ({ stories, showHeroImage }) => {
   return (
     <div styleName="first-column">
       <MainStory story={firstStory} showHeroImage={showHeroImage} />
-      {remainingStories.map((story) => (
+      {remainingStories.map((story, index) => (
         <div key={story.id}>
-          <CommonStory story={story} showThumbnail={true} />
+          <CommonStory story={story} showThumbnail={true} showBorder={index !== remainingStories.length - 1} />
         </div>
       ))}
     </div>
@@ -147,7 +156,7 @@ MainColumn.propTypes = {
 const TopComponentAd = () => {
   const adConfig = useSelector((state) => get(state, ["qt", "config", "ads-config", "slots", "top_component_ad"], {}));
   return (
-    <div styleName="wrapper">
+    <div styleName="ad-wrapper">
       <span styleName="ad-label">Advertisement</span>
       <DfpComponent
         adStyleName="ad-slot-size-300x250"
@@ -160,13 +169,13 @@ const TopComponentAd = () => {
   );
 };
 
-const SecondaryColumn = ({ stories, isFirstVariation, showAd }) => {
+const SecondaryColumn = ({ stories, showAd }) => {
   return (
     <div styleName="second-column">
       {showAd && <TopComponentAd />}
-      {stories.map((story) => (
+      {stories.map((story, index) => (
         <div key={story.id}>
-          <CommonStory story={story} showThumbnail={false} />
+          <CommonStory story={story} showThumbnail={false} showBorder={index !== stories.length - 1} />
         </div>
       ))}
     </div>
@@ -175,7 +184,6 @@ const SecondaryColumn = ({ stories, isFirstVariation, showAd }) => {
 
 SecondaryColumn.propTypes = {
   stories: array,
-  isFirstVariation: bool,
   showAd: bool,
 };
 
@@ -185,17 +193,17 @@ const ThirdColumn = ({ stories, photos_label, showAd }) => {
       {showAd && <TopComponentAd />}
       <div styleName="third-column-stories">
         <div>
-          {stories.slice(0, 3).map((story) => (
+          {stories.slice(0, 3).map((story, index) => (
             <div key={story.id}>
-              <CommonStory story={story} showThumbnail={false} />
+              <CommonStory story={story} showThumbnail={false} showBorder={index !== 2} />
             </div>
           ))}
         </div>
         <div>
           <div>
-            <CommonStory story={stories[3]} showThumbnail={false} />
+            <CommonStory story={stories[3]} showThumbnail={false} showBorder={false} />
           </div>
-          <p styleName="photos-label">{photos_label}</p>
+          <PhotosLabelWithLine label={photos_label} />
           <div styleName="photos-container">
             {stories.slice(4, 6).map((story) => {
               const label = getLabel(story);
@@ -218,25 +226,59 @@ const ThirdColumn = ({ stories, photos_label, showAd }) => {
 
 ThirdColumn.propTypes = {
   stories: array,
-  photos_label: array,
+  photos_label: string,
   showAd: bool,
 };
 
+const useDeviceType = () => {
+  const [deviceType, setDeviceType] = useState("");
+
+  // Determine device type based on window.innerWidth
+  const determineDeviceType = () => {
+    const width = window.innerWidth;
+    if (width < 768) {
+      setDeviceType("mobile");
+    } else if (width < 1200) {
+      setDeviceType("tablet");
+    } else {
+      setDeviceType("desktop");
+    }
+  };
+
+  // Add event listener for window resize
+  useEffect(() => {
+    // Determine initial device type
+    determineDeviceType();
+
+    // Add event listener for window resize
+    window.addEventListener("resize", determineDeviceType);
+
+    // Cleanup the event listener on component unmount
+    return () => {
+      window.removeEventListener("resize", determineDeviceType);
+    };
+  }, []);
+
+  return deviceType;
+};
+
 export const ThreeColNineteenStories = ({ collection, stories }) => {
+  const deviceType = useDeviceType();
   const { primary_in_first_column, photos_label, show_main_story_hero_image } = get(
     collection,
     ["associated-metadata"],
     {}
   );
+
   return (
-    <div styleName={`three-col-nine-stories ${primary_in_first_column ? "first-variation" : "second-variation"}`}>
-      <MainColumn
-        isFirstVariation={primary_in_first_column}
-        showHeroImage={show_main_story_hero_image}
-        stories={stories.slice(0, 5)}
-      />
-      <SecondaryColumn isFirstVariation={primary_in_first_column} stories={stories.slice(5, 13)} showAd={false} />
-      <ThirdColumn stories={stories.slice(13, 19)} photos_label={photos_label} showAd={true} />
+    <div
+      styleName={`three-col-nine-stories ${
+        primary_in_first_column || deviceType === "mobile" ? "first-variation" : "second-variation"
+      }`}
+    >
+      <MainColumn showHeroImage={show_main_story_hero_image} stories={stories.slice(0, 5)} />
+      <SecondaryColumn stories={stories.slice(5, 13)} showAd={deviceType === "mobile"} />
+      <ThirdColumn stories={stories.slice(13, 19)} photos_label={photos_label} showAd={deviceType !== "mobile"} />
     </div>
   );
 };
