@@ -110,7 +110,8 @@
 }
 
 .ad-label {
-  margin-left: 25px;
+  width: 300px;
+  margin: 0 auto;
 }
 
 .ad-wrapper {
@@ -130,10 +131,6 @@
   gap:var(--spacing-xs);
   border-bottom: 1px solid var(--border-color);
   padding-bottom: var(--spacing-m);
-  .story-icon {
-    width: 64px;
-    height: 64px;
-  }
 }
 
 .photos-container {

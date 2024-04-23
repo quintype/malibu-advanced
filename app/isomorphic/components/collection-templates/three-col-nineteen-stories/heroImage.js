@@ -5,10 +5,10 @@ import { StoryTemplateIcon } from "../../atoms/StoryTemplateIcon";
 
 import "./three-col-nineteen-stories.m.css";
 
-export const HeroImage = ({ story, headline, aspectRatio, widths, defaultWidth, styles = "" }) => {
+export const HeroImage = ({ story, headline, aspectRatio, widths, defaultWidth, styles = "", iconSizes }) => {
   return (
     <figure styleName={`hero-image-container ${styles}`}>
-      <StoryTemplateIcon storyTemplate={story["story-template"]} />
+      <StoryTemplateIcon storyTemplate={story["story-template"]} iconSizes={iconSizes} />
       <ResponsiveHeroImage
         story={story}
         aspectRatio={aspectRatio}
@@ -28,6 +28,7 @@ HeroImage.propTypes = {
   widths: array,
   defaultWidth: number,
   styles: string,
+  iconSizes: object,
 };
 
 HeroImage.defaultProps = {

@@ -59,7 +59,9 @@ const MainStory = ({ story, showHeroImage = true }) => {
           ) : null}
           {readTime && <span>{readTime} MIN READ</span>}
         </div>
-        {showHeroImage && <HeroImage story={story} headline={headline} aspectRatio={[4, 3]} />}
+        {showHeroImage && (
+          <HeroImage story={story} headline={headline} aspectRatio={[4, 3]} iconSizes={{ width: 64, height: 64 }} />
+        )}
       </div>
     </Link>
   );
@@ -92,7 +94,7 @@ const HeadlineImage = ({ headline, showThumbnail, story }) => {
       </div>
       {showThumbnail && (
         <div styleName="hero-image">
-          <HeroImage story={story} headline={headline} aspectRatio={[4, 3]} />
+          <HeroImage story={story} headline={headline} aspectRatio={[4, 3]} iconSizes={{ height: 24, width: 24 }} />
         </div>
       )}
     </div>
@@ -202,7 +204,13 @@ const ThirdColumn = ({ stories, photos_label, showAd }) => {
 
               return (
                 <div styleName="photo-story" key={story.id}>
-                  <HeroImage story={story} headline={story.headline} aspectRatio={[4, 3]} styles="photo-card" />
+                  <HeroImage
+                    story={story}
+                    headline={story.headline}
+                    aspectRatio={[4, 3]}
+                    iconSizes={{ height: 24, width: 24 }}
+                    styles="photo-card"
+                  />
                   {label && <p styleName="label">{label}</p>}
                   <h2 styleName="headline">{getHeadline(story)}</h2>
                 </div>

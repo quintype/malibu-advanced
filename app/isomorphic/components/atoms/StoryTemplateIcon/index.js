@@ -1,16 +1,18 @@
 import React from "react";
-import PropTypes from "prop-types";
+import { string, object } from "prop-types";
 import { SvgIconHandler } from "../../atoms/svg-icon-hadler";
 import "./svg-icon-handler.m.css";
 
-export const StoryTemplateIcon = ({ storyTemplate }) => {
+export const StoryTemplateIcon = ({ storyTemplate, iconSizes }) => {
+  const { width, height } = iconSizes;
+
   switch (storyTemplate) {
     case "photo":
-      return <SvgIconHandler styleName={`story-icon`} type="photo" />;
+      return <SvgIconHandler styleName={`story-icon`} type="photo" height={height} width={width} />;
     case "video":
-      return <SvgIconHandler styleName={`story-icon center`} type="video" />;
+      return <SvgIconHandler styleName={`story-icon center`} type="video" height={height} width={width} />;
     case "listicle":
-      return <SvgIconHandler styleName={`story-icon`} type="podcast" />;
+      return <SvgIconHandler styleName={`story-icon`} type="podcast" height={height} width={width} />;
 
     default:
       return null;
@@ -18,5 +20,6 @@ export const StoryTemplateIcon = ({ storyTemplate }) => {
 };
 
 StoryTemplateIcon.propTypes = {
-  storyTemplate: PropTypes.string,
+  storyTemplate: string,
+  iconSizes: object,
 };
