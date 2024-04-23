@@ -10,12 +10,14 @@ import { HeroImage } from "./heroImage";
 import { DfpComponent } from "../../ads/dfp-component";
 import "./three-col-nineteen-stories.m.css";
 
-const PhotosLabelWithLine = ({ label }) => {
-  return <div styleName="text-with-line">{label}</div>;
-};
+const PARTNER_CONTENT_STORY_TEMPLATE = "publication";
 
-PhotosLabelWithLine.propTypes = {
-  label: string,
+const getLabelToShow = (story) => {
+  if (story["story-template"] === PARTNER_CONTENT_STORY_TEMPLATE) {
+    return "Partner Content";
+  }
+  const label = get(story, ["metadata", "story-attributes", "label", "0"], null);
+  return label;
 };
 
 const getStoryDate = (timestamp) => {
@@ -38,18 +40,14 @@ const getHeadline = (story) => {
   return headline || story.headline;
 };
 
-const getLabel = (story) => {
-  return get(story, ["metadata", "story-attributes", "label", "0"], null);
-};
-
 const MainStory = ({ story, showHeroImage = true }) => {
   const headline = getHeadline(story);
-  const label = getLabel(story);
+  const label = getLabelToShow(story);
   const readTime = get(story, ["read-time"], null);
   return (
     <Link href={`/${story.slug}`}>
       <div styleName={`main-story ${showHeroImage ? "" : "hide-hero-image"}`}>
-        {label && label !== "Sponser Content" && <p styleName="label">{label}</p>}
+        {label && <p styleName="label">{label}</p>}
         <h2 styleName="main-story-headline">{headline}</h2>
         {story.subheadline && <p styleName="subheadline">{story.subheadline}</p>}
         <div styleName="time-container">
@@ -72,16 +70,15 @@ MainStory.propTypes = {
   showHeroImage: bool,
 };
 
-const HeadlineImage = ({ headline, showThumbnail, showLabel, story }) => {
+const HeadlineImage = ({ headline, showThumbnail, story }) => {
   const readTime = get(story, ["read-time"], null);
-  const label = getLabel(story);
+  const label = getLabelToShow(story);
 
   const headlineStyleName = showThumbnail ? "show-thumbnail" : "hide-thumbnail"; // Full width if no image
-
   return (
     <div styleName="second-card">
       <div styleName={`left-column ${headlineStyleName}`}>
-        {showLabel && label && <p styleName="label">{label}</p>}
+        {label && <p styleName="label">{label}</p>}
         <h2 styleName="headline">{headline}</h2>
         <div styleName="time-container">
           {getStoryDate(story["updated-at"] || story["last-published-at"]) ? (
@@ -105,23 +102,18 @@ const HeadlineImage = ({ headline, showThumbnail, showLabel, story }) => {
 HeadlineImage.propTypes = {
   headline: string,
   showThumbnail: bool,
-  showLabel: bool,
   story: object,
 };
 
 const CommonStory = ({ story, showThumbnail, showBorder }) => {
-  const label = getLabel(story);
   const headline = getHeadline(story);
-  const isPartneredContent = label && (label === "Partner Content" || label === "Sponser Content");
+  const sponsor = get(story, ["metadata", "sponsored-by"], null);
+  const isPartneredContent = story["story-template"] === PARTNER_CONTENT_STORY_TEMPLATE || sponsor !== null;
+
   return (
     <div styleName={`common-story ${showBorder ? "" : "no-border"}`} key={story.id}>
       <Link href={`/${story.slug}`}>
-        <HeadlineImage
-          headline={headline}
-          showThumbnail={showThumbnail || isPartneredContent}
-          story={story}
-          showLabel={label !== "Sponser Content"}
-        />
+        <HeadlineImage headline={headline} showThumbnail={showThumbnail || isPartneredContent} story={story} />
       </Link>
     </div>
   );
@@ -203,16 +195,15 @@ const ThirdColumn = ({ stories, photos_label, showAd }) => {
           <div>
             <CommonStory story={stories[3]} showThumbnail={false} showBorder={false} />
           </div>
-          <PhotosLabelWithLine label={photos_label} />
+          <div styleName="text-with-line">{photos_label}</div>
           <div styleName="photos-container">
             {stories.slice(4, 6).map((story) => {
-              const label = getLabel(story);
-              const showLabel = label !== "Sponser Content";
+              const label = getLabelToShow(story);
 
               return (
                 <div styleName="photo-story" key={story.id}>
                   <HeroImage story={story} headline={story.headline} aspectRatio={[4, 3]} styles="photo-card" />
-                  {showLabel && label && <p styleName="label">{label}</p>}
+                  {label && <p styleName="label">{label}</p>}
                   <h2 styleName="headline">{getHeadline(story)}</h2>
                 </div>
               );
@@ -276,9 +267,9 @@ export const ThreeColNineteenStories = ({ collection, stories }) => {
         primary_in_first_column || deviceType === "mobile" ? "first-variation" : "second-variation"
       }`}
     >
-      <MainColumn showHeroImage={show_main_story_hero_image} stories={stories.slice(0, 5)} />
+      <MainColumn stories={stories.slice(0, 5)} showHeroImage={show_main_story_hero_image} />
       <SecondaryColumn stories={stories.slice(5, 13)} showAd={deviceType === "mobile"} />
-      <ThirdColumn stories={stories.slice(13, 19)} photos_label={photos_label} showAd={deviceType !== "mobile"} />
+      <ThirdColumn stories={stories.slice(13, 19)} showAd={deviceType !== "mobile"} photos_label={photos_label} />
     </div>
   );
 };
