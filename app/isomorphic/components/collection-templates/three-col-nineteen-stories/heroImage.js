@@ -5,18 +5,33 @@ import { StoryTemplateIcon } from "../../atoms/StoryTemplateIcon";
 
 import "./three-col-nineteen-stories.m.css";
 
-export const HeroImage = ({ story, headline, aspectRatio, widths, defaultWidth, styles = "", iconSizes }) => {
+const FallbackImage = () => {
+  return (
+    <div className="qt-image" styleName="fallback-image">
+      <img
+        src="https://www.arabnews.com/sites/default/files/styles/n_670_395/public/2021/04/21/2585126-1140254469.png?itok=O9ewjQKr"
+        alt="gulfnews-fallback"
+      />
+    </div>
+  );
+};
+
+export const HeroImage = ({ story, headline, aspectRatio, widths, defaultWidth, styles = "", iconSizes, slug }) => {
   return (
     <figure styleName={`hero-image-container ${styles}`}>
       <StoryTemplateIcon storyTemplate={story["story-template"]} iconSizes={iconSizes} />
-      <ResponsiveHeroImage
-        story={story}
-        aspectRatio={aspectRatio}
-        defaultWidth={defaultWidth}
-        widths={widths}
-        imgParams={{ auto: ["format", "compress"], fit: "max" }}
-        alt={headline}
-      />
+      {slug ? (
+        <ResponsiveHeroImage
+          story={story}
+          aspectRatio={aspectRatio}
+          defaultWidth={defaultWidth}
+          widths={widths}
+          imgParams={{ auto: ["format", "compress"], fit: "max" }}
+          alt={headline}
+        />
+      ) : (
+        <FallbackImage />
+      )}
     </figure>
   );
 };
@@ -29,6 +44,7 @@ HeroImage.propTypes = {
   defaultWidth: number,
   styles: string,
   iconSizes: object,
+  slug: string,
 };
 
 HeroImage.defaultProps = {

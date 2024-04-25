@@ -29,9 +29,9 @@ const getStoryDate = (timestamp) => {
   if (minutesDifference < 5) {
     return "Just Now";
   } else if (minutesDifference < 60) {
-    return `${minutesDifference} min`;
+    return `${minutesDifference} min ago`;
   } else {
-    return `${hourDifference} ${hourDifference > 1 ? "hours" : "hour"}`;
+    return `${hourDifference > 1 ? hourDifference + " hrs" : "an hr"} ago`;
   }
 };
 
@@ -72,7 +72,7 @@ MainStory.propTypes = {
   showHeroImage: bool,
 };
 
-const HeadlineImage = ({ headline, showThumbnail, story }) => {
+const HeadlineImage = ({ headline, showThumbnail, story, slug }) => {
   const readTime = get(story, ["read-time"], null);
   const label = getLabelToShow(story);
 
@@ -80,8 +80,10 @@ const HeadlineImage = ({ headline, showThumbnail, story }) => {
   return (
     <div styleName="second-card">
       <div styleName={`left-column ${headlineStyleName}`}>
-        {label && <p styleName="label">{label}</p>}
-        <h2 styleName="headline">{headline}</h2>
+        <div styleName="headline-container">
+          {label && <p styleName="label">{label}</p>}
+          <h2 styleName="headline">{headline}</h2>
+        </div>
         <div styleName="time-container">
           {getStoryDate(story["updated-at"] || story["last-published-at"]) ? (
             <span>
@@ -94,7 +96,13 @@ const HeadlineImage = ({ headline, showThumbnail, story }) => {
       </div>
       {showThumbnail && (
         <div styleName="hero-image">
-          <HeroImage story={story} headline={headline} aspectRatio={[4, 3]} iconSizes={{ height: 24, width: 24 }} />
+          <HeroImage
+            story={story}
+            headline={headline}
+            aspectRatio={[4, 3]}
+            iconSizes={{ height: 24, width: 24 }}
+            slug={slug}
+          />
         </div>
       )}
     </div>
@@ -105,17 +113,21 @@ HeadlineImage.propTypes = {
   headline: string,
   showThumbnail: bool,
   story: object,
+  slug: string,
 };
 
-const CommonStory = ({ story, showThumbnail, showBorder }) => {
+const CommonStory = ({ story, showThumbnail, showBorder, defaultFallback }) => {
   const headline = getHeadline(story);
   const sponsor = get(story, ["metadata", "sponsored-by"], null);
   const isPartneredContent = story["story-template"] === PARTNER_CONTENT_STORY_TEMPLATE || sponsor !== null;
-
+  const slug =
+    get(story, ["hero-image-s3-key"]) ||
+    get(story, ["alternative", "home", "default", "hero-image", "hero-image-s3-key"]);
+  const showImageThumbnail = (showThumbnail || isPartneredContent) && (slug || defaultFallback);
   return (
     <div styleName={`common-story ${showBorder ? "" : "no-border"}`} key={story.id}>
       <Link href={`/${story.slug}`}>
-        <HeadlineImage headline={headline} showThumbnail={showThumbnail || isPartneredContent} story={story} />
+        <HeadlineImage headline={headline} showThumbnail={showImageThumbnail} story={story} slug={slug} />
       </Link>
     </div>
   );
@@ -125,6 +137,7 @@ CommonStory.propTypes = {
   story: object,
   showThumbnail: bool,
   showBorder: bool,
+  defaultFallback: bool,
 };
 
 const MainColumn = ({ stories, showHeroImage }) => {
@@ -147,11 +160,11 @@ MainColumn.propTypes = {
   showHeroImage: bool,
 };
 
-const TopComponentAd = () => {
+const TopComponentAd = ({ adSlotLabel = "Advertisement" }) => {
   const adConfig = useSelector((state) => get(state, ["qt", "config", "ads-config", "slots", "top_component_ad"], {}));
   return (
     <div styleName="ad-wrapper">
-      <div styleName="ad-label">Advertisement</div>
+      <div styleName="ad-label">{adSlotLabel}</div>
       <DfpComponent
         adStyleName="ad-slot-size-300x250"
         id={`ThreeColNineteenStories-ad`}
@@ -163,10 +176,14 @@ const TopComponentAd = () => {
   );
 };
 
-const SecondaryColumn = ({ stories, showAd }) => {
+TopComponentAd.propTypes = {
+  adSlotLabel: string,
+};
+
+const SecondaryColumn = ({ stories, showAd, adSlotLabel }) => {
   return (
     <div styleName="second-column">
-      {showAd && <TopComponentAd />}
+      {showAd && <TopComponentAd adSlotLabel={adSlotLabel} />}
       {stories.map((story, index) => (
         <div key={story.id}>
           <CommonStory story={story} showThumbnail={false} showBorder={index !== stories.length - 1} />
@@ -179,12 +196,13 @@ const SecondaryColumn = ({ stories, showAd }) => {
 SecondaryColumn.propTypes = {
   stories: array,
   showAd: bool,
+  adSlotLabel: string,
 };
 
-const ThirdColumn = ({ stories, photos_label, showAd }) => {
+const ThirdColumn = ({ stories, photos_label, showAd, adSlotLabel }) => {
   return (
     <div styleName="third-column">
-      {showAd && <TopComponentAd />}
+      {showAd && <TopComponentAd adSlotLabel={adSlotLabel} />}
       <div styleName="third-column-stories">
         <div styleName="left-stories">
           {stories.slice(0, 3).map((story, index) => (
@@ -227,12 +245,12 @@ ThirdColumn.propTypes = {
   stories: array,
   photos_label: string,
   showAd: bool,
+  adSlotLabel: string,
 };
 
 const useDeviceType = () => {
   const [deviceType, setDeviceType] = useState("");
 
-  // Determine device type based on window.innerWidth
   const determineDeviceType = () => {
     const width = window.innerWidth;
     if (width < 768) {
@@ -244,15 +262,9 @@ const useDeviceType = () => {
     }
   };
 
-  // Add event listener for window resize
   useEffect(() => {
-    // Determine initial device type
     determineDeviceType();
-
-    // Add event listener for window resize
     window.addEventListener("resize", determineDeviceType);
-
-    // Cleanup the event listener on component unmount
     return () => {
       window.removeEventListener("resize", determineDeviceType);
     };
@@ -263,7 +275,7 @@ const useDeviceType = () => {
 
 export const ThreeColNineteenStories = ({ collection, stories }) => {
   const deviceType = useDeviceType();
-  const { primary_in_first_column, photos_label, show_main_story_hero_image } = get(
+  const { primary_in_first_column, photos_label, show_main_story_hero_image, ad_slot_label } = get(
     collection,
     ["associated-metadata"],
     {}
@@ -276,8 +288,13 @@ export const ThreeColNineteenStories = ({ collection, stories }) => {
       }`}
     >
       <MainColumn stories={stories.slice(0, 5)} showHeroImage={show_main_story_hero_image} />
-      <SecondaryColumn stories={stories.slice(5, 13)} showAd={deviceType === "mobile"} />
-      <ThirdColumn stories={stories.slice(13, 19)} showAd={deviceType !== "mobile"} photos_label={photos_label} />
+      <SecondaryColumn stories={stories.slice(5, 13)} showAd={deviceType === "mobile"} adSlotLabel={ad_slot_label} />
+      <ThirdColumn
+        stories={stories.slice(13, 19)}
+        showAd={deviceType !== "mobile"}
+        adSlotLabel={ad_slot_label}
+        photos_label={photos_label}
+      />
     </div>
   );
 };
