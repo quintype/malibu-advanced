@@ -5,12 +5,21 @@ import { array, object, bool, string } from "prop-types";
 import { useSelector } from "react-redux";
 import { differenceInHours, differenceInMinutes } from "date-fns";
 import { Link } from "@quintype/components";
-import { Separator } from "./separator";
 import { HeroImage } from "./heroImage";
 import { DfpComponent } from "../../ads/dfp-component";
 import "./three-col-nineteen-stories.m.css";
 
 const PARTNER_CONTENT_STORY_TEMPLATE = "publication";
+
+const Separator = () => {
+  return (
+    <span style={{ display: "flex", margin: "0 4px", alignItems: "center" }}>
+      <svg width="4px" height="12px" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="2" cy="6" r="2" fill="#596e79" />
+      </svg>
+    </span>
+  );
+};
 
 const getLabelToShow = (story) => {
   if (story["story-template"] === PARTNER_CONTENT_STORY_TEMPLATE) {
@@ -44,6 +53,10 @@ const MainStory = ({ story, showHeroImage = true }) => {
   const headline = getHeadline(story);
   const label = getLabelToShow(story);
   const readTime = get(story, ["read-time"], null);
+  const slug =
+    get(story, ["hero-image-s3-key"]) ||
+    get(story, ["alternative", "home", "default", "hero-image", "hero-image-s3-key"]);
+
   return (
     <Link href={`/${story.slug}`}>
       <div styleName={`main-story ${showHeroImage ? "" : "hide-hero-image"}`}>
@@ -53,14 +66,20 @@ const MainStory = ({ story, showHeroImage = true }) => {
         <div styleName="time-container">
           {getStoryDate(story["updated-at"] || story["last-published-at"]) ? (
             <span styleName="publish-time">
-              {getStoryDate(story["updated-at"] || story["last-published-at"])}
-              <Separator type="dot" width="12px" height="12px" color="dark" />
+              {getStoryDate(story["updated-at"] || story["last-published-at"])} 2 Min Ago
+              <Separator />
             </span>
           ) : null}
           {readTime && <span>{readTime} MIN READ</span>}
         </div>
         {showHeroImage && (
-          <HeroImage story={story} headline={headline} aspectRatio={[4, 3]} iconSizes={{ width: 64, height: 64 }} />
+          <HeroImage
+            story={story}
+            headline={headline}
+            aspectRatio={[4, 3]}
+            iconSizes={{ width: 64, height: 64 }}
+            slug={slug}
+          />
         )}
       </div>
     </Link>
@@ -86,9 +105,9 @@ const HeadlineImage = ({ headline, showThumbnail, story, slug }) => {
         </div>
         <div styleName="time-container">
           {getStoryDate(story["updated-at"] || story["last-published-at"]) ? (
-            <span>
-              {getStoryDate(story["updated-at"] || story["last-published-at"])}
-              <Separator type="dot" width="12px" height="12px" color="dark" />
+            <span styleName="publish-time">
+              {getStoryDate(story["updated-at"] || story["last-published-at"])} 2 Min Ago
+              <Separator />
             </span>
           ) : null}
           {readTime && <span>{readTime} MIN READ</span>}
@@ -219,6 +238,9 @@ const ThirdColumn = ({ stories, photos_label, showAd, adSlotLabel }) => {
           <div styleName="photos-container">
             {stories.slice(4, 6).map((story) => {
               const label = getLabelToShow(story);
+              const slug =
+                get(story, ["hero-image-s3-key"]) ||
+                get(story, ["alternative", "home", "default", "hero-image", "hero-image-s3-key"]);
 
               return (
                 <div styleName="photo-story" key={story.id}>
@@ -228,6 +250,7 @@ const ThirdColumn = ({ stories, photos_label, showAd, adSlotLabel }) => {
                     aspectRatio={[4, 3]}
                     iconSizes={{ height: 24, width: 24 }}
                     styles="photo-card"
+                    slug={slug}
                   />
                   {label && <p styleName="label">{label}</p>}
                   <h2 styleName="headline">{getHeadline(story)}</h2>
@@ -275,17 +298,22 @@ const useDeviceType = () => {
 
 export const ThreeColNineteenStories = ({ collection, stories }) => {
   const deviceType = useDeviceType();
-  const { primary_in_first_column, photos_label, show_main_story_hero_image, ad_slot_label } = get(
-    collection,
-    ["associated-metadata"],
-    {}
-  );
+  const {
+    primary_in_first_column,
+    photos_label,
+    show_main_story_hero_image,
+    ad_slot_label,
+    show_row_separator,
+    row_background_color,
+    text_color,
+  } = get(collection, ["associated-metadata"], {});
 
   return (
     <div
       styleName={`three-col-nine-stories ${
         primary_in_first_column || deviceType === "mobile" ? "first-variation" : "second-variation"
       }`}
+      style={{ borderBottom: show_row_separator, backgroundColor: row_background_color, color: text_color }}
     >
       <MainColumn stories={stories.slice(0, 5)} showHeroImage={show_main_story_hero_image} />
       <SecondaryColumn stories={stories.slice(5, 13)} showAd={deviceType === "mobile"} adSlotLabel={ad_slot_label} />

@@ -5,17 +5,6 @@ import { StoryTemplateIcon } from "../../atoms/StoryTemplateIcon";
 
 import "./three-col-nineteen-stories.m.css";
 
-const FallbackImage = () => {
-  return (
-    <div className="qt-image" styleName="fallback-image">
-      <img
-        src="https://www.arabnews.com/sites/default/files/styles/n_670_395/public/2021/04/21/2585126-1140254469.png?itok=O9ewjQKr"
-        alt="gulfnews-fallback"
-      />
-    </div>
-  );
-};
-
 export const HeroImage = ({ story, headline, aspectRatio, widths, defaultWidth, styles = "", iconSizes, slug }) => {
   return (
     <figure styleName={`hero-image-container ${styles}`}>
@@ -30,7 +19,7 @@ export const HeroImage = ({ story, headline, aspectRatio, widths, defaultWidth, 
           alt={headline}
         />
       ) : (
-        <FallbackImage />
+        <div styleName="fallback-image"></div>
       )}
     </figure>
   );

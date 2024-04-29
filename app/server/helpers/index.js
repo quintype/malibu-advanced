@@ -102,7 +102,10 @@ export const getConfig = (state) => {
   };
 };
 
-export const extractor = new ChunkExtractor({ statsFile, entrypoints: ["topbar", "navbar", "footer"] });
+export const extractor = new ChunkExtractor({
+  statsFile,
+  entrypoints: ["topbar", "navbar", "footer", "threeColNineteenStories"],
+});
 export const getCriticalCss = async () => {
   const criticalCss = await extractor.getCssString();
   return criticalCss.trim();

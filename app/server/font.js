@@ -1,14 +1,14 @@
 const FONTS = Object.freeze({
-  "title-font": { value: "Lato, sans-serif", fallback: "sans-serif" },
-  "content-font": { value: "Roboto", fallback: "sans-serif" },
+  "title-font": { value: "Roboto Serif, sans-serif", fallback: "sans-serif" },
+  "content-font": { value: "Montserrat, sans-serif", fallback: "sans-serif" },
 });
 
 export default {
   preloadFonts: [
-    { fontName: "Lato", data: { weight: 400 } },
-    { fontName: "Lato", data: { weight: 700 } },
-    { fontName: "Roboto", data: { weight: 400 } },
-    { fontName: "Roboto", data: { weight: 600 } },
+    { fontName: "Roboto Serif", data: { weight: 400 } },
+    { fontName: "Roboto Serif", data: { weight: 600 } },
+    { fontName: "Montserrat", data: { weight: 400 } },
+    { fontName: "Montserrat", data: { weight: 700 } },
   ],
   fontSettings: FONTS,
 };
