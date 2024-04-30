@@ -66,7 +66,7 @@ const MainStory = ({ story, showHeroImage = true }) => {
         <div styleName="time-container">
           {getStoryDate(story["updated-at"] || story["last-published-at"]) ? (
             <span styleName="publish-time">
-              {getStoryDate(story["updated-at"] || story["last-published-at"])} 2 Min Ago
+              {getStoryDate(story["updated-at"] || story["last-published-at"])}
               <Separator />
             </span>
           ) : null}
@@ -106,7 +106,7 @@ const HeadlineImage = ({ headline, showThumbnail, story, slug }) => {
         <div styleName="time-container">
           {getStoryDate(story["updated-at"] || story["last-published-at"]) ? (
             <span styleName="publish-time">
-              {getStoryDate(story["updated-at"] || story["last-published-at"])} 2 Min Ago
+              {getStoryDate(story["updated-at"] || story["last-published-at"])}
               <Separator />
             </span>
           ) : null}
@@ -218,7 +218,7 @@ SecondaryColumn.propTypes = {
   adSlotLabel: string,
 };
 
-const ThirdColumn = ({ stories, photos_label, showAd, adSlotLabel }) => {
+const ThirdColumn = ({ stories, photos_label, showAd, adSlotLabel, deviceType }) => {
   return (
     <div styleName="third-column">
       {showAd && <TopComponentAd adSlotLabel={adSlotLabel} />}
@@ -226,7 +226,7 @@ const ThirdColumn = ({ stories, photos_label, showAd, adSlotLabel }) => {
         <div styleName="left-stories">
           {stories.slice(0, 3).map((story, index) => (
             <div key={story.id}>
-              <CommonStory story={story} showThumbnail={false} showBorder={index !== 2} />
+              <CommonStory story={story} showThumbnail={false} showBorder={deviceType !== "tablet" || index !== 2} />
             </div>
           ))}
         </div>
@@ -269,6 +269,7 @@ ThirdColumn.propTypes = {
   photos_label: string,
   showAd: bool,
   adSlotLabel: string,
+  deviceType: string,
 };
 
 const useDeviceType = () => {
@@ -322,6 +323,7 @@ export const ThreeColNineteenStories = ({ collection, stories }) => {
         showAd={deviceType !== "mobile"}
         adSlotLabel={ad_slot_label}
         photos_label={photos_label}
+        deviceType={deviceType}
       />
     </div>
   );
