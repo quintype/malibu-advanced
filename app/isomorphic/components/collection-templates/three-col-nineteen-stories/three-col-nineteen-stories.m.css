@@ -154,14 +154,14 @@
 
 .hide-hero-image {
   .main-story-headline {
-    font-size: 64px;
-    line-height: 64px;
-    font-weight: 700;
+    font-size: 48px;
+    line-height: 48px;
+    font-weight: var(--semibold);
   }
   .subheadline {
     font-size: var(--font-xl);
-    line-height: 30px;
-    font-weight: 500;
+    line-height: var(--font-xl);
+    font-weight: var(--regular);
   }
 }
 
