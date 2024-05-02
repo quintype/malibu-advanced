@@ -15,7 +15,7 @@ const Separator = () => {
   return (
     <span style={{ display: "flex", margin: "0 4px", alignItems: "center" }}>
       <svg width="4px" height="12px" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="2" cy="6" r="2" fill="#596e79" />
+        <circle cx="2" cy="6" r="1" fill="#596e79" />
       </svg>
     </span>
   );
@@ -36,11 +36,11 @@ const getStoryDate = (timestamp) => {
   }
   const minutesDifference = differenceInMinutes(new Date(), new Date(timestamp));
   if (minutesDifference < 5) {
-    return "Just Now";
+    return "JUST NOW";
   } else if (minutesDifference < 60) {
-    return `${minutesDifference} min ago`;
+    return `${minutesDifference} MIN AGO`;
   } else {
-    return `${hourDifference > 1 ? hourDifference + " hrs" : "an hr"} ago`;
+    return `${hourDifference > 1 ? hourDifference + " HOURS" : " HOUR"} AGO`;
   }
 };
 
@@ -56,6 +56,7 @@ const MainStory = ({ story, showHeroImage = true }) => {
   const slug =
     get(story, ["hero-image-s3-key"]) ||
     get(story, ["alternative", "home", "default", "hero-image", "hero-image-s3-key"]);
+  const lastPublishedTime = getStoryDate(story["updated-at"] || story["last-published-at"]);
 
   return (
     <Link href={`/${story.slug}`}>
@@ -64,9 +65,9 @@ const MainStory = ({ story, showHeroImage = true }) => {
         <h2 styleName="main-story-headline">{headline}</h2>
         {story.subheadline && <p styleName="subheadline">{story.subheadline}</p>}
         <div styleName="time-container">
-          {getStoryDate(story["updated-at"] || story["last-published-at"]) ? (
+          {lastPublishedTime ? (
             <span styleName="publish-time">
-              {getStoryDate(story["updated-at"] || story["last-published-at"])}
+              {lastPublishedTime}
               <Separator />
             </span>
           ) : null}
@@ -94,7 +95,7 @@ MainStory.propTypes = {
 const HeadlineImage = ({ headline, showThumbnail, story, slug }) => {
   const readTime = get(story, ["read-time"], null);
   const label = getLabelToShow(story);
-
+  const lastPublishedTime = getStoryDate(story["updated-at"] || story["last-published-at"]);
   const headlineStyleName = showThumbnail ? "show-thumbnail" : "hide-thumbnail"; // Full width if no image
   return (
     <div styleName="second-card">
@@ -104,9 +105,9 @@ const HeadlineImage = ({ headline, showThumbnail, story, slug }) => {
           <h2 styleName="headline">{headline}</h2>
         </div>
         <div styleName="time-container">
-          {getStoryDate(story["updated-at"] || story["last-published-at"]) ? (
+          {lastPublishedTime ? (
             <span styleName="publish-time">
-              {getStoryDate(story["updated-at"] || story["last-published-at"])}
+              {lastPublishedTime}
               <Separator />
             </span>
           ) : null}
@@ -197,6 +198,26 @@ const TopComponentAd = ({ adSlotLabel = "Advertisement" }) => {
 
 TopComponentAd.propTypes = {
   adSlotLabel: string,
+};
+const RowAd = ({ adSlotLabel = "Advertisement", adStyleName }) => {
+  const adConfig = useSelector((state) => get(state, ["qt", "config", "ads-config", "slots", "top_component_ad"], {}));
+  return (
+    <div styleName="row-ad-wrapper">
+      <div styleName="ad-label">{adSlotLabel}</div>
+      <DfpComponent
+        adStyleName={adStyleName}
+        id={`ThreeColNineteenStories-ad`}
+        path={adConfig.ad_unit}
+        size={adConfig.sizes}
+        viewPortSizeMapping={adConfig.view_port_size_mapping}
+      />
+    </div>
+  );
+};
+
+RowAd.propTypes = {
+  adSlotLabel: string,
+  adStyleName: string,
 };
 
 const SecondaryColumn = ({ stories, showAd, adSlotLabel }) => {
@@ -311,19 +332,28 @@ export const ThreeColNineteenStories = ({ collection, stories }) => {
 
   return (
     <div
-      styleName={`three-col-nine-stories ${
-        primary_in_first_column || deviceType === "mobile" ? "first-variation" : "second-variation"
-      }`}
-      style={{ borderBottom: show_row_separator, backgroundColor: row_background_color, color: text_color }}
+      styleName="top-component-container"
+      style={{ borderBottom: `${show_row_separator ? "1px solid #303d43" : "none"}` }}
     >
-      <MainColumn stories={stories.slice(0, 5)} showHeroImage={show_main_story_hero_image} />
-      <SecondaryColumn stories={stories.slice(5, 13)} showAd={deviceType === "mobile"} adSlotLabel={ad_slot_label} />
-      <ThirdColumn
-        stories={stories.slice(13, 19)}
-        showAd={deviceType !== "mobile"}
+      <div
+        styleName={`three-col-nine-stories ${
+          primary_in_first_column || deviceType === "mobile" ? "first-variation" : "second-variation"
+        }`}
+        style={{ backgroundColor: row_background_color, color: text_color }}
+      >
+        <MainColumn stories={stories.slice(0, 5)} showHeroImage={show_main_story_hero_image} />
+        <SecondaryColumn stories={stories.slice(5, 13)} showAd={deviceType === "mobile"} adSlotLabel={ad_slot_label} />
+        <ThirdColumn
+          stories={stories.slice(13, 19)}
+          showAd={deviceType !== "mobile"}
+          adSlotLabel={ad_slot_label}
+          photos_label={photos_label}
+          deviceType={deviceType}
+        />
+      </div>
+      <RowAd
         adSlotLabel={ad_slot_label}
-        photos_label={photos_label}
-        deviceType={deviceType}
+        adStyleName={`${deviceType === "mobile" ? "ad-slot-size-300x250" : "ad-slot-size-970x90"}`}
       />
     </div>
   );
