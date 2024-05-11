@@ -1,0 +1,13 @@
+.ads {
+  background-color: var(--arrow-c-mono5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.ad-text {
+  color: var(--arrow-c-mono3);
+}
+.ad-wrapper {
+  display: flex;
+  justify-content: center;
+}

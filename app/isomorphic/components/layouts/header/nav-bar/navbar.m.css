@@ -1,133 +1,365 @@
-.navbar {
-  list-style-type: none;
-  margin: 0 12px;
+@import "../../../../../assets/stylesheets/mixins.scss";
+
+* {
+  font-family: Montserrat;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 150%;
+}
+
+.nav-wrapper {
   display: flex;
-  overflow: auto;
-  font-family: var(--title-font);
+  padding: 15px;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--light-interface-neutral-010);
+  background-color: white;
+
+  @include tablet {
+    display: flex;
+    justify-content: space-between;
+    border-bottom:none;
+    padding: 4px 0px;
+  }
+  @include desktop {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: none;
+    padding: 4px 0px;
+  }
 }
 
-.main-wrapper {
-  background-color: var(--brand-primary);
-  position: relative;
-  box-shadow: -1px 12px 13px -11px rgba(var(--rgb-black), 0.42);
-  margin-bottom: 16px;
-}
-
-.wrapper {
+.nav-wrapper-scrolled {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  height: 42px;
-  position: relative;
-}
+  border-bottom: none;
+  background-color: white;
+  padding: 15px;
 
-.toggle-btn {
-  position: relative;
-}
-
-.dropdown {
-  display: flex;
-  line-height: 0;
-  flex-shrink: 0;
-  align-items: center;
-  margin-right: 8px;
-}
-
-.dropdown-content {
-  position: absolute;
-  background-color: var(--white);
-  min-width: 220px;
-  box-shadow: 0px 8px 16px 0px rgba(var(--rgb-black), 0.2);
-  padding: 12px 16px;
-  z-index: var(--zlevel2);
-  top: 0;
-  display: flex;
-  flex-direction: column;
-  max-height: 100vh;
-  overflow: scroll;
-
-  :global .hamburger-menu {
-    align-self: flex-end;
+  @include tablet {
+    padding: 4px 0px;
   }
+  @include desktop {
+    padding: 4px 0px;
+  }
+}
+
+.nav-menu-wrapper {
+  display: flex;
+  justify-content: flex-start;
+  gap: 8px;
+
+  @include tablet {
+    gap: 16px;
+
+  }
+  @include desktop {
+    gap: 16px;
+  }
+}
+.nav-menu-wrapper-scrolled {
+  display: flex;
+  justify-content: flex-start;
+  gap: 8px;
+  @include tablet {
+    gap: 16px;
+    height: 40px;
+
+  }
+  @include desktop {
+    height: 40px;
+    gap: 16px;
+     ~{
+      border: 1px solid red;
+    }
+  }
+}
+
+.nav-menus-scrolled {
+  display: none;
+
+  @include tablet {
+    display: flex;
+    flex: 0 50%;
+
+    & ul{
+      display: flex;
+      flex-wrap: wrap;
+      overflow: hidden;
+        height: 40px;
+      & li {
+        flex: 0 50%;
+        padding: 8px 16px;
+      }
+    }
+  }
+  @include desktop {
+    flex: 1;
+    display: flex;
+  }
+}
+.nav-button-wrapper {
+  display:flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+
+  @include tablet {
+    gap: 16px;
+
+  }
+  @include desktop {
+    gap: 16px;
+  }
+}
+
+.nav-button-wrapper-scrolled {
+  display:flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+
+  @include tablet {
+    gap: 16px;
+  }
+  @include desktop {
+    gap: 16px;
+  }
+}
+.nav-button-wrapper:has(> .profile__icon) {
+  gap: 16px;
+}
+
+.nav-menus {
+  display: none;
+
+  @include tablet {
+    display: flex;
+    height: 40px;
+  }
+  @include desktop {
+    display: flex;
+  }
+}
+
+.mobile-nav-menus {
+  height: 40px;
+  display: flex;
+  background-color: white;
 
   :global .menu-link {
-    padding: 16px 0;
-    margin-bottom: 12px;
-    width: 100%;
+    color: var(--light-ink-subtle);
   }
-
-  :global .menu-link:last-child {
-    margin-bottom: 0px;
+  @include tablet {
+    display: none;
   }
-
-  :global .menu-link:hover {
-    color: var(--brand-primary-dark);
+  @include desktop {
+    display: none;
   }
 }
 
-.dropdown-menu {
-  padding: 12px;
+
+.nav-wrapper:has(.profile__icon) {
+  padding: 16px 15px;
+  @include tablet{
+    padding: 4px 0px;
+  }
+  @include desktop {
+    padding: 4px 0px;
+  }
+}
+.nav-wrapper-scrolled:has(.profile__icon) {
+  padding: 16px 15px;
+  @include tablet{
+    padding: 4px 0px;
+  }
+  @include desktop {
+    padding: 4px 0px;
+  }
+}
+.nav-wrapper:has(.nav__search) {
+  padding: 12px 15px;
+  display: flex;
+  gap: 8px;
+  @include tablet{
+    padding: 4px 0px;
+  }
+  @include desktop {
+    padding: 4px 0px;
+  }
+}
+.nav-wrapper-scrolled:has(.nav__search) {
+  padding: 12px 15px;
+  display: flex;
+  gap: 8px;
+  @include tablet{
+    padding: 4px 0px;
+  }
+  @include desktop {
+    padding: 4px 0px;
+  }
 }
 
-.navbar::-webkit-scrollbar {
-  width: 0px;
-  height: 0px;
-  z-index: var(--zlevel3);
+.nav__search {
+  padding:  0px;
+  flex: 1;
+
+  @include tablet {
+    flex:  0;
+    padding: 0px;
+  }
+
+  @include desktop {
+    padding: 0px;
+    flex:  0;
+
+  }
 }
 
-.navbar::-webkit-scrollbar-thumb {
-  background: var(--brand-primary);
-  border-radius: 0px;
-}
-
-.overlay {
-  left: 0;
-  right: 0;
-  background-color: var(--brand-secondary);
-  width: 100vw;
-  height: 100vh;
-  top: 0;
-  position: fixed;
-  z-index: var(--zlevel1);
-  opacity: 0.4;
-}
-
-.user-profile {
-  flex-shrink: 0;
-  width: 100px;
-  text-align: right;
-}
-
-.user-btn {
-  background-color: transparent;
+.hamburger__btn {
   border: none;
   padding: 0;
-  cursor: pointer;
+  background: transparent;
+}
+.alter-nav-menus {
+  display: none;
+
+  @include desktop {
+    display: flex;
+  }
+  @include tablet {
+    display: flex;
+    height: 40px;
+  }
 }
 
-.member-img {
-  height: 24px;
-  width: 24px;
-  border-radius: 50%;
-  cursor: pointer;
-  object-fit: cover;
+.search__icon {
+  padding: 0;
+  background: transparent;
+  border: none;
 }
 
-.user-account {
-  right: 0;
-  top: 42px;
-  margin-right: 16px;
+.profile__icon {
+  padding: 0;
+  border: none;
+  background: transparent;
 }
 
-.user-account-item {
-  cursor: pointer;
-  padding: 8px 0;
+.login__btn {
+  padding: 8px 12px;
+  border-radius: 4px;
+  background-color: var(--light-interactive-secondary-030);
+  color: white;
+  justify-content: center;
+  width: 64px;
+  height: 34px;
+  border: none;
+
+  @include tablet {
+    border: 1px solid var(--light-interactive-secondary-030);
+    background-color: transparent;
+    color: var(--light-interactive-secondary-030);
+  }
+
+  @include desktop {
+    border: 1px solid var(--light-interactive-secondary-030);
+    background-color: transparent;
+    color: var(--light-interactive-secondary-030);
+
+  }
 }
 
-.user-account-item:hover {
-  color: var(--brand-primary-dark);
+.subscribe__btn  {
+  display: none;
+
+  @include tablet {
+    display: block;
+    padding: 8px 12px;
+    border-radius: 4px;
+    background-color: var(--light-interactive-primary-030);
+    color: var(--light-ink-inverse);
+    align-items: center;
+    width: 125px;
+    height: 34px;
+    border: none;
+  }
+  @include desktop {
+    display: block;
+    padding: 8px 12px;
+    border-radius: 4px;
+    color: var(--light-ink-inverse);
+    background-color: var(--light-interactive-primary-030);
+    width: 125px;
+    height: 34px;
+    align-items: center;
+    border: none;
+  }
+
 }
 
-.subscribe-btn {
-  color: var(--brand-secondary);
+.no-logo{
+  display: none;
+  flex: 0 1 0;
+
+  @include tablet {
+    display: none;
+  }
+  @include desktop {
+    display: none;
+  }
+}
+
+.hamburger-btn {
+  display: flex;
+  align-self: center;
+}
+.normal {
+  filter:invert(0%)
+}
+.inverted {
+  filter:invert(100%)
+}
+
+.nav-logo-scrolled {
+  display: flex;
+  align-self: center;
+  margin-bottom: 4.09px;
+  @include tablet {
+    display: flex;
+  }
+  @include desktop {
+    display: flex;
+  }
+}
+
+.nav-logo {
+  display: flex;
+  align-self: center;
+  margin-bottom: 4.09px;
+  @include tablet {
+    display: none;
+  }
+  @include desktop {
+    display: none;
+  }
+}
+
+.section-name {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 16px;
+}
+
+.section-page-scrolled {
+  display: none;
+  @include tablet {
+    display: flex;
+    gap: 16px;
+  }
+  @include desktop {
+    display: flex;
+    gap: 16px;
+  }
 }

@@ -1,0 +1,54 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  scroll-snap-align: center;
+  position: relative;
+
+  @media screen and (min-width: 995px){
+  }
+  & img {
+    aspect-ratio: 9 / 16;
+    object-fit: cover;
+  }
+}
+
+.card::after {
+  content: " ";
+  position: absolute;
+  top: 0;
+  height: calc(100% + 5px);
+  border: 1px solid var(--Light-interface-interfaceSkeleton010, #EFF1F2);;
+  z-index: 999;
+  left: calc(38% + 14px);
+  @media screen and (min-width: 755px) and (max-width:994px) {
+    left: calc(22% + 14px);
+  }
+  @media screen and (min-width: 995px) {
+    left: calc(160px + 14px);
+  }
+}
+
+.card:nth-last-of-type(1)::after {
+  border: none;
+}
+
+.portrait-icon {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: var(--zlevel0);
+}
+
+.head-line {
+  color: #0C1215;
+  font-family: "Roboto Serif";
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 150%;
+  align-items: end;
+  :hover {
+    text-decoration: underline;
+  }
+}

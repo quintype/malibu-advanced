@@ -1,0 +1,63 @@
+@import "../../../../assets/stylesheets/mixins.scss";
+
+.menu-group {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    flex-wrap: wrap;
+    height: 40px;
+    overflow: hidden;
+    white-space: nowrap;
+
+    & li {
+        flex: 1;
+        width: calc(30% - 10px);
+        & a {
+            padding-top: 8px ;
+        }
+    }
+    @media (max-width: 429px) {
+        flex-wrap: wrap;
+        overflow: hidden;
+        & li {
+            padding-top: 10px ;
+        }
+    }
+}
+.download {
+    display: flex;
+    align-items: center;
+    justify-content: stretch;
+
+    & a {
+        display: flex;
+        height: 40px;
+        justify-content: stretch;
+        align-items: center;
+        padding: 8px 16px;
+        position: relative;
+        top: 1px;
+      }
+       & span:first-child {
+        justify-content: center;
+        position: relative;
+        top: 1px;
+       }
+      & svg{
+        position: relative;
+        top: 3px;
+        left:8px;
+      }
+      @media (max-width: 429px) {
+        padding-top: 10px ;
+      }
+}
+
+.menu-with-download {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 0px;
+    justify-content: space-between;
+}

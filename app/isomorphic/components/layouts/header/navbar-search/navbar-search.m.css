@@ -1,74 +1,65 @@
-/* NOTE: Change these styles as per the publisher design */
-.search {
-  align-self: center;
-}
-.search__btn {
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  padding: 6px 3px 3px;
-}
+@import "../../../../../assets/stylesheets/mixins.scss";
+
 .search-box {
   display: flex;
-}
+  justify-content: space-between;
+  border: none;
+  border-radius: 100px;
+  padding: 4px 8px 4px 16px;
+  background-color: var(--light-interactive-primary-010);
+  color: var(--light-ink-contrast);
 
-.search__form-submit {
-  margin-right: 5px;
-  outline: none;
-  cursor: pointer;
-  color: white;
-  margin-left: 10px;
-  padding: 10px;
-  width: 40px;
-  height: 40px;
-  border: 0;
-}
 
-.search-form {
-  height: 74px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: #000;
-  transform: translate(0, -100%) rotateX(90deg);
-  transition-property: all;
-  transition-duration: 0.8s;
-  transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
-  z-index: var(--zlevel3);
-}
-:global .search__form-input {
-  width: 100%;
-  padding: 12px;
-  color: #fff;
-  box-shadow: none;
-  outline: none;
-  background: #000;
-  border: 1px solid #ccc;
-  font-size: 16px;
-  height: 40px;
-}
-:global .search__form-input:focus {
-  border: 1px solid #fff;
+  @include tablet {
+    justify-content: space-between;
+    width: 360px;
+  }
+  @include desktop {
+    justify-content: space-between;
+    width: 360px;
+  }
 }
 
 .search__form-label {
-  width: 80%;
+  flex: 1;
+  border: none;
+  justify-content: center;
+  display: flex;
 }
 
-.close-icon {
-  position: absolute;
-  right: 0;
-  margin-right: 24px;
+.close__search {
+  flex: 0;
+  width: 32px;
+  height: 32px;
+  padding: 1px;
+  align-self: center;
+  outline: none;
   cursor: pointer;
+  border: none;
+  color: var(--light-interactive-secondary-030);
+  background: transparent;
+    & :hover {
+        color:var(--light-interactive-secondary-030);
+        border: none;
+        background: transparent;
+      }
+}
+::placeholder {
+  font-family: Montserrat;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 150%;
+}
+:global .search__form-input {
+  box-shadow: none;
+  border: none;
+  outline: none;
+  background: var(--light-interactive-primary-010);
+  color: var(--light-ink-contrast);
+  width: 100%;
 }
 
-@media only screen and (max-width: 320px) {
-  .search__form-label {
-    width: 64%;
-  }
+:global .search__form-input::-webkit-search-cancel-button{
+  -webkit-appearance: none;
 }

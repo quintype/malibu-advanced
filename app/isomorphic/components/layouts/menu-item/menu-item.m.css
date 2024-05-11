@@ -1,22 +1,32 @@
+@import "../../../../assets/stylesheets/mixins.scss";
+
 .menu-link {
-  padding: 14px 6px 14px 6px;
-  display: flex;
-  align-items: center;
-  color: var(--brand-secondary);
-}
-
-.menu-link:hover {
-  color: var(--rgb-black);
-}
-
-.arrow-down {
-  border-left: 6px solid transparent;
-  border-right: 6px solid transparent;
-  border-top: 8px solid var(--brand-secondary);
-  margin: 4px 4px 0;
+  padding: 12px 24px;
   cursor: pointer;
+  line-height: 18px;
 }
 
 .menu-items-footer {
   padding: 4px 0;
+}
+
+.menu-link:has(svg){
+  :first-child {
+    align-content: center;
+  }
+}
+.trending-svg {
+  stroke: var(--light-link-blue);
+  stroke-width: 1;
+  stroke-opacity: 0.1;
+}
+.new-svg {
+  background: var(--light-interactive-red);
+  stroke: white;
+  stroke-opacity: 1;
+}
+.download-svg{
+  stroke: var(--light-ink-subtle);
+  stroke-width: 0;
+  stroke-opacity: 0;
 }

@@ -3,8 +3,7 @@ import serialize from "serialize-javascript";
 import { assetPath, readAsset, getAllChunks } from "@quintype/framework/server/asset-helper";
 import { renderReduxComponent, renderLoadableReduxComponent } from "@quintype/framework/server/render";
 import { getChunkName } from "../../isomorphic/pick-component";
-import { Header } from "../../isomorphic/components/layouts/header";
-import { NavBar } from "../../isomorphic/components/layouts/header/nav-bar";
+import Header from "../../isomorphic/components/layouts/header";
 import { Footer } from "../../isomorphic/components/layouts/footer";
 import fontFace from "../font";
 import { BreakingNewsView } from "../../isomorphic/components/breaking-news-view";
@@ -65,8 +64,7 @@ export async function renderLayout(res, params) {
         fontFace: fontFace,
         contentTemplate: null,
         title: params.title,
-        topbar: renderLoadableReduxComponent(Header, params.store, extractor),
-        navbar: renderLoadableReduxComponent(NavBar, params.store, extractor),
+        navbar: renderLoadableReduxComponent(Header, params.store, extractor),
         footer: renderLoadableReduxComponent(Footer, params.store, extractor),
         topad: renderReduxComponent(TopAd, params.store),
         breakingNews: renderReduxComponent(BreakingNewsView, params.store, {

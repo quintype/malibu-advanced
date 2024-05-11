@@ -4,8 +4,7 @@ import get from "lodash/get";
 import { pickComponent } from "../isomorphic/pick-component";
 import { BreakingNewsView } from "../isomorphic/components/breaking-news-view";
 import { Footer } from "../isomorphic/components/layouts/footer";
-import { NavbarSearch } from "../isomorphic/components/layouts/header/navbar-search";
-import { NavBar } from "../isomorphic/components/layouts/header/nav-bar";
+import Header from "../isomorphic/components/layouts/header";
 import { TopAd } from "../isomorphic/components/ads/top-ad";
 import { gumletScriptGenerator } from "../isomorphic/components/gumlet-script-generator";
 import LoadingIndicatorComponent from "../isomorphic/components/atoms/loading-indicator";
@@ -23,8 +22,8 @@ export function preRenderApplication(store) {
 
   if (pageType !== "user-login") {
     global.qtLoadedFromShell && renderComponent(Footer, "footer", store);
-    renderComponent(NavbarSearch, "search-bar", store, hydrate);
-    renderComponent(NavBar, "nav-bar", store, hydrate);
+    // renderComponent(NavbarSearch, "search-bar", store, hydrate);
+    renderComponent(Header, "nav-bar", store, hydrate);
     breakingNewsConfig.is_enable &&
       pageType !== "profile-page" &&
       renderBreakingNews("breaking-news-container", store, BreakingNewsView, breakingNewsbaseProps);

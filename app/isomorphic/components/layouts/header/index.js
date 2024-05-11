@@ -1,9 +1,19 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import NavBar from "./nav-bar";
 
-import { TopBar } from "./top-bar";
+export default function Header() {
+  const [isScrolled, setIsScrolled] = useState(false);
 
-// Common wrapper for navigation. We could add OffcanvasMenu, Navbar etc components here.
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = document.documentElement.scrollTop;
+      scrollTop >= 200 ? setIsScrolled(true) : setIsScrolled(false);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
-const Header = () => <TopBar />;
-
-export { Header };
+  return <NavBar isScrolled={isScrolled} />;
+}
