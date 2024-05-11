@@ -1,7 +1,7 @@
 @import "../../../../../assets/stylesheets/mixins.scss";
 
 * {
-  font-family: Montserrat;
+  font-family: "Montserrat";
   font-size: 12px;
   font-style: normal;
   font-weight: 500;
@@ -313,12 +313,6 @@
 .hamburger-btn {
   display: flex;
   align-self: center;
-}
-.normal {
-  filter:invert(0%)
-}
-.inverted {
-  filter:invert(100%)
 }
 
 .nav-logo-scrolled {

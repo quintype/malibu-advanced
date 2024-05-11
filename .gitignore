@@ -68,3 +68,4 @@ typings/
 .DS_Store
 stats.json
 /gulf*
+/app/isomorphic/collection-templates/portrait*
