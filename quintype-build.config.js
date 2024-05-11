@@ -4,7 +4,7 @@ const loadableConfigObj = {
   loadableConfig: {
     entryFiles: {
       topbar: "./app/isomorphic/components/layouts/header",
-      navbar: "./app/isomorphic/components/layouts/header/nav-bar",
+      navbar: "./app/isomorphic/components/layouts/header",
       footer: "./app/isomorphic/components/layouts/footer",
       ugcPage: "./app/isomorphic/components/pages/ugc-page/index.js",
       arrowElevenStoriesCssChunk: "./app/isomorphic/arrow/components/Rows/ElevenStories",

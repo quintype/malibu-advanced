@@ -22,7 +22,6 @@ export function preRenderApplication(store) {
 
   if (pageType !== "user-login") {
     global.qtLoadedFromShell && renderComponent(Footer, "footer", store);
-    // renderComponent(NavbarSearch, "search-bar", store, hydrate);
     renderComponent(Header, "nav-bar", store, hydrate);
     breakingNewsConfig.is_enable &&
       pageType !== "profile-page" &&
