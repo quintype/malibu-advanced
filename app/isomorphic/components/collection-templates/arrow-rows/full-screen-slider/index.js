@@ -1,14 +1,50 @@
 import React from "react";
 import FullScreenSlider from "../../../../arrow/components/Rows/FullScreenSlider";
 import { object } from "prop-types";
+import { collectionToStories } from "@quintype/components";
+import get from "lodash.get";
 
 export const ArrowFullScreenSlider = ({ collection }) => {
-  const contextConfig = {
-    numberOfStoriesToShow: 5,
-    buttonText: `${collection.name} News`,
+  const items = collectionToStories(collection);
+
+  if (items.length < 1) {
+    return null;
+  }
+
+  const associatedMetadata = get(collection, ["associated-metadata"], {});
+
+  if (associatedMetadata.alternative_collection_title) {
+    collection.name = associatedMetadata.alternative_collection_title;
+  }
+
+  const backgroundColor = associatedMetadata.row_background_color || "#FFFFFF";
+  const hideRowTitle = associatedMetadata.hide_row_title || false;
+  const collectionNameBorderColor = associatedMetadata.collection_name_border_color || "##005D92";
+  const hideSectionTag = associatedMetadata.hide_section_tag || false;
+  const sectionBorderColor = associatedMetadata.section_border_color || "#005D92";
+  const hideAuthor = associatedMetadata.hide_author || false;
+  const hideTimestamp = associatedMetadata.hide_timestamp || false;
+  const hideReadTime = associatedMetadata.hide_read_time || false;
+  const hideButton = associatedMetadata.hide_button || false;
+  const buttonText = associatedMetadata.button_text;
+
+  const config = {
+    collectionNameBorderColor: collectionNameBorderColor,
+    borderColor: sectionBorderColor,
+    theme: backgroundColor,
+    border: "",
+    collectionNameTemplate: "borderLeft",
+    sectionTagTemplate: "borderLeft",
+    showSection: !hideSectionTag,
+    showAuthor: !hideAuthor,
+    showTime: !hideTimestamp,
+    showRowTitle: !hideRowTitle,
+    buttonText: buttonText,
+    showButton: !hideButton,
+    showReadTime: !hideReadTime,
   };
 
-  return <FullScreenSlider collection={collection} config={contextConfig} />;
+  return <FullScreenSlider collection={collection} config={config} />;
 };
 
 ArrowFullScreenSlider.propTypes = {
