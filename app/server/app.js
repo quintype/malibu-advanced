@@ -1,4 +1,5 @@
 /* eslint-disable no-console, no-unused-vars, import/extensions, object-shorthand, global-require */
+import bodyParser from "body-parser";
 import createApp from "@quintype/framework/server/create-app";
 import { getClient, Collection } from "@quintype/framework/server/api-client";
 import logger from "@quintype/framework/server/logger";
@@ -14,6 +15,8 @@ import { renderLayout } from "./handlers/render-layout";
 import { loadData, loadErrorData } from "./load-data";
 import { pickComponent } from "../isomorphic/pick-component";
 import { generateStaticData, generateStructuredData, SEO } from "@quintype/seo";
+import { enableWebengage } from "../../config/webengage-config";
+import { handleWebEngageNotifications } from "./webengage/webengage-handler";
 
 export const app = createApp();
 
@@ -72,7 +75,12 @@ app.get("*", (req, res, next) => {
     return next();
   }
 });
+// Begin webengage integration route
+if (enableWebengage) {
+  app.post("/integrations/webengage/trigger-notification", bodyParser.json(), handleWebEngageNotifications);
+}
 
+// End webengage integration route
 function generateSeo(config, pageType) {
   return new SEO({
     staticTags: Object.assign(generateStaticData(config)),
@@ -133,7 +141,7 @@ isomorphicRoutes(app, {
   staticRoutes: STATIC_ROUTES,
   seo: generateSeo,
   preloadJs: true,
-  oneSignalServiceWorkers: true,
+  oneSignalServiceWorkers: false,
   prerenderServiceUrl: "https://prerender.quintype.io",
   externalIdPattern: "/EXTERNAL_ID",
   enableExternalStories: true,
