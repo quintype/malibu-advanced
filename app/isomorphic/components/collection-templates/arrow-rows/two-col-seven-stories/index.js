@@ -1,10 +1,10 @@
 import React from "react";
-import FourColTwelveStories from "../../../../arrow/components/Rows/FourColTwelveStory";
+import TwoColSevenStories from "../../../../arrow/components/Rows/TwoColSevenStories";
 import { object } from "prop-types";
 import get from "lodash.get";
 import { collectionToStories } from "@quintype/components";
 
-export const ArrowFourColTwelveStories = ({ collection }) => {
+export const ArrowTwoColSevenStories = ({ collection }) => {
   const items = collectionToStories(collection);
 
   if (items.length < 1) {
@@ -32,7 +32,7 @@ export const ArrowFourColTwelveStories = ({ collection }) => {
     collectionNameBorderColor: collectionNameBorderColor,
     borderColor: sectionBorderColor,
     theme: backgroundColor,
-    border: "fullBorder",
+    border: "full",
     collectionNameTemplate: "borderLeft",
     sectionTagTemplate: "borderLeft",
     showSection: !hideSectionTag,
@@ -45,11 +45,11 @@ export const ArrowFourColTwelveStories = ({ collection }) => {
     showLiveIcon: true,
     showSubheadline: true,
   };
-  return <FourColTwelveStories collection={collection} config={config} />;
+  return <TwoColSevenStories collection={collection} config={config} />;
 };
 
-ArrowFourColTwelveStories.propTypes = {
+ArrowTwoColSevenStories.propTypes = {
   collection: object,
 };
 
-ArrowFourColTwelveStories.storyLimit = 12;
+ArrowTwoColSevenStories.storyLimit = 7;

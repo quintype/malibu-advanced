@@ -16,7 +16,7 @@ import { LoadmoreButton } from "../../Atoms/Loadmore";
 
 import "./two-col-seven-stories.m.css";
 import { useDispatch, useSelector } from "react-redux";
-import get from "lodash/get";
+import get from "lodash.get";
 
 export const TwoColSevenStories = ({ collection, config = {} }) => {
   const items = collectionToStories(collection);
@@ -48,7 +48,7 @@ export const TwoColSevenStories = ({ collection, config = {} }) => {
     <div
       className="full-width-with-padding arrow-component"
       data-test-id="two-col-seven-stories"
-      style={{ backgroundColor: theme, color: textColor }}
+      style={{ backgroundColor: theme || "initial" }}
     >
       <div styleName="two-col-seven-story">
         <CollectionName
