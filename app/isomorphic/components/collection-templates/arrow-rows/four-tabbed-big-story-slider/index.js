@@ -1,9 +1,9 @@
 import React from "react";
-import TwoColFourStories from "../../../../arrow/components/Rows/TwoColFourStory";
+import FourTabbedBigStorySlider from "../../../../arrow/components/Rows/FourTabbedBigStorySlider";
 import { object } from "prop-types";
 import get from "lodash/get";
 
-export const ArrowTwoColFourStories = ({ collection }) => {
+export const ArrowFourTabbedBigStorySlider = ({ collection }) => {
   const associatedMetadata = get(collection, ["associated-metadata"], {});
 
   // based on background we need to determine if darkmode and set theme
@@ -32,11 +32,11 @@ export const ArrowTwoColFourStories = ({ collection }) => {
     buttonText: buttonText,
     showLiveIcon: true,
   };
-  return <TwoColFourStories collection={collection} config={config} />;
+  return <FourTabbedBigStorySlider collection={collection} config={config} />;
 };
 
-ArrowTwoColFourStories.propTypes = {
+ArrowFourTabbedBigStorySlider.propTypes = {
   collection: object,
 };
 
-ArrowTwoColFourStories.storyLimit = 4;
+ArrowFourTabbedBigStorySlider.storyLimit = 4;
