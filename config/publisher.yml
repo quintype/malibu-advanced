@@ -8,6 +8,7 @@ host_to_automatic_api_host:
 domain_mapping:
   subdomain.lvh.me: voices
   malibu.lvh.me: localhost:3000
+qt_internal_apps_key: 'srUIUbUlkyNXtHVzlpYeGJgigkrBKFEG'
 publisher:
   className: story-comments-widget
   cdn_src: "gumlet"
