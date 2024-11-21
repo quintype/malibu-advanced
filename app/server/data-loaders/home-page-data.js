@@ -4,7 +4,8 @@ import { getStoryLimits, getNestedCollectionLimit } from '../../isomorphic/compo
 
 export async function loadHomePageData (client, config, params = {}, qtInternalAppsKey = '') {
   const slug = params?.collectionSlug || 'home'
-  const opts = qtInternalAppsKey && params?.previewId ? { qtInternalAppsKey, previewId: params.previewId } : {}
+  const isPreviewPage = qtInternalAppsKey && params?.previewId
+  const opts = isPreviewPage ? { qtInternalAppsKey, previewId: params.previewId } : {}
   const collection = await Collection.getCollectionBySlug(
     client,
     slug,
@@ -19,6 +20,6 @@ export async function loadHomePageData (client, config, params = {}, qtInternalA
   )
   return {
     collection: collection.asJson(),
-    cacheKeys: collection.cacheKeys(config['publisher-id'])
+    cacheKeys: isPreviewPage ? 'DO_NOT_CACHE' : collection?.cacheKeys(config['publisher-id'])
   }
 }
