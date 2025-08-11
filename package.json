@@ -7,7 +7,7 @@
   "author": "Tejas Dinkar <tejas@gja.in>",
   "license": "MIT",
   "engines": {
-    "node": "^20.0.0",
+    "node": "^20.15.1",
     "npm": "^10.0.0"
   },
   "dependencies": {
