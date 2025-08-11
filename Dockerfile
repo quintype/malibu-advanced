@@ -1,5 +1,6 @@
-FROM quay.io/quintype/public-base:node-16.14.2-alpine3.15 AS build
+FROM quay.io/quintype/public-base:node-20.0.0-alpine3.18 AS build
 
+RUN apk add --no-cache git python3 make g++
 RUN apk update && \
     apk add git
 
@@ -23,7 +24,7 @@ RUN git log -n1 --pretty="Commit Date: %aD%nBuild Date: `date --rfc-2822`%n%h %a
     npm config set unsafe-perm true && \
     ./node_modules/.bin/quintype-build
 
-FROM quay.io/quintype/public-base:node-16.14.2-alpine3.15
+FROM quay.io/quintype/public-base:node-20.0.0-alpine3.18
 MAINTAINER Quintype Developers <dev-core@quintype.com>
 
 RUN apk update && \

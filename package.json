@@ -7,8 +7,8 @@
   "author": "Tejas Dinkar <tejas@gja.in>",
   "license": "MIT",
   "engines": {
-    "node": "^16.14.2",
-    "npm": "^8.5.0"
+    "node": "^20.0.0",
+    "npm": "^10.0.0"
   },
   "dependencies": {
     "@loadable/component": "^5.14.1",
@@ -19,6 +19,7 @@
     "@quintype/framework": "^7.25.0",
     "@quintype/seo": "^1.44.1",
     "axios": "^0.24.0",
+    "enzyme": "^3.11.0",
     "fontfaceobserver": "^2.1.0",
     "intersection-observer": "^0.12.2",
     "lodash": "^4.17.21",
@@ -98,7 +99,7 @@
     "lint:css": "npx stylelint './app/**/*.{scss,css}'",
     "lint:css:ci": "npx stylelint $(git diff --pretty='' --diff-filter=d --name-only origin/master...HEAD -- '*.css' '*.scss') ./app/assets/stylesheets/app.scss",
     "lint:ci": "npm run lint:js:ci && npm run lint:css:ci",
-    "check-node-npm": "check-node-version --node '>= 12.13.0' --npm '^6.14.0'"
+    "check-node-npm": "check-node-version --node '>= 20.0.0' --npm '^10.0.0'"
   },
   "husky": {
     "hooks": {
