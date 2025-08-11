@@ -20,8 +20,9 @@ ENV MINIFY_CSS_CLASSNAMES true
 # Everything above should be cached by docker. The below should run on every build
 
 COPY . /app/
-RUN git log -n1 --pretty="Commit Date: %aD%nBuild Date: `date --rfc-2822`%n%h %an%n%s%n" > public/round-table.txt && \
-    npm config set unsafe-perm true && \
+
+RUN git log -n1 --pretty="Commit Date: %aD%nBuild Date: $(date --rfc-2822)%n%h %an%n%s%n" > public/round-table.txt && \
+    npm install --legacy-peer-deps --unsafe-perm && \
     ./node_modules/.bin/quintype-build
 
 FROM node:20.15.1-alpine3.19
