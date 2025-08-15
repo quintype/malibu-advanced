@@ -7,6 +7,23 @@
     <meta content="yes" name="apple-mobile-web-app-capable">
     <meta content="black" name="apple-mobile-web-app-status-bar-style">
     <meta content="<%- title -%>" name="apple-mobile-web-app-title">
+
+    <!-- PWA Desktop Installation Support -->
+    <meta name="application-name" content="Malibu Quintype Framework">
+    <meta name="msapplication-TileColor" content="#2F3BA2">
+    <meta name="msapplication-TileImage" content="/icons/icon-144x144.png">
+    <meta name="msapplication-config" content="/browserconfig.xml">
+
+    <!-- Apple Touch Icons -->
+    <link rel="apple-touch-icon" href="/icons/icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-192x192.png">
+    <link rel="apple-touch-icon" sizes="167x167" href="/icons/icon-152x152.png">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-128x128.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/icons/icon-128x128.png">
+    <link rel="shortcut icon" href="/icons/icon-128x128.png">
     <link rel="preconnect" href="https://prod-analytics.qlitics.com" crossorigin >
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin >
 
@@ -139,6 +156,8 @@
       <% if (isGaEnable) { %>
         <%- include ("./partials/ga") -%>
       <% } %>
-    <script type="text/javascript" src="<%= assetPath("app.js") %>" id="app-js" async></script>
+        <script type="text/javascript" src="<%= assetPath("app.js") %>" id="app-js" async></script>
+    <script type="text/javascript" src="/js/install-prompt.js" defer></script>
+    <script type="text/javascript" src="/js/push-notification-redirect.js" defer></script>
    </body>
 </html>

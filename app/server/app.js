@@ -14,10 +14,14 @@ import { renderLayout } from "./handlers/render-layout";
 import { loadData, loadErrorData } from "./load-data";
 import { pickComponent } from "../isomorphic/pick-component";
 import { generateStaticData, generateStructuredData, SEO } from "@quintype/seo";
+import { handlePNRedirect } from "./handlers/pn-redirect";
 
 export const app = createApp();
 
 upstreamQuintypeRoutes(app, {});
+
+// Add PN redirect handler before other routes
+app.use(handlePNRedirect);
 
 const redirectCollectionHandler =
   () =>
