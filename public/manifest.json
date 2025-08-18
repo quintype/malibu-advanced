@@ -6,7 +6,7 @@
   "scope": "/",
   "display": "standalone",
   "theme_color": "#2F3BA2",
-  "orientation": "natural",
+  "orientation": "portrait-primary",
   "categories": [
     "news",
     "entertainment",
