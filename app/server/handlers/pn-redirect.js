@@ -9,16 +9,10 @@ import logger from "@quintype/framework/server/logger";
 export function handlePNRedirect(req, res, next) {
   try {
     const { url, target, redirect, link, pn, push, notification } = req.query;
-
+    const urlParams = new URLSearchParams(url);
+    console.log("LOGS VEENA ------------", { url, target, redirect, link, pn, push, notification });
     // Check if this is a PN link
-    const isPNLink =
-      pn ||
-      push ||
-      notification ||
-      req.path.includes("/pn/") ||
-      req.path.includes("/push/") ||
-      req.path.includes("/notification/");
-
+    const isPNLink = urlParams.has("path") || url.includes("/route-data.json?path=");
     if (!isPNLink) {
       return next();
     }
