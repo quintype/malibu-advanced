@@ -60,3 +60,5 @@ publisher:
       defaultTemplate: 8
       ArrowThreeColGrid: 4
     defaultNestedLimit: 4
+  onesignal:
+    is_enable: true
