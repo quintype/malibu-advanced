@@ -83,6 +83,25 @@
     <%_ } _%>
 
     <%_ if(isOnesignalEnable) { _%>
+      <script>
+        // Patch invalid timezones ("+00:00" etc.) to valid IANA identifier before OneSignal runs
+        (function() {
+          try {
+            const originalResolvedOptions = Intl.DateTimeFormat.prototype.resolvedOptions;
+
+            Intl.DateTimeFormat.prototype.resolvedOptions = function() {
+              const options = originalResolvedOptions.call(this);
+              if (options.timeZone && options.timeZone.startsWith("+")) {
+                // Replace invalid offset string with a valid IANA zone
+                options.timeZone = "UTC";
+              }
+              return options;
+            };
+          } catch (e) {
+            console.warn("Timezone patch failed:", e);
+          }
+        })();
+      </script>
       <%- oneSignalScript -%>
     <%_ } _%>
     <noscript>
