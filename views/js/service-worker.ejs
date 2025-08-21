@@ -18,7 +18,14 @@ initializeQServiceWorker({
 });
 
 workbox.routing.registerRoute(new RegExp('/route-data.json*'), new workbox.strategies.NetworkFirst());
+self.skipWaiting();
 
+// Add activate event listener to claim clients immediately
+self.addEventListener('activate', event => {
+  event.waitUntil(clients.claim());
+});
+
+var appVersion = "3";
 if("<%= config["public-integrations"]["one-signal"] &&  config["public-integrations"]["one-signal"]["app-id"] %>") {
   importScripts('https://cdn.onesignal.com/sdks/OneSignalSDKWorker.js');
 }
