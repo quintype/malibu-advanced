@@ -1,62 +1,109 @@
-// Push Notification Redirect Handler
-// This script handles redirecting users from PN links to the PWA
-
 (function () {
   "use strict";
 
-  // Check if the app is already installed as PWA
-  function isPWAInstalled() {
+  // Detect if app is currently running as installed PWA
+  function isPWARunning() {
     return (
-      window.matchMedia("(display-mode: standalone)").matches ||
-      window.navigator.standalone === true ||
-      document.referrer.includes("android-app://")
+      window.matchMedia("(display-mode: standalone)").matches || // modern browsers
+      window.navigator.standalone === true || // iOS Safari
+      document.referrer.includes("android-app://") // Android fallback
     );
   }
 
-  // Check if PWA is currently running
-  function isPWARunning() {
-    return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+  // Detect if PWA is installed (but may not be running)
+  async function isPWAInstalled() {
+    try {
+      // Check if service worker is registered
+      if ("serviceWorker" in navigator) {
+        const registrations = await navigator.serviceWorker.getRegistrations();
+        if (registrations.length > 0) {
+          return true;
+        }
+      }
+
+      // Check if running in standalone mode (already installed and running)
+      return isPWARunning();
+    } catch (error) {
+      console.log("Error checking PWA installation:", error);
+      return false;
+    }
   }
 
-  // Check if the current URL is a PN link
+  // Detect if current URL is a PN link
   function isPNLink() {
     const urlParams = new URLSearchParams(window.location.search);
+    console.log("LOGGG isPNLink  Check for common PN link patterns ---------", window.location.href, urlParams);
     return urlParams.has("path") || window.location.href.includes("/route-data.json?path=");
   }
 
   // Extract the target URL from PN link parameters
   function getTargetURL() {
     const urlParams = new URLSearchParams(window.location.search);
-    const targetURL =
-      urlParams.get("url") || urlParams.get("target") || urlParams.get("redirect") || urlParams.get("link");
+    const targetURL = urlParams.get("path");
     return targetURL ? decodeURIComponent(targetURL) : "/";
   }
 
-  // Main redirect logic
-  function handlePNRedirect() {
+  // Attempt to open PWA with deep link
+  function openPWAWithDeepLink(targetURL) {
+    const deepLinkURL = `${window.location.origin}${targetURL}`;
+
+    try {
+      // Try using window.open with specific features
+      const pwaWindow = window.open(deepLinkURL, "_blank", "standalone=yes");
+
+      // If window.open doesn't work, try location change
+      if (!pwaWindow || pwaWindow.closed) {
+        window.location.href = deepLinkURL;
+      }
+    } catch (error) {
+      console.log("Failed to open PWA, falling back to browser:", error);
+      window.location.href = targetURL;
+    }
+  }
+
+  // Redirect to target URL
+  function redirectToURL(url) {
+    window.location.href = url;
+  }
+
+  // Handle PN redirect
+  async function handlePNRedirect() {
     if (!isPNLink()) return;
 
     const targetURL = getTargetURL();
-    console.log("Handling PN redirect to:", targetURL);
+    console.log("PN link detected → redirecting to:", targetURL);
 
-    // If PWA is currently running, redirect directly
+    // Case 1: If PWA is currently running, redirect within PWA
     if (isPWARunning()) {
-      window.location.href = targetURL;
+      console.log("PWA is running → redirecting within PWA");
+      redirectToURL(targetURL);
       return;
     }
 
-    // If PWA is installed but not running, try to open it
-    if (isPWAInstalled()) {
-      // Try to open the PWA with the target URL
-      const pwaURL = window.location.origin + targetURL;
-      window.location.href = pwaURL;
+    // Case 2: Check if PWA is installed but not running
+    try {
+      const isInstalled = await isPWAInstalled();
+
+      if (isInstalled) {
+        console.log("PWA is installed but not running → attempting to open PWA");
+        openPWAWithDeepLink(targetURL);
+      } else {
+        console.log("PWA not installed → redirecting to browser");
+        redirectToURL(targetURL);
+      }
+    } catch (error) {
+      console.log("Error checking PWA installation, falling back to browser:", error);
+      redirectToURL(targetURL);
     }
   }
 
-  // Run the redirect logic when DOM is ready
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", handlePNRedirect);
-  } else {
-    handlePNRedirect();
+  // Initialize when DOM is ready
+  function init() {
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", handlePNRedirect);
+    } else {
+      handlePNRedirect();
+    }
   }
+  init();
 })();
