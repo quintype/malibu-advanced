@@ -16,7 +16,7 @@ initializeQServiceWorker({
   shell: shellUrl,
   hostname: <%- JSON.stringify(hostname) %>
 });
-
+<% console.log("ROUTES -------",routes); %>
 workbox.routing.registerRoute(new RegExp('/route-data.json*'), new workbox.strategies.NetworkFirst());
 self.skipWaiting();
 
