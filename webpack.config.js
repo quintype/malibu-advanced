@@ -34,17 +34,4 @@ module.exports = {
   ...webpackConfig,
   module: { ...webpackModule, ...{ rules: enhancedRules } },
   plugins: enhancedPlugins,
-  // Add explicit dev server configuration
-  devServer: {
-    ...(webpackConfig.devServer || {}),
-    port: 8081,
-    host: '0.0.0.0',
-    allowedHosts: 'all',
-    client: {
-      overlay: {
-        errors: true,
-        warnings: false,
-      },
-    },
-  },
 };
