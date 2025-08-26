@@ -13,15 +13,10 @@
   // Detect if PWA is installed (but may not be running)
   async function isPWAInstalled() {
     try {
-      // Check if service worker is registered
       if ("serviceWorker" in navigator) {
         const registrations = await navigator.serviceWorker.getRegistrations();
-        if (registrations.length > 0) {
-          return true;
-        }
+        if (registrations.length > 0) return true;
       }
-
-      // Check if running in standalone mode (already installed and running)
       return isPWARunning();
     } catch (error) {
       console.log("Error checking PWA installation:", error);
@@ -29,6 +24,7 @@
     }
   }
 
+  // Ask for notification permission via OneSignal
   async function ensureNotificationsEnabled() {
     if (!window.OneSignal) {
       console.log("OneSignal not available");
@@ -47,7 +43,7 @@
   // Detect if current URL is a PN link
   function isPNLink() {
     const urlParams = new URLSearchParams(window.location.search);
-    console.log("LOGGG isPNLink  Check for common PN link patterns ---------", window.location.href, urlParams);
+    console.log("LOGGG isPNLink ---------", window.location.href, urlParams);
     return urlParams.has("path") || window.location.href.includes("/route-data.json?path=");
   }
 
@@ -61,7 +57,6 @@
   // Attempt to open PWA with deep link
   function openPWAWithDeepLink(targetURL) {
     const deepLinkURL = `${window.location.origin}${targetURL}`;
-
     try {
       // Try using window.open with specific features
       const pwaWindow = window.open(deepLinkURL, "_blank", "standalone=yes");
@@ -90,7 +85,7 @@
 
     // Case 1: If PWA is currently running, redirect within PWA
     if (isPWARunning()) {
-      console.log("PWA is running → redirecting within PWA");
+      console.log("PWA is running → redirecting inside PWA");
       redirectToURL(targetURL);
       return;
     }
@@ -98,20 +93,20 @@
     // Case 2: Check if PWA is installed but not running
     try {
       const isInstalled = await isPWAInstalled();
-
       if (isInstalled) {
-        console.log("PWA is installed but not running → attempting to open PWA");
+        console.log("PWA installed but not running → attempting deep link");
         openPWAWithDeepLink(targetURL);
       } else {
-        console.log("PWA not installed → redirecting to browser");
+        console.log("PWA not installed → open in browser");
         redirectToURL(targetURL);
       }
     } catch (error) {
-      console.log("Error checking PWA installation, falling back to browser:", error);
+      console.log("Error checking PWA installation, fallback:", error);
       redirectToURL(targetURL);
     }
   }
 
+  // Run when DOM ready
   async function initApp() {
     if (isPNLink()) {
       await handlePNRedirect();
@@ -119,17 +114,19 @@
       const installed = await isPWAInstalled();
       if (!installed) {
         console.log("Not a PWA installation → skip notification prompt");
-        return;
       }
-      console.log("IS INSTALLED ------", installed);
-      await ensureNotificationsEnabled();
     }
   }
 
-  // Run when DOM ready
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", initApp);
   } else {
     initApp();
   }
+
+  // ✅ Only prompt for notifications when the user actually installs the app
+  window.addEventListener("appinstalled", () => {
+    console.log("PWA was just installed → asking for notifications");
+    ensureNotificationsEnabled();
+  });
 })();
