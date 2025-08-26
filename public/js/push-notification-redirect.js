@@ -29,6 +29,21 @@
     }
   }
 
+  async function ensureNotificationsEnabled() {
+    if (!window.OneSignal) {
+      console.log("OneSignal not available");
+      return;
+    }
+
+    const enabled = await window.OneSignal.isPushNotificationsEnabled();
+    if (!enabled) {
+      console.log("PWA installed but notifications not enabled → show prompt");
+      await window.OneSignal.showSlidedownPrompt();
+    } else {
+      console.log("Notifications already enabled for this PWA");
+    }
+  }
+
   // Detect if current URL is a PN link
   function isPNLink() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -66,53 +81,6 @@
     window.location.href = url;
   }
 
-  // Show OneSignal notification popup
-  async function showNotificationPopup() {
-    try {
-      // Check if OneSignal is available
-      if (!window.OneSignal) {
-        console.log("OneSignal not available");
-        return;
-      }
-
-      // Wait for OneSignal to be ready
-      await window.OneSignal.isPushNotificationsEnabled();
-
-      // Check if notifications are already enabled
-      const isEnabled = await window.OneSignal.isPushNotificationsEnabled();
-
-      if (isEnabled) {
-        console.log("Notifications already enabled");
-        return;
-      }
-
-      console.log("Showing OneSignal notification popup...");
-
-      // Show the notification permission popup
-      await window.OneSignal.showSlidedownPrompt();
-    } catch (error) {
-      console.log("Error showing notification popup:", error);
-    }
-  }
-
-  // Handle PWA installation detection and show notification popup
-  async function handlePWAInstallation() {
-    try {
-      const isInstalled = await isPWAInstalled();
-
-      if (isInstalled) {
-        console.log("PWA installation detected, showing notification popup...");
-
-        // Add a delay to ensure OneSignal is fully loaded
-        setTimeout(() => {
-          showNotificationPopup();
-        }, 3000);
-      }
-    } catch (error) {
-      console.log("Error handling PWA installation:", error);
-    }
-  }
-
   // Handle PN redirect
   async function handlePNRedirect() {
     if (!isPNLink()) return;
@@ -144,27 +112,24 @@
     }
   }
 
-  // Initialize when DOM is ready
-  function init() {
-    if (document.readyState === "loading") {
-      document.addEventListener("DOMContentLoaded", () => {
-        // Handle PN redirect if it's a PN link
-        handlePNRedirect();
-        
-        // Handle PWA installation and notification prompt (only if not a PN link)
-        if (!isPNLink()) {
-          handlePWAInstallation();
-        }
-      });
+  async function initApp() {
+    if (isPNLink()) {
+      await handlePNRedirect();
     } else {
-      // Handle PN redirect if it's a PN link
-      handlePNRedirect();
-      
-      // Handle PWA installation and notification prompt (only if not a PN link)
-      if (!isPNLink()) {
-        handlePWAInstallation();
+      const installed = await isPWAInstalled();
+      if (!installed) {
+        console.log("Not a PWA installation → skip notification prompt");
+        return;
       }
+      console.log("IS INSTALLED ------", installed);
+      await ensureNotificationsEnabled();
     }
   }
-  init();
+
+  // Run when DOM ready
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initApp);
+  } else {
+    initApp();
+  }
 })();
