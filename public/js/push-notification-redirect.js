@@ -25,20 +25,6 @@
   }
 
   // Ask for notification permission via OneSignal
-  async function ensureNotificationsEnabled_old() {
-    if (!window.OneSignal) {
-      console.log("OneSignal not available");
-      return;
-    }
-
-    const enabled = await window.OneSignal.isPushNotificationsEnabled();
-    if (!enabled) {
-      console.log("PWA installed but notifications not enabled → show prompt");
-      await window.OneSignal.showSlidedownPrompt();
-    } else {
-      console.log("Notifications already enabled for this PWA");
-    }
-  }
 
   async function ensureNotificationsEnabled() {
     if (!window.OneSignal) {
