@@ -6,7 +6,9 @@
     return (
       window.matchMedia("(display-mode: standalone)").matches || // modern browsers
       window.navigator.standalone === true || // iOS Safari
-      document.referrer.includes("android-app://") // Android fallback
+      document.referrer.includes("android-app://") || // Android fallback
+      window.location.search.includes("utm_source=pwa") || // Custom PWA parameter
+      window.location.hash.includes("pwa=true") // Custom PWA hash
     );
   }
 
@@ -21,6 +23,46 @@
     } catch (error) {
       console.log("Error checking PWA installation:", error);
       return false;
+    }
+  }
+
+  // Detect Safari specifically
+  function isSafari() {
+    const userAgent = navigator.userAgent;
+    return /Safari/.test(userAgent) && !/Chrome/.test(userAgent);
+  }
+
+  // Attempt to open PWA with deep link - improved for Safari
+  function openPWAWithDeepLink(targetURL) {
+    const deepLinkURL = `${window.location.origin}${targetURL}`;
+    console.log("Attempting to open PWA with deep link:", deepLinkURL);
+
+    try {
+      // For Safari, try different approaches
+      if (isSafari()) {
+        console.log("Safari detected, using Safari-specific deep linking");
+
+        // Method 1: Try using window.open with specific features
+        const pwaWindow = window.open(deepLinkURL, "_blank", "standalone=yes,scrollbars=yes,resizable=yes");
+
+        // Method 2: If that doesn't work, try location change with a delay
+        setTimeout(() => {
+          if (!pwaWindow || pwaWindow.closed) {
+            console.log("Safari PWA open failed, falling back to browser");
+            window.location.href = deepLinkURL;
+          }
+        }, 100);
+      } else {
+        // For other browsers, use standard approach
+        const pwaWindow = window.open(deepLinkURL, "_blank", "standalone=yes");
+
+        if (!pwaWindow || pwaWindow.closed) {
+          window.location.href = deepLinkURL;
+        }
+      }
+    } catch (error) {
+      console.log("Failed to open PWA, falling back to browser:", error);
+      window.location.href = targetURL;
     }
   }
 
@@ -69,23 +111,6 @@
     return targetURL ? decodeURIComponent(targetURL) : "/";
   }
 
-  // Attempt to open PWA with deep link
-  function openPWAWithDeepLink(targetURL) {
-    const deepLinkURL = `${window.location.origin}${targetURL}`;
-    try {
-      // Try using window.open with specific features
-      const pwaWindow = window.open(deepLinkURL, "_blank", "standalone=yes");
-
-      // If window.open doesn't work, try location change
-      if (!pwaWindow || pwaWindow.closed) {
-        window.location.href = deepLinkURL;
-      }
-    } catch (error) {
-      console.log("Failed to open PWA, falling back to browser:", error);
-      window.location.href = targetURL;
-    }
-  }
-
   // Redirect to target URL
   function redirectToURL(url) {
     window.location.href = url;
@@ -97,6 +122,8 @@
 
     const targetURL = getTargetURL();
     console.log("PN link detected → redirecting to:", targetURL);
+    console.log("Browser info:", navigator.userAgent);
+    console.log("Is Safari:", isSafari());
 
     // Case 1: If PWA is currently running, redirect within PWA
     if (isPWARunning()) {
@@ -108,9 +135,27 @@
     // Case 2: Check if PWA is installed but not running
     try {
       const isInstalled = await isPWAInstalled();
+      console.log("PWA installed check result:", isInstalled);
+
       if (isInstalled) {
         console.log("PWA installed but not running → attempting deep link");
-        openPWAWithDeepLink(targetURL);
+
+        // For Safari, try a more aggressive approach
+        if (isSafari()) {
+          console.log("Safari detected - trying multiple deep link methods");
+
+          // Method 1: Try direct PWA URL with special parameters
+          const safariPWAURL = `${window.location.origin}${targetURL}?utm_source=pwa&safari_deep_link=true`;
+          window.location.href = safariPWAURL;
+
+          // Method 2: Fallback after a short delay
+          setTimeout(() => {
+            console.log("Safari deep link fallback - trying standard approach");
+            openPWAWithDeepLink(targetURL);
+          }, 500);
+        } else {
+          openPWAWithDeepLink(targetURL);
+        }
       } else {
         console.log("PWA not installed → open in browser");
         redirectToURL(targetURL);
@@ -123,13 +168,28 @@
 
   // Run when DOM ready
   async function initApp() {
+    console.log("Initializing PWA redirect logic...");
+    console.log("Current URL:", window.location.href);
+    console.log("Is PWA running:", isPWARunning());
+
     if (isPNLink()) {
+      console.log("PN link detected, handling redirect...");
       await handlePNRedirect();
     } else {
       const installed = await isPWAInstalled();
+      console.log("PWA installed status:", installed);
+
       if (installed) {
         console.log("Running as PWA → check notifications");
         ensureNotificationsEnabled();
+
+        // Check if this is a Safari PWA launch from notification
+        if (isSafari() && window.location.search.includes("safari_deep_link=true")) {
+          console.log("Safari PWA launched from notification - cleaning up URL");
+          // Clean up the URL by removing the deep link parameters
+          const cleanURL = window.location.pathname + window.location.hash;
+          window.history.replaceState({}, document.title, cleanURL);
+        }
       } else {
         console.log("Not a PWA installation → skip notification prompt");
       }
@@ -147,4 +207,37 @@
     console.log("PWA was just installed → asking for notifications");
     ensureNotificationsEnabled();
   });
+
+  // Debug function for troubleshooting PWA deep linking
+  window.debugPWARedirect = function () {
+    console.log("=== PWA Redirect Debug Info ===");
+    console.log("Current URL:", window.location.href);
+    console.log("User Agent:", navigator.userAgent);
+    console.log("Is Safari:", isSafari());
+    console.log("Is PWA Running:", isPWARunning());
+    console.log("Is PN Link:", isPNLink());
+    console.log("Target URL:", getTargetURL());
+    console.log("Display Mode:", window.matchMedia("(display-mode: standalone)").matches);
+    console.log("Navigator Standalone:", window.navigator.standalone);
+    console.log("Document Referrer:", document.referrer);
+
+    // Check service worker registrations
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.getRegistrations().then((registrations) => {
+        console.log("Service Worker Registrations:", registrations.length);
+        registrations.forEach((reg, index) => {
+          console.log(`SW ${index}:`, reg.scope, reg.active ? "Active" : "Inactive");
+        });
+      });
+    }
+
+    // Check OneSignal status
+    if (window.OneSignal) {
+      window.OneSignal.isPushNotificationsEnabled().then((enabled) => {
+        console.log("OneSignal Notifications Enabled:", enabled);
+      });
+    }
+
+    console.log("=== End Debug Info ===");
+  };
 })();
