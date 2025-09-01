@@ -25,7 +25,7 @@
   }
 
   // Ask for notification permission via OneSignal
-  async function ensureNotificationsEnabled() {
+  async function ensureNotificationsEnabled_old() {
     if (!window.OneSignal) {
       console.log("OneSignal not available");
       return;
@@ -37,6 +37,35 @@
       await window.OneSignal.showSlidedownPrompt();
     } else {
       console.log("Notifications already enabled for this PWA");
+    }
+  }
+
+  async function ensureNotificationsEnabled() {
+    if (!window.OneSignal) {
+      console.log("OneSignal not available");
+      return;
+    }
+
+    const permission = Notification.permission;
+    console.log("Notification.permission =", permission);
+
+    if (permission === "granted") {
+      console.log("✅ Notifications already allowed");
+      return;
+    }
+
+    if (permission === "denied") {
+      console.log("❌ Notifications are blocked, must be enabled in settings");
+      return;
+    }
+
+    // Only when permission === "default"
+    const enabled = await window.OneSignal.isPushNotificationsEnabled();
+    if (!enabled) {
+      console.log("⚠️ Notifications not enabled yet → showing OneSignal prompt");
+      await window.OneSignal.showSlidedownPrompt();
+    } else {
+      console.log("✅ OneSignal already has notifications enabled");
     }
   }
 
@@ -112,7 +141,10 @@
       await handlePNRedirect();
     } else {
       const installed = await isPWAInstalled();
-      if (!installed) {
+      if (installed) {
+        console.log("Running as PWA → check notifications");
+        ensureNotificationsEnabled();
+      } else {
         console.log("Not a PWA installation → skip notification prompt");
       }
     }
