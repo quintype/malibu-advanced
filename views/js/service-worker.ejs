@@ -15,8 +15,7 @@ console.log('=== SERVICE WORKER STARTING ===');
 console.log('iOS Safari PWA Check:', {
   userAgent: navigator.userAgent,
   platform: navigator.platform,
-  standalone: navigator.standalone,
-  displayMode: window.matchMedia("(display-mode: standalone)").matches
+  standalone: navigator.standalone
 });
 
 // Service Worker Install Event
@@ -70,17 +69,40 @@ workbox.routing.registerRoute(new RegExp('/route-data.json*'), new workbox.strat
 self.skipWaiting();
 console.log('skipWaiting() called - will activate immediately');
 
-// Add activate event listener to claim clients immediately => forces the newly activated service worker to immediately take control of all open pages (clients) under its scope, without waiting for reload.
-self.addEventListener('activate', event => {
-  event.waitUntil(clients.claim());
-});
-
 // Handle push notifications
+let notificationIds = new Set();
+
 self.addEventListener("push", event => {
   console.log("📱 PUSH EVENT RECEIVED on iOS Safari PWA");
 
   const data = event.data ? event.data.json() : {};
   console.log("Push data:", data);
+
+  // Extract notification ID for deduplication
+  const notificationId = data.notification_id || data.id || Date.now().toString();
+
+  // Check if this notification was already shown
+  if (notificationIds.has(notificationId)) {
+    console.log("🚫 Duplicate notification detected, skipping:", notificationId);
+    return;
+  }
+
+  // Add to tracking set
+  notificationIds.add(notificationId);
+
+  // Clean up old IDs (keep only last 100)
+  if (notificationIds.size > 100) {
+    const idsArray = Array.from(notificationIds);
+    notificationIds = new Set(idsArray.slice(-100));
+  }
+
+  // Check if OneSignal is handling this notification
+  if (data.onesignal || data.source === 'onesignal') {
+    console.log("📱 OneSignal handling notification, skipping service worker display");
+    return;
+  }
+
+  console.log("📱 Showing notification:", notificationId);
 
   // Show notification
   event.waitUntil(
@@ -90,7 +112,7 @@ self.addEventListener("push", event => {
       badge: data.badge || "/icons/icon-128x128.png",
       data: {
         url: data.url || "/",
-        notification_id: data.notification_id || Date.now().toString()
+        notification_id: notificationId
       }
     })
   );
@@ -107,6 +129,26 @@ self.addEventListener('notificationclick', event => {
   event.waitUntil(
     clients.openWindow(targetUrl)
   );
+});
+
+// Listen for messages from OneSignal to coordinate notification handling
+self.addEventListener('message', event => {
+  if (event.data && event.data.type === 'ONESIGNAL_NOTIFICATION') {
+    console.log('📱 OneSignal notification received, marking as handled');
+
+    // Add to our tracking to prevent duplicates
+    const notificationId = event.data.notification_id || Date.now().toString();
+    notificationIds.add(notificationId);
+  }
+});
+
+// Handle notification close to clean up tracking
+self.addEventListener('notificationclose', event => {
+  const notificationId = event.notification.data?.notification_id;
+  if (notificationId) {
+    console.log('📱 Notification closed, cleaning up:', notificationId);
+    notificationIds.delete(notificationId);
+  }
 });
 
 // OneSignal integration
