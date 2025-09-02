@@ -309,4 +309,69 @@
       console.error("❌ Error checking service worker status:", error);
     }
   };
+
+  // Function to read service worker logs from localStorage (iOS-friendly)
+  window.getServiceWorkerLogs = function () {
+    try {
+      const logs = JSON.parse(localStorage.getItem("sw_logs") || "[]");
+
+      if (logs.length === 0) {
+        console.log("📝 No service worker logs found in localStorage");
+        return [];
+      }
+
+      console.log(`📝 Found ${logs.length} service worker logs:`);
+      logs.forEach((log, index) => {
+        console.log(`\n📱 Log ${index + 1} (${log.timestamp}):`);
+        console.log(`   Message: ${log.message}`);
+        if (log.data) {
+          console.log(`   Data:`, log.data);
+        }
+        console.log(`   Platform: ${log.platform}`);
+      });
+
+      return logs;
+    } catch (error) {
+      console.error("❌ Error reading service worker logs:", error);
+      return [];
+    }
+  };
+
+  // Function to clear service worker logs
+  window.clearServiceWorkerLogs = function () {
+    try {
+      localStorage.removeItem("sw_logs");
+      console.log("🗑️ Service worker logs cleared");
+    } catch (error) {
+      console.error("❌ Error clearing logs:", error);
+    }
+  };
+
+  // Function to show service worker logs in a visual way (iOS-friendly)
+  window.showServiceWorkerLogs = function () {
+    try {
+      const logs = JSON.parse(localStorage.getItem("sw_logs") || "[]");
+
+      if (logs.length === 0) {
+        alert("No service worker logs found");
+        return;
+      }
+
+      // Create a simple visual display
+      let logText = `Service Worker Logs (${logs.length} entries):\n\n`;
+      logs.slice(-10).forEach((log, index) => {
+        // Show last 10 logs
+        logText += `${index + 1}. ${log.timestamp}\n`;
+        logText += `   ${log.message}\n`;
+        if (log.data) {
+          logText += `   Data: ${JSON.stringify(log.data)}\n`;
+        }
+        logText += `\n`;
+      });
+
+      alert(logText);
+    } catch (error) {
+      alert("Error reading service worker logs: " + error.message);
+    }
+  };
 })();

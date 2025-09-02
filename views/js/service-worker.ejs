@@ -10,115 +10,51 @@ const REQUIRED_ASSETS = [
   shellUrl
 ];
 
-// Service Worker Installation Status Tracking
-let swInstallStatus = {
-  installed: false,
-  activated: false,
-  controlling: false,
-  scope: null,
-  timestamp: null
-};
-
-console.log('🔄 Service Worker: Starting installation process...');
-console.log('📱 User Agent:', navigator.userAgent);
-console.log('🌐 Platform:', navigator.platform);
-console.log('📱 Standalone Mode:', window.matchMedia("(display-mode: standalone)").matches);
-console.log('🍎 iOS Standalone:', navigator.standalone);
+// Simple logging for iOS Safari PWA debugging
+console.log('=== SERVICE WORKER STARTING ===');
+console.log('iOS Safari PWA Check:', {
+  userAgent: navigator.userAgent,
+  platform: navigator.platform,
+  standalone: navigator.standalone,
+  displayMode: window.matchMedia("(display-mode: standalone)").matches
+});
 
 // Service Worker Install Event
 self.addEventListener('install', event => {
-  console.log('✅ Service Worker: Install event triggered');
-  console.log('📦 Caching assets:', REQUIRED_ASSETS.length, 'files');
+  console.log('✅ SERVICE WORKER INSTALLED on iOS Safari PWA');
+  console.log('Caching assets:', REQUIRED_ASSETS.length, 'files');
 
-  swInstallStatus.installed = true;
-  swInstallStatus.timestamp = new Date().toISOString();
-
-  // Cache all required assets
   event.waitUntil(
     caches.open('malibu-pwa-v1').then(cache => {
-      console.log('📦 Cache opened successfully');
+      console.log('Cache opened successfully');
       return cache.addAll(REQUIRED_ASSETS);
     }).then(() => {
-      console.log('✅ All assets cached successfully');
-      console.log('📊 Install Status:', swInstallStatus);
+      console.log('All assets cached successfully');
     }).catch(error => {
-      console.error('❌ Cache installation failed:', error);
+      console.error('Cache installation failed:', error);
     })
   );
 });
 
 // Service Worker Activate Event
 self.addEventListener('activate', event => {
-  console.log('🚀 Service Worker: Activate event triggered');
+  console.log('🚀 SERVICE WORKER ACTIVATED on iOS Safari PWA');
 
-  swInstallStatus.activated = true;
-
-  // Claim all clients immediately
   event.waitUntil(
     clients.claim().then(() => {
-      console.log('👑 Service Worker: Claimed all clients');
-      swInstallStatus.controlling = true;
-
-      // Log detailed status
-      console.log('📊 Final Installation Status:', swInstallStatus);
-      console.log('🎯 Service Worker Scope:', self.registration.scope);
-      console.log('🔗 Service Worker Location:', self.location.href);
+      console.log('Service Worker claimed all clients');
 
       // Check if we're controlling any clients
       return clients.matchAll({ type: 'window', includeUncontrolled: true });
     }).then(clients => {
-      console.log('👥 Controlled Clients:', clients.length);
+      console.log('Controlled Clients:', clients.length);
       clients.forEach((client, index) => {
-        console.log(`  Client ${index + 1}:`, {
-          url: client.url,
-          type: client.type,
-          id: client.id,
-          focused: client.focused
-        });
+        console.log(`Client ${index + 1}:`, client.url);
       });
     }).catch(error => {
-      console.error('❌ Activation failed:', error);
+      console.error('Activation failed:', error);
     })
   );
-});
-
-// Service Worker Message Handler for Status Checks
-self.addEventListener('message', event => {
-  if (event.data && event.data.type === 'GET_SW_STATUS') {
-    console.log('📊 Service Worker Status Request Received');
-
-    // Get current client info
-    clients.matchAll({ type: 'window', includeUncontrolled: true }).then(clients => {
-      const response = {
-        ...swInstallStatus,
-        clients: clients.length,
-        scope: self.registration.scope,
-        location: self.location.href,
-        userAgent: navigator.userAgent,
-        platform: navigator.platform,
-        timestamp: new Date().toISOString()
-      };
-
-      console.log('📊 Sending Status Response:', response);
-      event.ports[0].postMessage(response);
-    });
-  }
-
-  // Handle manual activation request
-  if (event.data && event.data.type === 'SKIP_WAITING') {
-    console.log('⏭️ Manual activation requested via SKIP_WAITING message');
-    self.skipWaiting();
-  }
-
-  // Existing OneSignal message handling
-  if (event.data && event.data.type === 'ONESIGNAL_NOTIFICATION') {
-    console.log('OneSignal notification received, marking as handled');
-    isOneSignalHandling = true;
-
-    // Add to our tracking to prevent duplicates
-    const notificationId = event.data.notification_id || Date.now().toString();
-    notificationIds.add(notificationId);
-  }
 });
 
 initializeQServiceWorker({
@@ -132,68 +68,21 @@ workbox.routing.registerRoute(new RegExp('/route-data.json*'), new workbox.strat
 
 // Force immediate activation
 self.skipWaiting();
-console.log('⏭️ Service Worker: skipWaiting() called - will activate immediately');
+console.log('skipWaiting() called - will activate immediately');
 
 // Add activate event listener to claim clients immediately => forces the newly activated service worker to immediately take control of all open pages (clients) under its scope, without waiting for reload.
 self.addEventListener('activate', event => {
   event.waitUntil(clients.claim());
 });
 
-// Handle notification deduplication for Safari
-let notificationIds = new Set();
-let isOneSignalHandling = false;
-let recentNotifications = new Map(); // Track recent notifications by content
-
+// Handle push notifications
 self.addEventListener("push", event => {
-  console.log("Push event received:", event);
+  console.log("📱 PUSH EVENT RECEIVED on iOS Safari PWA");
 
-  // Extract notification data
   const data = event.data ? event.data.json() : {};
-  const notificationId = data.notification_id || data.id || Date.now().toString();
-  const notificationContent = `${data.title || ''}-${data.body || ''}`;
-  const currentTime = Date.now();
+  console.log("Push data:", data);
 
-  // Prevent duplicate notifications by ID
-  if (notificationIds.has(notificationId)) {
-    console.log("Duplicate notification detected by ID, skipping:", notificationId);
-    return;
-  }
-
-  // Prevent duplicate notifications by content (within last 30 seconds)
-  if (recentNotifications.has(notificationContent)) {
-    const lastTime = recentNotifications.get(notificationContent);
-    if (currentTime - lastTime < 30000) { // 30 seconds
-      console.log("Duplicate notification detected by content, skipping:", notificationContent);
-      return;
-    }
-  }
-
-  // Check if OneSignal is handling this notification
-  if (data.onesignal || data.source === 'onesignal') {
-    console.log("OneSignal handling notification, skipping service worker display:", notificationId);
-    isOneSignalHandling = true;
-    return;
-  }
-
-  notificationIds.add(notificationId);
-  recentNotifications.set(notificationContent, currentTime);
-
-  // Clean up old IDs
-  if (notificationIds.size > 100) {
-    const idsArray = Array.from(notificationIds);
-    notificationIds = new Set(idsArray.slice(-100));
-  }
-
-  // Clean up old content tracking (keep only last 5 minutes)
-  for (const [content, time] of recentNotifications.entries()) {
-    if (currentTime - time > 300000) { // 5 minutes
-      recentNotifications.delete(content);
-    }
-  }
-
-  console.log("Processing notification:", notificationId);
-
-  // ✅ Actually show the notification (needed for iOS PWA)
+  // Show notification
   event.waitUntil(
     self.registration.showNotification(data.title || "New Message", {
       body: data.body || "You have a new notification",
@@ -201,78 +90,28 @@ self.addEventListener("push", event => {
       badge: data.badge || "/icons/icon-128x128.png",
       data: {
         url: data.url || "/",
-        notification_id: notificationId
+        notification_id: data.notification_id || Date.now().toString()
       }
     })
   );
 });
 
-// Handle notification close to clean up tracking
-self.addEventListener('notificationclose', event => {
-  const notificationId = event.notification.data?.notification_id ||
-                        event.notification.data?.id ||
-                        event.notification.tag;
-
-  if (notificationId) {
-    console.log('Notification closed, cleaning up:', notificationId);
-    notificationIds.delete(notificationId);
-  }
-});
-
-// Listen for messages from OneSignal to coordinate notification handling
-self.addEventListener('message', event => {
-  if (event.data && event.data.type === 'ONESIGNAL_NOTIFICATION') {
-    console.log('OneSignal notification received, marking as handled');
-    isOneSignalHandling = true;
-
-    // Add to our tracking to prevent duplicates
-    const notificationId = event.data.notification_id || Date.now().toString();
-    notificationIds.add(notificationId);
-  }
-});
-
-var appVersion = "3";
-if("<%= config["public-integrations"]["one-signal"] &&  config["public-integrations"]["one-signal"]["app-id"] %>") {
-  importScripts('https://cdn.onesignal.com/sdks/OneSignalSDKWorker.js');
-}
-
-// Handle notification clicks -- Chrome handles notificationclick & routes to PWA but for Safari - If no notificationclick handler is defined, Safari falls back to opening the link in Safari browser, not the PWA.
+// Handle notification clicks
 self.addEventListener('notificationclick', event => {
+  console.log("📱 NOTIFICATION CLICKED on iOS Safari PWA");
   event.notification.close();
 
   const targetUrl = event.notification.data?.url || "/";
-  console.log('Notification clicked, target URL:', targetUrl);
+  console.log('Target URL:', targetUrl);
 
   event.waitUntil(
-    clients.matchAll({ type: "window", includeUncontrolled: true })
-      .then(windowClients => {
-        console.log('Found window clients:', windowClients.length);
-
-        // Check if any existing window is from our PWA
-        for (let client of windowClients) {
-          console.log('Checking client:', client.url, 'scope:', self.registration.scope);
-
-          // For Safari, we need to be more lenient with the scope check
-          if (client.url.includes(self.registration.scope) ||
-              client.url.includes(self.location.origin)) {
-            console.log('Found existing PWA window, focusing and navigating');
-            client.navigate(targetUrl);
-            return client.focus();
-          }
-        }
-
-        // No existing window found, try to open new PWA window
-        console.log('No existing PWA window found, opening new window');
-        if (clients.openWindow) {
-          return clients.openWindow(targetUrl);
-        }
-      })
-      .catch(error => {
-        console.error('Error handling notification click:', error);
-        // Fallback: try to open in new window
-        if (clients.openWindow) {
-          return clients.openWindow(targetUrl);
-        }
-      })
+    clients.openWindow(targetUrl)
   );
 });
+
+// OneSignal integration
+var appVersion = "3";
+if("<%= config["public-integrations"]["one-signal"] &&  config["public-integrations"]["one-signal"]["app-id"] %>") {
+  console.log("📱 Loading OneSignal SDK for iOS Safari PWA");
+  importScripts('https://cdn.onesignal.com/sdks/OneSignalSDKWorker.js');
+}
