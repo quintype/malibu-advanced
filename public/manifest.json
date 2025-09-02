@@ -3,6 +3,7 @@
   "short_name": "Quintype Demo",
   "description": "A modern news and content platform built with Quintype Framework",
   "start_url": "/",
+  "id": "/",
   "scope": "/",
   "display": "standalone",
   "theme_color": "#2F3BA2",
@@ -42,7 +43,8 @@
     {
       "src": "icons/icon-512x512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "maskable any"
     }
   ]
 }

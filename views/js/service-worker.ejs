@@ -27,30 +27,40 @@ self.addEventListener('activate', event => {
 // Handle notification deduplication for Safari
 let notificationIds = new Set();
 
-self.addEventListener('push', event => {
-  console.log('Push event received:', event);
+self.addEventListener("push", event => {
+  console.log("Push event received:", event);
 
   // Extract notification data
   const data = event.data ? event.data.json() : {};
   const notificationId = data.notification_id || data.id || Date.now().toString();
 
-  // Check if we've already shown this notification
+  // Prevent duplicate notifications
   if (notificationIds.has(notificationId)) {
-    console.log('Duplicate notification detected, skipping:', notificationId);
+    console.log("Duplicate notification detected, skipping:", notificationId);
     return;
   }
-
-  // Add to our tracking set
   notificationIds.add(notificationId);
 
-  // Clean up old notification IDs (keep only last 100)
+  // Clean up old IDs
   if (notificationIds.size > 100) {
     const idsArray = Array.from(notificationIds);
     notificationIds = new Set(idsArray.slice(-100));
   }
 
-  // Let OneSignal handle the notification display
-  console.log('Processing notification:', notificationId);
+  console.log("Processing notification:", notificationId);
+
+  // ✅ Actually show the notification (needed for iOS PWA)
+  event.waitUntil(
+    self.registration.showNotification(data.title || "New Message", {
+      body: data.body || "You have a new notification",
+      icon: data.icon || "/icons/icon-192x192.png",
+      badge: data.badge || "/icons/icon-128x128.png",
+      data: {
+        url: data.url || "/",
+        notification_id: notificationId
+      }
+    })
+  );
 });
 
 // Handle notification close to clean up tracking
