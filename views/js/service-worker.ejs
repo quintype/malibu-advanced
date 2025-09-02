@@ -69,58 +69,77 @@ workbox.routing.registerRoute(new RegExp('/route-data.json*'), new workbox.strat
 self.skipWaiting();
 console.log('skipWaiting() called - will activate immediately');
 
-// Handle push notifications
+// Handle push notifications - Fixed for Chrome and iOS
 let notificationIds = new Set();
 
 self.addEventListener("push", event => {
-  console.log("📱 PUSH EVENT RECEIVED on iOS Safari PWA");
+  console.log("📱 PUSH EVENT RECEIVED");
 
   const data = event.data ? event.data.json() : {};
   console.log("Push data:", data);
 
-  // Extract notification ID for deduplication
-  const notificationId = data.notification_id || data.id || Date.now().toString();
+  // Extract notification ID
+  const notificationId = data.notification_id || data.id || `pn_${Date.now()}`;
 
-  // Check if this notification was already shown
+  // Check for duplicates
   if (notificationIds.has(notificationId)) {
-    console.log("🚫 Duplicate notification detected, skipping:", notificationId);
+    console.log("🚫 Duplicate notification, skipping:", notificationId);
     return;
   }
 
-  // Add to tracking set
+  // Add to tracking
   notificationIds.add(notificationId);
 
-  // Clean up old IDs (keep only last 100)
-  if (notificationIds.size > 100) {
+  // Clean up old IDs
+  if (notificationIds.size > 50) {
     const idsArray = Array.from(notificationIds);
-    notificationIds = new Set(idsArray.slice(-100));
+    notificationIds = new Set(idsArray.slice(-50));
   }
 
-  // Check if OneSignal is handling this notification
-  if (data.onesignal || data.source === 'onesignal') {
-    console.log("📱 OneSignal handling notification, skipping service worker display");
-    return;
+  // Detect platform to handle differently
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.platform);
+  const isChrome = /Chrome/.test(navigator.userAgent) && !/Safari/.test(navigator.userAgent);
+
+  console.log("📱 Platform detected:", { isIOS, isChrome, platform: navigator.platform });
+
+  if (isIOS) {
+    // iOS Safari PWA: Service worker must show notification
+    console.log("📱 iOS detected - Service worker showing notification");
+    event.waitUntil(
+      self.registration.showNotification(data.title || "New Message", {
+        body: data.body || "You have a new notification",
+        icon: data.icon || "/icons/icon-192x192.png",
+        badge: data.badge || "/icons/icon-128x128.png",
+        data: {
+          url: data.url || "/",
+          notification_id: notificationId
+        }
+      })
+    );
+  } else if (isChrome) {
+    // Chrome: Let OneSignal handle to prevent duplicates
+    console.log("📱 Chrome detected - Letting OneSignal handle notification");
+    // Don't call showNotification here
+  } else {
+    // Other browsers: Use service worker
+    console.log("📱 Other browser detected - Service worker showing notification");
+    event.waitUntil(
+      self.registration.showNotification(data.title || "New Message", {
+        body: data.body || "You have a new notification",
+        icon: data.icon || "/icons/icon-192x192.png",
+        badge: data.badge || "/icons/icon-128x128.png",
+        data: {
+          url: data.url || "/",
+          notification_id: notificationId
+        }
+      })
+    );
   }
-
-  console.log("📱 Showing notification:", notificationId);
-
-  // Show notification
-  event.waitUntil(
-    self.registration.showNotification(data.title || "New Message", {
-      body: data.body || "You have a new notification",
-      icon: data.icon || "/icons/icon-192x192.png",
-      badge: data.badge || "/icons/icon-128x128.png",
-      data: {
-        url: data.url || "/",
-        notification_id: notificationId
-      }
-    })
-  );
 });
 
 // Handle notification clicks
 self.addEventListener('notificationclick', event => {
-  console.log("📱 NOTIFICATION CLICKED on iOS Safari PWA");
+  console.log("📱 NOTIFICATION CLICKED");
   event.notification.close();
 
   const targetUrl = event.notification.data?.url || "/";
@@ -131,18 +150,7 @@ self.addEventListener('notificationclick', event => {
   );
 });
 
-// Listen for messages from OneSignal to coordinate notification handling
-self.addEventListener('message', event => {
-  if (event.data && event.data.type === 'ONESIGNAL_NOTIFICATION') {
-    console.log('📱 OneSignal notification received, marking as handled');
-
-    // Add to our tracking to prevent duplicates
-    const notificationId = event.data.notification_id || Date.now().toString();
-    notificationIds.add(notificationId);
-  }
-});
-
-// Handle notification close to clean up tracking
+// Handle notification close
 self.addEventListener('notificationclose', event => {
   const notificationId = event.notification.data?.notification_id;
   if (notificationId) {
@@ -151,9 +159,37 @@ self.addEventListener('notificationclose', event => {
   }
 });
 
-// OneSignal integration
+// OneSignal integration - Load this FIRST
 var appVersion = "3";
 if("<%= config["public-integrations"]["one-signal"] &&  config["public-integrations"]["one-signal"]["app-id"] %>") {
-  console.log("📱 Loading OneSignal SDK for iOS Safari PWA");
+  console.log("📱 Loading OneSignal SDK");
   importScripts('https://cdn.onesignal.com/sdks/OneSignalSDKWorker.js');
 }
+
+// Test function to verify service worker is working
+self.addEventListener('message', event => {
+  if (event.data && event.data.type === 'TEST_NOTIFICATION') {
+    console.log("🧪 Testing notification display");
+
+    event.waitUntil(
+      self.registration.showNotification('Test Notification', {
+        body: 'Service Worker is working!',
+        icon: '/icons/icon-128x128.png',
+        badge: '/icons/icon-128x128.png',
+        data: { url: '/', notification_id: 'test_' + Date.now() }
+      })
+    );
+  }
+});
+
+// Log when service worker is ready
+self.addEventListener('install', event => {
+  console.log('✅ SERVICE WORKER INSTALLED');
+  console.log('📱 Platform:', navigator.platform);
+  console.log('📱 User Agent:', navigator.userAgent);
+});
+
+self.addEventListener('activate', event => {
+  console.log('🚀 SERVICE WORKER ACTIVATED');
+  console.log('📱 Ready to handle notifications');
+});

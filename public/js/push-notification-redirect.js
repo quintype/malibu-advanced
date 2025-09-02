@@ -374,4 +374,30 @@
       alert("Error reading service worker logs: " + error.message);
     }
   };
+
+  // Test function to verify service worker notifications work
+  window.testServiceWorkerNotification = function () {
+    console.log("🧪 Testing service worker notification...");
+
+    if (!("serviceWorker" in navigator)) {
+      alert("Service Workers not supported");
+      return;
+    }
+
+    navigator.serviceWorker
+      .getRegistration()
+      .then((registration) => {
+        if (registration && registration.active) {
+          console.log("Sending test notification to service worker");
+          registration.active.postMessage({ type: "TEST_NOTIFICATION" });
+          alert("Test notification sent! Check if you see a notification.");
+        } else {
+          alert("No active service worker found");
+        }
+      })
+      .catch((error) => {
+        console.error("Error testing notification:", error);
+        alert("Error: " + error.message);
+      });
+  };
 })();
