@@ -207,37 +207,4 @@
     console.log("PWA was just installed → asking for notifications");
     ensureNotificationsEnabled();
   });
-
-  // Debug function for troubleshooting PWA deep linking
-  window.debugPWARedirect = function () {
-    console.log("=== PWA Redirect Debug Info ===");
-    console.log("Current URL:", window.location.href);
-    console.log("User Agent:", navigator.userAgent);
-    console.log("Is Safari:", isSafari());
-    console.log("Is PWA Running:", isPWARunning());
-    console.log("Is PN Link:", isPNLink());
-    console.log("Target URL:", getTargetURL());
-    console.log("Display Mode:", window.matchMedia("(display-mode: standalone)").matches);
-    console.log("Navigator Standalone:", window.navigator.standalone);
-    console.log("Document Referrer:", document.referrer);
-
-    // Check service worker registrations
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.getRegistrations().then((registrations) => {
-        console.log("Service Worker Registrations:", registrations.length);
-        registrations.forEach((reg, index) => {
-          console.log(`SW ${index}:`, reg.scope, reg.active ? "Active" : "Inactive");
-        });
-      });
-    }
-
-    // Check OneSignal status
-    if (window.OneSignal) {
-      window.OneSignal.isPushNotificationsEnabled().then((enabled) => {
-        console.log("OneSignal Notifications Enabled:", enabled);
-      });
-    }
-
-    console.log("=== End Debug Info ===");
-  };
 })();

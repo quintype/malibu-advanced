@@ -19,9 +19,50 @@ initializeQServiceWorker({
 workbox.routing.registerRoute(new RegExp('/route-data.json*'), new workbox.strategies.NetworkFirst());
 self.skipWaiting();
 
-// Add activate event listener to claim clients immediately
+// Add activate event listener to claim clients immediately => forces the newly activated service worker to immediately take control of all open pages (clients) under its scope, without waiting for reload.
 self.addEventListener('activate', event => {
   event.waitUntil(clients.claim());
+});
+
+// Handle notification deduplication for Safari
+let notificationIds = new Set();
+
+self.addEventListener('push', event => {
+  console.log('Push event received:', event);
+
+  // Extract notification data
+  const data = event.data ? event.data.json() : {};
+  const notificationId = data.notification_id || data.id || Date.now().toString();
+
+  // Check if we've already shown this notification
+  if (notificationIds.has(notificationId)) {
+    console.log('Duplicate notification detected, skipping:', notificationId);
+    return;
+  }
+
+  // Add to our tracking set
+  notificationIds.add(notificationId);
+
+  // Clean up old notification IDs (keep only last 100)
+  if (notificationIds.size > 100) {
+    const idsArray = Array.from(notificationIds);
+    notificationIds = new Set(idsArray.slice(-100));
+  }
+
+  // Let OneSignal handle the notification display
+  console.log('Processing notification:', notificationId);
+});
+
+// Handle notification close to clean up tracking
+self.addEventListener('notificationclose', event => {
+  const notificationId = event.notification.data?.notification_id ||
+                        event.notification.data?.id ||
+                        event.notification.tag;
+
+  if (notificationId) {
+    console.log('Notification closed, cleaning up:', notificationId);
+    notificationIds.delete(notificationId);
+  }
 });
 
 var appVersion = "3";
