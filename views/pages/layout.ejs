@@ -102,7 +102,13 @@
           }
         })();
       </script>
-      <%- oneSignalScript -%>
+        <%_ if(oneSignalScript) { _%>
+          <%- oneSignalScript %>
+        <%_ } else { _%>
+          <script>
+            console.error('❌ oneSignalScript is undefined - OneSignal will not work');
+          </script>
+        <%_ } _%>
     <%_ } _%>
     <noscript>
       <style>
