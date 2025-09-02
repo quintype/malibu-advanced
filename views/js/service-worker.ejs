@@ -10,52 +10,6 @@ const REQUIRED_ASSETS = [
   shellUrl
 ];
 
-// Simple logging for iOS Safari PWA debugging
-console.log('=== SERVICE WORKER STARTING ===');
-console.log('iOS Safari PWA Check:', {
-  userAgent: navigator.userAgent,
-  platform: navigator.platform,
-  standalone: navigator.standalone
-});
-
-// Service Worker Install Event
-self.addEventListener('install', event => {
-  console.log('✅ SERVICE WORKER INSTALLED on iOS Safari PWA');
-  console.log('Caching assets:', REQUIRED_ASSETS.length, 'files');
-
-  event.waitUntil(
-    caches.open('malibu-pwa-v1').then(cache => {
-      console.log('Cache opened successfully');
-      return cache.addAll(REQUIRED_ASSETS);
-    }).then(() => {
-      console.log('All assets cached successfully');
-    }).catch(error => {
-      console.error('Cache installation failed:', error);
-    })
-  );
-});
-
-// Service Worker Activate Event
-self.addEventListener('activate', event => {
-  console.log('🚀 SERVICE WORKER ACTIVATED on iOS Safari PWA');
-
-  event.waitUntil(
-    clients.claim().then(() => {
-      console.log('Service Worker claimed all clients');
-
-      // Check if we're controlling any clients
-      return clients.matchAll({ type: 'window', includeUncontrolled: true });
-    }).then(clients => {
-      console.log('Controlled Clients:', clients.length);
-      clients.forEach((client, index) => {
-        console.log(`Client ${index + 1}:`, client.url);
-      });
-    }).catch(error => {
-      console.error('Activation failed:', error);
-    })
-  );
-});
-
 initializeQServiceWorker({
   routes: <%- JSON.stringify(routes) %>,
   assets: REQUIRED_ASSETS,
@@ -69,127 +23,39 @@ workbox.routing.registerRoute(new RegExp('/route-data.json*'), new workbox.strat
 self.skipWaiting();
 console.log('skipWaiting() called - will activate immediately');
 
-// Handle push notifications - Fixed for Chrome and iOS
-let notificationIds = new Set();
-
-self.addEventListener("push", event => {
-  console.log("📱 PUSH EVENT RECEIVED");
-
-  const data = event.data ? event.data.json() : {};
-  console.log("Push data:", data);
-
-  // Extract notification ID
-  const notificationId = data.notification_id || data.id || `pn_${Date.now()}`;
-
-  // Check for duplicates
-  if (notificationIds.has(notificationId)) {
-    console.log("🚫 Duplicate notification, skipping:", notificationId);
-    return;
-  }
-
-  // Add to tracking
-  notificationIds.add(notificationId);
-
-  // Clean up old IDs
-  if (notificationIds.size > 50) {
-    const idsArray = Array.from(notificationIds);
-    notificationIds = new Set(idsArray.slice(-50));
-  }
-
-  // Detect platform to handle differently
-  const isIOS = /iPad|iPhone|iPod/.test(navigator.platform);
-  const isChrome = /Chrome/.test(navigator.userAgent) && !/Safari/.test(navigator.userAgent);
-
-  console.log("📱 Platform detected:", { isIOS, isChrome, platform: navigator.platform });
-
-  if (isIOS) {
-    // iOS Safari PWA: Service worker must show notification
-    console.log("📱 iOS detected - Service worker showing notification");
-    event.waitUntil(
-      self.registration.showNotification(data.title || "New Message", {
-        body: data.body || "You have a new notification",
-        icon: data.icon || "/icons/icon-192x192.png",
-        badge: data.badge || "/icons/icon-128x128.png",
-        data: {
-          url: data.url || "/",
-          notification_id: notificationId
-        }
-      })
-    );
-  } else if (isChrome) {
-    // Chrome: Let OneSignal handle to prevent duplicates
-    console.log("📱 Chrome detected - Letting OneSignal handle notification");
-    // Don't call showNotification here
-  } else {
-    // Other browsers: Use service worker
-    console.log("📱 Other browser detected - Service worker showing notification");
-    event.waitUntil(
-      self.registration.showNotification(data.title || "New Message", {
-        body: data.body || "You have a new notification",
-        icon: data.icon || "/icons/icon-192x192.png",
-        badge: data.badge || "/icons/icon-128x128.png",
-        data: {
-          url: data.url || "/",
-          notification_id: notificationId
-        }
-      })
-    );
-  }
-});
-
-// Handle notification clicks
-self.addEventListener('notificationclick', event => {
-  console.log("📱 NOTIFICATION CLICKED");
-  event.notification.close();
-
-  const targetUrl = event.notification.data?.url || "/";
-  console.log('Target URL:', targetUrl);
-
-  event.waitUntil(
-    clients.openWindow(targetUrl)
-  );
-});
-
-// Handle notification close
-self.addEventListener('notificationclose', event => {
-  const notificationId = event.notification.data?.notification_id;
-  if (notificationId) {
-    console.log('📱 Notification closed, cleaning up:', notificationId);
-    notificationIds.delete(notificationId);
-  }
-});
-
-// OneSignal integration - Load this FIRST
 var appVersion = "3";
+
 if("<%= config["public-integrations"]["one-signal"] &&  config["public-integrations"]["one-signal"]["app-id"] %>") {
-  console.log("📱 Loading OneSignal SDK");
   importScripts('https://cdn.onesignal.com/sdks/OneSignalSDKWorker.js');
 }
 
-// Test function to verify service worker is working
-self.addEventListener('message', event => {
-  if (event.data && event.data.type === 'TEST_NOTIFICATION') {
-    console.log("🧪 Testing notification display");
+// Handle notification clicks -- Chrome handles notificationclick & routes to PWA but for Safari - If no notificationclick handler is defined, Safari falls back to opening the link in Safari browser, not the PWA.
+self.addEventListener('notificationclick', event => {
+  event.notification.close();
 
-    event.waitUntil(
-      self.registration.showNotification('Test Notification', {
-        body: 'Service Worker is working!',
-        icon: '/icons/icon-128x128.png',
-        badge: '/icons/icon-128x128.png',
-        data: { url: '/', notification_id: 'test_' + Date.now() }
+  const targetUrl = event.notification.data?.url || "/";
+
+  event.waitUntil(
+    clients.matchAll({ type: "window", includeUncontrolled: true })
+      .then(windowClients => {
+        // If app is already open, focus it and navigate
+        for (let client of windowClients) {
+          if (client.url.includes(self.registration.scope) && "focus" in client) {
+            client.navigate(targetUrl);
+            return client.focus();
+          }
+        }
+        // Otherwise, open new PWA window
+        if (clients.openWindow) {
+          return clients.openWindow(targetUrl);
+        }
       })
-    );
-  }
-});
-
-// Log when service worker is ready
-self.addEventListener('install', event => {
-  console.log('✅ SERVICE WORKER INSTALLED');
-  console.log('📱 Platform:', navigator.platform);
-  console.log('📱 User Agent:', navigator.userAgent);
-});
-
-self.addEventListener('activate', event => {
-  console.log('🚀 SERVICE WORKER ACTIVATED');
-  console.log('📱 Ready to handle notifications');
+      .catch(error => {
+        console.error('Error handling notification click:', error);
+        // Fallback: try to open in new window
+        if (clients.openWindow) {
+          return clients.openWindow(targetUrl);
+        }
+      })
+  );
 });
