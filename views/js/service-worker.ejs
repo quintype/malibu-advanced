@@ -26,6 +26,8 @@ self.addEventListener('activate', event => {
 
 // Handle notification deduplication for Safari
 let notificationIds = new Set();
+let isOneSignalHandling = false;
+let recentNotifications = new Map(); // Track recent notifications by content
 
 self.addEventListener("push", event => {
   console.log("Push event received:", event);
@@ -33,18 +35,45 @@ self.addEventListener("push", event => {
   // Extract notification data
   const data = event.data ? event.data.json() : {};
   const notificationId = data.notification_id || data.id || Date.now().toString();
+  const notificationContent = `${data.title || ''}-${data.body || ''}`;
+  const currentTime = Date.now();
 
-  // Prevent duplicate notifications
+  // Prevent duplicate notifications by ID
   if (notificationIds.has(notificationId)) {
-    console.log("Duplicate notification detected, skipping:", notificationId);
+    console.log("Duplicate notification detected by ID, skipping:", notificationId);
     return;
   }
+
+  // Prevent duplicate notifications by content (within last 30 seconds)
+  if (recentNotifications.has(notificationContent)) {
+    const lastTime = recentNotifications.get(notificationContent);
+    if (currentTime - lastTime < 30000) { // 30 seconds
+      console.log("Duplicate notification detected by content, skipping:", notificationContent);
+      return;
+    }
+  }
+
+  // Check if OneSignal is handling this notification
+  if (data.onesignal || data.source === 'onesignal') {
+    console.log("OneSignal handling notification, skipping service worker display:", notificationId);
+    isOneSignalHandling = true;
+    return;
+  }
+
   notificationIds.add(notificationId);
+  recentNotifications.set(notificationContent, currentTime);
 
   // Clean up old IDs
   if (notificationIds.size > 100) {
     const idsArray = Array.from(notificationIds);
     notificationIds = new Set(idsArray.slice(-100));
+  }
+
+  // Clean up old content tracking (keep only last 5 minutes)
+  for (const [content, time] of recentNotifications.entries()) {
+    if (currentTime - time > 300000) { // 5 minutes
+      recentNotifications.delete(content);
+    }
   }
 
   console.log("Processing notification:", notificationId);
@@ -72,6 +101,18 @@ self.addEventListener('notificationclose', event => {
   if (notificationId) {
     console.log('Notification closed, cleaning up:', notificationId);
     notificationIds.delete(notificationId);
+  }
+});
+
+// Listen for messages from OneSignal to coordinate notification handling
+self.addEventListener('message', event => {
+  if (event.data && event.data.type === 'ONESIGNAL_NOTIFICATION') {
+    console.log('OneSignal notification received, marking as handled');
+    isOneSignalHandling = true;
+
+    // Add to our tracking to prevent duplicates
+    const notificationId = event.data.notification_id || Date.now().toString();
+    notificationIds.add(notificationId);
   }
 });
 
