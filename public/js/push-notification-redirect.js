@@ -207,4 +207,106 @@
     console.log("PWA was just installed → asking for notifications");
     ensureNotificationsEnabled();
   });
+
+  // Debug function for troubleshooting PWA deep linking
+  window.debugPWARedirect = function () {
+    console.log("=== PWA Redirect Debug Info ===");
+    console.log("Current URL:", window.location.href);
+    console.log("User Agent:", navigator.userAgent);
+    console.log("Is Safari:", isSafari());
+    console.log("Is PWA Running:", isPWARunning());
+    console.log("Is PN Link:", isPNLink());
+    console.log("Target URL:", getTargetURL());
+    console.log("Display Mode:", window.matchMedia("(display-mode: standalone)").matches);
+    console.log("Navigator Standalone:", window.navigator.standalone);
+    console.log("Document Referrer:", document.referrer);
+
+    // Check service worker registrations
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.getRegistrations().then((registrations) => {
+        console.log("Service Worker Registrations:", registrations.length);
+        registrations.forEach((reg, index) => {
+          console.log(`SW ${index}:`, reg.scope, reg.active ? "Active" : "Inactive");
+        });
+      });
+    }
+
+    // Check OneSignal status
+    if (window.OneSignal) {
+      window.OneSignal.isPushNotificationsEnabled().then((enabled) => {
+        console.log("OneSignal Notifications Enabled:", enabled);
+      });
+    }
+
+    console.log("=== End Debug Info ===");
+  };
+
+  // New function to check Service Worker status specifically for iOS Safari PWA
+  window.checkServiceWorkerStatus = async function () {
+    console.log("🔍 Checking Service Worker Status for iOS Safari PWA...");
+
+    if (!("serviceWorker" in navigator)) {
+      console.log("❌ Service Workers not supported in this browser");
+      return;
+    }
+
+    try {
+      // Get all service worker registrations
+      const registrations = await navigator.serviceWorker.getRegistrations();
+      console.log(`📊 Found ${registrations.length} Service Worker registration(s)`);
+
+      for (let i = 0; i < registrations.length; i++) {
+        const reg = registrations[i];
+        console.log(`\n🔧 Service Worker ${i + 1}:`);
+        console.log(`   Scope: ${reg.scope}`);
+        console.log(`   Active: ${reg.active ? "✅ Yes" : "❌ No"}`);
+        console.log(`   Waiting: ${reg.waiting ? "⏳ Yes" : "❌ No"}`);
+        console.log(`   Installing: ${reg.installing ? "📥 Yes" : "❌ No"}`);
+
+        if (reg.active) {
+          console.log(`   Active SW State: ${reg.active.state}`);
+          console.log(`   Active SW Script URL: ${reg.active.scriptURL}`);
+        }
+
+        // Try to get status from the service worker
+        if (reg.active) {
+          try {
+            const status = await new Promise((resolve, reject) => {
+              const channel = new MessageChannel();
+              const timeout = setTimeout(() => reject(new Error("Timeout")), 5000);
+
+              channel.port1.onmessage = (event) => {
+                clearTimeout(timeout);
+                resolve(event.data);
+              };
+
+              reg.active.postMessage({ type: "GET_SW_STATUS" }, [channel.port2]);
+            });
+
+            console.log(`   📊 Service Worker Status:`, status);
+          } catch (error) {
+            console.log(`   ❌ Could not get SW status:`, error.message);
+          }
+        }
+      }
+
+      // Check if we're in a PWA context
+      console.log(`\n📱 PWA Context Check:`);
+      console.log(`   Display Mode Standalone: ${window.matchMedia("(display-mode: standalone)").matches}`);
+      console.log(`   Navigator Standalone: ${navigator.standalone}`);
+      console.log(`   Platform: ${navigator.platform}`);
+      console.log(`   User Agent: ${navigator.userAgent}`);
+
+      // Check if service worker is controlling this page
+      if (navigator.serviceWorker.controller) {
+        console.log(`\n🎯 Current Page Controller:`);
+        console.log(`   Controller State: ${navigator.serviceWorker.controller.state}`);
+        console.log(`   Controller Script: ${navigator.serviceWorker.controller.scriptURL}`);
+      } else {
+        console.log(`\n❌ No Service Worker controlling this page`);
+      }
+    } catch (error) {
+      console.error("❌ Error checking service worker status:", error);
+    }
+  };
 })();

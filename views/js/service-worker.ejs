@@ -10,14 +10,129 @@ const REQUIRED_ASSETS = [
   shellUrl
 ];
 
+// Service Worker Installation Status Tracking
+let swInstallStatus = {
+  installed: false,
+  activated: false,
+  controlling: false,
+  scope: null,
+  timestamp: null
+};
+
+console.log('🔄 Service Worker: Starting installation process...');
+console.log('📱 User Agent:', navigator.userAgent);
+console.log('🌐 Platform:', navigator.platform);
+console.log('📱 Standalone Mode:', window.matchMedia("(display-mode: standalone)").matches);
+console.log('🍎 iOS Standalone:', navigator.standalone);
+
+// Service Worker Install Event
+self.addEventListener('install', event => {
+  console.log('✅ Service Worker: Install event triggered');
+  console.log('📦 Caching assets:', REQUIRED_ASSETS.length, 'files');
+
+  swInstallStatus.installed = true;
+  swInstallStatus.timestamp = new Date().toISOString();
+
+  // Cache all required assets
+  event.waitUntil(
+    caches.open('malibu-pwa-v1').then(cache => {
+      console.log('📦 Cache opened successfully');
+      return cache.addAll(REQUIRED_ASSETS);
+    }).then(() => {
+      console.log('✅ All assets cached successfully');
+      console.log('📊 Install Status:', swInstallStatus);
+    }).catch(error => {
+      console.error('❌ Cache installation failed:', error);
+    })
+  );
+});
+
+// Service Worker Activate Event
+self.addEventListener('activate', event => {
+  console.log('🚀 Service Worker: Activate event triggered');
+
+  swInstallStatus.activated = true;
+
+  // Claim all clients immediately
+  event.waitUntil(
+    clients.claim().then(() => {
+      console.log('👑 Service Worker: Claimed all clients');
+      swInstallStatus.controlling = true;
+
+      // Log detailed status
+      console.log('📊 Final Installation Status:', swInstallStatus);
+      console.log('🎯 Service Worker Scope:', self.registration.scope);
+      console.log('🔗 Service Worker Location:', self.location.href);
+
+      // Check if we're controlling any clients
+      return clients.matchAll({ type: 'window', includeUncontrolled: true });
+    }).then(clients => {
+      console.log('👥 Controlled Clients:', clients.length);
+      clients.forEach((client, index) => {
+        console.log(`  Client ${index + 1}:`, {
+          url: client.url,
+          type: client.type,
+          id: client.id,
+          focused: client.focused
+        });
+      });
+    }).catch(error => {
+      console.error('❌ Activation failed:', error);
+    })
+  );
+});
+
+// Service Worker Message Handler for Status Checks
+self.addEventListener('message', event => {
+  if (event.data && event.data.type === 'GET_SW_STATUS') {
+    console.log('📊 Service Worker Status Request Received');
+
+    // Get current client info
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then(clients => {
+      const response = {
+        ...swInstallStatus,
+        clients: clients.length,
+        scope: self.registration.scope,
+        location: self.location.href,
+        userAgent: navigator.userAgent,
+        platform: navigator.platform,
+        timestamp: new Date().toISOString()
+      };
+
+      console.log('📊 Sending Status Response:', response);
+      event.ports[0].postMessage(response);
+    });
+  }
+
+  // Handle manual activation request
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    console.log('⏭️ Manual activation requested via SKIP_WAITING message');
+    self.skipWaiting();
+  }
+
+  // Existing OneSignal message handling
+  if (event.data && event.data.type === 'ONESIGNAL_NOTIFICATION') {
+    console.log('OneSignal notification received, marking as handled');
+    isOneSignalHandling = true;
+
+    // Add to our tracking to prevent duplicates
+    const notificationId = event.data.notification_id || Date.now().toString();
+    notificationIds.add(notificationId);
+  }
+});
+
 initializeQServiceWorker({
   routes: <%- JSON.stringify(routes) %>,
   assets: REQUIRED_ASSETS,
   shell: shellUrl,
   hostname: <%- JSON.stringify(hostname) %>
 });
+
 workbox.routing.registerRoute(new RegExp('/route-data.json*'), new workbox.strategies.NetworkFirst());
+
+// Force immediate activation
 self.skipWaiting();
+console.log('⏭️ Service Worker: skipWaiting() called - will activate immediately');
 
 // Add activate event listener to claim clients immediately => forces the newly activated service worker to immediately take control of all open pages (clients) under its scope, without waiting for reload.
 self.addEventListener('activate', event => {
