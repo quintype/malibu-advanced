@@ -66,13 +66,26 @@
     }
   }
 
-  // Ask for notification permission via OneSignal
+  // Ask for notification permission via OneSignal - Enhanced for iOS Safari
 
   async function ensureNotificationsEnabled() {
     if (!window.OneSignal) {
       console.log("OneSignal not available");
       return;
     }
+
+    // Detect iOS Safari
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.platform);
+    const isSafari = /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent);
+    const isIOSSafari = isIOS && isSafari;
+
+    console.log("Platform detection:", {
+      isIOS,
+      isSafari,
+      isIOSSafari,
+      platform: navigator.platform,
+      userAgent: navigator.userAgent,
+    });
 
     const permission = Notification.permission;
     console.log("Notification.permission =", permission);
@@ -84,16 +97,65 @@
 
     if (permission === "denied") {
       console.log("❌ Notifications are blocked, must be enabled in settings");
+
+      // For iOS Safari, provide specific guidance
+      if (isIOSSafari) {
+        console.log("📱 iOS Safari: Notifications blocked. User must enable in Settings > Safari > Notifications");
+        // You could show a custom UI here explaining how to enable notifications
+      }
       return;
     }
 
     // Only when permission === "default"
-    const enabled = await window.OneSignal.isPushNotificationsEnabled();
-    if (!enabled) {
-      console.log("⚠️ Notifications not enabled yet → showing OneSignal prompt");
-      await window.OneSignal.showSlidedownPrompt();
-    } else {
-      console.log("✅ OneSignal already has notifications enabled");
+    try {
+      const enabled = await window.OneSignal.isPushNotificationsEnabled();
+      console.log("OneSignal notification status:", enabled);
+
+      if (!enabled) {
+        console.log("⚠️ Notifications not enabled yet → showing OneSignal prompt");
+
+        if (isIOSSafari) {
+          // For iOS Safari, try multiple approaches
+          try {
+            // Method 1: Try slidedown prompt
+            await window.OneSignal.showSlidedownPrompt();
+            console.log("📱 iOS Safari: Slidedown prompt shown");
+          } catch (error) {
+            console.log("📱 iOS Safari: Slidedown failed, trying native prompt:", error);
+
+            // Method 2: Try native prompt
+            try {
+              await window.OneSignal.registerForPushNotifications();
+              console.log("📱 iOS Safari: Native prompt shown");
+            } catch (nativeError) {
+              console.log("📱 iOS Safari: Native prompt failed:", nativeError);
+
+              // Method 3: Try manual prompt
+              try {
+                await window.OneSignal.showNativePrompt();
+                console.log("📱 iOS Safari: Manual native prompt shown");
+              } catch (manualError) {
+                console.log("📱 iOS Safari: All prompt methods failed:", manualError);
+
+                // Method 4: Try direct permission request (may not work on iOS)
+                try {
+                  const result = await Notification.requestPermission();
+                  console.log("📱 iOS Safari: Direct permission result:", result);
+                } catch (directError) {
+                  console.log("📱 iOS Safari: Direct permission also failed:", directError);
+                }
+              }
+            }
+          }
+        } else {
+          // For other platforms, use standard approach
+          await window.OneSignal.showSlidedownPrompt();
+        }
+      } else {
+        console.log("✅ OneSignal already has notifications enabled");
+      }
+    } catch (error) {
+      console.log("Error checking/enabling notifications:", error);
     }
   }
 
