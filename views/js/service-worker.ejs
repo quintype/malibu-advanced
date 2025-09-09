@@ -23,7 +23,7 @@ workbox.routing.registerRoute(new RegExp('/route-data.json*'), new workbox.strat
 self.skipWaiting();
 console.log('skipWaiting() called - will activate immediately');
 
-var appVersion = "3";
+var appVersion = "4";
 
 if("<%= config["public-integrations"]["one-signal"] &&  config["public-integrations"]["one-signal"]["app-id"] %>") {
   importScripts('https://cdn.onesignal.com/sdks/OneSignalSDKWorker.js');
@@ -58,4 +58,29 @@ self.addEventListener('notificationclick', event => {
         }
       })
   );
+});
+
+self.addEventListener("push", event => {
+  console.log("📱 PUSH EVENT RECEIVED");
+
+  const data = event.data ? event.data.json() : {};
+  const notificationId = data.notification_id || data.id || `pn_${Date.now()}`;
+
+  // iOS Safari detection
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.platform);
+
+  if (isIOS) {
+    // iOS Safari PWA: Service worker must show notification
+    event.waitUntil(
+      self.registration.showNotification(data.title || "New Message", {
+        body: data.body || "You have a new notification",
+        icon: data.icon || "/icons/icon-192x192.png",
+        badge: data.badge || "/icons/icon-128x128.png",
+        data: {
+          url: data.url || "/",
+          notification_id: notificationId
+        }
+      })
+    );
+  }
 });
