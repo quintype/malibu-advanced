@@ -75,6 +75,11 @@ const ISOMORPHIC_ROUTES = [
     pageType: PAGE_TYPE.USER_LOGIN,
     exact: true,
   },
+  {
+    path: "/rankings/:rankingEntitySlug",
+    pageType: PAGE_TYPE.TOP15_RANKINGS,
+    exact: true,
+  },
 ];
 
 export function generateRoutes(config, domainSlug = undefined) {

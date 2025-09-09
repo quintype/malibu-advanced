@@ -1,34 +1,56 @@
-asset_host: http://localhost:8080
-sketches_host: https://malibu-advanced-web.quintype.io
+asset_host: http://localhost:8081
+sketches_host: https://fortuneindia-rpsg-uat.quintype.io
 host_to_api_host:
   help.lvh.me: https://user-documentation.quintype.io
 host_to_automatic_api_host:
   - "-web"
   - ".malibu"
 domain_mapping:
-  subdomain.lvh.me: voices
+  subdomain.lvh.me: brands
   malibu.lvh.me: localhost:3000
 publisher:
+  inTextHoverPopup: true
+  publisher-name: "fortuneindia-uat"
+  publisher-host: "https://fortuneindia-rpsg-uat.quintype.io"
+  publisher-sitemap-url: "https://www.fortuneindia.com/sitemap/sitemap-daily-2025-04-30.xml"
+  publisher-sitemap-url-visual-story: "https://www.fortuneindia.com/sitemap/sitemap-daily-2025-05-01.xml"
+  network_id: "23172162065"
   className: story-comments-widget
-  cdn_src: "gumlet"
-  cdn_image: "qtstage-01.gumlet.io"
+  cdn_src: "cloudflare"
+  cdn-image: "media-stg.assettype.com"
+  show_read_emagazine_link: true
+  read_emagazine_link: https://emagazine.fortuneindia.com
+  emagazineDesktopBgImageUrl: "https://media.fortuneindia.com/fortuneindia-uat/2025-05-02/e2dqz6rp/Emagazine.png"
+  emagazineImageUrlHome: "https://media.fortuneindia.com/fortuneindia-uat/2025-05-02/phh3fimp/e-magazine-2.png"
+  emagazineMobileBgImageUrl: "https://media.fortuneindia.com/fortuneindia-uat/2025-05-02/phh3fimp/e-magazine-2.png"
+  google_client_id: "1092633923623-hkl45p52nj37mc4d26m6409c1u096s2d.apps.googleusercontent.com"
+  enable_subscription: true
   sso_login:
     is_enable: true
-    redirect_Url: "<Domain>/auth/v1/oauth/token"
-    callback_Url: "Callback Url"
-    client_id: "Integration-id (number)"
+    redirect_Url: "https://fortuneindia-rpsg-web.qtstage.io/api/auth/v1/oauth/token"
+    callback_Url: "http://localhost:3000/"
+    client_id: 3735
     subdomain:
       voices:
         redirect_Url: "<Domain>/api/auth/v1/oauth/token"
         callback_Url: "Callback Url"
   accesstypeConfig:
-    key: "Aw4ujaqhpn8aVMT7yzQawSyZ"
-    accessTypeBkIntegrationId: 455
+    key: "PTqduuXLz1BFEitdxyavoqsG"
+    accessTypeBkIntegrationId: 1449
+  magazine_banner_story_page: Fortune India Latest Edition is Out Now!
+  latest_magazine_slug: "from-our-magazine"
+  custom_event_page:
+    - april-2025-mpw-100-most-powerful-women
+  custom_page_id: 198467
+  custom_page_entityslug: most-powerful-women-snapshot-year
+  custom_event_youtube_enabled: true
+  custom_event_youtube_link: "https://www.youtube.com/embed/DP0auvGFxLo"
   timezone: "Asia/Baku"
+  taboola: false
   auto_sso:
     is_enable: false
   google_tag_manager:
-    id: "gtm-id"
+    id: "GTM-KDCKX8M"
     is_enable: true
   google_analytics:
     id: "ga-id"
@@ -36,27 +58,40 @@ publisher:
   breaking_news:
     is_enable: true
     interval: 120
-    item_display: 1
+    item_display: 1000
     open_in_new_tab: false
-    pages: [home-page, section-page, tag-page, search-page, story-page, catalog-page, static-page, form-page]
+    collection_id: 205484
+    pages: [home-page, section-page, tag-page, search-page, story-page, static-page, form-page]
   should_use_collection: true
   enableMetype: true
   metypeConfig:
-      metypeHost: "https://www.metype.com/"
-      metypeAccountId: "1003587"
-      primaryColor: "#000"
-      backgroundColor: "#2cc7a4"
-      className: "story-commenting-widget"
-      name: "Malibu"
-  google_app_id: ""
-  facebook_app_id: ""
+    metypeHost: "https://www.metype.com/"
+    metypeAccountId: "1003587"
+    primaryColor: "#000"
+    backgroundColor: "#2cc7a4"
+    className: "story-commenting-widget"
+    name: "Malibu"
   is_verification_link_flow: true
-  enable_placeholder: true
+  enable_placeholder: false
   placeholder_delay: 3
   collectionParams:
     depth: 2
     storyLimits:
       FourColGrid: 8
       defaultTemplate: 8
-      ArrowThreeColGrid: 4
     defaultNestedLimit: 4
+  all_ranking_title: "Fortune India Rankings"
+  all_ranking_description: "The Fortune India 500 list for 2024 ranks India's largest corporations based on their total revenue for the fiscal year. Reliance Industries maintained its position as the top-ranked company, followed by the State Bank of India and Indian Oil Corporation."
+  mpw_ranking_page_title: "Most Powerful Women"
+  mpw_ranking_page_description: "The Fortune India 500 list for 2024 ranks India's largest corporations based on their total revenue for the fiscal year. Reliance Industries maintained its position as the top-ranked company, followed by the State Bank of India and Indian Oil Corporation in second and third places, respectively."
+  summary_sponsor: false
+  amp_validity_check:
+    - data
+    - jsembed
+general:
+  amp:
+    enableAutoAdvance: true
+mailchimp:
+  apiKey: 9ab68168d203e1611bc72edefa481bc5-us20
+  serverPrefix: us20
+  listId: 120d013a76

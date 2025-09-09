@@ -14,6 +14,14 @@ import { loadFormPageData } from "./data-loaders/form-page-data";
 import { getNavigationMenuArray } from "./data-loaders/menu-data";
 import { loadCollectionPageData } from "./data-loaders/collection-page-data";
 import { loadAuthorPageData } from "./data-loaders/author-page-data";
+import { loadTop15RankingsData } from "./data-loaders/top15-rankings-data";
+import { loadRankingsPageData } from "./data-loaders/rankings-page-data";
+import { loadMnc500PageData } from "./data-loaders/mnc-500-page-data";
+import { loadTop15Next500Data } from "./data-loaders/top-15-next-500-data";
+import { loadTop15BSchoolsData } from "./data-loaders/top-15-b-schools-data";
+import { loadRankingsTableData } from "./data-loaders/rankings-table-data";
+import { loadBestBSchoolsPageData } from "./data-loaders/best-b-schools-page-data";
+import { loadTop100BillionairesData } from "./data-loaders/top-100-billionaires-data";
 import { PAGE_TYPE } from "../isomorphic/constants";
 
 const { ads } = require("@quintype/framework/server/static-configuration");
@@ -84,6 +92,8 @@ export function loadData(pageType, params, config, client, { host, next, domainS
         return loadFormPageData(client, params.formSlug, next);
       case PAGE_TYPE.AUTHOR_PAGE:
         return loadAuthorPageData(client, params.authorSlug, config, next);
+      case PAGE_TYPE.TOP15_RANKINGS:
+        return loadTop15RankingsData(client, params.rankingEntitySlug, config);
       default:
         return Promise.resolve({ error: { message: "No Loader" } });
     }
