@@ -74,8 +74,21 @@
       return;
     }
 
-    const permission = Notification.permission;
+    let permission = Notification.permission;
     console.log("Notification.permission =", permission);
+
+    try {
+      const maybeOsPermission = window.OneSignal?.Notifications?.permission;
+      const osPermission = typeof maybeOsPermission === "function" ? await maybeOsPermission() : maybeOsPermission;
+      if (osPermission) {
+        console.log("OneSignal.Notifications.permission =", osPermission);
+        permission = osPermission;
+      }
+    } catch (e) {
+      console.log("Failed to read OneSignal.Notifications.permission", e);
+    }
+
+    console.log("Effective notification permission =", permission);
 
     if (permission === "granted") {
       console.log("✅ Notifications already allowed");
@@ -84,9 +97,51 @@
 
     if (permission === "denied") {
       console.log("❌ Notifications are blocked, must be enabled in settings");
-      return;
     }
+  }
 
+  // Helper to log notification permission states (native + OneSignal)
+  async function logOneSignalPermission(context) {
+    try {
+      const platform = navigator.platform;
+      const ua = navigator.userAgent;
+      const displayModeStandalone = window.matchMedia("(display-mode: standalone)").matches;
+      console.log(
+        `🔎 [Permission Log${context ? `: ${context}` : ""}] platform=${platform} standalone=${displayModeStandalone}`
+      );
+      console.log("🔎 UA:", ua);
+
+      const nativePermission = Notification?.permission;
+      console.log("🔎 Native Notification.permission:", nativePermission);
+
+      if (window.OneSignal) {
+        const maybeOsPermission = window.OneSignal?.Notifications?.permission;
+        const osPermission = typeof maybeOsPermission === "function" ? await maybeOsPermission() : maybeOsPermission;
+        console.log("🔎 OneSignal.Notifications.permission:", osPermission);
+
+        if (typeof window.OneSignal?.isPushNotificationsEnabled === "function") {
+          try {
+            const enabled = await window.OneSignal.isPushNotificationsEnabled();
+            console.log("🔎 OneSignal.isPushNotificationsEnabled():", enabled);
+          } catch (e) {
+            console.log("🔎 OneSignal.isPushNotificationsEnabled() failed:", e?.message || e);
+          }
+        }
+
+        if (typeof window.OneSignal?.getUserId === "function") {
+          try {
+            const userId = await window.OneSignal.getUserId();
+            console.log("🔎 OneSignal.getUserId():", userId);
+          } catch (e) {
+            console.log("🔎 OneSignal.getUserId() failed:", e?.message || e);
+          }
+        }
+      } else {
+        console.log("🔎 OneSignal object not present on window");
+      }
+    } catch (e) {
+      console.log("🔎 Permission log error:", e?.message || e);
+    }
   }
 
   // Detect if current URL is a PN link
@@ -174,6 +229,8 @@
       if (installed) {
         console.log("Running as PWA → check notifications");
         ensureNotificationsEnabled();
+        // Log detailed permission state for debugging (especially on iOS PWA)
+        logOneSignalPermission("initApp");
 
         // Check if this is a Safari PWA launch from notification
         if (isSafari() && window.location.search.includes("safari_deep_link=true")) {
@@ -193,6 +250,34 @@
   } else {
     initApp();
   }
+
+  // Expose manual logger for debugging in console
+  window.logOneSignalPermission = function () {
+    return logOneSignalPermission("manual");
+  };
+
+  // Re-log when window gains focus or becomes visible (useful on iOS PWA)
+  window.addEventListener("focus", function () {
+    logOneSignalPermission("window:focus");
+  });
+  document.addEventListener("visibilitychange", function () {
+    if (document.visibilityState === "visible") {
+      logOneSignalPermission("visibility:visible");
+    }
+  });
+
+  // Retry logging a few times while OneSignal initializes
+  (function retryLogOneSignalPermission() {
+    let attempts = 0;
+    const maxAttempts = 10;
+    const intervalId = setInterval(function () {
+      attempts += 1;
+      if (window.OneSignal || attempts >= maxAttempts) {
+        clearInterval(intervalId);
+        logOneSignalPermission(window.OneSignal ? "onesignal:ready-or-present" : "onesignal:not-present-after-retries");
+      }
+    }, 1000);
+  })();
 
   // ✅ Only prompt for notifications when the user actually installs the app
   window.addEventListener("appinstalled", () => {

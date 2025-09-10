@@ -7,7 +7,7 @@ import { REDUCERS } from "../isomorphic/components/store/reducers";
 import "../../app/assets/stylesheets/app.scss";
 
 const opts = {
-  enableServiceWorker: process.env.NODE_ENV === "production",
+  enableServiceWorker: true,
   appVersion: require("../isomorphic/app-version"),
   preRenderApplication
 };
