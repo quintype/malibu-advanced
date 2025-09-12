@@ -27,10 +27,10 @@ const WHITELIST_CONFIG_KEYS = [
   "publisher-name",
   "public-integrations",
   "sketches-host",
-  "publisher-settings"
+  "publisher-settings",
 ];
 
-const svgSpritePath = Array.from(getAssetFiles()).find(asset => asset.includes("sprite"));
+const svgSpritePath = Array.from(getAssetFiles()).find((asset) => asset.includes("sprite"));
 
 export function getPublisherAttributes(publisherYml = publisher) {
   const publisherAttributes = get(publisherYml, ["publisher"], {});
@@ -42,15 +42,15 @@ export function loadErrorData(error, config) {
   const errorComponents = { 404: "not-found" };
   return Promise.resolve({
     data: {
-      navigationMenu: getNavigationMenuArray(config.layout.menu, config.sections)
+      navigationMenu: getNavigationMenuArray(config.layout.menu, config.sections),
     },
     config: Object.assign(pick(config.asJson(), WHITELIST_CONFIG_KEYS), {
       "publisher-attributes": publisherAttributes,
       "ads-config": ads,
-      svgSpritePath
+      svgSpritePath,
     }),
     pageType: errorComponents[error.httpStatusCode],
-    httpStatusCode: error.httpStatusCode || 500
+    httpStatusCode: error.httpStatusCode || 500,
   });
 }
 
@@ -78,6 +78,8 @@ export function loadData(pageType, params, config, client, { host, next, domainS
         return loadStoryPublicPreviewPageData(client, params, config);
       case PAGE_TYPE.STATIC_PAGE:
         return Promise.resolve({ cacheKeys: ["static"] });
+      case PAGE_TYPE.PWA_SHELL:
+        return Promise.resolve({});
       case PAGE_TYPE.SEARCH_PAGE:
         return loadSearchPageData(client, params.q, config);
       case PAGE_TYPE.FORM_PAGE:
@@ -89,13 +91,13 @@ export function loadData(pageType, params, config, client, { host, next, domainS
     }
   }
 
-  return _loadData().then(data => {
+  return _loadData().then((data) => {
     return {
       httpStatusCode: data.httpStatusCode || 200,
       pageType: data.pageType || pageType,
       data: Object.assign({}, data, {
         navigationMenu: getNavigationMenuArray(config.layout.menu, config.sections),
-        timezone: publisherAttributes.timezone || null
+        timezone: publisherAttributes.timezone || null,
       }),
       config: Object.assign(pick(config.asJson(), WHITELIST_CONFIG_KEYS), {
         "publisher-attributes": publisherAttributes,
@@ -103,8 +105,8 @@ export function loadData(pageType, params, config, client, { host, next, domainS
         "ads-config": ads,
         svgSpritePath,
         domainSlug,
-        showPlaceholder: publisherAttributes.enable_placeholder
-      })
+        showPlaceholder: publisherAttributes.enable_placeholder,
+      }),
     };
   });
 }
