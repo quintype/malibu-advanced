@@ -2,7 +2,7 @@ const SpriteLoaderPlugin = require("svg-sprite-loader/plugin");
 const path = require("path");
 const webpackConfig = require("@quintype/build/config/webpack");
 
-const { plugins, output, module: webpackModule } = webpackConfig;
+const { plugins, output, module: webpackModule, resolve = {} } = webpackConfig;
 if (process.env.NODE_ENV !== "production") output.path = path.resolve("./public");
 const getSpritePlugin = () => new SpriteLoaderPlugin({ plainSprite: true });
 const insertIntoIndex = (arr, index, newItem) => [...arr.slice(0, index), newItem, ...arr.slice(index)];
@@ -34,4 +34,14 @@ module.exports = {
   ...webpackConfig,
   module: { ...webpackModule, ...{ rules: enhancedRules } },
   plugins: enhancedPlugins,
+  resolve: {
+    ...resolve,
+    alias: {
+      ...(resolve.alias || {}),
+      //redirect legacy react-dom usage to a compat layer that provides hydrate/render
+      "react-dom$": path.resolve(__dirname, "./app/client/react-dom-compat.js"),
+      //provide a way for the compat layer to import the real react-dom entry
+      "react-dom/raw": require.resolve("react-dom"),
+    },
+  },
 };

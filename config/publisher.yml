@@ -42,12 +42,12 @@ publisher:
   should_use_collection: true
   enableMetype: true
   metypeConfig:
-      metypeHost: "https://www.metype.com/"
-      metypeAccountId: "1003587"
-      primaryColor: "#000"
-      backgroundColor: "#2cc7a4"
-      className: "story-commenting-widget"
-      name: "Malibu"
+    metypeHost: "https://www.metype.com/"
+    metypeAccountId: "1003587"
+    primaryColor: "#000"
+    backgroundColor: "#2cc7a4"
+    className: "story-commenting-widget"
+    name: "Malibu"
   google_app_id: ""
   facebook_app_id: ""
   is_verification_link_flow: true

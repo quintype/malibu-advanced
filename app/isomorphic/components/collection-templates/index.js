@@ -1,5 +1,6 @@
 import React from "react";
-import { wrapCollectionLayout, EagerLoadImages } from "@quintype/components";
+import { wrapCollectionLayout } from "@quintype/components";
+import { EagerLoadImages } from "../EagerLoadImages";
 import { FourColGrid } from "./four-col-grid";
 import {
   ArrowElevenStories,

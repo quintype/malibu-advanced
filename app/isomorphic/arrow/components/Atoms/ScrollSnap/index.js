@@ -44,23 +44,29 @@ export const ScrollSnap = ({ children, isArrow, interval, isInfinite, pauseOnHov
   const indicatorItems = children.slice(0, numberOfIndicatorsToShow);
 
   useEffect(() => {
-    if (scroller.current) {
-      scroller.current.addEventListener(
-        "scroll",
-        setIndicatorValue(() => {
-          const value = Math.round((scroller.current.scrollLeft / scroller.current.scrollWidth) * noOfItems);
-          setSelectedIndex(Math.abs(value));
-        }, 150)
-      );
+    if (!scroller.current) return;
 
-      // For Default Selection if selectedIndex is not 0 then manually select it
-      if (selectedIndex !== 0) {
-        updateItemSelection(selectedIndex);
+    // Create the scroll handler function
+    const scrollHandler = setIndicatorValue(() => {
+      if (scroller.current) {
+        const value = Math.round((scroller.current.scrollLeft / scroller.current.scrollWidth) * noOfItems);
+        setSelectedIndex(Math.abs(value));
       }
+    }, 150);
+
+    // Add the event listener
+    scroller.current.addEventListener("scroll", scrollHandler);
+
+    // For Default Selection if selectedIndex is not 0 then manually select it
+    if (selectedIndex !== 0) {
+      updateItemSelection(selectedIndex);
     }
 
+    // Cleanup: remove event listener
     return () => {
-      scroller.current.removeEventListener("scroll", setIndicatorValue);
+      if (scroller.current) {
+        scroller.current.removeEventListener("scroll", scrollHandler);
+      }
     };
   }, []);
 
