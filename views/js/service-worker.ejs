@@ -19,6 +19,6 @@ initializeQServiceWorker({
 
 workbox.routing.registerRoute(new RegExp('/route-data.json*'), new workbox.strategies.NetworkFirst());
 
-if("<%= config["public-integrations"]["one-signal"] &&  config["public-integrations"]["one-signal"]["app-id"] %>") {
-  importScripts('https://cdn.onesignal.com/sdks/OneSignalSDKWorker.js');
-}
+self.skipWaiting();
+var izCacheVer = "2";
+importScripts("https://cdn.izooto.com/scripts/workers/8835738c3e6aabeb511545ec259bd86039dca4bf.js");

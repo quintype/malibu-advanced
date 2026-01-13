@@ -75,6 +75,11 @@ const ISOMORPHIC_ROUTES = [
     pageType: PAGE_TYPE.USER_LOGIN,
     exact: true,
   },
+  {
+    path: '/shell.html',
+    pageType: PAGE_TYPE.PWA_SHELL,
+    exact: true,
+  },
 ];
 
 export function generateRoutes(config, domainSlug = undefined) {
