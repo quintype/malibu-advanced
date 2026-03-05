@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { loadRelatedStories } from "../../../api/utils";
 import { TextStory, LiveBlogStory, ListicleStory, PhotoStory, VideoStory } from "./index";
-import { AdPlaceholder } from "../../arrow/components/Atoms/AdPlaceholder";
+import { AdPlaceholder } from "../atoms/AdPlaceholder";
 import { object, func } from "prop-types";
 
 function StoryWrapper({ isATGlobal, story, config, initAccessType, checkAccess }) {

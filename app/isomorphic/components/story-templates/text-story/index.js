@@ -1,5 +1,6 @@
 import React from "react";
-import TextStoryTemplate from "../../../arrow/components/Rows/StoryTemplates/TextStoryTemplates";
+import { TextStoryTemplate } from "@quintype/arrow";
+import "@quintype/arrow/TextStoryTemplate/styles.arrow.css";
 import { object, func, bool } from "prop-types";
 
 const TextStory = ({ story, config, adWidget, adPlaceholder, hasAccess }) => {

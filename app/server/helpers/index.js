@@ -36,15 +36,15 @@ export async function getArrowCss(state, { qtAssetHelpers = require("@quintype/f
 
   switch (storyTemplateTypes[storyTemplate]) {
     case "TextStory":
-      return getAsset("arrowTextStoryCssChunk.css", qtAssetHelpers);
+      return await extractor("arrowTextStoryCssChunk");
     case "ListicleStory":
-      return getAsset("arrowListicleStoryCssChunk.css", qtAssetHelpers);
+      return await extractor("arrowListicleStoryCssChunk");
     case "LiveBlogStory":
-      return getAsset("arrowLiveBlogStoryCssChunk.css", qtAssetHelpers);
+      return await extractor("arrowLiveBlogStoryCssChunk");
     case "PhotoStory":
-      return getAsset("arrowPhotoStoryCssChunk.css", qtAssetHelpers);
+      return await extractor("arrowPhotoStoryCssChunk");
     case "VideoStory":
-      return getAsset("arrowVideoStoryCssChunk.css", qtAssetHelpers);
+      return await extractor("arrowVideoStoryCssChunk");
   }
 
   switch (layout) {

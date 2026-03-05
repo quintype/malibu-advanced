@@ -1,5 +1,6 @@
 import React from "react";
-import FullScreenSlider from "../../../../arrow/components/Rows/FullScreenSlider";
+import { FullScreenSlider } from "@quintype/arrow";
+import "@quintype/arrow/FullScreenSlider/styles.arrow.css";
 import { object } from "prop-types";
 
 export const ArrowFullScreenSlider = ({ collection }) => {

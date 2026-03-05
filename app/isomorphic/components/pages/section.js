@@ -3,7 +3,8 @@ import { string, shape, object } from "prop-types";
 import get from "lodash/get";
 import { collectionToStories, LazyCollection } from "@quintype/components";
 import { useSelector } from "react-redux";
-import OneColStoryList from "../../arrow/components/Rows/OneColStoryList";
+import { OneColStoryList } from "@quintype/arrow";
+import "@quintype/arrow/OneColStoryList/styles.arrow.css";
 
 import { getCollectionTemplate } from "../get-collection-template";
 import { DfpComponent } from "../ads/dfp-component";

@@ -1,5 +1,6 @@
 import React from "react";
-import LiveBlogStoryTemplate from "../../../arrow/components/Rows/StoryTemplates/LiveBlogStoryTemplates";
+import { LiveBlogStoryTemplate } from "@quintype/arrow";
+import "@quintype/arrow/LiveBlogStoryTemplate/styles.arrow.css";
 import { object, func } from "prop-types";
 
 const LiveBlogStory = ({ story, config, adWidget, adPlaceholder, hasAccess }) => {

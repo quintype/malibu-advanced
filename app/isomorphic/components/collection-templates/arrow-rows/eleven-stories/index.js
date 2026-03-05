@@ -1,5 +1,6 @@
 import React from "react";
-import ElevenStories from "../../../../arrow/components/Rows/ElevenStories";
+import { ElevenStories } from "@quintype/arrow";
+import "@quintype/arrow/ElevenStories/styles.arrow.css";
 import { object } from "prop-types";
 
 export const ArrowElevenStories = ({ collection }) => {

@@ -1,5 +1,6 @@
 import React from "react";
-import VideoStoryTemplate from "../../../arrow/components/Rows/StoryTemplates/VideoStoryTemplates";
+import { VideoStoryTemplate } from "@quintype/arrow";
+import "@quintype/arrow/VideoStoryTemplate/styles.arrow.css";
 import { object, func } from "prop-types";
 
 const VideoStory = ({ story, config, adWidget, adPlaceholder, hasAccess }) => {

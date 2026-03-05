@@ -1,5 +1,6 @@
 import React from "react";
-import PhotoStoryTemplate from "../../../arrow/components/Rows/StoryTemplates/PhotoStoryTemplates";
+import { PhotoStoryTemplates as PhotoStoryTemplate } from "@quintype/arrow";
+import "@quintype/arrow/PhotoStoryTemplate/styles.arrow.css";
 import { object, func } from "prop-types";
 
 const PhotoStory = ({ story, config, adWidget, adPlaceholder, hasAccess }) => {

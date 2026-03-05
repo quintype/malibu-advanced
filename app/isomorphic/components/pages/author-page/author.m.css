@@ -1,6 +1,3 @@
-:global {
-  @import "../../../arrow/components/Rows/AuthorIntroductionCard/author-intro.m.css";
-}
 .wrapper {
   :global .arr--author-intro-card {
     figure {

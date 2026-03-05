@@ -1,5 +1,6 @@
 import React from "react";
-import ListicleStoryTemplate from "../../../arrow/components/Rows/StoryTemplates/ListicleStoryTemplates";
+import { ListicleStoryTemplate } from "@quintype/arrow";
+import "@quintype/arrow/ListicleStoryTemplate/styles.arrow.css";
 import { object, func } from "prop-types";
 
 const ListicleStory = ({ story, config, adWidget, adPlaceholder, hasAccess }) => {

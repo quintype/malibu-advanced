@@ -33,9 +33,17 @@ RUN apk update && \
 
 ENV NODE_ENV production
 WORKDIR /app
+
+COPY package.json package-lock.json /app/
+RUN npm ci --omit=dev --no-optional
+
 USER app
+
+COPY --from=build --chown=app:app /app/public ./public
+COPY --from=build --chown=app:app /app/app ./app
+COPY --from=build --chown=app:app /app/views ./views
+COPY --from=build --chown=app:app /app/config ./config
+COPY --from=build --chown=app:app /app/start.js ./start.js
 
 ENTRYPOINT ["/sbin/tini", "--"]
 CMD ["node", "start.js"]
-
-COPY --from=build --chown=app:app /app /app
