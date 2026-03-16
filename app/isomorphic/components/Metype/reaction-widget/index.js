@@ -1,30 +1,31 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { scriptLoader } from "../index";
 
 const MetypeReactionsWidget = (props) => {
   // eslint-disable-next-line react/prop-types
   const { accountId, host, storyUrl, storyId, fontUrl, fontFamily } = props;
-  const [triggerInitPageReactions, setTriggerInitPageReactions] = useState(false);
-  const reactionWrapper =
-    typeof document !== "undefined" && document.getElementById(`metype-page-reactions-container-${storyId}`);
-
-  useEffect(() => {
-    !window.talktype && scriptLoader(host, () => initPageReactions(storyId));
-
-    if (triggerInitPageReactions) {
-      initPageReactions(storyId);
-    }
-  }, [triggerInitPageReactions]);
-
-  if (reactionWrapper && !triggerInitPageReactions) {
-    setTriggerInitPageReactions(true);
-  }
 
   const initPageReactions = () => {
-    if (window.talktype && reactionWrapper) {
-      window.talktype.pageReactionsIframe(reactionWrapper);
+    const el = document.getElementById(`metype-page-reactions-container-${storyId}`);
+    if (el && window.talktype && typeof window.talktype.pageReactionsIframe === "function") {
+      window.talktype.pageReactionsIframe(el);
     }
   };
+
+  useEffect(() => {
+    if (window.talktype && window.talktype.pageReactionsIframe) {
+      // Real implementation already loaded
+      initPageReactions();
+    } else if (window.talktype) {
+      // Queue stub exists (from EJS feed widget) — wait for real implementation via queue
+      window.talktype(function () {
+        initPageReactions();
+      });
+    } else {
+      // No talktype at all — load script ourselves
+      scriptLoader(host, () => initPageReactions());
+    }
+  }, []);
 
   return (
     <div

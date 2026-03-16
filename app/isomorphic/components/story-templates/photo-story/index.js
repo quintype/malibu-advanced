@@ -1,8 +1,8 @@
 import React from "react";
-import PhotoStoryTemplate from "../../../arrow/components/Rows/StoryTemplates/PhotoStoryTemplates";
-import { object, func } from "prop-types";
+import { PhotoStoryTemplates as PhotoStoryTemplate } from "@quintype/arrow";
+import { object, func, node } from "prop-types";
 
-const PhotoStory = ({ story, config, adWidget, adPlaceholder, hasAccess }) => {
+const PhotoStory = ({ story, config, adWidget, widgetComp, secondChild, adPlaceholder, hasAccess }) => {
   const templateSpecific = {
     templateType: "hero-priority-center",
     showSection: false,
@@ -12,9 +12,9 @@ const PhotoStory = ({ story, config, adWidget, adPlaceholder, hasAccess }) => {
       story={story}
       config={{ ...config, ...templateSpecific }}
       adComponent={adWidget}
-      widgetComp={adWidget}
+      widgetComp={widgetComp || adWidget}
       firstChild={adPlaceholder}
-      secondChild={adPlaceholder}
+      secondChild={secondChild !== undefined ? secondChild : adPlaceholder}
       hasAccess={hasAccess}
     />
   );
@@ -24,7 +24,9 @@ PhotoStory.propTypes = {
   story: object,
   config: object,
   adWidget: func,
-  adPlaceholder: object,
+  widgetComp: func,
+  secondChild: node,
+  adPlaceholder: node,
   hasAccess: func,
 };
 

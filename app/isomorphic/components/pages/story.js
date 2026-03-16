@@ -56,21 +56,24 @@ StoryPageBase.propTypes = {
 
 const FIELDS =
   "id,headline,slug,url,hero-image-s3-key,hero-image-metadata,first-published-at,last-published-at,alternative,published-at,author-name,author-id,sections,authors,story-template,cards,access";
-function storyPageLoadItems(pageNumber) {
-  return global
-    .wretch("/api/v1/stories")
-    .query({
-      fields: FIELDS,
-      limit: 5,
-      offset: 5 * pageNumber,
-    })
-    .get()
-    .json((response) =>
-      response.stories.map((story) => ({ story, currentPath: `/${story.slug}`, otherProp: "value" }))
-    );
-}
 
 export function StoryPage(props) {
+  const config = get(props, ["data", "config"], {});
+
+  function storyPageLoadItems(pageNumber) {
+    return global
+      .wretch("/api/v1/stories")
+      .query({
+        fields: FIELDS,
+        limit: 5,
+        offset: 5 * pageNumber,
+      })
+      .get()
+      .json((response) =>
+        response.stories.map((story) => ({ story, config, currentPath: `/${story.slug}` }))
+      );
+  }
+
   return (
     <div className="container">
       <InfiniteStoryBase
@@ -78,7 +81,7 @@ export function StoryPage(props) {
         render={StoryPageBase}
         loadItems={storyPageLoadItems}
         onInitialItemFocus={(item) =>
-          app.registerPageView({ pageType: "story-page", data: { story: item.story } }, `/${item.story.slug}`)
+          typeof app !== "undefined" && app.registerPageView({ pageType: "story-page", data: { story: item.story } }, `/${item.story.slug}`)
         }
         onItemFocus={(item) => console.log(`Story In View: ${item.story.headline}`)}
         changeUrlTo={(item) => item.currentPath || props.currentPath}

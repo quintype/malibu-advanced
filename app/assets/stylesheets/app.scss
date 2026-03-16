@@ -6,7 +6,7 @@
 @import "./base/colors";
 @import "./base/normalize";
 @import "./base/typography";
-@import "../arrow/stylesheets/app.scss";
+@import "~@quintype/arrow/app.scss";
 
 :root {
   --container-width: 1280px;

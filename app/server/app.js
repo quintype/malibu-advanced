@@ -94,14 +94,17 @@ ampRoutes(app, {
   seo: generateSeo,
 
   featureConfig: {
+    ampPageBasePath: "/ampstories",
     subscriptions: {
       services: {
         authorizationUrl: ({ story, config }) => {
-          const { key, accessTypeBkIntegrationId } = config.additionalConfig.publisher.accesstypeConfig;
+          const { key = "", accessTypeBkIntegrationId = "" } =
+            (config.additionalConfig && config.additionalConfig.publisher && config.additionalConfig.publisher.accesstypeConfig) || {};
           return `https://malibu-advanced-web.qtstage.io/api/access/v1/stories/${story["story-content-id"]}/amp-access?key=${key}&accesstype_integration_id=${accessTypeBkIntegrationId}&rid=READER_ID&url=SOURCE_URL`;
         },
         pingbackUrl: ({ story, config }) => {
-          const { key, accessTypeBkIntegrationId } = config.additionalConfig.publisher.accesstypeConfig;
+          const { key = "", accessTypeBkIntegrationId = "" } =
+            (config.additionalConfig && config.additionalConfig.publisher && config.additionalConfig.publisher.accesstypeConfig) || {};
           return `https://malibu-advanced-web.qtstage.io/api/access/v1/stories/${story["story-content-id"]}/amp-access?key=${key}&accesstype_integration_id=${accessTypeBkIntegrationId}&rid=READER_ID&url=SOURCE_URL`;
         },
         actions: {

@@ -32,6 +32,7 @@ enhancedRules[8] = {
 
 module.exports = {
   ...webpackConfig,
+  resolve: { ...webpackConfig.resolve, symlinks: false },
   module: { ...webpackModule, ...{ rules: enhancedRules } },
   plugins: enhancedPlugins,
 };

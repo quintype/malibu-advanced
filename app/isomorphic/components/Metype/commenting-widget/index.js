@@ -21,20 +21,8 @@ const MetypeCommentsWidget = (props) => {
   } = props;
   const randomNumber = storyId;
 
-  useEffect(() => {
-    !window.talktype && scriptLoader(host, () => initWidget(randomNumber));
-    initWidget(randomNumber);
-  }, []);
-
-  useEffect(() => {
-    if (message !== null) {
-      window.talktype.accountUserLogout();
-      initWidget(randomNumber);
-    }
-  }, [message]);
-
-  const initWidget = (randomNumber) => {
-    if (window.talktype) {
+  const initWidget = () => {
+    if (window.talktype && typeof window.talktype.commentWidgetIframe === "function") {
       jwt &&
         !message &&
         window.talktype.accountUserLogin({
@@ -44,13 +32,35 @@ const MetypeCommentsWidget = (props) => {
     }
   };
 
+  useEffect(() => {
+    if (window.talktype && typeof window.talktype.commentWidgetIframe === "function") {
+      // Real implementation already loaded
+      initWidget();
+    } else if (window.talktype) {
+      // Queue stub exists (from EJS feed widget) — wait for real implementation via queue
+      window.talktype(function () {
+        initWidget();
+      });
+    } else {
+      // No talktype at all — load script ourselves
+      scriptLoader(host, () => initWidget());
+    }
+  }, []);
+
+  useEffect(() => {
+    if (message !== null) {
+      window.talktype.accountUserLogout();
+      initWidget();
+    }
+  }, [message]);
+
   return (
     <div>
       <div
         id={`metype-container-${randomNumber}`}
-        className={`iframe-container ${className}`}
+        className={`iframe-container ${className || ""}`}
         data-metype-account-id={accountId}
-        data-metype-host={host} // Change fallback to deployed domain name
+        data-metype-host={host}
         data-metype-primary-color={primaryColor || "#3a9fdd"}
         data-metype-bg-color={secondaryColor || "transparent"}
         data-metype-font-color={fontColor || "#4a4a4a"}

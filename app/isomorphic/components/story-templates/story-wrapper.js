@@ -1,22 +1,38 @@
 import React, { useState, useEffect } from "react";
 import { loadRelatedStories } from "../../../api/utils";
 import { TextStory, LiveBlogStory, ListicleStory, PhotoStory, VideoStory } from "./index";
-import { AdPlaceholder } from "../../arrow/components/Atoms/AdPlaceholder";
+import { AdPlaceholder } from "@quintype/arrow";
+import { MetypeCommentsWidget } from "../Metype/commenting-widget";
+import { useSelector } from "react-redux";
+import get from "lodash/get";
 import { object, func } from "prop-types";
 
 function StoryWrapper({ isATGlobal, story, config, initAccessType, checkAccess }) {
   const [hasAccess, setHasAccess] = useState(true);
   const [relatedStories, setRelatedStories] = useState([]);
   const storyTemplate = story["story-template"];
+  const metypeConfig = useSelector((state) =>
+    get(state, ["qt", "config", "publisher-attributes", "metypeConfig"], {})
+  );
 
   const adWidget = () => {
     return <AdPlaceholder height="250px" width="300px" />;
   };
 
+  const metypeElement =
+    metypeConfig.metypeAccountId && metypeConfig.metypeHost ? (
+      <MetypeCommentsWidget
+        host={metypeConfig.metypeHost}
+        accountId={String(metypeConfig.metypeAccountId)}
+        storyId={story.id}
+        pageURL={story.url}
+      />
+    ) : null;
+
   const templateConfig = {
     asideCollection: {
       data: relatedStories,
-      slotData: [
+      slots: [
         {
           type: "ad",
         },
@@ -38,6 +54,7 @@ function StoryWrapper({ isATGlobal, story, config, initAccessType, checkAccess }
     },
     templateType: "default",
     showSection: true,
+    noOfVisibleCards: -1,
     publishedDetails: {
       enablePublishedTime: true,
       enableUpdatedTime: true,
@@ -50,12 +67,14 @@ function StoryWrapper({ isATGlobal, story, config, initAccessType, checkAccess }
   }, []);
 
   useEffect(() => {
-    initAccessType(() => {
-      checkAccess(story.id).then((res) => {
-        const { granted } = res[story.id];
-        setHasAccess(granted);
+    if (isATGlobal && initAccessType) {
+      initAccessType(() => {
+        checkAccess(story.id).then((res) => {
+          const { granted } = res[story.id];
+          setHasAccess(granted);
+        });
       });
-    });
+    }
   }, [isATGlobal]);
 
   // Can switch to a different template based story-template, or only show a spoiler if index > 0
@@ -66,6 +85,7 @@ function StoryWrapper({ isATGlobal, story, config, initAccessType, checkAccess }
           story={story}
           config={{ ...config, ...templateConfig }}
           adWidget={adWidget}
+          secondChild={metypeElement || <AdPlaceholder height="250px" width="300px" />}
           adPlaceholder={<AdPlaceholder height="250px" width="300px" />}
           hasAccess={hasAccess}
         />
@@ -76,6 +96,7 @@ function StoryWrapper({ isATGlobal, story, config, initAccessType, checkAccess }
           story={story}
           config={{ ...config, ...templateConfig }}
           adWidget={adWidget}
+          secondChild={metypeElement || <AdPlaceholder height="250px" width="300px" />}
           adPlaceholder={<AdPlaceholder height="250px" width="300px" />}
           hasAccess={hasAccess}
         />
@@ -86,6 +107,7 @@ function StoryWrapper({ isATGlobal, story, config, initAccessType, checkAccess }
           story={story}
           config={{ ...config, ...templateConfig }}
           adWidget={adWidget}
+          secondChild={metypeElement || <AdPlaceholder height="250px" width="300px" />}
           adPlaceholder={<AdPlaceholder height="250px" width="300px" />}
           hasAccess={hasAccess}
         />
@@ -96,6 +118,7 @@ function StoryWrapper({ isATGlobal, story, config, initAccessType, checkAccess }
           story={story}
           config={{ ...config, ...templateConfig }}
           adWidget={adWidget}
+          secondChild={metypeElement || <AdPlaceholder height="250px" width="300px" />}
           adPlaceholder={<AdPlaceholder height="250px" width="300px" />}
           hasAccess={hasAccess}
         />
@@ -106,6 +129,7 @@ function StoryWrapper({ isATGlobal, story, config, initAccessType, checkAccess }
           story={story}
           config={{ ...config, ...templateConfig }}
           adWidget={adWidget}
+          secondChild={metypeElement || <AdPlaceholder height="250px" width="300px" />}
           adPlaceholder={<AdPlaceholder height="250px" width="300px" />}
           hasAccess={hasAccess}
         />
@@ -116,6 +140,7 @@ function StoryWrapper({ isATGlobal, story, config, initAccessType, checkAccess }
           story={story}
           config={{ ...config, ...templateConfig }}
           adWidget={adWidget}
+          secondChild={metypeElement || <AdPlaceholder height="250px" width="300px" />}
           adPlaceholder={<AdPlaceholder height="250px" width="300px" />}
           hasAccess={hasAccess}
         />
