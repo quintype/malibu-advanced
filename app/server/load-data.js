@@ -97,14 +97,14 @@ export function loadData(pageType, params, config, client, { host, next, domainS
         navigationMenu: getNavigationMenuArray(config.layout.menu, config.sections),
         timezone: publisherAttributes.timezone || null
       }),
-      config: Object.assign(pick(config.asJson(), WHITELIST_CONFIG_KEYS), {
+      config: {
         "publisher-attributes": publisherAttributes,
         "image-cdn-format": "gumlet",
         "ads-config": ads,
         svgSpritePath,
         domainSlug,
         showPlaceholder: publisherAttributes.enable_placeholder
-      })
+      }
     };
   });
 }
