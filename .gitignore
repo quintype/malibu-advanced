@@ -67,3 +67,5 @@ typings/
 
 .DS_Store
 stats.json
+
+venv/

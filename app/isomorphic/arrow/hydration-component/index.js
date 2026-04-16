@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import ReactDOM from "react-dom";
+import { createRoot, hydrateRoot } from "react-dom/client";
 import useNearScreen from "./useNearScreen";
 
 import PropTypes from "prop-types";
@@ -10,6 +10,7 @@ const isServer = typeof window === "undefined";
 export const ProgressiveHydration = (props) => {
   const { children } = props;
   const ref = useRef(null);
+  const rootRef = useRef(null);
   const isNearScreen = useNearScreen({ ref });
 
   useEffect(() => {
@@ -17,11 +18,25 @@ export const ProgressiveHydration = (props) => {
     // CLIENT:
     // If we want to force the hydration OR the element is near screen
     // then we hydrate the content to get the functionality ready
-    if (isNearScreen) {
-      const action = el.hasChildNodes() ? "hydrate" : "render";
-      ReactDOM[action](children, el);
+    if (!isNearScreen || !el) return;
+
+    if (!rootRef.current) {
+      if (el.hasChildNodes()) {
+        rootRef.current = hydrateRoot(el, children);
+        return;
+      }
+      rootRef.current = createRoot(el);
     }
+    rootRef.current.render(children);
   }, [children, isNearScreen]);
+  useEffect(() => {
+    return () => {
+      if (rootRef.current) {
+        rootRef.current.unmount();
+        rootRef.current = null;
+      }
+    };
+  }, []);
 
   // SERVER: Just render the content as usual
   if (isServer) {

@@ -2,7 +2,7 @@
 
 exports[`Extended Load more button Should render extended load more button 1`] = `
 <div
-  className="arr--button load-more-m_button__1mmf1 load-more-m_dark__3dfzb load-more-m_default__2_k4V"
+  className="arr--button load-more-m__button__GUDhq load-more-m__dark__6EGEv load-more-m__default__mQSXc"
   onClick={[Function]}
   style={Object {}}
 >
