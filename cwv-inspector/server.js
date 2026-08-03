@@ -2,7 +2,7 @@ import http from 'http';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { spawn } from 'child_process';
+import { spawn, exec } from 'child_process';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -71,7 +71,7 @@ const server = http.createServer((req, res) => {
           .filter(f => f.endsWith('.html'))
           .sort((a, b) => b.localeCompare(a));
         if (files.length > 0) {
-          latestReport = `/reports-view/${project}/${files[0]}`;
+          latestReport = `/reports-view?project=${encodeURIComponent(project)}&file=${encodeURIComponent(files[0])}`;
         }
       }
       res.write(`data: [COMPLETE]${latestReport}\n\n`);
@@ -82,12 +82,19 @@ const server = http.createServer((req, res) => {
   }
 
   // Handle reports-view mapping
-  if (pathname.startsWith('/reports-view/')) {
-    const parts = pathname.split('/'); // ["", "reports-view", "project-name", "filename"]
-    const projectName = parts[2];
-    const filename = parts[3];
+  if (pathname === '/reports-view') {
+    const project = parsedUrl.searchParams.get('project');
+    const filename = parsedUrl.searchParams.get('file');
+
+    if (!project || !filename) {
+      res.writeHead(400, { 'Content-Type': 'text/plain' });
+      res.end('Missing project or file parameter');
+      return;
+    }
+
     const parentDir = path.dirname(__dirname);
-    const filePath = path.join(parentDir, projectName, 'reports', filename);
+    const absoluteProjectPath = path.resolve(parentDir, project);
+    const filePath = path.join(absoluteProjectPath, 'reports', filename);
 
     if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
       const ext = path.extname(filePath).toLowerCase();
@@ -99,6 +106,24 @@ const server = http.createServer((req, res) => {
       res.writeHead(404, { 'Content-Type': 'text/plain' });
       res.end('404 Not Found');
     }
+    return;
+  }
+
+  // API Endpoint: /api/select-folder
+  if (pathname === '/api/select-folder') {
+    // Execute AppleScript to open directory chooser on macOS
+    const script = `osascript -e 'POSIX path of (choose folder with prompt "Select a project folder:")'`;
+    exec(script, (err, stdout, stderr) => {
+      if (err) {
+        // If user cancels or if we are not on macOS, return cancelled
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ cancelled: true }));
+        return;
+      }
+      const selectedPath = stdout.trim();
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ path: selectedPath }));
+    });
     return;
   }
 
@@ -149,7 +174,7 @@ const server = http.createServer((req, res) => {
                     pdf: null
                   };
                 }
-                runsMap[timestamp][type] = `/reports-view/${proj}/${file}`;
+                runsMap[timestamp][type] = `/reports-view?project=${encodeURIComponent(proj)}&file=${encodeURIComponent(file)}`;
               }
             });
             const runs = Object.values(runsMap).sort((a, b) => b.timestamp - a.timestamp);

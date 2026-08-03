@@ -283,3 +283,30 @@ function resetTerminal() {
   document.getElementById('terminalContainer').style.display = 'none';
   document.getElementById('terminalOutput').textContent = '';
 }
+
+function selectFolderDialog(event) {
+  if (event) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+  
+  const btn = event.currentTarget;
+  const originalHtml = btn.innerHTML;
+  btn.disabled = true;
+  btn.querySelector('span').textContent = 'Opening...';
+  
+  fetch('/api/select-folder')
+    .then(res => res.json())
+    .then(data => {
+      btn.disabled = false;
+      btn.innerHTML = originalHtml;
+      if (data && data.path) {
+        document.getElementById('projectSelect').value = data.path;
+      }
+    })
+    .catch(err => {
+      btn.disabled = false;
+      btn.innerHTML = originalHtml;
+      console.error('Error selecting folder:', err);
+    });
+}
