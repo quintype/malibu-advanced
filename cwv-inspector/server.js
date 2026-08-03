@@ -1,7 +1,10 @@
 import http from 'http';
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 import { spawn } from 'child_process';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 let currentPort = 3000;
 
@@ -37,11 +40,11 @@ const server = http.createServer((req, res) => {
       'Connection': 'keep-alive'
     });
 
-    const parentDir = path.dirname(process.cwd());
+    const parentDir = path.dirname(__dirname);
     const absoluteProjectPath = path.resolve(parentDir, project);
     
     // Spawn the audit.js script
-    const scriptPath = path.join(process.cwd(), 'cwv-inspector', 'audit.js');
+    const scriptPath = path.join(__dirname, 'audit.js');
     const args = [scriptPath, absoluteProjectPath];
     if (auditUrlInput && auditUrlInput.trim() !== '') {
       args.push('--url', auditUrlInput.trim());
@@ -83,7 +86,7 @@ const server = http.createServer((req, res) => {
     const parts = pathname.split('/'); // ["", "reports-view", "project-name", "filename"]
     const projectName = parts[2];
     const filename = parts[3];
-    const parentDir = path.dirname(process.cwd());
+    const parentDir = path.dirname(__dirname);
     const filePath = path.join(parentDir, projectName, 'reports', filename);
 
     if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
@@ -101,7 +104,7 @@ const server = http.createServer((req, res) => {
 
   // API Endpoint: /api/projects
   if (pathname === '/api/projects') {
-    const parentDir = path.dirname(process.cwd());
+    const parentDir = path.dirname(__dirname);
     try {
       const directories = fs.readdirSync(parentDir, { withFileTypes: true })
         .filter(dirent => dirent.isDirectory() && !dirent.name.startsWith('.'))
@@ -118,7 +121,7 @@ const server = http.createServer((req, res) => {
 
   // API Endpoint: /api/reports
   if (pathname === '/api/reports') {
-    const parentDir = path.dirname(process.cwd());
+    const parentDir = path.dirname(__dirname);
     const reportsList = [];
     try {
       const directories = fs.readdirSync(parentDir, { withFileTypes: true })
@@ -171,7 +174,7 @@ const server = http.createServer((req, res) => {
 
   // Serve static dashboard assets from cwv-inspector/dashboard/
   let targetPath = pathname === '/' || pathname === '/index.html' ? '/index.html' : pathname;
-  const localFilePath = path.join(process.cwd(), 'cwv-inspector', 'dashboard', targetPath);
+  const localFilePath = path.join(__dirname, 'dashboard', targetPath);
 
   if (fs.existsSync(localFilePath) && fs.statSync(localFilePath).isFile()) {
     const ext = path.extname(localFilePath).toLowerCase();
