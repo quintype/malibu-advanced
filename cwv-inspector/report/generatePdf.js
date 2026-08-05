@@ -36,7 +36,7 @@ function computeMetricDetails(data, type) {
         percent = Math.min(100, 66 + ((clsVal - 0.25) / 0.5) * 34);
       }
     } else if (type === 'tbt') {
-      const tbtVal = data.tbt.value;
+      const tbtVal = Math.round(data.tbt.value);
       valueDisplay = `${tbtVal}ms`;
       if (tbtVal <= 200) {
         statusClass = 'good'; statusLabel = 'Good'; textClass = 'good-text'; subdesc = 'Main thread is responsive.';
@@ -52,6 +52,58 @@ function computeMetricDetails(data, type) {
   }
 
   return { statusClass, statusLabel, valueDisplay, textClass, subdesc, percent };
+}
+
+/**
+ * Generates dynamic status badge HTML for metrics detail table.
+ */
+function getStatusBadgeHtml(mDetail) {
+  if (mDetail.valueDisplay === 'N/A' || mDetail.statusLabel === 'Static Only') {
+    return `<span class="status-indicator-dot" style="background-color: var(--text-secondary);"></span>N/A`;
+  }
+  if (mDetail.statusLabel === 'Good') {
+    return `<span class="status-indicator-dot dot-green"></span>PASS`;
+  } else if (mDetail.statusLabel === 'Needs Work') {
+    return `<span class="status-indicator-dot dot-warning"></span>WARN`;
+  } else {
+    return `<span class="status-indicator-dot dot-danger"></span>FAIL`;
+  }
+}
+
+/**
+ * Helper to dynamically load and customize SVG icons from the icons/ folder.
+ */
+function getIconSvg(name, size = 24, strokeWidth = 2) {
+  try {
+    const currentDir = path.dirname(new URL(import.meta.url).pathname);
+    const iconPath = path.join(currentDir, 'icons', `${name}.svg`);
+    if (fs.existsSync(iconPath)) {
+      let svg = fs.readFileSync(iconPath, 'utf8');
+      return svg
+        .replace(/width="24"/g, `width="${size}"`)
+        .replace(/height="24"/g, `height="${size}"`)
+        .replace(/stroke-width="[^"]*"/g, `stroke-width="${strokeWidth}"`);
+    }
+  } catch (err) {
+    // fallback
+  }
+  return '';
+}
+
+/**
+ * Generates dynamic metric card status badge HTML (PASS/WARN/FAIL).
+ */
+function getMetricBadgeHtml(mDetail) {
+  if (mDetail.valueDisplay === 'N/A' || mDetail.statusLabel === 'Static Only') {
+    return `<span class="metric-warning-badge">N/A</span>`;
+  }
+  if (mDetail.statusLabel === 'Good') {
+    return `<span class="metric-pass-badge">${getIconSvg('passed', 12, 3)} PASS</span>`;
+  } else if (mDetail.statusLabel === 'Needs Work') {
+    return `<span class="metric-warning-badge">${getIconSvg('warning', 12, 3)} WARN</span>`;
+  } else {
+    return `<span class="metric-poor-badge">${getIconSvg('failed', 12, 3)} FAIL</span>`;
+  }
 }
 
 /**
@@ -130,16 +182,44 @@ export async function generateReport(compiledResult, options) {
   const dCls = computeMetricDetails(desktopData, 'cls');
   const dTbt = computeMetricDetails(desktopData, 'tbt');
 
+  // Parse optional CrUX Field Data
+  let cruxLcp = { statusClass: 'warning', statusLabel: 'Static Only', valueDisplay: 'N/A' };
+  let cruxCls = { statusClass: 'warning', statusLabel: 'Static Only', valueDisplay: 'N/A' };
+  let cruxTbt = { statusClass: 'warning', statusLabel: 'Static Only', valueDisplay: 'N/A' };
+
+  if (options.cruxData) {
+    const parseCruxMetric = (metricName) => {
+      const metrics = options.cruxData?.record?.metrics;
+      if (!metrics || !metrics[metricName]) return null;
+      const val = parseFloat(metrics[metricName].percentiles?.p75);
+      return isNaN(val) ? null : val;
+    };
+
+    const cruxLcpVal = parseCruxMetric('largest_contentful_paint');
+    const cruxClsVal = parseCruxMetric('cumulative_layout_shift');
+    const cruxFidVal = parseCruxMetric('first_input_delay') || parseCruxMetric('interaction_to_next_paint');
+
+    if (cruxLcpVal !== null) {
+      cruxLcp = computeMetricDetails({ lcp: { value: cruxLcpVal } }, 'lcp');
+    }
+    if (cruxClsVal !== null) {
+      cruxCls = computeMetricDetails({ cls: { value: cruxClsVal } }, 'cls');
+    }
+    if (cruxFidVal !== null) {
+      cruxTbt = computeMetricDetails({ tbt: { value: cruxFidVal } }, 'tbt');
+    }
+  }
+
   // Assessment Banner
   let assessmentBannerHtml = '';
   if (hasLighthouse) {
     const mobilePassed = mobileData && (mobileData.lcp.value / 1000 <= 2.5 && mobileData.cls.value <= 0.1 && mobileData.tbt.value <= 200);
     const desktopPassed = desktopData && (desktopData.lcp.value / 1000 <= 2.5 && desktopData.cls.value <= 0.1 && desktopData.tbt.value <= 200);
 
-    if (mobilePassed && desktopPassed) {
+     if (mobilePassed && desktopPassed) {
       assessmentBannerHtml = `
         <div class="assessment-banner passed">
-          <div style="font-size: 1.8rem; line-height: 1;">🟢</div>
+          <div style="display: flex; align-items: center; justify-content: center; height: 32px;">${getIconSvg('passed', 32, 2.5)}</div>
           <div>
             <div class="assessment-title">Core Web Vitals Assessment: Passed</div>
             <div class="assessment-desc">All parameters on both Mobile and Desktop meet Google's recommended performance standards.</div>
@@ -152,7 +232,7 @@ export async function generateReport(compiledResult, options) {
       if (!desktopPassed) failDetails.push('Desktop');
       assessmentBannerHtml = `
         <div class="assessment-banner failed">
-          <div style="font-size: 1.8rem; line-height: 1;">🔴</div>
+          <div style="display: flex; align-items: center; justify-content: center; height: 32px;">${getIconSvg('failed', 32, 2.5)}</div>
           <div>
             <div class="assessment-title">Core Web Vitals Assessment: Failed</div>
             <div class="assessment-desc">One or more parameters outside the Good range on: <strong>${failDetails.join(', ')}</strong>.</div>
@@ -171,7 +251,7 @@ export async function generateReport(compiledResult, options) {
   if (topIssues.length === 0) {
     topRecsHtml = `
       <div class="fix-card" style="grid-column: span 3; text-align: center; color: var(--text-secondary); opacity: 0.7; padding: 24px;">
-        🎉 No urgent recommendations needed. All checked rules pass!
+        No urgent recommendations needed. All checked rules pass!
       </div>
     `;
   } else {
@@ -300,7 +380,7 @@ export async function generateReport(compiledResult, options) {
     .replace(/{{SUMMARY_MEDIUM}}/g, compiledResult.summary.medium)
     .replace(/{{SUMMARY_LOW}}/g, compiledResult.summary.low)
     
-    // MOBILE values
+     // MOBILE values
     .replace(/{{MOBILE_MAIN_SCORE}}/g, mobileScore)
     .replace(/{{MOBILE_SCORE_CLASS}}/g, mobileScoreClass)
     .replace(/{{MOBILE_SCORE_TEXT_CLASS}}/g, mobileScoreTextClass)
@@ -323,6 +403,44 @@ export async function generateReport(compiledResult, options) {
     .replace(/{{MOBILE_TBT_TEXT_CLASS}}/g, mTbt.textClass)
     .replace(/{{MOBILE_TBT_SUBDESC}}/g, mTbt.subdesc)
     .replace(/{{MOBILE_TBT_PERCENT}}/g, mTbt.percent)
+
+     // Table values and statuses
+    .replace(/{{MOBILE_LCP_FIELD_VALUE}}/g, cruxLcp.valueDisplay)
+    .replace(/{{MOBILE_LCP_FIELD_STATUS}}/g, getStatusBadgeHtml(cruxLcp))
+    .replace(/{{MOBILE_LCP_LAB_VALUE}}/g, mLcp.valueDisplay)
+    .replace(/{{MOBILE_LCP_LAB_STATUS}}/g, getStatusBadgeHtml(mLcp))
+
+    .replace(/{{MOBILE_CLS_FIELD_VALUE}}/g, cruxCls.valueDisplay)
+    .replace(/{{MOBILE_CLS_FIELD_STATUS}}/g, getStatusBadgeHtml(cruxCls))
+    .replace(/{{MOBILE_CLS_LAB_VALUE}}/g, mCls.valueDisplay)
+    .replace(/{{MOBILE_CLS_LAB_STATUS}}/g, getStatusBadgeHtml(mCls))
+
+    .replace(/{{MOBILE_TBT_FIELD_VALUE}}/g, cruxTbt.valueDisplay)
+    .replace(/{{MOBILE_TBT_FIELD_STATUS}}/g, getStatusBadgeHtml(cruxTbt))
+    .replace(/{{MOBILE_TBT_LAB_VALUE}}/g, mTbt.valueDisplay)
+    .replace(/{{MOBILE_TBT_LAB_STATUS}}/g, getStatusBadgeHtml(mTbt))
+
+    // Desktop Table values and statuses
+    .replace(/{{DESKTOP_LCP_FIELD_VALUE}}/g, cruxLcp.valueDisplay)
+    .replace(/{{DESKTOP_LCP_FIELD_STATUS}}/g, getStatusBadgeHtml(cruxLcp))
+    .replace(/{{DESKTOP_LCP_LAB_VALUE}}/g, dLcp.valueDisplay)
+    .replace(/{{DESKTOP_LCP_LAB_STATUS}}/g, getStatusBadgeHtml(dLcp))
+
+    .replace(/{{DESKTOP_CLS_FIELD_VALUE}}/g, cruxCls.valueDisplay)
+    .replace(/{{DESKTOP_CLS_FIELD_STATUS}}/g, getStatusBadgeHtml(cruxCls))
+    .replace(/{{DESKTOP_CLS_LAB_VALUE}}/g, dCls.valueDisplay)
+    .replace(/{{DESKTOP_CLS_LAB_STATUS}}/g, getStatusBadgeHtml(dCls))
+
+    .replace(/{{DESKTOP_TBT_FIELD_VALUE}}/g, cruxTbt.valueDisplay)
+    .replace(/{{DESKTOP_TBT_FIELD_STATUS}}/g, getStatusBadgeHtml(cruxTbt))
+    .replace(/{{DESKTOP_TBT_LAB_VALUE}}/g, dTbt.valueDisplay)
+    .replace(/{{DESKTOP_TBT_LAB_STATUS}}/g, getStatusBadgeHtml(dTbt))
+
+    // Card status badges
+    .replace(/{{MOBILE_LCP_STATUS_BADGE}}/g, getMetricBadgeHtml(mLcp))
+    .replace(/{{MOBILE_CLS_STATUS_BADGE}}/g, getMetricBadgeHtml(mCls))
+    .replace(/{{MOBILE_TBT_STATUS_BADGE}}/g, getMetricBadgeHtml(mTbt))
+
     .replace(/<!-- MOBILE_LIGHTHOUSE_SECTION -->/g, mobileLhHtml)
 
     // DESKTOP values
@@ -350,10 +468,16 @@ export async function generateReport(compiledResult, options) {
     .replace(/{{DESKTOP_TBT_PERCENT}}/g, dTbt.percent)
     .replace(/<!-- DESKTOP_LIGHTHOUSE_SECTION -->/g, desktopLhHtml)
 
-    // Sections
+    // Desktop Card status badges
+    .replace(/{{DESKTOP_LCP_STATUS_BADGE}}/g, getMetricBadgeHtml(dLcp))
+    .replace(/{{DESKTOP_CLS_STATUS_BADGE}}/g, getMetricBadgeHtml(dCls))
+    .replace(/{{DESKTOP_TBT_STATUS_BADGE}}/g, getMetricBadgeHtml(dTbt))
+
+     // Sections
     .replace(/<!-- ASSESSMENT_BANNER_SECTION -->/g, assessmentBannerHtml)
     .replace(/{{TOP_RECOMMENDATIONS}}/g, topRecsHtml)
-    .replace(/{{ISSUES_ACCORDIONS}}/g, accordionsHtml);
+    .replace(/{{ISSUES_ACCORDIONS}}/g, accordionsHtml)
+    .replace(/{{SEARCH_ICON}}/g, getIconSvg('search', 16, 2));
 
   const timestamp = Date.now();
   const outputDir = path.join(options.projectPath, 'reports');

@@ -81,7 +81,7 @@ export default function VitalsReport({ reportData }) {
           percent = Math.min(100, 66 + ((clsVal - 0.25) / 0.5) * 34);
         }
       } else if (type === 'tbt') {
-        const tbtVal = activeLhData.tbt.value;
+        const tbtVal = Math.round(activeLhData.tbt.value);
         valueDisplay = `${tbtVal}ms`;
         if (tbtVal <= 200) {
           statusClass = 'good'; statusLabel = 'Good'; textClass = 'good-text'; subdesc = 'Main thread is responsive.';
@@ -131,6 +131,7 @@ export default function VitalsReport({ reportData }) {
           </div>
           <div className="vitals-meta">
             <span>Prepared for: {clientName}</span>
+            <span>&bull; Author: Siripireddy Giri</span>
             <span>&bull; {auditDate}</span>
           </div>
         </div>

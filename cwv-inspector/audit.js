@@ -22,11 +22,34 @@ import { compileRecommendations } from './analyzers/recommendations.js';
 import { generateReport } from './report/generatePdf.js';
 
 async function main() {
+  // Load environment variables manually
+  try {
+    const envPath = path.resolve(process.cwd(), '.env');
+    if (fs.existsSync(envPath)) {
+      const content = fs.readFileSync(envPath, 'utf8');
+      content.split('\n').forEach(line => {
+        const match = line.match(/^\s*([\w.-]+)\s*=\s*(.*)?\s*$/);
+        if (match) {
+          const key = match[1];
+          let value = match[2] || '';
+          if (value.startsWith('"') && value.endsWith('"')) {
+            value = value.slice(1, -1);
+          } else if (value.startsWith("'") && value.endsWith("'")) {
+            value = value.slice(1, -1);
+          }
+          process.env[key] = value.trim();
+        }
+      });
+    }
+  } catch (err) {
+    // Ignore
+  }
+
   const args = process.argv.slice(2);
   
   if (args.includes('--help') || args.includes('-h')) {
     console.log(`
-📊 Core Web Vitals (CWV) Inspector CLI
+Core Web Vitals (CWV) Inspector CLI
 Usage:
   node audit.js <project-path> [options]
 
@@ -55,7 +78,7 @@ Options:
     }
 
     console.log('\n==========================================');
-    console.log('🕵️‍♂️ Core Web Vitals (CWV) Interactive Audit');
+    console.log('Core Web Vitals (CWV) Interactive Audit');
     console.log('==========================================');
     
     if (directories.length > 0) {
@@ -87,23 +110,23 @@ Options:
 
   const targetPath = path.resolve(targetPathInput);
   if (!fs.existsSync(targetPath)) {
-    console.error(`❌ Error: Target project path "${targetPath}" does not exist.`);
+    console.error(`Error: Target project path "${targetPath}" does not exist.`);
     process.exit(1);
   }
 
   console.log(`\n==========================================`);
-  console.log(`🕵️‍♂️  Starting Core Web Vitals Code Audit`);
-  console.log(`📂  Target: ${targetPath}`);
-  if (url) console.log(`🌐  URL:    ${url}`);
+  console.log(`Starting Core Web Vitals Code Audit`);
+  console.log(`Target: ${targetPath}`);
+  if (url) console.log(`URL:    ${url}`);
   console.log(`==========================================\n`);
 
   // Step 1: Scan files
-  console.log('🔍 Scanning workspace files...');
+  console.log('Scanning workspace files...');
   const files = scanFiles(targetPath);
-  console.log(`📁 Found ${files.length} project files to inspect.`);
+  console.log(`Found ${files.length} project files to inspect.`);
 
   // Step 2: Parse React/AST files
-  console.log('🚀 Parsing JS/TS files for AST inspection...');
+  console.log('Parsing JS/TS files for AST inspection...');
   const reactAsts = files
     .filter(f => ['.js', '.jsx', '.ts', '.tsx'].includes(f.ext))
     .map(f => ({
@@ -112,7 +135,7 @@ Options:
     }));
 
   // Step 3: Run Analyzers
-  console.log('💡 Running performance analyzers...');
+  console.log('Running performance analyzers...');
   const staticIssues = [
     ...scanDependencies(targetPath),
     ...analyzeLcp(files, reactAsts),
@@ -132,8 +155,30 @@ Options:
     lighthouseData = await runLighthouseAudit(url);
   }
 
+  // Fetch optional Chrome UX Report (CrUX) Field Data
+  let cruxData = null;
+  if (url && process.env.CRUX_API_KEY) {
+    console.log('⚡ Fetching Field Data from Google CrUX API...');
+    try {
+      const cruxRes = await fetch(`https://chromeuxreport.googleapis.com/v1/records:queryRecord?key=${process.env.CRUX_API_KEY}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url: url })
+      });
+      if (cruxRes.ok) {
+        cruxData = await cruxRes.json();
+        console.log('CrUX Field Data fetched successfully.');
+      } else {
+        const errText = await cruxRes.text();
+        console.warn(`CrUX API status ${cruxRes.status}: ${errText}`);
+      }
+    } catch (err) {
+      console.warn('CrUX Field Data fetch failed:', err.message);
+    }
+  }
+
   // Step 5: Compile recommendations
-  console.log('📊 Compiling findings and calculations...');
+  console.log('Compiling findings and calculations...');
   const compiledResult = compileRecommendations(staticIssues, lighthouseData);
 
   // Get Client/Project Name from package.json or folder name
@@ -159,23 +204,24 @@ Options:
   }
 
   // Step 6: Generate reports
-  console.log('✍️ Generating report outputs...');
+  console.log('Generating report outputs...');
   const reports = await generateReport(compiledResult, {
     projectPath: targetPath,
     url,
     lighthouseData,
+    cruxData,
     clientName,
     gitBranch
   });
 
   console.log(`\n==========================================`);
-  console.log(`✨ CWV Audit Completed!`);
-  console.log(`🏥 Health Score: ${compiledResult.healthScore}/100`);
-  console.log(`⚠️  Total Issues: ${compiledResult.summary.total} (High: ${compiledResult.summary.high}, Medium: ${compiledResult.summary.medium}, Low: ${compiledResult.summary.low})`);
+  console.log(`CWV Audit Completed!`);
+  console.log(`Health Score: ${compiledResult.healthScore}/100`);
+  console.log(`Total Issues: ${compiledResult.summary.total} (High: ${compiledResult.summary.high}, Medium: ${compiledResult.summary.medium}, Low: ${compiledResult.summary.low})`);
   console.log(`==========================================\n`);
 }
 
 main().catch(err => {
-  console.error(`💥 Execution crashed:`, err);
+  console.error(`Execution crashed:`, err);
   process.exit(1);
 });

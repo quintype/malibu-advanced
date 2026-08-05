@@ -464,6 +464,30 @@ body {
   font-weight: 700;
 }
 
+.metric-warning-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  background-color: rgba(245, 158, 11, 0.1);
+  color: var(--warning);
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.metric-poor-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  background-color: rgba(239, 68, 68, 0.1);
+  color: var(--danger);
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
 .threshold-lbl {
   font-size: 0.75rem;
   color: var(--text-muted);
