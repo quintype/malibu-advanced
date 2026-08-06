@@ -6,8 +6,8 @@ import "./top-bar.m.css";
 import axios from "axios";
 
 const urls = [
-  "https://catalogue.midnite.com/v1/competitions",
-  "https://catalogue.midnite-uat.com/v1/competitions",
+  "https://catalogue.midnite.com/v1/matches?competition_id=54291382",
+  "https://catalogue.midnite.com/v1/matches/57965075",
 ];
 
 const TopBar = () => {
@@ -16,15 +16,15 @@ const TopBar = () => {
       try {
         const response = await axios.get(url);
 
-        console.log("boop1 URL:", url);
-        console.log("boop1 Status:", response.status);
-        console.log("boop1 Body:", response.data);
+        console.log("boop2 URL:", url);
+        console.log("boop2 Status:", response.status);
+        console.log("boop2 Body:", response.data);
       } catch (err) {
-        console.error("boop1 Error:", url);
+        console.error("boop2 Error:", url);
 
         if (err.response) {
-          console.log("boop1 Status:", err.response.status);
-          console.log("boop1 Body:", err.response.data);
+          console.log("boop2 Status:", err.response.status);
+          console.log("boop2 Body:", err.response.data);
         } else {
           console.error(err.message);
         }
