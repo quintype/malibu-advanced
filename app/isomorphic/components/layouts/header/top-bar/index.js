@@ -9,11 +9,14 @@ const urls = [
 ];
 
 const TopBar = () => {
+  console.log("hello1");
   useEffect(() => {
+  console.log("hello2");
     const fetchApis = async () => {
+  console.log("hello3");
       for (const url of urls) {
         try {
-          console.log("hello");
+          console.log("hello4");
 
           const response = await fetch(url);
 
