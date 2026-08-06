@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { AppLogo } from "../../app-logo";
 
 import "./top-bar.m.css";
@@ -9,48 +9,37 @@ const urls = [
 ];
 
 const TopBar = () => {
-    alert("TopBar rendered");
-  console.log("hello11");
+  console.log("boop TopBar rendered");
 
-  useEffect(() => {
-    alert("useEffect ran");
-    console.log("hello21");
-  }, []);
-  console.log("hello1");
-  useEffect(() => {
-  console.log("hello2");
-    const fetchApis = async () => {
-  console.log("hello3");
-      for (const url of urls) {
+  (async () => {
+    console.log("boop Starting API calls");
+
+    for (const url of urls) {
+      try {
+        console.log("boop Fetching:", url);
+
+        const response = await fetch(url);
+        const bodyText = await response.text();
+
+        let body;
         try {
-          console.log("hello4");
-
-          const response = await fetch(url);
-
-          const bodyText = await response.text();
-
-          let body;
-          try {
-            body = JSON.parse(bodyText);
-          } catch {
-            body = bodyText;
-          }
-
-          console.log(`Response for ${url}:`, {
-            ok: response.ok,
-            status: response.status,
-            statusText: response.statusText,
-            headers: Object.fromEntries(response.headers.entries()),
-            body,
-          });
-        } catch (error) {
-          console.log(`Network error for ${url}:`, error);
+          body = JSON.parse(bodyText);
+        } catch {
+          body = bodyText;
         }
-      }
-    };
 
-    fetchApis();
-  }, []);
+        console.log(`boop Response for ${url}:`, {
+          ok: response.ok,
+          status: response.status,
+          statusText: response.statusText,
+          headers: Object.fromEntries(response.headers.entries()),
+          body,
+        });
+      } catch (error) {
+        console.error(`boop Network error for ${url}:`, error);
+      }
+    }
+  })();
 
   return (
     <div styleName="main-wrapper">
@@ -58,8 +47,8 @@ const TopBar = () => {
         <h1>
           <AppLogo />
         </h1>
-        <h1>Hello123</h1>
-        <div id="search-bar"></div>
+        <h1>Hello1231</h1>
+        <div id="search-bar" />
       </div>
     </div>
   );
