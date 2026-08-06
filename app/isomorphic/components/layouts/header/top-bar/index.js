@@ -9,6 +9,13 @@ const urls = [
 ];
 
 const TopBar = () => {
+    alert("TopBar rendered");
+  console.log("hello11");
+
+  useEffect(() => {
+    alert("useEffect ran");
+    console.log("hello21");
+  }, []);
   console.log("hello1");
   useEffect(() => {
   console.log("hello2");
@@ -51,7 +58,7 @@ const TopBar = () => {
         <h1>
           <AppLogo />
         </h1>
-        <h1>Hello</h1>
+        <h1>Hello123</h1>
         <div id="search-bar"></div>
       </div>
     </div>
