@@ -3,40 +3,31 @@ import { AppLogo } from "../../app-logo";
 
 import "./top-bar.m.css";
 
+import axios from "axios";
+
 const urls = [
   "https://catalogue.midnite.com/v1/competitions",
   "https://catalogue.midnite-uat.com/v1/competitions",
 ];
 
 const TopBar = () => {
-  console.log("boop TopBar rendered");
-
   (async () => {
-    console.log("boop Starting API calls");
-
     for (const url of urls) {
       try {
-        console.log("boop Fetching:", url);
+        const response = await axios.get(url);
 
-        const response = await fetch(url);
-        const bodyText = await response.text();
+        console.log("boop1 URL:", url);
+        console.log("boop1 Status:", response.status);
+        console.log("boop1 Body:", response.data);
+      } catch (err) {
+        console.error("boop1 Error:", url);
 
-        let body;
-        try {
-          body = JSON.parse(bodyText);
-        } catch {
-          body = bodyText;
+        if (err.response) {
+          console.log("boop1 Status:", err.response.status);
+          console.log("boop1 Body:", err.response.data);
+        } else {
+          console.error(err.message);
         }
-
-        console.log(`boop Response for ${url}:`, {
-          ok: response.ok,
-          status: response.status,
-          statusText: response.statusText,
-          headers: Object.fromEntries(response.headers.entries()),
-          body,
-        });
-      } catch (error) {
-        console.error(`boop Network error for ${url}:`, error);
       }
     }
   })();
@@ -47,7 +38,7 @@ const TopBar = () => {
         <h1>
           <AppLogo />
         </h1>
-        <h1>Hello1231</h1>
+        <h1>Hello12311</h1>
         <div id="search-bar" />
       </div>
     </div>
