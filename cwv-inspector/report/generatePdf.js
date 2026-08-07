@@ -107,6 +107,19 @@ function getMetricBadgeHtml(mDetail) {
 }
 
 /**
+ * Escapes special HTML characters to prevent breaking the generated report structure.
+ */
+function escapeHtml(str) {
+  if (!str) return '';
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+/**
  * Helper to build Lighthouse Score Slider HTML.
  */
 function buildSliderHtml(data, title) {
@@ -268,9 +281,9 @@ export async function generateReport(compiledResult, options) {
         <div class="fix-card">
           <div>
             <div class="fix-card-num">0${idx + 1}</div>
-            <div class="fix-card-title">${issue.message}</div>
+            <div class="fix-card-title">${escapeHtml(issue.message)}</div>
           </div>
-          <div class="fix-card-savings">${subtitle}</div>
+          <div class="fix-card-savings">${escapeHtml(subtitle)}</div>
         </div>
       `;
     }).join('\n');
@@ -281,7 +294,7 @@ export async function generateReport(compiledResult, options) {
   if (compiledResult.issues.length === 0) {
     accordionsHtml = `
       <div style="text-align: center; padding: 48px; color: var(--text-muted); background-color: var(--bg-card); border-radius: 16px; border: 1px solid var(--border-color);">
-        🎉 No issues detected! Your codebase matches the best-practice rules.
+        No issues detected! Your codebase matches the best-practice rules.
       </div>
     `;
   } else {
@@ -300,8 +313,8 @@ export async function generateReport(compiledResult, options) {
           const lineStr = o.line && o.line !== '-' ? `:${o.line}` : '';
           return `
             <div class="file-row">
-              <span class="file-path">${o.file}</span>
-              <span class="file-line">${lineStr}</span>
+              <span class="file-path">${escapeHtml(o.file)}</span>
+              <span class="file-line">${escapeHtml(lineStr)}</span>
             </div>
           `;
         }).join('\n');
@@ -323,8 +336,8 @@ export async function generateReport(compiledResult, options) {
               <div class="details-files-title">Affected File:</div>
               <div class="files-list">
                 <div class="file-row">
-                  <span class="file-path">${issue.file}</span>
-                  <span class="file-line">${lineStr}</span>
+                  <span class="file-path">${escapeHtml(issue.file)}</span>
+                  <span class="file-line">${escapeHtml(lineStr)}</span>
                 </div>
               </div>
             </div>
@@ -333,26 +346,26 @@ export async function generateReport(compiledResult, options) {
       }
 
       return `
-        <div class="issue-card" data-severity="${issue.severity}" data-category="${issue.cwv}">
+        <div class="issue-card" data-severity="${escapeHtml(issue.severity)}" data-category="${escapeHtml(issue.cwv)}">
           <div class="issue-card-header" onclick="toggleAccordion(this)">
             <div class="issue-card-left">
               <span class="issue-idx">#${idxStr}</span>
               <div class="issue-badges">
-                <span class="card-badge ${severityClass}">${issue.severity}</span>
-                <span class="card-badge cat">${issue.cwv}</span>
+                <span class="card-badge ${severityClass}">${escapeHtml(issue.severity)}</span>
+                <span class="card-badge cat">${escapeHtml(issue.cwv)}</span>
               </div>
-              <span class="issue-title-text">${issue.message}</span>
+              <span class="issue-title-text">${escapeHtml(issue.message)}</span>
             </div>
             <div class="issue-card-right">
-              <span class="affected-summary">${affectedSummary}</span>
+              <span class="affected-summary">${escapeHtml(affectedSummary)}</span>
               <span class="accordion-arrow">▼</span>
             </div>
           </div>
           <div class="issue-card-details">
-            <div class="details-desc">${issue.impact}</div>
+            <div class="details-desc">${escapeHtml(issue.impact)}</div>
             <div class="details-fix">
               <div class="details-fix-title">Recommendation</div>
-              <div class="details-fix-text">${issue.suggestion}</div>
+              <div class="details-fix-text">${escapeHtml(issue.suggestion)}</div>
             </div>
             ${filesListHtml}
           </div>

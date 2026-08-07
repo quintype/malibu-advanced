@@ -719,8 +719,10 @@
       const cards = document.querySelectorAll('.issue-card');
 
       cards.forEach(card => {
-        const severity = card.getAttribute('data-severity').toLowerCase();
-        const category = card.getAttribute('data-category').toLowerCase();
+        const severityAttr = card.getAttribute('data-severity');
+        const severity = severityAttr ? severityAttr.toLowerCase() : '';
+        const categoryAttr = card.getAttribute('data-category');
+        const category = categoryAttr ? categoryAttr.toLowerCase() : '';
         const text = card.textContent.toLowerCase();
 
         const matchesSeverity = (activeFilters.severity === 'all' || severity === activeFilters.severity);
@@ -738,7 +740,8 @@
     function updateCounts() {
       const counts = { high: 0, medium: 0, low: 0 };
       document.querySelectorAll('.issue-card').forEach(card => {
-        const sev = card.getAttribute('data-severity').toLowerCase();
+        const sevAttr = card.getAttribute('data-severity');
+        const sev = sevAttr ? sevAttr.toLowerCase() : '';
         if (counts[sev] !== undefined) {
           counts[sev]++;
         }
