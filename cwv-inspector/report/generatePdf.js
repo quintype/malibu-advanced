@@ -172,18 +172,43 @@ export async function generateReport(compiledResult, options) {
   const mobileScore = mobileData ? Math.round(mobileData.performanceScore) : compiledResult.healthScore;
   const desktopScore = desktopData ? Math.round(desktopData.performanceScore) : compiledResult.healthScore;
 
-  let mobileScoreClass = 'good', mobileScoreTextClass = 'good-text', mobileScoreStatus = 'Excellent';
+  const mobilePassed = mobileData && (mobileData.lcp.value / 1000 <= 2.5 && mobileData.cls.value <= 0.1 && mobileData.tbt.value <= 200);
+  const desktopPassed = desktopData && (desktopData.lcp.value / 1000 <= 2.5 && desktopData.cls.value <= 0.1 && desktopData.tbt.value <= 200);
+
+  let mobileScoreClass = 'good', mobileScoreTextClass = 'good-text', mobileScoreStatus = 'Passed';
   if (mobileScore < 50) {
-    mobileScoreClass = 'poor'; mobileScoreTextClass = 'danger-text'; mobileScoreStatus = 'Poor';
+    mobileScoreClass = 'poor';
   } else if (mobileScore < 90) {
-    mobileScoreClass = 'needs-improvement'; mobileScoreTextClass = 'warning-text'; mobileScoreStatus = 'Needs Improvement';
+    mobileScoreClass = 'needs-improvement';
+  }
+  if (hasLighthouse) {
+    if (!mobilePassed) {
+      mobileScoreTextClass = 'danger-text';
+      mobileScoreStatus = 'Failed';
+    }
+  } else {
+    if (mobileScore < 90) {
+      mobileScoreTextClass = 'danger-text';
+      mobileScoreStatus = 'Failed';
+    }
   }
 
-  let desktopScoreClass = 'good', desktopScoreTextClass = 'good-text', desktopScoreStatus = 'Excellent';
+  let desktopScoreClass = 'good', desktopScoreTextClass = 'good-text', desktopScoreStatus = 'Passed';
   if (desktopScore < 50) {
-    desktopScoreClass = 'poor'; desktopScoreTextClass = 'danger-text'; desktopScoreStatus = 'Poor';
+    desktopScoreClass = 'poor';
   } else if (desktopScore < 90) {
-    desktopScoreClass = 'needs-improvement'; desktopScoreTextClass = 'warning-text'; desktopScoreStatus = 'Needs Improvement';
+    desktopScoreClass = 'needs-improvement';
+  }
+  if (hasLighthouse) {
+    if (!desktopPassed) {
+      desktopScoreTextClass = 'danger-text';
+      desktopScoreStatus = 'Failed';
+    }
+  } else {
+    if (desktopScore < 90) {
+      desktopScoreTextClass = 'danger-text';
+      desktopScoreStatus = 'Failed';
+    }
   }
 
   // Calculate metrics details

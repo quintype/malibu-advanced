@@ -37,16 +37,26 @@ export default function VitalsReport({ reportData }) {
   // Compute status styles
   let scoreClass = 'good';
   let scoreTextClass = 'good-text';
-  let scoreStatus = 'Excellent';
+  let scoreStatus = 'Passed';
 
   if (activeScore < 50) {
     scoreClass = 'poor';
-    scoreTextClass = 'danger-text';
-    scoreStatus = 'Poor';
   } else if (activeScore < 90) {
     scoreClass = 'needs-improvement';
-    scoreTextClass = 'warning-text';
-    scoreStatus = 'Needs Improvement';
+  }
+
+  const activeTabPassed = activeLhData && (activeLhData.lcp.value / 1000 <= 2.5 && activeLhData.cls.value <= 0.1 && activeLhData.tbt.value <= 200);
+
+  if (hasLighthouse) {
+    if (!activeTabPassed) {
+      scoreTextClass = 'danger-text';
+      scoreStatus = 'Failed';
+    }
+  } else {
+    if (activeScore < 90) {
+      scoreTextClass = 'danger-text';
+      scoreStatus = 'Failed';
+    }
   }
 
   // Helper to compute range bar position and segment styles
