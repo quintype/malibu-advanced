@@ -179,7 +179,13 @@ Options:
 
   // Step 5: Compile recommendations
   console.log('Compiling findings and calculations...');
-  const compiledResult = compileRecommendations(staticIssues, lighthouseData);
+  const astElements = [];
+  reactAsts.forEach(ra => {
+    if (ra.ast && Array.isArray(ra.ast.jsxTags)) {
+      astElements.push(...ra.ast.jsxTags);
+    }
+  });
+  const compiledResult = compileRecommendations(staticIssues, lighthouseData, astElements);
 
   // Get Client/Project Name from package.json or folder name
   let clientName = path.basename(targetPath);

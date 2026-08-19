@@ -389,6 +389,16 @@ export default function VitalsReport({ reportData }) {
                   <div className="vitals-issue-badges">
                     <span className={`vitals-badge ${issue.severity.toLowerCase()}`}>{issue.severity}</span>
                     <span className="vitals-badge cat">{issue.cwv}</span>
+                    {issue.confidence && (
+                      <span className={`vitals-badge corr-badge ${issue.confidence.toLowerCase()}`} style={{ 
+                        marginLeft: '4px',
+                        backgroundColor: issue.confidence === 'HIGH' ? 'rgba(16, 185, 129, 0.1)' : (issue.confidence === 'MEDIUM' ? 'rgba(245, 158, 11, 0.1)' : 'rgba(100, 116, 139, 0.1)'),
+                        color: issue.confidence === 'HIGH' ? '#10b981' : (issue.confidence === 'MEDIUM' ? '#d97706' : '#64748b'),
+                        border: '1px solid rgba(0,0,0,0.05)'
+                      }}>
+                        {issue.confidence} MATCH
+                      </span>
+                    )}
                   </div>
                   <span className="vitals-issue-title-text">{issue.message}</span>
                 </div>
@@ -419,6 +429,44 @@ export default function VitalsReport({ reportData }) {
                             <span className="vitals-file-line">{o.line && o.line !== '-' ? `:${o.line}` : ''}</span>
                           </div>
                         ))}
+                      </div>
+                    </div>
+                  )}
+                  {issue.type === 'correlated' && (
+                    <div className="vitals-correlation-info" style={{ marginTop: '16px', borderTop: '1px dashed #e2e8f0', paddingTop: '16px' }}>
+                      <div style={{ fontWeight: 'bold', fontSize: '0.8rem', textTransform: 'uppercase', color: '#64748b', marginBottom: '8px' }}>CLS Correlation Evidence</div>
+                      <div style={{ fontSize: '0.82rem', marginBottom: '6px' }}>
+                        <strong>DOM Selector:</strong> <code style={{ backgroundColor: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#e11d48', fontFamily: 'monospace' }}>{issue.selector}</code>
+                      </div>
+                      <div style={{ fontSize: '0.82rem', marginBottom: '6px' }}>
+                        <strong>Device Tested:</strong> <span style={{ color: '#475569' }}>{issue.device}</span>
+                      </div>
+                      <div style={{ fontSize: '0.82rem', marginBottom: '6px' }}>
+                        <strong>Evidence:</strong> <span style={{ color: '#475569' }}>{issue.evidence ? issue.evidence.join('; ') : 'None'}</span>
+                      </div>
+                      {issue.snippet && (
+                        <div style={{ fontSize: '0.82rem', marginBottom: '6px' }}>
+                          <strong>Snippet:</strong> <code style={{ backgroundColor: '#f1f5f9', padding: '4px 8px', borderRadius: '4px', color: '#d97706', display: 'block', marginTop: '4px', whiteSpace: 'pre-wrap', fontFamily: 'monospace', fontSize: '0.78rem' }}>{issue.snippet}</code>
+                        </div>
+                      )}
+                      {issue.staticRule && (
+                        <div style={{ fontSize: '0.82rem', marginTop: '8px', color: '#10b981', fontWeight: 'bold' }}>
+                          ✓ Combined static rule: "{issue.staticRule}"
+                        </div>
+                      )}
+                    </div>
+                  )}
+                  {issue.type === 'lighthouse-unresolved' && (
+                    <div className="vitals-correlation-info" style={{ marginTop: '16px', borderTop: '1px dashed #e2e8f0', paddingTop: '16px' }}>
+                      <div style={{ fontWeight: 'bold', fontSize: '0.8rem', textTransform: 'uppercase', color: '#64748b', marginBottom: '8px' }}>CLS Correlation Info</div>
+                      <div style={{ fontSize: '0.82rem', marginBottom: '6px' }}>
+                        <strong>DOM Selector:</strong> <code style={{ backgroundColor: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#e11d48', fontFamily: 'monospace' }}>{issue.selector}</code>
+                      </div>
+                      <div style={{ fontSize: '0.82rem', marginBottom: '6px' }}>
+                        <strong>Device Tested:</strong> <span style={{ color: '#475569' }}>{issue.device}</span>
+                      </div>
+                      <div style={{ fontSize: '0.82rem', color: '#64748b', fontStyle: 'italic' }}>
+                        Lighthouse flagged this element as layout-shifting, but it could not be uniquely matched to a single source code element.
                       </div>
                     </div>
                   )}

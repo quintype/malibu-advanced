@@ -76,10 +76,22 @@ export function parseReactCode(content, filePath) {
             };
           });
 
+        const idAttr = attributes.find(a => a.name === 'id');
+        const classAttr = attributes.find(a => a.name === 'className' || a.name === 'class');
+        const srcAttr = attributes.find(a => a.name === 'src');
+        const hrefAttr = attributes.find(a => a.name === 'href');
+
         result.jsxTags.push({
           tagName,
           attributes,
-          loc: pathNode.node.loc
+          loc: pathNode.node.loc,
+          line: pathNode.node.loc?.start?.line,
+          column: pathNode.node.loc?.start?.column,
+          filePath,
+          id: idAttr && typeof idAttr.value === 'string' ? idAttr.value : null,
+          className: classAttr && typeof classAttr.value === 'string' ? classAttr.value : null,
+          src: srcAttr && typeof srcAttr.value === 'string' ? srcAttr.value : null,
+          href: hrefAttr && typeof hrefAttr.value === 'string' ? hrefAttr.value : null
         });
       },
       CallExpression(pathNode) {

@@ -48,6 +48,19 @@ function computeMetricDetails(data, type) {
         statusClass = 'poor'; statusLabel = 'Poor'; textClass = 'danger-text'; subdesc = `${(tbtVal - 200)}ms over the 200ms limit.`;
         percent = Math.min(100, 66 + ((tbtVal - 600) / 1000) * 34);
       }
+    } else if (type === 'inp') {
+      const inpVal = Math.round(data.inp.value);
+      valueDisplay = `${inpVal}ms`;
+      if (inpVal <= 200) {
+        statusClass = 'good'; statusLabel = 'Good'; textClass = 'good-text'; subdesc = 'Excellent input responsiveness.';
+        percent = (inpVal / 200) * 33;
+      } else if (inpVal <= 500) {
+        statusClass = 'warning'; statusLabel = 'Needs Work'; textClass = 'warning-text'; subdesc = 'Needs work (over 200ms).';
+        percent = 33 + ((inpVal - 200) / 300) * 33;
+      } else {
+        statusClass = 'poor'; statusLabel = 'Poor'; textClass = 'danger-text'; subdesc = `${(inpVal - 200)}ms over the 200ms limit.`;
+        percent = Math.min(100, 66 + ((inpVal - 500) / 1000) * 34);
+      }
     }
   }
 
@@ -215,15 +228,18 @@ export async function generateReport(compiledResult, options) {
   const mLcp = computeMetricDetails(mobileData, 'lcp');
   const mCls = computeMetricDetails(mobileData, 'cls');
   const mTbt = computeMetricDetails(mobileData, 'tbt');
+  const mInp = computeMetricDetails(mobileData, 'inp');
 
   const dLcp = computeMetricDetails(desktopData, 'lcp');
   const dCls = computeMetricDetails(desktopData, 'cls');
   const dTbt = computeMetricDetails(desktopData, 'tbt');
+  const dInp = computeMetricDetails(desktopData, 'inp');
 
   // Parse optional CrUX Field Data
   let cruxLcp = { statusClass: 'warning', statusLabel: 'Static Only', valueDisplay: 'N/A' };
   let cruxCls = { statusClass: 'warning', statusLabel: 'Static Only', valueDisplay: 'N/A' };
   let cruxTbt = { statusClass: 'warning', statusLabel: 'Static Only', valueDisplay: 'N/A' };
+  let cruxInp = { statusClass: 'warning', statusLabel: 'Static Only', valueDisplay: 'N/A' };
 
   if (options.cruxData) {
     const parseCruxMetric = (metricName) => {
@@ -236,6 +252,7 @@ export async function generateReport(compiledResult, options) {
     const cruxLcpVal = parseCruxMetric('largest_contentful_paint');
     const cruxClsVal = parseCruxMetric('cumulative_layout_shift');
     const cruxFidVal = parseCruxMetric('first_input_delay') || parseCruxMetric('interaction_to_next_paint');
+    const cruxInpVal = parseCruxMetric('interaction_to_next_paint');
 
     if (cruxLcpVal !== null) {
       cruxLcp = computeMetricDetails({ lcp: { value: cruxLcpVal } }, 'lcp');
@@ -245,6 +262,9 @@ export async function generateReport(compiledResult, options) {
     }
     if (cruxFidVal !== null) {
       cruxTbt = computeMetricDetails({ tbt: { value: cruxFidVal } }, 'tbt');
+    }
+    if (cruxInpVal !== null) {
+      cruxInp = computeMetricDetails({ inp: { value: cruxInpVal } }, 'inp');
     }
   }
 
@@ -370,6 +390,52 @@ export async function generateReport(compiledResult, options) {
         }
       }
 
+      let correlationBadge = '';
+      let correlationDetailsHtml = '';
+
+      if (issue.type === 'correlated') {
+        const confidenceClass = String(issue.confidence).toLowerCase();
+        correlationBadge = `<span class="card-badge corr-badge ${confidenceClass}">${escapeHtml(issue.confidence)} Correlation</span>`;
+        correlationDetailsHtml = `
+          <div class="correlation-info" style="margin-top: 12px; border-top: 1px dashed var(--border-color); padding-top: 12px;">
+            <div style="font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 6px;">CLS Correlation Evidence</div>
+            <div style="font-size: 0.82rem; margin-bottom: 4px;">
+              <strong>DOM Selector:</strong> <code style="background-color: var(--bg-body); padding: 2px 6px; border-radius: 4px; color: #f43f5e;">${escapeHtml(issue.selector)}</code>
+            </div>
+            <div style="font-size: 0.82rem; margin-bottom: 4px;">
+              <strong>Tested Device:</strong> <span style="color: var(--text-secondary);">${escapeHtml(issue.device)}</span>
+            </div>
+            <div style="font-size: 0.82rem; margin-bottom: 4px;">
+              <strong>Confidence Evidence:</strong> <span style="color: var(--text-secondary);">${escapeHtml(issue.evidence ? issue.evidence.join('; ') : 'None')}</span>
+            </div>
+            ${issue.snippet ? `
+            <div style="font-size: 0.82rem; margin-bottom: 4px;">
+              <strong>HTML Snippet:</strong> <code style="background-color: var(--bg-body); padding: 4px 8px; border-radius: 4px; color: #f59e0b; display: block; margin-top: 4px; white-space: pre-wrap; font-family: monospace; font-size: 0.78rem;">${escapeHtml(issue.snippet)}</code>
+            </div>` : ''}
+            ${issue.staticRule ? `
+            <div style="font-size: 0.82rem; margin-top: 6px; color: #10b981; font-weight: 600;">
+              ✓ Combined static rule: "${escapeHtml(issue.staticRule)}"
+            </div>` : ''}
+          </div>
+        `;
+      } else if (issue.type === 'lighthouse-unresolved') {
+        correlationBadge = `<span class="card-badge corr-badge unresolved">Unresolved Correlation</span>`;
+        correlationDetailsHtml = `
+          <div class="correlation-info" style="margin-top: 12px; border-top: 1px dashed var(--border-color); padding-top: 12px;">
+            <div style="font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 6px;">CLS Correlation Info</div>
+            <div style="font-size: 0.82rem; margin-bottom: 4px;">
+              <strong>DOM Selector:</strong> <code style="background-color: var(--bg-body); padding: 2px 6px; border-radius: 4px; color: #f43f5e;">${escapeHtml(issue.selector)}</code>
+            </div>
+            <div style="font-size: 0.82rem; margin-bottom: 4px;">
+              <strong>Tested Device:</strong> <span style="color: var(--text-secondary);">${escapeHtml(issue.device)}</span>
+            </div>
+            <div style="font-size: 0.82rem; color: var(--text-muted);">
+              Lighthouse flagged this element as layout-shifting, but it could not be uniquely matched to a single source code element.
+            </div>
+          </div>
+        `;
+      }
+
       return `
         <div class="issue-card" data-severity="${escapeHtml(issue.severity)}" data-category="${escapeHtml(issue.cwv)}">
           <div class="issue-card-header" onclick="toggleAccordion(this)">
@@ -378,6 +444,7 @@ export async function generateReport(compiledResult, options) {
               <div class="issue-badges">
                 <span class="card-badge ${severityClass}">${escapeHtml(issue.severity)}</span>
                 <span class="card-badge cat">${escapeHtml(issue.cwv)}</span>
+                ${correlationBadge}
               </div>
               <span class="issue-title-text">${escapeHtml(issue.message)}</span>
             </div>
@@ -393,6 +460,7 @@ export async function generateReport(compiledResult, options) {
               <div class="details-fix-text">${escapeHtml(issue.suggestion)}</div>
             </div>
             ${filesListHtml}
+            ${correlationDetailsHtml}
           </div>
         </div>
       `;
@@ -458,6 +526,11 @@ export async function generateReport(compiledResult, options) {
     .replace(/{{MOBILE_TBT_LAB_VALUE}}/g, mTbt.valueDisplay)
     .replace(/{{MOBILE_TBT_LAB_STATUS}}/g, getStatusBadgeHtml(mTbt))
 
+    .replace(/{{MOBILE_INP_FIELD_VALUE}}/g, cruxInp.valueDisplay)
+    .replace(/{{MOBILE_INP_FIELD_STATUS}}/g, getStatusBadgeHtml(cruxInp))
+    .replace(/{{MOBILE_INP_LAB_VALUE}}/g, mInp.valueDisplay)
+    .replace(/{{MOBILE_INP_LAB_STATUS}}/g, getStatusBadgeHtml(mInp))
+
     // Desktop Table values and statuses
     .replace(/{{DESKTOP_LCP_FIELD_VALUE}}/g, cruxLcp.valueDisplay)
     .replace(/{{DESKTOP_LCP_FIELD_STATUS}}/g, getStatusBadgeHtml(cruxLcp))
@@ -473,6 +546,11 @@ export async function generateReport(compiledResult, options) {
     .replace(/{{DESKTOP_TBT_FIELD_STATUS}}/g, getStatusBadgeHtml(cruxTbt))
     .replace(/{{DESKTOP_TBT_LAB_VALUE}}/g, dTbt.valueDisplay)
     .replace(/{{DESKTOP_TBT_LAB_STATUS}}/g, getStatusBadgeHtml(dTbt))
+
+    .replace(/{{DESKTOP_INP_FIELD_VALUE}}/g, cruxInp.valueDisplay)
+    .replace(/{{DESKTOP_INP_FIELD_STATUS}}/g, getStatusBadgeHtml(cruxInp))
+    .replace(/{{DESKTOP_INP_LAB_VALUE}}/g, dInp.valueDisplay)
+    .replace(/{{DESKTOP_INP_LAB_STATUS}}/g, getStatusBadgeHtml(dInp))
 
     // Card status badges
     .replace(/{{MOBILE_LCP_STATUS_BADGE}}/g, getMetricBadgeHtml(mLcp))
@@ -530,24 +608,6 @@ export async function generateReport(compiledResult, options) {
   fs.writeFileSync(htmlPath, templateHtml);
   console.log(`\n📄 HTML report written to: ${htmlPath}`);
 
-  const jsonPath = path.join(outputDir, `report-${timestamp}.json`);
-  const jsonPayload = {
-    projectName,
-    clientName: options.clientName || 'Default Project',
-    gitBranch: options.gitBranch || 'N/A',
-    auditDate: formattedDate,
-    auditUrl: options.url || 'No URL specified (Static scan only)',
-    healthScore: {
-      mobile: mobileScore,
-      desktop: desktopScore
-    },
-    lighthouseData: options.lighthouseData || null,
-    summary: compiledResult.summary,
-    issues: compiledResult.issues
-  };
-  fs.writeFileSync(jsonPath, JSON.stringify(jsonPayload, null, 2));
-  console.log(`📊 JSON data report written to: ${jsonPath}`);
-
   // Render to PDF using Puppeteer
   try {
     console.log('Generating PDF from HTML template...');
@@ -577,5 +637,5 @@ export async function generateReport(compiledResult, options) {
     console.warn(`⚠️ Failed to generate PDF report: ${err.message}. HTML report is still available.`);
   }
 
-  return { htmlPath, pdfPath, jsonPath };
+  return { htmlPath, pdfPath };
 }

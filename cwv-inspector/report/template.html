@@ -17,7 +17,7 @@
           <img class="brand-logo-img"
             src="https://cdn.prod.website-files.com/64819da6f9ae7ae6e232658c/66ed2342896c97c223a0a15c_256x256%20Quintype%20Logo.png"
             alt="Quintype Logo">
-          <span class="brand-title-text">ACE Team</span>
+          <span class="brand-title-text">Core Web Vitals Diagnostic Lab for ACE Team</span>
         </div>
         <div class="brand-date">
           <svg class="date-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -38,7 +38,7 @@
           <span class="meta-sep">|</span>
           <strong>URL:</strong> <a class="meta-link" href="{{AUDIT_URL}}" target="_blank">{{AUDIT_URL}}</a>
           <span class="meta-sep">|</span>
-          <strong>Author:</strong> <span class="meta-val">Siripireddy Giri</span>
+          <strong>Engineering Analysis:</strong> <span class="meta-val">Siripireddy Giri</span>
         </div>
       </div>
     </header>
@@ -601,6 +601,38 @@
             <td>{{DESKTOP_TBT_LAB_STATUS}}</td>
             <td class="threshold-cell">&le; 200 ms</td>
           </tr>
+          <!-- INP (Mobile) -->
+          <tr class="mobile-only-view">
+            <td class="metric-cell-title">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="m9 12 2 2 4-4"></path>
+              </svg>
+              <span>Interaction to Next Paint (INP)</span>
+            </td>
+            <td class="bold-cell">{{MOBILE_INP_FIELD_VALUE}}</td>
+            <td>{{MOBILE_INP_FIELD_STATUS}}</td>
+            <td class="bold-cell">{{MOBILE_INP_LAB_VALUE}}</td>
+            <td>{{MOBILE_INP_LAB_STATUS}}</td>
+            <td class="threshold-cell">&le; 200 ms</td>
+          </tr>
+          <!-- INP (Desktop) -->
+          <tr class="desktop-only-view hidden-view">
+            <td class="metric-cell-title">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="m9 12 2 2 4-4"></path>
+              </svg>
+              <span>Interaction to Next Paint (INP)</span>
+            </td>
+            <td class="bold-cell">{{DESKTOP_INP_FIELD_VALUE}}</td>
+            <td>{{DESKTOP_INP_FIELD_STATUS}}</td>
+            <td class="bold-cell">{{DESKTOP_INP_LAB_VALUE}}</td>
+            <td>{{DESKTOP_INP_LAB_STATUS}}</td>
+            <td class="threshold-cell">&le; 200 ms</td>
+          </tr>
         </tbody>
       </table>
     </div>
@@ -655,7 +687,7 @@
         <img
           src="https://cdn.prod.website-files.com/64819da6f9ae7ae6e232658c/66ed2342896c97c223a0a15c_256x256%20Quintype%20Logo.png"
           alt="Quintype Logo">
-        <span>Confidential - ACE Team Performance Lab</span>
+        <span>Confidential - Core Web Vitals Diagnostic Lab for ACE Team</span>
       </div>
       <div class="pdf-footer-right">
         <span>Page 1 of 1</span>
