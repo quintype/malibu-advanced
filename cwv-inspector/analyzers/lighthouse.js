@@ -29,6 +29,18 @@ function extractScores(reportJson) {
       score: (audits['interaction-to-next-paint']?.score !== undefined ? audits['interaction-to-next-paint']?.score : audits['inp']?.score || 0) * 100,
       displayValue: audits['interaction-to-next-paint']?.displayValue || audits['inp']?.displayValue || 'N/A'
     },
+    inpInteractions: (() => {
+      const audit = audits['interaction-to-next-paint'] || audits['inp'];
+      if (!audit || !audit.details || !Array.isArray(audit.details.items)) return [];
+      return audit.details.items.map(item => ({
+        type: item.interactionType || 'click',
+        selector: item.node?.selector || '',
+        nodeLabel: item.node?.nodeLabel || '',
+        inputDelay: item.inputDelay || 0,
+        processingDuration: item.processingDuration || 0,
+        presentationDelay: item.presentationDelay || 0
+      }));
+    })(),
     speedIndex: {
       value: audits['speed-index']?.numericValue,
       score: audits['speed-index']?.score * 100,

@@ -432,6 +432,29 @@ export default function VitalsReport({ reportData }) {
                       </div>
                     </div>
                   )}
+                  {issue.cwv === 'inp' && issue.confidence && (
+                    <div className="vitals-correlation-info" style={{ marginTop: '16px', borderTop: '1px dashed #e2e8f0', paddingTop: '16px' }}>
+                      <div style={{ fontWeight: 'bold', fontSize: '0.8rem', textTransform: 'uppercase', color: '#64748b', marginBottom: '8px' }}>INP Correlation Evidence</div>
+                      {issue.selector && (
+                        <div style={{ fontSize: '0.82rem', marginBottom: '6px' }}>
+                          <strong>DOM Selector:</strong> <code style={{ backgroundColor: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#e11d48', fontFamily: 'monospace' }}>{issue.selector}</code>
+                        </div>
+                      )}
+                      {issue.device && (
+                        <div style={{ fontSize: '0.82rem', marginBottom: '6px' }}>
+                          <strong>Device Tested:</strong> <span style={{ color: '#475569' }}>{issue.device}</span>
+                        </div>
+                      )}
+                      <div style={{ fontSize: '0.82rem', marginBottom: '6px' }}>
+                        <strong>Evidence:</strong> <span style={{ color: '#475569' }}>{issue.evidence ? issue.evidence.join('; ') : 'None'}</span>
+                      </div>
+                      {issue.inpPhase && (
+                        <div style={{ fontSize: '0.82rem', marginTop: '8px', color: '#6366f1', fontWeight: 'bold' }}>
+                          ✓ Matched INP Details: {issue.inpPhase}
+                        </div>
+                      )}
+                    </div>
+                  )}
                   {issue.type === 'correlated' && (
                     <div className="vitals-correlation-info" style={{ marginTop: '16px', borderTop: '1px dashed #e2e8f0', paddingTop: '16px' }}>
                       <div style={{ fontWeight: 'bold', fontSize: '0.8rem', textTransform: 'uppercase', color: '#64748b', marginBottom: '8px' }}>CLS Correlation Evidence</div>

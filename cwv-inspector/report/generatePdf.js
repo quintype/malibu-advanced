@@ -393,7 +393,30 @@ export async function generateReport(compiledResult, options) {
       let correlationBadge = '';
       let correlationDetailsHtml = '';
 
-      if (issue.type === 'correlated') {
+      if (issue.cwv === 'inp' && issue.confidence) {
+        const confidenceClass = String(issue.confidence).toLowerCase();
+        correlationBadge = `<span class="card-badge corr-badge ${confidenceClass}">${escapeHtml(issue.confidence)} Correlation</span>`;
+        correlationDetailsHtml = `
+          <div class="correlation-info" style="margin-top: 12px; border-top: 1px dashed var(--border-color); padding-top: 12px;">
+            <div style="font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 6px;">INP Correlation Evidence</div>
+            ${issue.selector ? `
+            <div style="font-size: 0.82rem; margin-bottom: 4px;">
+              <strong>DOM Selector:</strong> <code style="background-color: var(--bg-body); padding: 2px 6px; border-radius: 4px; color: #f43f5e;">${escapeHtml(issue.selector)}</code>
+            </div>` : ''}
+            ${issue.device ? `
+            <div style="font-size: 0.82rem; margin-bottom: 4px;">
+              <strong>Tested Device:</strong> <span style="color: var(--text-secondary);">${escapeHtml(issue.device)}</span>
+            </div>` : ''}
+            <div style="font-size: 0.82rem; margin-bottom: 4px;">
+              <strong>Confidence Evidence:</strong> <span style="color: var(--text-secondary);">${escapeHtml(issue.evidence ? issue.evidence.join('; ') : 'None')}</span>
+            </div>
+            ${issue.inpPhase ? `
+            <div style="font-size: 0.82rem; margin-top: 6px; color: #6366f1; font-weight: 600;">
+              ✓ Matched INP Details: ${escapeHtml(issue.inpPhase)}
+            </div>` : ''}
+          </div>
+        `;
+      } else if (issue.type === 'correlated') {
         const confidenceClass = String(issue.confidence).toLowerCase();
         correlationBadge = `<span class="card-badge corr-badge ${confidenceClass}">${escapeHtml(issue.confidence)} Correlation</span>`;
         correlationDetailsHtml = `

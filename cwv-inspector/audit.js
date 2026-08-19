@@ -182,6 +182,10 @@ Options:
   const astElements = [];
   reactAsts.forEach(ra => {
     if (ra.ast && Array.isArray(ra.ast.jsxTags)) {
+      ra.ast.jsxTags.forEach(tag => {
+        tag.fileFunctions = ra.ast.functions || {};
+        tag.fileCalls = ra.ast.calls || {};
+      });
       astElements.push(...ra.ast.jsxTags);
     }
   });

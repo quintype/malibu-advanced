@@ -16,6 +16,8 @@ export function parseReactCode(content, filePath) {
     jsxTags: [],
     useEffects: [],
     contextProviders: [],
+    functions: {}, // Stores functionName -> lineNumber
+    calls: {},     // Stores functionName -> [calledFunctionName1, calledFunctionName2]
     memoUsage: false,
     lazyUsage: false,
     astSuccess: false,
@@ -37,6 +39,54 @@ export function parseReactCode(content, filePath) {
     result.astSuccess = true;
 
     traverse(ast, {
+      FunctionDeclaration(pathNode) {
+        if (pathNode.node.id && pathNode.node.id.type === 'Identifier') {
+          const funcName = pathNode.node.id.name;
+          result.functions[funcName] = pathNode.node.loc?.start?.line || 1;
+          const called = [];
+          pathNode.traverse({
+            CallExpression(childPath) {
+              if (childPath.node.callee.type === 'Identifier') {
+                called.push(childPath.node.callee.name);
+              }
+            }
+          });
+          result.calls[funcName] = called;
+        }
+      },
+      VariableDeclarator(pathNode) {
+        if (pathNode.node.id && pathNode.node.id.type === 'Identifier' && pathNode.node.init) {
+          const initType = pathNode.node.init.type;
+          if (initType === 'ArrowFunctionExpression' || initType === 'FunctionExpression') {
+            const funcName = pathNode.node.id.name;
+            result.functions[funcName] = pathNode.node.loc?.start?.line || 1;
+            const called = [];
+            pathNode.traverse({
+              CallExpression(childPath) {
+                if (childPath.node.callee.type === 'Identifier') {
+                  called.push(childPath.node.callee.name);
+                }
+              }
+            });
+            result.calls[funcName] = called;
+          }
+        }
+      },
+      ObjectMethod(pathNode) {
+        if (pathNode.node.key && pathNode.node.key.type === 'Identifier') {
+          const funcName = pathNode.node.key.name;
+          result.functions[funcName] = pathNode.node.loc?.start?.line || 1;
+          const called = [];
+          pathNode.traverse({
+            CallExpression(childPath) {
+              if (childPath.node.callee.type === 'Identifier') {
+                called.push(childPath.node.callee.name);
+              }
+            }
+          });
+          result.calls[funcName] = called;
+        }
+      },
       ImportDeclaration(pathNode) {
         const source = pathNode.node.source.value;
         const specifiers = pathNode.node.specifiers.map(spec => {
@@ -69,9 +119,21 @@ export function parseReactCode(content, filePath) {
         const attributes = pathNode.node.attributes
           .filter(attr => attr.type === 'JSXAttribute')
           .map(attr => {
+            let val = attr.value ? (attr.value.value || attr.value.type) : true;
+            if (attr.value && attr.value.type === 'JSXExpressionContainer') {
+              if (attr.value.expression) {
+                if (attr.value.expression.type === 'Identifier') {
+                  val = attr.value.expression.name;
+                } else if (attr.value.expression.type === 'MemberExpression' && attr.value.expression.property.type === 'Identifier') {
+                  val = attr.value.expression.property.name;
+                } else if (attr.value.expression.type === 'ArrowFunctionExpression' || attr.value.expression.type === 'FunctionExpression') {
+                  val = 'inline-handler';
+                }
+              }
+            }
             return {
               name: attr.name.name,
-              value: attr.value ? (attr.value.value || attr.value.type) : true,
+              value: val,
               loc: attr.loc
             };
           });
