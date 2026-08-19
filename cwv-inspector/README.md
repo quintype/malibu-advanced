@@ -156,26 +156,34 @@ The tool flags performance issues using deterministic rules:
 
 ---
 
-## 11. Source Code Correlation Engine
+## 11. Source Code Correlation Engine (V5)
 
-The engine in `analyzers/correlation.js` matches layout shifts to source code:
+The engine in `analyzers/correlation.js` and `analyzers/recommendations.js` matches runtime layout shifts (CLS) and interaction latencies (INP) to source code:
 
-1.  **Extraction**: Extract layout shift targets from Lighthouse (`layout-shift-elements` audit).
-2.  **Selector Parsing**: Parses the target CSS selector (e.g. `div.hero > img.banner`) into tag names and classes.
-3.  **Candidate Lookup**: Filters AST components to find elements matching the tag name and classes.
-4.  **Disambiguation**:
-    *   If a unique candidate is found, maps it directly with **High Confidence**.
-    *   If multiple elements match, compares the `src` attribute name from the Lighthouse code snippet. If resolved, marks as **High Confidence**.
-    *   If still ambiguous, labels the match as **Unresolved** to avoid false mappings.
+1.  **Extraction**: Gathers shift selectors and interaction timings (input delay, processing duration, presentation delay) from mobile and desktop Lighthouse profiles.
+2.  **Selector Parsing**: Parses the target CSS selector into tag names and classes.
+3.  **AST Code Mappings**: Filters the static codebase JSX components matching the tags/classes.
+4.  **Event Handler Tracing**: Inspects Babel AST nodes to map handlers (e.g. `onClick={handleSave}`) to functions (arrow functions, variable declarators, method declarations) and trace nested calls up to 2 frames deep. Prevents recursive cycle loops.
+5.  **Phase Validation & Negative Correlation**:
+    *   **Input Delay dominant**: Aligns with third-party or blocking initialization script operations.
+    *   **Processing Duration dominant**: Aligns with fetch, computation, or async task operations.
+    *   **Presentation Delay dominant**: Aligns with reflow, rendering, or memo list updates.
+    *   *Mismatched operations trigger a negative correlation penalty, reducing the match score.*
 
 ---
 
-## 12. Recommendations Engine
+## 12. Recommendations Engine & Quality States (V5)
 
-The consolidator in `analyzers/recommendations.js` processes findings through these steps:
+The consolidator in `analyzers/recommendations.js` aggregates findings and determines the alignment quality:
 
-*   **Correlation & Deduplication**: If a layout shift maps to a source element, it checks if `images.js` also flagged that element for missing dimensions. If so, it merges the findings into a single recommendation card, deducting points only once.
-*   **Severity Weights**: Score deductions are applied: High severity = **5 points**, Medium = **2 points**, Low = **0.5 points**.
+*   **Five Correlation States**:
+    *   `EXACT`: Exact selector and event matches with successfully resolved local function definitions matching the dominant latency phase.
+    *   `STRONG`: High confidence signal alignment but missing one minor trace (e.g., phase alignment mismatch or unresolved inner calls).
+    *   `PARTIAL`: Weak selector match or local interaction triggering third-party script loops.
+    *   `UNRESOLVED`: Lighthouse interaction occurred, but no source components match.
+    *   `STATIC_ONLY`: Static rules triggered, but page runtime was within Good limits (&le; 200ms).
+*   **Worst-Interaction Outlier Aggregation**: Deduplicates multiple sample events on the same selector, retaining only the worst (highest latency) observation.
+*   **Ranking & Score Deductions**: Grouped recommendations are sorted by metrics latency score first, correlation state weight second, and severity third. Deductions are calculated as: High = **5 points**, Medium = **2 points**, Low = **0.5 points**.
 *   **Deduction Formula**:
     $$\text{Health Score} = \max\left(0, \, 100 - (5 \times \text{high} + 2 \times \text{medium} + 0.5 \times \text{low})\right)$$
 
