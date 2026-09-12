@@ -133,7 +133,7 @@ export async function runLighthouseAudit(url) {
     console.log(`\n🚀 Launching headless Chrome for dual Lighthouse audit on: ${url}...`);
     
     chrome = await chromeLauncher.launch({
-      chromeFlags: ['--headless', '--disable-gpu', '--no-sandbox']
+      chromeFlags: ['--headless=new', '--disable-gpu', '--no-sandbox']
     });
 
     // Run bot scrolling to trigger lazy loaders and initialize assets
