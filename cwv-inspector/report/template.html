@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Core Web Vitals Audit Report</title>
+  <style>
+    /* CSS_CONTENT_PLACEHOLDER */
+  </style>
+</head>
+
+<body>
+  <div class="report-container">
+    <header>
+      <div class="brand-row">
+        <div class="brand-identity">
+          <img class="brand-logo-img"
+            src="https://cdn.prod.website-files.com/64819da6f9ae7ae6e232658c/66ed2342896c97c223a0a15c_256x256%20Quintype%20Logo.png"
+            alt="Quintype Logo">
+          <span class="brand-title-text">Core Web Vitals Diagnostic Lab</span>
+        </div>
+        <div class="brand-date">
+          <svg class="date-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+          <span>Date: {{AUDIT_DATE}}</span>
+        </div>
+      </div>
+      <div class="header-divider"></div>
+      <div class="header-main-details">
+        <h1 class="pdf-report-title">Performance Audit Report</h1>
+        <div class="pdf-report-meta">
+          <strong>Project:</strong> <span class="meta-val">{{PROJECT_PATH}}</span>
+          <span class="meta-sep">|</span>
+          <strong>URL:</strong> <a class="meta-link" href="{{AUDIT_URL}}" target="_blank">{{AUDIT_URL}}</a>
+          <span class="meta-sep">|</span>
+          <strong>Engineering Analysis:</strong> <span class="meta-val">Siripireddy Giri</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- ASSESSMENT_BANNER_SECTION -->
+
+    <!-- Mobile / Desktop Tab Switcher (Visible in HTML, Hidden/Stacked in PDF Print) -->
+    <div class="mode-tabs-container">
+      <div class="mode-tabs">
+        <button class="tab-btn active" data-mode="mobile" onclick="switchMode('mobile')">
+          Mobile
+        </button>
+        <button class="tab-btn" data-mode="desktop" onclick="switchMode('desktop')">
+          Desktop
+        </button>
+      </div>
+    </div>
+
+    <!-- MOBILE VIEW SECTIONS -->
+    <div class="mobile-only-view">
+      <!-- Section: Executive Summary (Mobile) -->
+      <div class="section-title-bar">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="20" x2="18" y2="10"></line>
+          <line x1="12" y1="20" x2="12" y2="4"></line>
+          <line x1="6" y1="20" x2="6" y2="14"></line>
+        </svg>
+        <h2>EXECUTIVE SUMMARY</h2>
+      </div>
+
+      <div class="executive-summary-card">
+        <div class="exec-gauge-col">
+          <div class="exec-circular-gauge {{MOBILE_SCORE_CLASS}}" style="--score: {{MOBILE_MAIN_SCORE}};">
+            <div class="exec-gauge-score-value">{{MOBILE_MAIN_SCORE}}</div>
+          </div>
+          <div class="exec-gauge-label-outside">
+            <div class="exec-fraction"><strong>{{MOBILE_MAIN_SCORE}}</strong> / 100</div>
+            <div class="exec-label-text">Performance Score</div>
+          </div>
+        </div>
+        <div class="exec-details-col">
+          <div class="exec-header">
+            <svg class="trophy-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+              <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+              <path d="M4 22h16"></path>
+              <path d="M10 14.66V17c0 .55-.45 1-1 1H4v2h16v-2h-5c-.55 0-1-.45-1-1v-2.34"></path>
+              <path d="M12 2a6 6 0 0 1 6 6c0 3.6-2 5.5-6 6.6C8 13.5 6 11.6 6 8a6 6 0 0 1 6-6z"></path>
+            </svg>
+            <span class="exec-status {{MOBILE_SCORE_TEXT_CLASS}}">{{MOBILE_SCORE_STATUS}}</span>
+          </div>
+          <p class="exec-desc">
+            Your website is performing exceptionally well across Core Web Vitals and key performance metrics. This
+            delivers a fast, stable, and responsive experience for users, which helps improve engagement and supports
+            better search visibility.
+          </p>
+          <div class="exec-pillars">
+            <div class="pillar-item">
+              <div class="pillar-icon-wrapper user-ux">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+              </div>
+              <div class="pillar-text">
+                <strong>Great User Experience</strong>
+                <span>Fast load times and smooth interactions.</span>
+              </div>
+            </div>
+            <div class="pillar-item">
+              <div class="pillar-icon-wrapper seo-adv">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                  <polyline points="17 6 23 6 23 12"></polyline>
+                </svg>
+              </div>
+              <div class="pillar-text">
+                <strong>SEO Advantage</strong>
+                <span>Strong performance supports higher rankings.</span>
+              </div>
+            </div>
+            <div class="pillar-item">
+              <div class="pillar-icon-wrapper stable-rel">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="9" y1="3" x2="9" y2="21"></line>
+                  <line x1="9" y1="12" x2="21" y2="12"></line>
+                </svg>
+              </div>
+              <div class="pillar-text">
+                <strong>Stable & Reliable</strong>
+                <span>Low layout shift and high visual stability.</span>
+              </div>
+            </div>
+            <div class="pillar-item">
+              <div class="pillar-icon-wrapper opt-perf">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
+                </svg>
+              </div>
+              <div class="pillar-text">
+                <strong>Well-Optimized</strong>
+                <span>Continued optimization can unlock even more performance.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section: Core Web Vitals (Mobile) -->
+      <div class="section-title-bar">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+        </svg>
+        <h2>CORE WEB VITALS OVERVIEW</h2>
+      </div>
+
+      <!-- Core Web Vitals Metric Grid (Mobile) -->
+      <div class="metrics-grid">
+        <!-- LCP Card -->
+        <div class="metric-card">
+          <div class="metric-header-layout">
+            <div class="metric-icon-circle">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+            </div>
+            <div class="metric-title-group">
+              <span class="metric-fullname">Largest Contentful Paint (LCP)</span>
+              <span class="metric-desc-text">Measures loading performance.</span>
+            </div>
+          </div>
+          <div class="metric-value {{MOBILE_LCP_TEXT_CLASS}}">{{MOBILE_LCP_VALUE_DISPLAY}}</div>
+          <div class="metric-range-bar">
+            <div class="range-indicator" style="left: {{MOBILE_LCP_PERCENT}}%;"></div>
+            <div class="range-segments">
+              <span class="seg good"></span>
+              <span class="seg warning"></span>
+              <span class="seg poor"></span>
+            </div>
+          </div>
+          <div class="metric-bottom-bar">
+            {{MOBILE_LCP_STATUS_BADGE}}
+            <span class="threshold-lbl">Good &le; 2.5s</span>
+          </div>
+        </div>
+
+        <!-- CLS Card -->
+        <div class="metric-card">
+          <div class="metric-header-layout">
+            <div class="metric-icon-circle">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="9" y1="3" x2="9" y2="21"></line>
+                <line x1="9" y1="12" x2="21" y2="12"></line>
+              </svg>
+            </div>
+            <div class="metric-title-group">
+              <span class="metric-fullname">Cumulative Layout Shift (CLS)</span>
+              <span class="metric-desc-text">Measures visual stability.</span>
+            </div>
+          </div>
+          <div class="metric-value {{MOBILE_CLS_TEXT_CLASS}}">{{MOBILE_CLS_VALUE_DISPLAY}}</div>
+          <div class="metric-range-bar">
+            <div class="range-indicator" style="left: {{MOBILE_CLS_PERCENT}}%;"></div>
+            <div class="range-segments">
+              <span class="seg good"></span>
+              <span class="seg warning"></span>
+              <span class="seg poor"></span>
+            </div>
+          </div>
+          <div class="metric-bottom-bar">
+            {{MOBILE_CLS_STATUS_BADGE}}
+            <span class="threshold-lbl">Good &le; 0.1</span>
+          </div>
+        </div>
+
+        <!-- TBT Card -->
+        <div class="metric-card">
+          <div class="metric-header-layout">
+            <div class="metric-icon-circle">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+              </svg>
+            </div>
+            <div class="metric-title-group">
+              <span class="metric-fullname">Total Blocking Time (TBT)</span>
+              <span class="metric-desc-text">Measures responsiveness.</span>
+            </div>
+          </div>
+          <div class="metric-value {{MOBILE_TBT_TEXT_CLASS}}">{{MOBILE_TBT_VALUE_DISPLAY}}</div>
+          <div class="metric-range-bar">
+            <div class="range-indicator" style="left: {{MOBILE_TBT_PERCENT}}%;"></div>
+            <div class="range-segments">
+              <span class="seg good"></span>
+              <span class="seg warning"></span>
+              <span class="seg poor"></span>
+            </div>
+          </div>
+          <div class="metric-bottom-bar">
+            {{MOBILE_TBT_STATUS_BADGE}}
+            <span class="threshold-lbl">Good &le; 200ms</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Performance Slider Track (Mobile) -->
+      <!-- MOBILE_LIGHTHOUSE_SECTION -->
+    </div>
+
+    <!-- DESKTOP VIEW SECTIONS -->
+    <div class="desktop-only-view">
+      <!-- Section: Executive Summary (Desktop) -->
+      <div class="section-title-bar">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="20" x2="18" y2="10"></line>
+          <line x1="12" y1="20" x2="12" y2="4"></line>
+          <line x1="6" y1="20" x2="6" y2="14"></line>
+        </svg>
+        <h2>EXECUTIVE SUMMARY</h2>
+      </div>
+
+      <div class="executive-summary-card">
+        <div class="exec-gauge-col">
+          <div class="exec-circular-gauge {{DESKTOP_SCORE_CLASS}}" style="--score: {{DESKTOP_MAIN_SCORE}};">
+            <div class="exec-gauge-score-value">{{DESKTOP_MAIN_SCORE}}</div>
+          </div>
+          <div class="exec-gauge-label-outside">
+            <div class="exec-fraction"><strong>{{DESKTOP_MAIN_SCORE}}</strong> / 100</div>
+            <div class="exec-label-text">Performance Score</div>
+          </div>
+        </div>
+        <div class="exec-details-col">
+          <div class="exec-header">
+            <svg class="trophy-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+              <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+              <path d="M4 22h16"></path>
+              <path d="M10 14.66V17c0 .55-.45 1-1 1H4v2h16v-2h-5c-.55 0-1-.45-1-1v-2.34"></path>
+              <path d="M12 2a6 6 0 0 1 6 6c0 3.6-2 5.5-6 6.6C8 13.5 6 11.6 6 8a6 6 0 0 1 6-6z"></path>
+            </svg>
+            <span class="exec-status {{DESKTOP_SCORE_TEXT_CLASS}}">{{DESKTOP_SCORE_STATUS}}</span>
+          </div>
+          <p class="exec-desc">
+            Your website is performing exceptionally well across Core Web Vitals and key performance metrics. This
+            delivers a fast, stable, and responsive experience for users, which helps improve engagement and supports
+            better search visibility.
+          </p>
+          <div class="exec-pillars">
+            <div class="pillar-item">
+              <div class="pillar-icon-wrapper user-ux">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+              </div>
+              <div class="pillar-text">
+                <strong>Great User Experience</strong>
+                <span>Fast load times and smooth interactions.</span>
+              </div>
+            </div>
+            <div class="pillar-item">
+              <div class="pillar-icon-wrapper seo-adv">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                  <polyline points="17 6 23 6 23 12"></polyline>
+                </svg>
+              </div>
+              <div class="pillar-text">
+                <strong>SEO Advantage</strong>
+                <span>Strong performance supports higher rankings.</span>
+              </div>
+            </div>
+            <div class="pillar-item">
+              <div class="pillar-icon-wrapper stable-rel">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="9" y1="3" x2="9" y2="21"></line>
+                  <line x1="9" y1="12" x2="21" y2="12"></line>
+                </svg>
+              </div>
+              <div class="pillar-text">
+                <strong>Stable & Reliable</strong>
+                <span>Low layout shift and high visual stability.</span>
+              </div>
+            </div>
+            <div class="pillar-item">
+              <div class="pillar-icon-wrapper opt-perf">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
+                </svg>
+              </div>
+              <div class="pillar-text">
+                <strong>Well-Optimized</strong>
+                <span>Continued optimization can unlock even more performance.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section: Core Web Vitals (Desktop) -->
+      <div class="section-title-bar">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+        </svg>
+        <h2>CORE WEB VITALS OVERVIEW</h2>
+      </div>
+
+      <!-- Core Web Vitals Metric Grid (Desktop) -->
+      <div class="metrics-grid">
+        <!-- LCP Card -->
+        <div class="metric-card">
+          <div class="metric-header-layout">
+            <div class="metric-icon-circle">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+            </div>
+            <div class="metric-title-group">
+              <span class="metric-fullname">Largest Contentful Paint (LCP)</span>
+              <span class="metric-desc-text">Measures loading performance.</span>
+            </div>
+          </div>
+          <div class="metric-value {{DESKTOP_LCP_TEXT_CLASS}}">{{DESKTOP_LCP_VALUE_DISPLAY}}</div>
+          <div class="metric-range-bar">
+            <div class="range-indicator" style="left: {{DESKTOP_LCP_PERCENT}}%;"></div>
+            <div class="range-segments">
+              <span class="seg good"></span>
+              <span class="seg warning"></span>
+              <span class="seg poor"></span>
+            </div>
+          </div>
+          <div class="metric-bottom-bar">
+            {{DESKTOP_LCP_STATUS_BADGE}}
+            <span class="threshold-lbl">Good &le; 2.5s</span>
+          </div>
+        </div>
+
+        <!-- CLS Card -->
+        <div class="metric-card">
+          <div class="metric-header-layout">
+            <div class="metric-icon-circle">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="9" y1="3" x2="9" y2="21"></line>
+                <line x1="9" y1="12" x2="21" y2="12"></line>
+              </svg>
+            </div>
+            <div class="metric-title-group">
+              <span class="metric-fullname">Cumulative Layout Shift (CLS)</span>
+              <span class="metric-desc-text">Measures visual stability.</span>
+            </div>
+          </div>
+          <div class="metric-value {{DESKTOP_CLS_TEXT_CLASS}}">{{DESKTOP_CLS_VALUE_DISPLAY}}</div>
+          <div class="metric-range-bar">
+            <div class="range-indicator" style="left: {{DESKTOP_CLS_PERCENT}}%;"></div>
+            <div class="range-segments">
+              <span class="seg good"></span>
+              <span class="seg warning"></span>
+              <span class="seg poor"></span>
+            </div>
+          </div>
+          <div class="metric-bottom-bar">
+            {{DESKTOP_CLS_STATUS_BADGE}}
+            <span class="threshold-lbl">Good &le; 0.1</span>
+          </div>
+        </div>
+
+        <!-- TBT Card -->
+        <div class="metric-card">
+          <div class="metric-header-layout">
+            <div class="metric-icon-circle">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+              </svg>
+            </div>
+            <div class="metric-title-group">
+              <span class="metric-fullname">Total Blocking Time (TBT)</span>
+              <span class="metric-desc-text">Measures responsiveness.</span>
+            </div>
+          </div>
+          <div class="metric-value {{DESKTOP_TBT_TEXT_CLASS}}">{{DESKTOP_TBT_VALUE_DISPLAY}}</div>
+          <div class="metric-range-bar">
+            <div class="range-indicator" style="left: {{DESKTOP_TBT_PERCENT}}%;"></div>
+            <div class="range-segments">
+              <span class="seg good"></span>
+              <span class="seg warning"></span>
+              <span class="seg poor"></span>
+            </div>
+          </div>
+          <div class="metric-bottom-bar">
+            {{DESKTOP_TBT_STATUS_BADGE}}
+            <span class="threshold-lbl">Good &le; 200ms</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Performance Slider Track (Desktop) -->
+      <!-- DESKTOP_LIGHTHOUSE_SECTION -->
+    </div>
+
+    <!-- Section: Metrics Detail Table -->
+    <div class="section-title-bar">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+        stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+        <line x1="3" y1="9" x2="21" y2="9"></line>
+        <line x1="3" y1="15" x2="21" y2="15"></line>
+        <line x1="9" y1="3" x2="9" y2="21"></line>
+        <line x1="15" y1="3" x2="15" y2="21"></line>
+      </svg>
+      <h2>METRICS DETAIL</h2>
+    </div>
+
+    <div class="detail-table-card">
+      <table class="metrics-detail-table">
+        <thead>
+          <tr>
+            <th rowspan="2" class="align-left">Metric</th>
+            <th colspan="2">Field Data (Real User Monitoring)</th>
+            <th colspan="2">Lab Data (Lighthouse)</th>
+            <th rowspan="2">Good Threshold (Recommended)</th>
+          </tr>
+          <tr>
+            <th>Value</th>
+            <th>Status</th>
+            <th>Value</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- LCP (Mobile) -->
+          <tr class="mobile-only-view">
+            <td class="metric-cell-title">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+              <span>Largest Contentful Paint (LCP)</span>
+            </td>
+            <td class="bold-cell">{{MOBILE_LCP_FIELD_VALUE}}</td>
+            <td>{{MOBILE_LCP_FIELD_STATUS}}</td>
+            <td class="bold-cell">{{MOBILE_LCP_LAB_VALUE}}</td>
+            <td>{{MOBILE_LCP_LAB_STATUS}}</td>
+            <td class="threshold-cell">&le; 2.5 s</td>
+          </tr>
+          <!-- LCP (Desktop) -->
+          <tr class="desktop-only-view hidden-view">
+            <td class="metric-cell-title">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+              <span>Largest Contentful Paint (LCP)</span>
+            </td>
+            <td class="bold-cell">{{DESKTOP_LCP_FIELD_VALUE}}</td>
+            <td>{{DESKTOP_LCP_FIELD_STATUS}}</td>
+            <td class="bold-cell">{{DESKTOP_LCP_LAB_VALUE}}</td>
+            <td>{{DESKTOP_LCP_LAB_STATUS}}</td>
+            <td class="threshold-cell">&le; 2.5 s</td>
+          </tr>
+          <!-- CLS (Mobile) -->
+          <tr class="mobile-only-view">
+            <td class="metric-cell-title">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="9" y1="3" x2="9" y2="21"></line>
+                <line x1="9" y1="12" x2="21" y2="12"></line>
+              </svg>
+              <span>Cumulative Layout Shift (CLS)</span>
+            </td>
+            <td class="bold-cell">{{MOBILE_CLS_FIELD_VALUE}}</td>
+            <td>{{MOBILE_CLS_FIELD_STATUS}}</td>
+            <td class="bold-cell">{{MOBILE_CLS_LAB_VALUE}}</td>
+            <td>{{MOBILE_CLS_LAB_STATUS}}</td>
+            <td class="threshold-cell">&le; 0.1</td>
+          </tr>
+          <!-- CLS (Desktop) -->
+          <tr class="desktop-only-view hidden-view">
+            <td class="metric-cell-title">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="9" y1="3" x2="9" y2="21"></line>
+                <line x1="9" y1="12" x2="21" y2="12"></line>
+              </svg>
+              <span>Cumulative Layout Shift (CLS)</span>
+            </td>
+            <td class="bold-cell">{{DESKTOP_CLS_FIELD_VALUE}}</td>
+            <td>{{DESKTOP_CLS_FIELD_STATUS}}</td>
+            <td class="bold-cell">{{DESKTOP_CLS_LAB_VALUE}}</td>
+            <td>{{DESKTOP_CLS_LAB_STATUS}}</td>
+            <td class="threshold-cell">&le; 0.1</td>
+          </tr>
+          <!-- TBT (Mobile) -->
+          <tr class="mobile-only-view">
+            <td class="metric-cell-title">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+              </svg>
+              <span>Total Blocking Time (TBT)</span>
+            </td>
+            <td class="bold-cell">{{MOBILE_TBT_FIELD_VALUE}}</td>
+            <td>{{MOBILE_TBT_FIELD_STATUS}}</td>
+            <td class="bold-cell">{{MOBILE_TBT_LAB_VALUE}}</td>
+            <td>{{MOBILE_TBT_LAB_STATUS}}</td>
+            <td class="threshold-cell">&le; 200 ms</td>
+          </tr>
+          <!-- TBT (Desktop) -->
+          <tr class="desktop-only-view hidden-view">
+            <td class="metric-cell-title">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+              </svg>
+              <span>Total Blocking Time (TBT)</span>
+            </td>
+            <td class="bold-cell">{{DESKTOP_TBT_FIELD_VALUE}}</td>
+            <td>{{DESKTOP_TBT_FIELD_STATUS}}</td>
+            <td class="bold-cell">{{DESKTOP_TBT_LAB_VALUE}}</td>
+            <td>{{DESKTOP_TBT_LAB_STATUS}}</td>
+            <td class="threshold-cell">&le; 200 ms</td>
+          </tr>
+          <!-- INP (Mobile) -->
+          <tr class="mobile-only-view">
+            <td class="metric-cell-title">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="m9 12 2 2 4-4"></path>
+              </svg>
+              <span>Interaction to Next Paint (INP)</span>
+            </td>
+            <td class="bold-cell">{{MOBILE_INP_FIELD_VALUE}}</td>
+            <td>{{MOBILE_INP_FIELD_STATUS}}</td>
+            <td class="bold-cell">{{MOBILE_INP_LAB_VALUE}}</td>
+            <td>{{MOBILE_INP_LAB_STATUS}}</td>
+            <td class="threshold-cell">&le; 200 ms</td>
+          </tr>
+          <!-- INP (Desktop) -->
+          <tr class="desktop-only-view hidden-view">
+            <td class="metric-cell-title">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="m9 12 2 2 4-4"></path>
+              </svg>
+              <span>Interaction to Next Paint (INP)</span>
+            </td>
+            <td class="bold-cell">{{DESKTOP_INP_FIELD_VALUE}}</td>
+            <td>{{DESKTOP_INP_FIELD_STATUS}}</td>
+            <td class="bold-cell">{{DESKTOP_INP_LAB_VALUE}}</td>
+            <td>{{DESKTOP_INP_LAB_STATUS}}</td>
+            <td class="threshold-cell">&le; 200 ms</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Opportunities section -->
+    <div class="section-title-bar">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+        stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <h2>DIAGNOSTICS & OPPORTUNITIES</h2>
+    </div>
+
+    <!-- Filter and Search Row (Visible in HTML view only) -->
+    <div class="controls-row">
+      <div class="search-box">
+        <span class="search-icon">{{SEARCH_ICON}}</span>
+        <input type="text" id="issueSearch" placeholder="Search issues, files, or fixes..." oninput="filterIssues()">
+      </div>
+      <div class="filter-group">
+        <button class="filter-pill active" data-filter-type="severity" data-filter-value="all"
+          onclick="setFilter(this, 'severity')">All severities</button>
+        <button class="filter-pill" data-filter-type="severity" data-filter-value="high"
+          onclick="setFilter(this, 'severity')">High - <span id="high-count">0</span></button>
+        <button class="filter-pill" data-filter-type="severity" data-filter-value="medium"
+          onclick="setFilter(this, 'severity')">Medium - <span id="med-count">0</span></button>
+        <button class="filter-pill" data-filter-type="severity" data-filter-value="low"
+          onclick="setFilter(this, 'severity')">Low - <span id="low-count">0</span></button>
+      </div>
+      <div class="filter-group">
+        <button class="filter-pill active" data-filter-type="category" data-filter-value="all"
+          onclick="setFilter(this, 'category')">All categories</button>
+        <button class="filter-pill" data-filter-type="category" data-filter-value="lcp"
+          onclick="setFilter(this, 'category')">LCP</button>
+        <button class="filter-pill" data-filter-type="category" data-filter-value="cls"
+          onclick="setFilter(this, 'category')">CLS</button>
+        <button class="filter-pill" data-filter-type="category" data-filter-value="inp"
+          onclick="setFilter(this, 'category')">INP</button>
+        <button class="filter-pill" data-filter-type="category" data-filter-value="a11y"
+          onclick="setFilter(this, 'category')">A11y</button>
+      </div>
+    </div>
+
+    <!-- Accordion Issue List -->
+    <div class="issues-list" id="issuesList">
+      {{ISSUES_ACCORDIONS}}
+    </div>
+
+    <footer class="pdf-footer-layout">
+      <div class="pdf-footer-left">
+        <img
+          src="https://cdn.prod.website-files.com/64819da6f9ae7ae6e232658c/66ed2342896c97c223a0a15c_256x256%20Quintype%20Logo.png"
+          alt="Quintype Logo">
+        <span>Confidential - Core Web Vitals Diagnostic Lab</span>
+      </div>
+      <div class="pdf-footer-right">
+        <span>Page 1 of 1</span>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // Toggle accordion state
+    function toggleAccordion(cardHeader) {
+      const card = cardHeader.parentElement;
+      const isOpen = card.classList.contains('expanded');
+
+      // Close all other accordions
+      document.querySelectorAll('.issue-card').forEach(c => {
+        c.classList.remove('expanded');
+      });
+
+      // Toggle current
+      if (!isOpen) {
+        card.classList.add('expanded');
+      }
+    }
+
+    // Toggle Mobile / Desktop views
+    function switchMode(mode) {
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelector(`.tab-btn[data-mode="${mode}"]`).classList.add('active');
+
+      if (mode === 'mobile') {
+        document.querySelectorAll('.mobile-only-view').forEach(el => el.classList.remove('hidden-view'));
+        document.querySelectorAll('.desktop-only-view').forEach(el => el.classList.add('hidden-view'));
+      } else {
+        document.querySelectorAll('.mobile-only-view').forEach(el => el.classList.add('hidden-view'));
+        document.querySelectorAll('.desktop-only-view').forEach(el => el.classList.remove('hidden-view'));
+      }
+    }
+
+    // Interactive client-side filtering variables
+    let activeFilters = {
+      severity: 'all',
+      category: 'all',
+      searchQuery: ''
+    };
+
+    function setFilter(button, filterType) {
+      const parent = button.parentElement;
+      parent.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+      button.classList.add('active');
+
+      activeFilters[filterType] = button.getAttribute('data-filter-value');
+      applyFilters();
+    }
+
+    function filterIssues() {
+      activeFilters.searchQuery = document.getElementById('issueSearch').value.toLowerCase().trim();
+      applyFilters();
+    }
+
+    function applyFilters() {
+      const cards = document.querySelectorAll('.issue-card');
+
+      cards.forEach(card => {
+        const severityAttr = card.getAttribute('data-severity');
+        const severity = severityAttr ? severityAttr.toLowerCase() : '';
+        const categoryAttr = card.getAttribute('data-category');
+        const category = categoryAttr ? categoryAttr.toLowerCase() : '';
+        const text = card.textContent.toLowerCase();
+
+        const matchesSeverity = (activeFilters.severity === 'all' || severity === activeFilters.severity);
+        const matchesCategory = (activeFilters.category === 'all' || category === activeFilters.category);
+        const matchesSearch = (activeFilters.searchQuery === '' || text.includes(activeFilters.searchQuery));
+
+        if (matchesSeverity && matchesCategory && matchesSearch) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    function updateCounts() {
+      const counts = { high: 0, medium: 0, low: 0 };
+      document.querySelectorAll('.issue-card').forEach(card => {
+        const sevAttr = card.getAttribute('data-severity');
+        const sev = sevAttr ? sevAttr.toLowerCase() : '';
+        if (counts[sev] !== undefined) {
+          counts[sev]++;
+        }
+      });
+      document.getElementById('high-count').textContent = counts.high;
+      document.getElementById('med-count').textContent = counts.medium;
+      document.getElementById('low-count').textContent = counts.low;
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      updateCounts();
+      switchMode('mobile');
+    });
+  </script>
+</body>
+
+</html>

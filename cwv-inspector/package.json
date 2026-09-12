@@ -1,0 +1,17 @@
+{
+  "name": "cwv-inspector",
+  "version": "1.0.0",
+  "description": "Inspects projects for Core Web Vitals optimizations and suggestions.",
+  "main": "audit.js",
+  "type": "module",
+  "scripts": {
+    "start": "node audit.js"
+  },
+  "dependencies": {
+    "@babel/parser": "^7.23.0",
+    "@babel/traverse": "^7.23.0",
+    "chrome-launcher": "^1.1.1",
+    "lighthouse": "^11.3.0",
+    "puppeteer": "^22.0.0"
+  }
+}
