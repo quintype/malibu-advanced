@@ -132,30 +132,92 @@ function escapeHtml(str) {
     .replace(/'/g, '&#039;');
 }
 
-/**
- * Helper to build Lighthouse Score Slider HTML.
- */
-function buildSliderHtml(data, title) {
-  if (!data) return '';
-  const diffToGoal = 90 - Math.round(data.performanceScore);
-  const diffText = diffToGoal > 0 ? `${diffToGoal} points below the 90 target` : 'Meets the 90 target!';
 
+
+/**
+ * Helper to build Metrics Grid HTML.
+ */
+function buildMetricGridHtml(lcp, cls, tbt, isLocal = false) {
   return `
-    <div class="lh-score-section">
-      <div class="lh-score-header">
-        <div class="lh-score-title-group">
-          <h4>${title} Performance Score</h4>
-          <div class="val">${Math.round(data.performanceScore)}</div>
+      <div class="metrics-grid ${isLocal ? 'local-data-view hidden-view' : 'api-data-view'}">
+        <!-- LCP Card -->
+        <div class="metric-card">
+          <div class="metric-header-layout">
+            <div class="metric-icon-circle">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+            </div>
+            <div class="metric-title-group">
+              <span class="metric-fullname">Largest Contentful Paint (LCP)</span>
+              <span class="metric-desc-text">Measures loading performance.</span>
+            </div>
+          </div>
+          <div class="metric-value ${lcp.textClass}">${lcp.valueDisplay}</div>
+          <div class="metric-range-bar">
+            <div class="range-indicator" style="left: ${lcp.percent}%;"></div>
+            <div class="range-segments">
+              <span class="seg good"></span><span class="seg warning"></span><span class="seg poor"></span>
+            </div>
+          </div>
+          <div class="metric-bottom-bar">
+            ${getMetricBadgeHtml(lcp)}
+            <span class="threshold-lbl">Good &le; 2.5s</span>
+          </div>
         </div>
-        <div class="lh-score-target">${diffText}</div>
-      </div>
-      <div class="slider-track-container">
-        <div class="slider-track">
-          <div class="slider-track-fill" style="width: ${Math.round(data.performanceScore)}%;"></div>
-          <div class="slider-handle" style="left: ${Math.round(data.performanceScore)}%;"></div>
+
+        <!-- CLS Card -->
+        <div class="metric-card">
+          <div class="metric-header-layout">
+            <div class="metric-icon-circle">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line><line x1="9" y1="12" x2="21" y2="12"></line>
+              </svg>
+            </div>
+            <div class="metric-title-group">
+              <span class="metric-fullname">Cumulative Layout Shift (CLS)</span>
+              <span class="metric-desc-text">Measures visual stability.</span>
+            </div>
+          </div>
+          <div class="metric-value ${cls.textClass}">${cls.valueDisplay}</div>
+          <div class="metric-range-bar">
+            <div class="range-indicator" style="left: ${cls.percent}%;"></div>
+            <div class="range-segments">
+              <span class="seg good"></span><span class="seg warning"></span><span class="seg poor"></span>
+            </div>
+          </div>
+          <div class="metric-bottom-bar">
+            ${getMetricBadgeHtml(cls)}
+            <span class="threshold-lbl">Good &le; 0.1</span>
+          </div>
+        </div>
+
+        <!-- TBT/INP Card -->
+        <div class="metric-card">
+          <div class="metric-header-layout">
+            <div class="metric-icon-circle">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line>
+              </svg>
+            </div>
+            <div class="metric-title-group">
+              <span class="metric-fullname">Total Blocking Time (TBT)</span>
+              <span class="metric-desc-text">Measures responsiveness.</span>
+            </div>
+          </div>
+          <div class="metric-value ${tbt.textClass}">${tbt.valueDisplay}</div>
+          <div class="metric-range-bar">
+            <div class="range-indicator" style="left: ${tbt.percent}%;"></div>
+            <div class="range-segments">
+              <span class="seg good"></span><span class="seg warning"></span><span class="seg poor"></span>
+            </div>
+          </div>
+          <div class="metric-bottom-bar">
+            ${getMetricBadgeHtml(tbt)}
+            <span class="threshold-lbl">Good &le; 200ms</span>
+          </div>
         </div>
       </div>
-    </div>
   `;
 }
 
@@ -178,70 +240,86 @@ export async function generateReport(compiledResult, options) {
   templateHtml = templateHtml.replace('/* CSS_CONTENT_PLACEHOLDER */', cssContent);
 
   const hasLighthouse = options.lighthouseData && !options.lighthouseData.error && options.lighthouseData.mobile;
-  const mobileData = hasLighthouse ? options.lighthouseData.mobile : null;
-  const desktopData = hasLighthouse ? options.lighthouseData.desktop : null;
+  const localMobileData = hasLighthouse ? options.lighthouseData.mobile : null;
+  const localDesktopData = hasLighthouse ? options.lighthouseData.desktop : null;
 
-  // Determine scores
-  const mobileScore = mobileData ? Math.round(mobileData.performanceScore) : compiledResult.healthScore;
-  const desktopScore = desktopData ? Math.round(desktopData.performanceScore) : compiledResult.healthScore;
+  const hasPsi = options.psiData && options.psiData.mobile;
+  const mobileData = hasPsi ? options.psiData.mobile : localMobileData;
+  const desktopData = hasPsi ? options.psiData.desktop : localDesktopData;
 
-  const mobilePassed = mobileData && (mobileData.lcp.value / 1000 <= 2.5 && mobileData.cls.value <= 0.1 && mobileData.tbt.value <= 200);
-  const desktopPassed = desktopData && (desktopData.lcp.value / 1000 <= 2.5 && desktopData.cls.value <= 0.1 && desktopData.tbt.value <= 200);
-
-  let mobileScoreClass = 'good', mobileScoreTextClass = 'good-text', mobileScoreStatus = 'Passed';
-  if (mobileScore < 50) {
-    mobileScoreClass = 'poor';
-  } else if (mobileScore < 90) {
-    mobileScoreClass = 'needs-improvement';
-  }
-  if (hasLighthouse) {
-    if (!mobilePassed) {
-      mobileScoreTextClass = 'danger-text';
-      mobileScoreStatus = 'Failed';
+  // Determine scores for API and Local
+  const getScoreData = (score) => {
+    let cls = 'good', textCls = 'good-text', status = 'Passed';
+    if (score < 50) {
+      cls = 'poor'; textCls = 'danger-text'; status = 'Failed';
+    } else if (score < 90) {
+      cls = 'needs-improvement'; textCls = 'warning-text'; status = 'Needs Improvement';
     }
-  } else {
-    if (mobileScore < 90) {
-      mobileScoreTextClass = 'danger-text';
-      mobileScoreStatus = 'Failed';
-    }
-  }
+    return { score, cls, textCls, status };
+  };
 
-  let desktopScoreClass = 'good', desktopScoreTextClass = 'good-text', desktopScoreStatus = 'Passed';
-  if (desktopScore < 50) {
-    desktopScoreClass = 'poor';
-  } else if (desktopScore < 90) {
-    desktopScoreClass = 'needs-improvement';
-  }
-  if (hasLighthouse) {
-    if (!desktopPassed) {
-      desktopScoreTextClass = 'danger-text';
-      desktopScoreStatus = 'Failed';
-    }
-  } else {
-    if (desktopScore < 90) {
-      desktopScoreTextClass = 'danger-text';
-      desktopScoreStatus = 'Failed';
-    }
-  }
+  const mobileApiScore = getScoreData(mobileData ? Math.round(mobileData.performanceScore) : compiledResult.healthScore);
+  const desktopApiScore = getScoreData(desktopData ? Math.round(desktopData.performanceScore) : compiledResult.healthScore);
+  const mobileLocScore = getScoreData(localMobileData ? Math.round(localMobileData.performanceScore) : mobileApiScore.score);
+  const desktopLocScore = getScoreData(localDesktopData ? Math.round(localDesktopData.performanceScore) : desktopApiScore.score);
 
-  // Calculate metrics details
-  const mLcp = computeMetricDetails(mobileData, 'lcp');
-  const mCls = computeMetricDetails(mobileData, 'cls');
-  const mTbt = computeMetricDetails(mobileData, 'tbt');
-  const mInp = computeMetricDetails(mobileData, 'inp');
+  // Calculate metrics details for lab data table (using Local Lighthouse data)
+  const localMLcp = computeMetricDetails(localMobileData, 'lcp');
+  const localMCls = computeMetricDetails(localMobileData, 'cls');
+  const localMTbt = computeMetricDetails(localMobileData, 'tbt');
+  const localMInp = computeMetricDetails(localMobileData, 'inp');
 
-  const dLcp = computeMetricDetails(desktopData, 'lcp');
-  const dCls = computeMetricDetails(desktopData, 'cls');
-  const dTbt = computeMetricDetails(desktopData, 'tbt');
-  const dInp = computeMetricDetails(desktopData, 'inp');
+  const localDLcp = computeMetricDetails(localDesktopData, 'lcp');
+  const localDCls = computeMetricDetails(localDesktopData, 'cls');
+  const localDTbt = computeMetricDetails(localDesktopData, 'tbt');
+  const localDInp = computeMetricDetails(localDesktopData, 'inp');
 
   // Parse optional CrUX Field Data
-  let cruxLcp = { statusClass: 'warning', statusLabel: 'Static Only', valueDisplay: 'N/A' };
-  let cruxCls = { statusClass: 'warning', statusLabel: 'Static Only', valueDisplay: 'N/A' };
-  let cruxTbt = { statusClass: 'warning', statusLabel: 'Static Only', valueDisplay: 'N/A' };
-  let cruxInp = { statusClass: 'warning', statusLabel: 'Static Only', valueDisplay: 'N/A' };
+  let mobileCruxLcp = { statusClass: 'warning', statusLabel: 'Static Only', valueDisplay: 'N/A' };
+  let mobileCruxCls = { statusClass: 'warning', statusLabel: 'Static Only', valueDisplay: 'N/A' };
+  let mobileCruxTbt = { statusClass: 'warning', statusLabel: 'Static Only', valueDisplay: 'N/A' };
+  let mobileCruxInp = { statusClass: 'warning', statusLabel: 'Static Only', valueDisplay: 'N/A' };
 
-  if (options.cruxData) {
+  let desktopCruxLcp = { statusClass: 'warning', statusLabel: 'Static Only', valueDisplay: 'N/A' };
+  let desktopCruxCls = { statusClass: 'warning', statusLabel: 'Static Only', valueDisplay: 'N/A' };
+  let desktopCruxTbt = { statusClass: 'warning', statusLabel: 'Static Only', valueDisplay: 'N/A' };
+  let desktopCruxInp = { statusClass: 'warning', statusLabel: 'Static Only', valueDisplay: 'N/A' };
+
+  const parsePsiFieldData = (fieldData) => {
+    let res = { lcp: null, cls: null, tbt: null, inp: null };
+    if (fieldData && fieldData.metrics) {
+      const getVal = (key) => fieldData.metrics[key]?.percentile !== undefined ? fieldData.metrics[key].percentile : null;
+      
+      const lcpVal = getVal('LARGEST_CONTENTFUL_PAINT_MS');
+      const clsVal = getVal('CUMULATIVE_LAYOUT_SHIFT_SCORE');
+      const fidVal = getVal('FIRST_INPUT_DELAY_MS');
+      const inpVal = getVal('INTERACTION_TO_NEXT_PAINT');
+
+      if (lcpVal !== null) res.lcp = computeMetricDetails({ lcp: { value: lcpVal } }, 'lcp');
+      if (clsVal !== null) res.cls = computeMetricDetails({ cls: { value: clsVal / 100 } }, 'cls'); // PSI CLS is * 100
+      if (fidVal !== null) res.tbt = computeMetricDetails({ tbt: { value: fidVal } }, 'tbt');
+      else if (inpVal !== null) res.tbt = computeMetricDetails({ tbt: { value: inpVal } }, 'tbt');
+      if (inpVal !== null) res.inp = computeMetricDetails({ inp: { value: inpVal } }, 'inp');
+    }
+    return res;
+  };
+
+  if (options.psiData) {
+    if (options.psiData.mobileField) {
+      const mField = parsePsiFieldData(options.psiData.mobileField);
+      if (mField.lcp) mobileCruxLcp = mField.lcp;
+      if (mField.cls) mobileCruxCls = mField.cls;
+      if (mField.tbt) mobileCruxTbt = mField.tbt;
+      if (mField.inp) mobileCruxInp = mField.inp;
+    }
+    if (options.psiData.desktopField) {
+      const dField = parsePsiFieldData(options.psiData.desktopField);
+      if (dField.lcp) desktopCruxLcp = dField.lcp;
+      if (dField.cls) desktopCruxCls = dField.cls;
+      if (dField.tbt) desktopCruxTbt = dField.tbt;
+      if (dField.inp) desktopCruxInp = dField.inp;
+    }
+  } else if (options.cruxData) {
     const parseCruxMetric = (metricName) => {
       const metrics = options.cruxData?.record?.metrics;
       if (!metrics || !metrics[metricName]) return null;
@@ -255,18 +333,29 @@ export async function generateReport(compiledResult, options) {
     const cruxInpVal = parseCruxMetric('interaction_to_next_paint');
 
     if (cruxLcpVal !== null) {
-      cruxLcp = computeMetricDetails({ lcp: { value: cruxLcpVal } }, 'lcp');
+      mobileCruxLcp = desktopCruxLcp = computeMetricDetails({ lcp: { value: cruxLcpVal } }, 'lcp');
     }
     if (cruxClsVal !== null) {
-      cruxCls = computeMetricDetails({ cls: { value: cruxClsVal } }, 'cls');
+      mobileCruxCls = desktopCruxCls = computeMetricDetails({ cls: { value: cruxClsVal } }, 'cls');
     }
     if (cruxFidVal !== null) {
-      cruxTbt = computeMetricDetails({ tbt: { value: cruxFidVal } }, 'tbt');
+      mobileCruxTbt = desktopCruxTbt = computeMetricDetails({ tbt: { value: cruxFidVal } }, 'tbt');
     }
     if (cruxInpVal !== null) {
-      cruxInp = computeMetricDetails({ inp: { value: cruxInpVal } }, 'inp');
+      mobileCruxInp = desktopCruxInp = computeMetricDetails({ inp: { value: cruxInpVal } }, 'inp');
     }
   }
+
+  // Set overview metrics to use CrUX field data directly
+  const mLcp = mobileCruxLcp;
+  const mCls = mobileCruxCls;
+  const mTbt = mobileCruxTbt;
+  const mInp = mobileCruxInp;
+
+  const dLcp = desktopCruxLcp;
+  const dCls = desktopCruxCls;
+  const dTbt = desktopCruxTbt;
+  const dInp = desktopCruxInp;
 
   // Assessment Banner
   let assessmentBannerHtml = '';
@@ -300,8 +389,7 @@ export async function generateReport(compiledResult, options) {
     }
   }
 
-  const mobileLhHtml = buildSliderHtml(mobileData, 'Mobile');
-  const desktopLhHtml = buildSliderHtml(desktopData, 'Desktop');
+
 
   // Top Recommendations "Fix These First"
   const topIssues = compiledResult.issues.slice(0, 3);
@@ -510,10 +598,20 @@ export async function generateReport(compiledResult, options) {
     .replace(/{{SUMMARY_LOW}}/g, compiledResult.summary.low)
     
      // MOBILE values
-    .replace(/{{MOBILE_MAIN_SCORE}}/g, mobileScore)
-    .replace(/{{MOBILE_SCORE_CLASS}}/g, mobileScoreClass)
-    .replace(/{{MOBILE_SCORE_TEXT_CLASS}}/g, mobileScoreTextClass)
-    .replace(/{{MOBILE_SCORE_STATUS}}/g, mobileScoreStatus)
+    .replace(/{{MOBILE_MAIN_SCORE}}/g, mobileApiScore.score)
+    .replace(/{{MOBILE_SCORE_CLASS}}/g, mobileApiScore.cls)
+    .replace(/{{MOBILE_SCORE_TEXT_CLASS}}/g, mobileApiScore.textCls)
+    .replace(/{{MOBILE_SCORE_STATUS}}/g, mobileApiScore.status)
+
+    .replace(/{{MOBILE_API_SCORE}}/g, mobileApiScore.score)
+    .replace(/{{MOBILE_API_CLASS}}/g, mobileApiScore.cls)
+    .replace(/{{MOBILE_API_TEXT_CLASS}}/g, mobileApiScore.textCls)
+    .replace(/{{MOBILE_API_STATUS}}/g, mobileApiScore.status)
+
+    .replace(/{{MOBILE_LOCAL_SCORE}}/g, mobileLocScore.score)
+    .replace(/{{MOBILE_LOCAL_CLASS}}/g, mobileLocScore.cls)
+    .replace(/{{MOBILE_LOCAL_TEXT_CLASS}}/g, mobileLocScore.textCls)
+    .replace(/{{MOBILE_LOCAL_STATUS}}/g, mobileLocScore.status)
     .replace(/{{MOBILE_LCP_STATUS_CLASS}}/g, mLcp.statusClass)
     .replace(/{{MOBILE_LCP_STATUS_LABEL}}/g, mLcp.statusLabel)
     .replace(/{{MOBILE_LCP_VALUE_DISPLAY}}/g, mLcp.valueDisplay)
@@ -534,59 +632,67 @@ export async function generateReport(compiledResult, options) {
     .replace(/{{MOBILE_TBT_PERCENT}}/g, mTbt.percent)
 
      // Table values and statuses
-    .replace(/{{MOBILE_LCP_FIELD_VALUE}}/g, cruxLcp.valueDisplay)
-    .replace(/{{MOBILE_LCP_FIELD_STATUS}}/g, getStatusBadgeHtml(cruxLcp))
-    .replace(/{{MOBILE_LCP_LAB_VALUE}}/g, mLcp.valueDisplay)
-    .replace(/{{MOBILE_LCP_LAB_STATUS}}/g, getStatusBadgeHtml(mLcp))
+    .replace(/{{MOBILE_LCP_FIELD_VALUE}}/g, mobileCruxLcp.valueDisplay)
+    .replace(/{{MOBILE_LCP_FIELD_STATUS}}/g, getStatusBadgeHtml(mobileCruxLcp))
+    .replace(/{{MOBILE_LCP_LAB_VALUE}}/g, localMLcp.valueDisplay)
+    .replace(/{{MOBILE_LCP_LAB_STATUS}}/g, getStatusBadgeHtml(localMLcp))
 
-    .replace(/{{MOBILE_CLS_FIELD_VALUE}}/g, cruxCls.valueDisplay)
-    .replace(/{{MOBILE_CLS_FIELD_STATUS}}/g, getStatusBadgeHtml(cruxCls))
-    .replace(/{{MOBILE_CLS_LAB_VALUE}}/g, mCls.valueDisplay)
-    .replace(/{{MOBILE_CLS_LAB_STATUS}}/g, getStatusBadgeHtml(mCls))
+    .replace(/{{MOBILE_CLS_FIELD_VALUE}}/g, mobileCruxCls.valueDisplay)
+    .replace(/{{MOBILE_CLS_FIELD_STATUS}}/g, getStatusBadgeHtml(mobileCruxCls))
+    .replace(/{{MOBILE_CLS_LAB_VALUE}}/g, localMCls.valueDisplay)
+    .replace(/{{MOBILE_CLS_LAB_STATUS}}/g, getStatusBadgeHtml(localMCls))
 
-    .replace(/{{MOBILE_TBT_FIELD_VALUE}}/g, cruxTbt.valueDisplay)
-    .replace(/{{MOBILE_TBT_FIELD_STATUS}}/g, getStatusBadgeHtml(cruxTbt))
-    .replace(/{{MOBILE_TBT_LAB_VALUE}}/g, mTbt.valueDisplay)
-    .replace(/{{MOBILE_TBT_LAB_STATUS}}/g, getStatusBadgeHtml(mTbt))
+    .replace(/{{MOBILE_TBT_FIELD_VALUE}}/g, mobileCruxTbt.valueDisplay)
+    .replace(/{{MOBILE_TBT_FIELD_STATUS}}/g, getStatusBadgeHtml(mobileCruxTbt))
+    .replace(/{{MOBILE_TBT_LAB_VALUE}}/g, localMTbt.valueDisplay)
+    .replace(/{{MOBILE_TBT_LAB_STATUS}}/g, getStatusBadgeHtml(localMTbt))
 
-    .replace(/{{MOBILE_INP_FIELD_VALUE}}/g, cruxInp.valueDisplay)
-    .replace(/{{MOBILE_INP_FIELD_STATUS}}/g, getStatusBadgeHtml(cruxInp))
-    .replace(/{{MOBILE_INP_LAB_VALUE}}/g, mInp.valueDisplay)
-    .replace(/{{MOBILE_INP_LAB_STATUS}}/g, getStatusBadgeHtml(mInp))
+    .replace(/{{MOBILE_INP_FIELD_VALUE}}/g, mobileCruxInp.valueDisplay)
+    .replace(/{{MOBILE_INP_FIELD_STATUS}}/g, getStatusBadgeHtml(mobileCruxInp))
+    .replace(/{{MOBILE_INP_LAB_VALUE}}/g, localMInp.valueDisplay)
+    .replace(/{{MOBILE_INP_LAB_STATUS}}/g, getStatusBadgeHtml(localMInp))
 
     // Desktop Table values and statuses
-    .replace(/{{DESKTOP_LCP_FIELD_VALUE}}/g, cruxLcp.valueDisplay)
-    .replace(/{{DESKTOP_LCP_FIELD_STATUS}}/g, getStatusBadgeHtml(cruxLcp))
-    .replace(/{{DESKTOP_LCP_LAB_VALUE}}/g, dLcp.valueDisplay)
-    .replace(/{{DESKTOP_LCP_LAB_STATUS}}/g, getStatusBadgeHtml(dLcp))
+    .replace(/{{DESKTOP_LCP_FIELD_VALUE}}/g, desktopCruxLcp.valueDisplay)
+    .replace(/{{DESKTOP_LCP_FIELD_STATUS}}/g, getStatusBadgeHtml(desktopCruxLcp))
+    .replace(/{{DESKTOP_LCP_LAB_VALUE}}/g, localDLcp.valueDisplay)
+    .replace(/{{DESKTOP_LCP_LAB_STATUS}}/g, getStatusBadgeHtml(localDLcp))
 
-    .replace(/{{DESKTOP_CLS_FIELD_VALUE}}/g, cruxCls.valueDisplay)
-    .replace(/{{DESKTOP_CLS_FIELD_STATUS}}/g, getStatusBadgeHtml(cruxCls))
-    .replace(/{{DESKTOP_CLS_LAB_VALUE}}/g, dCls.valueDisplay)
-    .replace(/{{DESKTOP_CLS_LAB_STATUS}}/g, getStatusBadgeHtml(dCls))
+    .replace(/{{DESKTOP_CLS_FIELD_VALUE}}/g, desktopCruxCls.valueDisplay)
+    .replace(/{{DESKTOP_CLS_FIELD_STATUS}}/g, getStatusBadgeHtml(desktopCruxCls))
+    .replace(/{{DESKTOP_CLS_LAB_VALUE}}/g, localDCls.valueDisplay)
+    .replace(/{{DESKTOP_CLS_LAB_STATUS}}/g, getStatusBadgeHtml(localDCls))
 
-    .replace(/{{DESKTOP_TBT_FIELD_VALUE}}/g, cruxTbt.valueDisplay)
-    .replace(/{{DESKTOP_TBT_FIELD_STATUS}}/g, getStatusBadgeHtml(cruxTbt))
-    .replace(/{{DESKTOP_TBT_LAB_VALUE}}/g, dTbt.valueDisplay)
-    .replace(/{{DESKTOP_TBT_LAB_STATUS}}/g, getStatusBadgeHtml(dTbt))
+    .replace(/{{DESKTOP_TBT_FIELD_VALUE}}/g, desktopCruxTbt.valueDisplay)
+    .replace(/{{DESKTOP_TBT_FIELD_STATUS}}/g, getStatusBadgeHtml(desktopCruxTbt))
+    .replace(/{{DESKTOP_TBT_LAB_VALUE}}/g, localDTbt.valueDisplay)
+    .replace(/{{DESKTOP_TBT_LAB_STATUS}}/g, getStatusBadgeHtml(localDTbt))
 
-    .replace(/{{DESKTOP_INP_FIELD_VALUE}}/g, cruxInp.valueDisplay)
-    .replace(/{{DESKTOP_INP_FIELD_STATUS}}/g, getStatusBadgeHtml(cruxInp))
-    .replace(/{{DESKTOP_INP_LAB_VALUE}}/g, dInp.valueDisplay)
-    .replace(/{{DESKTOP_INP_LAB_STATUS}}/g, getStatusBadgeHtml(dInp))
+    .replace(/{{DESKTOP_INP_FIELD_VALUE}}/g, desktopCruxInp.valueDisplay)
+    .replace(/{{DESKTOP_INP_FIELD_STATUS}}/g, getStatusBadgeHtml(desktopCruxInp))
+    .replace(/{{DESKTOP_INP_LAB_VALUE}}/g, localDInp.valueDisplay)
+    .replace(/{{DESKTOP_INP_LAB_STATUS}}/g, getStatusBadgeHtml(localDInp))
 
     // Card status badges
     .replace(/{{MOBILE_LCP_STATUS_BADGE}}/g, getMetricBadgeHtml(mLcp))
     .replace(/{{MOBILE_CLS_STATUS_BADGE}}/g, getMetricBadgeHtml(mCls))
     .replace(/{{MOBILE_TBT_STATUS_BADGE}}/g, getMetricBadgeHtml(mTbt))
 
-    .replace(/<!-- MOBILE_LIGHTHOUSE_SECTION -->/g, mobileLhHtml)
-
     // DESKTOP values
-    .replace(/{{DESKTOP_MAIN_SCORE}}/g, desktopScore)
-    .replace(/{{DESKTOP_SCORE_CLASS}}/g, desktopScoreClass)
-    .replace(/{{DESKTOP_SCORE_TEXT_CLASS}}/g, desktopScoreTextClass)
-    .replace(/{{DESKTOP_SCORE_STATUS}}/g, desktopScoreStatus)
+    .replace(/{{DESKTOP_MAIN_SCORE}}/g, desktopApiScore.score)
+    .replace(/{{DESKTOP_SCORE_CLASS}}/g, desktopApiScore.cls)
+    .replace(/{{DESKTOP_SCORE_TEXT_CLASS}}/g, desktopApiScore.textCls)
+    .replace(/{{DESKTOP_SCORE_STATUS}}/g, desktopApiScore.status)
+
+    .replace(/{{DESKTOP_API_SCORE}}/g, desktopApiScore.score)
+    .replace(/{{DESKTOP_API_CLASS}}/g, desktopApiScore.cls)
+    .replace(/{{DESKTOP_API_TEXT_CLASS}}/g, desktopApiScore.textCls)
+    .replace(/{{DESKTOP_API_STATUS}}/g, desktopApiScore.status)
+
+    .replace(/{{DESKTOP_LOCAL_SCORE}}/g, desktopLocScore.score)
+    .replace(/{{DESKTOP_LOCAL_CLASS}}/g, desktopLocScore.cls)
+    .replace(/{{DESKTOP_LOCAL_TEXT_CLASS}}/g, desktopLocScore.textCls)
+    .replace(/{{DESKTOP_LOCAL_STATUS}}/g, desktopLocScore.status)
     .replace(/{{DESKTOP_LCP_STATUS_CLASS}}/g, dLcp.statusClass)
     .replace(/{{DESKTOP_LCP_STATUS_LABEL}}/g, dLcp.statusLabel)
     .replace(/{{DESKTOP_LCP_VALUE_DISPLAY}}/g, dLcp.valueDisplay)
@@ -605,15 +711,16 @@ export async function generateReport(compiledResult, options) {
     .replace(/{{DESKTOP_TBT_TEXT_CLASS}}/g, dTbt.textClass)
     .replace(/{{DESKTOP_TBT_SUBDESC}}/g, dTbt.subdesc)
     .replace(/{{DESKTOP_TBT_PERCENT}}/g, dTbt.percent)
-    .replace(/<!-- DESKTOP_LIGHTHOUSE_SECTION -->/g, desktopLhHtml)
 
     // Desktop Card status badges
     .replace(/{{DESKTOP_LCP_STATUS_BADGE}}/g, getMetricBadgeHtml(dLcp))
     .replace(/{{DESKTOP_CLS_STATUS_BADGE}}/g, getMetricBadgeHtml(dCls))
     .replace(/{{DESKTOP_TBT_STATUS_BADGE}}/g, getMetricBadgeHtml(dTbt))
 
-     // Sections
+    // Sections
     .replace(/<!-- ASSESSMENT_BANNER_SECTION -->/g, assessmentBannerHtml)
+    .replace(/<!-- MOBILE_METRICS_GRID -->/g, buildMetricGridHtml(mLcp, mCls, mTbt, false) + buildMetricGridHtml(localMLcp, localMCls, localMTbt, true))
+    .replace(/<!-- DESKTOP_METRICS_GRID -->/g, buildMetricGridHtml(dLcp, dCls, dTbt, false) + buildMetricGridHtml(localDLcp, localDCls, localDTbt, true))
     .replace(/{{TOP_RECOMMENDATIONS}}/g, topRecsHtml)
     .replace(/{{ISSUES_ACCORDIONS}}/g, accordionsHtml)
     .replace(/{{SEARCH_ICON}}/g, getIconSvg('search', 16, 2));

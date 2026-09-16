@@ -5,7 +5,7 @@ import puppeteer from 'puppeteer';
 /**
  * Extracts score and key metrics from Lighthouse report JSON.
  */
-function extractScores(reportJson) {
+export function extractScores(reportJson) {
   const audits = reportJson.audits;
   return {
     performanceScore: reportJson.categories.performance.score * 100,

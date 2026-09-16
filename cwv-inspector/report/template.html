@@ -70,7 +70,9 @@
         <h2>EXECUTIVE SUMMARY</h2>
       </div>
 
-      <div class="executive-summary-card">
+      <div class="executive-summary-card"
+        data-api-score="{{MOBILE_API_SCORE}}" data-api-class="{{MOBILE_API_CLASS}}" data-api-text-class="{{MOBILE_API_TEXT_CLASS}}" data-api-status="{{MOBILE_API_STATUS}}"
+        data-local-score="{{MOBILE_LOCAL_SCORE}}" data-local-class="{{MOBILE_LOCAL_CLASS}}" data-local-text-class="{{MOBILE_LOCAL_TEXT_CLASS}}" data-local-status="{{MOBILE_LOCAL_STATUS}}">
         <div class="exec-gauge-col">
           <div class="exec-circular-gauge {{MOBILE_SCORE_CLASS}}" style="--score: {{MOBILE_MAIN_SCORE}};">
             <div class="exec-gauge-score-value">{{MOBILE_MAIN_SCORE}}</div>
@@ -97,166 +99,14 @@
             delivers a fast, stable, and responsive experience for users, which helps improve engagement and supports
             better search visibility.
           </p>
-          <div class="exec-pillars">
-            <div class="pillar-item">
-              <div class="pillar-icon-wrapper user-ux">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-                  stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                  <circle cx="9" cy="7" r="4"></circle>
-                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                </svg>
-              </div>
-              <div class="pillar-text">
-                <strong>Great User Experience</strong>
-                <span>Fast load times and smooth interactions.</span>
-              </div>
-            </div>
-            <div class="pillar-item">
-              <div class="pillar-icon-wrapper seo-adv">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-                  stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
-                  <polyline points="17 6 23 6 23 12"></polyline>
-                </svg>
-              </div>
-              <div class="pillar-text">
-                <strong>SEO Advantage</strong>
-                <span>Strong performance supports higher rankings.</span>
-              </div>
-            </div>
-            <div class="pillar-item">
-              <div class="pillar-icon-wrapper stable-rel">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-                  stroke-linecap="round" stroke-linejoin="round">
-                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                  <line x1="9" y1="3" x2="9" y2="21"></line>
-                  <line x1="9" y1="12" x2="21" y2="12"></line>
-                </svg>
-              </div>
-              <div class="pillar-text">
-                <strong>Stable & Reliable</strong>
-                <span>Low layout shift and high visual stability.</span>
-              </div>
-            </div>
-            <div class="pillar-item">
-              <div class="pillar-icon-wrapper opt-perf">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-                  stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
-                </svg>
-              </div>
-              <div class="pillar-text">
-                <strong>Well-Optimized</strong>
-                <span>Continued optimization can unlock even more performance.</span>
-              </div>
+          <div class="metrics-toggle-container" style="margin-top: 24px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center;">
+            <h3 class="metrics-overview-title" style="font-size: 0.85rem; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; color: #004b87; margin: 0;">CORE WEB VITALS OVERVIEW</h3>
+            <div class="metrics-toggle" style="display: flex; background: #f1f5f9; padding: 4px; border-radius: 8px; gap: 4px;">
+              <button class="metric-btn active" onclick="toggleMetricsView('mobile', 'api', this)" style="border: none; background: transparent; padding: 6px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; cursor: pointer; color: var(--text-secondary); transition: all 0.2s;">Field Data (CrUX)</button>
+              <button class="metric-btn" onclick="toggleMetricsView('mobile', 'local', this)" style="border: none; background: transparent; padding: 6px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; cursor: pointer; color: var(--text-secondary); transition: all 0.2s;">Lab Data (Local)</button>
             </div>
           </div>
-        </div>
-      </div>
-
-      <!-- Section: Core Web Vitals (Mobile) -->
-      <div class="section-title-bar">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-          stroke-linecap="round" stroke-linejoin="round">
-          <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
-        </svg>
-        <h2>CORE WEB VITALS OVERVIEW</h2>
-      </div>
-
-      <!-- Core Web Vitals Metric Grid (Mobile) -->
-      <div class="metrics-grid">
-        <!-- LCP Card -->
-        <div class="metric-card">
-          <div class="metric-header-layout">
-            <div class="metric-icon-circle">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-                stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="10"></circle>
-                <polyline points="12 6 12 12 16 14"></polyline>
-              </svg>
-            </div>
-            <div class="metric-title-group">
-              <span class="metric-fullname">Largest Contentful Paint (LCP)</span>
-              <span class="metric-desc-text">Measures loading performance.</span>
-            </div>
-          </div>
-          <div class="metric-value {{MOBILE_LCP_TEXT_CLASS}}">{{MOBILE_LCP_VALUE_DISPLAY}}</div>
-          <div class="metric-range-bar">
-            <div class="range-indicator" style="left: {{MOBILE_LCP_PERCENT}}%;"></div>
-            <div class="range-segments">
-              <span class="seg good"></span>
-              <span class="seg warning"></span>
-              <span class="seg poor"></span>
-            </div>
-          </div>
-          <div class="metric-bottom-bar">
-            {{MOBILE_LCP_STATUS_BADGE}}
-            <span class="threshold-lbl">Good &le; 2.5s</span>
-          </div>
-        </div>
-
-        <!-- CLS Card -->
-        <div class="metric-card">
-          <div class="metric-header-layout">
-            <div class="metric-icon-circle">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-                stroke-linecap="round" stroke-linejoin="round">
-                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                <line x1="9" y1="3" x2="9" y2="21"></line>
-                <line x1="9" y1="12" x2="21" y2="12"></line>
-              </svg>
-            </div>
-            <div class="metric-title-group">
-              <span class="metric-fullname">Cumulative Layout Shift (CLS)</span>
-              <span class="metric-desc-text">Measures visual stability.</span>
-            </div>
-          </div>
-          <div class="metric-value {{MOBILE_CLS_TEXT_CLASS}}">{{MOBILE_CLS_VALUE_DISPLAY}}</div>
-          <div class="metric-range-bar">
-            <div class="range-indicator" style="left: {{MOBILE_CLS_PERCENT}}%;"></div>
-            <div class="range-segments">
-              <span class="seg good"></span>
-              <span class="seg warning"></span>
-              <span class="seg poor"></span>
-            </div>
-          </div>
-          <div class="metric-bottom-bar">
-            {{MOBILE_CLS_STATUS_BADGE}}
-            <span class="threshold-lbl">Good &le; 0.1</span>
-          </div>
-        </div>
-
-        <!-- TBT Card -->
-        <div class="metric-card">
-          <div class="metric-header-layout">
-            <div class="metric-icon-circle">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-                stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="10"></circle>
-                <line x1="12" y1="8" x2="12" y2="12"></line>
-                <line x1="12" y1="16" x2="12.01" y2="16"></line>
-              </svg>
-            </div>
-            <div class="metric-title-group">
-              <span class="metric-fullname">Total Blocking Time (TBT)</span>
-              <span class="metric-desc-text">Measures responsiveness.</span>
-            </div>
-          </div>
-          <div class="metric-value {{MOBILE_TBT_TEXT_CLASS}}">{{MOBILE_TBT_VALUE_DISPLAY}}</div>
-          <div class="metric-range-bar">
-            <div class="range-indicator" style="left: {{MOBILE_TBT_PERCENT}}%;"></div>
-            <div class="range-segments">
-              <span class="seg good"></span>
-              <span class="seg warning"></span>
-              <span class="seg poor"></span>
-            </div>
-          </div>
-          <div class="metric-bottom-bar">
-            {{MOBILE_TBT_STATUS_BADGE}}
-            <span class="threshold-lbl">Good &le; 200ms</span>
-          </div>
+          <!-- MOBILE_METRICS_GRID -->
         </div>
       </div>
 
@@ -277,7 +127,9 @@
         <h2>EXECUTIVE SUMMARY</h2>
       </div>
 
-      <div class="executive-summary-card">
+      <div class="executive-summary-card"
+        data-api-score="{{DESKTOP_API_SCORE}}" data-api-class="{{DESKTOP_API_CLASS}}" data-api-text-class="{{DESKTOP_API_TEXT_CLASS}}" data-api-status="{{DESKTOP_API_STATUS}}"
+        data-local-score="{{DESKTOP_LOCAL_SCORE}}" data-local-class="{{DESKTOP_LOCAL_CLASS}}" data-local-text-class="{{DESKTOP_LOCAL_TEXT_CLASS}}" data-local-status="{{DESKTOP_LOCAL_STATUS}}">
         <div class="exec-gauge-col">
           <div class="exec-circular-gauge {{DESKTOP_SCORE_CLASS}}" style="--score: {{DESKTOP_MAIN_SCORE}};">
             <div class="exec-gauge-score-value">{{DESKTOP_MAIN_SCORE}}</div>
@@ -304,166 +156,14 @@
             delivers a fast, stable, and responsive experience for users, which helps improve engagement and supports
             better search visibility.
           </p>
-          <div class="exec-pillars">
-            <div class="pillar-item">
-              <div class="pillar-icon-wrapper user-ux">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-                  stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                  <circle cx="9" cy="7" r="4"></circle>
-                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                </svg>
-              </div>
-              <div class="pillar-text">
-                <strong>Great User Experience</strong>
-                <span>Fast load times and smooth interactions.</span>
-              </div>
-            </div>
-            <div class="pillar-item">
-              <div class="pillar-icon-wrapper seo-adv">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-                  stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
-                  <polyline points="17 6 23 6 23 12"></polyline>
-                </svg>
-              </div>
-              <div class="pillar-text">
-                <strong>SEO Advantage</strong>
-                <span>Strong performance supports higher rankings.</span>
-              </div>
-            </div>
-            <div class="pillar-item">
-              <div class="pillar-icon-wrapper stable-rel">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-                  stroke-linecap="round" stroke-linejoin="round">
-                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                  <line x1="9" y1="3" x2="9" y2="21"></line>
-                  <line x1="9" y1="12" x2="21" y2="12"></line>
-                </svg>
-              </div>
-              <div class="pillar-text">
-                <strong>Stable & Reliable</strong>
-                <span>Low layout shift and high visual stability.</span>
-              </div>
-            </div>
-            <div class="pillar-item">
-              <div class="pillar-icon-wrapper opt-perf">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-                  stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
-                </svg>
-              </div>
-              <div class="pillar-text">
-                <strong>Well-Optimized</strong>
-                <span>Continued optimization can unlock even more performance.</span>
-              </div>
+          <div class="metrics-toggle-container" style="margin-top: 24px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center;">
+            <h3 class="metrics-overview-title" style="font-size: 0.85rem; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; color: #004b87; margin: 0;">CORE WEB VITALS OVERVIEW</h3>
+            <div class="metrics-toggle" style="display: flex; background: #f1f5f9; padding: 4px; border-radius: 8px; gap: 4px;">
+              <button class="metric-btn active" onclick="toggleMetricsView('desktop', 'api', this)" style="border: none; background: transparent; padding: 6px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; cursor: pointer; color: var(--text-secondary); transition: all 0.2s;">Field Data (CrUX)</button>
+              <button class="metric-btn" onclick="toggleMetricsView('desktop', 'local', this)" style="border: none; background: transparent; padding: 6px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; cursor: pointer; color: var(--text-secondary); transition: all 0.2s;">Lab Data (Local)</button>
             </div>
           </div>
-        </div>
-      </div>
-
-      <!-- Section: Core Web Vitals (Desktop) -->
-      <div class="section-title-bar">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-          stroke-linecap="round" stroke-linejoin="round">
-          <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
-        </svg>
-        <h2>CORE WEB VITALS OVERVIEW</h2>
-      </div>
-
-      <!-- Core Web Vitals Metric Grid (Desktop) -->
-      <div class="metrics-grid">
-        <!-- LCP Card -->
-        <div class="metric-card">
-          <div class="metric-header-layout">
-            <div class="metric-icon-circle">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-                stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="10"></circle>
-                <polyline points="12 6 12 12 16 14"></polyline>
-              </svg>
-            </div>
-            <div class="metric-title-group">
-              <span class="metric-fullname">Largest Contentful Paint (LCP)</span>
-              <span class="metric-desc-text">Measures loading performance.</span>
-            </div>
-          </div>
-          <div class="metric-value {{DESKTOP_LCP_TEXT_CLASS}}">{{DESKTOP_LCP_VALUE_DISPLAY}}</div>
-          <div class="metric-range-bar">
-            <div class="range-indicator" style="left: {{DESKTOP_LCP_PERCENT}}%;"></div>
-            <div class="range-segments">
-              <span class="seg good"></span>
-              <span class="seg warning"></span>
-              <span class="seg poor"></span>
-            </div>
-          </div>
-          <div class="metric-bottom-bar">
-            {{DESKTOP_LCP_STATUS_BADGE}}
-            <span class="threshold-lbl">Good &le; 2.5s</span>
-          </div>
-        </div>
-
-        <!-- CLS Card -->
-        <div class="metric-card">
-          <div class="metric-header-layout">
-            <div class="metric-icon-circle">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-                stroke-linecap="round" stroke-linejoin="round">
-                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                <line x1="9" y1="3" x2="9" y2="21"></line>
-                <line x1="9" y1="12" x2="21" y2="12"></line>
-              </svg>
-            </div>
-            <div class="metric-title-group">
-              <span class="metric-fullname">Cumulative Layout Shift (CLS)</span>
-              <span class="metric-desc-text">Measures visual stability.</span>
-            </div>
-          </div>
-          <div class="metric-value {{DESKTOP_CLS_TEXT_CLASS}}">{{DESKTOP_CLS_VALUE_DISPLAY}}</div>
-          <div class="metric-range-bar">
-            <div class="range-indicator" style="left: {{DESKTOP_CLS_PERCENT}}%;"></div>
-            <div class="range-segments">
-              <span class="seg good"></span>
-              <span class="seg warning"></span>
-              <span class="seg poor"></span>
-            </div>
-          </div>
-          <div class="metric-bottom-bar">
-            {{DESKTOP_CLS_STATUS_BADGE}}
-            <span class="threshold-lbl">Good &le; 0.1</span>
-          </div>
-        </div>
-
-        <!-- TBT Card -->
-        <div class="metric-card">
-          <div class="metric-header-layout">
-            <div class="metric-icon-circle">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-                stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="10"></circle>
-                <line x1="12" y1="8" x2="12" y2="12"></line>
-                <line x1="12" y1="16" x2="12.01" y2="16"></line>
-              </svg>
-            </div>
-            <div class="metric-title-group">
-              <span class="metric-fullname">Total Blocking Time (TBT)</span>
-              <span class="metric-desc-text">Measures responsiveness.</span>
-            </div>
-          </div>
-          <div class="metric-value {{DESKTOP_TBT_TEXT_CLASS}}">{{DESKTOP_TBT_VALUE_DISPLAY}}</div>
-          <div class="metric-range-bar">
-            <div class="range-indicator" style="left: {{DESKTOP_TBT_PERCENT}}%;"></div>
-            <div class="range-segments">
-              <span class="seg good"></span>
-              <span class="seg warning"></span>
-              <span class="seg poor"></span>
-            </div>
-          </div>
-          <div class="metric-bottom-bar">
-            {{DESKTOP_TBT_STATUS_BADGE}}
-            <span class="threshold-lbl">Good &le; 200ms</span>
-          </div>
+          <!-- DESKTOP_METRICS_GRID -->
         </div>
       </div>
 
@@ -709,6 +409,58 @@
       // Toggle current
       if (!isOpen) {
         card.classList.add('expanded');
+      }
+    }
+
+    // Toggle Metrics View
+    function toggleMetricsView(mode, view, btn) {
+      const container = btn.closest('.exec-details-col');
+      const card = btn.closest('.executive-summary-card');
+      
+      if (card) {
+        const prefix = view === 'api' ? 'api' : 'local';
+        const score = card.getAttribute(`data-${prefix}-score`);
+        const scoreClass = card.getAttribute(`data-${prefix}-class`);
+        const textClass = card.getAttribute(`data-${prefix}-text-class`);
+        const statusText = card.getAttribute(`data-${prefix}-status`);
+
+        const gauge = card.querySelector('.exec-circular-gauge');
+        if (gauge) {
+          gauge.className = `exec-circular-gauge ${scoreClass}`;
+          gauge.style.setProperty('--score', score);
+        }
+        
+        const scoreVal = card.querySelector('.exec-gauge-score-value');
+        if (scoreVal) scoreVal.textContent = score;
+        
+        const fraction = card.querySelector('.exec-fraction strong');
+        if (fraction) fraction.textContent = score;
+
+        const statusEl = card.querySelector('.exec-status');
+        if (statusEl) {
+          statusEl.className = `exec-status ${textClass}`;
+          statusEl.textContent = statusText;
+        }
+      }
+      
+      // Update button styles
+      container.querySelectorAll('.metric-btn').forEach(b => {
+        b.classList.remove('active');
+        b.style.backgroundColor = 'transparent';
+        b.style.color = 'var(--text-secondary)';
+        b.style.boxShadow = 'none';
+      });
+      btn.classList.add('active');
+      btn.style.backgroundColor = '#ffffff';
+      btn.style.color = '#004b87';
+      btn.style.boxShadow = '0 2px 5px rgba(0,0,0,0.05)';
+
+      // Toggle Grids
+      container.querySelectorAll('.metrics-grid').forEach(grid => grid.classList.add('hidden-view'));
+      if (view === 'api') {
+        container.querySelector('.api-data-view').classList.remove('hidden-view');
+      } else {
+        container.querySelector('.local-data-view').classList.remove('hidden-view');
       }
     }
 

@@ -6,7 +6,7 @@ import { execSync } from 'child_process';
 import { scanFiles } from './scanners/scanFiles.js';
 import { parseReactCode } from './scanners/parseReact.js';
 import { scanDependencies } from './scanners/dependencyScanner.js';
-import { runLighthouseAudit } from './analyzers/lighthouse.js';
+import { runLighthouseAudit, extractScores } from './analyzers/lighthouse.js';
 
 import { analyzeLcp } from './analyzers/lcp.js';
 import { analyzeCls } from './analyzers/cls.js';
@@ -177,6 +177,34 @@ Options:
     }
   }
 
+  // Fetch PSI Data
+  let psiData = null;
+  if (url) {
+    const psiApiKey = process.env.PSI_API_KEY || 'AIzaSyBlp2RAKJY40LUJPx-mrY93225m_9Q-h9Y';
+    console.log('⚡ Fetching Performance Data from Google PageSpeed Insights API...');
+    try {
+      const psiMobileRes = await fetch(`https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${encodeURIComponent(url)}&key=${psiApiKey}&strategy=mobile`);
+      const psiDesktopRes = await fetch(`https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${encodeURIComponent(url)}&key=${psiApiKey}&strategy=desktop`);
+      
+      if (psiMobileRes.ok && psiDesktopRes.ok) {
+        const mobileJson = await psiMobileRes.json();
+        const desktopJson = await psiDesktopRes.json();
+        
+        psiData = {
+          mobile: extractScores(mobileJson.lighthouseResult),
+          desktop: extractScores(desktopJson.lighthouseResult),
+          mobileField: mobileJson.loadingExperience,
+          desktopField: desktopJson.loadingExperience
+        };
+        console.log('PageSpeed Insights Data (including Field Data) fetched successfully.');
+      } else {
+        console.warn(`PSI API failed. Mobile: ${psiMobileRes.status}, Desktop: ${psiDesktopRes.status}`);
+      }
+    } catch (err) {
+      console.warn('PSI API fetch failed:', err.message);
+    }
+  }
+
   // Step 5: Compile recommendations
   console.log('Compiling findings and calculations...');
   const astElements = [];
@@ -220,6 +248,7 @@ Options:
     url,
     lighthouseData,
     cruxData,
+    psiData,
     clientName,
     gitBranch
   });
