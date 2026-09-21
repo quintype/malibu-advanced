@@ -1029,3 +1029,100 @@ body {
     display: none !important;
   }
 }
+
+/* CrUX Raw Data Section */
+.crux-raw-section {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 32px;
+  margin-bottom: 40px;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.02);
+}
+
+.crux-raw-header {
+  margin-bottom: 24px;
+}
+
+.crux-raw-header h3 {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--info);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.crux-raw-header p {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+.crux-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 24px;
+}
+
+.crux-metric-card {
+  background: #f8fafc;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.crux-metric-title {
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+  font-size: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.crux-p75-value {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--info);
+}
+
+.crux-histogram-bar {
+  display: flex;
+  height: 12px;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.crux-bar-good {
+  background-color: var(--success);
+}
+
+.crux-bar-ni {
+  background-color: var(--warning);
+}
+
+.crux-bar-poor {
+  background-color: var(--danger);
+}
+
+.crux-legend {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.crux-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.crux-legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}

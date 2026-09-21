@@ -157,10 +157,11 @@ Options:
 
   // Fetch optional Chrome UX Report (CrUX) Field Data
   let cruxData = null;
-  if (url && process.env.CRUX_API_KEY) {
+  const cruxApiKey = process.env.CRUX_API_KEY || 'AIzaSyCxH_Ch4j49NIzqjfYwPIKRLsTc13FS-Ek';
+  if (url && cruxApiKey) {
     console.log('⚡ Fetching Field Data from Google CrUX API...');
     try {
-      const cruxRes = await fetch(`https://chromeuxreport.googleapis.com/v1/records:queryRecord?key=${process.env.CRUX_API_KEY}`, {
+      const cruxRes = await fetch(`https://chromeuxreport.googleapis.com/v1/records:queryRecord?key=${cruxApiKey}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ url: url })

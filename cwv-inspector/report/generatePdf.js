@@ -588,7 +588,69 @@ export async function generateReport(compiledResult, options) {
     minute: '2-digit'
   });
 
+  let cruxHistogramsHtml = '';
+  if (options.cruxData && options.cruxData.record && options.cruxData.record.metrics) {
+    const metrics = options.cruxData.record.metrics;
+    
+    const renderMetric = (metricId, title, formatVal = v => v) => {
+      if (!metrics[metricId] || !metrics[metricId].histogram) return '';
+      const hist = metrics[metricId].histogram;
+      const p75 = metrics[metricId].percentiles ? metrics[metricId].percentiles.p75 : 'N/A';
+      
+      const goodPct = (hist[0] ? (hist[0].density * 100).toFixed(1) : '0') + '%';
+      const niPct = (hist[1] ? (hist[1].density * 100).toFixed(1) : '0') + '%';
+      const poorPct = (hist[2] ? (hist[2].density * 100).toFixed(1) : '0') + '%';
+      
+      return `
+        <div class="crux-metric-card">
+          <div class="crux-metric-title">
+            <span>${title}</span>
+            <span class="crux-p75-value">${p75 !== 'N/A' ? formatVal(p75) : 'N/A'}</span>
+          </div>
+          <div class="crux-histogram-bar">
+            <div class="crux-bar-good" style="width: ${goodPct}"></div>
+            <div class="crux-bar-ni" style="width: ${niPct}"></div>
+            <div class="crux-bar-poor" style="width: ${poorPct}"></div>
+          </div>
+          <div class="crux-legend">
+            <div class="crux-legend-item"><div class="crux-legend-dot crux-bar-good"></div>Good (${goodPct})</div>
+            <div class="crux-legend-item"><div class="crux-legend-dot crux-bar-ni"></div>Needs Impr. (${niPct})</div>
+            <div class="crux-legend-item"><div class="crux-legend-dot crux-bar-poor"></div>Poor (${poorPct})</div>
+          </div>
+        </div>
+      `;
+    };
+
+    const lcpHtml = renderMetric('largest_contentful_paint', 'Largest Contentful Paint (LCP)', v => (v / 1000).toFixed(2) + 's');
+    const clsHtml = renderMetric('cumulative_layout_shift', 'Cumulative Layout Shift (CLS)', v => v);
+    const inpHtml = renderMetric('interaction_to_next_paint', 'Interaction to Next Paint (INP)', v => v + 'ms');
+
+    if (lcpHtml || clsHtml || inpHtml) {
+      cruxHistogramsHtml = `
+        <div class="crux-raw-section">
+          <div class="crux-raw-header">
+            <h3>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="20" x2="18" y2="10"></line>
+                <line x1="12" y1="20" x2="12" y2="4"></line>
+                <line x1="6" y1="20" x2="6" y2="14"></line>
+              </svg>
+              Chrome UX Report - 28-Day Field Data
+            </h3>
+            <p>Real-world user experience distributions (Good, Needs Improvement, Poor).</p>
+          </div>
+          <div class="crux-metrics-grid">
+            ${lcpHtml}
+            ${clsHtml}
+            ${inpHtml}
+          </div>
+        </div>
+      `;
+    }
+  }
+
   templateHtml = templateHtml
+    .replace(/{{CRUX_HISTOGRAMS_SECTION}}/g, cruxHistogramsHtml)
     .replace(/{{CLIENT_NAME}}/g, options.clientName || 'Default Project')
     .replace(/{{PROJECT_PATH}}/g, projectName)
     .replace(/{{AUDIT_DATE}}/g, formattedDate)

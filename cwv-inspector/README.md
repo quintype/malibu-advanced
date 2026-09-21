@@ -26,6 +26,7 @@ The primary objectives of the engineering implementation are:
 *   To programmatically correlate runtime-shifted selectors with static AST coordinates.
 *   To generate structured, grouped recommendations that point to specific lines of code.
 *   To compute a unified Health Score and render interactive HTML/PDF diagnostic reports.
+*   To visualize real-world Chrome UX Report (CrUX) field data via histograms.
 
 ---
 
@@ -223,6 +224,17 @@ npm install
 ```
 
 ### Starting the Server
+
+**Environment Variables (.env)**
+You can optionally place a `.env` file in the `cwv-inspector/` directory with your own API keys:
+```env
+# Required for 28-Day Field Data Histograms
+CRUX_API_KEY=your_chrome_ux_report_api_key
+
+# Optional: Overrides default PSI key
+PSI_API_KEY=your_pagespeed_insights_api_key
+```
+
 Start the Express server:
 ```bash
 node server.js
