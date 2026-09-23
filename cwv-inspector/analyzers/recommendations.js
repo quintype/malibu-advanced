@@ -29,6 +29,31 @@ export function compileRecommendations(staticIssues, lighthouseIssues = null, as
   const matchedStaticIndices = new Set();
   const correlatedIssues = [];
 
+  // Custom Observer Fallback
+  const observerCorrelatedResult = [];
+  if (lighthouseIssues && Array.isArray(lighthouseIssues.customShifts)) {
+    const observerElements = [];
+    lighthouseIssues.customShifts.forEach(shift => {
+      if (Array.isArray(shift.sources)) {
+        shift.sources.forEach(src => {
+          if (src.selector && src.selector !== 'Unknown/Removed' && src.selector !== '') {
+            observerElements.push({
+              selector: src.selector,
+              snippet: src.snippet,
+              score: shift.value,
+              device: 'Diagnostic Observer',
+              previousRect: src.previousRect,
+              currentRect: src.currentRect,
+              isFallback: true
+            });
+          }
+        });
+      }
+    });
+    const tempCorrelated = correlateCls(observerElements, astElements);
+    observerCorrelatedResult.push(...tempCorrelated);
+  }
+
   correlatedClsResult.forEach(item => {
     if (item.confidence !== 'UNRESOLVED' && item.source) {
       const srcFile = item.source.filePath;
@@ -79,10 +104,11 @@ export function compileRecommendations(staticIssues, lighthouseIssues = null, as
         device: item.lhEl.device,
         snippet: item.lhEl.snippet,
         score: item.lhEl.score,
-        staticRule: staticDetails ? staticDetails.message : null
+        staticRule: staticDetails ? staticDetails.message : null,
+        ambiguousSources: item.ambiguousSources
       });
     } else {
-      // Unresolved: Keep as runtime-only CLS issue
+      // Unresolved or Ambiguous: Keep as runtime-only CLS issue
       correlatedIssues.push({
         type: 'lighthouse-unresolved',
         cwv: 'cls',
@@ -96,8 +122,73 @@ export function compileRecommendations(staticIssues, lighthouseIssues = null, as
         device: item.lhEl.device,
         snippet: item.lhEl.snippet,
         score: item.lhEl.score,
-        confidence: 'UNRESOLVED',
-        evidence: item.evidence
+        confidence: item.confidence,
+        evidence: item.evidence,
+        ambiguousSources: item.ambiguousSources
+      });
+    }
+  });
+
+  // Process Observer Fallback results
+  observerCorrelatedResult.forEach(item => {
+    let suggestion = 'Investigate this element, as it was captured shifting during an unthrottled diagnostic run.';
+    let impact = `Unthrottled diagnostic observer captured a shift of ${item.lhEl.score.toFixed(4)} on "${item.lhEl.selector}". Note: Timing and severity may differ from Lighthouse.`;
+    
+    if (item.lhEl.selector.includes('.fonts-loaded') || item.lhEl.selector.includes('.wf-active') || item.lhEl.selector.includes('.font-loaded')) {
+      suggestion = 'Note: The DOM path contains font-loading indicator classes (e.g. .fonts-loaded). This suggests FOIT/FOUT as a possible cause for the shift. Verify if text metrics changed upon font load.';
+      impact = `Unthrottled diagnostic observer captured a shift of ${item.lhEl.score.toFixed(4)} on "${item.lhEl.selector}". (Suspected Cause: Web Font Loading)`;
+    }
+
+    // Add rect info if available
+    let rectDetails = '';
+    if (item.lhEl.previousRect && item.lhEl.currentRect) {
+      rectDetails = ` (Moved from Y:${item.lhEl.previousRect.y.toFixed(1)} to Y:${item.lhEl.currentRect.y.toFixed(1)})`;
+      impact += rectDetails;
+    }
+
+    if (item.confidence !== 'UNRESOLVED' && item.confidence !== 'AMBIGUOUS' && item.source) {
+      const srcFile = item.source.filePath;
+      const srcLine = item.source.line;
+      const shortFile = path.basename(srcFile);
+
+      correlatedIssues.push({
+        type: 'observer-fallback-correlated',
+        cwv: 'cls',
+        severity: 'low',
+        file: srcFile,
+        line: srcLine,
+        message: `[Observer Fallback] Shift associated with <${item.source.tagName}> in ${shortFile}`,
+        impact: impact,
+        suggestion: suggestion + ' While the selector matched a source element, verify that this is the actual cause of the Lighthouse shift.',
+        confidence: item.confidence,
+        evidence: item.evidence,
+        selector: item.lhEl.selector,
+        device: item.lhEl.device,
+        snippet: item.lhEl.snippet,
+        score: item.lhEl.score,
+        previousRect: item.lhEl.previousRect,
+        currentRect: item.lhEl.currentRect,
+        ambiguousSources: item.ambiguousSources
+      });
+    } else {
+      correlatedIssues.push({
+        type: 'observer-fallback-unresolved',
+        cwv: 'cls',
+        severity: 'low',
+        file: `Diagnostic Run (${item.lhEl.device})`,
+        line: '-',
+        message: `[Observer Fallback] Shift on "${item.lhEl.selector}"`,
+        impact: impact,
+        suggestion: suggestion,
+        selector: item.lhEl.selector,
+        device: item.lhEl.device,
+        snippet: item.lhEl.snippet,
+        score: item.lhEl.score,
+        confidence: item.confidence,
+        evidence: item.evidence,
+        previousRect: item.lhEl.previousRect,
+        currentRect: item.lhEl.currentRect,
+        ambiguousSources: item.ambiguousSources
       });
     }
   });

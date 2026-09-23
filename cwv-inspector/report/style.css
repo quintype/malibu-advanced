@@ -871,12 +871,12 @@ body {
 .bg-warning { background-color: var(--warning); }
 .bg-poor { background-color: var(--danger); }
 
-.card-badge.corr-badge.high {
+.card-badge.corr-badge.exact {
   background-color: rgba(16, 185, 129, 0.1);
   color: #10b981;
   border: 1px solid rgba(16, 185, 129, 0.2);
 }
-.card-badge.corr-badge.medium {
+.card-badge.corr-badge.probable {
   background-color: rgba(245, 158, 11, 0.1);
   color: var(--warning);
   border: 1px solid rgba(245, 158, 11, 0.2);
@@ -885,6 +885,11 @@ body {
   background-color: rgba(100, 116, 139, 0.1);
   color: #64748b;
   border: 1px solid rgba(100, 116, 139, 0.2);
+}
+.card-badge.corr-badge.ambiguous {
+  background-color: rgba(139, 92, 246, 0.1);
+  color: #8b5cf6;
+  border: 1px solid rgba(139, 92, 246, 0.2);
 }
 
 .issue-title-text {

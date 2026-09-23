@@ -530,7 +530,22 @@ export async function generateReport(compiledResult, options) {
           </div>
         `;
       } else if (issue.type === 'lighthouse-unresolved') {
-        correlationBadge = `<span class="card-badge corr-badge unresolved">Unresolved Correlation</span>`;
+        const isAmbiguous = issue.confidence === 'AMBIGUOUS';
+        const badgeClass = isAmbiguous ? 'ambiguous' : 'unresolved';
+        const badgeLabel = isAmbiguous ? 'Ambiguous Correlation' : 'Unresolved Correlation';
+        correlationBadge = `<span class="card-badge corr-badge ${badgeClass}">${badgeLabel}</span>`;
+        
+        let ambiguousHtml = '';
+        if (isAmbiguous && issue.ambiguousSources && issue.ambiguousSources.length > 0) {
+          ambiguousHtml = `
+            <div style="font-size: 0.82rem; margin-bottom: 4px; margin-top: 6px;">
+              <strong>Ambiguous Matches:</strong>
+              <ul style="margin: 4px 0 0 16px; padding: 0;">
+                ${issue.ambiguousSources.map(s => `<li><code>${escapeHtml(path.basename(s.filePath))}:${s.line}</code></li>`).join('')}
+              </ul>
+            </div>`;
+        }
+
         correlationDetailsHtml = `
           <div class="correlation-info" style="margin-top: 12px; border-top: 1px dashed var(--border-color); padding-top: 12px;">
             <div style="font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 6px;">CLS Correlation Info</div>
@@ -541,8 +556,70 @@ export async function generateReport(compiledResult, options) {
               <strong>Tested Device:</strong> <span style="color: var(--text-secondary);">${escapeHtml(issue.device)}</span>
             </div>
             <div style="font-size: 0.82rem; color: var(--text-muted);">
-              Lighthouse flagged this element as layout-shifting, but it could not be uniquely matched to a single source code element.
+              Lighthouse flagged this element as layout-shifting, but ${isAmbiguous ? 'multiple source elements match this selector.' : 'it could not be uniquely matched to a single source code element.'}
             </div>
+            ${ambiguousHtml}
+          </div>
+        `;
+      } else if (issue.type === 'observer-fallback-correlated' || issue.type === 'observer-fallback-unresolved') {
+        const isCorrelated = issue.type === 'observer-fallback-correlated';
+        const isAmbiguous = issue.confidence === 'AMBIGUOUS';
+        
+        let confidenceClass = 'unresolved';
+        let badgeLabel = 'Unresolved Correlation';
+        
+        if (isCorrelated) {
+          confidenceClass = String(issue.confidence).toLowerCase();
+          badgeLabel = `${escapeHtml(issue.confidence)} Correlation`;
+        } else if (isAmbiguous) {
+          confidenceClass = 'ambiguous';
+          badgeLabel = 'Ambiguous Correlation';
+        }
+        
+        let ambiguousHtml = '';
+        if (isAmbiguous && issue.ambiguousSources && issue.ambiguousSources.length > 0) {
+          ambiguousHtml = `
+            <div style="font-size: 0.82rem; margin-bottom: 4px; margin-top: 6px;">
+              <strong>Ambiguous Matches:</strong>
+              <ul style="margin: 4px 0 0 16px; padding: 0;">
+                ${issue.ambiguousSources.map(s => `<li><code>${escapeHtml(path.basename(s.filePath))}:${s.line}</code></li>`).join('')}
+              </ul>
+            </div>`;
+        }
+
+        correlationBadge = `<span class="card-badge corr-badge ${confidenceClass}">${badgeLabel}</span>`;
+        correlationDetailsHtml = `
+          <div class="correlation-info" style="margin-top: 12px; border-top: 1px dashed var(--border-color); padding-top: 12px;">
+            <div style="font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 6px;">Observer Fallback Details</div>
+            <div style="font-size: 0.82rem; margin-bottom: 4px; color: #8b5cf6;">
+              <em>This data was captured by an unthrottled diagnostic observer because Lighthouse failed to attribute nodes.</em>
+            </div>
+            <div style="font-size: 0.82rem; margin-bottom: 4px;">
+              <strong>DOM Selector:</strong> <code style="background-color: var(--bg-body); padding: 2px 6px; border-radius: 4px; color: #f43f5e;">${escapeHtml(issue.selector)}</code>
+            </div>
+            ${issue.snippet ? `
+            <div style="font-size: 0.82rem; margin-bottom: 4px;">
+              <strong>HTML Snippet:</strong> <code style="background-color: var(--bg-body); padding: 4px 8px; border-radius: 4px; color: #f59e0b; display: block; margin-top: 4px; white-space: pre-wrap; font-family: monospace; font-size: 0.78rem;">${escapeHtml(issue.snippet)}</code>
+            </div>` : ''}
+            ${issue.previousRect && issue.currentRect ? `
+            <div style="font-size: 0.82rem; margin-bottom: 4px;">
+              <strong>Bounding Box (Before -> After):</strong>
+              <div style="background-color: var(--bg-body); padding: 4px 8px; border-radius: 4px; font-family: monospace; font-size: 0.78rem; margin-top: 4px;">
+                X: ${issue.previousRect.x.toFixed(1)} -> ${issue.currentRect.x.toFixed(1)}<br>
+                Y: ${issue.previousRect.y.toFixed(1)} -> ${issue.currentRect.y.toFixed(1)}<br>
+                Width: ${issue.previousRect.width.toFixed(1)} -> ${issue.currentRect.width.toFixed(1)}<br>
+                Height: ${issue.previousRect.height.toFixed(1)} -> ${issue.currentRect.height.toFixed(1)}
+              </div>
+            </div>` : ''}
+            ${isCorrelated ? `
+            <div style="font-size: 0.82rem; margin-bottom: 4px; margin-top: 6px;">
+              <strong>Confidence Evidence:</strong> <span style="color: var(--text-secondary);">${escapeHtml(issue.evidence ? issue.evidence.join('; ') : 'None')}</span>
+            </div>` : ''}
+            ${isAmbiguous ? ambiguousHtml : ''}
+            ${!isCorrelated && !isAmbiguous ? `
+            <div style="font-size: 0.82rem; color: var(--text-muted); margin-top: 6px;">
+              This diagnostic element could not be uniquely matched to a single source code element.
+            </div>` : ''}
           </div>
         `;
       }
@@ -589,64 +666,115 @@ export async function generateReport(compiledResult, options) {
   });
 
   let cruxHistogramsHtml = '';
-  if (options.cruxData && options.cruxData.record && options.cruxData.record.metrics) {
-    const metrics = options.cruxData.record.metrics;
+  if (options.cruxHistoryData && options.cruxHistoryData.record) {
+    const historyRecord = options.cruxHistoryData.record;
+    const historyJson = JSON.stringify(historyRecord);
     
-    const renderMetric = (metricId, title, formatVal = v => v) => {
-      if (!metrics[metricId] || !metrics[metricId].histogram) return '';
-      const hist = metrics[metricId].histogram;
-      const p75 = metrics[metricId].percentiles ? metrics[metricId].percentiles.p75 : 'N/A';
-      
-      const goodPct = (hist[0] ? (hist[0].density * 100).toFixed(1) : '0') + '%';
-      const niPct = (hist[1] ? (hist[1].density * 100).toFixed(1) : '0') + '%';
-      const poorPct = (hist[2] ? (hist[2].density * 100).toFixed(1) : '0') + '%';
-      
-      return `
-        <div class="crux-metric-card">
-          <div class="crux-metric-title">
-            <span>${title}</span>
-            <span class="crux-p75-value">${p75 !== 'N/A' ? formatVal(p75) : 'N/A'}</span>
-          </div>
-          <div class="crux-histogram-bar">
-            <div class="crux-bar-good" style="width: ${goodPct}"></div>
-            <div class="crux-bar-ni" style="width: ${niPct}"></div>
-            <div class="crux-bar-poor" style="width: ${poorPct}"></div>
-          </div>
-          <div class="crux-legend">
-            <div class="crux-legend-item"><div class="crux-legend-dot crux-bar-good"></div>Good (${goodPct})</div>
-            <div class="crux-legend-item"><div class="crux-legend-dot crux-bar-ni"></div>Needs Impr. (${niPct})</div>
-            <div class="crux-legend-item"><div class="crux-legend-dot crux-bar-poor"></div>Poor (${poorPct})</div>
-          </div>
+    cruxHistogramsHtml += `
+      <div class="crux-raw-section" style="margin-top: 24px;">
+        <div class="crux-raw-header">
+          <h3>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+            </svg>
+            CrUX Historical Trend (Past 6 Months)
+          </h3>
+          <p>LCP (ms) and CLS scores over the previous 25 collection periods.</p>
         </div>
-      `;
-    };
-
-    const lcpHtml = renderMetric('largest_contentful_paint', 'Largest Contentful Paint (LCP)', v => (v / 1000).toFixed(2) + 's');
-    const clsHtml = renderMetric('cumulative_layout_shift', 'Cumulative Layout Shift (CLS)', v => v);
-    const inpHtml = renderMetric('interaction_to_next_paint', 'Interaction to Next Paint (INP)', v => v + 'ms');
-
-    if (lcpHtml || clsHtml || inpHtml) {
-      cruxHistogramsHtml = `
-        <div class="crux-raw-section">
-          <div class="crux-raw-header">
-            <h3>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="18" y1="20" x2="18" y2="10"></line>
-                <line x1="12" y1="20" x2="12" y2="4"></line>
-                <line x1="6" y1="20" x2="6" y2="14"></line>
-              </svg>
-              Chrome UX Report - 28-Day Field Data
-            </h3>
-            <p>Real-world user experience distributions (Good, Needs Improvement, Poor).</p>
-          </div>
-          <div class="crux-metrics-grid">
-            ${lcpHtml}
-            ${clsHtml}
-            ${inpHtml}
-          </div>
+        <div style="position: relative; height: 300px; width: 100%;">
+          <canvas id="cruxHistoryChart"></canvas>
         </div>
-      `;
-    }
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+          const initChart = () => {
+            if (typeof Chart === 'undefined') {
+              setTimeout(initChart, 50);
+              return;
+            }
+            const historyData = ${historyJson};
+            if (!historyData.collectionPeriods || !historyData.metrics) return;
+            
+            let labels = [];
+            let lcpData = [];
+            let clsData = [];
+            
+            const lcpRaw = historyData.metrics.largest_contentful_paint?.percentilesTimeseries?.p75s || [];
+            const clsRaw = historyData.metrics.cumulative_layout_shift?.percentilesTimeseries?.p75s || [];
+            
+            historyData.collectionPeriods.forEach((p, idx) => {
+              const lcpVal = lcpRaw[idx];
+              const clsVal = clsRaw[idx];
+              
+              if ((lcpVal !== null && lcpVal !== undefined && lcpVal !== 'NaN') || 
+                  (clsVal !== null && clsVal !== undefined && clsVal !== 'NaN')) {
+                labels.push(p.lastDate.year + '-' + String(p.lastDate.month).padStart(2, '0') + '-' + String(p.lastDate.day).padStart(2, '0'));
+                lcpData.push(lcpVal);
+                clsData.push(clsVal);
+              }
+            });
+            
+            const ctx = document.getElementById('cruxHistoryChart').getContext('2d');
+            new Chart(ctx, {
+              type: 'line',
+              data: {
+                labels: labels,
+                datasets: [
+                  {
+                    label: 'LCP p75 (ms)',
+                    data: lcpData,
+                    borderColor: '#4F46E5', // Indigo
+                    backgroundColor: 'rgba(79, 70, 229, 0.1)',
+                    yAxisID: 'yLcp',
+                    tension: 0.3,
+                    fill: true,
+                    pointRadius: 3,
+                    pointBackgroundColor: '#4F46E5'
+                  },
+                  {
+                    label: 'CLS p75',
+                    data: clsData,
+                    borderColor: '#F59E0B', // Amber
+                    backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                    yAxisID: 'yCls',
+                    tension: 0.3,
+                    fill: true,
+                    pointRadius: 3,
+                    pointBackgroundColor: '#F59E0B'
+                  }
+                ]
+              },
+              options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: false, // Disable for PDF rendering
+                interaction: {
+                  mode: 'index',
+                  intersect: false,
+                },
+                scales: {
+                  x: {
+                    grid: { display: false }
+                  },
+                  yLcp: {
+                    type: 'linear',
+                    position: 'left',
+                    title: { display: true, text: 'LCP (ms)' },
+                    grid: { color: 'rgba(0,0,0,0.05)' }
+                  },
+                  yCls: {
+                    type: 'linear',
+                    position: 'right',
+                    title: { display: true, text: 'CLS Score' },
+                    grid: { display: false }
+                  }
+                }
+              }
+            });
+          };
+          initChart();
+        </script>
+      </div>
+    `;
   }
 
   templateHtml = templateHtml

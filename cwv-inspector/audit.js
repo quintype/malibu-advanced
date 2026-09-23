@@ -155,26 +155,41 @@ Options:
     lighthouseData = await runLighthouseAudit(url);
   }
 
-  // Fetch optional Chrome UX Report (CrUX) Field Data
+  // Fetch optional Chrome UX Report (CrUX) Field Data and History Data
   let cruxData = null;
+  let cruxHistoryData = null;
   const cruxApiKey = process.env.CRUX_API_KEY || 'AIzaSyCxH_Ch4j49NIzqjfYwPIKRLsTc13FS-Ek';
   if (url && cruxApiKey) {
-    console.log('⚡ Fetching Field Data from Google CrUX API...');
+    console.log('⚡ Fetching Field Data and History from Google CrUX API...');
     try {
-      const cruxRes = await fetch(`https://chromeuxreport.googleapis.com/v1/records:queryRecord?key=${cruxApiKey}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url: url })
-      });
+      const [cruxRes, cruxHistoryRes] = await Promise.all([
+        fetch(`https://chromeuxreport.googleapis.com/v1/records:queryRecord?key=${cruxApiKey}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url: url })
+        }),
+        fetch(`https://chromeuxreport.googleapis.com/v1/records:queryHistoryRecord?key=${cruxApiKey}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url: url })
+        })
+      ]);
+
       if (cruxRes.ok) {
         cruxData = await cruxRes.json();
         console.log('CrUX Field Data fetched successfully.');
       } else {
-        const errText = await cruxRes.text();
-        console.warn(`CrUX API status ${cruxRes.status}: ${errText}`);
+        console.warn(`CrUX API status ${cruxRes.status}: ${await cruxRes.text()}`);
+      }
+
+      if (cruxHistoryRes.ok) {
+        cruxHistoryData = await cruxHistoryRes.json();
+        console.log('CrUX History Data fetched successfully.');
+      } else {
+        console.warn(`CrUX History API status ${cruxHistoryRes.status}: ${await cruxHistoryRes.text()}`);
       }
     } catch (err) {
-      console.warn('CrUX Field Data fetch failed:', err.message);
+      console.warn('CrUX Data fetch failed:', err.message);
     }
   }
 
@@ -249,6 +264,7 @@ Options:
     url,
     lighthouseData,
     cruxData,
+    cruxHistoryData,
     psiData,
     clientName,
     gitBranch

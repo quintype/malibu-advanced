@@ -110,16 +110,21 @@ export function correlateCls(lhClsElements, astElements) {
 
     // Step 3: Confidence evaluation and disambiguation
     let matchedCandidate = null;
+    let ambiguousCandidates = null;
     let confidence = 'UNRESOLVED';
     const evidence = [];
 
     if (candidates.length === 1) {
       matchedCandidate = candidates[0];
       evidence.push(`Tag matched: "${matchedCandidate.tagName}"`);
-      if (targetParsed.id) evidence.push(`ID matched: "${targetParsed.id}"`);
+      if (targetParsed.id) {
+        evidence.push(`ID matched: "${targetParsed.id}"`);
+        confidence = 'EXACT';
+      } else {
+        confidence = 'PROBABLE';
+      }
       if (targetParsed.classes.length > 0) evidence.push(`Classes matched: "${targetParsed.classes.join(', ')}"`);
       evidence.push('Unique candidate found in codebase.');
-      confidence = 'HIGH';
     } else {
       // Disambiguate by checking image src names if available in element snippet
       if (lhEl.snippet) {
@@ -131,7 +136,7 @@ export function correlateCls(lhClsElements, astElements) {
             matchedCandidate = matched;
             evidence.push(`Tag matched: "${matchedCandidate.tagName}"`);
             evidence.push(`Unique source file src match: "${path.basename(srcVal)}"`);
-            confidence = 'HIGH';
+            confidence = 'EXACT';
           }
         }
       }
@@ -143,13 +148,21 @@ export function correlateCls(lhClsElements, astElements) {
           matchedCandidate = exactClassMatches[0];
           evidence.push(`Tag matched: "${matchedCandidate.tagName}"`);
           evidence.push(`Exact class match: "${matchedCandidate.className}"`);
-          confidence = 'MEDIUM';
+          confidence = 'PROBABLE';
         }
       }
 
       if (!matchedCandidate) {
         evidence.push(`Ambiguous: Found ${candidates.length} candidates with matching tag/classes.`);
-        confidence = 'UNRESOLVED';
+        confidence = 'AMBIGUOUS';
+        ambiguousCandidates = candidates.map(c => ({
+          filePath: c.filePath,
+          line: c.line,
+          column: c.column,
+          tagName: c.tagName,
+          id: c.id,
+          className: c.className
+        }));
       }
     }
 
@@ -164,6 +177,7 @@ export function correlateCls(lhClsElements, astElements) {
         className: matchedCandidate.className,
         src: matchedCandidate.src
       } : null,
+      ambiguousSources: ambiguousCandidates,
       confidence,
       evidence
     });
