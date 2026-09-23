@@ -69,7 +69,7 @@ export function extractScores(reportJson) {
       // If Lighthouse detected a shift but provided NO details, force a generic fallback
       if (mapped.length === 0 && clsScore > 0.001) {
         mapped.push({
-          selector: 'Global/Unknown (Lighthouse failed to map to a specific DOM node)',
+          selector: 'Global/Unknown (Lighthouse trace parsing failed to attribute elements)',
           nodeLabel: 'N/A',
           snippet: 'N/A',
           score: clsScore

@@ -41,6 +41,7 @@ export function compileRecommendations(staticIssues, lighthouseIssues = null, as
               selector: src.selector,
               snippet: src.snippet,
               score: shift.value,
+              time: shift.time,
               device: 'Diagnostic Observer',
               previousRect: src.previousRect,
               currentRect: src.currentRect,
@@ -142,8 +143,29 @@ export function compileRecommendations(staticIssues, lighthouseIssues = null, as
     // Add rect info if available
     let rectDetails = '';
     if (item.lhEl.previousRect && item.lhEl.currentRect) {
-      rectDetails = ` (Moved from Y:${item.lhEl.previousRect.y.toFixed(1)} to Y:${item.lhEl.currentRect.y.toFixed(1)})`;
+      const p = item.lhEl.previousRect;
+      const c = item.lhEl.currentRect;
+      const yDelta = c.y - p.y;
+      const xDelta = c.x - p.x;
+      const wDelta = c.width - p.width;
+      const hDelta = c.height - p.height;
+      
+      const movements = [];
+      if (Math.abs(yDelta) > 0.1) movements.push(`Y: ${p.y.toFixed(1)} -> ${c.y.toFixed(1)}`);
+      if (Math.abs(xDelta) > 0.1) movements.push(`X: ${p.x.toFixed(1)} -> ${c.x.toFixed(1)}`);
+      if (Math.abs(wDelta) > 0.1) movements.push(`Width: ${p.width.toFixed(1)} -> ${c.width.toFixed(1)}`);
+      if (Math.abs(hDelta) > 0.1) movements.push(`Height: ${p.height.toFixed(1)} -> ${c.height.toFixed(1)}`);
+      
+      if (movements.length > 0) {
+        rectDetails = ` (Movement: ${movements.join(', ')})`;
+      } else {
+        rectDetails = ` (Movement: none / sub-pixel rounding)`;
+      }
       impact += rectDetails;
+    }
+    
+    if (item.lhEl.time) {
+      impact += ` [Timestamp: ${item.lhEl.time.toFixed(1)}ms]`;
     }
 
     if (item.confidence !== 'UNRESOLVED' && item.confidence !== 'AMBIGUOUS' && item.source) {
