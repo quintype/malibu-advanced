@@ -110,6 +110,11 @@ export function compileRecommendations(staticIssues, lighthouseIssues = null, as
       });
     } else {
       // Unresolved or Ambiguous: Keep as runtime-only CLS issue
+      let suggestionText = `Check elements matching "${item.lhEl.selector}" in your compiled layouts.`;
+      if (item.lhEl.selector.includes('Global/Unknown')) {
+        suggestionText = `Lighthouse trace parsing crashed natively. We have automatically launched a secondary Throttled Diagnostic Pass (emulating Slow 4G & 4x CPU slowdown) to capture the missing shifts. Please review the "Observer Fallback" entries below for the automatically extracted elements!`;
+      }
+      
       correlatedIssues.push({
         type: 'lighthouse-unresolved',
         cwv: 'cls',
@@ -118,7 +123,7 @@ export function compileRecommendations(staticIssues, lighthouseIssues = null, as
         line: '-',
         message: `Layout Shift on selector "${item.lhEl.selector}"`,
         impact: `Lighthouse detected this element shifting on ${item.lhEl.device} but it could not be mapped to a unique source element.`,
-        suggestion: `Check elements matching "${item.lhEl.selector}" in your compiled layouts.`,
+        suggestion: suggestionText,
         selector: item.lhEl.selector,
         device: item.lhEl.device,
         snippet: item.lhEl.snippet,

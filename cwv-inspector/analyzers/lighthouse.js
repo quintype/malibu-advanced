@@ -215,6 +215,91 @@ async function preScrollPage(url, port) {
 }
 
 /**
+ * Runs a specially throttled diagnostic pass to capture layout shifts when Lighthouse trace parsing fails.
+ * Emulates exactly Lighthouse Mobile throttling (4x CPU, Slow 4G).
+ */
+async function throttledDiagnosticPass(url, port) {
+  console.log(`🤖 Lighthouse trace parser failed. Running Custom Throttled Diagnostic Pass on port ${port}...`);
+  let browser = null;
+  let customShifts = [];
+  try {
+    const response = await fetch(`http://127.0.0.1:${port}/json/version`);
+    const data = await response.json();
+    browser = await puppeteer.connect({ browserWSEndpoint: data.webSocketDebuggerUrl });
+    const pages = await browser.pages();
+    const page = pages.length > 0 ? pages[0] : await browser.newPage();
+
+    // Emulate Mobile Device
+    await page.setViewport({ width: 360, height: 640, isMobile: true, hasTouch: true });
+
+    // Emulate Lighthouse Mobile Throttling
+    const client = await page.target().createCDPSession();
+    await client.send('Network.emulateNetworkConditions', {
+      offline: false,
+      latency: 150,
+      downloadThroughput: (1.6 * 1024 * 1024) / 8,
+      uploadThroughput: (750 * 1024) / 8,
+      connectionType: 'cellular3g'
+    });
+    await client.send('Emulation.setCPUThrottlingRate', { rate: 4 });
+
+    await page.evaluateOnNewDocument(() => {
+      window.__cwv_layout_shifts = [];
+      try {
+        new PerformanceObserver((list) => {
+          for (const entry of list.getEntries()) {
+            if (entry.hadRecentInput) continue;
+            let sources = entry.sources ? entry.sources.map(s => {
+              const node = s.node;
+              if (!node) return { selector: 'Unknown/Removed' };
+              const isDetached = !document.contains(node);
+              
+              let path = [];
+              let el = node;
+              while (el && el.nodeType === 1) {
+                let sel = el.nodeName.toLowerCase();
+                if (el.id) sel += '#' + el.id;
+                else if (el.className && typeof el.className === 'string') {
+                  const c = el.className.trim().split(/\\s+/).filter(Boolean);
+                  if (c.length > 0) sel += '.' + c.join('.');
+                }
+                path.unshift(sel);
+                el = el.parentNode;
+              }
+              return {
+                selector: (isDetached ? 'Detached Node: ' : '') + path.join(' > '),
+                nodeName: node.nodeName,
+                snippet: (isDetached ? '[Captured post-shift; element detached] ' : '') + (node.outerHTML ? node.outerHTML.substring(0, 150) : ''),
+                previousRect: s.previousRect ? { x: s.previousRect.x, y: s.previousRect.y, width: s.previousRect.width, height: s.previousRect.height } : null,
+                currentRect: s.currentRect ? { x: s.currentRect.x, y: s.currentRect.y, width: s.currentRect.width, height: s.currentRect.height } : null,
+                isDetached
+              };
+            }) : [];
+            window.__cwv_layout_shifts.push({ value: entry.value, time: entry.startTime, sources });
+          }
+        }).observe({type: 'layout-shift', buffered: true});
+      } catch(e) {}
+    });
+
+    await page.goto(url, { waitUntil: 'networkidle2', timeout: 45000 });
+    
+    // Quick scroll to trigger lazy elements
+    await page.evaluate(async () => {
+      window.scrollBy(0, 500);
+      await new Promise(r => setTimeout(r, 500));
+      window.scrollTo(0, 0);
+    });
+    
+    await new Promise(r => setTimeout(r, 2000));
+    customShifts = await page.evaluate(() => window.__cwv_layout_shifts || []);
+    console.log(`🤖 Custom Throttled Pass captured ${customShifts.length} layout shifts.`);
+  } catch (err) {
+    console.warn('⚠️ Custom Throttled Pass warning:', err.message);
+  }
+  return customShifts;
+}
+
+/**
  * Runs Lighthouse audit on a URL for both Mobile and Desktop.
  * 
  * @param {string} url The target page URL.
@@ -269,6 +354,13 @@ export async function runLighthouseAudit(url) {
     console.log(`📱 Running Lighthouse Mobile Audit...`);
     const mobileResult = await lighthouse(url, mobileOptions);
     const mobileData = extractScores(JSON.parse(mobileResult.report));
+    
+    // Check if Lighthouse failed to trace DOM nodes
+    const hasUnknownShift = mobileData.clsElements.some(el => el.selector.includes('Global/Unknown'));
+    let finalCustomShifts = customShifts;
+    if (hasUnknownShift) {
+      finalCustomShifts = await throttledDiagnosticPass(url, chrome.port);
+    }
 
     console.log(`💻 Running Lighthouse Desktop Audit...`);
     const desktopResult = await lighthouse(url, desktopOptions);
@@ -277,7 +369,7 @@ export async function runLighthouseAudit(url) {
     return {
       mobile: mobileData,
       desktop: desktopData,
-      customShifts
+      customShifts: finalCustomShifts
     };
   } catch (err) {
     console.error(`⚠️ Lighthouse execution failed: ${err.message}`);
