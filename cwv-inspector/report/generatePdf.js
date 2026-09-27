@@ -679,7 +679,7 @@ export async function generateReport(compiledResult, options) {
             </svg>
             CrUX Historical Trend (Past 6 Months)
           </h3>
-          <p>LCP (ms) and CLS scores over the previous 25 collection periods.</p>
+          <p>LCP, INP, and CLS scores over the previous 25 collection periods.</p>
         </div>
         <div style="position: relative; height: 300px; width: 100%;">
           <canvas id="cruxHistoryChart"></canvas>
@@ -697,19 +697,24 @@ export async function generateReport(compiledResult, options) {
             let labels = [];
             let lcpData = [];
             let clsData = [];
+            let inpData = [];
             
             const lcpRaw = historyData.metrics.largest_contentful_paint?.percentilesTimeseries?.p75s || [];
             const clsRaw = historyData.metrics.cumulative_layout_shift?.percentilesTimeseries?.p75s || [];
+            const inpRaw = historyData.metrics.interaction_to_next_paint?.percentilesTimeseries?.p75s || [];
             
             historyData.collectionPeriods.forEach((p, idx) => {
               const lcpVal = lcpRaw[idx];
               const clsVal = clsRaw[idx];
+              const inpVal = inpRaw[idx];
               
               if ((lcpVal !== null && lcpVal !== undefined && lcpVal !== 'NaN') || 
-                  (clsVal !== null && clsVal !== undefined && clsVal !== 'NaN')) {
+                  (clsVal !== null && clsVal !== undefined && clsVal !== 'NaN') ||
+                  (inpVal !== null && inpVal !== undefined && inpVal !== 'NaN')) {
                 labels.push(p.lastDate.year + '-' + String(p.lastDate.month).padStart(2, '0') + '-' + String(p.lastDate.day).padStart(2, '0'));
                 lcpData.push(lcpVal);
                 clsData.push(clsVal);
+                inpData.push(inpVal);
               }
             });
             
@@ -726,9 +731,22 @@ export async function generateReport(compiledResult, options) {
                     backgroundColor: 'rgba(79, 70, 229, 0.1)',
                     yAxisID: 'yLcp',
                     tension: 0.3,
-                    fill: true,
+                    fill: false,
                     pointRadius: 3,
-                    pointBackgroundColor: '#4F46E5'
+                    pointBackgroundColor: '#4F46E5',
+                    pointStyle: 'circle'
+                  },
+                  {
+                    label: 'INP p75 (ms)',
+                    data: inpData,
+                    borderColor: '#10B981', // Emerald
+                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                    yAxisID: 'yLcp',
+                    tension: 0.3,
+                    fill: false,
+                    pointRadius: 3,
+                    pointBackgroundColor: '#10B981',
+                    pointStyle: 'rect'
                   },
                   {
                     label: 'CLS p75',
@@ -737,9 +755,10 @@ export async function generateReport(compiledResult, options) {
                     backgroundColor: 'rgba(245, 158, 11, 0.1)',
                     yAxisID: 'yCls',
                     tension: 0.3,
-                    fill: true,
+                    fill: false,
                     pointRadius: 3,
-                    pointBackgroundColor: '#F59E0B'
+                    pointBackgroundColor: '#F59E0B',
+                    pointStyle: 'triangle'
                   }
                 ]
               },
@@ -758,7 +777,7 @@ export async function generateReport(compiledResult, options) {
                   yLcp: {
                     type: 'linear',
                     position: 'left',
-                    title: { display: true, text: 'LCP (ms)' },
+                    title: { display: true, text: 'LCP / INP (ms)' },
                     grid: { color: 'rgba(0,0,0,0.05)' }
                   },
                   yCls: {
