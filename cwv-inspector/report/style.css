@@ -958,6 +958,7 @@ body {
 .details-fix-text {
   font-size: 0.85rem;
   color: var(--text-primary);
+  white-space: pre-wrap;
 }
 
 .details-files-title {
