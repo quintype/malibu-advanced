@@ -13,7 +13,7 @@ export const config = {
   ],
 
   // File extensions to inspect
-  extensions: ['.js', '.jsx', '.ts', '.tsx', '.css', '.html'],
+  extensions: ['.js', '.jsx', '.ts', '.tsx', '.css', '.html', '.ejs', '.vue', '.php'],
 
   // Thresholds for warning levels
   thresholds: {

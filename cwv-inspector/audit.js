@@ -233,7 +233,7 @@ Options:
       astElements.push(...ra.ast.jsxTags);
     }
   });
-  const compiledResult = compileRecommendations(staticIssues, lighthouseData, astElements);
+  const compiledResult = compileRecommendations(staticIssues, lighthouseData, astElements, files);
 
   // Get Client/Project Name from package.json or folder name
   let clientName = path.basename(targetPath);

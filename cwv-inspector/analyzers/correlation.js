@@ -125,7 +125,7 @@ export function correlateCls(lhClsElements, astElements) {
       }
       if (targetParsed.classes.length > 0) evidence.push(`Classes matched: "${targetParsed.classes.join(', ')}"`);
       evidence.push('Unique candidate found in codebase.');
-    } else {
+    } else if (candidates.length > 1) {
       // Disambiguate by checking image src names if available in element snippet
       if (lhEl.snippet) {
         const snippetSrc = lhEl.snippet.match(/src=["']([^"']+)["']/);
@@ -163,6 +163,53 @@ export function correlateCls(lhClsElements, astElements) {
           id: c.id,
           className: c.className
         }));
+      }
+    }
+
+    // Step 4: Fallback Plain-Text Regex Search (if AST fails, e.g. for EJS, HTML)
+    if (!matchedCandidate && allFiles && allFiles.length > 0) {
+      // Walk backwards up the selector path looking for an identifiable parent (e.g. ID or Class)
+      for (let i = parts.length - 1; i >= 0; i--) {
+        const fallbackPart = parseSelectorComponent(parts[i]);
+        if (!fallbackPart) continue;
+
+        if (fallbackPart.id) {
+          const idRegex = new RegExp(`id=['"]${fallbackPart.id}['"]`, 'i');
+          const matchedFiles = allFiles.filter(f => idRegex.test(f.content));
+          if (matchedFiles.length === 1) {
+            matchedCandidate = {
+              filePath: matchedFiles[0].filePath,
+              line: 1, // Fallback doesn't provide exact line without full parsing
+              tagName: fallbackPart.tagName || 'Unknown',
+              id: fallbackPart.id,
+              className: ''
+            };
+            evidence.push(`Regex fallback: Found unique parent ID match "${fallbackPart.id}" in raw file.`);
+            confidence = i === parts.length - 1 ? 'EXACT' : 'PROBABLE'; // Probable if it's a parent
+            break;
+          }
+        }
+
+        if (fallbackPart.classes && fallbackPart.classes.length > 0) {
+          const primaryClass = fallbackPart.classes[0];
+          // We only try fallback on classes if they look somewhat unique (not generic like 'div', 'container')
+          if (primaryClass.length > 4 && !['container', 'wrapper', 'row', 'col', 'main'].includes(primaryClass)) {
+            const classRegex = new RegExp(`class(Name)?=['"][^'"]*${primaryClass}[^'"]*['"]`, 'i');
+            const matchedFiles = allFiles.filter(f => classRegex.test(f.content));
+            if (matchedFiles.length === 1) {
+              matchedCandidate = {
+                filePath: matchedFiles[0].filePath,
+                line: 1,
+                tagName: fallbackPart.tagName || 'Unknown',
+                id: null,
+                className: primaryClass
+              };
+              evidence.push(`Regex fallback: Found unique parent Class match "${primaryClass}" in raw file.`);
+              confidence = i === parts.length - 1 ? 'PROBABLE' : 'AMBIGUOUS'; // Weaker confidence for class
+              break;
+            }
+          }
+        }
       }
     }
 

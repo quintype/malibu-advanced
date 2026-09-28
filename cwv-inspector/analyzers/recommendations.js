@@ -10,7 +10,7 @@ import { correlateCls } from './correlation.js';
  * @param {Array<object>} astElements JSX elements parsed from project files.
  * @returns {object} Categorized, prioritized, and scored recommendations.
  */
-export function compileRecommendations(staticIssues, lighthouseIssues = null, astElements = []) {
+export function compileRecommendations(staticIssues, lighthouseIssues = null, astElements = [], allFiles = []) {
   // Extract runtime CLS elements
   const lhClsElements = [];
   if (lighthouseIssues) {
@@ -23,7 +23,7 @@ export function compileRecommendations(staticIssues, lighthouseIssues = null, as
   }
 
   // Run the Correlation Engine
-  const correlatedClsResult = correlateCls(lhClsElements, astElements);
+  const correlatedClsResult = correlateCls(lhClsElements, astElements, allFiles);
   
   // Track matched static issues to exclude them from standard listing
   const matchedStaticIndices = new Set();
@@ -51,7 +51,7 @@ export function compileRecommendations(staticIssues, lighthouseIssues = null, as
         });
       }
     });
-    const tempCorrelated = correlateCls(observerElements, astElements);
+    const tempCorrelated = correlateCls(observerElements, astElements, allFiles);
     observerCorrelatedResult.push(...tempCorrelated);
   }
 
