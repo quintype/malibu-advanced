@@ -24,7 +24,7 @@ function parseSelectorComponent(comp) {
  * @param {Array<object>} astElements JSX elements parsed from project files.
  * @returns {Array<object>} Array of correlated findings.
  */
-export function correlateCls(lhClsElements, astElements) {
+export function correlateCls(lhClsElements, astElements, allFiles = []) {
   const correlated = [];
 
   lhClsElements.forEach(lhEl => {
@@ -98,23 +98,14 @@ export function correlateCls(lhClsElements, astElements) {
       }
     }
 
-    if (candidates.length === 0) {
-      correlated.push({
-        lhEl,
-        source: null,
-        confidence: 'UNRESOLVED',
-        evidence: [`No matching source elements found for tag "${targetParsed.tagName || 'any'}"`]
-      });
-      return;
-    }
-
-    // Step 3: Confidence evaluation and disambiguation
     let matchedCandidate = null;
     let ambiguousCandidates = null;
     let confidence = 'UNRESOLVED';
     const evidence = [];
 
-    if (candidates.length === 1) {
+    if (candidates.length === 0) {
+      evidence.push(`No matching AST elements found for tag "${targetParsed.tagName || 'any'}". Falling back to Regex.`);
+    } else if (candidates.length === 1) {
       matchedCandidate = candidates[0];
       evidence.push(`Tag matched: "${matchedCandidate.tagName}"`);
       if (targetParsed.id) {
