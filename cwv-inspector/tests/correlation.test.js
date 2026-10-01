@@ -140,7 +140,7 @@ try {
     [{ selector: 'img.hero-image', score: 0.12, device: 'Mobile', snippet: '<img class="hero-image" src="/images/banner.jpg" />' }],
     mockAstElements
   );
-  assert.strictEqual(run1[0].confidence, 'HIGH');
+  assert.strictEqual(run1[0].confidence, 'PROBABLE');
   assert.strictEqual(run1[0].source.filePath, 'src/components/Hero.jsx');
   assert.strictEqual(run1[0].source.line, 25);
   console.log('✓ Test 1: Exact tag + class match passed.');
@@ -150,7 +150,7 @@ try {
     [{ selector: 'img#header-logo', score: 0.05, device: 'Desktop', snippet: '<img id="header-logo" />' }],
     mockAstElements
   );
-  assert.strictEqual(run2[0].confidence, 'HIGH');
+  assert.strictEqual(run2[0].confidence, 'EXACT');
   assert.strictEqual(run2[0].source.filePath, 'src/components/Header.jsx');
   console.log('✓ Test 2: Tag + ID match passed.');
 
@@ -159,7 +159,7 @@ try {
     [{ selector: 'img.thumbnail', score: 0.08, device: 'Mobile', snippet: '<img class="thumbnail" src="/images/thumb2.png" />' }],
     mockAstElements
   );
-  assert.strictEqual(run3[0].confidence, 'HIGH');
+  assert.strictEqual(run3[0].confidence, 'EXACT');
   assert.strictEqual(run3[0].source.line, 22); // uniquely matched thumb2.png src
   console.log('✓ Test 3: Tag + src disambiguation match passed.');
 
@@ -168,7 +168,7 @@ try {
     [{ selector: 'img.thumbnail', score: 0.04, device: 'Mobile', snippet: '<img class="thumbnail" />' }],
     mockAstElements
   );
-  assert.strictEqual(run4[0].confidence, 'UNRESOLVED');
+  assert.strictEqual(run4[0].confidence, 'AMBIGUOUS');
   assert.strictEqual(run4[0].source, null);
   console.log('✓ Test 4: Multiple ambiguous matches unresolved passed.');
 
@@ -765,7 +765,103 @@ try {
   assert.strictEqual(t64Result.issues[0].correlationState, 'UNRESOLVED');
   console.log('✓ Test 64: Fixture-based unrelated handler passed.');
 
-  console.log('\n🎉 All 64 Core Web Vitals Correlation Engine tests passed successfully!');
+  // --- CLS MERGE LOGIC TESTS ---
+  // Case 1: Mobile Dummy, Desktop Valid, Observer duplicates desktop + unique
+  const t65Lh = {
+    mobile: { clsElements: [{ selector: 'Global/Unknown (Lighthouse trace parsing failed to attribute elements)', score: 0.877 }] },
+    desktop: { clsElements: [{ selector: 'div.header', score: 0.1 }] },
+    customShifts: [
+      { value: 0.05, sources: [{ selector: 'div.header' }] },
+      { value: 0.15, sources: [{ selector: 'footer#footer' }] }
+    ]
+  };
+  const t65Ast = [
+    { tagName: 'div', className: 'header', filePath: 'src/Header.jsx', line: 1 },
+    { tagName: 'footer', id: 'footer', filePath: 'src/Footer.jsx', line: 2 }
+  ];
+  const t65Result = compileRecommendations([], t65Lh, t65Ast);
+  // Verify Global/Unknown is removed
+  assert.strictEqual(t65Result.issues.filter(i => i.selector && i.selector.includes('Global/Unknown')).length, 0);
+  // Verify div.header exists only ONCE
+  const t65Header = t65Result.issues.filter(i => i.selector === 'div.header');
+  assert.strictEqual(t65Header.length, 1);
+  assert.strictEqual(t65Header[0].type, 'correlated'); // Retained the Lighthouse valid one
+  // Verify footer exists
+  const t65Footer = t65Result.issues.filter(i => i.selector === 'footer#footer');
+  assert.strictEqual(t65Footer.length, 1);
+  assert.strictEqual(t65Footer[0].type, 'observer-fallback-correlated');
+  console.log('✓ Test 65: CLS Merge - Valid Desktop + Mobile Dummy + Duplicate Observer passed.');
+
+  // Case 2: Lighthouse dummy, Observer no correlated findings
+  const t66Lh = {
+    mobile: { clsElements: [{ selector: 'Global/Unknown (Lighthouse trace parsing failed to attribute elements)', score: 0.877 }] },
+    customShifts: []
+  };
+  const t66Result = compileRecommendations([], t66Lh, []);
+  assert.strictEqual(t66Result.issues.filter(i => i.selector && i.selector.includes('Global/Unknown')).length, 1);
+  console.log('✓ Test 66: CLS Merge - Dummy retained when no observer fallback passed.');
+
+  // Case 3: Lighthouse valid finding, Observer same finding
+  const t67Lh = {
+    mobile: { clsElements: [{ selector: 'div.header', score: 0.1 }] },
+    customShifts: [{ value: 0.05, sources: [{ selector: 'div.header' }] }]
+  };
+  const t67Result = compileRecommendations([], t67Lh, t65Ast);
+  assert.strictEqual(t67Result.issues.filter(i => i.selector === 'div.header').length, 1);
+  assert.strictEqual(t67Result.issues[0].type, 'correlated');
+  console.log('✓ Test 67: CLS Merge - Valid deduplicated against identical observer passed.');
+
+  // Case 4: Lighthouse valid + Observer unique
+  const t68Lh = {
+    mobile: { clsElements: [{ selector: 'div.header', score: 0.1 }] },
+    customShifts: [{ value: 0.05, sources: [{ selector: 'footer#footer' }] }]
+  };
+  const t68Result = compileRecommendations([], t68Lh, t65Ast);
+  assert.strictEqual(t68Result.issues.length, 2);
+  const types68 = t68Result.issues.map(i => i.type).sort();
+  assert.deepStrictEqual(types68, ['correlated', 'observer-fallback-correlated']);
+  console.log('✓ Test 68: CLS Merge - Valid Lighthouse + Unique Observer both retained passed.');
+
+  // Case 5: Mobile dummy + valid Desktop findings (ensure Desktop findings aren't deleted)
+  const t69Lh = {
+    mobile: { clsElements: [{ selector: 'Global/Unknown (Lighthouse trace parsing failed to attribute elements)', score: 0.877 }] },
+    desktop: { clsElements: [{ selector: 'div.desktop-only', score: 0.2 }] },
+    customShifts: [{ value: 0.05, sources: [{ selector: 'footer#footer' }] }]
+  };
+  const t69Ast = [
+    { tagName: 'div', className: 'desktop-only', filePath: 'src/Desktop.jsx', line: 5 },
+    { tagName: 'footer', id: 'footer', filePath: 'src/Footer.jsx', line: 2 }
+  ];
+  const t69Result = compileRecommendations([], t69Lh, t69Ast);
+  assert.strictEqual(t69Result.issues.filter(i => i.selector && i.selector.includes('Global/Unknown')).length, 0);
+  assert.strictEqual(t69Result.issues.filter(i => i.selector === 'div.desktop-only').length, 1);
+  assert.strictEqual(t69Result.issues.filter(i => i.selector === 'footer#footer').length, 1);
+  console.log('✓ Test 69: CLS Merge - Mobile Dummy removed, Desktop valid retained passed.');
+
+  // Case 6: Multiple sources in single observer shift
+  const t70Lh = {
+    mobile: { clsElements: [{ selector: 'Global/Unknown (Lighthouse trace parsing failed to attribute elements)', score: 0.877 }] },
+    customShifts: [{ 
+      value: 0.435, 
+      sources: [
+        { selector: 'footer#footer' },
+        { selector: 'footer#footer > div > div > a.link' }
+      ] 
+    }]
+  };
+  const t70Ast = [
+    { tagName: 'a', className: 'link', filePath: 'src/Link.jsx', line: 10 }
+  ];
+  const t70Result = compileRecommendations([], t70Lh, t70Ast);
+  assert.strictEqual(t70Result.issues.length, 1);
+  assert.strictEqual(t70Result.issues[0].score, 0.435);
+  // Should select longest selector (a.link) as primary
+  assert.strictEqual(t70Result.issues[0].selector, 'footer#footer > div > div > a.link');
+  assert.strictEqual(t70Result.issues[0].relatedSources.length, 1);
+  assert.strictEqual(t70Result.issues[0].relatedSources[0].selector, 'footer#footer');
+  console.log('✓ Test 70: CLS Merge - Multiple sources inside a single shift are grouped under one issue passed.');
+
+  console.log('\n🎉 All 70 Core Web Vitals Correlation Engine tests passed successfully!');
 } catch (err) {
   console.error('\n❌ Test execution failed:');
   console.error(err);

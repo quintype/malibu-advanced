@@ -165,7 +165,8 @@ export function correlateCls(lhClsElements, astElements, allFiles = []) {
         if (!fallbackPart) continue;
 
         if (fallbackPart.id) {
-          const idRegex = new RegExp(`id=['"]${fallbackPart.id}['"]`, 'i');
+          // Handle id="id", id='id', id=id, id = "id"
+          const idRegex = new RegExp(`id\\s*=\\s*['"]?${fallbackPart.id}['"]?(?:\\s|>)`, 'i');
           const matchedFiles = allFiles.filter(f => idRegex.test(f.content));
           if (matchedFiles.length === 1) {
             matchedCandidate = {
@@ -185,7 +186,8 @@ export function correlateCls(lhClsElements, astElements, allFiles = []) {
           const primaryClass = fallbackPart.classes[0];
           // We only try fallback on classes if they look somewhat unique (not generic like 'div', 'container')
           if (primaryClass.length > 4 && !['container', 'wrapper', 'row', 'col', 'main'].includes(primaryClass)) {
-            const classRegex = new RegExp(`class(Name)?=['"][^'"]*${primaryClass}[^'"]*['"]`, 'i');
+            // Handle class="... class ...", className="...", with spaces around =
+            const classRegex = new RegExp(`class(Name)?\\s*=\\s*['"][^'"]*${primaryClass}[^'"]*['"]`, 'i');
             const matchedFiles = allFiles.filter(f => classRegex.test(f.content));
             if (matchedFiles.length === 1) {
               matchedCandidate = {

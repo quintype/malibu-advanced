@@ -34,21 +34,33 @@ export function compileRecommendations(staticIssues, lighthouseIssues = null, as
   if (lighthouseIssues && Array.isArray(lighthouseIssues.customShifts)) {
     const observerElements = [];
     lighthouseIssues.customShifts.forEach(shift => {
-      if (Array.isArray(shift.sources)) {
-        shift.sources.forEach(src => {
-          if (src.selector && src.selector !== 'Unknown/Removed' && src.selector !== '') {
-            observerElements.push({
-              selector: src.selector,
-              snippet: src.snippet,
-              score: shift.value,
-              time: shift.time,
-              device: 'Diagnostic Observer',
-              previousRect: src.previousRect,
-              currentRect: src.currentRect,
-              isFallback: true
-            });
-          }
-        });
+      if (Array.isArray(shift.sources) && shift.sources.length > 0) {
+        const validSources = shift.sources.filter(src => src.selector && src.selector !== 'Unknown/Removed' && src.selector !== '');
+        
+        if (validSources.length > 0) {
+          // Select the most specific source (longest selector generally implies deepest DOM node)
+          const sortedSources = [...validSources].sort((a, b) => b.selector.length - a.selector.length);
+          const primarySrc = sortedSources[0];
+          const relatedSources = sortedSources.slice(1).map(src => ({
+            selector: src.selector,
+            snippet: src.snippet,
+            previousRect: src.previousRect,
+            currentRect: src.currentRect,
+            isDetached: src.isDetached
+          }));
+
+          observerElements.push({
+            selector: primarySrc.selector,
+            snippet: primarySrc.snippet,
+            score: shift.value,
+            time: shift.time,
+            device: 'Diagnostic Observer',
+            previousRect: primarySrc.previousRect,
+            currentRect: primarySrc.currentRect,
+            isFallback: true,
+            relatedSources: relatedSources
+          });
+        }
       }
     });
     const tempCorrelated = correlateCls(observerElements, astElements, allFiles);
@@ -115,10 +127,14 @@ export function compileRecommendations(staticIssues, lighthouseIssues = null, as
         suggestionText = `Lighthouse trace parsing crashed natively. We have automatically launched a secondary Throttled Diagnostic Pass (emulating Slow 4G & 4x CPU slowdown) to capture the missing shifts. Please review the "Observer Fallback" entries below for the automatically extracted elements!`;
       }
       
+      let severity = 'medium';
+      if (item.lhEl.score >= 0.25) severity = 'high';
+      else if (item.lhEl.score < 0.1) severity = 'low';
+
       correlatedIssues.push({
         type: 'lighthouse-unresolved',
         cwv: 'cls',
-        severity: 'medium',
+        severity: severity,
         file: `Runtime Audit (Lighthouse ${item.lhEl.device})`,
         line: '-',
         message: `Layout Shift on selector "${item.lhEl.selector}"`,
@@ -139,6 +155,10 @@ export function compileRecommendations(staticIssues, lighthouseIssues = null, as
   observerCorrelatedResult.forEach(item => {
     let suggestion = 'Investigate this element, as it was captured shifting during an unthrottled diagnostic run.';
     let impact = `Unthrottled diagnostic observer captured a shift of ${item.lhEl.score.toFixed(4)} on "${item.lhEl.selector}". Note: Timing and severity may differ from Lighthouse.`;
+    
+    let severity = 'low';
+    if (item.lhEl.score >= 0.25) severity = 'high';
+    else if (item.lhEl.score >= 0.1) severity = 'medium';
     
     if (item.lhEl.selector.includes('.fonts-loaded') || item.lhEl.selector.includes('.wf-active') || item.lhEl.selector.includes('.font-loaded')) {
       suggestion = 'Note: The DOM path contains font-loading indicator classes (e.g. .fonts-loaded). This suggests FOIT/FOUT as a possible cause for the shift. Verify if text metrics changed upon font load.';
@@ -181,7 +201,7 @@ export function compileRecommendations(staticIssues, lighthouseIssues = null, as
       correlatedIssues.push({
         type: 'observer-fallback-correlated',
         cwv: 'cls',
-        severity: 'low',
+        severity: severity,
         file: srcFile,
         line: srcLine,
         message: `[Observer Fallback] Shift associated with <${item.source.tagName}> in ${shortFile}`,
@@ -195,13 +215,14 @@ export function compileRecommendations(staticIssues, lighthouseIssues = null, as
         score: item.lhEl.score,
         previousRect: item.lhEl.previousRect,
         currentRect: item.lhEl.currentRect,
-        ambiguousSources: item.ambiguousSources
+        ambiguousSources: item.ambiguousSources,
+        relatedSources: item.lhEl.relatedSources
       });
     } else {
       correlatedIssues.push({
         type: 'observer-fallback-unresolved',
         cwv: 'cls',
-        severity: 'low',
+        severity: severity,
         file: `Diagnostic Run (${item.lhEl.device})`,
         line: '-',
         message: `[Observer Fallback] Shift on "${item.lhEl.selector}"`,
@@ -215,10 +236,109 @@ export function compileRecommendations(staticIssues, lighthouseIssues = null, as
         evidence: item.evidence,
         previousRect: item.lhEl.previousRect,
         currentRect: item.lhEl.currentRect,
-        ambiguousSources: item.ambiguousSources
+        ambiguousSources: item.ambiguousSources,
+        relatedSources: item.lhEl.relatedSources
       });
     }
   });
+
+  // --- BEGIN CLS MERGE LOGIC ---
+  const clsLhValid = correlatedIssues.filter(i => 
+    (i.type === 'correlated' || i.type === 'lighthouse-unresolved') && !i.selector.includes('Global/Unknown')
+  );
+  
+  const clsLhDummies = correlatedIssues.filter(i => 
+    i.type === 'lighthouse-unresolved' && i.selector.includes('Global/Unknown')
+  );
+  
+  const clsObsCorrelated = correlatedIssues.filter(i => 
+    i.type === 'observer-fallback-correlated'
+  );
+  
+  const clsObsUnresolved = correlatedIssues.filter(i => 
+    i.type === 'observer-fallback-unresolved'
+  );
+  
+  // Deduplicate observer correlated against valid lighthouse AND within itself
+  const seenObsCorrelated = new Map();
+  clsObsCorrelated.forEach(obs => {
+    const isDuplicateLh = clsLhValid.some(lh => {
+      // 1. file + line exact match (excluding runtime generic files)
+      const hasValidFile = lh.file && lh.file !== 'Runtime Audit (Lighthouse Mobile)' && lh.file !== 'Runtime Audit (Lighthouse Desktop)' && !lh.file.includes('Diagnostic Run');
+      if (hasValidFile && lh.file === obs.file && lh.line === obs.line) {
+        return true;
+      }
+      // 2. Exact selector + file match
+      if (hasValidFile && lh.selector === obs.selector && lh.file === obs.file) {
+        return true;
+      }
+      // 3. Exact selector match as fallback
+      if (lh.selector === obs.selector) {
+        return true;
+      }
+      return false;
+    });
+
+    if (!isDuplicateLh) {
+      // Deduplicate within observer fallback shifts pointing to same source
+      const key = `${obs.file}:${obs.line}`;
+      if (seenObsCorrelated.has(key)) {
+        const existing = seenObsCorrelated.get(key);
+        existing.score = (existing.score || 0) + (obs.score || 0);
+        if (existing.score >= 0.25) existing.severity = 'high';
+        else if (existing.score >= 0.1) existing.severity = 'medium';
+        else existing.severity = 'low';
+        
+        // Upgrade confidence if the newer match is stronger
+        if (obs.confidence === 'EXACT') existing.confidence = 'EXACT';
+        else if (obs.confidence === 'PROBABLE' && existing.confidence !== 'EXACT') existing.confidence = 'PROBABLE';
+      } else {
+        seenObsCorrelated.set(key, { ...obs });
+      }
+    }
+  });
+  const uniqueObsCorrelated = Array.from(seenObsCorrelated.values());
+
+  // Deduplicate observer unresolved
+  const seenObsUnresolved = new Map();
+  clsObsUnresolved.forEach(obs => {
+     const isDuplicateLh = clsLhValid.some(lh => lh.selector === obs.selector);
+     if (!isDuplicateLh) {
+       const key = obs.selector;
+       if (seenObsUnresolved.has(key)) {
+         const existing = seenObsUnresolved.get(key);
+         existing.score = (existing.score || 0) + (obs.score || 0);
+         if (existing.score >= 0.25) existing.severity = 'high';
+         else if (existing.score >= 0.1) existing.severity = 'medium';
+         else existing.severity = 'low';
+       } else {
+         seenObsUnresolved.set(key, { ...obs });
+       }
+     }
+  });
+  const uniqueObsUnresolved = Array.from(seenObsUnresolved.values());
+
+  // Rebuild the correlatedIssues array for CLS
+  correlatedIssues.length = 0;
+  
+  // 1. Valid Lighthouse (always keep)
+  correlatedIssues.push(...clsLhValid);
+  
+  // 2. Unique Observer Correlated (always keep)
+  correlatedIssues.push(...uniqueObsCorrelated);
+  
+  // 3. Observer Unresolved (always keep)
+  correlatedIssues.push(...uniqueObsUnresolved);
+  
+  // 4. Dummies (only keep if no useful observer correlation exists or if observer shifts miss the bulk of the score)
+  if (clsLhDummies.length > 0) {
+    const totalObsScore = [...uniqueObsCorrelated, ...uniqueObsUnresolved].reduce((sum, obs) => sum + (obs.score || 0), 0);
+    const dummyScore = clsLhDummies.reduce((sum, d) => sum + (d.score || 0), 0);
+    if (uniqueObsCorrelated.length === 0 || totalObsScore < dummyScore * 0.5) {
+      correlatedIssues.push(...clsLhDummies);
+    }
+  }
+  // --- END CLS MERGE LOGIC ---
 
   // Filter staticIssues to remove combined ones
   const cleanStaticIssues = staticIssues.filter((_, idx) => !matchedStaticIndices.has(idx));
@@ -579,6 +699,7 @@ export function compileRecommendations(staticIssues, lighthouseIssues = null, as
         inpImpact: issue.inpImpact || null,
         callChain: issue.callChain || null,
         callChainString: issue.callChainString || null,
+        relatedSources: issue.relatedSources || [],
         occurrences: []
       };
     }

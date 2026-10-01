@@ -123,8 +123,9 @@ async function preScrollPage(url, port) {
 
     await page.setViewport({ width: 1350, height: 940 });
 
-    // Inject PerformanceObserver
     await page.evaluateOnNewDocument(() => {
+      if (window.__cwv_layout_shifts_injected) return;
+      window.__cwv_layout_shifts_injected = true;
       window.__cwv_layout_shifts = [];
       try {
         new PerformanceObserver((list) => {
@@ -218,8 +219,8 @@ async function preScrollPage(url, port) {
  * Runs a specially throttled diagnostic pass to capture layout shifts when Lighthouse trace parsing fails.
  * Emulates exactly Lighthouse Mobile throttling (4x CPU, Slow 4G).
  */
-async function throttledDiagnosticPass(url, port) {
-  console.log(`🤖 Lighthouse trace parser failed. Running Custom Throttled Diagnostic Pass on port ${port}...`);
+async function throttledDiagnosticPass(url, port, device = 'mobile') {
+  console.log(`🤖 Lighthouse trace parser failed. Running Custom Throttled Diagnostic Pass for ${device} on port ${port}...`);
   let browser = null;
   let customShifts = [];
   try {
@@ -229,8 +230,12 @@ async function throttledDiagnosticPass(url, port) {
     const pages = await browser.pages();
     const page = pages.length > 0 ? pages[0] : await browser.newPage();
 
-    // Emulate Mobile Device
-    await page.setViewport({ width: 360, height: 640, isMobile: true, hasTouch: true });
+    // Emulate Device Viewport
+    if (device === 'mobile') {
+      await page.setViewport({ width: 360, height: 640, isMobile: true, hasTouch: true });
+    } else {
+      await page.setViewport({ width: 1350, height: 940, isMobile: false, hasTouch: false });
+    }
 
     // Emulate Lighthouse Mobile Throttling
     const client = await page.target().createCDPSession();
@@ -244,6 +249,8 @@ async function throttledDiagnosticPass(url, port) {
     await client.send('Emulation.setCPUThrottlingRate', { rate: 4 });
 
     await page.evaluateOnNewDocument(() => {
+      if (window.__cwv_layout_shifts_injected) return;
+      window.__cwv_layout_shifts_injected = true;
       window.__cwv_layout_shifts = [];
       try {
         new PerformanceObserver((list) => {
@@ -356,15 +363,21 @@ export async function runLighthouseAudit(url) {
     const mobileData = extractScores(JSON.parse(mobileResult.report));
     
     // Check if Lighthouse failed to trace DOM nodes
-    const hasUnknownShift = mobileData.clsElements.some(el => el.selector.includes('Global/Unknown'));
+    const hasUnknownMobile = mobileData.clsElements.some(el => el.selector.includes('Global/Unknown'));
     let finalCustomShifts = customShifts;
-    if (hasUnknownShift) {
-      finalCustomShifts = await throttledDiagnosticPass(url, chrome.port);
+    if (hasUnknownMobile) {
+      finalCustomShifts = await throttledDiagnosticPass(url, chrome.port, 'mobile');
     }
 
     console.log(`💻 Running Lighthouse Desktop Audit...`);
     const desktopResult = await lighthouse(url, desktopOptions);
     const desktopData = extractScores(JSON.parse(desktopResult.report));
+
+    const hasUnknownDesktop = desktopData.clsElements.some(el => el.selector.includes('Global/Unknown'));
+    if (hasUnknownDesktop) {
+      const desktopShifts = await throttledDiagnosticPass(url, chrome.port, 'desktop');
+      finalCustomShifts = [...finalCustomShifts, ...desktopShifts];
+    }
 
     return {
       mobile: mobileData,
