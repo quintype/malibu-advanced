@@ -58,7 +58,7 @@ export function extractScores(reportJson) {
       if (audit && audit.details && Array.isArray(audit.details.items)) {
         items = audit.details.items;
       }
-      
+
       const mapped = items.map(item => ({
         selector: item.node?.selector || 'Unknown Node (Removed or no DOM element)',
         nodeLabel: item.node?.nodeLabel || 'N/A',
@@ -121,7 +121,7 @@ async function preScrollPage(url, port) {
     const pages = await browser.pages();
     const page = pages.length > 0 ? pages[0] : await browser.newPage();
 
-    await page.setViewport({ width: 1350, height: 940 });
+    await page.setViewport({ width: 1024, height: 768 });
 
     await page.evaluateOnNewDocument(() => {
       if (window.__cwv_layout_shifts_injected) return;
@@ -136,10 +136,10 @@ async function preScrollPage(url, port) {
               sources = entry.sources.map(s => {
                 const node = s.node;
                 if (!node) return { selector: 'Unknown/Removed' };
-                
+
                 // Check if the node is still attached to the live document
                 const isDetached = !document.contains(node);
-                
+
                 let path = [];
                 let el = node;
                 while (el && el.nodeType === 1) {
@@ -152,12 +152,12 @@ async function preScrollPage(url, port) {
                   path.unshift(sel);
                   el = el.parentNode;
                 }
-                
+
                 let selectorStr = path.join(' > ');
                 if (isDetached) {
                   selectorStr = `Detached Node: ${selectorStr}`;
                 }
-                
+
                 let snippetRaw = node.outerHTML ? node.outerHTML.substring(0, 150) : '';
                 if (isDetached && snippetRaw) {
                   snippetRaw = `[Captured post-shift; element detached] ${snippetRaw}`;
@@ -179,8 +179,8 @@ async function preScrollPage(url, port) {
               sources
             });
           }
-        }).observe({type: 'layout-shift', buffered: true});
-      } catch(e) {}
+        }).observe({ type: 'layout-shift', buffered: true });
+      } catch (e) { }
     });
 
     // Navigate to URL
@@ -232,9 +232,9 @@ async function throttledDiagnosticPass(url, port, device = 'mobile') {
 
     // Emulate Device Viewport
     if (device === 'mobile') {
-      await page.setViewport({ width: 360, height: 640, isMobile: true, hasTouch: true });
+      await page.setViewport({ width: 360, height: 667, isMobile: true, hasTouch: true });
     } else {
-      await page.setViewport({ width: 1350, height: 940, isMobile: false, hasTouch: false });
+      await page.setViewport({ width: 1024, height: 768, isMobile: false, hasTouch: false });
     }
 
     // Emulate Lighthouse Mobile Throttling
@@ -260,7 +260,7 @@ async function throttledDiagnosticPass(url, port, device = 'mobile') {
               const node = s.node;
               if (!node) return { selector: 'Unknown/Removed' };
               const isDetached = !document.contains(node);
-              
+
               let path = [];
               let el = node;
               while (el && el.nodeType === 1) {
@@ -284,19 +284,19 @@ async function throttledDiagnosticPass(url, port, device = 'mobile') {
             }) : [];
             window.__cwv_layout_shifts.push({ value: entry.value, time: entry.startTime, sources });
           }
-        }).observe({type: 'layout-shift', buffered: true});
-      } catch(e) {}
+        }).observe({ type: 'layout-shift', buffered: true });
+      } catch (e) { }
     });
 
     await page.goto(url, { waitUntil: 'networkidle2', timeout: 45000 });
-    
+
     // Quick scroll to trigger lazy elements
     await page.evaluate(async () => {
       window.scrollBy(0, 500);
       await new Promise(r => setTimeout(r, 500));
       window.scrollTo(0, 0);
     });
-    
+
     await new Promise(r => setTimeout(r, 2000));
     customShifts = await page.evaluate(() => window.__cwv_layout_shifts || []);
     console.log(`🤖 Custom Throttled Pass captured ${customShifts.length} layout shifts.`);
@@ -308,7 +308,7 @@ async function throttledDiagnosticPass(url, port, device = 'mobile') {
 
 /**
  * Runs Lighthouse audit on a URL for both Mobile and Desktop.
- * 
+ *
  * @param {string} url The target page URL.
  * @returns {Promise<object|null>} Lighthouse audit scores for both modes.
  */
@@ -318,7 +318,7 @@ export async function runLighthouseAudit(url) {
   let chrome = null;
   try {
     console.log(`\n🚀 Launching headless Chrome for dual Lighthouse audit on: ${url}...`);
-    
+
     chrome = await chromeLauncher.launch({
       chromeFlags: ['--headless=new', '--disable-gpu', '--no-sandbox']
     });
@@ -331,7 +331,15 @@ export async function runLighthouseAudit(url) {
       output: 'json',
       onlyCategories: ['performance'],
       port: chrome.port,
-      disableStorageReset: true
+      disableStorageReset: true,
+      formFactor: 'mobile',
+      screenEmulation: {
+        mobile: true,
+        width: 375,
+        height: 667,
+        deviceScaleFactor: 2,
+        disabled: false
+      }
     };
 
     const desktopOptions = {
@@ -343,8 +351,8 @@ export async function runLighthouseAudit(url) {
       formFactor: 'desktop',
       screenEmulation: {
         mobile: false,
-        width: 1350,
-        height: 940,
+        width: 1024,
+        height: 768,
         deviceScaleFactor: 1,
         disabled: false
       },
@@ -361,7 +369,7 @@ export async function runLighthouseAudit(url) {
     console.log(`📱 Running Lighthouse Mobile Audit...`);
     const mobileResult = await lighthouse(url, mobileOptions);
     const mobileData = extractScores(JSON.parse(mobileResult.report));
-    
+
     // Check if Lighthouse failed to trace DOM nodes
     const hasUnknownMobile = mobileData.clsElements.some(el => el.selector.includes('Global/Unknown'));
     let finalCustomShifts = customShifts;

@@ -161,7 +161,7 @@ export function compileRecommendations(staticIssues, lighthouseIssues = null, as
     else if (item.lhEl.score >= 0.1) severity = 'medium';
     
     if (item.lhEl.selector.includes('.fonts-loaded') || item.lhEl.selector.includes('.wf-active') || item.lhEl.selector.includes('.font-loaded')) {
-      suggestion = 'Note: The DOM path contains font-loading indicator classes (e.g. .fonts-loaded). This suggests FOIT/FOUT as a possible cause for the shift. Verify if text metrics changed upon font load.';
+      suggestion = 'Note: The DOM path contains font-loading indicator classes (e.g. .fonts-loaded). This indicates FOIT/FOUT caused a layout shift. To fix: 1. Preload the critical web font in the <head> (<link rel="preload" as="font"...>). 2. Use "font-display: optional" or "swap" in your @font-face CSS. 3. Configure fallback font metrics (size-adjust) to match the web font width/height.';
       impact = `Unthrottled diagnostic observer captured a shift of ${item.lhEl.score.toFixed(4)} on "${item.lhEl.selector}". (Suspected Cause: Web Font Loading)`;
     }
 
