@@ -160,19 +160,22 @@ export class CopilotService {
 
       unsubscribe = session.on((event) => {
         if (event.type === 'assistant.message') {
-          lastAssistantMessage = event;
-          // Assistant has emitted the response. Start a short grace settling window for session.idle
-          if (!settlingTimer) {
-            settlingTimer = setTimeout(() => {
-              if (!isDone && lastAssistantMessage) {
-                isDone = true;
-                finishResolve(lastAssistantMessage);
-              }
-            }, 800);
+          const text = event.data?.content;
+          if (text && typeof text === 'string' && text.trim().length > 0) {
+            lastAssistantMessage = event;
+            // Assistant has emitted a non-empty response. Start a short grace settling window for session.idle
+            if (!settlingTimer) {
+              settlingTimer = setTimeout(() => {
+                if (!isDone && lastAssistantMessage) {
+                  isDone = true;
+                  finishResolve(lastAssistantMessage);
+                }
+              }, 800);
+            }
           }
         } else if (event.type === 'session.idle') {
           if (settlingTimer) clearTimeout(settlingTimer);
-          if (!isDone) {
+          if (!isDone && lastAssistantMessage && lastAssistantMessage.data?.content?.trim()) {
             isDone = true;
             finishResolve(lastAssistantMessage);
           }

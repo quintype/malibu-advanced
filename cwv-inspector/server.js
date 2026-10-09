@@ -82,10 +82,12 @@ const server = http.createServer((req, res) => {
 
   // Handle run-audit EventSource stream
   if (pathname === '/run-audit') {
-    const project = parsedUrl.searchParams.get('project');
+    const rawProject = parsedUrl.searchParams.get('project');
     const auditUrlInput = parsedUrl.searchParams.get('url');
 
-    const parentDir = path.dirname(__dirname);
+    const parentDir = getProjectsParentDir(rawProject);
+    const project = normalizeProjectInput(rawProject, parentDir);
+
     if (!project || !isSafeProjectName(project, parentDir)) {
       res.writeHead(400, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ success: false, error: 'Invalid or unsafe project parameter' }));
@@ -140,10 +142,12 @@ const server = http.createServer((req, res) => {
 
   // Handle reports-view mapping
   if (pathname === '/reports-view') {
-    const project = parsedUrl.searchParams.get('project');
+    const rawProject = parsedUrl.searchParams.get('project');
     const filename = parsedUrl.searchParams.get('file');
 
-    const parentDir = path.dirname(__dirname);
+    const parentDir = getProjectsParentDir(rawProject);
+    const project = normalizeProjectInput(rawProject, parentDir);
+
     if (!project || !filename || !isSafeProjectName(project, parentDir) || !isSafeReportFile(filename)) {
       res.writeHead(400, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ success: false, error: 'Invalid project or report file parameter' }));
@@ -192,16 +196,18 @@ const server = http.createServer((req, res) => {
         res.end(JSON.stringify({ cancelled: true }));
         return;
       }
-      const selectedPath = stdout.trim();
+      const selectedPath = stdout.trim().replace(/\/+$/, '');
+      const parentDir = getProjectsParentDir(selectedPath);
+      const projectName = (selectedPath.startsWith(parentDir) ? path.relative(parentDir, selectedPath) : null) || path.basename(selectedPath);
       res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ path: selectedPath }));
+      res.end(JSON.stringify({ path: projectName, fullPath: selectedPath }));
     });
     return;
   }
 
   // API Endpoint: /api/projects
   if (pathname === '/api/projects') {
-    const parentDir = path.dirname(__dirname);
+    const parentDir = getProjectsParentDir();
     try {
       const directories = fs.readdirSync(parentDir, { withFileTypes: true })
         .filter(dirent => dirent.isDirectory() && !dirent.name.startsWith('.'))
@@ -218,7 +224,7 @@ const server = http.createServer((req, res) => {
 
   // API Endpoint: /api/reports
   if (pathname === '/api/reports') {
-    const parentDir = path.dirname(__dirname);
+    const parentDir = getProjectsParentDir();
     const reportsList = [];
     try {
       const directories = fs.readdirSync(parentDir, { withFileTypes: true })
@@ -327,7 +333,9 @@ const server = http.createServer((req, res) => {
 
       // Approach 1: Reuse existing audit result via project + reportFile + issueIndex
       if (payload.project || payload.reportFile || payload.issueIndex !== undefined) {
-        const { project, reportFile, issueIndex } = payload;
+        const { project: rawProject, reportFile, issueIndex } = payload;
+        const parentDir = getProjectsParentDir(rawProject);
+        const project = normalizeProjectInput(rawProject, parentDir);
 
         if (!isSafeProjectName(project, parentDir)) {
           sendJsonResponse(res, 400, { success: false, error: 'Invalid or unsafe project parameter' });
@@ -488,8 +496,9 @@ const server = http.createServer((req, res) => {
         return;
       }
 
-      const { project, reportFile } = payload || {};
-      const parentDir = path.dirname(__dirname);
+      const { project: rawProject, reportFile } = payload || {};
+      const parentDir = getProjectsParentDir(rawProject);
+      const project = normalizeProjectInput(rawProject, parentDir);
 
       if (!isSafeProjectName(project, parentDir)) {
         sendJsonResponse(res, 400, { success: false, error: 'Invalid or unsafe project parameter' });
@@ -634,6 +643,50 @@ function sendJsonResponse(res, statusCode, data) {
     'X-Content-Type-Options': 'nosniff'
   });
   res.end(JSON.stringify(data));
+}
+
+/**
+ * Resolves the root directory containing project folders.
+ * Checks PROJECTS_DIR env var, enclosing workspace root (if inside subproject),
+ * or falls back to one level up.
+ */
+function getProjectsParentDir(project = null) {
+  if (process.env.PROJECTS_DIR && fs.existsSync(process.env.PROJECTS_DIR)) {
+    return path.resolve(process.env.PROJECTS_DIR);
+  }
+  const oneUp = path.dirname(__dirname);
+  const twoUp = path.dirname(oneUp);
+
+  if (project && typeof project === 'string') {
+    const clean = project.trim().replace(/\/+$/, '');
+    if (path.isAbsolute(clean)) {
+      if (clean.startsWith(twoUp) && fs.existsSync(clean)) return twoUp;
+      if (clean.startsWith(oneUp) && fs.existsSync(clean)) return oneUp;
+    } else if (!clean.includes('..')) {
+      if (fs.existsSync(path.resolve(twoUp, clean))) return twoUp;
+      if (fs.existsSync(path.resolve(oneUp, clean))) return oneUp;
+    }
+  }
+
+  // If oneUp is a project itself (e.g. malibu-advanced with a package.json)
+  if (fs.existsSync(path.join(oneUp, 'package.json')) && path.basename(oneUp) !== 'cwv-inspector') {
+    return twoUp;
+  }
+  return oneUp;
+}
+
+/**
+ * Normalizes project input (supports absolute paths inside parentDir and relative project names).
+ */
+function normalizeProjectInput(project, parentDir) {
+  if (!project || typeof project !== 'string') return '';
+  const clean = project.trim().replace(/\/+$/, '');
+  if (path.isAbsolute(clean)) {
+    if (clean.startsWith(parentDir)) {
+      return path.relative(parentDir, clean);
+    }
+  }
+  return clean;
 }
 
 /**

@@ -254,12 +254,14 @@ function runAudit(event) {
 
   // Connect to dynamic log stream
   const eventUrl = '/run-audit?project=' + encodeURIComponent(project) + '&url=' + encodeURIComponent(urlInput);
+  let isCompleted = false;
   eventSource = new EventSource(eventUrl);
 
   eventSource.onmessage = function(event) {
     const data = event.data;
     
     if (data.startsWith('[COMPLETE]')) {
+      isCompleted = true;
       const reportUrl = data.replace('[COMPLETE]', '');
       eventSource.close();
       
@@ -286,7 +288,20 @@ function runAudit(event) {
     eventSource.close();
     submitBtn.disabled = false;
     submitBtn.querySelector('span').textContent = 'Run Inspector';
-    outputConsole.textContent += '\n⚠️ Connection lost or completed.';
+    if (!isCompleted) {
+      fetch(eventUrl)
+        .then(res => res.json())
+        .then(errData => {
+          if (errData && errData.error) {
+            outputConsole.textContent += '\n❌ Error: ' + errData.error + '\n';
+          } else {
+            outputConsole.textContent += '\n⚠️ Connection lost or completed.\n';
+          }
+        })
+        .catch(() => {
+          outputConsole.textContent += '\n⚠️ Connection lost or completed.\n';
+        });
+    }
   };
 }
 
