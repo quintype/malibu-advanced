@@ -995,6 +995,37 @@ body {
   font-weight: bold;
 }
 
+/* Device Pills and Section Badges */
+.device-pill {
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 4px;
+  margin-left: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.device-pill-mobile {
+  background: #e0f2fe;
+  color: #0284c7;
+}
+
+.device-pill-desktop {
+  background: #ede9fe;
+  color: #7c3aed;
+}
+
+.device-title-tag {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+  margin-left: 6px;
+}
+
 /* Print/PDF layout overrides */
 @media print {
   :root {
@@ -1014,25 +1045,73 @@ body {
     width: 100% !important;
   }
   
-  .mode-tabs-container, .controls-row, .ai-advice-btn {
-    display: none !important;
-  }
-
-  .mobile-only-view, .desktop-only-view {
-    display: block !important;
-    page-break-inside: avoid;
-  }
-  
-  .issue-card {
-    page-break-inside: avoid;
-  }
-
-  .issue-card-details {
-    display: block !important;
-  }
-
+  /* Exclude interactive controls, notices, and source-code issue accordions from PDF */
+  .mode-tabs-container,
+  .controls-row,
+  .ai-advice-btn,
+  .metrics-toggle,
+  .ai-pdf-sync-notice,
+  #diagnostics-title-bar,
+  .issues-list,
+  #issuesList,
+  .issue-card,
   .accordion-arrow {
     display: none !important;
+  }
+
+  div.mobile-only-view,
+  div.desktop-only-view {
+    display: block !important;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  tr.mobile-only-view,
+  tr.desktop-only-view {
+    display: table-row !important;
+  }
+
+  .executive-summary-card {
+    page-break-inside: avoid;
+    break-inside: avoid;
+    margin-bottom: 24px !important;
+  }
+
+  .detail-table-card {
+    page-break-inside: avoid;
+    break-inside: avoid;
+    box-shadow: none !important;
+    border: 1px solid var(--border-color) !important;
+    margin-bottom: 24px !important;
+  }
+
+  .metrics-detail-table {
+    width: 100% !important;
+    table-layout: auto !important;
+    border-collapse: collapse !important;
+  }
+
+  .metrics-detail-table th,
+  .metrics-detail-table td {
+    padding: 10px 14px !important;
+    vertical-align: middle !important;
+  }
+
+  .metrics-detail-table tbody tr:nth-child(4n+1),
+  .metrics-detail-table tbody tr:nth-child(4n+2) {
+    background-color: #fafbfc;
+  }
+
+  .metrics-detail-table tbody tr:nth-child(4n+3),
+  .metrics-detail-table tbody tr:nth-child(4n) {
+    background-color: #ffffff;
+  }
+
+  .pdf-footer-layout {
+    page-break-inside: avoid;
+    break-inside: avoid;
+    margin-top: 24px !important;
+    padding-top: 12px !important;
   }
 }
 

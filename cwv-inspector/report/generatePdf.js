@@ -1157,6 +1157,18 @@ export async function generateReport(compiledResult, options) {
     const page = await browser.newPage();
     await page.setContent(finalHtml, { waitUntil: 'networkidle0' });
     
+    // Ensure PDF contains only metrics and executive summaries (exclude code issue accordions)
+    await page.evaluate(() => {
+      const diagTitle = document.getElementById("diagnostics-title-bar");
+      if (diagTitle) diagTitle.remove();
+      const controls = document.querySelector(".controls-row");
+      if (controls) controls.remove();
+      const issuesList = document.getElementById("issuesList");
+      if (issuesList) issuesList.remove();
+      const notice = document.getElementById("ai-pdf-sync-notice");
+      if (notice) notice.remove();
+    });
+
     await page.pdf({
       path: pdfPath,
       format: 'A4',
