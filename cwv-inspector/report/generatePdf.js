@@ -422,6 +422,148 @@ export async function generateReport(compiledResult, options) {
     }).join('\n');
   }
 
+  /**
+   * Helper to render the automatic AI Solution section or its state in each issue card
+   */
+  function renderAiSectionHtml(issue, index) {
+    if (issue.aiAdvice && typeof issue.aiAdvice === 'object') {
+      const adv = issue.aiAdvice;
+      const confClass = String(adv.confidence || 'medium').toLowerCase();
+
+      let whyItHelpsHtml = '';
+      if (adv.whyItHelps) {
+        whyItHelpsHtml = `
+          <div class="ai-field-block ai-why-callout">
+            <div class="ai-field-label">Why This Solution Improves CWV</div>
+            <div class="ai-field-value">${escapeHtml(adv.whyItHelps)}</div>
+          </div>
+        `;
+      }
+
+      let affectedFilesHtml = '';
+      if (Array.isArray(adv.affectedFiles) && adv.affectedFiles.length > 0) {
+        const fileRows = adv.affectedFiles.map(af => {
+          const lineStr = af.line && af.line !== '-' ? `:${escapeHtml(af.line)}` : '';
+          return `<code>${escapeHtml(af.file)}${lineStr}</code>`;
+        }).join(', ');
+        affectedFilesHtml = `
+          <div class="ai-field-block">
+            <div class="ai-field-label">Affected Source Locations</div>
+            <div class="ai-field-value">${fileRows}</div>
+          </div>
+        `;
+      }
+
+      let proposedChangesHtml = '';
+      if (adv.proposedChanges) {
+        proposedChangesHtml = `
+          <div class="ai-field-block">
+            <div class="ai-field-label">Proposed Code Adjustments (Read-Only Preview)</div>
+            <div class="ai-code-block">${escapeHtml(adv.proposedChanges)}</div>
+          </div>
+        `;
+      }
+
+      const recsList = Array.isArray(adv.recommendations) ? adv.recommendations : [String(adv.recommendations || '')];
+      const limitationsList = Array.isArray(adv.limitations) ? adv.limitations : [String(adv.limitations || '')];
+
+      return `
+        <div class="ai-advisor-container">
+          <div class="ai-solution-card">
+            <div class="ai-card-top">
+              <div class="ai-badge-group">
+                <span class="ai-source-badge">✨ Copilot AI Solution</span>
+                <span class="ai-conf-badge ${escapeHtml(confClass)}">${escapeHtml(adv.confidence || 'MEDIUM')} Confidence</span>
+              </div>
+              ${adv.confidenceReason ? `<div class="ai-conf-reason">${escapeHtml(adv.confidenceReason)}</div>` : ''}
+            </div>
+
+            <div class="ai-field-block">
+              <div class="ai-field-label">Diagnosis & UX Impact</div>
+              <div class="ai-field-value">${escapeHtml(adv.explanation)}</div>
+            </div>
+
+            <div class="ai-field-block">
+              <div class="ai-field-label">Likely Root Cause</div>
+              <div class="ai-field-value">${escapeHtml(adv.rootCause)}</div>
+            </div>
+
+            <div class="ai-field-block">
+              <div class="ai-field-label">Recommended Action Steps</div>
+              <ul class="ai-list">
+                ${recsList.map(r => `<li>${escapeHtml(r)}</li>`).join('')}
+              </ul>
+            </div>
+
+            ${whyItHelpsHtml}
+            ${adv.verificationProcedure ? `
+            <div class="ai-field-block">
+              <div class="ai-field-label">Verification Procedure</div>
+              <div class="ai-field-value">${escapeHtml(adv.verificationProcedure)}</div>
+            </div>` : ''}
+            ${Array.isArray(adv.alternativeHypotheses) && adv.alternativeHypotheses.length > 0 ? `
+            <div class="ai-field-block">
+              <div class="ai-field-label">Alternative Hypotheses</div>
+              <ul class="ai-list" style="font-size: 0.82rem;">
+                ${adv.alternativeHypotheses.map(h => `<li>${escapeHtml(h)}</li>`).join('')}
+              </ul>
+            </div>` : ''}
+            ${affectedFilesHtml}
+            ${proposedChangesHtml}
+
+            <div class="ai-field-block" style="margin-top: 10px; border-top: 1px dashed var(--border-color); padding-top: 8px;">
+              <div class="ai-field-label" style="color: var(--text-muted);">Limitations & Hypotheses</div>
+              <ul class="ai-list" style="color: var(--text-muted); font-size: 0.78rem;">
+                ${limitationsList.map(l => `<li>${escapeHtml(l)}</li>`).join('')}
+              </ul>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    if (issue.aiStatus === 'omitted_limit') {
+      return `
+        <div class="ai-advisor-container ai-limit-container">
+          <div class="ai-limit-bar">
+            <span>Deterministic recommendation active. Copilot advice auto-generated for top priority findings.</span>
+            <button class="ai-retry-btn" type="button" onclick="retryAiAdvice(event, ${index})">Analyze with Copilot</button>
+          </div>
+          <div id="ai-advice-result-${index}" class="ai-advice-result-wrapper" style="display: none;"></div>
+        </div>
+      `;
+    }
+
+    if (issue.aiStatus === 'error') {
+      const errorTag = issue.aiErrorDetails?.type ? `[${escapeHtml(issue.aiErrorDetails.type)}] ` : '';
+      return `
+        <div class="ai-advisor-container ai-error-container">
+          <div class="ai-error-box" style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 0.8rem; color: #ef4444;">
+              ⚠️ Copilot analysis encountered an issue: ${errorTag}${escapeHtml(issue.aiError || 'Service temporarily unavailable')}
+            </span>
+            <button class="ai-retry-btn" type="button" onclick="retryAiAdvice(event, ${index})">Retry</button>
+          </div>
+          <div id="ai-advice-result-${index}" class="ai-advice-result-wrapper" style="display: none;"></div>
+        </div>
+      `;
+    }
+
+    // Default / Pending auto-enrichment state on page load
+    return `
+      <div class="ai-advisor-container" id="ai-advisor-container-${index}">
+        <div id="ai-pending-${index}" class="ai-loading-box">
+          <div class="ai-spinner"></div>
+          <div>
+            <strong>✨ Copilot AI Advisor analyzing finding...</strong>
+            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 2px;">Synthesizing deterministic evidence, call chains, and layout metrics</div>
+          </div>
+        </div>
+        <div id="ai-advice-result-${index}" class="ai-advice-result-wrapper" style="display: none;"></div>
+      </div>
+    `;
+  }
+
   // Accordion Issues
   let accordionsHtml = '';
   if (compiledResult.issues.length === 0) {
@@ -462,7 +604,7 @@ export async function generateReport(compiledResult, options) {
         `;
       } else {
         affectedSummary = isLighthouse ? 'Runtime Audit' : path.basename(issue.file);
-        const lineStr = issue.line && issue.line !== '-' ? `:${issue.line}` : '';
+        const lineStr = (issue.line !== null && issue.line !== undefined && issue.line !== '-') ? `:${issue.line}` : '';
         if (!isLighthouse) {
           filesListHtml = `
             <div class="details-files">
@@ -472,6 +614,14 @@ export async function generateReport(compiledResult, options) {
                   <span class="file-path">${escapeHtml(issue.file)}</span>
                   <span class="file-line">${escapeHtml(lineStr)}</span>
                 </div>
+                ${(issue.isParentContainer && issue.containerLine) ? `
+                <div class="parent-container-context" style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">
+                  Candidate Parent Container: <code>&lt;${escapeHtml(issue.containerTag || 'container')}${issue.containerId ? '#' + escapeHtml(issue.containerId) : ''}&gt;</code> at line ${issue.containerLine}${issue.containerColumn ? ':' + issue.containerColumn : ''} (child line unresolvable without build source maps)
+                </div>` : ''}
+                ${issue.isSingleLine ? `
+                <div class="single-line-context" style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">
+                  Note: Template file is minified / on a single line; line-level attribution unavailable.
+                </div>` : ''}
               </div>
             </div>
           `;
@@ -615,6 +765,10 @@ export async function generateReport(compiledResult, options) {
             <div style="font-size: 0.82rem; margin-bottom: 4px; margin-top: 6px;">
               <strong>Confidence Evidence:</strong> <span style="color: var(--text-secondary);">${escapeHtml(issue.evidence ? issue.evidence.join('; ') : 'None')}</span>
             </div>` : ''}
+            ${(issue.isParentContainer || issue.source?.isParentContainer) ? `
+            <div style="font-size: 0.82rem; margin-bottom: 4px; color: #8b5cf6;">
+              <strong>Attribution Grounding:</strong> Matched candidate parent container <code>&lt;${escapeHtml(issue.containerTag || issue.source?.containerTag || 'container')}${issue.containerId || issue.source?.containerId ? '#' + escapeHtml(issue.containerId || issue.source?.containerId) : ''}&gt;</code>${(issue.containerLine || issue.source?.containerLine) ? ` at line ${issue.containerLine || issue.source?.containerLine}` : ''} in raw template (runtime child element line is unresolvable directly without build source maps).
+            </div>` : ''}
             ${isAmbiguous ? ambiguousHtml : ''}
             ${!isCorrelated && !isAmbiguous ? `
             <div style="font-size: 0.82rem; color: var(--text-muted); margin-top: 6px;">
@@ -649,6 +803,7 @@ export async function generateReport(compiledResult, options) {
             </div>
             ${filesListHtml}
             ${correlationDetailsHtml}
+            ${renderAiSectionHtml(issue, index)}
           </div>
         </div>
       `;
@@ -943,8 +1098,52 @@ export async function generateReport(compiledResult, options) {
 
   const htmlPath = path.join(outputDir, `report-${timestamp}.html`);
   const pdfPath = path.join(outputDir, `report-${timestamp}.pdf`);
+  const jsonPath = path.join(outputDir, `report-${timestamp}.json`);
 
-  fs.writeFileSync(htmlPath, templateHtml);
+  const isInitialAiComplete = Boolean(
+    compiledResult.aiAdvisor &&
+    (compiledResult.aiAdvisor.status === 'completed' || compiledResult.aiAdvisor.status === 'partial') &&
+    Number(compiledResult.aiAdvisor.analyzedCount) > 0
+  );
+
+  const pdfStatus = {
+    generated: true,
+    aiEnriched: isInitialAiComplete,
+    synchronized: true,
+    notice: isInitialAiComplete
+      ? 'PDF generated synchronously with initial AI advice.'
+      : 'PDF reflects initial audit baseline. Subsequent background advice is recorded in companion JSON and interactive HTML.'
+  };
+
+  const clientMetaScript = `
+  <script>
+    window.__AUDIT_ISSUES__ = ${JSON.stringify(compiledResult.issues)};
+    window.__AI_ADVISOR_STATUS__ = ${JSON.stringify({ ...(compiledResult.aiAdvisor || { status: 'completed' }), pdfSynchronized: isInitialAiComplete })};
+    window.__PDF_STATUS__ = ${JSON.stringify(pdfStatus)};
+    window.__REPORT_META__ = {
+      project: ${JSON.stringify(path.basename(options.projectPath))},
+      reportFile: "report-${timestamp}.json",
+      timestamp: ${timestamp}
+    };
+  </script>
+  `;
+  const finalHtml = templateHtml.replace('</body>', `${clientMetaScript}\n</body>`);
+
+  fs.writeFileSync(htmlPath, finalHtml);
+  fs.writeFileSync(jsonPath, JSON.stringify({
+    timestamp,
+    project: path.basename(options.projectPath),
+    clientName: options.clientName || path.basename(options.projectPath),
+    url: options.url,
+    scores: compiledResult.scores,
+    issues: compiledResult.issues,
+    summary: compiledResult.summary,
+    aiAdvisor: {
+      ...(compiledResult.aiAdvisor || { status: 'completed' }),
+      pdfSynchronized: isInitialAiComplete
+    },
+    pdfStatus
+  }, null, 2));
   console.log(`\n📄 HTML report written to: ${htmlPath}`);
 
   // Render to PDF using Puppeteer
@@ -956,7 +1155,7 @@ export async function generateReport(compiledResult, options) {
     });
     
     const page = await browser.newPage();
-    await page.setContent(templateHtml, { waitUntil: 'networkidle0' });
+    await page.setContent(finalHtml, { waitUntil: 'networkidle0' });
     
     await page.pdf({
       path: pdfPath,

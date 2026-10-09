@@ -138,8 +138,16 @@ function renderReports(reports) {
 
       let pdfBtn = '';
       if (r.pdf) {
+        let pdfTitle = 'Pre-generated PDF';
+        if (r.pdfAiEnriched) {
+          pdfTitle = r.pdfSynchronized
+            ? 'Pre-generated PDF (Contains Synchronous AI Recommendations)'
+            : 'Pre-generated PDF (Contains Initial AI Recommendations; not synchronized with subsequent updates)';
+        } else {
+          pdfTitle = 'Pre-generated PDF (Reflects Initial Baseline Audit Without AI Advice)';
+        }
         pdfBtn = `
-          <a class="file-icon-badge pdf-badge" href="${r.pdf}" target="_blank" style="text-decoration: none; padding: 4px 10px; display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s;">
+          <a class="file-icon-badge pdf-badge" href="${r.pdf}" target="_blank" title="${pdfTitle}" style="text-decoration: none; padding: 4px 10px; display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s;">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
               <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
               <polyline points="14 2 14 8 20 8"></polyline>
@@ -157,7 +165,10 @@ function renderReports(reports) {
           </svg>
           <span>${formattedTime}</span>
         </div>
-        <div class="run-links" style="display: flex; gap: 8px;">
+        <div class="run-links" style="display: flex; gap: 8px; align-items: center;">
+          <span style="background: rgba(99, 102, 241, 0.12); border: 1px solid rgba(99, 102, 241, 0.25); color: #a5b4fc; font-size: 0.72rem; padding: 3px 8px; border-radius: 6px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">
+            ✨ Copilot Ready
+          </span>
           ${htmlBtn}
           ${pdfBtn}
         </div>

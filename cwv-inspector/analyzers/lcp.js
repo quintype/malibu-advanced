@@ -1,3 +1,5 @@
+import { getLineAndColumn } from './correlation.js';
+
 /**
  * Analyzes code elements affecting Largest Contentful Paint (LCP).
  * 
@@ -43,10 +45,12 @@ export function analyzeLcp(files, reactAsts) {
       if (f.ext === '.html') {
         const content = f.content.toLowerCase();
         if (content.includes('<img') && !content.includes('rel="preload"') && !content.includes('rel="dns-prefetch"')) {
+          const imgIndex = content.indexOf('<img');
+          const { line: imgLine } = getLineAndColumn(f.content, imgIndex >= 0 ? imgIndex : 0);
           recommendations.push({
             type: 'code',
             file: f.relativePath,
-            line: 1,
+            line: imgLine || null,
             cwv: 'lcp',
             severity: 'medium',
             message: 'Images detected but no resource hints (preload / preconnect / dns-prefetch) found.',

@@ -154,40 +154,73 @@ export function compileRecommendations(staticIssues, lighthouseIssues = null, as
   // Process Observer Fallback results
   observerCorrelatedResult.forEach(item => {
     let suggestion = 'Investigate this element, as it was captured shifting during an unthrottled diagnostic run.';
-    let impact = `Unthrottled diagnostic observer captured a shift of ${item.lhEl.score.toFixed(4)} on "${item.lhEl.selector}". Note: Timing and severity may differ from Lighthouse.`;
+    let impact = `Unthrottled diagnostic observer captured a shift of ${item.lhEl.score.toFixed(4)} on "${item.lhEl.selector}".`;
     
     let severity = 'low';
     if (item.lhEl.score >= 0.25) severity = 'high';
     else if (item.lhEl.score >= 0.1) severity = 'medium';
-    
-    if (item.lhEl.selector.includes('.fonts-loaded') || item.lhEl.selector.includes('.wf-active') || item.lhEl.selector.includes('.font-loaded')) {
-      suggestion = 'Note: The DOM path contains font-loading indicator classes (e.g. .fonts-loaded). This indicates FOIT/FOUT caused a layout shift. To fix: 1. Preload the critical web font in the <head> (<link rel="preload" as="font"...>). 2. Use "font-display: optional" or "swap" in your @font-face CSS. 3. Configure fallback font metrics (size-adjust) to match the web font width/height.';
-      impact = `Unthrottled diagnostic observer captured a shift of ${item.lhEl.score.toFixed(4)} on "${item.lhEl.selector}". (Suspected Cause: Web Font Loading)`;
-    }
 
-    // Add rect info if available
+    // Analyze geometry deltas
+    const prev = item.lhEl.previousRect;
+    const curr = item.lhEl.currentRect;
     let rectDetails = '';
-    if (item.lhEl.previousRect && item.lhEl.currentRect) {
-      const p = item.lhEl.previousRect;
-      const c = item.lhEl.currentRect;
-      const yDelta = c.y - p.y;
-      const xDelta = c.x - p.x;
-      const wDelta = c.width - p.width;
-      const hDelta = c.height - p.height;
+    let isCollapsed = false;
+    let isExpanded = false;
+    let isPushed = false;
+
+    if (prev && curr) {
+      const yDelta = curr.y - prev.y;
+      const xDelta = curr.x - prev.x;
+      const wDelta = curr.width - prev.width;
+      const hDelta = curr.height - prev.height;
       
       const movements = [];
-      if (Math.abs(yDelta) > 0.1) movements.push(`Y: ${p.y.toFixed(1)} -> ${c.y.toFixed(1)}`);
-      if (Math.abs(xDelta) > 0.1) movements.push(`X: ${p.x.toFixed(1)} -> ${c.x.toFixed(1)}`);
-      if (Math.abs(wDelta) > 0.1) movements.push(`Width: ${p.width.toFixed(1)} -> ${c.width.toFixed(1)}`);
-      if (Math.abs(hDelta) > 0.1) movements.push(`Height: ${p.height.toFixed(1)} -> ${c.height.toFixed(1)}`);
+      if (Math.abs(yDelta) > 0.1) movements.push(`Y: ${prev.y.toFixed(1)} -> ${curr.y.toFixed(1)}`);
+      if (Math.abs(xDelta) > 0.1) movements.push(`X: ${prev.x.toFixed(1)} -> ${curr.x.toFixed(1)}`);
+      if (Math.abs(wDelta) > 0.1) movements.push(`Width: ${prev.width.toFixed(1)} -> ${curr.width.toFixed(1)}`);
+      if (Math.abs(hDelta) > 0.1) movements.push(`Height: ${prev.height.toFixed(1)} -> ${curr.height.toFixed(1)}`);
       
       if (movements.length > 0) {
         rectDetails = ` (Movement: ${movements.join(', ')})`;
       } else {
         rectDetails = ` (Movement: none / sub-pixel rounding)`;
       }
-      impact += rectDetails;
+
+      if ((prev.width > 0 || prev.height > 0) && (curr.width === 0 && curr.height === 0)) {
+        isCollapsed = true;
+      } else if (prev.width === 0 && prev.height === 0 && (curr.width > 0 || curr.height > 0)) {
+        isExpanded = true;
+      } else if (Math.abs(yDelta) > 5 && Math.abs(wDelta) < 2 && Math.abs(hDelta) < 2) {
+        isPushed = true;
+      }
     }
+
+    const hasFontClass = item.lhEl.selector.includes('.fonts-loaded') ||
+                         item.lhEl.selector.includes('.wf-active') ||
+                         item.lhEl.selector.includes('.font-loaded');
+
+    let suspectedCause = null;
+    if (isCollapsed) {
+      suspectedCause = 'Element Removal / Collapsed to 0x0';
+      suggestion = 'Element dimensions collapsed from non-zero to 0x0 (width/height became 0). This indicates DOM element removal, client-side React unmounting/hydration replacement, or "display: none" toggling rather than a font metric swap. Check client-side hydration handlers and dynamic component unmounting.';
+      if (hasFontClass) {
+        suggestion += ' Note: Ancestor selector contains font-loading class, but 0x0 collapse geometry indicates element removal/unmount rather than FOIT/FOUT.';
+      }
+    } else if (isExpanded) {
+      suspectedCause = 'Late Element Insertion';
+      suggestion = 'Element expanded from 0x0 to non-zero dimensions without reserved container space. Reserve layout space using CSS min-height or aspect-ratio.';
+    } else if (isPushed) {
+      suspectedCause = 'Pushed by Content Above';
+      suggestion = 'Element moved vertically without changing its own dimensions. Investigate dynamic elements or banners inserted above this container.';
+    } else if (hasFontClass && prev && curr && prev.width > 0 && curr.width > 0) {
+      suspectedCause = 'Web Font Loading';
+      suggestion = 'Note: The DOM path contains font-loading indicator classes (e.g. .fonts-loaded). This indicates FOIT/FOUT caused a layout shift. To fix: 1. Preload the critical web font in the <head> (<link rel="preload" as="font"...>). 2. Use "font-display: optional" or "swap" in your @font-face CSS. 3. Configure fallback font metrics (size-adjust) to match the web font width/height.';
+    }
+
+    if (suspectedCause) {
+      impact += ` (Suspected Cause: ${suspectedCause})`;
+    }
+    impact += rectDetails;
     
     if (item.lhEl.time) {
       impact += ` [Timestamp: ${item.lhEl.time.toFixed(1)}ms]`;
@@ -195,8 +228,26 @@ export function compileRecommendations(staticIssues, lighthouseIssues = null, as
 
     if (item.confidence !== 'UNRESOLVED' && item.confidence !== 'AMBIGUOUS' && item.source) {
       const srcFile = item.source.filePath;
-      const srcLine = item.source.line;
+      const isParent = Boolean(item.source.isParentContainer);
+      const isSingle = Boolean(item.source.isSingleLine);
+      
+      // When target is a child inside a parent container, target element source line is unknown!
+      // Report the candidate parent container line separately, and set target line to null so we don't
+      // falsely label the parent container line as the exact offending line of the child.
+      const srcLine = isParent || isSingle ? null : item.source.line;
+      const srcCol = isParent || isSingle ? null : item.source.column;
+      const containerLine = isSingle ? null : (item.source.containerLine || item.source.line);
+      const containerCol = isSingle ? null : (item.source.containerColumn || item.source.column);
       const shortFile = path.basename(srcFile);
+
+      let message = `[Observer Fallback] Shift associated with <${item.source.tagName}> in ${shortFile}`;
+      if (item.source.isParentContainer) {
+        const containerLabel = `<${item.source.containerTag || 'container'}${item.source.containerId ? '#' + item.source.containerId : ''}>`;
+        message = `[Observer Fallback] Shift on "${item.source.targetSelector || item.source.targetTag || 'element'}" (inside ${containerLabel} in ${shortFile})`;
+      }
+
+      // Parent container fallback must not report EXACT confidence
+      const effectiveConfidence = (item.source.isParentContainer && item.confidence === 'EXACT') ? 'PROBABLE' : item.confidence;
 
       correlatedIssues.push({
         type: 'observer-fallback-correlated',
@@ -204,10 +255,17 @@ export function compileRecommendations(staticIssues, lighthouseIssues = null, as
         severity: severity,
         file: srcFile,
         line: srcLine,
-        message: `[Observer Fallback] Shift associated with <${item.source.tagName}> in ${shortFile}`,
+        column: srcCol,
+        containerLine,
+        containerColumn: containerCol,
+        containerTag: item.source.containerTag,
+        containerId: item.source.containerId,
+        isParentContainer: isParent,
+        isSingleLine: isSingle,
+        message: message,
         impact: impact,
         suggestion: suggestion + ' While the selector matched a source element, verify that this is the actual cause of the Lighthouse shift.',
-        confidence: item.confidence,
+        confidence: effectiveConfidence,
         evidence: item.evidence,
         selector: item.lhEl.selector,
         device: item.lhEl.device,
@@ -216,7 +274,8 @@ export function compileRecommendations(staticIssues, lighthouseIssues = null, as
         previousRect: item.lhEl.previousRect,
         currentRect: item.lhEl.currentRect,
         ambiguousSources: item.ambiguousSources,
-        relatedSources: item.lhEl.relatedSources
+        relatedSources: item.lhEl.relatedSources,
+        relatedCss: item.source.relatedCss || []
       });
     } else {
       correlatedIssues.push({
@@ -281,7 +340,7 @@ export function compileRecommendations(staticIssues, lighthouseIssues = null, as
 
     if (!isDuplicateLh) {
       // Deduplicate within observer fallback shifts pointing to same source
-      const key = `${obs.file}:${obs.line}`;
+      const key = `${obs.file}:${obs.line !== null ? obs.line : (obs.containerLine ? 'container:' + obs.containerLine + ':' + obs.selector : obs.selector)}`;
       if (seenObsCorrelated.has(key)) {
         const existing = seenObsCorrelated.get(key);
         existing.score = (existing.score || 0) + (obs.score || 0);
@@ -289,8 +348,8 @@ export function compileRecommendations(staticIssues, lighthouseIssues = null, as
         else if (existing.score >= 0.1) existing.severity = 'medium';
         else existing.severity = 'low';
         
-        // Upgrade confidence if the newer match is stronger
-        if (obs.confidence === 'EXACT') existing.confidence = 'EXACT';
+        // Upgrade confidence if the newer match is stronger (do not upgrade parent container matches to EXACT)
+        if (obs.confidence === 'EXACT' && !obs.source?.isParentContainer) existing.confidence = 'EXACT';
         else if (obs.confidence === 'PROBABLE' && existing.confidence !== 'EXACT') existing.confidence = 'PROBABLE';
       } else {
         seenObsCorrelated.set(key, { ...obs });
@@ -687,6 +746,16 @@ export function compileRecommendations(staticIssues, lighthouseIssues = null, as
         type: issue.type || 'code',
         file: issue.file,
         line: issue.line,
+        column: issue.column || null,
+        containerLine: issue.containerLine || null,
+        containerColumn: issue.containerColumn || null,
+        containerTag: issue.containerTag || null,
+        containerId: issue.containerId || null,
+        isParentContainer: Boolean(issue.isParentContainer),
+        isSingleLine: Boolean(issue.isSingleLine),
+        previousRect: issue.previousRect || null,
+        currentRect: issue.currentRect || null,
+        relatedCss: issue.relatedCss || [],
         confidence: issue.confidence || null,
         correlationState: issue.correlationState || null,
         confidenceExplanation: issue.confidenceExplanation || null,

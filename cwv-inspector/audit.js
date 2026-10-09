@@ -235,6 +235,35 @@ Options:
   });
   const compiledResult = compileRecommendations(staticIssues, lighthouseData, astElements, files);
 
+  // Step 6: Automatically enrich priority findings with GitHub Copilot AI Advisor
+  let enrichedResult = compiledResult;
+  if (!args.includes('--no-ai')) {
+    let copilot = null;
+    try {
+      console.log('🤖 Generating automatic AI-powered recommendations with GitHub Copilot...');
+      const { CopilotService } = await import('./services/copilotService.js');
+      const { enrichAuditWithCopilot } = await import('./analyzers/aiAdvisor.js');
+      copilot = new CopilotService();
+      enrichedResult = await enrichAuditWithCopilot(compiledResult, {
+        copilotService: copilot,
+        url,
+        maxIssues: 5,
+        totalTimeoutMs: 60000
+      });
+      const analyzedCount = enrichedResult.aiAdvisor?.analyzedCount || 0;
+      console.log(`✓ Copilot AI recommendations generated (${analyzedCount} priority findings enriched).`);
+    } catch (aiErr) {
+      console.warn(`⚠️ Copilot auto-enrichment skipped: ${aiErr.message}. Proceeding with deterministic report.`);
+      enrichedResult.aiAdvisor = { status: 'unavailable', error: aiErr.message };
+    } finally {
+      if (copilot) {
+        await copilot.stop().catch(() => {});
+      }
+    }
+  } else {
+    enrichedResult.aiAdvisor = { status: 'skipped', note: 'AI enrichment disabled via --no-ai flag.' };
+  }
+
   // Get Client/Project Name from package.json or folder name
   let clientName = path.basename(targetPath);
   try {
@@ -252,14 +281,15 @@ Options:
   // Get current active Git branch
   let gitBranch = 'N/A';
   try {
-    gitBranch = execSync('git rev-parse --abbrev-ref HEAD', { cwd: targetPath, stdio: ['ignore', 'pipe', 'ignore'], encoding: 'utf8' }).trim();
+    const targetPathGit = targetPath;
+    gitBranch = execSync('git rev-parse --abbrev-ref HEAD', { cwd: targetPathGit, stdio: ['ignore', 'pipe', 'ignore'], encoding: 'utf8' }).trim();
   } catch (err) {
     // Not a git repo
   }
 
-  // Step 6: Generate reports
+  // Step 7: Generate reports
   console.log('Generating report outputs...');
-  const reports = await generateReport(compiledResult, {
+  const reports = await generateReport(enrichedResult, {
     projectPath: targetPath,
     url,
     lighthouseData,

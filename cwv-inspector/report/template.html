@@ -40,6 +40,10 @@
           <span class="meta-sep">|</span>
           <strong>Engineering Analysis:</strong> <span class="meta-val">Siripireddy Giri</span>
         </div>
+        <div id="ai-pdf-sync-notice" class="ai-pdf-sync-notice" style="display: none;">
+          <span style="font-size: 1rem;">ℹ️</span>
+          <span><strong>Format Notice:</strong> The archived static PDF file reflects the initial audit baseline. This interactive HTML report displays post-audit Copilot AI recommendations (use <strong>Print to PDF</strong> in your browser to export an updated PDF).</span>
+        </div>
       </div>
     </header>
 
@@ -538,9 +542,249 @@
       document.getElementById('low-count').textContent = counts.low;
     }
 
+    function escapeClientHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    async function autoEnrichReport() {
+      const meta = window.__REPORT_META__ || {};
+      const status = window.__AI_ADVISOR_STATUS__ || {};
+
+      // If already completed or no pending issues exist, do nothing
+      if (status.status === 'completed') return;
+      const pendingElements = document.querySelectorAll('.ai-loading-box');
+      if (pendingElements.length === 0) return;
+
+      try {
+        const res = await fetch('/api/enrich-report', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            project: meta.project,
+            reportFile: meta.reportFile
+          })
+        });
+
+        const data = await res.json();
+        if (data.success && Array.isArray(data.issues)) {
+          window.__AUDIT_ISSUES__ = data.issues;
+          window.__AI_ADVISOR_STATUS__ = data.aiAdvisor || { status: 'completed' };
+
+          if (data.pdfStatus && (data.pdfStatus.synchronized === false || data.pdfStatus.aiEnriched === false)) {
+            const noticeEl = document.getElementById('ai-pdf-sync-notice');
+            if (noticeEl) noticeEl.style.display = 'flex';
+          }
+
+          data.issues.forEach((issue, idx) => {
+            const container = document.getElementById(`ai-advisor-container-${idx}`) || document.getElementById(`ai-advice-result-${idx}`);
+            if (!container) return;
+
+            if (issue.aiAdvice) {
+              container.style.display = 'block';
+              renderAiAdviceResult(container, issue.aiAdvice);
+            } else if (issue.aiStatus === 'omitted_limit') {
+              container.innerHTML = `
+                <div class="ai-limit-bar">
+                  <span>Deterministic recommendation active. Copilot advice auto-generated for top priority findings.</span>
+                  <button class="ai-retry-btn" type="button" onclick="retryAiAdvice(event, ${idx})">Analyze with Copilot</button>
+                </div>
+              `;
+            } else if (issue.aiStatus === 'error') {
+              container.innerHTML = `
+                <div class="ai-error-box" style="display: flex; justify-content: space-between; align-items: center;">
+                  <span style="font-size: 0.8rem; color: #ef4444;">
+                    ⚠️ Copilot analysis encountered an issue: ${escapeClientHtml(issue.aiError || 'Service temporarily unavailable')}
+                  </span>
+                  <button class="ai-retry-btn" type="button" onclick="retryAiAdvice(event, ${idx})">Retry</button>
+                </div>
+              `;
+            }
+          });
+        }
+      } catch (err) {
+        console.warn('Auto-enrichment could not complete:', err.message);
+      }
+    }
+
+    async function retryAiAdvice(event, index) {
+      if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+
+      const btn = event ? event.currentTarget : null;
+      const container = document.getElementById(`ai-advice-result-${index}`) || document.getElementById(`ai-advisor-container-${index}`);
+      if (!container) return;
+
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = 'Analyzing...';
+      }
+
+      container.style.display = 'block';
+      container.innerHTML = `
+        <div class="ai-loading-box">
+          <div class="ai-spinner"></div>
+          <div>
+            <strong>Consulting GitHub Copilot AI Advisor...</strong>
+            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 2px;">Synthesizing deterministic findings and metric correlation</div>
+          </div>
+        </div>
+      `;
+
+      try {
+        const issueData = (window.__AUDIT_ISSUES__ && window.__AUDIT_ISSUES__[index]) || null;
+        const meta = window.__REPORT_META__ || {};
+
+        const res = await fetch('/api/ai-advice', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            project: meta.project,
+            reportFile: meta.reportFile,
+            issueIndex: index,
+            issue: issueData
+          })
+        });
+
+        const data = await res.json();
+        if (!res.ok || !data.success || !data.advice) {
+          throw new Error(data.message || data.error || `Server returned ${res.status}`);
+        }
+
+        renderAiAdviceResult(container, data.advice);
+        if (window.__AUDIT_ISSUES__ && window.__AUDIT_ISSUES__[index]) {
+          window.__AUDIT_ISSUES__[index].aiAdvice = data.advice;
+          window.__AUDIT_ISSUES__[index].aiStatus = 'completed';
+        }
+
+        // Show PDF sync notice since this single-issue retry updated advice post-generation
+        const noticeEl = document.getElementById('ai-pdf-sync-notice');
+        if (noticeEl) noticeEl.style.display = 'flex';
+      } catch (err) {
+        container.innerHTML = `
+          <div class="ai-error-box">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+              <strong style="color: #ef4444; font-size: 0.82rem;">⚠️ Copilot AI Advisor Error</strong>
+              <button type="button" class="ai-retry-btn" onclick="retryAiAdvice(event, ${index})">Retry</button>
+            </div>
+            <p style="font-size: 0.78rem; margin-top: 4px; color: var(--text-secondary);">${escapeClientHtml(err.message)}</p>
+          </div>
+        `;
+      }
+    }
+
+    function renderAiAdviceResult(container, advice) {
+      const conf = String(advice.confidence || 'MEDIUM').toUpperCase();
+      const confClass = conf.toLowerCase();
+
+      let whyItHelpsHtml = '';
+      if (advice.whyItHelps) {
+        whyItHelpsHtml = `
+          <div class="ai-field-block ai-why-callout">
+            <div class="ai-field-label">Why This Solution Improves CWV</div>
+            <div class="ai-field-value">${escapeClientHtml(advice.whyItHelps)}</div>
+          </div>
+        `;
+      }
+
+      let affectedFilesHtml = '';
+      if (Array.isArray(advice.affectedFiles) && advice.affectedFiles.length > 0) {
+        const fileItems = advice.affectedFiles.map(af => {
+          const lineStr = af.line && af.line !== '-' ? `:${escapeClientHtml(af.line)}` : '';
+          return `<code>${escapeClientHtml(af.file)}${lineStr}</code>`;
+        }).join(', ');
+        affectedFilesHtml = `
+          <div class="ai-field-block">
+            <div class="ai-field-label">Affected Source Locations</div>
+            <div class="ai-field-value">${fileItems}</div>
+          </div>
+        `;
+      }
+
+      let proposedChangesHtml = '';
+      if (advice.proposedChanges) {
+        proposedChangesHtml = `
+          <div class="ai-field-block">
+            <div class="ai-field-label">Proposed Code Adjustments (Read-Only Preview)</div>
+            <div class="ai-code-block">${escapeClientHtml(advice.proposedChanges)}</div>
+          </div>
+        `;
+      }
+
+      const evidenceList = Array.isArray(advice.evidence) ? advice.evidence : [String(advice.evidence || '')];
+      const recList = Array.isArray(advice.recommendations) ? advice.recommendations : [String(advice.recommendations || '')];
+      const limitationsList = Array.isArray(advice.limitations) ? advice.limitations : [String(advice.limitations || '')];
+
+      container.innerHTML = `
+        <div class="ai-solution-card">
+          <div class="ai-card-top">
+            <div class="ai-badge-group">
+              <span class="ai-source-badge">✨ Copilot AI Solution</span>
+              <span class="ai-conf-badge ${confClass}">${escapeClientHtml(conf)} Confidence</span>
+            </div>
+            ${advice.confidenceReason ? `<div class="ai-conf-reason">${escapeClientHtml(advice.confidenceReason)}</div>` : ''}
+          </div>
+
+          <div class="ai-field-block">
+            <div class="ai-field-label">Diagnosis & UX Impact</div>
+            <div class="ai-field-value">${escapeClientHtml(advice.explanation)}</div>
+          </div>
+
+          <div class="ai-field-block">
+            <div class="ai-field-label">Likely Root Cause</div>
+            <div class="ai-field-value">${escapeClientHtml(advice.rootCause)}</div>
+          </div>
+
+          <div class="ai-field-block">
+            <div class="ai-field-label">Recommended Action Steps</div>
+            <ul class="ai-list">
+              ${recList.map(r => `<li>${escapeClientHtml(r)}</li>`).join('')}
+            </ul>
+          </div>
+
+          ${whyItHelpsHtml}
+          ${advice.verificationProcedure ? `
+          <div class="ai-field-block">
+            <div class="ai-field-label">Verification Procedure</div>
+            <div class="ai-field-value">${escapeClientHtml(advice.verificationProcedure)}</div>
+          </div>` : ''}
+          ${Array.isArray(advice.alternativeHypotheses) && advice.alternativeHypotheses.length > 0 ? `
+          <div class="ai-field-block">
+            <div class="ai-field-label">Alternative Hypotheses</div>
+            <ul class="ai-list" style="font-size: 0.82rem;">
+              ${advice.alternativeHypotheses.map(h => `<li>${escapeClientHtml(h)}</li>`).join('')}
+            </ul>
+          </div>` : ''}
+          ${affectedFilesHtml}
+          ${proposedChangesHtml}
+
+          <div class="ai-field-block" style="margin-top: 10px; border-top: 1px dashed var(--border-color); padding-top: 8px;">
+            <div class="ai-field-label" style="color: var(--text-muted);">Limitations & Hypotheses</div>
+            <ul class="ai-list" style="color: var(--text-muted); font-size: 0.78rem;">
+              ${limitationsList.map(l => `<li>${escapeClientHtml(l)}</li>`).join('')}
+            </ul>
+          </div>
+        </div>
+      `;
+    }
+
     window.addEventListener('DOMContentLoaded', () => {
       updateCounts();
       switchMode('mobile');
+      const pdfStatus = window.__PDF_STATUS__ || {};
+      const aiStatus = window.__AI_ADVISOR_STATUS__ || {};
+      if (pdfStatus.synchronized === false || (pdfStatus.aiEnriched === false && aiStatus.status === 'completed')) {
+        const noticeEl = document.getElementById('ai-pdf-sync-notice');
+        if (noticeEl) noticeEl.style.display = 'flex';
+      }
+      autoEnrichReport();
     });
   </script>
 </body>

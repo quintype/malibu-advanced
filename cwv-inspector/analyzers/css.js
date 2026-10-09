@@ -1,3 +1,5 @@
+import { getLineAndColumn } from './correlation.js';
+
 /**
  * Analyzes CSS files and CSS usage in HTML.
  * 
@@ -12,10 +14,12 @@ export function analyzeCss(files) {
     if (f.ext === '.css') {
       const importMatches = f.content.match(/@import\s+url\([^)]+\)/gi) || [];
       if (importMatches.length > 0) {
+        const importIdx = f.content.indexOf(importMatches[0]);
+        const { line: importLine } = getLineAndColumn(f.content, importIdx >= 0 ? importIdx : 0);
         recommendations.push({
           type: 'code',
           file: f.relativePath,
-          line: 1,
+          line: importLine || null,
           cwv: 'lcp',
           severity: 'high',
           message: `@import rule found inside CSS file: "${importMatches[0]}".`,
@@ -29,10 +33,12 @@ export function analyzeCss(files) {
     if (f.ext === '.html') {
       const stylesheets = f.content.match(/<link\s+rel=["']stylesheet["'][^>]*>/gi) || [];
       if (stylesheets.length > 2) {
+        const linkIdx = f.content.indexOf(stylesheets[0]);
+        const { line: linkLine } = getLineAndColumn(f.content, linkIdx >= 0 ? linkIdx : 0);
         recommendations.push({
           type: 'code',
           file: f.relativePath,
-          line: 1,
+          line: linkLine || null,
           cwv: 'lcp',
           severity: 'medium',
           message: `${stylesheets.length} blocking stylesheets linked in HTML head.`,

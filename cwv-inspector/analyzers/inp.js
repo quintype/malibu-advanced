@@ -1,4 +1,5 @@
 import path from 'path';
+import { getLineAndColumn } from './correlation.js';
 
 /**
  * Analyzes code elements affecting Interaction to Next Paint (INP).
@@ -145,10 +146,12 @@ export function analyzeInp(files, reactAsts) {
     if (isComponent) {
       const hasLargeList = content.includes('.map(') && content.includes('return') && !content.includes('memo(');
       if (hasLargeList) {
+        const mapIdx = content.indexOf('.map(');
+        const { line: mapLine } = getLineAndColumn(content, mapIdx >= 0 ? mapIdx : 0);
         recommendations.push({
           type: 'code',
           file: file.filePath,
-          line: 1,
+          line: mapLine || null,
           cwv: 'inp',
           severity: 'low',
           message: 'Large un-memoized list layout render.',
@@ -169,10 +172,12 @@ export function analyzeInp(files, reactAsts) {
         const hasDeferOrAsync = scriptTag.includes('defer') || scriptTag.includes('async');
         
         if (isThirdParty && !hasDeferOrAsync) {
+          const scriptIdx = f.content.indexOf(scriptTag);
+          const { line: scriptLine } = getLineAndColumn(f.content, scriptIdx >= 0 ? scriptIdx : 0);
           recommendations.push({
             type: 'code',
             file: f.filePath,
-            line: 1,
+            line: scriptLine || null,
             cwv: 'inp',
             severity: 'low',
             message: `Synchronous Third-Party Script: "${scriptTag}"`,
