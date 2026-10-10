@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Core Web Vitals Audit Report</title>
+  <style>
+    /* CSS_CONTENT_PLACEHOLDER */
+  </style>
+</head>
+
+<body>
+  <div class="report-container">
+    <header>
+      <div class="brand-row">
+        <div class="brand-identity">
+          <img class="brand-logo-img"
+            src="https://cdn.prod.website-files.com/64819da6f9ae7ae6e232658c/66ed2342896c97c223a0a15c_256x256%20Quintype%20Logo.png"
+            alt="Quintype Logo">
+          <span class="brand-title-text">Core Web Vitals Diagnostic Lab</span>
+        </div>
+        <div class="brand-date">
+          <svg class="date-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+          <span>Date: {{AUDIT_DATE}}</span>
+        </div>
+      </div>
+      <div class="header-divider"></div>
+      <div class="header-main-details">
+        <h1 class="pdf-report-title">Performance Audit Report</h1>
+        <div class="pdf-report-meta">
+          <strong>Project:</strong> <span class="meta-val">{{PROJECT_PATH}}</span>
+          <span class="meta-sep">|</span>
+          <strong>URL:</strong> <a class="meta-link" href="{{AUDIT_URL}}" target="_blank">{{AUDIT_URL}}</a>
+          <span class="meta-sep">|</span>
+          <strong>Engineering Analysis:</strong> <span class="meta-val">Siripireddy Giri</span>
+        </div>
+        <div id="ai-pdf-sync-notice" class="ai-pdf-sync-notice" style="display: none;">
+          <span style="font-size: 1rem;">ℹ️</span>
+          <span><strong>Format Notice:</strong> The archived static PDF file reflects the initial audit baseline. This interactive HTML report displays post-audit Copilot AI recommendations (use <strong>Print to PDF</strong> in your browser to export an updated PDF).</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- ASSESSMENT_BANNER_SECTION -->
+
+    <!-- Mobile / Desktop Tab Switcher (Visible in HTML, Hidden/Stacked in PDF Print) -->
+    <div class="mode-tabs-container">
+      <div class="mode-tabs">
+        <button class="tab-btn active" data-mode="mobile" onclick="switchMode('mobile')">
+          Mobile
+        </button>
+        <button class="tab-btn" data-mode="desktop" onclick="switchMode('desktop')">
+          Desktop
+        </button>
+      </div>
+    </div>
+
+    <!-- MOBILE VIEW SECTIONS -->
+    <div class="mobile-only-view">
+      <!-- Section: Executive Summary (Mobile) -->
+      <div class="section-title-bar">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="20" x2="18" y2="10"></line>
+          <line x1="12" y1="20" x2="12" y2="4"></line>
+          <line x1="6" y1="20" x2="6" y2="14"></line>
+        </svg>
+        <h2>EXECUTIVE SUMMARY <span class="device-title-tag">(MOBILE)</span></h2>
+      </div>
+
+      <div class="executive-summary-card"
+        data-api-score="{{MOBILE_API_SCORE}}" data-api-class="{{MOBILE_API_CLASS}}" data-api-text-class="{{MOBILE_API_TEXT_CLASS}}" data-api-status="{{MOBILE_API_STATUS}}"
+        data-local-score="{{MOBILE_LOCAL_SCORE}}" data-local-class="{{MOBILE_LOCAL_CLASS}}" data-local-text-class="{{MOBILE_LOCAL_TEXT_CLASS}}" data-local-status="{{MOBILE_LOCAL_STATUS}}">
+        <div class="exec-gauge-col">
+          <div class="exec-circular-gauge {{MOBILE_SCORE_CLASS}}" style="--score: {{MOBILE_MAIN_SCORE}};">
+            <div class="exec-gauge-score-value">{{MOBILE_MAIN_SCORE}}</div>
+          </div>
+          <div class="exec-gauge-label-outside">
+            <div class="exec-fraction"><strong>{{MOBILE_MAIN_SCORE}}</strong> / 100</div>
+            <div class="exec-label-text">Performance Score</div>
+          </div>
+        </div>
+        <div class="exec-details-col">
+          <div class="exec-header">
+            <svg class="trophy-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+              <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+              <path d="M4 22h16"></path>
+              <path d="M10 14.66V17c0 .55-.45 1-1 1H4v2h16v-2h-5c-.55 0-1-.45-1-1v-2.34"></path>
+              <path d="M12 2a6 6 0 0 1 6 6c0 3.6-2 5.5-6 6.6C8 13.5 6 11.6 6 8a6 6 0 0 1 6-6z"></path>
+            </svg>
+            <span class="exec-status {{MOBILE_SCORE_TEXT_CLASS}}">{{MOBILE_SCORE_STATUS}}</span>
+          </div>
+          <p class="exec-desc">
+            Your website is performing exceptionally well across Core Web Vitals and key performance metrics. This
+            delivers a fast, stable, and responsive experience for users, which helps improve engagement and supports
+            better search visibility.
+          </p>
+          <div class="metrics-toggle-container" style="margin-top: 24px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center;">
+            <h3 class="metrics-overview-title" style="font-size: 0.85rem; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; color: #004b87; margin: 0;">CORE WEB VITALS OVERVIEW</h3>
+            <div class="metrics-toggle" style="display: flex; background: #f1f5f9; padding: 4px; border-radius: 8px; gap: 4px;">
+              <button class="metric-btn active" onclick="toggleMetricsView('mobile', 'api', this)" style="border: none; background: transparent; padding: 6px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; cursor: pointer; color: var(--text-secondary); transition: all 0.2s;">Field Data (CrUX)</button>
+              <button class="metric-btn" onclick="toggleMetricsView('mobile', 'local', this)" style="border: none; background: transparent; padding: 6px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; cursor: pointer; color: var(--text-secondary); transition: all 0.2s;">Lab Data (Local)</button>
+            </div>
+          </div>
+          <!-- MOBILE_METRICS_GRID -->
+        </div>
+      </div>
+
+      <!-- Performance Slider Track (Mobile) -->
+      <!-- MOBILE_LIGHTHOUSE_SECTION -->
+    </div>
+
+    <!-- DESKTOP VIEW SECTIONS -->
+    <div class="desktop-only-view">
+      <!-- Section: Executive Summary (Desktop) -->
+      <div class="section-title-bar">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="20" x2="18" y2="10"></line>
+          <line x1="12" y1="20" x2="12" y2="4"></line>
+          <line x1="6" y1="20" x2="6" y2="14"></line>
+        </svg>
+        <h2>EXECUTIVE SUMMARY <span class="device-title-tag">(DESKTOP)</span></h2>
+      </div>
+
+      <div class="executive-summary-card"
+        data-api-score="{{DESKTOP_API_SCORE}}" data-api-class="{{DESKTOP_API_CLASS}}" data-api-text-class="{{DESKTOP_API_TEXT_CLASS}}" data-api-status="{{DESKTOP_API_STATUS}}"
+        data-local-score="{{DESKTOP_LOCAL_SCORE}}" data-local-class="{{DESKTOP_LOCAL_CLASS}}" data-local-text-class="{{DESKTOP_LOCAL_TEXT_CLASS}}" data-local-status="{{DESKTOP_LOCAL_STATUS}}">
+        <div class="exec-gauge-col">
+          <div class="exec-circular-gauge {{DESKTOP_SCORE_CLASS}}" style="--score: {{DESKTOP_MAIN_SCORE}};">
+            <div class="exec-gauge-score-value">{{DESKTOP_MAIN_SCORE}}</div>
+          </div>
+          <div class="exec-gauge-label-outside">
+            <div class="exec-fraction"><strong>{{DESKTOP_MAIN_SCORE}}</strong> / 100</div>
+            <div class="exec-label-text">Performance Score</div>
+          </div>
+        </div>
+        <div class="exec-details-col">
+          <div class="exec-header">
+            <svg class="trophy-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+              <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+              <path d="M4 22h16"></path>
+              <path d="M10 14.66V17c0 .55-.45 1-1 1H4v2h16v-2h-5c-.55 0-1-.45-1-1v-2.34"></path>
+              <path d="M12 2a6 6 0 0 1 6 6c0 3.6-2 5.5-6 6.6C8 13.5 6 11.6 6 8a6 6 0 0 1 6-6z"></path>
+            </svg>
+            <span class="exec-status {{DESKTOP_SCORE_TEXT_CLASS}}">{{DESKTOP_SCORE_STATUS}}</span>
+          </div>
+          <p class="exec-desc">
+            Your website is performing exceptionally well across Core Web Vitals and key performance metrics. This
+            delivers a fast, stable, and responsive experience for users, which helps improve engagement and supports
+            better search visibility.
+          </p>
+          <div class="metrics-toggle-container" style="margin-top: 24px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center;">
+            <h3 class="metrics-overview-title" style="font-size: 0.85rem; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; color: #004b87; margin: 0;">CORE WEB VITALS OVERVIEW</h3>
+            <div class="metrics-toggle" style="display: flex; background: #f1f5f9; padding: 4px; border-radius: 8px; gap: 4px;">
+              <button class="metric-btn active" onclick="toggleMetricsView('desktop', 'api', this)" style="border: none; background: transparent; padding: 6px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; cursor: pointer; color: var(--text-secondary); transition: all 0.2s;">Field Data (CrUX)</button>
+              <button class="metric-btn" onclick="toggleMetricsView('desktop', 'local', this)" style="border: none; background: transparent; padding: 6px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; cursor: pointer; color: var(--text-secondary); transition: all 0.2s;">Lab Data (Local)</button>
+            </div>
+          </div>
+          <!-- DESKTOP_METRICS_GRID -->
+        </div>
+      </div>
+
+      <!-- Performance Slider Track (Desktop) -->
+      <!-- DESKTOP_LIGHTHOUSE_SECTION -->
+    </div>
+
+    <!-- CrUX Raw Data Section -->
+    {{CRUX_HISTOGRAMS_SECTION}}
+
+    <!-- Section: Metrics Detail Table -->
+    <div class="section-title-bar">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+        stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+        <line x1="3" y1="9" x2="21" y2="9"></line>
+        <line x1="3" y1="15" x2="21" y2="15"></line>
+        <line x1="9" y1="3" x2="9" y2="21"></line>
+        <line x1="15" y1="3" x2="15" y2="21"></line>
+      </svg>
+      <h2>METRICS DETAIL</h2>
+    </div>
+
+    <div class="detail-table-card">
+      <table class="metrics-detail-table">
+        <thead>
+          <tr>
+            <th rowspan="2" class="align-left">Metric</th>
+            <th colspan="2">Field Data (Real User Monitoring)</th>
+            <th colspan="2">Lab Data (Lighthouse)</th>
+            <th rowspan="2">Good Threshold (Recommended)</th>
+          </tr>
+          <tr>
+            <th>Value</th>
+            <th>Status</th>
+            <th>Value</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- LCP (Mobile) -->
+          <tr class="mobile-only-view">
+            <td class="metric-cell-title">
+              <span class="device-pill device-pill-mobile">Mobile</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+              <span>Largest Contentful Paint (LCP)</span>
+            </td>
+            <td class="bold-cell">{{MOBILE_LCP_FIELD_VALUE}}</td>
+            <td>{{MOBILE_LCP_FIELD_STATUS}}</td>
+            <td class="bold-cell">{{MOBILE_LCP_LAB_VALUE}}</td>
+            <td>{{MOBILE_LCP_LAB_STATUS}}</td>
+            <td class="threshold-cell">&le; 2.5 s</td>
+          </tr>
+          <!-- LCP (Desktop) -->
+          <tr class="desktop-only-view hidden-view">
+            <td class="metric-cell-title">
+              <span class="device-pill device-pill-desktop">Desktop</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+              <span>Largest Contentful Paint (LCP)</span>
+            </td>
+            <td class="bold-cell">{{DESKTOP_LCP_FIELD_VALUE}}</td>
+            <td>{{DESKTOP_LCP_FIELD_STATUS}}</td>
+            <td class="bold-cell">{{DESKTOP_LCP_LAB_VALUE}}</td>
+            <td>{{DESKTOP_LCP_LAB_STATUS}}</td>
+            <td class="threshold-cell">&le; 2.5 s</td>
+          </tr>
+          <!-- CLS (Mobile) -->
+          <tr class="mobile-only-view">
+            <td class="metric-cell-title">
+              <span class="device-pill device-pill-mobile">Mobile</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="9" y1="3" x2="9" y2="21"></line>
+                <line x1="9" y1="12" x2="21" y2="12"></line>
+              </svg>
+              <span>Cumulative Layout Shift (CLS)</span>
+            </td>
+            <td class="bold-cell">{{MOBILE_CLS_FIELD_VALUE}}</td>
+            <td>{{MOBILE_CLS_FIELD_STATUS}}</td>
+            <td class="bold-cell">{{MOBILE_CLS_LAB_VALUE}}</td>
+            <td>{{MOBILE_CLS_LAB_STATUS}}</td>
+            <td class="threshold-cell">&le; 0.1</td>
+          </tr>
+          <!-- CLS (Desktop) -->
+          <tr class="desktop-only-view hidden-view">
+            <td class="metric-cell-title">
+              <span class="device-pill device-pill-desktop">Desktop</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="9" y1="3" x2="9" y2="21"></line>
+                <line x1="9" y1="12" x2="21" y2="12"></line>
+              </svg>
+              <span>Cumulative Layout Shift (CLS)</span>
+            </td>
+            <td class="bold-cell">{{DESKTOP_CLS_FIELD_VALUE}}</td>
+            <td>{{DESKTOP_CLS_FIELD_STATUS}}</td>
+            <td class="bold-cell">{{DESKTOP_CLS_LAB_VALUE}}</td>
+            <td>{{DESKTOP_CLS_LAB_STATUS}}</td>
+            <td class="threshold-cell">&le; 0.1</td>
+          </tr>
+          <!-- TBT (Mobile) -->
+          <tr class="mobile-only-view">
+            <td class="metric-cell-title">
+              <span class="device-pill device-pill-mobile">Mobile</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+              </svg>
+              <span>Total Blocking Time (TBT)</span>
+            </td>
+            <td class="bold-cell">{{MOBILE_TBT_FIELD_VALUE}}</td>
+            <td>{{MOBILE_TBT_FIELD_STATUS}}</td>
+            <td class="bold-cell">{{MOBILE_TBT_LAB_VALUE}}</td>
+            <td>{{MOBILE_TBT_LAB_STATUS}}</td>
+            <td class="threshold-cell">&le; 200 ms</td>
+          </tr>
+          <!-- TBT (Desktop) -->
+          <tr class="desktop-only-view hidden-view">
+            <td class="metric-cell-title">
+              <span class="device-pill device-pill-desktop">Desktop</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+              </svg>
+              <span>Total Blocking Time (TBT)</span>
+            </td>
+            <td class="bold-cell">{{DESKTOP_TBT_FIELD_VALUE}}</td>
+            <td>{{DESKTOP_TBT_FIELD_STATUS}}</td>
+            <td class="bold-cell">{{DESKTOP_TBT_LAB_VALUE}}</td>
+            <td>{{DESKTOP_TBT_LAB_STATUS}}</td>
+            <td class="threshold-cell">&le; 200 ms</td>
+          </tr>
+          <!-- INP (Mobile) -->
+          <tr class="mobile-only-view">
+            <td class="metric-cell-title">
+              <span class="device-pill device-pill-mobile">Mobile</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="m9 12 2 2 4-4"></path>
+              </svg>
+              <span>Interaction to Next Paint (INP)</span>
+            </td>
+            <td class="bold-cell">{{MOBILE_INP_FIELD_VALUE}}</td>
+            <td>{{MOBILE_INP_FIELD_STATUS}}</td>
+            <td class="bold-cell">{{MOBILE_INP_LAB_VALUE}}</td>
+            <td>{{MOBILE_INP_LAB_STATUS}}</td>
+            <td class="threshold-cell">&le; 200 ms</td>
+          </tr>
+          <!-- INP (Desktop) -->
+          <tr class="desktop-only-view hidden-view">
+            <td class="metric-cell-title">
+              <span class="device-pill device-pill-desktop">Desktop</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="m9 12 2 2 4-4"></path>
+              </svg>
+              <span>Interaction to Next Paint (INP)</span>
+            </td>
+            <td class="bold-cell">{{DESKTOP_INP_FIELD_VALUE}}</td>
+            <td>{{DESKTOP_INP_FIELD_STATUS}}</td>
+            <td class="bold-cell">{{DESKTOP_INP_LAB_VALUE}}</td>
+            <td>{{DESKTOP_INP_LAB_STATUS}}</td>
+            <td class="threshold-cell">&le; 200 ms</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Opportunities section -->
+    <div class="section-title-bar" id="diagnostics-title-bar">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+        stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <h2>DIAGNOSTICS & OPPORTUNITIES</h2>
+    </div>
+
+    <!-- Filter and Search Row (Visible in HTML view only) -->
+    <div class="controls-row">
+      <div class="search-box">
+        <span class="search-icon">{{SEARCH_ICON}}</span>
+        <input type="text" id="issueSearch" placeholder="Search issues, files, or fixes..." oninput="filterIssues()">
+      </div>
+      <div class="filter-group">
+        <button class="filter-pill active" data-filter-type="severity" data-filter-value="all"
+          onclick="setFilter(this, 'severity')">All severities</button>
+        <button class="filter-pill" data-filter-type="severity" data-filter-value="high"
+          onclick="setFilter(this, 'severity')">High - <span id="high-count">0</span></button>
+        <button class="filter-pill" data-filter-type="severity" data-filter-value="medium"
+          onclick="setFilter(this, 'severity')">Medium - <span id="med-count">0</span></button>
+        <button class="filter-pill" data-filter-type="severity" data-filter-value="low"
+          onclick="setFilter(this, 'severity')">Low - <span id="low-count">0</span></button>
+      </div>
+      <div class="filter-group">
+        <button class="filter-pill active" data-filter-type="category" data-filter-value="all"
+          onclick="setFilter(this, 'category')">All categories</button>
+        <button class="filter-pill" data-filter-type="category" data-filter-value="lcp"
+          onclick="setFilter(this, 'category')">LCP</button>
+        <button class="filter-pill" data-filter-type="category" data-filter-value="cls"
+          onclick="setFilter(this, 'category')">CLS</button>
+        <button class="filter-pill" data-filter-type="category" data-filter-value="inp"
+          onclick="setFilter(this, 'category')">INP</button>
+        <button class="filter-pill" data-filter-type="category" data-filter-value="a11y"
+          onclick="setFilter(this, 'category')">A11y</button>
+      </div>
+    </div>
+
+    <!-- Accordion Issue List -->
+    <div class="issues-list" id="issuesList">
+      {{ISSUES_ACCORDIONS}}
+    </div>
+
+    <footer class="pdf-footer-layout">
+      <div class="pdf-footer-left">
+        <img
+          src="https://cdn.prod.website-files.com/64819da6f9ae7ae6e232658c/66ed2342896c97c223a0a15c_256x256%20Quintype%20Logo.png"
+          alt="Quintype Logo">
+        <span>Confidential - Core Web Vitals Diagnostic Lab</span>
+      </div>
+      <div class="pdf-footer-right">
+        <span>Core Web Vitals Executive Audit</span>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // Toggle accordion state
+    function toggleAccordion(cardHeader) {
+      const card = cardHeader.parentElement;
+      const isOpen = card.classList.contains('expanded');
+
+      // Close all other accordions
+      document.querySelectorAll('.issue-card').forEach(c => {
+        c.classList.remove('expanded');
+      });
+
+      // Toggle current
+      if (!isOpen) {
+        card.classList.add('expanded');
+      }
+    }
+
+    // Toggle Metrics View
+    function toggleMetricsView(mode, view, btn) {
+      const container = btn.closest('.exec-details-col');
+      const card = btn.closest('.executive-summary-card');
+      
+      if (card) {
+        const prefix = view === 'api' ? 'api' : 'local';
+        const score = card.getAttribute(`data-${prefix}-score`);
+        const scoreClass = card.getAttribute(`data-${prefix}-class`);
+        const textClass = card.getAttribute(`data-${prefix}-text-class`);
+        const statusText = card.getAttribute(`data-${prefix}-status`);
+
+        const gauge = card.querySelector('.exec-circular-gauge');
+        if (gauge) {
+          gauge.className = `exec-circular-gauge ${scoreClass}`;
+          gauge.style.setProperty('--score', score);
+        }
+        
+        const scoreVal = card.querySelector('.exec-gauge-score-value');
+        if (scoreVal) scoreVal.textContent = score;
+        
+        const fraction = card.querySelector('.exec-fraction strong');
+        if (fraction) fraction.textContent = score;
+
+        const statusEl = card.querySelector('.exec-status');
+        if (statusEl) {
+          statusEl.className = `exec-status ${textClass}`;
+          statusEl.textContent = statusText;
+        }
+      }
+      
+      // Update button styles
+      container.querySelectorAll('.metric-btn').forEach(b => {
+        b.classList.remove('active');
+        b.style.backgroundColor = 'transparent';
+        b.style.color = 'var(--text-secondary)';
+        b.style.boxShadow = 'none';
+      });
+      btn.classList.add('active');
+      btn.style.backgroundColor = '#ffffff';
+      btn.style.color = '#004b87';
+      btn.style.boxShadow = '0 2px 5px rgba(0,0,0,0.05)';
+
+      // Toggle Grids
+      container.querySelectorAll('.metrics-grid').forEach(grid => grid.classList.add('hidden-view'));
+      if (view === 'api') {
+        container.querySelector('.api-data-view').classList.remove('hidden-view');
+      } else {
+        container.querySelector('.local-data-view').classList.remove('hidden-view');
+      }
+    }
+
+    // Toggle Mobile / Desktop views
+    function switchMode(mode) {
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelector(`.tab-btn[data-mode="${mode}"]`).classList.add('active');
+
+      if (mode === 'mobile') {
+        document.querySelectorAll('.mobile-only-view').forEach(el => el.classList.remove('hidden-view'));
+        document.querySelectorAll('.desktop-only-view').forEach(el => el.classList.add('hidden-view'));
+      } else {
+        document.querySelectorAll('.mobile-only-view').forEach(el => el.classList.add('hidden-view'));
+        document.querySelectorAll('.desktop-only-view').forEach(el => el.classList.remove('hidden-view'));
+      }
+    }
+
+    // Interactive client-side filtering variables
+    let activeFilters = {
+      severity: 'all',
+      category: 'all',
+      searchQuery: ''
+    };
+
+    function setFilter(button, filterType) {
+      const parent = button.parentElement;
+      parent.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+      button.classList.add('active');
+
+      activeFilters[filterType] = button.getAttribute('data-filter-value');
+      applyFilters();
+    }
+
+    function filterIssues() {
+      activeFilters.searchQuery = document.getElementById('issueSearch').value.toLowerCase().trim();
+      applyFilters();
+    }
+
+    function applyFilters() {
+      const cards = document.querySelectorAll('.issue-card');
+
+      cards.forEach(card => {
+        const severityAttr = card.getAttribute('data-severity');
+        const severity = severityAttr ? severityAttr.toLowerCase() : '';
+        const categoryAttr = card.getAttribute('data-category');
+        const category = categoryAttr ? categoryAttr.toLowerCase() : '';
+        const text = card.textContent.toLowerCase();
+
+        const matchesSeverity = (activeFilters.severity === 'all' || severity === activeFilters.severity);
+        const matchesCategory = (activeFilters.category === 'all' || category === activeFilters.category);
+        const matchesSearch = (activeFilters.searchQuery === '' || text.includes(activeFilters.searchQuery));
+
+        if (matchesSeverity && matchesCategory && matchesSearch) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    function updateCounts() {
+      const counts = { high: 0, medium: 0, low: 0 };
+      document.querySelectorAll('.issue-card').forEach(card => {
+        const sevAttr = card.getAttribute('data-severity');
+        const sev = sevAttr ? sevAttr.toLowerCase() : '';
+        if (counts[sev] !== undefined) {
+          counts[sev]++;
+        }
+      });
+      document.getElementById('high-count').textContent = counts.high;
+      document.getElementById('med-count').textContent = counts.medium;
+      document.getElementById('low-count').textContent = counts.low;
+    }
+
+    function escapeClientHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    async function autoEnrichReport() {
+      const meta = window.__REPORT_META__ || {};
+      const status = window.__AI_ADVISOR_STATUS__ || {};
+
+      // If already completed or no pending issues exist, do nothing
+      if (status.status === 'completed') return;
+      const pendingElements = document.querySelectorAll('.ai-loading-box');
+      if (pendingElements.length === 0) return;
+
+      try {
+        const res = await fetch('/api/enrich-report', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            project: meta.project,
+            reportFile: meta.reportFile
+          })
+        });
+
+        const data = await res.json();
+        if (data.success && Array.isArray(data.issues)) {
+          window.__AUDIT_ISSUES__ = data.issues;
+          window.__AI_ADVISOR_STATUS__ = data.aiAdvisor || { status: 'completed' };
+
+          if (data.pdfStatus && (data.pdfStatus.synchronized === false || data.pdfStatus.aiEnriched === false)) {
+            const noticeEl = document.getElementById('ai-pdf-sync-notice');
+            if (noticeEl) noticeEl.style.display = 'flex';
+          }
+
+          data.issues.forEach((issue, idx) => {
+            const container = document.getElementById(`ai-advisor-container-${idx}`) || document.getElementById(`ai-advice-result-${idx}`);
+            if (!container) return;
+
+            if (issue.aiAdvice) {
+              container.style.display = 'block';
+              renderAiAdviceResult(container, issue.aiAdvice);
+            } else if (issue.aiStatus === 'omitted_limit') {
+              container.innerHTML = `
+                <div class="ai-limit-bar">
+                  <span>Deterministic recommendation active. Copilot advice auto-generated for top priority findings.</span>
+                  <button class="ai-retry-btn" type="button" onclick="retryAiAdvice(event, ${idx})">Analyze with Copilot</button>
+                </div>
+              `;
+            } else if (issue.aiStatus === 'error') {
+              container.innerHTML = `
+                <div class="ai-error-box" style="display: flex; justify-content: space-between; align-items: center;">
+                  <span style="font-size: 0.8rem; color: #ef4444;">
+                    ⚠️ Copilot analysis encountered an issue: ${escapeClientHtml(issue.aiError || 'Service temporarily unavailable')}
+                  </span>
+                  <button class="ai-retry-btn" type="button" onclick="retryAiAdvice(event, ${idx})">Retry</button>
+                </div>
+              `;
+            }
+          });
+        }
+      } catch (err) {
+        console.warn('Auto-enrichment could not complete:', err.message);
+      }
+    }
+
+    async function retryAiAdvice(event, index) {
+      if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+
+      const btn = event ? event.currentTarget : null;
+      const container = document.getElementById(`ai-advice-result-${index}`) || document.getElementById(`ai-advisor-container-${index}`);
+      if (!container) return;
+
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = 'Analyzing...';
+      }
+
+      container.style.display = 'block';
+      container.innerHTML = `
+        <div class="ai-loading-box">
+          <div class="ai-spinner"></div>
+          <div>
+            <strong>Consulting GitHub Copilot AI Advisor...</strong>
+            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 2px;">Synthesizing deterministic findings and metric correlation</div>
+          </div>
+        </div>
+      `;
+
+      try {
+        const issueData = (window.__AUDIT_ISSUES__ && window.__AUDIT_ISSUES__[index]) || null;
+        const meta = window.__REPORT_META__ || {};
+
+        const res = await fetch('/api/ai-advice', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            project: meta.project,
+            reportFile: meta.reportFile,
+            issueIndex: index,
+            issue: issueData
+          })
+        });
+
+        const data = await res.json();
+        if (!res.ok || !data.success || !data.advice) {
+          throw new Error(data.message || data.error || `Server returned ${res.status}`);
+        }
+
+        renderAiAdviceResult(container, data.advice);
+        if (window.__AUDIT_ISSUES__ && window.__AUDIT_ISSUES__[index]) {
+          window.__AUDIT_ISSUES__[index].aiAdvice = data.advice;
+          window.__AUDIT_ISSUES__[index].aiStatus = 'completed';
+        }
+
+        // Show PDF sync notice since this single-issue retry updated advice post-generation
+        const noticeEl = document.getElementById('ai-pdf-sync-notice');
+        if (noticeEl) noticeEl.style.display = 'flex';
+      } catch (err) {
+        container.innerHTML = `
+          <div class="ai-error-box">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+              <strong style="color: #ef4444; font-size: 0.82rem;">⚠️ Copilot AI Advisor Error</strong>
+              <button type="button" class="ai-retry-btn" onclick="retryAiAdvice(event, ${index})">Retry</button>
+            </div>
+            <p style="font-size: 0.78rem; margin-top: 4px; color: var(--text-secondary);">${escapeClientHtml(err.message)}</p>
+          </div>
+        `;
+      }
+    }
+
+    function renderAiAdviceResult(container, advice) {
+      const conf = String(advice.confidence || 'MEDIUM').toUpperCase();
+      const confClass = conf.toLowerCase();
+
+      let whyItHelpsHtml = '';
+      if (advice.whyItHelps) {
+        whyItHelpsHtml = `
+          <div class="ai-field-block ai-why-callout">
+            <div class="ai-field-label">Why This Solution Improves CWV</div>
+            <div class="ai-field-value">${escapeClientHtml(advice.whyItHelps)}</div>
+          </div>
+        `;
+      }
+
+      let affectedFilesHtml = '';
+      if (Array.isArray(advice.affectedFiles) && advice.affectedFiles.length > 0) {
+        const fileItems = advice.affectedFiles.map(af => {
+          const lineStr = af.line && af.line !== '-' ? `:${escapeClientHtml(af.line)}` : '';
+          return `<code>${escapeClientHtml(af.file)}${lineStr}</code>`;
+        }).join(', ');
+        affectedFilesHtml = `
+          <div class="ai-field-block">
+            <div class="ai-field-label">Affected Source Locations</div>
+            <div class="ai-field-value">${fileItems}</div>
+          </div>
+        `;
+      }
+
+      let proposedChangesHtml = '';
+      if (advice.proposedChanges) {
+        proposedChangesHtml = `
+          <div class="ai-field-block">
+            <div class="ai-field-label">Proposed Code Adjustments (Read-Only Preview)</div>
+            <div class="ai-code-block">${escapeClientHtml(advice.proposedChanges)}</div>
+          </div>
+        `;
+      }
+
+      const evidenceList = Array.isArray(advice.evidence) ? advice.evidence : [String(advice.evidence || '')];
+      const recList = Array.isArray(advice.recommendations) ? advice.recommendations : [String(advice.recommendations || '')];
+      const limitationsList = Array.isArray(advice.limitations) ? advice.limitations : [String(advice.limitations || '')];
+
+      container.innerHTML = `
+        <div class="ai-solution-card">
+          <div class="ai-card-top">
+            <div class="ai-badge-group">
+              <span class="ai-source-badge">✨ Copilot AI Solution</span>
+              <span class="ai-conf-badge ${confClass}">${escapeClientHtml(conf)} Confidence</span>
+            </div>
+            ${advice.confidenceReason ? `<div class="ai-conf-reason">${escapeClientHtml(advice.confidenceReason)}</div>` : ''}
+          </div>
+
+          <div class="ai-field-block">
+            <div class="ai-field-label">Diagnosis & UX Impact</div>
+            <div class="ai-field-value">${escapeClientHtml(advice.explanation)}</div>
+          </div>
+
+          <div class="ai-field-block">
+            <div class="ai-field-label">Likely Root Cause</div>
+            <div class="ai-field-value">${escapeClientHtml(advice.rootCause)}</div>
+          </div>
+
+          <div class="ai-field-block">
+            <div class="ai-field-label">Recommended Action Steps</div>
+            <ul class="ai-list">
+              ${recList.map(r => `<li>${escapeClientHtml(r)}</li>`).join('')}
+            </ul>
+          </div>
+
+          ${whyItHelpsHtml}
+          ${advice.verificationProcedure ? `
+          <div class="ai-field-block">
+            <div class="ai-field-label">Verification Procedure</div>
+            <div class="ai-field-value">${escapeClientHtml(advice.verificationProcedure)}</div>
+          </div>` : ''}
+          ${Array.isArray(advice.alternativeHypotheses) && advice.alternativeHypotheses.length > 0 ? `
+          <div class="ai-field-block">
+            <div class="ai-field-label">Alternative Hypotheses</div>
+            <ul class="ai-list" style="font-size: 0.82rem;">
+              ${advice.alternativeHypotheses.map(h => `<li>${escapeClientHtml(h)}</li>`).join('')}
+            </ul>
+          </div>` : ''}
+          ${affectedFilesHtml}
+          ${proposedChangesHtml}
+
+          <div class="ai-field-block" style="margin-top: 10px; border-top: 1px dashed var(--border-color); padding-top: 8px;">
+            <div class="ai-field-label" style="color: var(--text-muted);">Limitations & Hypotheses</div>
+            <ul class="ai-list" style="color: var(--text-muted); font-size: 0.78rem;">
+              ${limitationsList.map(l => `<li>${escapeClientHtml(l)}</li>`).join('')}
+            </ul>
+          </div>
+        </div>
+      `;
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      updateCounts();
+      switchMode('mobile');
+      const pdfStatus = window.__PDF_STATUS__ || {};
+      const aiStatus = window.__AI_ADVISOR_STATUS__ || {};
+      if (pdfStatus.synchronized === false || (pdfStatus.aiEnriched === false && aiStatus.status === 'completed')) {
+        const noticeEl = document.getElementById('ai-pdf-sync-notice');
+        if (noticeEl) noticeEl.style.display = 'flex';
+      }
+      autoEnrichReport();
+    });
+  </script>
+</body>
+
+</html>
