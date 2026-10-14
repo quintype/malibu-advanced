@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import { execSync } from 'child_process';
 import { ReadableStream as WebReadableStream } from 'stream/web';
 
 if (typeof globalThis.ReadableStream === 'undefined' && WebReadableStream) {
@@ -154,7 +155,7 @@ function escapeHtml(str) {
 /**
  * Helper to build Metrics Grid HTML.
  */
-function buildMetricGridHtml(lcp, cls, tbt, isLocal = false) {
+function buildMetricGridHtml(lcp, cls, tbt, isLocal = false, branchName = '') {
   return `
       <div class="metrics-grid ${isLocal ? 'local-data-view hidden-view' : 'api-data-view'}">
         <!-- LCP Card -->
@@ -192,7 +193,7 @@ function buildMetricGridHtml(lcp, cls, tbt, isLocal = false) {
               </svg>
             </div>
             <div class="metric-title-group">
-              <span class="metric-fullname">Cumulative Layout Shift (CLS)</span>
+              <span class="metric-fullname">Cumulative Layout Shift (CLS)${isLocal && branchName ? ` <span class="branch-tag" style="margin-left: 6px; font-size: 0.65rem; font-weight: 700; color: #0284c7; background: #e0f2fe; padding: 2px 6px; border-radius: 4px; font-family: monospace;">branch: ${escapeHtml(branchName)}</span>` : ''}</span>
               <span class="metric-desc-text">Measures visual stability.</span>
             </div>
           </div>
@@ -856,6 +857,20 @@ export async function generateReport(compiledResult, options = {}) {
 
   // Replace all general placeholders
   const projectName = options.clientName || path.basename(options.projectPath);
+  let gitBranch = options.gitBranch;
+  if (!gitBranch || gitBranch === 'N/A') {
+    try {
+      gitBranch = execSync('git rev-parse --abbrev-ref HEAD', { cwd: options.projectPath, stdio: ['ignore', 'pipe', 'ignore'], encoding: 'utf8' }).trim();
+    } catch (e) {
+      try {
+        gitBranch = execSync('git rev-parse --abbrev-ref HEAD', { cwd: process.cwd(), stdio: ['ignore', 'pipe', 'ignore'], encoding: 'utf8' }).trim();
+      } catch (err2) {
+        gitBranch = 'main';
+      }
+    }
+  }
+  if (!gitBranch) gitBranch = 'main';
+
   const formattedDate = new Date().toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
@@ -1029,6 +1044,7 @@ export async function generateReport(compiledResult, options = {}) {
     .replace(/{{CRUX_HISTOGRAMS_SECTION}}/g, cruxHistogramsHtml)
     .replace(/{{CLIENT_NAME}}/g, options.clientName || 'Default Project')
     .replace(/{{PROJECT_PATH}}/g, projectName)
+    .replace(/{{GIT_BRANCH}}/g, escapeHtml(gitBranch))
     .replace(/{{AUDIT_DATE}}/g, formattedDate)
     .replace(/{{AUDIT_URL}}/g, options.url || 'No URL specified (Static scan only)')
     .replace(/{{SUMMARY_HIGH}}/g, compiledResult.summary.high)
@@ -1157,8 +1173,8 @@ export async function generateReport(compiledResult, options = {}) {
 
     // Sections
     .replace(/<!-- ASSESSMENT_BANNER_SECTION -->/g, assessmentBannerHtml)
-    .replace(/<!-- MOBILE_METRICS_GRID -->/g, buildMetricGridHtml(mLcp, mCls, mTbt, false) + buildMetricGridHtml(localMLcp, localMCls, localMTbt, true))
-    .replace(/<!-- DESKTOP_METRICS_GRID -->/g, buildMetricGridHtml(dLcp, dCls, dTbt, false) + buildMetricGridHtml(localDLcp, localDCls, localDTbt, true))
+    .replace(/<!-- MOBILE_METRICS_GRID -->/g, buildMetricGridHtml(mLcp, mCls, mTbt, false) + buildMetricGridHtml(localMLcp, localMCls, localMTbt, true, gitBranch))
+    .replace(/<!-- DESKTOP_METRICS_GRID -->/g, buildMetricGridHtml(dLcp, dCls, dTbt, false) + buildMetricGridHtml(localDLcp, localDCls, localDTbt, true, gitBranch))
     .replace(/{{TOP_RECOMMENDATIONS}}/g, topRecsHtml)
     .replace(/{{ISSUES_ACCORDIONS}}/g, accordionsHtml)
     .replace(/{{SEARCH_ICON}}/g, getIconSvg('search', 16, 2));
@@ -1261,6 +1277,7 @@ export async function generateReport(compiledResult, options = {}) {
 
     const redesignedData = {
       clientName: options.clientName || projectName,
+      gitBranch: gitBranch,
       url: options.url || 'https://imaindia-uat-web.quintype.io',
       date: formattedDate,
       engineer: options.engineer || 'Siripireddy Giri',
@@ -1286,8 +1303,8 @@ export async function generateReport(compiledResult, options = {}) {
       metricsDetail: [
         { device: 'MOBILE', metric: 'Largest Contentful Paint (LCP)', fVal: mobileCruxLcp.valueDisplay, fStat: mobileCruxLcp.statusLabel === 'Good' ? 'PASS' : mobileCruxLcp.valueDisplay === 'N/A' ? 'N/A' : 'WARN', lVal: localMLcp.valueDisplay, lStat: localMLcp.statusLabel === 'Good' ? 'PASS' : 'WARN', thresh: '≤ 2.5 s' },
         { device: 'DESKTOP', metric: 'Largest Contentful Paint (LCP)', fVal: desktopCruxLcp.valueDisplay, fStat: desktopCruxLcp.statusLabel === 'Good' ? 'PASS' : desktopCruxLcp.valueDisplay === 'N/A' ? 'N/A' : 'WARN', lVal: localDLcp.valueDisplay, lStat: localDLcp.statusLabel === 'Good' ? 'PASS' : 'WARN', thresh: '≤ 2.5 s' },
-        { device: 'MOBILE', metric: 'Cumulative Layout Shift (CLS)', fVal: mobileCruxCls.valueDisplay, fStat: mobileCruxCls.statusLabel === 'Good' ? 'PASS' : mobileCruxCls.valueDisplay === 'N/A' ? 'N/A' : 'WARN', lVal: localMCls.valueDisplay, lStat: localMCls.statusLabel === 'Good' ? 'PASS' : 'WARN', thresh: '≤ 0.1' },
-        { device: 'DESKTOP', metric: 'Cumulative Layout Shift (CLS)', fVal: desktopCruxCls.valueDisplay, fStat: desktopCruxCls.statusLabel === 'Good' ? 'PASS' : desktopCruxCls.valueDisplay === 'N/A' ? 'N/A' : 'WARN', lVal: localDCls.valueDisplay, lStat: localDCls.statusLabel === 'Good' ? 'PASS' : 'WARN', thresh: '≤ 0.1' },
+        { device: 'MOBILE', metric: `Cumulative Layout Shift (CLS)${gitBranch ? ` [${gitBranch}]` : ''}`, fVal: mobileCruxCls.valueDisplay, fStat: mobileCruxCls.statusLabel === 'Good' ? 'PASS' : mobileCruxCls.valueDisplay === 'N/A' ? 'N/A' : 'WARN', lVal: localMCls.valueDisplay, lStat: localMCls.statusLabel === 'Good' ? 'PASS' : 'WARN', thresh: '≤ 0.1' },
+        { device: 'DESKTOP', metric: `Cumulative Layout Shift (CLS)${gitBranch ? ` [${gitBranch}]` : ''}`, fVal: desktopCruxCls.valueDisplay, fStat: desktopCruxCls.statusLabel === 'Good' ? 'PASS' : desktopCruxCls.valueDisplay === 'N/A' ? 'N/A' : 'WARN', lVal: localDCls.valueDisplay, lStat: localDCls.statusLabel === 'Good' ? 'PASS' : 'WARN', thresh: '≤ 0.1' },
         { device: 'MOBILE', metric: 'Total Blocking Time (TBT)', fVal: mobileCruxTbt.valueDisplay, fStat: mobileCruxTbt.statusLabel === 'Good' ? 'PASS' : mobileCruxTbt.valueDisplay === 'N/A' ? 'N/A' : 'WARN', lVal: localMTbt.valueDisplay, lStat: localMTbt.statusLabel === 'Good' ? 'PASS' : 'WARN', thresh: '≤ 200 ms' },
         { device: 'DESKTOP', metric: 'Total Blocking Time (TBT)', fVal: desktopCruxTbt.valueDisplay, fStat: desktopCruxTbt.statusLabel === 'Good' ? 'PASS' : desktopCruxTbt.valueDisplay === 'N/A' ? 'N/A' : 'WARN', lVal: localDTbt.valueDisplay, lStat: localDTbt.statusLabel === 'Good' ? 'PASS' : 'WARN', thresh: '≤ 200 ms' },
         { device: 'MOBILE', metric: 'Interaction to Next Paint (INP)', fVal: mobileCruxInp.valueDisplay, fStat: mobileCruxInp.statusLabel === 'Good' ? 'PASS' : mobileCruxInp.valueDisplay === 'N/A' ? 'N/A' : 'WARN', lVal: localMInp.valueDisplay, lStat: localMInp.statusLabel === 'Good' ? 'PASS' : 'WARN', thresh: '≤ 200 ms' },

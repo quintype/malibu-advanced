@@ -42,6 +42,7 @@ export function extractCruxHistoryPoints(cruxHistoryData) {
 export function buildRedesignedPdfHtml(data) {
   const {
     clientName = 'ima-india',
+    gitBranch = 'main',
     url = 'https://imaindia-uat-web.quintype.io',
     date = 'October 9, 2026 · 09:57 PM',
     engineer = 'Siripireddy Giri',
@@ -141,7 +142,10 @@ export function buildRedesignedPdfHtml(data) {
         <div style="width: 24px; height: 24px; background: #0f172a; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; font-size: 14px; font-family: Inter, sans-serif;">Q</div>
         <span style="font-size: 1.05rem; font-weight: 800; color: #004b87; font-family: Inter, sans-serif; letter-spacing: -0.01em;">Core Web Vitals Diagnostic Lab</span>
       </div>
-      <div style="font-size: 0.78rem; color: #64748b; font-weight: 500;">${date}</div>
+      <div style="display: flex; align-items: center; gap: 10px; font-size: 0.78rem; color: #64748b; font-weight: 500;">
+        <span style="background: #e0f2fe; color: #0284c7; font-family: monospace; font-size: 0.7rem; font-weight: 700; padding: 2px 7px; border-radius: 4px;">branch: ${gitBranch}</span>
+        <span>${date}</span>
+      </div>
     </div>
   `;
 
@@ -453,10 +457,14 @@ export function buildRedesignedPdfHtml(data) {
         <h1 style="font-size: 1.95rem; font-weight: 800; color: #0f172a; letter-spacing: -0.03em; margin-bottom: 10px;">Performance Audit Report</h1>
         
         <!-- Metadata Box -->
-        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 14px; display: grid; grid-template-columns: 1fr 1.6fr 1.4fr; gap: 12px; margin-bottom: 12px;">
+        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 14px; display: grid; grid-template-columns: 1fr 1fr 1.6fr 1.3fr; gap: 10px; margin-bottom: 12px;">
           <div>
             <div style="font-size: 0.62rem; font-weight: 700; color: #94a3b8; letter-spacing: 0.05em; text-transform: uppercase;">PROJECT</div>
-            <div style="font-size: 0.88rem; font-weight: 700; color: #0f172a;">${clientName}</div>
+            <div style="font-size: 0.88rem; font-weight: 700; color: #0f172a; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${clientName}</div>
+          </div>
+          <div>
+            <div style="font-size: 0.62rem; font-weight: 700; color: #94a3b8; letter-spacing: 0.05em; text-transform: uppercase;">GIT BRANCH</div>
+            <div style="font-size: 0.82rem; font-weight: 700; color: #0284c7; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: monospace;">${gitBranch}</div>
           </div>
           <div>
             <div style="font-size: 0.62rem; font-weight: 700; color: #94a3b8; letter-spacing: 0.05em; text-transform: uppercase;">URL</div>
@@ -464,7 +472,7 @@ export function buildRedesignedPdfHtml(data) {
           </div>
           <div>
             <div style="font-size: 0.62rem; font-weight: 700; color: #94a3b8; letter-spacing: 0.05em; text-transform: uppercase;">ENGINEERING ANALYSIS</div>
-            <div style="font-size: 0.88rem; font-weight: 700; color: #0f172a;">${engineer}</div>
+            <div style="font-size: 0.88rem; font-weight: 700; color: #0f172a; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${engineer}</div>
           </div>
         </div>
 

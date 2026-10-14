@@ -289,10 +289,16 @@ Options:
   // Get current active Git branch
   let gitBranch = 'N/A';
   try {
-    const targetPathGit = targetPath;
-    gitBranch = execSync('git rev-parse --abbrev-ref HEAD', { cwd: targetPathGit, stdio: ['ignore', 'pipe', 'ignore'], encoding: 'utf8' }).trim();
+    gitBranch = execSync('git rev-parse --abbrev-ref HEAD', { cwd: targetPath, stdio: ['ignore', 'pipe', 'ignore'], encoding: 'utf8' }).trim();
   } catch (err) {
-    // Not a git repo
+    try {
+      gitBranch = execSync('git rev-parse --abbrev-ref HEAD', { cwd: process.cwd(), stdio: ['ignore', 'pipe', 'ignore'], encoding: 'utf8' }).trim();
+    } catch (e) {
+      // Not a git repo
+    }
+  }
+  if (gitBranch && gitBranch !== 'N/A') {
+    console.log(`🌿 Active Git Branch: ${gitBranch}`);
   }
 
   // Step 7: Generate reports
