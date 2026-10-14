@@ -128,6 +128,7 @@ async function preScrollPage(url, port) {
     const page = pages.length > 0 ? pages[0] : await browser.newPage();
 
     await page.setViewport({ width: 1024, height: 768 });
+    await page.setCacheEnabled(false);
 
     await page.evaluateOnNewDocument(() => {
       if (window.__cwv_layout_shifts_injected) return;
@@ -242,6 +243,7 @@ async function throttledDiagnosticPass(url, port, device = 'mobile') {
     } else {
       await page.setViewport({ width: 1024, height: 768, isMobile: false, hasTouch: false });
     }
+    await page.setCacheEnabled(false);
 
     // Emulate Lighthouse Mobile Throttling
     const client = await page.target().createCDPSession();
@@ -326,7 +328,7 @@ export async function runLighthouseAudit(url) {
     console.log(`\n🚀 Launching headless Chrome for dual Lighthouse audit on: ${url}...`);
 
     chrome = await chromeLauncher.launch({
-      chromeFlags: ['--headless=new', '--disable-gpu', '--no-sandbox']
+      chromeFlags: ['--headless=new', '--disable-gpu', '--no-sandbox', '--disable-cache', '--disk-cache-size=0']
     });
 
     // Run bot scrolling to trigger lazy loaders and initialize assets
@@ -337,7 +339,7 @@ export async function runLighthouseAudit(url) {
       output: 'json',
       onlyCategories: ['performance'],
       port: chrome.port,
-      disableStorageReset: true,
+      disableStorageReset: false,
       formFactor: 'mobile',
       screenEmulation: {
         mobile: true,
@@ -353,7 +355,7 @@ export async function runLighthouseAudit(url) {
       output: 'json',
       onlyCategories: ['performance'],
       port: chrome.port,
-      disableStorageReset: true,
+      disableStorageReset: false,
       formFactor: 'desktop',
       screenEmulation: {
         mobile: false,

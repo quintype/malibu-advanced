@@ -128,6 +128,29 @@ Options:
     process.exit(1);
   }
 
+  // If a branch is explicitly requested, checkout the branch in the target repo before scanning
+  if (explicitBranch && targetPath && fs.existsSync(path.join(targetPath, '.git'))) {
+    try {
+      const currentBranch = execSync('git rev-parse --abbrev-ref HEAD', { cwd: targetPath, stdio: ['ignore', 'pipe', 'ignore'], encoding: 'utf8' }).trim();
+      if (currentBranch !== explicitBranch) {
+        console.log(`🌿 Switching ${path.basename(targetPath)} from branch "${currentBranch}" to "${explicitBranch}"...`);
+        try {
+          const out = execSync(`git checkout ${explicitBranch}`, { cwd: targetPath, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
+          if (out && out.trim()) console.log(out.trim());
+        } catch (initialErr) {
+          // If local branch does not exist yet, try tracking remote branch
+          const out = execSync(`git checkout -t origin/${explicitBranch}`, { cwd: targetPath, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
+          if (out && out.trim()) console.log(out.trim());
+        }
+        console.log(`✓ Repository checked out to branch "${explicitBranch}".`);
+      } else {
+        console.log(`🌿 Target repository is on branch "${explicitBranch}".`);
+      }
+    } catch (checkoutErr) {
+      console.warn(`⚠️ Could not switch git branch to "${explicitBranch}": ${checkoutErr.message}`);
+    }
+  }
+
   console.log(`\n==========================================`);
   console.log(`Starting Core Web Vitals Code Audit`);
   console.log(`Target: ${targetPath}`);
@@ -213,8 +236,9 @@ Options:
     const psiApiKey = process.env.PSI_API_KEY || 'AIzaSyBlp2RAKJY40LUJPx-mrY93225m_9Q-h9Y';
     console.log('⚡ Fetching Performance Data from Google PageSpeed Insights API...');
     try {
-      const psiMobileRes = await fetch(`https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${encodeURIComponent(url)}&key=${psiApiKey}&strategy=mobile`);
-      const psiDesktopRes = await fetch(`https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${encodeURIComponent(url)}&key=${psiApiKey}&strategy=desktop`);
+      const psiUrl = `${url}${url.includes('?') ? '&' : '?'}_cwv_ts=${Date.now()}`;
+      const psiMobileRes = await fetch(`https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${encodeURIComponent(psiUrl)}&key=${psiApiKey}&strategy=mobile`);
+      const psiDesktopRes = await fetch(`https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${encodeURIComponent(psiUrl)}&key=${psiApiKey}&strategy=desktop`);
       
       if (psiMobileRes.ok && psiDesktopRes.ok) {
         const mobileJson = await psiMobileRes.json();

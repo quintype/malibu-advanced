@@ -164,7 +164,7 @@ function escapeHtml(str) {
  */
 function buildMetricGridHtml(lcp, cls, tbt, isLocal = false, branchName = '') {
   return `
-      <div class="metrics-grid ${isLocal ? 'local-data-view hidden-view' : 'api-data-view'}">
+      <div class="metrics-grid ${isLocal ? 'local-data-view' : 'api-data-view hidden-view'}">
         <!-- LCP Card -->
         <div class="metric-card">
           <div class="metric-header-layout">
@@ -1074,10 +1074,10 @@ export async function generateReport(compiledResult, options = {}) {
     .replace(/{{SUMMARY_LOW}}/g, compiledResult.summary.low)
     
      // MOBILE values
-    .replace(/{{MOBILE_MAIN_SCORE}}/g, mobileApiScore.score)
-    .replace(/{{MOBILE_SCORE_CLASS}}/g, mobileApiScore.cls)
-    .replace(/{{MOBILE_SCORE_TEXT_CLASS}}/g, mobileApiScore.textCls)
-    .replace(/{{MOBILE_SCORE_STATUS}}/g, mobileApiScore.status)
+    .replace(/{{MOBILE_MAIN_SCORE}}/g, mobileLocScore.score)
+    .replace(/{{MOBILE_SCORE_CLASS}}/g, mobileLocScore.cls)
+    .replace(/{{MOBILE_SCORE_TEXT_CLASS}}/g, mobileLocScore.textCls)
+    .replace(/{{MOBILE_SCORE_STATUS}}/g, mobileLocScore.status)
 
     .replace(/{{MOBILE_API_SCORE}}/g, mobileApiScore.score)
     .replace(/{{MOBILE_API_CLASS}}/g, mobileApiScore.cls)
@@ -1155,10 +1155,10 @@ export async function generateReport(compiledResult, options = {}) {
     .replace(/{{MOBILE_TBT_STATUS_BADGE}}/g, getMetricBadgeHtml(mTbt))
 
     // DESKTOP values
-    .replace(/{{DESKTOP_MAIN_SCORE}}/g, desktopApiScore.score)
-    .replace(/{{DESKTOP_SCORE_CLASS}}/g, desktopApiScore.cls)
-    .replace(/{{DESKTOP_SCORE_TEXT_CLASS}}/g, desktopApiScore.textCls)
-    .replace(/{{DESKTOP_SCORE_STATUS}}/g, desktopApiScore.status)
+    .replace(/{{DESKTOP_MAIN_SCORE}}/g, desktopLocScore.score)
+    .replace(/{{DESKTOP_SCORE_CLASS}}/g, desktopLocScore.cls)
+    .replace(/{{DESKTOP_SCORE_TEXT_CLASS}}/g, desktopLocScore.textCls)
+    .replace(/{{DESKTOP_SCORE_STATUS}}/g, desktopLocScore.status)
 
     .replace(/{{DESKTOP_API_SCORE}}/g, desktopApiScore.score)
     .replace(/{{DESKTOP_API_CLASS}}/g, desktopApiScore.cls)
@@ -1316,19 +1316,19 @@ export async function generateReport(compiledResult, options = {}) {
         score: mobileLocScore.score,
         statusLabel: mobileLocScore.status,
         statusColor: mobileLocScore.score >= 90 ? '#10b981' : mobileLocScore.score >= 50 ? '#f59e0b' : '#ef4444',
-        desc: 'Real-user (field) Core Web Vitals pass on every metric. The lab score is below the 90+ target, with LCP and TBT in the warning range under simulated mobile conditions.',
-        lcp: { val: mLcp.valueDisplay, pass: mLcp.statusLabel === 'Good', pct: mLcp.percent, limit: 'Good ≤ 2.5 s' },
-        cls: { val: mCls.valueDisplay, pass: mCls.statusLabel === 'Good', pct: mCls.percent, limit: 'Good ≤ 0.1' },
-        tbt: { val: mTbt.valueDisplay, pass: mTbt.statusLabel === 'Good', pct: mTbt.percent, limit: 'Good ≤ 200 ms' }
+        desc: `Lab Core Web Vitals audit under simulated mobile conditions${gitBranch ? ` for branch: ${gitBranch}` : ''}.`,
+        lcp: { val: localMLcp.valueDisplay, pass: localMLcp.statusLabel === 'Good', pct: localMLcp.percent, limit: 'Good ≤ 2.5 s' },
+        cls: { val: localMCls.valueDisplay, pass: localMCls.statusLabel === 'Good', pct: localMCls.percent, limit: 'Good ≤ 0.1' },
+        tbt: { val: localMTbt.valueDisplay, pass: localMTbt.statusLabel === 'Good', pct: localMTbt.percent, limit: 'Good ≤ 200 ms' }
       },
       desktop: {
         score: desktopLocScore.score,
         statusLabel: desktopLocScore.status,
         statusColor: desktopLocScore.score >= 90 ? '#10b981' : desktopLocScore.score >= 50 ? '#f59e0b' : '#ef4444',
-        desc: 'Real-user (field) Core Web Vitals pass on every metric. The lab score is below the 90+ target, with room to improve overall load efficiency.',
-        lcp: { val: dLcp.valueDisplay, pass: dLcp.statusLabel === 'Good', pct: dLcp.percent, limit: 'Good ≤ 2.5 s' },
-        cls: { val: dCls.valueDisplay, pass: dCls.statusLabel === 'Good', pct: dCls.percent, limit: 'Good ≤ 0.1' },
-        tbt: { val: dTbt.valueDisplay, pass: dTbt.statusLabel === 'Good', pct: dTbt.percent, limit: 'Good ≤ 200 ms' }
+        desc: `Lab Core Web Vitals audit under desktop conditions${gitBranch ? ` for branch: ${gitBranch}` : ''}.`,
+        lcp: { val: localDLcp.valueDisplay, pass: localDLcp.statusLabel === 'Good', pct: localDLcp.percent, limit: 'Good ≤ 2.5 s' },
+        cls: { val: localDCls.valueDisplay, pass: localDCls.statusLabel === 'Good', pct: localDCls.percent, limit: 'Good ≤ 0.1' },
+        tbt: { val: localDTbt.valueDisplay, pass: localDTbt.statusLabel === 'Good', pct: localDTbt.percent, limit: 'Good ≤ 200 ms' }
       },
       metricsDetail: [
         { device: 'MOBILE', metric: 'Largest Contentful Paint (LCP)', fVal: mobileCruxLcp.valueDisplay, fStat: mobileCruxLcp.statusLabel === 'Good' ? 'PASS' : mobileCruxLcp.valueDisplay === 'N/A' ? 'N/A' : 'WARN', lVal: localMLcp.valueDisplay, lStat: localMLcp.statusLabel === 'Good' ? 'PASS' : 'WARN', thresh: '≤ 2.5 s' },

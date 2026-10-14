@@ -108,8 +108,8 @@
           <div class="metrics-toggle-container" style="margin-top: 24px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center;">
             <h3 class="metrics-overview-title" style="font-size: 0.85rem; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; color: #004b87; margin: 0;">CORE WEB VITALS OVERVIEW</h3>
             <div class="metrics-toggle" style="display: flex; background: #f1f5f9; padding: 4px; border-radius: 8px; gap: 4px;">
-              <button class="metric-btn active" onclick="toggleMetricsView('mobile', 'api', this)" style="border: none; background: transparent; padding: 6px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; cursor: pointer; color: var(--text-secondary); transition: all 0.2s;">Field Data (CrUX)</button>
-              <button class="metric-btn" onclick="toggleMetricsView('mobile', 'local', this)" style="border: none; background: transparent; padding: 6px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; cursor: pointer; color: var(--text-secondary); transition: all 0.2s;">Lab Data (Local)</button>
+              <button class="metric-btn active" onclick="toggleMetricsView('mobile', 'local', this)" style="border: none; background: #ffffff; color: #004b87; box-shadow: 0 2px 5px rgba(0,0,0,0.05); padding: 6px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; cursor: pointer; transition: all 0.2s;">Lab Data (Branch: {{GIT_BRANCH}})</button>
+              <button class="metric-btn" onclick="toggleMetricsView('mobile', 'api', this)" style="border: none; background: transparent; padding: 6px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; cursor: pointer; color: var(--text-secondary); transition: all 0.2s;">Field Data (CrUX)</button>
             </div>
           </div>
           <!-- MOBILE_METRICS_GRID -->
@@ -165,8 +165,8 @@
           <div class="metrics-toggle-container" style="margin-top: 24px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center;">
             <h3 class="metrics-overview-title" style="font-size: 0.85rem; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; color: #004b87; margin: 0;">CORE WEB VITALS OVERVIEW</h3>
             <div class="metrics-toggle" style="display: flex; background: #f1f5f9; padding: 4px; border-radius: 8px; gap: 4px;">
-              <button class="metric-btn active" onclick="toggleMetricsView('desktop', 'api', this)" style="border: none; background: transparent; padding: 6px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; cursor: pointer; color: var(--text-secondary); transition: all 0.2s;">Field Data (CrUX)</button>
-              <button class="metric-btn" onclick="toggleMetricsView('desktop', 'local', this)" style="border: none; background: transparent; padding: 6px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; cursor: pointer; color: var(--text-secondary); transition: all 0.2s;">Lab Data (Local)</button>
+              <button class="metric-btn active" onclick="toggleMetricsView('desktop', 'local', this)" style="border: none; background: #ffffff; color: #004b87; box-shadow: 0 2px 5px rgba(0,0,0,0.05); padding: 6px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; cursor: pointer; transition: all 0.2s;">Lab Data (Branch: {{GIT_BRANCH}})</button>
+              <button class="metric-btn" onclick="toggleMetricsView('desktop', 'api', this)" style="border: none; background: transparent; padding: 6px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; cursor: pointer; color: var(--text-secondary); transition: all 0.2s;">Field Data (CrUX)</button>
             </div>
           </div>
           <!-- DESKTOP_METRICS_GRID -->

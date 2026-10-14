@@ -502,7 +502,7 @@ export function buildRedesignedPdfHtml(data) {
               </div>
               <p style="font-size: 0.7rem; color: #475569; margin-top: 3px; line-height: 1.3;">${mobile.desc}</p>
               
-              <div style="font-size: 0.65rem; font-weight: 800; color: #004b87; letter-spacing: 0.05em; text-transform: uppercase; margin-top: 8px; margin-bottom: 6px;">CORE WEB VITALS OVERVIEW (FIELD DATA)</div>
+              <div style="font-size: 0.65rem; font-weight: 800; color: #004b87; letter-spacing: 0.05em; text-transform: uppercase; margin-top: 8px; margin-bottom: 6px;">CORE WEB VITALS OVERVIEW (LAB AUDIT${gitBranch ? ` · ${gitBranch.toUpperCase()}` : ''})</div>
               <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;">
                 ${renderMetricCard('LCP', 'Largest Contentful Paint', 'Loading performance', mobile.lcp.val, mobile.lcp.pass, mobile.lcp.pct, mobile.lcp.limit)}
                 ${renderMetricCard('CLS', 'Cumulative Layout Shift', 'Visual stability', mobile.cls.val, mobile.cls.pass, mobile.cls.pct, mobile.cls.limit)}
@@ -529,7 +529,7 @@ export function buildRedesignedPdfHtml(data) {
               </div>
               <p style="font-size: 0.7rem; color: #475569; margin-top: 3px; line-height: 1.3;">${desktop.desc}</p>
               
-              <div style="font-size: 0.65rem; font-weight: 800; color: #004b87; letter-spacing: 0.05em; text-transform: uppercase; margin-top: 8px; margin-bottom: 6px;">CORE WEB VITALS OVERVIEW (FIELD DATA)</div>
+              <div style="font-size: 0.65rem; font-weight: 800; color: #004b87; letter-spacing: 0.05em; text-transform: uppercase; margin-top: 8px; margin-bottom: 6px;">CORE WEB VITALS OVERVIEW (LAB AUDIT${gitBranch ? ` · ${gitBranch.toUpperCase()}` : ''})</div>
               <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;">
                 ${renderMetricCard('LCP', 'Largest Contentful Paint', 'Loading performance', desktop.lcp.val, desktop.lcp.pass, desktop.lcp.pct, desktop.lcp.limit)}
                 ${renderMetricCard('CLS', 'Cumulative Layout Shift', 'Visual stability', desktop.cls.val, desktop.cls.pass, desktop.cls.pct, desktop.cls.limit)}
