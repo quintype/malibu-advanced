@@ -58,14 +58,16 @@ Usage:
   node audit.js <project-path> [options]
 
 Options:
-  --url <url>      Run Lighthouse performance audit against a live/local URL
-  --help, -h       Show this usage guide
+  --url <url>          Run Lighthouse performance audit against a live/local URL
+  --branch <branch>    Override or specify Git branch name (default: auto-detected)
+  --help, -h           Show this usage guide
     `);
     process.exit(0);
   }
 
   let targetPathInput = '';
   let url = null;
+  let explicitBranch = null;
 
   if (args.length === 0) {
     const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
@@ -109,6 +111,10 @@ Options:
     const urlIndex = args.indexOf('--url');
     if (urlIndex !== -1 && args[urlIndex + 1]) {
       url = args[urlIndex + 1];
+    }
+    const branchIndex = args.indexOf('--branch');
+    if (branchIndex !== -1 && args[branchIndex + 1]) {
+      explicitBranch = args[branchIndex + 1].trim();
     }
   }
 
@@ -287,19 +293,22 @@ Options:
   }
 
   // Get current active Git branch
-  let gitBranch = 'N/A';
-  try {
-    gitBranch = execSync('git rev-parse --abbrev-ref HEAD', { cwd: targetPath, stdio: ['ignore', 'pipe', 'ignore'], encoding: 'utf8' }).trim();
-  } catch (err) {
+  let gitBranch = explicitBranch || 'N/A';
+  if (gitBranch === 'N/A') {
     try {
-      gitBranch = execSync('git rev-parse --abbrev-ref HEAD', { cwd: process.cwd(), stdio: ['ignore', 'pipe', 'ignore'], encoding: 'utf8' }).trim();
-    } catch (e) {
-      // Not a git repo
+      gitBranch = execSync('git rev-parse --abbrev-ref HEAD', { cwd: targetPath, stdio: ['ignore', 'pipe', 'ignore'], encoding: 'utf8' }).trim();
+    } catch (err) {
+      try {
+        gitBranch = execSync('git rev-parse --abbrev-ref HEAD', { cwd: process.cwd(), stdio: ['ignore', 'pipe', 'ignore'], encoding: 'utf8' }).trim();
+      } catch (e) {
+        // Not a git repo
+      }
     }
   }
-  if (gitBranch && gitBranch !== 'N/A') {
-    console.log(`🌿 Active Git Branch: ${gitBranch}`);
+  if (!gitBranch || gitBranch === 'N/A') {
+    gitBranch = 'main';
   }
+  console.log(`🌿 Active Git Branch: ${gitBranch}`);
 
   // Step 7: Generate reports
   console.log('Generating report outputs...');

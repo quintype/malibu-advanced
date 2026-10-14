@@ -84,6 +84,7 @@ const server = http.createServer((req, res) => {
   if (pathname === '/run-audit') {
     const rawProject = parsedUrl.searchParams.get('project');
     const auditUrlInput = parsedUrl.searchParams.get('url');
+    const branchInput = parsedUrl.searchParams.get('branch');
 
     const parentDir = getProjectsParentDir(rawProject);
     const project = normalizeProjectInput(rawProject, parentDir);
@@ -107,6 +108,9 @@ const server = http.createServer((req, res) => {
     const args = [scriptPath, absoluteProjectPath];
     if (auditUrlInput && auditUrlInput.trim() !== '') {
       args.push('--url', auditUrlInput.trim());
+    }
+    if (branchInput && branchInput.trim() !== '') {
+      args.push('--branch', branchInput.trim());
     }
 
     const child = spawn('node', args, {

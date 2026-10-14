@@ -238,7 +238,8 @@ function runAudit(event) {
   event.preventDefault();
   
   const project = document.getElementById('projectSelect').value;
-  const urlInput = document.getElementsByName('url')[0].value;
+  const urlInput = document.getElementsByName('url')[0]?.value || '';
+  const branchInput = document.getElementsByName('branch')[0]?.value || '';
   const submitBtn = event.target.querySelector('button[type="submit"]');
   
   // UI state updates
@@ -253,7 +254,10 @@ function runAudit(event) {
   viewReportBtn.style.display = 'none';
 
   // Connect to dynamic log stream
-  const eventUrl = '/run-audit?project=' + encodeURIComponent(project) + '&url=' + encodeURIComponent(urlInput);
+  let eventUrl = '/run-audit?project=' + encodeURIComponent(project) + '&url=' + encodeURIComponent(urlInput);
+  if (branchInput && branchInput.trim() !== '') {
+    eventUrl += '&branch=' + encodeURIComponent(branchInput.trim());
+  }
   let isCompleted = false;
   eventSource = new EventSource(eventUrl);
 
