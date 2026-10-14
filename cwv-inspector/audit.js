@@ -17,9 +17,13 @@ import { analyzeCss } from './analyzers/css.js';
 import { analyzeJavascript } from './analyzers/javascript.js';
 import { analyzeReact } from './analyzers/react.js';
 import { analyzeBundle } from './analyzers/bundle.js';
-import readline from 'readline/promises';
+import readline from 'readline';
 import { compileRecommendations } from './analyzers/recommendations.js';
 import { generateReport } from './report/generatePdf.js';
+
+function askQuestion(rl, query) {
+  return new Promise(resolve => rl.question(query, resolve));
+}
 
 async function main() {
   // Load environment variables manually
@@ -88,7 +92,7 @@ Options:
       });
     }
 
-    const folderIndexStr = await rl.question('\nSelect a folder number or enter a custom path (default is current folder \'.\'): ');
+    const folderIndexStr = await askQuestion(rl, '\nSelect a folder number or enter a custom path (default is current folder \'.\'): ');
     const idx = parseInt(folderIndexStr, 10) - 1;
     if (directories[idx] && idx >= 0 && idx < directories.length) {
       targetPathInput = path.join(parentDir, directories[idx]);
@@ -96,7 +100,7 @@ Options:
       targetPathInput = folderIndexStr.trim() || '.';
     }
 
-    const urlInput = await rl.question('Enter website URL to audit (optional, e.g. https://example.com): ');
+    const urlInput = await askQuestion(rl, 'Enter website URL to audit (optional, e.g. https://example.com): ');
     url = urlInput.trim() || null;
     
     rl.close();
@@ -106,6 +110,10 @@ Options:
     if (urlIndex !== -1 && args[urlIndex + 1]) {
       url = args[urlIndex + 1];
     }
+  }
+
+  if (url && !/^https?:\/\//i.test(url)) {
+    url = url.startsWith('localhost') || url.startsWith('127.0.0.1') ? `http://${url}` : `https://${url}`;
   }
 
   const targetPath = path.resolve(targetPathInput);

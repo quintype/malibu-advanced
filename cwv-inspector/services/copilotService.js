@@ -16,6 +16,16 @@ function resolveCliPath() {
     return process.env.COPILOT_CLI_PATH;
   }
 
+  // Check the native precompiled binary installed in @github/copilot-<platform>-<arch>
+  const ext = process.platform === 'win32' ? '.exe' : '';
+  const nativeBinary = path.resolve(
+    __dirname,
+    `../node_modules/@github/copilot-${process.platform}-${process.arch}/copilot${ext}`
+  );
+  if (fs.existsSync(nativeBinary)) {
+    return nativeBinary;
+  }
+
   // Check the npm-loader bundled in @github/copilot package
   const bundledLoader = path.resolve(__dirname, '../node_modules/@github/copilot/npm-loader.js');
   if (fs.existsSync(bundledLoader)) {

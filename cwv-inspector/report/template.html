@@ -390,6 +390,14 @@
         <button class="filter-pill" data-filter-type="category" data-filter-value="a11y"
           onclick="setFilter(this, 'category')">A11y</button>
       </div>
+      <div class="filter-group">
+        <button class="filter-pill active" data-filter-type="device" data-filter-value="all"
+          onclick="setFilter(this, 'device')">All devices</button>
+        <button class="filter-pill" data-filter-type="device" data-filter-value="mobile"
+          onclick="setFilter(this, 'device')">Mobile</button>
+        <button class="filter-pill" data-filter-type="device" data-filter-value="desktop"
+          onclick="setFilter(this, 'device')">Desktop</button>
+      </div>
     </div>
 
     <!-- Accordion Issue List -->
@@ -497,6 +505,7 @@
     let activeFilters = {
       severity: 'all',
       category: 'all',
+      device: 'all',
       searchQuery: ''
     };
 
@@ -522,13 +531,16 @@
         const severity = severityAttr ? severityAttr.toLowerCase() : '';
         const categoryAttr = card.getAttribute('data-category');
         const category = categoryAttr ? categoryAttr.toLowerCase() : '';
+        const deviceAttr = card.getAttribute('data-device');
+        const device = deviceAttr ? deviceAttr.toLowerCase() : 'all';
         const text = card.textContent.toLowerCase();
 
         const matchesSeverity = (activeFilters.severity === 'all' || severity === activeFilters.severity);
         const matchesCategory = (activeFilters.category === 'all' || category === activeFilters.category);
+        const matchesDevice = (activeFilters.device === 'all' || device === 'all' || device === activeFilters.device);
         const matchesSearch = (activeFilters.searchQuery === '' || text.includes(activeFilters.searchQuery));
 
-        if (matchesSeverity && matchesCategory && matchesSearch) {
+        if (matchesSeverity && matchesCategory && matchesDevice && matchesSearch) {
           card.style.display = 'block';
         } else {
           card.style.display = 'none';

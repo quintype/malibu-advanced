@@ -389,11 +389,9 @@ export function compileRecommendations(staticIssues, lighthouseIssues = null, as
   // 3. Observer Unresolved (always keep)
   correlatedIssues.push(...uniqueObsUnresolved);
   
-  // 4. Dummies (only keep if no useful observer correlation exists or if observer shifts miss the bulk of the score)
+  // 4. Dummies (only keep if no useful observer correlation or valid lighthouse findings exist)
   if (clsLhDummies.length > 0) {
-    const totalObsScore = [...uniqueObsCorrelated, ...uniqueObsUnresolved].reduce((sum, obs) => sum + (obs.score || 0), 0);
-    const dummyScore = clsLhDummies.reduce((sum, d) => sum + (d.score || 0), 0);
-    if (uniqueObsCorrelated.length === 0 || totalObsScore < dummyScore * 0.5) {
+    if (uniqueObsCorrelated.length === 0 && clsLhValid.length === 0) {
       correlatedIssues.push(...clsLhDummies);
     }
   }

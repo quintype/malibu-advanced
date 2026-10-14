@@ -113,24 +113,48 @@ const server = http.createServer((req, res) => {
       env: { ...process.env, FORCE_COLOR: '1' }
     });
 
+    const sendSseMessage = (text) => {
+      if (!text) return;
+      const lines = text.toString().split(/\r?\n/);
+      for (const line of lines) {
+        res.write(`data: ${line}\n`);
+      }
+      res.write('\n');
+    };
+
     child.stdout.on('data', (data) => {
-      res.write(`data: ${data.toString()}\n\n`);
+      sendSseMessage(data);
     });
 
     child.stderr.on('data', (data) => {
-      res.write(`data: ${data.toString()}\n\n`);
+      sendSseMessage(data);
     });
 
     child.on('close', (code) => {
+      if (code !== 0) {
+        sendSseMessage(`\n❌ Audit process exited with code ${code}`);
+      }
       // Find the latest generated HTML report in the project's reports folder
-      const reportsDir = path.join(absoluteProjectPath, 'reports');
+      const candidateDirs = [
+        { dir: path.join(absoluteProjectPath, 'reports'), proj: project },
+        { dir: path.join(__dirname, 'reports'), proj: path.basename(__dirname) }
+      ];
       let latestReport = '';
-      if (fs.existsSync(reportsDir)) {
-        const files = fs.readdirSync(reportsDir)
-          .filter(f => f.endsWith('.html'))
-          .sort((a, b) => b.localeCompare(a));
-        if (files.length > 0) {
-          latestReport = `/reports-view?project=${encodeURIComponent(project)}&file=${encodeURIComponent(files[0])}`;
+      for (const candidate of candidateDirs) {
+        if (fs.existsSync(candidate.dir)) {
+          const files = fs.readdirSync(candidate.dir)
+            .filter(f => f.endsWith('.html'))
+            .sort((a, b) => {
+              try {
+                return fs.statSync(path.join(candidate.dir, b)).mtimeMs - fs.statSync(path.join(candidate.dir, a)).mtimeMs;
+              } catch (_) {
+                return b.localeCompare(a);
+              }
+            });
+          if (files.length > 0) {
+            latestReport = `/reports-view?project=${encodeURIComponent(candidate.proj)}&file=${encodeURIComponent(files[0])}`;
+            break;
+          }
         }
       }
       res.write(`data: [COMPLETE]${latestReport}\n\n`);

@@ -799,6 +799,31 @@ body {
   border: 1px solid rgba(99, 102, 241, 0.2);
 }
 
+.card-badge.device-badge {
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  font-size: 0.68rem;
+  border-radius: 5px;
+}
+
+.card-badge.device-badge.mobile {
+  background-color: rgba(14, 165, 233, 0.12);
+  color: #0284c7;
+  border: 1px solid rgba(14, 165, 233, 0.3);
+}
+
+.card-badge.device-badge.desktop {
+  background-color: rgba(139, 92, 246, 0.12);
+  color: #7c3aed;
+  border: 1px solid rgba(139, 92, 246, 0.3);
+}
+
+.card-badge.device-badge.diagnostic {
+  background-color: rgba(245, 158, 11, 0.12);
+  color: #d97706;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
 /* Lighthouse Score Progress Bar */
 .lh-score-section {
   background: #ffffff;

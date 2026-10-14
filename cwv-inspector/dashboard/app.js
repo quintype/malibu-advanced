@@ -289,18 +289,7 @@ function runAudit(event) {
     submitBtn.disabled = false;
     submitBtn.querySelector('span').textContent = 'Run Inspector';
     if (!isCompleted) {
-      fetch(eventUrl)
-        .then(res => res.json())
-        .then(errData => {
-          if (errData && errData.error) {
-            outputConsole.textContent += '\n❌ Error: ' + errData.error + '\n';
-          } else {
-            outputConsole.textContent += '\n⚠️ Connection lost or completed.\n';
-          }
-        })
-        .catch(() => {
-          outputConsole.textContent += '\n⚠️ Connection lost or completed.\n';
-        });
+      outputConsole.textContent += '\n⚠️ Connection closed before completion.\n';
     }
   };
 }

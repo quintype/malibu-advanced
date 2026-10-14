@@ -1,5 +1,11 @@
 import fs from 'fs';
 import path from 'path';
+import { ReadableStream as WebReadableStream } from 'stream/web';
+
+if (typeof globalThis.ReadableStream === 'undefined' && WebReadableStream) {
+  globalThis.ReadableStream = WebReadableStream;
+}
+
 import puppeteer from 'puppeteer';
 import { buildRedesignedPdfHtml } from './redesignedPdfTemplate.js';
 
@@ -589,6 +595,31 @@ export async function generateReport(compiledResult, options) {
       const severityClass = issue.severity.toLowerCase();
       const categoryClass = issue.cwv.toLowerCase();
       const isLighthouse = issue.file.includes('Runtime Audit (Lighthouse');
+
+      let deviceVal = issue.device;
+      if (!deviceVal && issue.file) {
+        if (issue.file.includes('Mobile')) deviceVal = 'Mobile';
+        else if (issue.file.includes('Desktop')) deviceVal = 'Desktop';
+      }
+
+      let deviceAttr = 'all';
+      let deviceBadge = '';
+      if (deviceVal) {
+        const dLower = String(deviceVal).toLowerCase();
+        if (dLower.includes('mobile')) {
+          deviceAttr = 'mobile';
+          deviceBadge = `<span class="card-badge device-badge mobile">MOBILE</span>`;
+        } else if (dLower.includes('desktop')) {
+          deviceAttr = 'desktop';
+          deviceBadge = `<span class="card-badge device-badge desktop">DESKTOP</span>`;
+        } else if (dLower.includes('diagnostic') || dLower.includes('observer')) {
+          deviceAttr = 'diagnostic';
+          deviceBadge = `<span class="card-badge device-badge diagnostic">DIAGNOSTIC</span>`;
+        } else {
+          deviceAttr = dLower;
+          deviceBadge = `<span class="card-badge device-badge">${escapeHtml(String(deviceVal).toUpperCase())}</span>`;
+        }
+      }
       
       let affectedSummary = '';
       let filesListHtml = '';
@@ -614,7 +645,7 @@ export async function generateReport(compiledResult, options) {
           </div>
         `;
       } else {
-        affectedSummary = isLighthouse ? 'Runtime Audit' : path.basename(issue.file);
+        affectedSummary = isLighthouse ? (deviceVal ? `Runtime Audit (${deviceVal})` : 'Runtime Audit') : path.basename(issue.file);
         const lineStr = (issue.line !== null && issue.line !== undefined && issue.line !== '-') ? `:${issue.line}` : '';
         if (!isLighthouse) {
           filesListHtml = `
@@ -790,13 +821,14 @@ export async function generateReport(compiledResult, options) {
       }
 
       return `
-        <div class="issue-card" data-severity="${escapeHtml(issue.severity)}" data-category="${escapeHtml(issue.cwv)}">
+        <div class="issue-card" data-severity="${escapeHtml(issue.severity)}" data-category="${escapeHtml(issue.cwv)}" data-device="${escapeHtml(deviceAttr)}">
           <div class="issue-card-header" onclick="toggleAccordion(this)">
             <div class="issue-card-left">
               <span class="issue-idx">#${idxStr}</span>
               <div class="issue-badges">
                 <span class="card-badge ${severityClass}">${escapeHtml(issue.severity)}</span>
                 <span class="card-badge cat">${escapeHtml(issue.cwv)}</span>
+                ${deviceBadge}
                 ${correlationBadge}
               </div>
               <span class="issue-title-text">${escapeHtml(issue.message)}</span>

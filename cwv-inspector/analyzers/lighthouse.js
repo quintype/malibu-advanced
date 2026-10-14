@@ -1,3 +1,9 @@
+import { ReadableStream as WebReadableStream } from 'stream/web';
+
+if (typeof globalThis.ReadableStream === 'undefined' && WebReadableStream) {
+  globalThis.ReadableStream = WebReadableStream;
+}
+
 import * as chromeLauncher from 'chrome-launcher';
 import lighthouse from 'lighthouse';
 import puppeteer from 'puppeteer';
