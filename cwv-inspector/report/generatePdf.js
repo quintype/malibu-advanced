@@ -141,8 +141,15 @@ function getMetricBadgeHtml(mDetail) {
  * Escapes special HTML characters to prevent breaking the generated report structure.
  */
 function escapeHtml(str) {
-  if (!str) return '';
-  return str
+  if (str === null || str === undefined) return '';
+  if (typeof str === 'object') {
+    try {
+      return JSON.stringify(str);
+    } catch (e) {
+      return '';
+    }
+  }
+  return String(str)
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
@@ -462,8 +469,15 @@ export async function generateReport(compiledResult, options = {}) {
       let affectedFilesHtml = '';
       if (Array.isArray(adv.affectedFiles) && adv.affectedFiles.length > 0) {
         const fileRows = adv.affectedFiles.map(af => {
-          const lineStr = af.line && af.line !== '-' ? `:${escapeHtml(af.line)}` : '';
-          return `<code>${escapeHtml(af.file)}${lineStr}</code>`;
+          if (typeof af === 'string') {
+            return `<code>${escapeHtml(af)}</code>`;
+          }
+          if (af && typeof af === 'object') {
+            const filePath = af.file || af.filePath || af.path || '';
+            const lineStr = (af.line !== undefined && af.line !== null && af.line !== '-') ? `:${escapeHtml(af.line)}` : '';
+            return `<code>${escapeHtml(filePath)}${lineStr}</code>`;
+          }
+          return `<code>${escapeHtml(af)}</code>`;
         }).join(', ');
         affectedFilesHtml = `
           <div class="ai-field-block">
