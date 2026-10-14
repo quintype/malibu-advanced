@@ -1,7 +1,43 @@
 /**
- * Redesigned 3-Page Executive PDF Template for CWV Inspector.
- * Matches performance-audit-report-redesigned.pdf design.
+ * Redesigned Executive PDF Template for CWV Inspector.
+ * Conditionally includes CrUX Historical Trend (Page 2) if real CrUX history data is available;
+ * otherwise produces a clean 2-page report with Metrics Detail & Findings on Page 2.
  */
+
+export function extractCruxHistoryPoints(cruxHistoryData) {
+  if (!cruxHistoryData) return null;
+  const historyData = cruxHistoryData.record || cruxHistoryData;
+  if (!historyData.collectionPeriods || !historyData.metrics) return null;
+
+  const lcpRaw = historyData.metrics.largest_contentful_paint?.percentilesTimeseries?.p75s || [];
+  const clsRaw = historyData.metrics.cumulative_layout_shift?.percentilesTimeseries?.p75s || [];
+  const inpRaw = historyData.metrics.interaction_to_next_paint?.percentilesTimeseries?.p75s || [];
+
+  const points = [];
+  historyData.collectionPeriods.forEach((p, idx) => {
+    const lcpVal = lcpRaw[idx];
+    const clsVal = clsRaw[idx];
+    const inpVal = inpRaw[idx];
+
+    const hasLcp = lcpVal !== null && lcpVal !== undefined && lcpVal !== 'NaN' && !isNaN(Number(lcpVal));
+    const hasCls = clsVal !== null && clsVal !== undefined && clsVal !== 'NaN' && !isNaN(Number(clsVal));
+    const hasInp = inpVal !== null && inpVal !== undefined && inpVal !== 'NaN' && !isNaN(Number(inpVal));
+
+    if (hasLcp || hasCls || hasInp) {
+      const year = p.lastDate?.year || '';
+      const month = String(p.lastDate?.month || '').padStart(2, '0');
+      const day = String(p.lastDate?.day || '').padStart(2, '0');
+      points.push({
+        dateStr: `${year}-${month}-${day}`,
+        lcp: hasLcp ? Number(lcpVal) : null,
+        cls: hasCls ? Number(clsVal) : null,
+        inp: hasInp ? Number(inpVal) : null,
+      });
+    }
+  });
+
+  return points.length >= 2 ? points : null;
+}
 
 export function buildRedesignedPdfHtml(data) {
   const {
@@ -46,19 +82,23 @@ export function buildRedesignedPdfHtml(data) {
       { device: 'MOBILE', metric: 'Interaction to Next Paint (INP)', fVal: '113ms', fStat: 'PASS', lVal: '0ms', lStat: 'PASS', thresh: '≤ 200 ms' },
       { device: 'DESKTOP', metric: 'Interaction to Next Paint (INP)', fVal: '63ms', fStat: 'PASS', lVal: '0ms', lStat: 'PASS', thresh: '≤ 200 ms' },
     ],
-    takeaways = [
-      { title: 'CLS', text: 'Layout shift dropped from ~0.43 to ~0 after July: from Poor to well inside Good.' },
-      { title: 'LCP', text: 'Field LCP fell ~28% over six months and is now 1.86 s, under the 2.5 s limit.' },
-      { title: 'INP', text: 'Interaction latency stayed steady around 115–145 ms, below the 200 ms limit.' }
-    ],
+    takeaways = [],
     findings = [
       { color: '#f59e0b', title: 'Mobile lab LCP is 3.58 s (limit 2.5 s)', desc: 'Optimise the hero image/resource, reduce render-blocking CSS and JS, and improve server response time.' },
       { color: '#f59e0b', title: 'Mobile lab TBT is 249 ms (limit 200 ms)', desc: 'Split long JavaScript tasks, defer non-critical scripts and trim third-party code.' },
       { color: '#10b981', title: 'All field metrics pass on Mobile and Desktop', desc: 'Real users already get a stable, fast experience; keep monitoring to protect these gains.' },
       { color: '#0284c7', title: 'Verify INP data', desc: 'Field INP (113 ms / 63 ms) matches the TBT values exactly; confirm both come from separate measurements.' }
     ],
-    cruxHistory = null
+    cruxHistory = null,
+    cruxHistoryPoints = null
   } = data;
+
+  const validPoints = Array.isArray(cruxHistoryPoints) && cruxHistoryPoints.length >= 2
+    ? cruxHistoryPoints
+    : extractCruxHistoryPoints(cruxHistory);
+
+  const hasCruxHistory = !!(validPoints && validPoints.length >= 2);
+  const totalPages = hasCruxHistory ? 3 : 2;
 
   const renderGaugeSvg = (score) => {
     const strokeColor = score >= 90 ? '#10b981' : score >= 50 ? '#f59e0b' : '#ef4444';
@@ -112,7 +152,7 @@ export function buildRedesignedPdfHtml(data) {
         <span>Confidential · Core Web Vitals Diagnostic Lab</span>
       </div>
       <div style="font-weight: 600; color: #64748b;">Core Web Vitals Executive Audit</div>
-      <div style="font-weight: 700; color: #0f172a;">Page ${pageNum} of 3</div>
+      <div style="font-weight: 700; color: #0f172a;">Page ${pageNum} of ${totalPages}</div>
     </div>
   `;
 
@@ -130,6 +170,195 @@ export function buildRedesignedPdfHtml(data) {
       </div>
     </div>
   `;
+
+  const renderCruxTrendPage = () => {
+    if (!hasCruxHistory || !validPoints) return '';
+
+    const n = validPoints.length;
+    const firstDate = validPoints[0].dateStr;
+    const lastDate = validPoints[n - 1].dateStr;
+
+    // Collect max values
+    const lcpInpVals = validPoints.flatMap(p => [p.lcp, p.inp]).filter(v => v !== null && !isNaN(v));
+    const maxLcpInpRaw = lcpInpVals.length > 0 ? Math.max(...lcpInpVals) : 2500;
+    const maxLcpInp = Math.max(2500, Math.ceil(maxLcpInpRaw / 500) * 500);
+
+    const clsVals = validPoints.map(p => p.cls).filter(v => v !== null && !isNaN(v));
+    const maxClsRaw = clsVals.length > 0 ? Math.max(...clsVals) : 0.25;
+    const maxCls = Math.max(0.20, Math.ceil(maxClsRaw * 20) / 20);
+
+    // Chart dimensions
+    const xStart = 55;
+    const xEnd = 645;
+    const chartW = xEnd - xStart;
+    const yTop = 20;
+    const yBottom = 236;
+    const chartH = yBottom - yTop;
+
+    // Grid lines: 5 intervals
+    const gridCount = 5;
+    let gridLinesSvg = '';
+    let leftYLabelsSvg = '';
+    let rightYLabelsSvg = '';
+
+    for (let k = 0; k <= gridCount; k++) {
+      const y = yBottom - (k / gridCount) * chartH;
+      const lcpVal = Math.round((k / gridCount) * maxLcpInp);
+      const clsVal = ((k / gridCount) * maxCls).toFixed(2);
+      const isBase = k === 0;
+
+      gridLinesSvg += `<line x1="${xStart}" y1="${y.toFixed(1)}" x2="${xEnd}" y2="${y.toFixed(1)}" stroke="${isBase ? '#e2e8f0' : '#f1f5f9'}" stroke-width="1" />\n`;
+      leftYLabelsSvg += `<text x="46" y="${(y + 3).toFixed(1)}" text-anchor="end" font-size="8.5" fill="#94a3b8">${lcpVal.toLocaleString()}</text>\n`;
+      rightYLabelsSvg += `<text x="654" y="${(y + 3).toFixed(1)}" text-anchor="start" font-size="8.5" fill="#94a3b8">${clsVal}</text>\n`;
+    }
+
+    // Coordinates mapping
+    const getX = (idx) => (xStart + (idx / (n - 1)) * chartW).toFixed(1);
+    const getYLeft = (val) => (yBottom - (val / maxLcpInp) * chartH).toFixed(1);
+    const getYRight = (val) => (yBottom - (val / maxCls) * chartH).toFixed(1);
+
+    // Build LCP path & points
+    const lcpPoints = [];
+    let lcpPath = '';
+    // Build INP path & points
+    const inpPoints = [];
+    let inpPath = '';
+    // Build CLS path & points
+    const clsPoints = [];
+    let clsPath = '';
+
+    validPoints.forEach((pt, idx) => {
+      const cx = getX(idx);
+
+      if (pt.lcp !== null) {
+        const cy = getYLeft(pt.lcp);
+        lcpPath += (lcpPath === '' ? `M ${cx} ${cy}` : ` L ${cx} ${cy}`);
+        lcpPoints.push(`<circle cx="${cx}" cy="${cy}" r="3" fill="#3b82f6" />`);
+      }
+      if (pt.inp !== null) {
+        const cy = getYLeft(pt.inp);
+        inpPath += (inpPath === '' ? `M ${cx} ${cy}` : ` L ${cx} ${cy}`);
+        inpPoints.push(`<circle cx="${cx}" cy="${cy}" r="3" fill="#10b981" />`);
+      }
+      if (pt.cls !== null) {
+        const cy = getYRight(pt.cls);
+        clsPath += (clsPath === '' ? `M ${cx} ${cy}` : ` L ${cx} ${cy}`);
+        clsPoints.push(`<circle cx="${cx}" cy="${cy}" r="3" fill="#f59e0b" />`);
+      }
+    });
+
+    // X Axis Labels: up to 10 labels evenly spaced
+    const labelStep = Math.max(1, Math.floor((n - 1) / 9));
+    const xLabelsSvg = [];
+    const addedIndices = new Set();
+    for (let idx = 0; idx < n; idx += labelStep) {
+      const cx = getX(idx);
+      xLabelsSvg.push(`<text x="${cx}" y="248" transform="rotate(-45 ${cx} 248)" text-anchor="end" font-size="7.5" fill="#94a3b8">${validPoints[idx].dateStr}</text>`);
+      addedIndices.add(idx);
+    }
+    if (!addedIndices.has(n - 1)) {
+      const lastCx = getX(n - 1);
+      xLabelsSvg.push(`<text x="${lastCx}" y="248" transform="rotate(-45 ${lastCx} 248)" text-anchor="end" font-size="7.5" fill="#94a3b8">${validPoints[n - 1].dateStr}</text>`);
+    }
+
+    const activeTakeaways = (takeaways && takeaways.length > 0) ? takeaways : [
+      {
+        title: 'LCP',
+        text: validPoints[0].lcp !== null && validPoints[n - 1].lcp !== null
+          ? `Field LCP moved from ${(validPoints[0].lcp / 1000).toFixed(2)}s to ${(validPoints[n - 1].lcp / 1000).toFixed(2)}s (${Math.round(((validPoints[n - 1].lcp - validPoints[0].lcp) / validPoints[0].lcp) * 100)}%) across collection periods.`
+          : 'Field LCP historical data recorded.'
+      },
+      {
+        title: 'CLS',
+        text: validPoints[0].cls !== null && validPoints[n - 1].cls !== null
+          ? `Cumulative Layout Shift changed from ${validPoints[0].cls.toFixed(3)} to ${validPoints[n - 1].cls.toFixed(3)}.`
+          : 'Cumulative Layout Shift historical stability maintained.'
+      },
+      {
+        title: 'INP',
+        text: validPoints[0].inp !== null && validPoints[n - 1].inp !== null
+          ? `Interaction latency (INP) moved from ${validPoints[0].inp}ms to ${validPoints[n - 1].inp}ms.`
+          : 'Interaction responsiveness maintained.'
+      }
+    ];
+
+    return `
+  <!-- ================= PAGE 2 ================= -->
+  <div class="pdf-page">
+    <div class="page-border-box">
+      ${renderRunningHeader()}
+
+      <div style="margin-top: 14px;">
+        <!-- Section: CrUX Historical Trend -->
+        <div class="section-title">
+          CrUX HISTORICAL TREND <span style="font-size: 0.6rem; font-weight: 800; background: #e0f2fe; color: #0284c7; padding: 2px 7px; border-radius: 4px; margin-left: 8px;">PAST 6 MONTHS</span>
+        </div>
+
+        <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px 20px; margin-bottom: 16px;">
+          <h3 style="font-size: 0.95rem; font-weight: 800; color: #0f172a;">LCP, INP and CLS (75th percentile)</h3>
+          <p style="font-size: 0.7rem; color: #64748b; margin-top: 2px;">Collected over the previous ${n} collection periods (${firstDate} – ${lastDate}).</p>
+          
+          <!-- Legend -->
+          <div style="display: flex; gap: 18px; font-size: 0.68rem; font-weight: 700; margin: 12px 0 10px 0;">
+            <div style="display: flex; align-items: center; gap: 6px;"><span style="width: 10px; height: 10px; background: #3b82f6; border-radius: 2px;"></span> <span style="color: #3b82f6;">LCP p75 (ms)</span></div>
+            <div style="display: flex; align-items: center; gap: 6px;"><span style="width: 10px; height: 10px; background: #10b981; border-radius: 2px;"></span> <span style="color: #10b981;">INP p75 (ms)</span></div>
+            <div style="display: flex; align-items: center; gap: 6px;"><span style="width: 10px; height: 10px; background: #f59e0b; border-radius: 2px;"></span> <span style="color: #f59e0b;">CLS p75</span></div>
+          </div>
+
+          <!-- Dual Axis SVG Chart -->
+          <div style="position: relative; width: 100%; height: 280px; margin-top: 8px;">
+            <svg viewBox="0 0 700 280" style="width: 100%; height: 100%; overflow: visible;" font-family="Inter, sans-serif">
+              <!-- Grid lines -->
+              ${gridLinesSvg}
+
+              <!-- Left Y Axis Labels (LCP/INP ms) -->
+              ${leftYLabelsSvg}
+              <text x="14" y="128" transform="rotate(-90 14 128)" text-anchor="middle" font-size="9" font-weight="600" fill="#64748b">LCP / INP (ms)</text>
+
+              <!-- Right Y Axis Labels (CLS) -->
+              ${rightYLabelsSvg}
+              <text x="686" y="128" transform="rotate(90 686 128)" text-anchor="middle" font-size="9" font-weight="600" fill="#64748b">CLS score</text>
+
+              <!-- X Axis Labels -->
+              ${xLabelsSvg.join('\n              ')}
+
+              <!-- Lines & Points: CLS (Amber) -->
+              ${clsPath ? `<path d="${clsPath}" fill="none" stroke="#f59e0b" stroke-width="2.5" />` : ''}
+              ${clsPoints.join('\n              ')}
+
+              <!-- Lines & Points: LCP (Blue) -->
+              ${lcpPath ? `<path d="${lcpPath}" fill="none" stroke="#3b82f6" stroke-width="2.5" />` : ''}
+              ${lcpPoints.join('\n              ')}
+
+              <!-- Lines & Points: INP (Green) -->
+              ${inpPath ? `<path d="${inpPath}" fill="none" stroke="#10b981" stroke-width="2.5" />` : ''}
+              ${inpPoints.join('\n              ')}
+            </svg>
+          </div>
+          <div style="font-size: 0.62rem; color: #94a3b8; margin-top: 10px;">Field data aggregated by Google Chrome User Experience Report (CrUX).</div>
+        </div>
+
+        <!-- Section: Key Takeaways -->
+        <div class="section-title">
+          KEY TAKEAWAYS
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-top: 8px;">
+          ${activeTakeaways.map(t => `
+            <div style="background: #ffffff; border: 1px solid #e2e8f0; border-left: 3.5px solid #10b981; border-radius: 8px; padding: 12px 14px;">
+              <div style="font-size: 0.95rem; font-weight: 800; color: #0f172a; margin-bottom: 4px;">${t.title}</div>
+              <div style="font-size: 0.72rem; color: #475569; line-height: 1.35;">${t.text}</div>
+            </div>
+          `).join('')}
+        </div>
+
+      </div>
+
+      ${renderRunningFooter(2)}
+    </div>
+  </div>
+    `;
+  };
 
   return `
 <!DOCTYPE html>
@@ -318,174 +547,9 @@ export function buildRedesignedPdfHtml(data) {
     </div>
   </div>
 
-  <!-- ================= PAGE 2 ================= -->
-  <div class="pdf-page">
-    <div class="page-border-box">
-      ${renderRunningHeader()}
+  ${renderCruxTrendPage()}
 
-      <div style="margin-top: 14px;">
-        <!-- Section: CrUX Historical Trend -->
-        <div class="section-title">
-          CrUX HISTORICAL TREND <span style="font-size: 0.6rem; font-weight: 800; background: #e0f2fe; color: #0284c7; padding: 2px 7px; border-radius: 4px; margin-left: 8px;">PAST 6 MONTHS</span>
-        </div>
-
-        <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px 20px; margin-bottom: 16px;">
-          <h3 style="font-size: 0.95rem; font-weight: 800; color: #0f172a;">LCP, INP and CLS (75th percentile)</h3>
-          <p style="font-size: 0.7rem; color: #64748b; margin-top: 2px;">Collected over the previous 25 collection periods (weekly, 18 Apr – 3 Oct 2026).</p>
-          
-          <!-- Legend -->
-          <div style="display: flex; gap: 18px; font-size: 0.68rem; font-weight: 700; margin: 12px 0 10px 0;">
-            <div style="display: flex; align-items: center; gap: 6px;"><span style="width: 10px; height: 10px; background: #3b82f6; border-radius: 2px;"></span> <span style="color: #3b82f6;">LCP p75 (ms)</span></div>
-            <div style="display: flex; align-items: center; gap: 6px;"><span style="width: 10px; height: 10px; background: #10b981; border-radius: 2px;"></span> <span style="color: #10b981;">INP p75 (ms)</span></div>
-            <div style="display: flex; align-items: center; gap: 6px;"><span style="width: 10px; height: 10px; background: #f59e0b; border-radius: 2px;"></span> <span style="color: #f59e0b;">CLS p75</span></div>
-          </div>
-
-          <!-- Dual Axis SVG Chart -->
-          <div style="position: relative; width: 100%; height: 280px; margin-top: 8px;">
-            <svg viewBox="0 0 700 280" style="width: 100%; height: 100%; overflow: visible;" font-family="Inter, sans-serif">
-              <!-- Grid lines: 10 levels from 0 to 4500 (spacing: 24px) -->
-              <line x1="55" y1="20" x2="645" y2="20" stroke="#f1f5f9" stroke-width="1" />
-              <line x1="55" y1="44" x2="645" y2="44" stroke="#f1f5f9" stroke-width="1" />
-              <line x1="55" y1="68" x2="645" y2="68" stroke="#f1f5f9" stroke-width="1" />
-              <line x1="55" y1="92" x2="645" y2="92" stroke="#f1f5f9" stroke-width="1" />
-              <line x1="55" y1="116" x2="645" y2="116" stroke="#f1f5f9" stroke-width="1" />
-              <line x1="55" y1="140" x2="645" y2="140" stroke="#f1f5f9" stroke-width="1" />
-              <line x1="55" y1="164" x2="645" y2="164" stroke="#f1f5f9" stroke-width="1" />
-              <line x1="55" y1="188" x2="645" y2="188" stroke="#f1f5f9" stroke-width="1" />
-              <line x1="55" y1="212" x2="645" y2="212" stroke="#f1f5f9" stroke-width="1" />
-              <line x1="55" y1="236" x2="645" y2="236" stroke="#e2e8f0" stroke-width="1" />
-
-              <!-- Left Y Axis Labels (LCP/INP ms) -->
-              <text x="46" y="23" text-anchor="end" font-size="8.5" fill="#94a3b8">4,500</text>
-              <text x="46" y="47" text-anchor="end" font-size="8.5" fill="#94a3b8">4,000</text>
-              <text x="46" y="71" text-anchor="end" font-size="8.5" fill="#94a3b8">3,500</text>
-              <text x="46" y="95" text-anchor="end" font-size="8.5" fill="#94a3b8">3,000</text>
-              <text x="46" y="119" text-anchor="end" font-size="8.5" fill="#94a3b8">2,500</text>
-              <text x="46" y="143" text-anchor="end" font-size="8.5" fill="#94a3b8">2,000</text>
-              <text x="46" y="167" text-anchor="end" font-size="8.5" fill="#94a3b8">1,500</text>
-              <text x="46" y="191" text-anchor="end" font-size="8.5" fill="#94a3b8">1,000</text>
-              <text x="46" y="215" text-anchor="end" font-size="8.5" fill="#94a3b8">500</text>
-              <text x="46" y="239" text-anchor="end" font-size="8.5" fill="#94a3b8">0</text>
-              <text x="14" y="128" transform="rotate(-90 14 128)" text-anchor="middle" font-size="9" font-weight="600" fill="#64748b">LCP / INP (ms)</text>
-
-              <!-- Right Y Axis Labels (CLS) -->
-              <text x="654" y="23" text-anchor="start" font-size="8.5" fill="#94a3b8">0.45</text>
-              <text x="654" y="47" text-anchor="start" font-size="8.5" fill="#94a3b8">0.40</text>
-              <text x="654" y="71" text-anchor="start" font-size="8.5" fill="#94a3b8">0.35</text>
-              <text x="654" y="95" text-anchor="start" font-size="8.5" fill="#94a3b8">0.30</text>
-              <text x="654" y="119" text-anchor="start" font-size="8.5" fill="#94a3b8">0.25</text>
-              <text x="654" y="143" text-anchor="start" font-size="8.5" fill="#94a3b8">0.20</text>
-              <text x="654" y="167" text-anchor="start" font-size="8.5" fill="#94a3b8">0.15</text>
-              <text x="654" y="191" text-anchor="start" font-size="8.5" fill="#94a3b8">0.10</text>
-              <text x="654" y="215" text-anchor="start" font-size="8.5" fill="#94a3b8">0.05</text>
-              <text x="654" y="239" text-anchor="start" font-size="8.5" fill="#94a3b8">0.00</text>
-              <text x="686" y="128" transform="rotate(90 686 128)" text-anchor="middle" font-size="9" font-weight="600" fill="#64748b">CLS score</text>
-
-              <!-- X Axis Labels (13 dates) -->
-              <text x="65" y="248" transform="rotate(-45 65 248)" text-anchor="end" font-size="7.5" fill="#94a3b8">2026-04-18</text>
-              <text x="112" y="248" transform="rotate(-45 112 248)" text-anchor="end" font-size="7.5" fill="#94a3b8">2026-05-02</text>
-              <text x="160" y="248" transform="rotate(-45 160 248)" text-anchor="end" font-size="7.5" fill="#94a3b8">2026-05-16</text>
-              <text x="207" y="248" transform="rotate(-45 207 248)" text-anchor="end" font-size="7.5" fill="#94a3b8">2026-05-30</text>
-              <text x="255" y="248" transform="rotate(-45 255 248)" text-anchor="end" font-size="7.5" fill="#94a3b8">2026-06-13</text>
-              <text x="302" y="248" transform="rotate(-45 302 248)" text-anchor="end" font-size="7.5" fill="#94a3b8">2026-06-27</text>
-              <text x="350" y="248" transform="rotate(-45 350 248)" text-anchor="end" font-size="7.5" fill="#94a3b8">2026-07-11</text>
-              <text x="397" y="248" transform="rotate(-45 397 248)" text-anchor="end" font-size="7.5" fill="#94a3b8">2026-07-25</text>
-              <text x="445" y="248" transform="rotate(-45 445 248)" text-anchor="end" font-size="7.5" fill="#94a3b8">2026-08-08</text>
-              <text x="492" y="248" transform="rotate(-45 492 248)" text-anchor="end" font-size="7.5" fill="#94a3b8">2026-08-22</text>
-              <text x="540" y="248" transform="rotate(-45 540 248)" text-anchor="end" font-size="7.5" fill="#94a3b8">2026-09-05</text>
-              <text x="587" y="248" transform="rotate(-45 587 248)" text-anchor="end" font-size="7.5" fill="#94a3b8">2026-09-19</text>
-              <text x="635" y="248" transform="rotate(-45 635 248)" text-anchor="end" font-size="7.5" fill="#94a3b8">2026-10-03</text>
-
-              <!-- Lines: CLS (Amber) dropping from 0.43 to 0.00 -->
-              <path d="M 65 30 L 112 36 L 160 30 L 207 30 L 255 30 L 302 36 L 350 234 L 397 235 L 445 235 L 492 235 L 540 235 L 587 235 L 635 235" fill="none" stroke="#f59e0b" stroke-width="2.5" />
-              <!-- Points on CLS -->
-              <circle cx="65" cy="30" r="3" fill="#f59e0b" />
-              <circle cx="112" cy="36" r="3" fill="#f59e0b" />
-              <circle cx="160" cy="30" r="3" fill="#f59e0b" />
-              <circle cx="207" cy="30" r="3" fill="#f59e0b" />
-              <circle cx="255" cy="30" r="3" fill="#f59e0b" />
-              <circle cx="302" cy="36" r="3" fill="#f59e0b" />
-              <circle cx="350" cy="234" r="3" fill="#f59e0b" />
-              <circle cx="397" cy="235" r="3" fill="#f59e0b" />
-              <circle cx="445" cy="235" r="3" fill="#f59e0b" />
-              <circle cx="492" cy="235" r="3" fill="#f59e0b" />
-              <circle cx="540" cy="235" r="3" fill="#f59e0b" />
-              <circle cx="587" cy="235" r="3" fill="#f59e0b" />
-              <circle cx="635" cy="235" r="3" fill="#f59e0b" />
-
-              <!-- Lines: LCP (Blue) dropping from 2.57s to 1.86s -->
-              <path d="M 65 113 L 112 116 L 160 111 L 207 113 L 255 111 L 302 121 L 350 132 L 397 138 L 445 140 L 492 140 L 540 143 L 587 145 L 635 147" fill="none" stroke="#3b82f6" stroke-width="2.5" />
-              <circle cx="65" cy="113" r="3" fill="#3b82f6" />
-              <circle cx="112" cy="116" r="3" fill="#3b82f6" />
-              <circle cx="160" cy="111" r="3" fill="#3b82f6" />
-              <circle cx="207" cy="113" r="3" fill="#3b82f6" />
-              <circle cx="255" cy="111" r="3" fill="#3b82f6" />
-              <circle cx="302" cy="121" r="3" fill="#3b82f6" />
-              <circle cx="350" cy="132" r="3" fill="#3b82f6" />
-              <circle cx="397" cy="138" r="3" fill="#3b82f6" />
-              <circle cx="445" cy="140" r="3" fill="#3b82f6" />
-              <circle cx="492" cy="140" r="3" fill="#3b82f6" />
-              <circle cx="540" cy="143" r="3" fill="#3b82f6" />
-              <circle cx="587" cy="145" r="3" fill="#3b82f6" />
-              <circle cx="635" cy="147" r="3" fill="#3b82f6" />
-
-              <!-- Lines: INP (Green) steady around 120ms -->
-              <path d="M 65 230 L 112 230 L 160 230 L 207 230 L 255 230 L 302 230 L 350 230 L 397 230 L 445 230 L 492 230 L 540 230 L 587 230 L 635 230" fill="none" stroke="#10b981" stroke-width="2.5" />
-              <circle cx="65" cy="230" r="3" fill="#10b981" />
-              <circle cx="112" cy="230" r="3" fill="#10b981" />
-              <circle cx="160" cy="230" r="3" fill="#10b981" />
-              <circle cx="207" cy="230" r="3" fill="#10b981" />
-              <circle cx="255" cy="230" r="3" fill="#10b981" />
-              <circle cx="302" cy="230" r="3" fill="#10b981" />
-              <circle cx="350" cy="230" r="3" fill="#10b981" />
-              <circle cx="397" cy="230" r="3" fill="#10b981" />
-              <circle cx="445" cy="230" r="3" fill="#10b981" />
-              <circle cx="492" cy="230" r="3" fill="#10b981" />
-              <circle cx="540" cy="230" r="3" fill="#10b981" />
-              <circle cx="587" cy="230" r="3" fill="#10b981" />
-              <circle cx="635" cy="230" r="3" fill="#10b981" />
-
-              <!-- Callout: CLS fixed in July -->
-              <g transform="translate(400, 110)">
-                <line x1="-35" y1="120" x2="0" y2="15" stroke="#f59e0b" stroke-width="1.2" stroke-dasharray="3,3" />
-                <rect x="-10" y="-14" width="125" height="34" rx="6" fill="#fef9c3" stroke="#facc15" stroke-width="1" />
-                <text x="52" y="0" text-anchor="middle" font-size="8.5" font-weight="700" fill="#854d0e">CLS fixed in July</text>
-                <text x="52" y="12" text-anchor="middle" font-size="7.5" fill="#a16207">0.43 → ~0.00</text>
-              </g>
-
-              <!-- Callout: LCP improved -->
-              <g transform="translate(420, 165)">
-                <line x1="-15" y1="-25" x2="0" y2="0" stroke="#3b82f6" stroke-width="1.2" stroke-dasharray="3,3" />
-                <rect x="-10" y="-14" width="125" height="34" rx="6" fill="#eff6ff" stroke="#93c5fd" stroke-width="1" />
-                <text x="52" y="0" text-anchor="middle" font-size="8.5" font-weight="700" fill="#1e40af">LCP improved</text>
-                <text x="52" y="12" text-anchor="middle" font-size="7.5" fill="#2563eb">2.57 s → 1.86 s</text>
-              </g>
-            </svg>
-          </div>
-          <div style="font-size: 0.62rem; color: #94a3b8; margin-top: 10px;">Chart values are read from the original report’s graph and are approximate.</div>
-        </div>
-
-        <!-- Section: Key Takeaways -->
-        <div class="section-title">
-          KEY TAKEAWAYS
-        </div>
-
-        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-top: 8px;">
-          ${takeaways.map(t => `
-            <div style="background: #ffffff; border: 1px solid #e2e8f0; border-left: 3.5px solid #10b981; border-radius: 8px; padding: 12px 14px;">
-              <div style="font-size: 0.95rem; font-weight: 800; color: #0f172a; margin-bottom: 4px;">${t.title}</div>
-              <div style="font-size: 0.72rem; color: #475569; line-height: 1.35;">${t.text}</div>
-            </div>
-          `).join('')}
-        </div>
-
-      </div>
-
-      ${renderRunningFooter(2)}
-    </div>
-  </div>
-
-  <!-- ================= PAGE 3 ================= -->
+  <!-- ================= PAGE ${hasCruxHistory ? 3 : 2} ================= -->
   <div class="pdf-page">
     <div class="page-border-box">
       ${renderRunningHeader()}
@@ -567,7 +631,7 @@ export function buildRedesignedPdfHtml(data) {
 
       </div>
 
-      ${renderRunningFooter(3)}
+      ${renderRunningFooter(hasCruxHistory ? 3 : 2)}
     </div>
   </div>
 

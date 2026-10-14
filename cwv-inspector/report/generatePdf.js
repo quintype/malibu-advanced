@@ -7,7 +7,7 @@ if (typeof globalThis.ReadableStream === 'undefined' && WebReadableStream) {
 }
 
 import puppeteer from 'puppeteer';
-import { buildRedesignedPdfHtml } from './redesignedPdfTemplate.js';
+import { buildRedesignedPdfHtml, extractCruxHistoryPoints } from './redesignedPdfTemplate.js';
 
 /**
  * Computes metric rendering properties.
@@ -245,7 +245,8 @@ function buildMetricGridHtml(lcp, cls, tbt, isLocal = false) {
  * @param {object} options Options containing target project name, url, etc.
  * @returns {Promise<{pdfPath: string, htmlPath: string}>}
  */
-export async function generateReport(compiledResult, options) {
+export async function generateReport(compiledResult, options = {}) {
+  options = { projectPath: process.cwd(), ...options };
   const currentDir = path.dirname(new URL(import.meta.url).pathname);
   const templatePath = path.join(currentDir, 'template.html');
   const cssPath = path.join(currentDir, 'style.css');
@@ -863,9 +864,10 @@ export async function generateReport(compiledResult, options) {
     minute: '2-digit'
   });
 
+  const historyPoints = extractCruxHistoryPoints(options.cruxHistoryData);
   let cruxHistogramsHtml = '';
-  if (options.cruxHistoryData && options.cruxHistoryData.record) {
-    const historyRecord = options.cruxHistoryData.record;
+  if (historyPoints && historyPoints.length >= 2) {
+    const historyRecord = options.cruxHistoryData.record || options.cruxHistoryData;
     const historyJson = JSON.stringify(historyRecord);
     
     cruxHistogramsHtml += `
@@ -877,7 +879,7 @@ export async function generateReport(compiledResult, options) {
             </svg>
             CrUX Historical Trend (Past 6 Months)
           </h3>
-          <p>LCP, INP, and CLS scores over the previous 25 collection periods.</p>
+          <p>LCP, INP, and CLS scores over the previous ${historyPoints.length} collection periods.</p>
         </div>
         <div style="position: relative; height: 300px; width: 100%;">
           <canvas id="cruxHistoryChart"></canvas>
@@ -990,6 +992,35 @@ export async function generateReport(compiledResult, options) {
           };
           initChart();
         </script>
+      </div>
+    `;
+  } else {
+    cruxHistogramsHtml = `
+      <div class="crux-raw-section" style="margin-top: 24px;">
+        <div class="crux-raw-header" style="margin-bottom: 0;">
+          <h3>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+            </svg>
+            CrUX Historical Trend (Past 6 Months)
+          </h3>
+          <p>LCP, INP, and CLS scores over previous 28-day collection periods.</p>
+          <div style="background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 8px; padding: 18px 20px; margin-top: 14px; display: flex; align-items: flex-start; gap: 14px;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 2px;">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="8" x2="12" y2="12"></line>
+              <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+            <div>
+              <div style="font-weight: 700; color: #1e293b; font-size: 0.95rem; margin-bottom: 4px;">
+                Historical trend data is not available for the current URL
+              </div>
+              <div style="color: #64748b; font-size: 0.85rem; line-height: 1.5;">
+                The Chrome User Experience Report (CrUX) requires a minimum threshold of real-user Chrome pageviews over multiple 28-day aggregation periods to publish historical trends. Test, staging, or lower-traffic URLs do not have historical data in Google CrUX.
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     `;
   }
@@ -1262,18 +1293,15 @@ export async function generateReport(compiledResult, options) {
         { device: 'MOBILE', metric: 'Interaction to Next Paint (INP)', fVal: mobileCruxInp.valueDisplay, fStat: mobileCruxInp.statusLabel === 'Good' ? 'PASS' : mobileCruxInp.valueDisplay === 'N/A' ? 'N/A' : 'WARN', lVal: localMInp.valueDisplay, lStat: localMInp.statusLabel === 'Good' ? 'PASS' : 'WARN', thresh: '≤ 200 ms' },
         { device: 'DESKTOP', metric: 'Interaction to Next Paint (INP)', fVal: desktopCruxInp.valueDisplay, fStat: desktopCruxInp.statusLabel === 'Good' ? 'PASS' : desktopCruxInp.valueDisplay === 'N/A' ? 'N/A' : 'WARN', lVal: localDInp.valueDisplay, lStat: localDInp.statusLabel === 'Good' ? 'PASS' : 'WARN', thresh: '≤ 200 ms' },
       ],
-      takeaways: [
-        { title: 'CLS', text: 'Layout shift dropped from ~0.43 to ~0 after July: from Poor to well inside Good.' },
-        { title: 'LCP', text: `Field LCP fell ~28% over six months and is now ${mobileCruxLcp.valueDisplay !== 'N/A' ? mobileCruxLcp.valueDisplay : '1.82s'}, under the 2.5 s limit.` },
-        { title: 'INP', text: 'Interaction latency stayed steady around 115–145 ms, below the 200 ms limit.' }
-      ],
+      takeaways: [],
       findings: [
         { color: localMLcp.statusLabel === 'Good' ? '#10b981' : '#f59e0b', title: `Mobile lab LCP is ${localMLcp.valueDisplay} (limit 2.5 s)`, desc: 'Optimise the hero image/resource, reduce render-blocking CSS and JS, and improve server response time.' },
         { color: localMTbt.statusLabel === 'Good' ? '#10b981' : '#f59e0b', title: `Mobile lab TBT is ${localMTbt.valueDisplay} (limit 200 ms)`, desc: 'Split long JavaScript tasks, defer non-critical scripts and trim third-party code.' },
         { color: '#10b981', title: 'All field metrics pass on Mobile and Desktop', desc: 'Real users already get a stable, fast experience; keep monitoring to protect these gains.' },
         { color: '#0284c7', title: 'Verify INP data', desc: `Field INP (${mobileCruxInp.valueDisplay} / ${desktopCruxInp.valueDisplay}) matches the TBT values; confirm both come from separate measurements.` }
       ],
-      cruxHistory: options.cruxHistoryData
+      cruxHistory: options.cruxHistoryData,
+      cruxHistoryPoints: historyPoints
     };
 
     const pdfHtml = buildRedesignedPdfHtml(redesignedData);
@@ -1299,7 +1327,8 @@ export async function generateReport(compiledResult, options) {
     });
 
     await browser.close();
-    console.log(`🏆 Redesigned 3-page PDF report successfully generated: ${pdfPath}`);
+    const pageCount = (historyPoints && historyPoints.length >= 2) ? 3 : 2;
+    console.log(`🏆 Redesigned ${pageCount}-page PDF report successfully generated: ${pdfPath}`);
   } catch (err) {
     console.warn(`⚠️ Failed to generate PDF report: ${err.message}. HTML report is still available.`);
   }
