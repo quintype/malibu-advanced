@@ -16,19 +16,19 @@ export function extractScores(reportJson) {
   return {
     performanceScore: reportJson.categories.performance.score * 100,
     lcp: {
-      value: audits['largest-contentful-paint']?.numericValue,
-      score: audits['largest-contentful-paint']?.score * 100,
-      displayValue: audits['largest-contentful-paint']?.displayValue
+      value: audits['largest-contentful-paint']?.numericValue !== undefined ? audits['largest-contentful-paint'].numericValue : 0,
+      score: (audits['largest-contentful-paint']?.score || 0) * 100,
+      displayValue: audits['largest-contentful-paint']?.displayValue || 'N/A'
     },
     cls: {
-      value: audits['cumulative-layout-shift']?.numericValue,
-      score: audits['cumulative-layout-shift']?.score * 100,
-      displayValue: audits['cumulative-layout-shift']?.displayValue
+      value: audits['cumulative-layout-shift']?.numericValue !== undefined ? audits['cumulative-layout-shift'].numericValue : 0,
+      score: (audits['cumulative-layout-shift']?.score || 0) * 100,
+      displayValue: audits['cumulative-layout-shift']?.displayValue || '0'
     },
     tbt: {
-      value: audits['total-blocking-time']?.numericValue,
-      score: audits['total-blocking-time']?.score * 100,
-      displayValue: audits['total-blocking-time']?.displayValue
+      value: audits['total-blocking-time']?.numericValue !== undefined ? audits['total-blocking-time'].numericValue : 0,
+      score: (audits['total-blocking-time']?.score || 0) * 100,
+      displayValue: audits['total-blocking-time']?.displayValue || '0ms'
     },
     inp: {
       value: audits['interaction-to-next-paint']?.numericValue || audits['inp']?.numericValue || 0,
@@ -391,6 +391,14 @@ export async function runLighthouseAudit(url) {
     if (hasUnknownDesktop) {
       const desktopShifts = await throttledDiagnosticPass(url, chrome.port, 'desktop');
       finalCustomShifts = [...finalCustomShifts, ...desktopShifts];
+    }
+
+    if (mobileData && (mobileData.cls.value === 0 || mobileData.cls.value === undefined) && finalCustomShifts.length > 0) {
+      const shiftSum = finalCustomShifts.reduce((acc, s) => acc + (Number(s.value) || 0), 0);
+      if (shiftSum > 0) {
+        mobileData.cls.value = shiftSum;
+        mobileData.cls.displayValue = shiftSum.toFixed(3);
+      }
     }
 
     return {

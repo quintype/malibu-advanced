@@ -17,7 +17,7 @@ function computeMetricDetails(data, type) {
   let statusClass = 'warning', statusLabel = 'Static Only', valueDisplay = 'N/A', textClass = 'warning-text', subdesc = 'No runtime measured.', percent = 0;
 
   if (data) {
-    if (type === 'lcp' && data.lcp) {
+    if (type === 'lcp' && data.lcp && data.lcp.value !== undefined && data.lcp.value !== null && !isNaN(data.lcp.value)) {
       const lcpSec = data.lcp.value / 1000;
       valueDisplay = `${lcpSec.toFixed(2)}s`;
       if (lcpSec <= 2.5) {
@@ -30,8 +30,8 @@ function computeMetricDetails(data, type) {
         statusClass = 'poor'; statusLabel = 'Poor'; textClass = 'danger-text'; subdesc = `${(lcpSec - 2.5).toFixed(1)}s over the 2.5s limit.`;
         percent = Math.min(100, 66 + ((lcpSec - 4.0) / 4.0) * 34);
       }
-    } else if (type === 'cls' && data.cls) {
-      const clsVal = data.cls.value;
+    } else if (type === 'cls' && data.cls && data.cls.value !== undefined && data.cls.value !== null && !isNaN(data.cls.value)) {
+      const clsVal = Number(data.cls.value);
       valueDisplay = clsVal.toFixed(3);
       if (clsVal <= 0.1) {
         statusClass = 'good'; statusLabel = 'Good'; textClass = 'good-text'; subdesc = 'No layout shift detected.';
@@ -43,7 +43,7 @@ function computeMetricDetails(data, type) {
         statusClass = 'poor'; statusLabel = 'Poor'; textClass = 'danger-text'; subdesc = 'Poor layout stability.';
         percent = Math.min(100, 66 + ((clsVal - 0.25) / 0.5) * 34);
       }
-    } else if (type === 'tbt' && data.tbt) {
+    } else if (type === 'tbt' && data.tbt && data.tbt.value !== undefined && data.tbt.value !== null && !isNaN(data.tbt.value)) {
       const tbtVal = Math.round(data.tbt.value);
       valueDisplay = `${tbtVal}ms`;
       if (tbtVal <= 200) {
@@ -57,7 +57,7 @@ function computeMetricDetails(data, type) {
         percent = Math.min(100, 66 + ((tbtVal - 600) / 1000) * 34);
       }
     } else if (type === 'inp') {
-      if (data.inp && data.inp.value !== undefined) {
+      if (data.inp && data.inp.value !== undefined && data.inp.value !== null && !isNaN(data.inp.value)) {
         const inpVal = Math.round(data.inp.value);
         valueDisplay = `${inpVal}ms`;
         if (inpVal <= 200) {
@@ -386,8 +386,16 @@ export async function generateReport(compiledResult, options = {}) {
   // Assessment Banner
   let assessmentBannerHtml = '';
   if (hasLighthouse) {
-    const mobilePassed = mobileData && (mobileData.lcp.value / 1000 <= 2.5 && mobileData.cls.value <= 0.1 && mobileData.tbt.value <= 200);
-    const desktopPassed = desktopData && (desktopData.lcp.value / 1000 <= 2.5 && desktopData.cls.value <= 0.1 && desktopData.tbt.value <= 200);
+    const mobilePassed = mobileData && (
+      (mobileData.lcp?.value !== undefined && mobileData.lcp?.value !== null ? mobileData.lcp.value / 1000 <= 2.5 : true) &&
+      (mobileData.cls?.value !== undefined && mobileData.cls?.value !== null ? mobileData.cls.value <= 0.1 : true) &&
+      (mobileData.tbt?.value !== undefined && mobileData.tbt?.value !== null ? mobileData.tbt.value <= 200 : true)
+    );
+    const desktopPassed = desktopData && (
+      (desktopData.lcp?.value !== undefined && desktopData.lcp?.value !== null ? desktopData.lcp.value / 1000 <= 2.5 : true) &&
+      (desktopData.cls?.value !== undefined && desktopData.cls?.value !== null ? desktopData.cls.value <= 0.1 : true) &&
+      (desktopData.tbt?.value !== undefined && desktopData.tbt?.value !== null ? desktopData.tbt.value <= 200 : true)
+    );
 
      if (mobilePassed && desktopPassed) {
       assessmentBannerHtml = `
@@ -1264,8 +1272,16 @@ export async function generateReport(compiledResult, options = {}) {
       text: `Field metrics pass on Mobile and Desktop; Lighthouse lab scores (${mobileLocScore.score} / ${desktopLocScore.score}) and mobile lab LCP / TBT warnings are outside the Good range.`
     };
 
-    const mobilePassed = mobileData && (mobileData.lcp.value / 1000 <= 2.5 && mobileData.cls.value <= 0.1 && mobileData.tbt.value <= 200);
-    const desktopPassed = desktopData && (desktopData.lcp.value / 1000 <= 2.5 && desktopData.cls.value <= 0.1 && desktopData.tbt.value <= 200);
+    const mobilePassed = mobileData && (
+      (mobileData.lcp?.value !== undefined && mobileData.lcp?.value !== null ? mobileData.lcp.value / 1000 <= 2.5 : true) &&
+      (mobileData.cls?.value !== undefined && mobileData.cls?.value !== null ? mobileData.cls.value <= 0.1 : true) &&
+      (mobileData.tbt?.value !== undefined && mobileData.tbt?.value !== null ? mobileData.tbt.value <= 200 : true)
+    );
+    const desktopPassed = desktopData && (
+      (desktopData.lcp?.value !== undefined && desktopData.lcp?.value !== null ? desktopData.lcp.value / 1000 <= 2.5 : true) &&
+      (desktopData.cls?.value !== undefined && desktopData.cls?.value !== null ? desktopData.cls.value <= 0.1 : true) &&
+      (desktopData.tbt?.value !== undefined && desktopData.tbt?.value !== null ? desktopData.tbt.value <= 200 : true)
+    );
 
     if (mobilePassed && desktopPassed && mobileLocScore.score >= 90 && desktopLocScore.score >= 90) {
       assessmentObj = {
