@@ -2,7 +2,34 @@
 
 import fs from 'fs';
 import path from 'path';
+import http from 'http';
+import https from 'https';
 import { execSync } from 'child_process';
+
+function httpGet(urlStr, timeoutMs = 6000) {
+  return new Promise((resolve, reject) => {
+    try {
+      const urlObj = new URL(urlStr);
+      const mod = urlObj.protocol === 'http:' ? http : https;
+      const req = mod.get(urlStr, { timeout: timeoutMs }, (res) => {
+        if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
+          return resolve(httpGet(new URL(res.headers.location, urlStr).toString(), timeoutMs));
+        }
+        let data = '';
+        res.on('data', chunk => { data += chunk; });
+        res.on('end', () => resolve({
+          ok: res.statusCode >= 200 && res.statusCode < 300,
+          status: res.statusCode,
+          text: () => Promise.resolve(data)
+        }));
+      });
+      req.on('error', reject);
+      req.on('timeout', () => { req.destroy(); reject(new Error('Request timed out')); });
+    } catch (err) {
+      reject(err);
+    }
+  });
+}
 import { scanFiles } from './scanners/scanFiles.js';
 import { parseReactCode } from './scanners/parseReact.js';
 import { scanDependencies } from './scanners/dependencyScanner.js';
@@ -188,7 +215,38 @@ Options:
 
   // Step 4: Run optional Lighthouse
   let lighthouseData = null;
+  let remoteDeployment = null;
   if (url) {
+    try {
+      const parsedUrl = new URL(url);
+      const rtRes = await httpGet(`${parsedUrl.origin}/round-table.txt?_ts=${Date.now()}`, 5000);
+      if (rtRes.ok) {
+        const text = await rtRes.text();
+        const commitHashMatch = text.match(/^([0-9a-f]{7,40})\s+(.*)$/m);
+        const deploymentMatch = text.match(/Deployment:\s*(\S+)/i);
+        const buildDateMatch = text.match(/Build Date:\s*(.+)$/m);
+        const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
+        const messageLine = lines.find(l => 
+          !l.startsWith('Commit Date') && 
+          !l.startsWith('Build Date') && 
+          !l.startsWith('Deployment') && 
+          !l.match(/^[0-9a-f]{7,40}\s+/)
+        );
+
+        if (commitHashMatch) {
+          remoteDeployment = {
+            commit: commitHashMatch[1],
+            author: commitHashMatch[2],
+            deploymentId: deploymentMatch ? deploymentMatch[1] : 'N/A',
+            buildDate: buildDateMatch ? buildDateMatch[1] : 'N/A',
+            message: messageLine || ''
+          };
+          console.log(`🌐 Live Server Deployment Verified: Commit ${commitHashMatch[1]} (Build #${remoteDeployment.deploymentId})`);
+          if (remoteDeployment.message) console.log(`   Commit Message: "${remoteDeployment.message}"`);
+        }
+      }
+    } catch (_) {}
+
     lighthouseData = await runLighthouseAudit(url);
   }
 
@@ -344,7 +402,8 @@ Options:
     cruxHistoryData,
     psiData,
     clientName,
-    gitBranch
+    gitBranch,
+    remoteDeployment
   });
 
   console.log(`\n==========================================`);

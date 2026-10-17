@@ -1069,6 +1069,7 @@ export async function generateReport(compiledResult, options = {}) {
     .replace(/{{GIT_BRANCH}}/g, escapeHtml(gitBranch))
     .replace(/{{AUDIT_DATE}}/g, formattedDate)
     .replace(/{{AUDIT_URL}}/g, options.url || 'No URL specified (Static scan only)')
+    .replace(/{{REMOTE_DEPLOYMENT_META}}/g, options.remoteDeployment && options.remoteDeployment.deploymentId ? ` <span class="meta-sep">|</span> <strong>Live Deployment:</strong> <span class="meta-val" style="background: #f0fdf4; color: #166534; padding: 2px 8px; border-radius: 4px; font-weight: 700; font-family: monospace;">Build #${escapeHtml(options.remoteDeployment.deploymentId)}${options.remoteDeployment.commit ? ` (${escapeHtml(options.remoteDeployment.commit.substring(0, 7))})` : ''}</span>` : '')
     .replace(/{{SUMMARY_HIGH}}/g, compiledResult.summary.high)
     .replace(/{{SUMMARY_MEDIUM}}/g, compiledResult.summary.medium)
     .replace(/{{SUMMARY_LOW}}/g, compiledResult.summary.low)

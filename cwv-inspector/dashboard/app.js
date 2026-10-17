@@ -73,6 +73,9 @@ function selectProjectOption(val) {
   const input = document.getElementById('projectSelect');
   input.value = val;
   document.getElementById('projectDropdownOptions').style.display = 'none';
+  if (typeof triggerLiveDeploymentCheck === 'function') {
+    triggerLiveDeploymentCheck();
+  }
 }
 
 function renderReports(reports) {
@@ -321,6 +324,7 @@ function selectFolderDialog(event) {
       btn.innerHTML = originalHtml;
       if (data && data.path) {
         document.getElementById('projectSelect').value = data.path;
+        triggerLiveDeploymentCheck();
       }
     })
     .catch(err => {
@@ -329,3 +333,104 @@ function selectFolderDialog(event) {
       console.error('Error selecting folder:', err);
     });
 }
+
+// Live Server Deployment Checker (via /round-table.txt)
+let checkDeployTimeout = null;
+
+function triggerLiveDeploymentCheck() {
+  clearTimeout(checkDeployTimeout);
+  checkDeployTimeout = setTimeout(checkLiveDeployment, 350);
+}
+
+function checkLiveDeployment() {
+  const urlInput = document.getElementsByName('url')[0]?.value?.trim() || '';
+  const projectInput = document.getElementById('projectSelect')?.value?.trim() || '';
+  const branchInput = document.getElementsByName('branch')[0]?.value?.trim() || '';
+
+  const badge = document.getElementById('liveDeploymentBadge');
+  const sidebarWidget = document.getElementById('sidebarDeployWidget');
+  const sidebarBranch = document.getElementById('sidebarDeployBranch');
+  const sidebarDot = document.getElementById('sidebarDeployDot');
+
+  if (!urlInput || !/^https?:\/\//i.test(urlInput)) {
+    if (badge) badge.style.display = 'none';
+    if (sidebarWidget) sidebarWidget.style.display = 'none';
+    return;
+  }
+
+  fetch(`/api/check-deployment?url=${encodeURIComponent(urlInput)}&project=${encodeURIComponent(projectInput)}`)
+    .then(res => res.json())
+    .then(data => {
+      if (!data || !data.success) {
+        if (badge) badge.style.display = 'none';
+        if (sidebarWidget) sidebarWidget.style.display = 'none';
+        return;
+      }
+
+      badge.style.display = 'block';
+      if (sidebarWidget) {
+        sidebarWidget.style.display = 'flex';
+        sidebarBranch.textContent = data.detectedBranch ? data.detectedBranch.toUpperCase() : 'LIVE';
+      }
+
+      const dot = document.getElementById('depStatusDot');
+      const title = document.getElementById('depServerTitle');
+      const tags = document.getElementById('depMetaTags');
+      const warn = document.getElementById('depWarningMsg');
+
+      const shortCommit = data.commit ? data.commit.substring(0, 7) : 'N/A';
+      const branchLabel = data.detectedBranch || 'Unknown Branch';
+
+      title.innerHTML = `<strong>${data.host}</strong> &nbsp;·&nbsp; Deployed Branch: <span style="color: #60a5fa; font-weight: 700;">${branchLabel}</span>`;
+      
+      let tagsHtml = '';
+      if (data.commit) {
+        tagsHtml += `<span style="background: rgba(255,255,255,0.08); padding: 4px 8px; border-radius: 4px; font-family: monospace; font-size: 0.78rem; color: #cbd5e1;">commit: ${shortCommit}</span>`;
+      }
+      if (data.deploymentId) {
+        tagsHtml += `<span style="background: rgba(37,99,235,0.2); border: 1px solid rgba(37,99,235,0.4); padding: 4px 8px; border-radius: 4px; font-size: 0.78rem; color: #93c5fd;">build #${data.deploymentId}</span>`;
+      }
+      if (data.message) {
+        tagsHtml += `<span style="background: rgba(255,255,255,0.05); padding: 4px 8px; border-radius: 4px; font-size: 0.78rem; color: #94a3b8; max-width: 260px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${data.message}">${data.message}</span>`;
+      }
+      tags.innerHTML = tagsHtml;
+
+      // Check for Branch Mismatch warning
+      if (branchInput && data.detectedBranch && branchInput.toLowerCase() !== data.detectedBranch.toLowerCase()) {
+        dot.style.background = '#f59e0b';
+        dot.style.boxShadow = '0 0 8px #f59e0b';
+        if (sidebarDot) {
+          sidebarDot.style.background = '#f59e0b';
+          sidebarDot.style.boxShadow = '0 0 6px #f59e0b';
+        }
+        warn.style.display = 'block';
+        warn.innerHTML = `⚠️ <strong>Deployment Mismatch Warning:</strong> Remote server is running <strong>${data.detectedBranch}</strong> (commit <code>${shortCommit}</code>), but you entered branch <strong>${branchInput}</strong>. If your fixes are in <code>${branchInput}</code>, please deploy <code>${branchInput}</code> to UAT so Lighthouse can test your new code!`;
+      } else {
+        dot.style.background = '#10b981';
+        dot.style.boxShadow = '0 0 8px #10b981';
+        if (sidebarDot) {
+          sidebarDot.style.background = '#10b981';
+          sidebarDot.style.boxShadow = '0 0 6px #10b981';
+        }
+        warn.style.display = 'none';
+      }
+    })
+    .catch(() => {
+      if (badge) badge.style.display = 'none';
+      if (sidebarWidget) sidebarWidget.style.display = 'none';
+    });
+}
+
+// Wire input listeners on page load
+window.addEventListener('DOMContentLoaded', () => {
+  const urlInput = document.getElementsByName('url')[0];
+  const branchInput = document.getElementsByName('branch')[0];
+  if (urlInput) {
+    urlInput.addEventListener('input', triggerLiveDeploymentCheck);
+    urlInput.addEventListener('change', triggerLiveDeploymentCheck);
+  }
+  if (branchInput) {
+    branchInput.addEventListener('input', triggerLiveDeploymentCheck);
+    branchInput.addEventListener('change', triggerLiveDeploymentCheck);
+  }
+});

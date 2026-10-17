@@ -1,10 +1,36 @@
 import http from 'http';
+import https from 'https';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { spawn, exec } from 'child_process';
+import { spawn, exec, execSync } from 'child_process';
 import { CopilotService } from './services/copilotService.js';
 import { analyzeIssueWithCopilot, enrichAuditWithCopilot } from './analyzers/aiAdvisor.js';
+
+function httpGet(urlStr, timeoutMs = 6000) {
+  return new Promise((resolve, reject) => {
+    try {
+      const urlObj = new URL(urlStr);
+      const mod = urlObj.protocol === 'http:' ? http : https;
+      const req = mod.get(urlStr, { timeout: timeoutMs }, (res) => {
+        if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
+          return resolve(httpGet(new URL(res.headers.location, urlStr).toString(), timeoutMs));
+        }
+        let data = '';
+        res.on('data', chunk => { data += chunk; });
+        res.on('end', () => resolve({
+          ok: res.statusCode >= 200 && res.statusCode < 300,
+          status: res.statusCode,
+          text: () => Promise.resolve(data)
+        }));
+      });
+      req.on('error', reject);
+      req.on('timeout', () => { req.destroy(); reject(new Error('Request timed out')); });
+    } catch (err) {
+      reject(err);
+    }
+  });
+}
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -23,7 +49,7 @@ const MIME_TYPES = {
 // In-flight report enrichment tracking for deduplication
 const inFlightEnrichments = new Map();
 
-const server = http.createServer((req, res) => {
+const server = http.createServer(async (req, res) => {
   // 1. Enforce local loopback connections by default
   const remoteAddress = req.socket?.remoteAddress;
   const isLoopback = remoteAddress === '127.0.0.1' ||
@@ -235,6 +261,102 @@ const server = http.createServer((req, res) => {
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ path: projectName, fullPath: selectedPath }));
     });
+    return;
+  }
+
+  // API Endpoint: /api/check-deployment?url=...&project=...
+  if (pathname === '/api/check-deployment') {
+    const rawUrl = parsedUrl.searchParams.get('url');
+    const rawProject = parsedUrl.searchParams.get('project');
+    if (!rawUrl) {
+      res.writeHead(400, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: false, error: 'Missing url parameter' }));
+      return;
+    }
+
+    let targetOrigin = rawUrl.trim();
+    if (!/^https?:\/\//i.test(targetOrigin)) {
+      targetOrigin = `https://${targetOrigin}`;
+    }
+    try {
+      const parsed = new URL(targetOrigin);
+      const roundTableUrl = `${parsed.origin}/round-table.txt?_ts=${Date.now()}`;
+      const resp = await httpGet(roundTableUrl, 6000);
+
+      if (!resp.ok) {
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, message: `round-table.txt returned ${resp.status}` }));
+        return;
+      }
+
+      const text = await resp.text();
+      const commitHashMatch = text.match(/^([0-9a-f]{7,40})\s+(.*)$/m);
+      const deploymentMatch = text.match(/Deployment:\s*(\S+)/i);
+      const buildDateMatch = text.match(/Build Date:\s*(.+)$/m);
+      const commitDateMatch = text.match(/Commit Date:\s*(.+)$/m);
+      const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
+      const messageLine = lines.find(l => 
+        !l.startsWith('Commit Date') && 
+        !l.startsWith('Build Date') && 
+        !l.startsWith('Deployment') && 
+        !l.match(/^[0-9a-f]{7,40}\s+/)
+      );
+
+      const commitHash = commitHashMatch ? commitHashMatch[1] : null;
+      let detectedBranch = null;
+
+      if (commitHash && rawProject) {
+        const parentDir = getProjectsParentDir(rawProject);
+        const project = normalizeProjectInput(rawProject, parentDir);
+        const projectPath = path.resolve(parentDir, project);
+        if (fs.existsSync(path.join(projectPath, '.git'))) {
+          try {
+            const headBranches = execSync(`git for-each-ref --format="%(objectname:short) %(refname:short)" refs/heads/ refs/remotes/origin/`, {
+              cwd: projectPath,
+              encoding: 'utf8',
+              stdio: ['ignore', 'pipe', 'ignore']
+            });
+            for (const line of headBranches.split('\n')) {
+              const [h, ref] = line.trim().split(' ');
+              if (h && (commitHash.startsWith(h) || h.startsWith(commitHash))) {
+                detectedBranch = ref.replace(/^origin\//, '');
+                break;
+              }
+            }
+            if (!detectedBranch) {
+              const branchOut = execSync(`git branch -a --contains ${commitHash}`, {
+                cwd: projectPath,
+                encoding: 'utf8',
+                stdio: ['ignore', 'pipe', 'ignore']
+              });
+              const branchList = branchOut.split('\n')
+                .map(b => b.replace(/^\*/, '').trim().replace(/^remotes\/origin\//, ''))
+                .filter(b => b && !b.includes('HEAD ->'));
+
+              if (branchList.includes('main')) detectedBranch = 'main';
+              else if (branchList.includes('master')) detectedBranch = 'master';
+              else if (branchList.length > 0) detectedBranch = branchList[0];
+            }
+          } catch (_) {}
+        }
+      }
+
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({
+        success: true,
+        host: parsed.host,
+        commit: commitHash,
+        author: commitHashMatch ? commitHashMatch[2] : null,
+        deploymentId: deploymentMatch ? deploymentMatch[1] : null,
+        buildDate: buildDateMatch ? buildDateMatch[1] : null,
+        commitDate: commitDateMatch ? commitDateMatch[1] : null,
+        message: messageLine || null,
+        detectedBranch
+      }));
+    } catch (fetchErr) {
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: false, error: fetchErr.message }));
+    }
     return;
   }
 
