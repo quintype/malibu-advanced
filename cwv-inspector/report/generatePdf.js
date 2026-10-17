@@ -1070,6 +1070,7 @@ export async function generateReport(compiledResult, options = {}) {
     .replace(/{{AUDIT_DATE}}/g, formattedDate)
     .replace(/{{AUDIT_URL}}/g, options.url || 'No URL specified (Static scan only)')
     .replace(/{{REMOTE_DEPLOYMENT_META}}/g, options.remoteDeployment && options.remoteDeployment.deploymentId ? ` <span class="meta-sep">|</span> <strong>Live Deployment:</strong> <span class="meta-val" style="background: #f0fdf4; color: #166534; padding: 2px 8px; border-radius: 4px; font-weight: 700; font-family: monospace;">Build #${escapeHtml(options.remoteDeployment.deploymentId)}${options.remoteDeployment.commit ? ` (${escapeHtml(options.remoteDeployment.commit.substring(0, 7))})` : ''}</span>` : '')
+    .replace(/{{ENGINEER_NAME}}/g, escapeHtml(options.engineer || 'Performance Engineering Team'))
     .replace(/{{SUMMARY_HIGH}}/g, compiledResult.summary.high)
     .replace(/{{SUMMARY_MEDIUM}}/g, compiledResult.summary.medium)
     .replace(/{{SUMMARY_LOW}}/g, compiledResult.summary.low)
@@ -1263,28 +1264,25 @@ export async function generateReport(compiledResult, options = {}) {
   try {
     console.log('Generating redesigned 3-page executive PDF report...');
     
-    let assessmentObj = {
-      status: 'Needs Improvement',
-      color: '#f59e0b',
-      bgColor: '#fffbeb',
-      borderColor: '#fef3c7',
-      borderLeftColor: '#f59e0b',
-      icon: '!',
-      text: `Field metrics pass on Mobile and Desktop; Lighthouse lab scores (${mobileLocScore.score} / ${desktopLocScore.score}) and mobile lab LCP / TBT warnings are outside the Good range.`
-    };
+    // Compute failing / warning metrics dynamically
+    const labWarnings = [];
+    if (localMLcp.statusLabel !== 'Good') labWarnings.push('Mobile LCP');
+    if (localMCls.statusLabel !== 'Good') labWarnings.push('Mobile CLS');
+    if (localMTbt.statusLabel !== 'Good') labWarnings.push('Mobile TBT');
+    if (localDLcp.statusLabel !== 'Good') labWarnings.push('Desktop LCP');
+    if (localDCls.statusLabel !== 'Good') labWarnings.push('Desktop CLS');
+    if (localDTbt.statusLabel !== 'Good') labWarnings.push('Desktop TBT');
 
-    const mobilePassed = mobileData && (
-      (mobileData.lcp?.value !== undefined && mobileData.lcp?.value !== null ? mobileData.lcp.value / 1000 <= 2.5 : true) &&
-      (mobileData.cls?.value !== undefined && mobileData.cls?.value !== null ? mobileData.cls.value <= 0.1 : true) &&
-      (mobileData.tbt?.value !== undefined && mobileData.tbt?.value !== null ? mobileData.tbt.value <= 200 : true)
-    );
-    const desktopPassed = desktopData && (
-      (desktopData.lcp?.value !== undefined && desktopData.lcp?.value !== null ? desktopData.lcp.value / 1000 <= 2.5 : true) &&
-      (desktopData.cls?.value !== undefined && desktopData.cls?.value !== null ? desktopData.cls.value <= 0.1 : true) &&
-      (desktopData.tbt?.value !== undefined && desktopData.tbt?.value !== null ? desktopData.tbt.value <= 200 : true)
+    const hasRealCrux = mobileCruxLcp.valueDisplay !== 'N/A' || desktopCruxLcp.valueDisplay !== 'N/A';
+    const fieldPassed = hasRealCrux && (
+      (mobileCruxLcp.statusLabel === 'Good' || mobileCruxLcp.valueDisplay === 'N/A') &&
+      (mobileCruxCls.statusLabel === 'Good' || mobileCruxCls.valueDisplay === 'N/A') &&
+      (desktopCruxLcp.statusLabel === 'Good' || desktopCruxLcp.valueDisplay === 'N/A') &&
+      (desktopCruxCls.statusLabel === 'Good' || desktopCruxCls.valueDisplay === 'N/A')
     );
 
-    if (mobilePassed && desktopPassed && mobileLocScore.score >= 90 && desktopLocScore.score >= 90) {
+    let assessmentObj;
+    if (labWarnings.length === 0 && mobileLocScore.score >= 90 && desktopLocScore.score >= 90) {
       assessmentObj = {
         status: 'Passed',
         color: '#10b981',
@@ -1292,26 +1290,117 @@ export async function generateReport(compiledResult, options = {}) {
         borderColor: '#d1fae5',
         borderLeftColor: '#10b981',
         icon: '✓',
-        text: 'All parameters on both Mobile and Desktop meet Google recommended performance standards.'
+        text: 'All Core Web Vitals parameters on both Mobile and Desktop meet Google recommended performance standards.'
       };
-    } else if ((!mobilePassed || !desktopPassed) && mobileLocScore.score < 50) {
+    } else if (labWarnings.length >= 3 || mobileLocScore.score < 50 || desktopLocScore.score < 50) {
       assessmentObj = {
-        status: 'Failed',
+        status: 'Needs Immediate Attention',
         color: '#ef4444',
         bgColor: '#fef2f2',
         borderColor: '#fee2e2',
         borderLeftColor: '#ef4444',
         icon: '✕',
-        text: 'One or more Core Web Vitals parameters are outside the Good range.'
+        text: `Multiple Core Web Vitals parameters require optimization. Scores: Mobile ${mobileLocScore.score}/100, Desktop ${desktopLocScore.score}/100. Warnings detected on: ${labWarnings.join(', ') || 'overall metrics'}.`
       };
+    } else {
+      const fieldNote = hasRealCrux
+        ? (fieldPassed ? 'Real-user field metrics pass on measured devices.' : 'Field data shows real-user variance.')
+        : 'Lab audit baseline evaluated.';
+      assessmentObj = {
+        status: 'Needs Improvement',
+        color: '#f59e0b',
+        bgColor: '#fffbeb',
+        borderColor: '#fef3c7',
+        borderLeftColor: '#f59e0b',
+        icon: '!',
+        text: `${fieldNote} Lighthouse lab scores (${mobileLocScore.score} / ${desktopLocScore.score})${labWarnings.length > 0 ? ` with warnings on ${labWarnings.join(', ')} outside the Good range.` : '.'}`
+      };
+    }
+
+    // Generate dynamic findings based on actual lab metrics and code issues
+    const dynamicFindings = [];
+    
+    // LCP finding
+    if (localMLcp.statusLabel !== 'Good') {
+      dynamicFindings.push({
+        color: localMLcp.statusLabel === 'Poor' ? '#ef4444' : '#f59e0b',
+        title: `Mobile Lab LCP is ${localMLcp.valueDisplay} (recommended ≤ 2.5 s)`,
+        desc: 'Optimize largest above-the-fold content: preload critical hero images, eliminate render-blocking CSS/JS, and improve TTFB / server response time.'
+      });
+    } else {
+      dynamicFindings.push({
+        color: '#10b981',
+        title: `Mobile Lab LCP is ${localMLcp.valueDisplay} (Good ≤ 2.5 s)`,
+        desc: 'Initial viewport content loads quickly and meets Google recommended loading thresholds.'
+      });
+    }
+
+    // CLS finding
+    if (localMCls.statusLabel !== 'Good') {
+      dynamicFindings.push({
+        color: localMCls.statusLabel === 'Poor' ? '#ef4444' : '#f59e0b',
+        title: `Mobile Lab CLS is ${localMCls.valueDisplay} (recommended ≤ 0.1)`,
+        desc: `Layout instability detected on branch ${gitBranch || 'current'}. Ensure explicit dimensions (width/height/aspect-ratio) on images and banners, avoid top-injected dynamic elements, and reserve ad container space.`
+      });
+    } else {
+      dynamicFindings.push({
+        color: '#10b981',
+        title: `Mobile Lab CLS is ${localMCls.valueDisplay} (Good ≤ 0.1)`,
+        desc: `Visual stability verified on branch ${gitBranch || 'current'}. Page layout remains stable with minimal unexpected shifting.`
+      });
+    }
+
+    // TBT finding
+    if (localMTbt.statusLabel !== 'Good') {
+      dynamicFindings.push({
+        color: localMTbt.statusLabel === 'Poor' ? '#ef4444' : '#f59e0b',
+        title: `Mobile Lab TBT is ${localMTbt.valueDisplay} (recommended ≤ 200 ms)`,
+        desc: 'Break up long JavaScript execution tasks (>50ms), defer non-critical third-party analytics/widgets, and use Web Workers for CPU-heavy operations.'
+      });
+    } else {
+      dynamicFindings.push({
+        color: '#10b981',
+        title: `Mobile Lab TBT is ${localMTbt.valueDisplay} (Good ≤ 200 ms)`,
+        desc: 'Main thread responsiveness is healthy with low task execution delays.'
+      });
+    }
+
+    // Fourth finding: Field vs Static/Code findings
+    if (hasRealCrux) {
+      if (fieldPassed) {
+        dynamicFindings.push({
+          color: '#10b981',
+          title: 'Field CrUX Data Confirms Good Real-World Experience',
+          desc: 'Production Chrome user experience percentiles meet Google recommended Core Web Vitals thresholds.'
+        });
+      } else {
+        dynamicFindings.push({
+          color: '#f59e0b',
+          title: 'Field CrUX Data Shows Opportunities for Improvement',
+          desc: '75th percentile of real-world visitors experience performance degradation on one or more metrics.'
+        });
+      }
+    } else if (compiledResult.issues && compiledResult.issues.length > 0) {
+      const highIssues = compiledResult.issues.filter(i => (i.severity || '').toLowerCase() === 'high').length;
+      dynamicFindings.push({
+        color: highIssues > 0 ? '#ef4444' : '#0284c7',
+        title: `Static & Runtime Audit Flagged ${compiledResult.issues.length} Code/DOM Pattern(s)`,
+        desc: `${highIssues} high-severity issue(s) detected. Review the detailed findings table and AI code fix recommendations below.`
+      });
+    } else {
+      dynamicFindings.push({
+        color: '#10b981',
+        title: 'Clean Performance Architecture',
+        desc: 'No anti-patterns or blocking anomalies detected across audited template files.'
+      });
     }
 
     const redesignedData = {
       clientName: options.clientName || projectName,
       gitBranch: gitBranch,
-      url: options.url || 'https://imaindia-uat-web.quintype.io',
+      url: options.url || '',
       date: formattedDate,
-      engineer: options.engineer || 'Siripireddy Giri',
+      engineer: options.engineer || 'Performance Engineering Team',
       assessment: assessmentObj,
       mobile: {
         score: mobileLocScore.score,
@@ -1342,12 +1431,7 @@ export async function generateReport(compiledResult, options = {}) {
         { device: 'DESKTOP', metric: 'Interaction to Next Paint (INP)', fVal: desktopCruxInp.valueDisplay, fStat: desktopCruxInp.statusLabel === 'Good' ? 'PASS' : desktopCruxInp.valueDisplay === 'N/A' ? 'N/A' : 'WARN', lVal: localDInp.valueDisplay, lStat: localDInp.statusLabel === 'Good' ? 'PASS' : 'WARN', thresh: '≤ 200 ms' },
       ],
       takeaways: [],
-      findings: [
-        { color: localMLcp.statusLabel === 'Good' ? '#10b981' : '#f59e0b', title: `Mobile lab LCP is ${localMLcp.valueDisplay} (limit 2.5 s)`, desc: 'Optimise the hero image/resource, reduce render-blocking CSS and JS, and improve server response time.' },
-        { color: localMTbt.statusLabel === 'Good' ? '#10b981' : '#f59e0b', title: `Mobile lab TBT is ${localMTbt.valueDisplay} (limit 200 ms)`, desc: 'Split long JavaScript tasks, defer non-critical scripts and trim third-party code.' },
-        { color: '#10b981', title: 'All field metrics pass on Mobile and Desktop', desc: 'Real users already get a stable, fast experience; keep monitoring to protect these gains.' },
-        { color: '#0284c7', title: 'Verify INP data', desc: `Field INP (${mobileCruxInp.valueDisplay} / ${desktopCruxInp.valueDisplay}) matches the TBT values; confirm both come from separate measurements.` }
-      ],
+      findings: dynamicFindings,
       cruxHistory: options.cruxHistoryData,
       cruxHistoryPoints: historyPoints
     };

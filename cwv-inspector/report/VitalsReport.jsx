@@ -21,7 +21,8 @@ export default function VitalsReport({ reportData }) {
     healthScore,
     lighthouseData,
     summary,
-    issues = []
+    issues = [],
+    author = reportData.author || reportData.engineer || 'Performance Engineering Team'
   } = reportData;
 
   const [activeTab, setActiveTab] = useState('mobile');
@@ -141,7 +142,7 @@ export default function VitalsReport({ reportData }) {
           </div>
           <div className="vitals-meta">
             <span>Prepared for: {clientName}</span>
-            <span>&bull; Author: Siripireddy Giri</span>
+            <span>&bull; Author: {author}</span>
             <span>&bull; {auditDate}</span>
           </div>
         </div>

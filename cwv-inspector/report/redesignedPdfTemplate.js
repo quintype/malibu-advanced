@@ -39,60 +39,46 @@ export function extractCruxHistoryPoints(cruxHistoryData) {
   return points.length >= 2 ? points : null;
 }
 
-export function buildRedesignedPdfHtml(data) {
+export function buildRedesignedPdfHtml(data = {}) {
   const {
-    clientName = 'ima-india',
-    gitBranch = 'main',
-    url = 'https://imaindia-uat-web.quintype.io',
-    date = 'October 9, 2026 · 09:57 PM',
-    engineer = 'Siripireddy Giri',
+    clientName = 'Performance Audit',
+    gitBranch = '',
+    url = '',
+    date = '',
+    engineer = 'Performance Engineering',
     assessment = {
-      status: 'Needs Improvement',
-      color: '#f59e0b',
-      bgColor: '#fffbeb',
-      borderColor: '#fef3c7',
-      borderLeftColor: '#f59e0b',
-      icon: '!',
-      text: 'Field metrics pass on Mobile and Desktop; Lighthouse lab scores (61 / 69) and mobile lab LCP / TBT warnings are outside the Good range.'
+      status: 'Completed',
+      color: '#0284c7',
+      bgColor: '#f0f9ff',
+      borderColor: '#e0f2fe',
+      borderLeftColor: '#0284c7',
+      icon: 'ℹ',
+      text: 'Performance audit completed.'
     },
     mobile = {
-      score: 61,
-      statusLabel: 'Needs Improvement',
-      statusColor: '#f59e0b',
-      desc: 'Real-user (field) Core Web Vitals pass on every metric. The lab score is below the 90+ target, with LCP and TBT in the warning range under simulated mobile conditions.',
-      lcp: { val: '1.82s', pass: true, pct: 36.4, limit: 'Good ≤ 2.5 s' },
-      cls: { val: '0.000', pass: true, pct: 2.0, limit: 'Good ≤ 0.1' },
-      tbt: { val: '113ms', pass: true, pct: 18.8, limit: 'Good ≤ 200 ms' }
+      score: 0,
+      statusLabel: 'N/A',
+      statusColor: '#94a3b8',
+      desc: 'Mobile audit results.',
+      lcp: { val: 'N/A', pass: false, pct: 0, limit: 'Good ≤ 2.5 s' },
+      cls: { val: 'N/A', pass: false, pct: 0, limit: 'Good ≤ 0.1' },
+      tbt: { val: 'N/A', pass: false, pct: 0, limit: 'Good ≤ 200 ms' }
     },
     desktop = {
-      score: 69,
-      statusLabel: 'Needs Improvement',
-      statusColor: '#f59e0b',
-      desc: 'Real-user (field) Core Web Vitals pass on every metric. The lab score is below the 90+ target, with room to improve overall load efficiency.',
-      lcp: { val: '1.70s', pass: true, pct: 34.0, limit: 'Good ≤ 2.5 s' },
-      cls: { val: '0.000', pass: true, pct: 2.0, limit: 'Good ≤ 0.1' },
-      tbt: { val: '63ms', pass: true, pct: 10.5, limit: 'Good ≤ 200 ms' }
+      score: 0,
+      statusLabel: 'N/A',
+      statusColor: '#94a3b8',
+      desc: 'Desktop audit results.',
+      lcp: { val: 'N/A', pass: false, pct: 0, limit: 'Good ≤ 2.5 s' },
+      cls: { val: 'N/A', pass: false, pct: 0, limit: 'Good ≤ 0.1' },
+      tbt: { val: 'N/A', pass: false, pct: 0, limit: 'Good ≤ 200 ms' }
     },
-    metricsDetail = [
-      { device: 'MOBILE', metric: 'Largest Contentful Paint (LCP)', fVal: '1.82s', fStat: 'PASS', lVal: '3.58s', lStat: 'WARN', thresh: '≤ 2.5 s' },
-      { device: 'DESKTOP', metric: 'Largest Contentful Paint (LCP)', fVal: '1.70s', fStat: 'PASS', lVal: '0.49s', lStat: 'PASS', thresh: '≤ 2.5 s' },
-      { device: 'MOBILE', metric: 'Cumulative Layout Shift (CLS)', fVal: '0.000', fStat: 'PASS', lVal: '0.021', lStat: 'PASS', thresh: '≤ 0.1' },
-      { device: 'DESKTOP', metric: 'Cumulative Layout Shift (CLS)', fVal: '0.000', fStat: 'PASS', lVal: '0.038', lStat: 'PASS', thresh: '≤ 0.1' },
-      { device: 'MOBILE', metric: 'Total Blocking Time (TBT)', fVal: '113ms', fStat: 'PASS', lVal: '249ms', lStat: 'WARN', thresh: '≤ 200 ms' },
-      { device: 'DESKTOP', metric: 'Total Blocking Time (TBT)', fVal: '63ms', fStat: 'PASS', lVal: '0ms', lStat: 'PASS', thresh: '≤ 200 ms' },
-      { device: 'MOBILE', metric: 'Interaction to Next Paint (INP)', fVal: '113ms', fStat: 'PASS', lVal: '0ms', lStat: 'PASS', thresh: '≤ 200 ms' },
-      { device: 'DESKTOP', metric: 'Interaction to Next Paint (INP)', fVal: '63ms', fStat: 'PASS', lVal: '0ms', lStat: 'PASS', thresh: '≤ 200 ms' },
-    ],
+    metricsDetail = [],
     takeaways = [],
-    findings = [
-      { color: '#f59e0b', title: 'Mobile lab LCP is 3.58 s (limit 2.5 s)', desc: 'Optimise the hero image/resource, reduce render-blocking CSS and JS, and improve server response time.' },
-      { color: '#f59e0b', title: 'Mobile lab TBT is 249 ms (limit 200 ms)', desc: 'Split long JavaScript tasks, defer non-critical scripts and trim third-party code.' },
-      { color: '#10b981', title: 'All field metrics pass on Mobile and Desktop', desc: 'Real users already get a stable, fast experience; keep monitoring to protect these gains.' },
-      { color: '#0284c7', title: 'Verify INP data', desc: 'Field INP (113 ms / 63 ms) matches the TBT values exactly; confirm both come from separate measurements.' }
-    ],
+    findings = [],
     cruxHistory = null,
     cruxHistoryPoints = null
-  } = data;
+  } = data || {};
 
   const validPoints = Array.isArray(cruxHistoryPoints) && cruxHistoryPoints.length >= 2
     ? cruxHistoryPoints
@@ -143,8 +129,8 @@ export function buildRedesignedPdfHtml(data) {
         <span style="font-size: 1.05rem; font-weight: 800; color: #004b87; font-family: Inter, sans-serif; letter-spacing: -0.01em;">Core Web Vitals Diagnostic Lab</span>
       </div>
       <div style="display: flex; align-items: center; gap: 10px; font-size: 0.78rem; color: #64748b; font-weight: 500;">
-        <span style="background: #e0f2fe; color: #0284c7; font-family: monospace; font-size: 0.7rem; font-weight: 700; padding: 2px 7px; border-radius: 4px;">branch: ${gitBranch}</span>
-        <span>${date}</span>
+        ${gitBranch ? `<span style="background: #e0f2fe; color: #0284c7; font-family: monospace; font-size: 0.7rem; font-weight: 700; padding: 2px 7px; border-radius: 4px;">branch: ${gitBranch}</span>` : ''}
+        ${date ? `<span>${date}</span>` : ''}
       </div>
     </div>
   `;
@@ -602,13 +588,13 @@ export function buildRedesignedPdfHtml(data) {
                     </td>
                     <td style="padding: 9px 10px; text-align: center; font-weight: 800; color: #0f172a; font-size: 0.8rem;">${m.fVal}</td>
                     <td style="padding: 9px 10px; text-align: center;">
-                      <span style="font-size: 0.65rem; font-weight: 700; color: ${fPass ? '#059669' : '#d97706'}; display: inline-flex; align-items: center; gap: 4px;">
+                      <span style="font-size: 0.65rem; font-weight: 700; color: ${fPass ? '#059669' : m.fStat === 'N/A' ? '#94a3b8' : '#d97706'}; display: inline-flex; align-items: center; gap: 4px;">
                         <span>●</span> ${m.fStat}
                       </span>
                     </td>
                     <td style="padding: 9px 10px; text-align: center; font-weight: 800; color: #0f172a; font-size: 0.8rem;">${m.lVal}</td>
                     <td style="padding: 9px 10px; text-align: center;">
-                      <span style="font-size: 0.65rem; font-weight: 700; color: ${lPass ? '#059669' : '#d97706'}; display: inline-flex; align-items: center; gap: 4px;">
+                      <span style="font-size: 0.65rem; font-weight: 700; color: ${lPass ? '#059669' : m.lStat === 'N/A' ? '#94a3b8' : '#d97706'}; display: inline-flex; align-items: center; gap: 4px;">
                         <span>●</span> ${m.lStat}
                       </span>
                     </td>
@@ -626,15 +612,15 @@ export function buildRedesignedPdfHtml(data) {
         </div>
 
         <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px 18px;">
-          ${findings.map((f, idx) => `
+          ${findings && findings.length > 0 ? findings.map((f, idx) => `
             <div style="margin-bottom: ${idx === findings.length - 1 ? '0' : '12px'};">
               <div style="display: flex; align-items: center; gap: 8px; font-size: 0.8rem; font-weight: 800; color: #0f172a;">
-                <span style="color: ${f.color}; font-size: 11px;">●</span>
+                <span style="color: ${f.color || '#0284c7'}; font-size: 11px;">●</span>
                 <span>${f.title}</span>
               </div>
               <p style="margin: 2px 0 0 16px; font-size: 0.68rem; color: #475569; line-height: 1.35;">${f.desc}</p>
             </div>
-          `).join('')}
+          `).join('') : '<div style="font-size: 0.72rem; color: #64748b;">No critical performance findings detected for this audit.</div>'}
         </div>
 
       </div>
