@@ -129,6 +129,11 @@ async function preScrollPage(url, port) {
 
     await page.setViewport({ width: 1024, height: 768 });
     await page.setCacheEnabled(false);
+    await page.setExtraHTTPHeaders({
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+      'Pragma': 'no-cache',
+      'Expires': '0'
+    });
 
     await page.evaluateOnNewDocument(() => {
       if (window.__cwv_layout_shifts_injected) return;
@@ -244,6 +249,11 @@ async function throttledDiagnosticPass(url, port, device = 'mobile') {
       await page.setViewport({ width: 1024, height: 768, isMobile: false, hasTouch: false });
     }
     await page.setCacheEnabled(false);
+    await page.setExtraHTTPHeaders({
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+      'Pragma': 'no-cache',
+      'Expires': '0'
+    });
 
     // Emulate Lighthouse Mobile Throttling
     const client = await page.target().createCDPSession();
@@ -323,16 +333,30 @@ async function throttledDiagnosticPass(url, port, device = 'mobile') {
 export async function runLighthouseAudit(url) {
   if (!url) return null;
 
+  // Append unique timestamp parameter to bust CDN and intermediate proxy caches on every run
+  const cacheBuster = `_cwv_nocache=${Date.now()}`;
+  const auditUrl = url.includes('?') ? `${url}&${cacheBuster}` : `${url}?${cacheBuster}`;
+
   let chrome = null;
   try {
-    console.log(`\n🚀 Launching headless Chrome for dual Lighthouse audit on: ${url}...`);
+    console.log(`\n🚀 Launching headless Chrome for dual Lighthouse audit on: ${auditUrl}...`);
 
     chrome = await chromeLauncher.launch({
-      chromeFlags: ['--headless=new', '--disable-gpu', '--no-sandbox', '--disable-cache', '--disk-cache-size=0']
+      chromeFlags: [
+        '--headless=new',
+        '--disable-gpu',
+        '--no-sandbox',
+        '--disable-cache',
+        '--disk-cache-size=0',
+        '--media-cache-size=0',
+        '--disable-application-cache',
+        '--disable-offline-load-stale-cache',
+        '--aggressive-cache-discard'
+      ]
     });
 
     // Run bot scrolling to trigger lazy loaders and initialize assets
-    const customShifts = await preScrollPage(url, chrome.port);
+    const customShifts = await preScrollPage(auditUrl, chrome.port);
 
     const mobileOptions = {
       logLevel: 'info',
@@ -375,23 +399,23 @@ export async function runLighthouseAudit(url) {
     };
 
     console.log(`📱 Running Lighthouse Mobile Audit...`);
-    const mobileResult = await lighthouse(url, mobileOptions);
+    const mobileResult = await lighthouse(auditUrl, mobileOptions);
     const mobileData = extractScores(JSON.parse(mobileResult.report));
 
     // Check if Lighthouse failed to trace DOM nodes
     const hasUnknownMobile = mobileData.clsElements.some(el => el.selector.includes('Global/Unknown'));
     let finalCustomShifts = customShifts;
     if (hasUnknownMobile) {
-      finalCustomShifts = await throttledDiagnosticPass(url, chrome.port, 'mobile');
+      finalCustomShifts = await throttledDiagnosticPass(auditUrl, chrome.port, 'mobile');
     }
 
     console.log(`💻 Running Lighthouse Desktop Audit...`);
-    const desktopResult = await lighthouse(url, desktopOptions);
+    const desktopResult = await lighthouse(auditUrl, desktopOptions);
     const desktopData = extractScores(JSON.parse(desktopResult.report));
 
     const hasUnknownDesktop = desktopData.clsElements.some(el => el.selector.includes('Global/Unknown'));
     if (hasUnknownDesktop) {
-      const desktopShifts = await throttledDiagnosticPass(url, chrome.port, 'desktop');
+      const desktopShifts = await throttledDiagnosticPass(auditUrl, chrome.port, 'desktop');
       finalCustomShifts = [...finalCustomShifts, ...desktopShifts];
     }
 
