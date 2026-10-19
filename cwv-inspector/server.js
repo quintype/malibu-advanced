@@ -139,6 +139,7 @@ const server = http.createServer(async (req, res) => {
       args.push('--branch', branchInput.trim());
     }
 
+    const auditStartTime = Date.now();
     const child = spawn('node', args, {
       env: { ...process.env, FORCE_COLOR: '1' }
     });
@@ -163,8 +164,11 @@ const server = http.createServer(async (req, res) => {
     child.on('close', (code) => {
       if (code !== 0) {
         sendSseMessage(`\n❌ Audit process exited with code ${code}`);
+        res.write(`data: [ERROR]Audit process failed with exit code ${code}\n\n`);
+        res.end();
+        return;
       }
-      // Find the latest generated HTML report in the project's reports folder
+      // Find the freshly generated HTML report in the project's reports folder
       const candidateDirs = [
         { dir: path.join(absoluteProjectPath, 'reports'), proj: project },
         { dir: path.join(__dirname, 'reports'), proj: path.basename(__dirname) }
@@ -174,6 +178,13 @@ const server = http.createServer(async (req, res) => {
         if (fs.existsSync(candidate.dir)) {
           const files = fs.readdirSync(candidate.dir)
             .filter(f => f.endsWith('.html'))
+            .filter(f => {
+              try {
+                return fs.statSync(path.join(candidate.dir, f)).mtimeMs >= (auditStartTime - 5000);
+              } catch (_) {
+                return false;
+              }
+            })
             .sort((a, b) => {
               try {
                 return fs.statSync(path.join(candidate.dir, b)).mtimeMs - fs.statSync(path.join(candidate.dir, a)).mtimeMs;
@@ -182,12 +193,16 @@ const server = http.createServer(async (req, res) => {
               }
             });
           if (files.length > 0) {
-            latestReport = `/reports-view?project=${encodeURIComponent(candidate.proj)}&file=${encodeURIComponent(files[0])}`;
+            latestReport = `/reports-view?project=${encodeURIComponent(candidate.proj)}&file=${encodeURIComponent(files[0])}&_nocache=${Date.now()}`;
             break;
           }
         }
       }
-      res.write(`data: [COMPLETE]${latestReport}\n\n`);
+      if (latestReport) {
+        res.write(`data: [COMPLETE]${latestReport}\n\n`);
+      } else {
+        res.write(`data: [ERROR]Audit finished but no new HTML report was generated.\n\n`);
+      }
       res.end();
     });
 

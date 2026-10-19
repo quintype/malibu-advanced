@@ -5,6 +5,11 @@ import path from 'path';
 import http from 'http';
 import https from 'https';
 import { execSync } from 'child_process';
+import nodeFetch from 'node-fetch';
+
+if (typeof globalThis.fetch === 'undefined' && nodeFetch) {
+  globalThis.fetch = nodeFetch;
+}
 
 function httpGet(urlStr, timeoutMs = 6000) {
   return new Promise((resolve, reject) => {

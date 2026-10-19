@@ -285,6 +285,13 @@ function runAudit(event) {
       } else {
         outputConsole.textContent += '\n❌ Audit finished but no report HTML could be found.';
       }
+    } else if (data.startsWith('[ERROR]')) {
+      isCompleted = true;
+      eventSource.close();
+      submitBtn.disabled = false;
+      submitBtn.querySelector('span').textContent = 'Run Inspector';
+      outputConsole.textContent += '\n❌ ' + data.replace('[ERROR]', '') + '\n';
+      outputConsole.scrollTop = outputConsole.scrollHeight;
     } else {
       outputConsole.textContent += data + '\n';
       outputConsole.scrollTop = outputConsole.scrollHeight; // Auto scroll to bottom

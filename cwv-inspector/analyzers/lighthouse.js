@@ -1,7 +1,12 @@
 import { ReadableStream as WebReadableStream } from 'stream/web';
+import nodeFetch from 'node-fetch';
 
 if (typeof globalThis.ReadableStream === 'undefined' && WebReadableStream) {
   globalThis.ReadableStream = WebReadableStream;
+}
+
+if (typeof globalThis.fetch === 'undefined' && nodeFetch) {
+  globalThis.fetch = nodeFetch;
 }
 
 import * as chromeLauncher from 'chrome-launcher';
