@@ -371,7 +371,7 @@ export async function analyzeIssueWithCopilot(issue, copilotService, options = {
   const prompt = buildAdvisorPrompt(issue, options.context || {});
   try {
     const rawResponse = await copilotService.generateResponse(prompt, {
-      timeoutMs: options.timeoutMs || 30000,
+      timeoutMs: options.timeoutMs || 60000,
       model: options.model
     });
     return parseModelOutput(rawResponse, issue);
@@ -442,10 +442,10 @@ export async function enrichAuditWithCopilot(compiledResult, options = {}) {
 
   const maxIssues = Math.max(1, Number(options.maxIssues || process.env.COPILOT_MAX_ISSUES) || 5);
   const copilotService = options.copilotService || options.copilot || null;
-  const timeoutMs = options.timeoutMs || 30000;
+  const timeoutMs = options.timeoutMs || 60000;
   const totalTimeoutMs = options.totalTimeoutMs !== undefined
     ? Number(options.totalTimeoutMs)
-    : (Number(process.env.COPILOT_TOTAL_TIMEOUT_MS) || 60000);
+    : (Number(process.env.COPILOT_TOTAL_TIMEOUT_MS) || 90000);
   const batchSize = Math.max(1, Number(options.batchSize) || 1);
   const deadline = Date.now() + totalTimeoutMs;
 

@@ -509,7 +509,7 @@ export async function generateReport(compiledResult, options = {}) {
       const limitationsList = Array.isArray(adv.limitations) ? adv.limitations : [String(adv.limitations || '')];
 
       return `
-        <div class="ai-advisor-container">
+        <div class="ai-advisor-container" id="ai-advisor-container-${index}">
           <div class="ai-solution-card">
             <div class="ai-card-top">
               <div class="ai-badge-group">
@@ -565,7 +565,7 @@ export async function generateReport(compiledResult, options = {}) {
 
     if (issue.aiStatus === 'omitted_limit') {
       return `
-        <div class="ai-advisor-container ai-limit-container">
+        <div class="ai-advisor-container ai-limit-container" id="ai-advisor-container-${index}">
           <div class="ai-limit-bar">
             <span>Deterministic recommendation active. Copilot advice auto-generated for top priority findings.</span>
             <button class="ai-retry-btn" type="button" onclick="retryAiAdvice(event, ${index})">Analyze with Copilot</button>
@@ -578,7 +578,7 @@ export async function generateReport(compiledResult, options = {}) {
     if (issue.aiStatus === 'error') {
       const errorTag = issue.aiErrorDetails?.type ? `[${escapeHtml(issue.aiErrorDetails.type)}] ` : '';
       return `
-        <div class="ai-advisor-container ai-error-container">
+        <div class="ai-advisor-container ai-error-container" id="ai-advisor-container-${index}">
           <div class="ai-error-box" style="display: flex; justify-content: space-between; align-items: center;">
             <span style="font-size: 0.8rem; color: #ef4444;">
               ⚠️ Copilot analysis encountered an issue: ${errorTag}${escapeHtml(issue.aiError || 'Service temporarily unavailable')}

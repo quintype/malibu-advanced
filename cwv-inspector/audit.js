@@ -349,7 +349,7 @@ Options:
         copilotService: copilot,
         url,
         maxIssues: 5,
-        totalTimeoutMs: 60000
+        totalTimeoutMs: 90000
       });
       const analyzedCount = enrichedResult.aiAdvisor?.analyzedCount || 0;
       console.log(`✓ Copilot AI recommendations generated (${analyzedCount} priority findings enriched).`);

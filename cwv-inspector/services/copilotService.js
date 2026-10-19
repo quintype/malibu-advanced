@@ -75,7 +75,7 @@ export function categorizeCopilotError(error) {
 export class CopilotService {
   constructor(options = {}) {
     this.cliPath = options.cliPath || resolveCliPath();
-    this.timeoutMs = options.timeoutMs || 30000;
+    this.timeoutMs = options.timeoutMs || 60000;
     this.client = null;
     this.isStarted = false;
     this._queue = Promise.resolve();

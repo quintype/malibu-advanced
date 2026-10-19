@@ -575,14 +575,15 @@ const server = http.createServer(async (req, res) => {
       try {
         const copilot = getCopilotService();
         const advice = await analyzeIssueWithCopilot(issueToAnalyze, copilot, {
-          timeoutMs: 35000,
+          timeoutMs: 60000,
           context: targetContext
         });
 
         if (payload.project && payload.reportFile && payload.issueIndex !== undefined) {
           try {
             const jsonFilename = payload.reportFile.endsWith('.html') ? payload.reportFile.replace(/\.html$/, '.json') : payload.reportFile;
-            const rPath = path.join(parentDir, payload.project, 'reports', jsonFilename);
+            const targetParentDir = getProjectsParentDir(payload.project);
+            const rPath = path.join(targetParentDir, payload.project, 'reports', jsonFilename);
             if (fs.existsSync(rPath)) {
               const fileData = fs.readFileSync(rPath, 'utf8');
               const reportJson = JSON.parse(fileData);

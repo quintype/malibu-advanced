@@ -607,13 +607,17 @@
           }
 
           data.issues.forEach((issue, idx) => {
-            const container = document.getElementById(`ai-advisor-container-${idx}`) || document.getElementById(`ai-advice-result-${idx}`);
+            const container = document.getElementById(`ai-advisor-container-${idx}`) || 
+                              (document.getElementById(`ai-advice-result-${idx}`) ? document.getElementById(`ai-advice-result-${idx}`).closest('.ai-advisor-container') : null) ||
+                              document.getElementById(`ai-advice-result-${idx}`);
             if (!container) return;
 
             if (issue.aiAdvice) {
+              container.className = 'ai-advisor-container';
               container.style.display = 'block';
               renderAiAdviceResult(container, issue.aiAdvice);
             } else if (issue.aiStatus === 'omitted_limit') {
+              container.className = 'ai-advisor-container ai-limit-container';
               container.innerHTML = `
                 <div class="ai-limit-bar">
                   <span>Deterministic recommendation active. Copilot advice auto-generated for top priority findings.</span>
@@ -621,6 +625,7 @@
                 </div>
               `;
             } else if (issue.aiStatus === 'error') {
+              container.className = 'ai-advisor-container ai-error-container';
               container.innerHTML = `
                 <div class="ai-error-box" style="display: flex; justify-content: space-between; align-items: center;">
                   <span style="font-size: 0.8rem; color: #ef4444;">
@@ -643,21 +648,19 @@
         event.stopPropagation();
       }
 
-      const btn = event ? event.currentTarget : null;
-      const container = document.getElementById(`ai-advice-result-${index}`) || document.getElementById(`ai-advisor-container-${index}`);
-      if (!container) return;
+      const mainContainer = document.getElementById(`ai-advisor-container-${index}`) || 
+                            (event?.currentTarget ? event.currentTarget.closest('.ai-advisor-container') : null) ||
+                            document.getElementById(`ai-advice-result-${index}`);
+      if (!mainContainer) return;
 
-      if (btn) {
-        btn.disabled = true;
-        btn.textContent = 'Analyzing...';
-      }
-
-      container.style.display = 'block';
-      container.innerHTML = `
+      // Immediately replace any error box and button with a clean loading spinner
+      mainContainer.className = 'ai-advisor-container';
+      mainContainer.style.display = 'block';
+      mainContainer.innerHTML = `
         <div class="ai-loading-box">
           <div class="ai-spinner"></div>
           <div>
-            <strong>Consulting GitHub Copilot AI Advisor...</strong>
+            <strong>✨ Consulting GitHub Copilot AI Advisor...</strong>
             <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 2px;">Synthesizing deterministic findings and metric correlation</div>
           </div>
         </div>
@@ -683,7 +686,7 @@
           throw new Error(data.message || data.error || `Server returned ${res.status}`);
         }
 
-        renderAiAdviceResult(container, data.advice);
+        renderAiAdviceResult(mainContainer, data.advice);
         if (window.__AUDIT_ISSUES__ && window.__AUDIT_ISSUES__[index]) {
           window.__AUDIT_ISSUES__[index].aiAdvice = data.advice;
           window.__AUDIT_ISSUES__[index].aiStatus = 'completed';
@@ -693,19 +696,28 @@
         const noticeEl = document.getElementById('ai-pdf-sync-notice');
         if (noticeEl) noticeEl.style.display = 'flex';
       } catch (err) {
-        container.innerHTML = `
-          <div class="ai-error-box">
-            <div style="display: flex; align-items: center; justify-content: space-between;">
-              <strong style="color: #ef4444; font-size: 0.82rem;">⚠️ Copilot AI Advisor Error</strong>
-              <button type="button" class="ai-retry-btn" onclick="retryAiAdvice(event, ${index})">Retry</button>
-            </div>
-            <p style="font-size: 0.78rem; margin-top: 4px; color: var(--text-secondary);">${escapeClientHtml(err.message)}</p>
+        mainContainer.className = 'ai-advisor-container ai-error-container';
+        mainContainer.innerHTML = `
+          <div class="ai-error-box" style="display: flex; align-items: center; justify-content: space-between;">
+            <span style="font-size: 0.8rem; color: #ef4444;">
+              ⚠️ Copilot analysis encountered an issue: ${escapeClientHtml(err.message)}
+            </span>
+            <button class="ai-retry-btn" type="button" onclick="retryAiAdvice(event, ${index})">Retry</button>
           </div>
         `;
       }
     }
 
     function renderAiAdviceResult(container, advice) {
+      if (!container) return;
+
+      // Ascend to top-level .ai-advisor-container if an inner result wrapper was passed
+      if (container.classList && (container.classList.contains('ai-advice-result-wrapper') || container.id?.startsWith('ai-advice-result-'))) {
+        const parent = container.closest('.ai-advisor-container');
+        if (parent) container = parent;
+      }
+      container.className = 'ai-advisor-container';
+
       const conf = String(advice.confidence || 'MEDIUM').toUpperCase();
       const confClass = conf.toLowerCase();
 
