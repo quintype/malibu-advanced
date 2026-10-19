@@ -10,7 +10,7 @@ if (typeof globalThis.fetch === 'undefined' && nodeFetch) {
 }
 
 import * as chromeLauncher from 'chrome-launcher';
-import lighthouse from 'lighthouse';
+import lighthouse, { desktopConfig } from 'lighthouse';
 import puppeteer from 'puppeteer';
 
 /**
@@ -106,8 +106,8 @@ export function extractScores(reportJson) {
  * Programmatically scrolls down the page and back to the top to trigger lazy-loaded assets.
  * Also captures unthrottled layout shifts as a fallback attribution source.
  */
-async function preScrollPage(url, port) {
-  console.log(`🤖 Bot Scrolling: Connecting Puppeteer to port ${port} to trigger lazy-loaded assets...`);
+async function preScrollPage(url, port, device = 'mobile') {
+  console.log(`🤖 Bot Scrolling: Connecting Puppeteer to port ${port} (${device}) to trigger lazy-loaded assets...`);
   let browser = null;
   let customShifts = [];
   try {
@@ -132,7 +132,13 @@ async function preScrollPage(url, port) {
     const pages = await browser.pages();
     const page = pages.length > 0 ? pages[0] : await browser.newPage();
 
-    await page.setViewport({ width: 1024, height: 768 });
+    if (device === 'mobile') {
+      await page.setUserAgent('Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Mobile Safari/537.36');
+      await page.setViewport({ width: 412, height: 823, deviceScaleFactor: 1.75, isMobile: true, hasTouch: true });
+    } else {
+      await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36');
+      await page.setViewport({ width: 1350, height: 940, deviceScaleFactor: 1, isMobile: false, hasTouch: false });
+    }
     await page.setCacheEnabled(false);
     await page.setExtraHTTPHeaders({
       'Cache-Control': 'no-cache, no-store, must-revalidate',
@@ -234,7 +240,7 @@ async function preScrollPage(url, port) {
 
 /**
  * Runs a specially throttled diagnostic pass to capture layout shifts when Lighthouse trace parsing fails.
- * Emulates exactly Lighthouse Mobile throttling (4x CPU, Slow 4G).
+ * Emulates exactly Lighthouse Mobile/Desktop throttling & screen metrics.
  */
 async function throttledDiagnosticPass(url, port, device = 'mobile') {
   console.log(`🤖 Lighthouse trace parser failed. Running Custom Throttled Diagnostic Pass for ${device} on port ${port}...`);
@@ -247,11 +253,13 @@ async function throttledDiagnosticPass(url, port, device = 'mobile') {
     const pages = await browser.pages();
     const page = pages.length > 0 ? pages[0] : await browser.newPage();
 
-    // Emulate Device Viewport
+    // Emulate Device Viewport & User Agent (matching official Lighthouse specs)
     if (device === 'mobile') {
-      await page.setViewport({ width: 360, height: 667, isMobile: true, hasTouch: true });
+      await page.setUserAgent('Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Mobile Safari/537.36');
+      await page.setViewport({ width: 412, height: 823, deviceScaleFactor: 1.75, isMobile: true, hasTouch: true });
     } else {
-      await page.setViewport({ width: 1024, height: 768, isMobile: false, hasTouch: false });
+      await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36');
+      await page.setViewport({ width: 1350, height: 940, deviceScaleFactor: 1, isMobile: false, hasTouch: false });
     }
     await page.setCacheEnabled(false);
     await page.setExtraHTTPHeaders({
@@ -260,16 +268,27 @@ async function throttledDiagnosticPass(url, port, device = 'mobile') {
       'Expires': '0'
     });
 
-    // Emulate Lighthouse Mobile Throttling
+    // Emulate Network & CPU Conditions (matching official Lighthouse constants)
     const client = await page.target().createCDPSession();
-    await client.send('Network.emulateNetworkConditions', {
-      offline: false,
-      latency: 150,
-      downloadThroughput: (1.6 * 1024 * 1024) / 8,
-      uploadThroughput: (750 * 1024) / 8,
-      connectionType: 'cellular3g'
-    });
-    await client.send('Emulation.setCPUThrottlingRate', { rate: 4 });
+    if (device === 'mobile') {
+      await client.send('Network.emulateNetworkConditions', {
+        offline: false,
+        latency: 150,
+        downloadThroughput: (1.6 * 1024 * 1024 * 0.9) / 8,
+        uploadThroughput: (750 * 1024 * 0.9) / 8,
+        connectionType: 'cellular3g'
+      });
+      await client.send('Emulation.setCPUThrottlingRate', { rate: 4 });
+    } else {
+      await client.send('Network.emulateNetworkConditions', {
+        offline: false,
+        latency: 40,
+        downloadThroughput: (10 * 1024 * 1024) / 8,
+        uploadThroughput: (5 * 1024 * 1024) / 8,
+        connectionType: 'wifi'
+      });
+      await client.send('Emulation.setCPUThrottlingRate', { rate: 1 });
+    }
 
     await page.evaluateOnNewDocument(() => {
       if (window.__cwv_layout_shifts_injected) return;
@@ -360,9 +379,10 @@ export async function runLighthouseAudit(url) {
       ]
     });
 
-    // Run bot scrolling to trigger lazy loaders and initialize assets
-    const customShifts = await preScrollPage(auditUrl, chrome.port);
+    // Run bot scrolling to trigger lazy loaders and initialize assets (Mobile pass)
+    const customShifts = await preScrollPage(auditUrl, chrome.port, 'mobile');
 
+    // Official Lighthouse & PageSpeed Insights Reference Configuration
     const mobileOptions = {
       logLevel: 'info',
       output: 'json',
@@ -370,13 +390,23 @@ export async function runLighthouseAudit(url) {
       port: chrome.port,
       disableStorageReset: false,
       formFactor: 'mobile',
+      throttlingMethod: 'simulate',
       screenEmulation: {
         mobile: true,
-        width: 375,
-        height: 667,
-        deviceScaleFactor: 2,
+        width: 412,
+        height: 823,
+        deviceScaleFactor: 1.75,
         disabled: false
-      }
+      },
+      throttling: {
+        rttMs: 150,
+        throughputKbps: 1.6 * 1024,
+        requestLatencyMs: 150 * 3.75,
+        downloadThroughputKbps: 1.6 * 1024 * 0.9,
+        uploadThroughputKbps: 750 * 0.9,
+        cpuSlowdownMultiplier: 4
+      },
+      emulatedUserAgent: 'Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Mobile Safari/537.36'
     };
 
     const desktopOptions = {
@@ -386,10 +416,11 @@ export async function runLighthouseAudit(url) {
       port: chrome.port,
       disableStorageReset: false,
       formFactor: 'desktop',
+      throttlingMethod: 'simulate',
       screenEmulation: {
         mobile: false,
-        width: 1024,
-        height: 768,
+        width: 1350,
+        height: 940,
         deviceScaleFactor: 1,
         disabled: false
       },
@@ -400,10 +431,11 @@ export async function runLighthouseAudit(url) {
         requestLatencyMs: 0,
         downloadThroughputKbps: 0,
         uploadThroughputKbps: 0
-      }
+      },
+      emulatedUserAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36'
     };
 
-    console.log(`📱 Running Lighthouse Mobile Audit...`);
+    console.log(`📱 Running Lighthouse Mobile Audit (412x823, 1.75x DPR, Slow 4G, 4x CPU)...`);
     const mobileResult = await lighthouse(auditUrl, mobileOptions);
     const mobileData = extractScores(JSON.parse(mobileResult.report));
 
@@ -414,8 +446,8 @@ export async function runLighthouseAudit(url) {
       finalCustomShifts = await throttledDiagnosticPass(auditUrl, chrome.port, 'mobile');
     }
 
-    console.log(`💻 Running Lighthouse Desktop Audit...`);
-    const desktopResult = await lighthouse(auditUrl, desktopOptions);
+    console.log(`💻 Running Lighthouse Desktop Audit (1350x940, 1x DPR, Dense 4G, 1x CPU)...`);
+    const desktopResult = await lighthouse(auditUrl, desktopOptions, desktopConfig);
     const desktopData = extractScores(JSON.parse(desktopResult.report));
 
     const hasUnknownDesktop = desktopData.clsElements.some(el => el.selector.includes('Global/Unknown'));
