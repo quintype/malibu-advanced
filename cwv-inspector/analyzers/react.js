@@ -28,8 +28,9 @@ export function analyzeReact(files, reactAsts) {
       });
     }
 
-    // Check for heavy inline handlers inside rendering loops
-    if (content.includes('.map(') && (content.includes('() =>') || content.includes('.bind(this)')) && (content.includes('onClick=') || content.includes('onChange='))) {
+    // Check for heavy inline handlers inside rendering loops (exclude small card/molecule components)
+    const isCardOrMolecule = file.relativePath.toLowerCase().includes('card') || file.relativePath.toLowerCase().includes('molecule') || file.relativePath.toLowerCase().includes('atom');
+    if (!isCardOrMolecule && content.includes('.map(') && (content.includes('() =>') || content.includes('.bind(this)')) && (content.includes('onClick=') || content.includes('onChange='))) {
       recommendations.push({
         type: 'code',
         file: file.relativePath,

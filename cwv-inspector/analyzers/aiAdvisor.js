@@ -21,10 +21,16 @@ export function selectPriorityIssues(issues = [], maxCount = 5) {
 
   const cwvWeights = { cls: 3, inp: 3, lcp: 2 };
   const severityWeights = { high: 3, medium: 2, low: 1 };
+  const correlationWeights = { EXACT: 4, PROBABLE: 3, PARTIAL: 2, STATIC_ONLY: 1, UNRESOLVED: 1 };
 
   return [...issues]
     .filter(issue => issue && typeof issue === 'object' && issue.message)
     .sort((a, b) => {
+      // Prioritize verified runtime/correlated issues over unconfirmed static-only code scans
+      const corrA = correlationWeights[a.correlationState] || (a.type === 'correlated' ? 3 : (a.correlationState === 'STATIC_ONLY' ? 1 : 2));
+      const corrB = correlationWeights[b.correlationState] || (b.type === 'correlated' ? 3 : (b.correlationState === 'STATIC_ONLY' ? 1 : 2));
+      if (corrB !== corrA) return corrB - corrA;
+
       const cwvA = cwvWeights[String(a.cwv).toLowerCase()] || 0;
       const cwvB = cwvWeights[String(b.cwv).toLowerCase()] || 0;
       if (cwvB !== cwvA) return cwvB - cwvA;
@@ -121,6 +127,11 @@ STRICT INSTRUCTIONS:
 6. Your response MUST be valid JSON conforming strictly to the schema below. Do not wrap in markdown or include conversational text.
 7. ARCHITECTURAL & DOM INTEGRITY:
    - NEVER suggest wrapping components with arbitrary dummy wrapper <div>s ("DIV soup") purely to attach a CSS class or min-height. Extra wrapper elements increase DOM tree depth, bloat HTML size, and violate the Lighthouse "Avoid an excessive DOM size" audit.
+   - NEVER suggest ternary fallback empty dummy divs or static spacer elements (e.g., "{condition ? <Component /> : <div style={{ minHeight: '32px' }} />}"). Static dummy divs render phantom whitespace when the prop/flag is false and clutter the JSX. Instead, reserve dimensions in CSS on the component wrapper itself, or provide a semantic skeleton loader if data loads asynchronously.
+   - NEVER recommend wrapping simple presentation card components (e.g., SpeakerCard, StoryCard, AuthorCard, MemberCard) with React.memo(), useMemo(), or useCallback() unless there is verified runtime evidence of interaction lag or heavy re-render cascades. Do not introduce premature optimization boilerplate to simple presentation components.
+   - NEVER suggest adding startTransition() or synthetic pending states to simple event handlers that only toggle local UI state (e.g. open/close modal, expand bio) or pass events to parents.
+   - NEVER suggest adding ternary fallback dummy divs or fixed-height spacer hacks (e.g., "{speaker.bio ? <p>...</p> : <div style={{ minHeight: '50px' }} />}") for optional text or fields in card components. Card layouts should flex naturally based on provided content; injecting empty spacer divs leaves awkward empty white gaps in the UI.
+   - For image components in cards, respect framework primitives (e.g., @quintype/components's <ResponsiveImage>, Next.js <Image>). Do not advise replacing clean framework components with raw <img> tags or manual inline style calculations unless specifically required.
    - Recommend applying layout attributes (width, height, aspect-ratio), CSS classes, or CSS containment (contain: layout) directly to EXISTING elements or existing parent containers in the same line/hierarchy.
    - NEVER suggest arbitrary dummy heights like "min-height: 1px" which provide no real CLS benefit. If space reservation is needed, recommend realistic dimensions, aspect-ratio, or proper skeleton placeholders with clear technical reasoning.
    - Always provide sound technical reasoning explaining why the proposed fix resolves the metric without negatively impacting DOM performance, tree depth, or bundle size.

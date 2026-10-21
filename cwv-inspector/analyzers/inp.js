@@ -36,9 +36,22 @@ export function analyzeInp(files, reactAsts) {
           handlerFunction = handlerValue;
         }
 
+        // Scope check to the handler function if defined, or inline handler
+        let searchScope = '';
+        if (handlerFunction && ast.functions[handlerFunction]) {
+          const funcStartLine = Math.max(0, ast.functions[handlerFunction] - 1);
+          searchScope = lines.slice(funcStartLine, funcStartLine + 35).join('\n');
+        } else if (attr.value === 'inline-handler' && attr.loc) {
+          const attrStart = Math.max(0, (attr.loc.start?.line || 1) - 1);
+          searchScope = lines.slice(attrStart, attrStart + 10).join('\n');
+        }
+
+        // If handler is an external prop, reference, or simple inline toggle, do not blindly run whole-file regex matches
+        if (!searchScope) return;
+
         // Check if handler triggers synchronous fetch without transition/pending wrappers
-        const isAsyncCall = content.includes('fetch(') || content.includes('axios(') || content.includes('XMLHttpRequest');
-        const hasTransition = content.includes('startTransition') || content.includes('useTransition');
+        const isAsyncCall = searchScope.includes('fetch(') || searchScope.includes('axios(') || searchScope.includes('XMLHttpRequest');
+        const hasTransition = searchScope.includes('startTransition') || searchScope.includes('useTransition') || content.includes('startTransition');
 
         if (isAsyncCall && !hasTransition) {
           recommendations.push({
@@ -56,8 +69,8 @@ export function analyzeInp(files, reactAsts) {
           });
         }
 
-        // Check for long JS operations (map/filter/JSON.parse) inside the file containing the handler
-        const hasHeavyOps = content.includes('.map(') && content.includes('.filter(') && (content.includes('JSON.parse') || content.includes('JSON.stringify'));
+        // Check for long JS operations inside the handler
+        const hasHeavyOps = searchScope.includes('.map(') && searchScope.includes('.filter(') && (searchScope.includes('JSON.parse') || searchScope.includes('JSON.stringify'));
         if (hasHeavyOps) {
           recommendations.push({
             type: 'code',
@@ -73,8 +86,9 @@ export function analyzeInp(files, reactAsts) {
             operation: 'computation'
           });
         }
+
         // Check for async/await handlers and promise chains
-        const isPromiseChain = content.includes('.then(') || content.includes('.catch(') || content.includes('await ');
+        const isPromiseChain = (searchScope.includes('.then(') || searchScope.includes('.catch(') || searchScope.includes('await ')) && isAsyncCall;
         if (isPromiseChain) {
           recommendations.push({
             type: 'code',
@@ -92,8 +106,8 @@ export function analyzeInp(files, reactAsts) {
         }
 
         // Check for React State Updates causing Render loops
-        const hasStateUpdate = /set[A-Z][a-zA-Z]*\(/.test(content);
-        if (hasStateUpdate && content.includes('.map(')) {
+        const hasStateUpdate = /set[A-Z][a-zA-Z]*\(/.test(searchScope);
+        if (hasStateUpdate && searchScope.includes('.map(')) {
           recommendations.push({
             type: 'code',
             file: file.filePath,
@@ -141,9 +155,10 @@ export function analyzeInp(files, reactAsts) {
       }
     });
 
-    // 3. React-Specific render loop issues
+    // 3. React-Specific render loop issues (only for large page/list containers, never presentation cards or molecules)
     const isComponent = path.basename(file.filePath).match(/^[A-Z]/);
-    if (isComponent) {
+    const isCardOrMolecule = file.filePath.toLowerCase().includes('card') || file.filePath.toLowerCase().includes('molecule') || file.filePath.toLowerCase().includes('atom');
+    if (isComponent && !isCardOrMolecule) {
       const hasLargeList = content.includes('.map(') && content.includes('return') && !content.includes('memo(');
       if (hasLargeList) {
         const mapIdx = content.indexOf('.map(');

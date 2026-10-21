@@ -38,19 +38,24 @@ export function analyzeCls(files, reactAsts) {
     });
 
     // Check for dynamic element rendering that could cause shifts
+    // Only flag true asynchronous state renders (e.g. useState/useEffect with loading/data flags),
+    // NEVER flag static template props or SSR configuration branches (e.g. verticalShare, isFullBleed).
     const content = file.content;
-    const asyncStateRenders = (content.match(/\{\s*[a-zA-Z0-9_]+\s*&&\s*<[A-Z]/g) || []).length;
-    if (asyncStateRenders > 3 && !content.includes('Skeleton') && !content.includes('Placeholder')) {
-      recommendations.push({
-        type: 'code',
-        file: file.relativePath,
-        line: 1,
-        cwv: 'cls',
-        severity: 'medium',
-        message: 'Multiple conditional renders detected without loading skeletons or placeholders.',
-        impact: 'Injecting components asynchronously after state updates causes elements below them to jump.',
-        suggestion: 'Implement loading skeletons or define stable layout constraints on the existing component or parent rather than adding redundant wrapper divs.'
-      });
+    const hasStateOrAsync = /use(State|Query|SWR|Async|Effect)\b|fetch|axios|\.then\(/.test(content);
+    if (hasStateOrAsync) {
+      const asyncConditions = content.match(/\{\s*(?:is)?(?:Loading|Loaded|Fetching|Ready|data|response|error)\s*&&\s*<[A-Z]/g) || [];
+      if (asyncConditions.length > 0 && !content.includes('Skeleton') && !content.includes('Placeholder')) {
+        recommendations.push({
+          type: 'code',
+          file: file.relativePath,
+          line: 1,
+          cwv: 'cls',
+          severity: 'medium',
+          message: 'Asynchronous state conditional render detected without a loading skeleton or placeholder.',
+          impact: 'Injecting components dynamically after client-side state resolution causes content below to jump.',
+          suggestion: 'Render a skeleton loader or reserve layout space via CSS on the component/container instead of injecting elements after data resolves. Do not use empty dummy spacer divs.'
+        });
+      }
     }
   }
 

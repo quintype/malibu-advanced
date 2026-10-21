@@ -36,7 +36,8 @@ export function analyzeImages(files, reactAsts) {
 
         // Check if lazy loading is missing on normal below-the-fold images
         const isHomeOrList = file.relativePath.toLowerCase().includes('list') || file.relativePath.toLowerCase().includes('card') || file.relativePath.toLowerCase().includes('grid');
-        if (isHomeOrList && !loadingAttr && !file.relativePath.toLowerCase().includes('hero') && !file.relativePath.toLowerCase().includes('banner')) {
+        const hasFrameworkLazy = file.content.includes('ResponsiveImage') || file.content.includes('LazyLoadImages') || file.content.includes('LazyLoad') || file.content.includes('next/image');
+        if (isHomeOrList && !loadingAttr && !hasFrameworkLazy && !file.relativePath.toLowerCase().includes('hero') && !file.relativePath.toLowerCase().includes('banner')) {
           recommendations.push({
             type: 'code',
             file: file.relativePath,

@@ -668,7 +668,7 @@ export function compileRecommendations(staticIssues, lighthouseIssues = null, as
     }
   });
 
-  // Filter staticIssues to keep non-correlated static-only INP issues as LOW severity
+  // Filter staticIssues to keep non-correlated static-only issues as LOW severity
   const remainingStaticIssues = cleanStaticIssues.filter((issue, idx) => {
     if (issue.cwv === 'inp') {
       return !matchedInpStaticIndices.has(idx);
@@ -684,6 +684,25 @@ export function compileRecommendations(staticIssues, lighthouseIssues = null, as
         evidence: ['Static rule scanned; no runtime INP latency triggered for this component.'],
         confidenceExplanation: 'Signals: ✗ No corresponding runtime latency event registered',
         impact: `Static Evidence: ${issue.impact} [Static Only - No runtime INP correlation established]`
+      };
+    }
+    if (issue.cwv === 'cls') {
+      const isLhRun = !!lighthouseIssues;
+      const mobileCls = Number(lighthouseIssues?.mobile?.cls?.value ?? 0);
+      const desktopCls = Number(lighthouseIssues?.desktop?.cls?.value ?? 0);
+      const maxCls = Math.max(mobileCls, desktopCls);
+      const isRuntimeClean = isLhRun && maxCls < 0.1;
+
+      return {
+        ...issue,
+        severity: isRuntimeClean ? 'low' : (issue.severity || 'medium'),
+        confidence: 'LOW',
+        correlationState: 'STATIC_ONLY',
+        evidence: isLhRun
+          ? [`Static code pattern scanned; no runtime layout shift detected for this element (Runtime CLS: ${maxCls.toFixed(3)}).`]
+          : ['Static code pattern scanned without runtime measurement.'],
+        confidenceExplanation: 'Signals: ✗ No corresponding runtime layout shift registered',
+        impact: `Static Opportunity: ${issue.impact} [Static Only - No runtime layout shift observed]`
       };
     }
     return issue;
