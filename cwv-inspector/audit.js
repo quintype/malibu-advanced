@@ -262,31 +262,50 @@ Options:
   if (url && cruxApiKey) {
     console.log('⚡ Fetching Field Data and History from Google CrUX API...');
     try {
-      const [cruxRes, cruxHistoryRes] = await Promise.all([
-        fetch(`https://chromeuxreport.googleapis.com/v1/records:queryRecord?key=${cruxApiKey}`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ url: url })
-        }),
-        fetch(`https://chromeuxreport.googleapis.com/v1/records:queryHistoryRecord?key=${cruxApiKey}`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ url: url })
-        })
+      const parsedUrl = new URL(url);
+      const origin = parsedUrl.origin;
+
+      const fetchCruxQuery = async (endpoint, payload) => {
+        try {
+          const res = await fetch(`https://chromeuxreport.googleapis.com/v1/records:${endpoint}?key=${cruxApiKey}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          if (res.ok) return await res.json();
+          return null;
+        } catch (_) {
+          return null;
+        }
+      };
+
+      // 1. Attempt exact URL query
+      let [cData, cHistory] = await Promise.all([
+        fetchCruxQuery('queryRecord', { url: url }),
+        fetchCruxQuery('queryHistoryRecord', { url: url })
       ]);
 
-      if (cruxRes.ok) {
-        cruxData = await cruxRes.json();
-        console.log('CrUX Field Data fetched successfully.');
-      } else {
-        console.warn(`CrUX API status ${cruxRes.status}: ${await cruxRes.text()}`);
+      // 2. Fall back to origin if exact URL has insufficient Chrome traffic (standard PSI behavior)
+      if (!cData) {
+        console.log(`⚡ CrUX exact URL record not found. Falling back to origin: "${origin}" (standard PSI behavior)...`);
+        cData = await fetchCruxQuery('queryRecord', { origin: origin });
+      }
+      if (!cHistory) {
+        cHistory = await fetchCruxQuery('queryHistoryRecord', { origin: origin });
       }
 
-      if (cruxHistoryRes.ok) {
-        cruxHistoryData = await cruxHistoryRes.json();
+      if (cData) {
+        cruxData = cData;
+        console.log('CrUX Field Data fetched successfully.');
+      } else {
+        console.warn('CrUX Field Data unavailable for this URL and origin.');
+      }
+
+      if (cHistory) {
+        cruxHistoryData = cHistory;
         console.log('CrUX History Data fetched successfully.');
       } else {
-        console.warn(`CrUX History API status ${cruxHistoryRes.status}: ${await cruxHistoryRes.text()}`);
+        console.warn('CrUX History Data unavailable for this URL and origin.');
       }
     } catch (err) {
       console.warn('CrUX Data fetch failed:', err.message);

@@ -456,11 +456,20 @@ export async function runLighthouseAudit(url) {
       finalCustomShifts = [...finalCustomShifts, ...desktopShifts];
     }
 
-    if (mobileData && (mobileData.cls.value === 0 || mobileData.cls.value === undefined) && finalCustomShifts.length > 0) {
+    // Incorporate scroll-triggered layout shifts if observed shifts exceed the static non-scrolling trace
+    if (mobileData && finalCustomShifts.length > 0) {
       const shiftSum = finalCustomShifts.reduce((acc, s) => acc + (Number(s.value) || 0), 0);
-      if (shiftSum > 0) {
+      if (shiftSum > (mobileData.cls.value || 0)) {
+        console.log(`📊 Full-page scroll observed CLS (${shiftSum.toFixed(3)}) exceeds static viewport CLS (${(mobileData.cls.value || 0).toFixed(3)}). Updating report metrics.`);
         mobileData.cls.value = shiftSum;
         mobileData.cls.displayValue = shiftSum.toFixed(3);
+        if (shiftSum > 0.25) {
+          mobileData.cls.score = Math.max(0, Math.round((1 - Math.min(1, (shiftSum - 0.25) / 0.5)) * 49));
+        } else if (shiftSum > 0.10) {
+          mobileData.cls.score = Math.round(50 + ((0.25 - shiftSum) / 0.15) * 39);
+        } else {
+          mobileData.cls.score = 90 + Math.round(((0.10 - shiftSum) / 0.10) * 10);
+        }
       }
     }
 

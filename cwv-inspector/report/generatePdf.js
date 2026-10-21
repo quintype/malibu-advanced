@@ -276,12 +276,15 @@ export async function generateReport(compiledResult, options = {}) {
   // Determine scores for API and Local
   const getScoreData = (score) => {
     let cls = 'good', textCls = 'good-text', status = 'Passed';
+    let desc = 'Your website is performing exceptionally well across Core Web Vitals and key performance metrics. This delivers a fast, stable, and responsive experience for users, which helps improve engagement and supports better search visibility.';
     if (score < 50) {
       cls = 'poor'; textCls = 'danger-text'; status = 'Failed';
+      desc = 'Critical performance bottlenecks and visual layout instability were detected across Core Web Vitals. Significant layout shifts or blocking scripts impact real-user experience and Google ranking metrics.';
     } else if (score < 90) {
       cls = 'needs-improvement'; textCls = 'warning-text'; status = 'Needs Improvement';
+      desc = 'Your website demonstrates moderate performance across Core Web Vitals, but notable layout stability or responsiveness bottlenecks require optimization to prevent user experience degradation.';
     }
-    return { score, cls, textCls, status };
+    return { score, cls, textCls, status, desc };
   };
 
   const mobileApiScore = getScoreData(mobileData ? Math.round(mobileData.performanceScore) : compiledResult.healthScore);
@@ -1080,6 +1083,7 @@ export async function generateReport(compiledResult, options = {}) {
     .replace(/{{MOBILE_SCORE_CLASS}}/g, mobileLocScore.cls)
     .replace(/{{MOBILE_SCORE_TEXT_CLASS}}/g, mobileLocScore.textCls)
     .replace(/{{MOBILE_SCORE_STATUS}}/g, mobileLocScore.status)
+    .replace(/{{MOBILE_SCORE_DESC}}/g, escapeHtml(mobileLocScore.desc))
 
     .replace(/{{MOBILE_API_SCORE}}/g, mobileApiScore.score)
     .replace(/{{MOBILE_API_CLASS}}/g, mobileApiScore.cls)
@@ -1161,6 +1165,7 @@ export async function generateReport(compiledResult, options = {}) {
     .replace(/{{DESKTOP_SCORE_CLASS}}/g, desktopLocScore.cls)
     .replace(/{{DESKTOP_SCORE_TEXT_CLASS}}/g, desktopLocScore.textCls)
     .replace(/{{DESKTOP_SCORE_STATUS}}/g, desktopLocScore.status)
+    .replace(/{{DESKTOP_SCORE_DESC}}/g, escapeHtml(desktopLocScore.desc))
 
     .replace(/{{DESKTOP_API_SCORE}}/g, desktopApiScore.score)
     .replace(/{{DESKTOP_API_CLASS}}/g, desktopApiScore.cls)
