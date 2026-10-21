@@ -119,6 +119,11 @@ STRICT INSTRUCTIONS:
 4. If evidence is incomplete or circumstantial, explicitly state this limitation under "limitations", provide alternative hypotheses, and adjust "confidence".
 5. Do not propose running commands that modify system state. Propose safe, non-destructive code edits only.
 6. Your response MUST be valid JSON conforming strictly to the schema below. Do not wrap in markdown or include conversational text.
+7. ARCHITECTURAL & DOM INTEGRITY:
+   - NEVER suggest wrapping components with arbitrary dummy wrapper <div>s ("DIV soup") purely to attach a CSS class or min-height. Extra wrapper elements increase DOM tree depth, bloat HTML size, and violate the Lighthouse "Avoid an excessive DOM size" audit.
+   - Recommend applying layout attributes (width, height, aspect-ratio), CSS classes, or CSS containment (contain: layout) directly to EXISTING elements or existing parent containers in the same line/hierarchy.
+   - NEVER suggest arbitrary dummy heights like "min-height: 1px" which provide no real CLS benefit. If space reservation is needed, recommend realistic dimensions, aspect-ratio, or proper skeleton placeholders with clear technical reasoning.
+   - Always provide sound technical reasoning explaining why the proposed fix resolves the metric without negatively impacting DOM performance, tree depth, or bundle size.
 
 REQUIRED JSON SCHEMA:
 {

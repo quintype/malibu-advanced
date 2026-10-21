@@ -49,7 +49,7 @@ export function analyzeCls(files, reactAsts) {
         severity: 'medium',
         message: 'Multiple conditional renders detected without loading skeletons or placeholders.',
         impact: 'Injecting components asynchronously after state updates causes elements below them to jump.',
-        suggestion: 'Implement loading skeletons or set a min-height container for elements rendered conditionally.'
+        suggestion: 'Implement loading skeletons or define stable layout constraints on the existing component or parent rather than adding redundant wrapper divs.'
       });
     }
   }
