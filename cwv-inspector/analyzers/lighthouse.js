@@ -146,6 +146,28 @@ async function preScrollPage(url, port, device = 'mobile') {
       'Expires': '0'
     });
 
+    // Emulate Network & CPU Conditions (matching official Lighthouse constants)
+    const client = await page.target().createCDPSession();
+    if (device === 'mobile') {
+      await client.send('Network.emulateNetworkConditions', {
+        offline: false,
+        latency: 150,
+        downloadThroughput: (1.6 * 1024 * 1024 * 0.9) / 8,
+        uploadThroughput: (750 * 1024 * 0.9) / 8,
+        connectionType: 'cellular3g'
+      });
+      await client.send('Emulation.setCPUThrottlingRate', { rate: 4 });
+    } else {
+      await client.send('Network.emulateNetworkConditions', {
+        offline: false,
+        latency: 40,
+        downloadThroughput: (10 * 1024 * 1024) / 8,
+        uploadThroughput: (5 * 1024 * 1024) / 8,
+        connectionType: 'wifi'
+      });
+      await client.send('Emulation.setCPUThrottlingRate', { rate: 1 });
+    }
+
     await page.evaluateOnNewDocument(() => {
       if (window.__cwv_layout_shifts_injected) return;
       window.__cwv_layout_shifts_injected = true;
@@ -169,7 +191,7 @@ async function preScrollPage(url, port, device = 'mobile') {
                   let sel = el.nodeName.toLowerCase();
                   if (el.id) sel += '#' + el.id;
                   else if (el.className && typeof el.className === 'string') {
-                    const c = el.className.trim().split(/\\s+/).filter(Boolean);
+                    const c = el.className.trim().split(/\s+/).filter(Boolean);
                     if (c.length > 0) sel += '.' + c.join('.');
                   }
                   path.unshift(sel);
@@ -209,16 +231,28 @@ async function preScrollPage(url, port, device = 'mobile') {
     // Navigate to URL
     await page.goto(url, { waitUntil: 'networkidle2', timeout: 45000 });
 
-    // Scroll to bottom in increments
+    // Scroll to bottom in increments ensuring full page traversal
     await page.evaluate(async () => {
       await new Promise((resolve) => {
         let totalHeight = 0;
-        const distance = 250;
+        const distance = 300;
+        let lastScrollY = -1;
+        let stagnantCount = 0;
         const timer = setInterval(() => {
           const scrollHeight = document.body.scrollHeight;
           window.scrollBy(0, distance);
           totalHeight += distance;
-          if (totalHeight >= scrollHeight) {
+
+          const currentScrollY = window.scrollY;
+          if (currentScrollY === lastScrollY) {
+            stagnantCount++;
+          } else {
+            stagnantCount = 0;
+          }
+          lastScrollY = currentScrollY;
+
+          const reachedBottom = (window.innerHeight + window.scrollY) >= (scrollHeight - 50);
+          if (reachedBottom || stagnantCount >= 3 || totalHeight >= 25000) {
             clearInterval(timer);
             // Scroll back to top
             window.scrollTo(0, 0);
@@ -231,9 +265,15 @@ async function preScrollPage(url, port, device = 'mobile') {
     // Short wait at the top for layout stability
     await new Promise(r => setTimeout(r, 1500));
     customShifts = await page.evaluate(() => window.__cwv_layout_shifts || []);
-    console.log('🤖 Bot Scrolling completed successfully. Cache and DOM primed. Captured', customShifts.length, 'layout shifts.');
+    console.log(`🤖 Bot Scrolling (${device}) completed successfully. Cache and DOM primed. Captured`, customShifts.length, 'layout shifts.');
   } catch (err) {
     console.warn('⚠️ Bot scrolling warning:', err.message);
+  } finally {
+    if (browser) {
+      try {
+        await browser.disconnect();
+      } catch (e) { }
+    }
   }
   return customShifts;
 }
@@ -380,7 +420,7 @@ export async function runLighthouseAudit(url) {
     });
 
     // Run bot scrolling to trigger lazy loaders and initialize assets (Mobile pass)
-    const customShifts = await preScrollPage(auditUrl, chrome.port, 'mobile');
+    const mobileCustomShifts = await preScrollPage(auditUrl, chrome.port, 'mobile');
 
     // Official Lighthouse & PageSpeed Insights Reference Configuration
     const mobileOptions = {
@@ -441,26 +481,31 @@ export async function runLighthouseAudit(url) {
 
     // Check if Lighthouse failed to trace DOM nodes
     const hasUnknownMobile = mobileData.clsElements.some(el => el.selector.includes('Global/Unknown'));
-    let finalCustomShifts = customShifts;
+    let finalMobileShifts = mobileCustomShifts;
     if (hasUnknownMobile) {
-      finalCustomShifts = await throttledDiagnosticPass(auditUrl, chrome.port, 'mobile');
+      const throttledShifts = await throttledDiagnosticPass(auditUrl, chrome.port, 'mobile');
+      finalMobileShifts = [...finalMobileShifts, ...throttledShifts];
     }
+
+    // Run bot scrolling to trigger lazy loaders and initialize assets (Desktop pass)
+    const desktopCustomShifts = await preScrollPage(auditUrl, chrome.port, 'desktop');
 
     console.log(`💻 Running Lighthouse Desktop Audit (1350x940, 1x DPR, Dense 4G, 1x CPU)...`);
     const desktopResult = await lighthouse(auditUrl, desktopOptions, desktopConfig);
     const desktopData = extractScores(JSON.parse(desktopResult.report));
 
     const hasUnknownDesktop = desktopData.clsElements.some(el => el.selector.includes('Global/Unknown'));
+    let finalDesktopShifts = desktopCustomShifts;
     if (hasUnknownDesktop) {
       const desktopShifts = await throttledDiagnosticPass(auditUrl, chrome.port, 'desktop');
-      finalCustomShifts = [...finalCustomShifts, ...desktopShifts];
+      finalDesktopShifts = [...finalDesktopShifts, ...desktopShifts];
     }
 
     // Incorporate scroll-triggered layout shifts if observed shifts exceed the static non-scrolling trace
-    if (mobileData && finalCustomShifts.length > 0) {
-      const shiftSum = finalCustomShifts.reduce((acc, s) => acc + (Number(s.value) || 0), 0);
+    if (mobileData && finalMobileShifts.length > 0) {
+      const shiftSum = finalMobileShifts.reduce((acc, s) => acc + (Number(s.value) || 0), 0);
       if (shiftSum > (mobileData.cls.value || 0)) {
-        console.log(`📊 Full-page scroll observed CLS (${shiftSum.toFixed(3)}) exceeds static viewport CLS (${(mobileData.cls.value || 0).toFixed(3)}). Updating report metrics.`);
+        console.log(`📊 Mobile full-page scroll observed CLS (${shiftSum.toFixed(3)}) exceeds static viewport CLS (${(mobileData.cls.value || 0).toFixed(3)}). Updating report metrics.`);
         mobileData.cls.value = shiftSum;
         mobileData.cls.displayValue = shiftSum.toFixed(3);
         if (shiftSum > 0.25) {
@@ -473,10 +518,26 @@ export async function runLighthouseAudit(url) {
       }
     }
 
+    if (desktopData && finalDesktopShifts.length > 0) {
+      const shiftSum = finalDesktopShifts.reduce((acc, s) => acc + (Number(s.value) || 0), 0);
+      if (shiftSum > (desktopData.cls.value || 0)) {
+        console.log(`📊 Desktop full-page scroll observed CLS (${shiftSum.toFixed(3)}) exceeds static viewport CLS (${(desktopData.cls.value || 0).toFixed(3)}). Updating report metrics.`);
+        desktopData.cls.value = shiftSum;
+        desktopData.cls.displayValue = shiftSum.toFixed(3);
+        if (shiftSum > 0.25) {
+          desktopData.cls.score = Math.max(0, Math.round((1 - Math.min(1, (shiftSum - 0.25) / 0.5)) * 49));
+        } else if (shiftSum > 0.10) {
+          desktopData.cls.score = Math.round(50 + ((0.25 - shiftSum) / 0.15) * 39);
+        } else {
+          desktopData.cls.score = 90 + Math.round(((0.10 - shiftSum) / 0.10) * 10);
+        }
+      }
+    }
+
     return {
       mobile: mobileData,
       desktop: desktopData,
-      customShifts: finalCustomShifts
+      customShifts: [...finalMobileShifts, ...finalDesktopShifts]
     };
   } catch (err) {
     console.error(`⚠️ Lighthouse execution failed: ${err.message}`);
