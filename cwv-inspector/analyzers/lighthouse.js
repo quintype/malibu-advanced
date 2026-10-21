@@ -173,7 +173,7 @@ async function preScrollPage(url, port, device = 'mobile') {
       window.__cwv_layout_shifts_injected = true;
       window.__cwv_layout_shifts = [];
       try {
-        new PerformanceObserver((list) => {
+        window.__cwv_observer = new PerformanceObserver((list) => {
           for (const entry of list.getEntries()) {
             if (entry.hadRecentInput) continue;
             let sources = [];
@@ -224,7 +224,8 @@ async function preScrollPage(url, port, device = 'mobile') {
               sources
             });
           }
-        }).observe({ type: 'layout-shift', buffered: true });
+        });
+        window.__cwv_observer.observe({ type: 'layout-shift', buffered: true });
       } catch (e) { }
     });
 
@@ -254,6 +255,10 @@ async function preScrollPage(url, port, device = 'mobile') {
           const reachedBottom = (window.innerHeight + window.scrollY) >= (scrollHeight - 50);
           if (reachedBottom || stagnantCount >= 3 || totalHeight >= 25000) {
             clearInterval(timer);
+            // Disconnect layout shift observer before snapping back to top to avoid capturing artificial viewport exit shifts
+            try {
+              if (window.__cwv_observer) window.__cwv_observer.disconnect();
+            } catch (_) {}
             // Scroll back to top
             window.scrollTo(0, 0);
             resolve();
@@ -335,7 +340,7 @@ async function throttledDiagnosticPass(url, port, device = 'mobile') {
       window.__cwv_layout_shifts_injected = true;
       window.__cwv_layout_shifts = [];
       try {
-        new PerformanceObserver((list) => {
+        window.__cwv_observer = new PerformanceObserver((list) => {
           for (const entry of list.getEntries()) {
             if (entry.hadRecentInput) continue;
             let sources = entry.sources ? entry.sources.map(s => {
@@ -349,7 +354,7 @@ async function throttledDiagnosticPass(url, port, device = 'mobile') {
                 let sel = el.nodeName.toLowerCase();
                 if (el.id) sel += '#' + el.id;
                 else if (el.className && typeof el.className === 'string') {
-                  const c = el.className.trim().split(/\\s+/).filter(Boolean);
+                  const c = el.className.trim().split(/\s+/).filter(Boolean);
                   if (c.length > 0) sel += '.' + c.join('.');
                 }
                 path.unshift(sel);
@@ -366,7 +371,8 @@ async function throttledDiagnosticPass(url, port, device = 'mobile') {
             }) : [];
             window.__cwv_layout_shifts.push({ value: entry.value, time: entry.startTime, sources });
           }
-        }).observe({ type: 'layout-shift', buffered: true });
+        });
+        window.__cwv_observer.observe({ type: 'layout-shift', buffered: true });
       } catch (e) { }
     });
 
@@ -376,6 +382,9 @@ async function throttledDiagnosticPass(url, port, device = 'mobile') {
     await page.evaluate(async () => {
       window.scrollBy(0, 500);
       await new Promise(r => setTimeout(r, 500));
+      try {
+        if (window.__cwv_observer) window.__cwv_observer.disconnect();
+      } catch (_) {}
       window.scrollTo(0, 0);
     });
 
@@ -479,12 +488,11 @@ export async function runLighthouseAudit(url) {
     const mobileResult = await lighthouse(auditUrl, mobileOptions);
     const mobileData = extractScores(JSON.parse(mobileResult.report));
 
-    // Check if Lighthouse failed to trace DOM nodes
-    const hasUnknownMobile = mobileData.clsElements.some(el => el.selector.includes('Global/Unknown'));
+    // Check if Lighthouse failed to trace DOM nodes and preScrollPage had no custom shifts
     let finalMobileShifts = mobileCustomShifts;
-    if (hasUnknownMobile) {
+    if (finalMobileShifts.length === 0 && mobileData.clsElements.some(el => el.selector.includes('Global/Unknown'))) {
       const throttledShifts = await throttledDiagnosticPass(auditUrl, chrome.port, 'mobile');
-      finalMobileShifts = [...finalMobileShifts, ...throttledShifts];
+      finalMobileShifts = throttledShifts;
     }
 
     // Run bot scrolling to trigger lazy loaders and initialize assets (Desktop pass)
@@ -494,11 +502,10 @@ export async function runLighthouseAudit(url) {
     const desktopResult = await lighthouse(auditUrl, desktopOptions, desktopConfig);
     const desktopData = extractScores(JSON.parse(desktopResult.report));
 
-    const hasUnknownDesktop = desktopData.clsElements.some(el => el.selector.includes('Global/Unknown'));
     let finalDesktopShifts = desktopCustomShifts;
-    if (hasUnknownDesktop) {
+    if (finalDesktopShifts.length === 0 && desktopData.clsElements.some(el => el.selector.includes('Global/Unknown'))) {
       const desktopShifts = await throttledDiagnosticPass(auditUrl, chrome.port, 'desktop');
-      finalDesktopShifts = [...finalDesktopShifts, ...desktopShifts];
+      finalDesktopShifts = desktopShifts;
     }
 
     // Incorporate scroll-triggered layout shifts if observed shifts exceed the static non-scrolling trace
