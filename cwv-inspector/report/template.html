@@ -30,9 +30,18 @@
           <span>Date: {{AUDIT_DATE}}</span>
         </div>
       </div>
-      <div class="header-divider"></div>
       <div class="header-main-details">
         <h1 class="pdf-report-title">Performance Audit Report</h1>
+        <div class="pdf-report-meta">
+          <strong>Project:</strong> <span class="meta-val">{{PROJECT_PATH}}</span>
+          <span class="meta-sep">|</span>
+          <strong>Branch:</strong> <span class="meta-val branch-pill" style="background: #e0f2fe; color: #0284c7; padding: 2px 8px; border-radius: 4px; font-weight: 700; font-family: monospace;">{{GIT_BRANCH}}</span>
+          <span class="meta-sep">|</span>
+          <strong>URL:</strong> <a class="meta-link" href="{{AUDIT_URL}}" target="_blank">{{AUDIT_URL}}</a>
+          {{REMOTE_DEPLOYMENT_META}}
+          <span class="meta-sep">|</span>
+          <strong>Engineering Analysis:</strong> <span class="meta-val">{{ENGINEER_NAME}}</span>
+        </div>
 
         <div id="ai-pdf-sync-notice" class="ai-pdf-sync-notice" style="display: none;">
           <span style="font-size: 1rem;">ℹ️</span>

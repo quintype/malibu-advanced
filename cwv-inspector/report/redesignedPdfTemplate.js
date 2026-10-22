@@ -168,88 +168,150 @@ export function buildRedesignedPdfHtml(data = {}) {
     const firstDate = validPoints[0].dateStr;
     const lastDate = validPoints[n - 1].dateStr;
 
-    // Collect max values
-    const lcpInpVals = validPoints.flatMap(p => [p.lcp, p.inp]).filter(v => v !== null && !isNaN(v));
-    const maxLcpInpRaw = lcpInpVals.length > 0 ? Math.max(...lcpInpVals) : 2500;
-    const maxLcpInp = Math.max(2500, Math.ceil(maxLcpInpRaw / 500) * 500);
+    // Extract series and date labels
+    const lcpVals = validPoints.map(p => p.lcp);
+    const inpVals = validPoints.map(p => p.inp);
+    const clsVals = validPoints.map(p => p.cls);
+    const dateLabels = validPoints.map(p => p.dateStr.length >= 10 ? p.dateStr.substring(5) : p.dateStr);
 
-    const clsVals = validPoints.map(p => p.cls).filter(v => v !== null && !isNaN(v));
-    const maxClsRaw = clsVals.length > 0 ? Math.max(...clsVals) : 0.25;
-    const maxCls = Math.max(0.20, Math.ceil(maxClsRaw * 20) / 20);
+    const validLcp = lcpVals.filter(v => v !== null && !isNaN(v));
+    const validInp = inpVals.filter(v => v !== null && !isNaN(v));
+    const validCls = clsVals.filter(v => v !== null && !isNaN(v));
 
-    // Chart dimensions
-    const xStart = 55;
-    const xEnd = 645;
-    const chartW = xEnd - xStart;
-    const yTop = 20;
-    const yBottom = 236;
-    const chartH = yBottom - yTop;
+    const maxLcpRaw = validLcp.length > 0 ? Math.max(...validLcp) : 2500;
+    const maxLcp = Math.max(3000, Math.ceil((maxLcpRaw * 1.15) / 500) * 500);
 
-    // Grid lines: 5 intervals
-    const gridCount = 5;
-    let gridLinesSvg = '';
-    let leftYLabelsSvg = '';
-    let rightYLabelsSvg = '';
+    const maxInpRaw = validInp.length > 0 ? Math.max(...validInp) : 200;
+    const maxInp = Math.max(300, Math.ceil((maxInpRaw * 1.3) / 50) * 50);
 
-    for (let k = 0; k <= gridCount; k++) {
-      const y = yBottom - (k / gridCount) * chartH;
-      const lcpVal = Math.round((k / gridCount) * maxLcpInp);
-      const clsVal = ((k / gridCount) * maxCls).toFixed(2);
-      const isBase = k === 0;
+    const maxClsRaw = validCls.length > 0 ? Math.max(...validCls) : 0.10;
+    const maxCls = Math.max(0.15, Math.ceil(maxClsRaw * 20) / 20);
 
-      gridLinesSvg += `<line x1="${xStart}" y1="${y.toFixed(1)}" x2="${xEnd}" y2="${y.toFixed(1)}" stroke="${isBase ? '#e2e8f0' : '#f1f5f9'}" stroke-width="1" />\n`;
-      leftYLabelsSvg += `<text x="46" y="${(y + 3).toFixed(1)}" text-anchor="end" font-size="8.5" fill="#94a3b8">${lcpVal.toLocaleString()}</text>\n`;
-      rightYLabelsSvg += `<text x="654" y="${(y + 3).toFixed(1)}" text-anchor="start" font-size="8.5" fill="#94a3b8">${clsVal}</text>\n`;
-    }
+    const latestLcp = validLcp.length > 0 ? validLcp[validLcp.length - 1] : null;
+    const latestInp = validInp.length > 0 ? validInp[validInp.length - 1] : null;
+    const latestCls = validCls.length > 0 ? validCls[validCls.length - 1] : null;
 
-    // Coordinates mapping
-    const getX = (idx) => (xStart + (idx / (n - 1)) * chartW).toFixed(1);
-    const getYLeft = (val) => (yBottom - (val / maxLcpInp) * chartH).toFixed(1);
-    const getYRight = (val) => (yBottom - (val / maxCls) * chartH).toFixed(1);
+    // Helper to render vector SVG sub-charts with dedicated scale and threshold
+    const renderSubChartSvg = (opts) => {
+      const {
+        width = 200,
+        height = 135,
+        values = [],
+        dates = [],
+        color = '#3b82f6',
+        yMax = 5000,
+        threshold = 2500,
+        thresholdLabel = '≤ 2.5s',
+        formatVal = (v) => `${(v / 1000).toFixed(1)}s`
+      } = opts;
 
-    // Build LCP path & points
-    const lcpPoints = [];
-    let lcpPath = '';
-    // Build INP path & points
-    const inpPoints = [];
-    let inpPath = '';
-    // Build CLS path & points
-    const clsPoints = [];
-    let clsPath = '';
+      const padLeft = 32;
+      const padRight = 8;
+      const padTop = 14;
+      const padBottom = 22;
+      const chartW = width - padLeft - padRight;
+      const chartH = height - padTop - padBottom;
+      const ptCount = values.length;
 
-    validPoints.forEach((pt, idx) => {
-      const cx = getX(idx);
+      const getX = (idx) => (padLeft + (idx / Math.max(1, ptCount - 1)) * chartW).toFixed(1);
+      const getY = (val) => (padTop + chartH - (val / yMax) * chartH).toFixed(1);
 
-      if (pt.lcp !== null) {
-        const cy = getYLeft(pt.lcp);
-        lcpPath += (lcpPath === '' ? `M ${cx} ${cy}` : ` L ${cx} ${cy}`);
-        lcpPoints.push(`<circle cx="${cx}" cy="${cy}" r="3" fill="#3b82f6" />`);
+      // Horizontal grid lines (0, 50%, 100%)
+      let gridLines = '';
+      [0, yMax / 2, yMax].forEach(val => {
+        const y = getY(val);
+        gridLines += `<line x1="${padLeft}" y1="${y}" x2="${padLeft + chartW}" y2="${y}" stroke="#f1f5f9" stroke-width="1" />\n`;
+        gridLines += `<text x="${padLeft - 4}" y="${(Number(y) + 3).toFixed(1)}" text-anchor="end" font-size="7" fill="#94a3b8">${formatVal(val)}</text>\n`;
+      });
+
+      // Threshold line
+      let thresholdSvg = '';
+      if (threshold && threshold <= yMax) {
+        const ty = getY(threshold);
+        thresholdSvg = `
+          <line x1="${padLeft}" y1="${ty}" x2="${padLeft + chartW}" y2="${ty}" stroke="#10b981" stroke-width="1.2" stroke-dasharray="3,3" />
+          <text x="${padLeft + chartW}" y="${(Number(ty) - 3).toFixed(1)}" text-anchor="end" font-size="6.5" font-weight="700" fill="#10b981">Good ${thresholdLabel}</text>
+        `;
       }
-      if (pt.inp !== null) {
-        const cy = getYLeft(pt.inp);
-        inpPath += (inpPath === '' ? `M ${cx} ${cy}` : ` L ${cx} ${cy}`);
-        inpPoints.push(`<circle cx="${cx}" cy="${cy}" r="3" fill="#10b981" />`);
+
+      // Line path and dots
+      let pathD = '';
+      let dotsSvg = '';
+      values.forEach((v, idx) => {
+        if (v !== null && !isNaN(v)) {
+          const cx = getX(idx);
+          const cy = getY(v);
+          pathD += (pathD === '' ? `M ${cx} ${cy}` : ` L ${cx} ${cy}`);
+          dotsSvg += `<circle cx="${cx}" cy="${cy}" r="3" fill="${color}" stroke="#ffffff" stroke-width="1.2" />\n`;
+        }
+      });
+
+      // Subtle area fill
+      let areaSvg = '';
+      if (pathD) {
+        const firstX = getX(0);
+        const lastX = getX(ptCount - 1);
+        const baseY = getY(0);
+        areaSvg = `<path d="${pathD} L ${lastX} ${baseY} L ${firstX} ${baseY} Z" fill="${color}" fill-opacity="0.08" />\n`;
       }
-      if (pt.cls !== null) {
-        const cy = getYRight(pt.cls);
-        clsPath += (clsPath === '' ? `M ${cx} ${cy}` : ` L ${cx} ${cy}`);
-        clsPoints.push(`<circle cx="${cx}" cy="${cy}" r="3" fill="#f59e0b" />`);
+
+      // X-axis date labels
+      let xLabelsSvg = '';
+      if (dates.length >= 2) {
+        const startX = getX(0);
+        const endX = getX(dates.length - 1);
+        const yText = (padTop + chartH + 14).toFixed(1);
+        xLabelsSvg += `<text x="${startX}" y="${yText}" text-anchor="start" font-size="7" fill="#94a3b8">${dates[0]}</text>\n`;
+        xLabelsSvg += `<text x="${endX}" y="${yText}" text-anchor="end" font-size="7" fill="#94a3b8">${dates[dates.length - 1]}</text>\n`;
       }
+
+      return `
+        <svg viewBox="0 0 ${width} ${height}" style="width: 100%; height: auto; overflow: visible;" font-family="Inter, sans-serif">
+          ${gridLines}
+          ${thresholdSvg}
+          ${areaSvg}
+          ${pathD ? `<path d="${pathD}" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />` : ''}
+          ${dotsSvg}
+          ${xLabelsSvg}
+        </svg>
+      `;
+    };
+
+    const lcpSvg = renderSubChartSvg({
+      width: 200,
+      height: 135,
+      values: lcpVals,
+      dates: dateLabels,
+      color: '#3b82f6',
+      yMax: maxLcp,
+      threshold: 2500,
+      thresholdLabel: '≤ 2.5s',
+      formatVal: (v) => `${(v / 1000).toFixed(1)}s`
     });
 
-    // X Axis Labels: up to 10 labels evenly spaced
-    const labelStep = Math.max(1, Math.floor((n - 1) / 9));
-    const xLabelsSvg = [];
-    const addedIndices = new Set();
-    for (let idx = 0; idx < n; idx += labelStep) {
-      const cx = getX(idx);
-      xLabelsSvg.push(`<text x="${cx}" y="248" transform="rotate(-45 ${cx} 248)" text-anchor="end" font-size="7.5" fill="#94a3b8">${validPoints[idx].dateStr}</text>`);
-      addedIndices.add(idx);
-    }
-    if (!addedIndices.has(n - 1)) {
-      const lastCx = getX(n - 1);
-      xLabelsSvg.push(`<text x="${lastCx}" y="248" transform="rotate(-45 ${lastCx} 248)" text-anchor="end" font-size="7.5" fill="#94a3b8">${validPoints[n - 1].dateStr}</text>`);
-    }
+    const inpSvg = renderSubChartSvg({
+      width: 200,
+      height: 135,
+      values: inpVals,
+      dates: dateLabels,
+      color: '#10b981',
+      yMax: maxInp,
+      threshold: 200,
+      thresholdLabel: '≤ 200ms',
+      formatVal: (v) => `${Math.round(v)}ms`
+    });
+
+    const clsSvg = renderSubChartSvg({
+      width: 200,
+      height: 135,
+      values: clsVals,
+      dates: dateLabels,
+      color: '#f59e0b',
+      yMax: maxCls,
+      threshold: 0.10,
+      thresholdLabel: '≤ 0.10',
+      formatVal: (v) => v.toFixed(2)
+    });
 
     const activeTakeaways = (takeaways && takeaways.length > 0) ? takeaways : [
       {
@@ -284,46 +346,62 @@ export function buildRedesignedPdfHtml(data = {}) {
           CrUX HISTORICAL TREND <span style="font-size: 0.6rem; font-weight: 800; background: #e0f2fe; color: #0284c7; padding: 2px 7px; border-radius: 4px; margin-left: 8px;">PAST 6 MONTHS</span>
         </div>
 
-        <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px 20px; margin-bottom: 16px;">
-          <h3 style="font-size: 0.95rem; font-weight: 800; color: #0f172a;">LCP, INP and CLS (75th percentile)</h3>
-          <p style="font-size: 0.7rem; color: #64748b; margin-top: 2px;">Collected over the previous ${n} collection periods (${firstDate} – ${lastDate}).</p>
-          
-          <!-- Legend -->
-          <div style="display: flex; gap: 18px; font-size: 0.68rem; font-weight: 700; margin: 12px 0 10px 0;">
-            <div style="display: flex; align-items: center; gap: 6px;"><span style="width: 10px; height: 10px; background: #3b82f6; border-radius: 2px;"></span> <span style="color: #3b82f6;">LCP p75 (ms)</span></div>
-            <div style="display: flex; align-items: center; gap: 6px;"><span style="width: 10px; height: 10px; background: #10b981; border-radius: 2px;"></span> <span style="color: #10b981;">INP p75 (ms)</span></div>
-            <div style="display: flex; align-items: center; gap: 6px;"><span style="width: 10px; height: 10px; background: #f59e0b; border-radius: 2px;"></span> <span style="color: #f59e0b;">CLS p75</span></div>
-          </div>
+        <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px 18px; margin-bottom: 14px;">
+          <h3 style="font-size: 0.95rem; font-weight: 800; color: #0f172a;">Core Web Vitals Historical Trends (75th percentile)</h3>
+          <p style="font-size: 0.68rem; color: #64748b; margin-top: 1px;">Field data aggregated by Google Chrome User Experience Report (CrUX) across ${n} collection periods (${firstDate} – ${lastDate}).</p>
 
-          <!-- Dual Axis SVG Chart -->
-          <div style="position: relative; width: 100%; height: 280px; margin-top: 8px;">
-            <svg viewBox="0 0 700 280" style="width: 100%; height: 100%; overflow: visible;" font-family="Inter, sans-serif">
-              <!-- Grid lines -->
-              ${gridLinesSvg}
+          <!-- 3 Sub-Charts Grid -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-top: 12px;">
+            <!-- Card 1: LCP -->
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 12px;">
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
+                <div>
+                  <div style="font-size: 0.74rem; font-weight: 800; color: #0f172a; display: flex; align-items: center; gap: 5px;">
+                    <span style="width: 7px; height: 7px; background: #3b82f6; border-radius: 50%; display: inline-block;"></span>
+                    Largest Contentful Paint
+                  </div>
+                  <div style="font-size: 0.6rem; color: #64748b;">Target: ≤ 2.5s (Good)</div>
+                </div>
+                <div style="font-size: 0.75rem; font-weight: 800; color: ${latestLcp !== null && latestLcp <= 2500 ? '#166534' : latestLcp !== null && latestLcp <= 4000 ? '#b45309' : '#991b1b'}; background: ${latestLcp !== null && latestLcp <= 2500 ? '#dcfce7' : latestLcp !== null && latestLcp <= 4000 ? '#fef3c7' : '#fee2e2'}; padding: 1px 6px; border-radius: 3px; font-family: monospace;">
+                  ${latestLcp !== null ? `${(latestLcp / 1000).toFixed(2)}s` : 'N/A'}
+                </div>
+              </div>
+              ${lcpSvg}
+            </div>
 
-              <!-- Left Y Axis Labels (LCP/INP ms) -->
-              ${leftYLabelsSvg}
-              <text x="14" y="128" transform="rotate(-90 14 128)" text-anchor="middle" font-size="9" font-weight="600" fill="#64748b">LCP / INP (ms)</text>
+            <!-- Card 2: INP -->
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 12px;">
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
+                <div>
+                  <div style="font-size: 0.74rem; font-weight: 800; color: #0f172a; display: flex; align-items: center; gap: 5px;">
+                    <span style="width: 7px; height: 7px; background: #10b981; border-radius: 50%; display: inline-block;"></span>
+                    Interaction to Next Paint
+                  </div>
+                  <div style="font-size: 0.6rem; color: #64748b;">Target: ≤ 200ms (Good)</div>
+                </div>
+                <div style="font-size: 0.75rem; font-weight: 800; color: ${latestInp !== null && latestInp <= 200 ? '#166534' : latestInp !== null && latestInp <= 500 ? '#b45309' : '#991b1b'}; background: ${latestInp !== null && latestInp <= 200 ? '#dcfce7' : latestInp !== null && latestInp <= 500 ? '#fef3c7' : '#fee2e2'}; padding: 1px 6px; border-radius: 3px; font-family: monospace;">
+                  ${latestInp !== null ? `${latestInp}ms` : 'N/A'}
+                </div>
+              </div>
+              ${inpSvg}
+            </div>
 
-              <!-- Right Y Axis Labels (CLS) -->
-              ${rightYLabelsSvg}
-              <text x="686" y="128" transform="rotate(90 686 128)" text-anchor="middle" font-size="9" font-weight="600" fill="#64748b">CLS score</text>
-
-              <!-- X Axis Labels -->
-              ${xLabelsSvg.join('\n              ')}
-
-              <!-- Lines & Points: CLS (Amber) -->
-              ${clsPath ? `<path d="${clsPath}" fill="none" stroke="#f59e0b" stroke-width="2.5" />` : ''}
-              ${clsPoints.join('\n              ')}
-
-              <!-- Lines & Points: LCP (Blue) -->
-              ${lcpPath ? `<path d="${lcpPath}" fill="none" stroke="#3b82f6" stroke-width="2.5" />` : ''}
-              ${lcpPoints.join('\n              ')}
-
-              <!-- Lines & Points: INP (Green) -->
-              ${inpPath ? `<path d="${inpPath}" fill="none" stroke="#10b981" stroke-width="2.5" />` : ''}
-              ${inpPoints.join('\n              ')}
-            </svg>
+            <!-- Card 3: CLS -->
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 12px;">
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
+                <div>
+                  <div style="font-size: 0.74rem; font-weight: 800; color: #0f172a; display: flex; align-items: center; gap: 5px;">
+                    <span style="width: 7px; height: 7px; background: #f59e0b; border-radius: 50%; display: inline-block;"></span>
+                    Cumulative Layout Shift
+                  </div>
+                  <div style="font-size: 0.6rem; color: #64748b;">Target: ≤ 0.10 (Good)</div>
+                </div>
+                <div style="font-size: 0.75rem; font-weight: 800; color: ${latestCls !== null && latestCls <= 0.10 ? '#166534' : latestCls !== null && latestCls <= 0.25 ? '#b45309' : '#991b1b'}; background: ${latestCls !== null && latestCls <= 0.10 ? '#dcfce7' : latestCls !== null && latestCls <= 0.25 ? '#fef3c7' : '#fee2e2'}; padding: 1px 6px; border-radius: 3px; font-family: monospace;">
+                  ${latestCls !== null ? latestCls.toFixed(3) : 'N/A'}
+                </div>
+              </div>
+              ${clsSvg}
+            </div>
           </div>
           <div style="font-size: 0.62rem; color: #94a3b8; margin-top: 10px;">Field data aggregated by Google Chrome User Experience Report (CrUX).</div>
         </div>
