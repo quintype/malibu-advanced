@@ -92,6 +92,10 @@ Usage:
 Options:
   --url <url>          Run Lighthouse performance audit against a live/local URL
   --branch <branch>    Override or specify Git branch name (default: auto-detected)
+  --engineer <name>    Set author/engineer name for reports
+  --all-ai             Generate Copilot AI recommendations for all issues without limit
+  --max-ai <count>     Set maximum number of issues to enrich with Copilot (default: 5)
+  --no-ai              Disable Copilot AI enrichment entirely
   --help, -h           Show this usage guide
     `);
     process.exit(0);
@@ -100,6 +104,7 @@ Options:
   let targetPathInput = '';
   let url = null;
   let explicitBranch = null;
+  let explicitEngineer = null;
 
   if (args.length === 0) {
     const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
@@ -148,6 +153,19 @@ Options:
     if (branchIndex !== -1 && args[branchIndex + 1]) {
       explicitBranch = args[branchIndex + 1].trim();
     }
+    const engineerIndex = args.indexOf('--engineer');
+    if (engineerIndex !== -1 && args[engineerIndex + 1]) {
+      explicitEngineer = args[engineerIndex + 1].trim();
+    }
+  }
+
+  const allAi = args.includes('--all-ai');
+  const maxAiIndex = args.indexOf('--max-ai');
+  let maxAiIssues = Number(process.env.COPILOT_MAX_ISSUES) || 5;
+  if (allAi) {
+    maxAiIssues = 999;
+  } else if (maxAiIndex !== -1 && args[maxAiIndex + 1]) {
+    maxAiIssues = parseInt(args[maxAiIndex + 1], 10) || 5;
   }
 
   if (url && !/^https?:\/\//i.test(url)) {
@@ -367,8 +385,8 @@ Options:
       enrichedResult = await enrichAuditWithCopilot(compiledResult, {
         copilotService: copilot,
         url,
-        maxIssues: 5,
-        totalTimeoutMs: 90000
+        maxIssues: maxAiIssues,
+        totalTimeoutMs: allAi || maxAiIssues > 10 ? 300000 : 90000
       });
       const analyzedCount = enrichedResult.aiAdvisor?.analyzedCount || 0;
       console.log(`✓ Copilot AI recommendations generated (${analyzedCount} priority findings enriched).`);
@@ -427,7 +445,8 @@ Options:
     psiData,
     clientName,
     gitBranch,
-    remoteDeployment
+    remoteDeployment,
+    engineer: explicitEngineer || 'siripireddy Giri'
   });
 
   console.log(`\n==========================================`);

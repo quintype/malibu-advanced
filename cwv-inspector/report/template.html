@@ -33,16 +33,7 @@
       <div class="header-divider"></div>
       <div class="header-main-details">
         <h1 class="pdf-report-title">Performance Audit Report</h1>
-        <div class="pdf-report-meta">
-          <strong>Project:</strong> <span class="meta-val">{{PROJECT_PATH}}</span>
-          <span class="meta-sep">|</span>
-          <strong>Branch:</strong> <span class="meta-val branch-pill" style="background: #e0f2fe; color: #0284c7; padding: 2px 8px; border-radius: 4px; font-weight: 700; font-family: monospace;">{{GIT_BRANCH}}</span>
-          <span class="meta-sep">|</span>
-          <strong>URL:</strong> <a class="meta-link" href="{{AUDIT_URL}}" target="_blank">{{AUDIT_URL}}</a>
-          {{REMOTE_DEPLOYMENT_META}}
-          <span class="meta-sep">|</span>
-          <strong>Engineering Analysis:</strong> <span class="meta-val">{{ENGINEER_NAME}}</span>
-        </div>
+
         <div id="ai-pdf-sync-notice" class="ai-pdf-sync-notice" style="display: none;">
           <span style="font-size: 1rem;">ℹ️</span>
           <span><strong>Format Notice:</strong> The archived static PDF file reflects the initial audit baseline. This interactive HTML report displays post-audit Copilot AI recommendations (use <strong>Print to PDF</strong> in your browser to export an updated PDF).</span>
@@ -721,7 +712,7 @@
       if (advice.whyItHelps) {
         whyItHelpsHtml = `
           <div class="ai-field-block ai-why-callout">
-            <div class="ai-field-label">Why This Solution Improves CWV</div>
+            <div class="ai-field-label">3. Why Only This Way to Solve it? (Engineering Rationale)</div>
             <div class="ai-field-value">${escapeClientHtml(advice.whyItHelps)}</div>
           </div>
         `;
@@ -771,12 +762,12 @@
           </div>
 
           <div class="ai-field-block">
-            <div class="ai-field-label">Likely Root Cause</div>
+            <div class="ai-field-label">1. What's the Reason for it? (Root Cause)</div>
             <div class="ai-field-value">${escapeClientHtml(advice.rootCause)}</div>
           </div>
 
           <div class="ai-field-block">
-            <div class="ai-field-label">Recommended Action Steps</div>
+            <div class="ai-field-label">2. How Are We Solving it? (Actionable Solution)</div>
             <ul class="ai-list">
               ${recList.map(r => `<li>${escapeClientHtml(r)}</li>`).join('')}
             </ul>

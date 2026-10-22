@@ -921,14 +921,63 @@ export async function generateReport(compiledResult, options = {}) {
           </h3>
           <p>LCP, INP, and CLS scores over the previous ${historyPoints.length} collection periods.</p>
         </div>
-        <div style="position: relative; height: 300px; width: 100%;">
-          <canvas id="cruxHistoryChart"></canvas>
+        <div class="crux-subcharts-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 16px; margin-top: 16px;">
+          <!-- Card 1: LCP -->
+          <div class="crux-trend-card" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.03);">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+              <div>
+                <div style="font-size: 0.88rem; font-weight: 700; color: #1e293b; display: flex; align-items: center; gap: 6px;">
+                  <span style="width: 8px; height: 8px; background: #3b82f6; border-radius: 50%; display: inline-block;"></span>
+                  Largest Contentful Paint (LCP)
+                </div>
+                <div style="font-size: 0.72rem; color: #64748b; margin-top: 2px;">Good: ≤ 2.5s | Needs Imp: ≤ 4.0s</div>
+              </div>
+              <div id="latest-lcp-badge" style="font-size: 0.8rem; font-weight: 800; padding: 2px 8px; border-radius: 4px; background: #eff6ff; color: #1d4ed8; font-family: monospace;"></div>
+            </div>
+            <div style="position: relative; height: 210px; width: 100%;">
+              <canvas id="cruxLcpChart"></canvas>
+            </div>
+          </div>
+
+          <!-- Card 2: INP -->
+          <div class="crux-trend-card" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.03);">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+              <div>
+                <div style="font-size: 0.88rem; font-weight: 700; color: #1e293b; display: flex; align-items: center; gap: 6px;">
+                  <span style="width: 8px; height: 8px; background: #10b981; border-radius: 50%; display: inline-block;"></span>
+                  Interaction to Next Paint (INP)
+                </div>
+                <div style="font-size: 0.72rem; color: #64748b; margin-top: 2px;">Good: ≤ 200ms | Needs Imp: ≤ 500ms</div>
+              </div>
+              <div id="latest-inp-badge" style="font-size: 0.8rem; font-weight: 800; padding: 2px 8px; border-radius: 4px; background: #ecfdf5; color: #047857; font-family: monospace;"></div>
+            </div>
+            <div style="position: relative; height: 210px; width: 100%;">
+              <canvas id="cruxInpChart"></canvas>
+            </div>
+          </div>
+
+          <!-- Card 3: CLS -->
+          <div class="crux-trend-card" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.03);">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+              <div>
+                <div style="font-size: 0.88rem; font-weight: 700; color: #1e293b; display: flex; align-items: center; gap: 6px;">
+                  <span style="width: 8px; height: 8px; background: #f59e0b; border-radius: 50%; display: inline-block;"></span>
+                  Cumulative Layout Shift (CLS)
+                </div>
+                <div style="font-size: 0.72rem; color: #64748b; margin-top: 2px;">Good: ≤ 0.10 | Needs Imp: ≤ 0.25</div>
+              </div>
+              <div id="latest-cls-badge" style="font-size: 0.8rem; font-weight: 800; padding: 2px 8px; border-radius: 4px; background: #fffbeb; color: #b45309; font-family: monospace;"></div>
+            </div>
+            <div style="position: relative; height: 210px; width: 100%;">
+              <canvas id="cruxClsChart"></canvas>
+            </div>
+          </div>
         </div>
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script>
-          const initChart = () => {
+          const initSubCharts = () => {
             if (typeof Chart === 'undefined') {
-              setTimeout(initChart, 50);
+              setTimeout(initSubCharts, 50);
               return;
             }
             const historyData = ${historyJson};
@@ -952,85 +1001,193 @@ export async function generateReport(compiledResult, options = {}) {
                   (clsVal !== null && clsVal !== undefined && clsVal !== 'NaN') ||
                   (inpVal !== null && inpVal !== undefined && inpVal !== 'NaN')) {
                 labels.push(p.lastDate.year + '-' + String(p.lastDate.month).padStart(2, '0') + '-' + String(p.lastDate.day).padStart(2, '0'));
-                lcpData.push(lcpVal);
-                clsData.push(clsVal);
-                inpData.push(inpVal);
+                lcpData.push(lcpVal !== null && !isNaN(lcpVal) ? Number(lcpVal) : null);
+                clsData.push(clsVal !== null && !isNaN(clsVal) ? Number(clsVal) : null);
+                inpData.push(inpVal !== null && !isNaN(inpVal) ? Number(inpVal) : null);
               }
             });
-            
-            const ctx = document.getElementById('cruxHistoryChart').getContext('2d');
-            new Chart(ctx, {
-              type: 'line',
-              data: {
-                labels: labels,
-                datasets: [
-                  {
-                    label: 'LCP p75 (ms)',
-                    data: lcpData,
-                    borderColor: '#4F46E5', // Indigo
-                    backgroundColor: 'rgba(79, 70, 229, 0.1)',
-                    yAxisID: 'yLcp',
-                    tension: 0.3,
-                    fill: false,
-                    pointRadius: 3,
-                    pointBackgroundColor: '#4F46E5',
-                    pointStyle: 'circle'
-                  },
-                  {
-                    label: 'INP p75 (ms)',
-                    data: inpData,
-                    borderColor: '#10B981', // Emerald
-                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                    yAxisID: 'yLcp',
-                    tension: 0.3,
-                    fill: false,
-                    pointRadius: 3,
-                    pointBackgroundColor: '#10B981',
-                    pointStyle: 'rect'
-                  },
-                  {
-                    label: 'CLS p75',
-                    data: clsData,
-                    borderColor: '#F59E0B', // Amber
-                    backgroundColor: 'rgba(245, 158, 11, 0.1)',
-                    yAxisID: 'yCls',
-                    tension: 0.3,
-                    fill: false,
-                    pointRadius: 3,
-                    pointBackgroundColor: '#F59E0B',
-                    pointStyle: 'triangle'
+
+            // Populate Latest Status Badges
+            const validLcp = lcpData.filter(v => v !== null);
+            const validInp = inpData.filter(v => v !== null);
+            const validCls = clsData.filter(v => v !== null);
+
+            const latestLcp = validLcp.length > 0 ? validLcp[validLcp.length - 1] : null;
+            const latestInp = validInp.length > 0 ? validInp[validInp.length - 1] : null;
+            const latestCls = validCls.length > 0 ? validCls[validCls.length - 1] : null;
+
+            const lcpBadge = document.getElementById('latest-lcp-badge');
+            if (lcpBadge && latestLcp !== null) {
+              lcpBadge.textContent = (latestLcp / 1000).toFixed(2) + 's (' + latestLcp.toLocaleString() + ' ms)';
+              lcpBadge.style.color = latestLcp <= 2500 ? '#166534' : latestLcp <= 4000 ? '#b45309' : '#991b1b';
+              lcpBadge.style.background = latestLcp <= 2500 ? '#f0fdf4' : latestLcp <= 4000 ? '#fffbeb' : '#fef2f2';
+            }
+
+            const inpBadge = document.getElementById('latest-inp-badge');
+            if (inpBadge && latestInp !== null) {
+              inpBadge.textContent = latestInp + ' ms';
+              inpBadge.style.color = latestInp <= 200 ? '#166534' : latestInp <= 500 ? '#b45309' : '#991b1b';
+              inpBadge.style.background = latestInp <= 200 ? '#f0fdf4' : latestInp <= 500 ? '#fffbeb' : '#fef2f2';
+            }
+
+            const clsBadge = document.getElementById('latest-cls-badge');
+            if (clsBadge && latestCls !== null) {
+              clsBadge.textContent = latestCls.toFixed(3);
+              clsBadge.style.color = latestCls <= 0.10 ? '#166534' : latestCls <= 0.25 ? '#b45309' : '#991b1b';
+              clsBadge.style.background = latestCls <= 0.10 ? '#f0fdf4' : latestCls <= 0.25 ? '#fffbeb' : '#fef2f2';
+            }
+
+            const baseOptions = (yTitle, yMax, stepSize, unitSuffix = '') => ({
+              responsive: true,
+              maintainAspectRatio: false,
+              animation: false,
+              plugins: {
+                legend: {
+                  display: true,
+                  position: 'bottom',
+                  labels: {
+                    boxWidth: 10,
+                    boxHeight: 10,
+                    font: { size: 10 },
+                    color: '#64748b'
                   }
-                ]
-              },
-              options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                animation: false, // Disable for PDF rendering
-                interaction: {
-                  mode: 'index',
-                  intersect: false,
                 },
-                scales: {
-                  x: {
-                    grid: { display: false }
-                  },
-                  yLcp: {
-                    type: 'linear',
-                    position: 'left',
-                    title: { display: true, text: 'LCP / INP (ms)' },
-                    grid: { color: 'rgba(0,0,0,0.05)' }
-                  },
-                  yCls: {
-                    type: 'linear',
-                    position: 'right',
-                    title: { display: true, text: 'CLS Score' },
-                    grid: { display: false }
+                tooltip: {
+                  backgroundColor: '#0f172a',
+                  titleColor: '#94a3b8',
+                  bodyColor: '#ffffff',
+                  padding: 8,
+                  cornerRadius: 6,
+                  callbacks: {
+                    label: (context) => context.dataset.label + ': ' + context.parsed.y + unitSuffix
                   }
+                }
+              },
+              scales: {
+                x: {
+                  grid: { display: false },
+                  ticks: { font: { size: 9 }, color: '#94a3b8', maxRotation: 45 }
+                },
+                y: {
+                  beginAtZero: true,
+                  suggestedMax: yMax,
+                  ticks: {
+                    font: { size: 9 },
+                    color: '#94a3b8',
+                    ...(stepSize ? { stepSize } : {})
+                  },
+                  title: { display: true, text: yTitle, font: { size: 9 }, color: '#64748b' },
+                  grid: { color: 'rgba(226, 232, 240, 0.6)' }
                 }
               }
             });
+
+            // 1. LCP Chart
+            const lcpEl = document.getElementById('cruxLcpChart');
+            if (lcpEl) {
+              const maxLcp = validLcp.length > 0 ? Math.max(...validLcp) : 2500;
+              const yMax = Math.max(3000, Math.ceil((maxLcp * 1.15) / 500) * 500);
+              new Chart(lcpEl.getContext('2d'), {
+                type: 'line',
+                data: {
+                  labels: labels,
+                  datasets: [
+                    {
+                      label: 'LCP p75 (ms)',
+                      data: lcpData,
+                      borderColor: '#3b82f6',
+                      backgroundColor: 'rgba(59, 130, 246, 0.08)',
+                      tension: 0.25,
+                      fill: true,
+                      pointRadius: 4,
+                      pointBackgroundColor: '#3b82f6'
+                    },
+                    {
+                      label: 'Good Threshold (2500ms)',
+                      data: labels.map(() => 2500),
+                      borderColor: '#10b981',
+                      borderDash: [5, 5],
+                      borderWidth: 1.5,
+                      pointRadius: 0,
+                      fill: false
+                    }
+                  ]
+                },
+                options: baseOptions('ms', yMax, null, ' ms')
+              });
+            }
+
+            // 2. INP Chart
+            const inpEl = document.getElementById('cruxInpChart');
+            if (inpEl) {
+              const maxInp = validInp.length > 0 ? Math.max(...validInp) : 200;
+              const yMax = Math.max(300, Math.ceil((maxInp * 1.3) / 50) * 50);
+              new Chart(inpEl.getContext('2d'), {
+                type: 'line',
+                data: {
+                  labels: labels,
+                  datasets: [
+                    {
+                      label: 'INP p75 (ms)',
+                      data: inpData,
+                      borderColor: '#10b981',
+                      backgroundColor: 'rgba(16, 185, 129, 0.08)',
+                      tension: 0.25,
+                      fill: true,
+                      pointRadius: 4,
+                      pointBackgroundColor: '#10b981'
+                    },
+                    {
+                      label: 'Good Threshold (200ms)',
+                      data: labels.map(() => 200),
+                      borderColor: '#10b981',
+                      borderDash: [5, 5],
+                      borderWidth: 1.5,
+                      pointRadius: 0,
+                      fill: false
+                    }
+                  ]
+                },
+                options: baseOptions('ms', yMax, null, ' ms')
+              });
+            }
+
+            // 3. CLS Chart
+            const clsEl = document.getElementById('cruxClsChart');
+            if (clsEl) {
+              const maxCls = validCls.length > 0 ? Math.max(...validCls) : 0.10;
+              const yMax = Math.max(0.15, Math.ceil((maxCls * 1.35) * 20) / 20);
+              new Chart(clsEl.getContext('2d'), {
+                type: 'line',
+                data: {
+                  labels: labels,
+                  datasets: [
+                    {
+                      label: 'CLS p75',
+                      data: clsData,
+                      borderColor: '#f59e0b',
+                      backgroundColor: 'rgba(245, 158, 11, 0.08)',
+                      tension: 0.25,
+                      fill: true,
+                      pointRadius: 4,
+                      pointBackgroundColor: '#f59e0b'
+                    },
+                    {
+                      label: 'Good Threshold (0.10)',
+                      data: labels.map(() => 0.10),
+                      borderColor: '#10b981',
+                      borderDash: [5, 5],
+                      borderWidth: 1.5,
+                      pointRadius: 0,
+                      fill: false
+                    }
+                  ]
+                },
+                options: baseOptions('Score', yMax, 0.05, '')
+              });
+            }
           };
-          initChart();
+          initSubCharts();
         </script>
       </div>
     `;
@@ -1073,7 +1230,7 @@ export async function generateReport(compiledResult, options = {}) {
     .replace(/{{AUDIT_DATE}}/g, formattedDate)
     .replace(/{{AUDIT_URL}}/g, options.url || 'No URL specified (Static scan only)')
     .replace(/{{REMOTE_DEPLOYMENT_META}}/g, options.remoteDeployment && options.remoteDeployment.deploymentId ? ` <span class="meta-sep">|</span> <strong>Live Deployment:</strong> <span class="meta-val" style="background: #f0fdf4; color: #166534; padding: 2px 8px; border-radius: 4px; font-weight: 700; font-family: monospace;">Build #${escapeHtml(options.remoteDeployment.deploymentId)}${options.remoteDeployment.commit ? ` (${escapeHtml(options.remoteDeployment.commit.substring(0, 7))})` : ''}</span>` : '')
-    .replace(/{{ENGINEER_NAME}}/g, escapeHtml(options.engineer || 'Performance Engineering Team'))
+    .replace(/{{ENGINEER_NAME}}/g, escapeHtml(options.engineer || 'siripireddy Giri'))
     .replace(/{{SUMMARY_HIGH}}/g, compiledResult.summary.high)
     .replace(/{{SUMMARY_MEDIUM}}/g, compiledResult.summary.medium)
     .replace(/{{SUMMARY_LOW}}/g, compiledResult.summary.low)
@@ -1405,7 +1562,7 @@ export async function generateReport(compiledResult, options = {}) {
       gitBranch: gitBranch,
       url: options.url || '',
       date: formattedDate,
-      engineer: options.engineer || 'Performance Engineering Team',
+      engineer: options.engineer || 'siripireddy Giri',
       assessment: assessmentObj,
       mobile: {
         score: mobileLocScore.score,

@@ -125,7 +125,14 @@ STRICT INSTRUCTIONS:
 4. If evidence is incomplete or circumstantial, explicitly state this limitation under "limitations", provide alternative hypotheses, and adjust "confidence".
 5. Do not propose running commands that modify system state. Propose safe, non-destructive code edits only.
 6. Your response MUST be valid JSON conforming strictly to the schema below. Do not wrap in markdown or include conversational text.
-7. ARCHITECTURAL & DOM INTEGRITY:
+7. THREE-QUESTION STRUCTURE (MANDATORY & TOKEN-EFFICIENT):
+   - Pillar 1 (What's the reason for it?): In "rootCause", explain in 1-2 concise, dense sentences the exact technical browser/layout mechanism or code anti-pattern causing this metric regression.
+   - Pillar 2 (How are we solving it?): In "recommendations", provide concrete, minimal, actionable code steps applied directly to existing elements without adding extra wrapper nodes.
+   - Pillar 3 (Why only this way to solve it?): In "whyItHelps", explicitly explain why ONLY this specific solution is the correct engineering approach, and why alternative workarounds (such as dummy spacer divs, empty fallback elements, arbitrary wrappers, or premature memoization) fail, cause side effects, or bloat DOM depth.
+8. TOKEN ECONOMY:
+   - Keep answers direct, dense, and free of conversational fluff, greetings, or filler.
+   - Limit explanation, rootCause, and whyItHelps to 1-2 focused sentences each. Avoid repeating the finding title. Every token must deliver technical engineering value.
+9. ARCHITECTURAL & DOM INTEGRITY:
    - NEVER suggest wrapping components with arbitrary dummy wrapper <div>s ("DIV soup") purely to attach a CSS class or min-height. Extra wrapper elements increase DOM tree depth, bloat HTML size, and violate the Lighthouse "Avoid an excessive DOM size" audit.
    - NEVER suggest ternary fallback empty dummy divs or static spacer elements (e.g., "{condition ? <Component /> : <div style={{ minHeight: '32px' }} />}"). Static dummy divs render phantom whitespace when the prop/flag is false and clutter the JSX. Instead, reserve dimensions in CSS on the component wrapper itself, or provide a semantic skeleton loader if data loads asynchronously.
    - NEVER recommend wrapping simple presentation card components (e.g., SpeakerCard, StoryCard, AuthorCard, MemberCard) with React.memo(), useMemo(), or useCallback() unless there is verified runtime evidence of interaction lag or heavy re-render cascades. Do not introduce premature optimization boilerplate to simple presentation components.
@@ -140,11 +147,11 @@ REQUIRED JSON SCHEMA:
 {
   "issue": "${issue.message.replace(/"/g, '\\"')}",
   "metric": "${cwvMetric}",
-  "explanation": "<Clear plain-language explanation of what this issue means for user experience>",
-  "rootCause": "<Technical diagnosis of the underlying cause based on the evidence>",
+  "explanation": "<Concise 1-2 sentence plain-language summary of user experience impact>",
+  "rootCause": "<Pillar 1: What's the reason for it? Concise 1-2 sentence technical diagnosis of the underlying browser/code mechanism>",
   "evidence": ["<Specific evidence point 1>", "<Specific evidence point 2>"],
-  "recommendations": ["<Actionable step 1>", "<Actionable step 2>"],
-  "whyItHelps": "<Clear explanation of why this solution will improve the metric and user experience>",
+  "recommendations": ["<Pillar 2: How are we solving it? Actionable step 1>", "<Actionable step 2>"],
+  "whyItHelps": "<Pillar 3: Why only this way to solve it? Concise explanation of why this specific solution works and why alternative workarounds (dummy spacers, extra wrappers, etc.) fail or cause regressions>",
   "verificationProcedure": "<Concrete steps the developer can take in Chrome DevTools / Lighthouse to verify the fix>",
   "alternativeHypotheses": ["<Alternative hypothesis if evidence is inconclusive>"],
   "confidence": "HIGH" | "MEDIUM" | "LOW" | "UNRESOLVED",

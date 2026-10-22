@@ -22,7 +22,7 @@ export default function VitalsReport({ reportData }) {
     lighthouseData,
     summary,
     issues = [],
-    author = reportData.author || reportData.engineer || 'Performance Engineering Team'
+    author = reportData.author || reportData.engineer || 'siripireddy Giri'
   } = reportData;
 
   const [activeTab, setActiveTab] = useState('mobile');
