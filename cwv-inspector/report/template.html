@@ -588,13 +588,17 @@
       const pendingElements = document.querySelectorAll('.ai-loading-box');
       if (pendingElements.length === 0) return;
 
+      const urlParams = new URLSearchParams(window.location.search);
+      const projectParam = meta.project || urlParams.get('project') || '';
+      const fileParam = meta.reportFile || urlParams.get('file') || '';
+
       try {
         const res = await fetch('/api/enrich-report', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            project: meta.project,
-            reportFile: meta.reportFile
+            project: projectParam,
+            reportFile: fileParam
           })
         });
 
@@ -671,13 +675,16 @@
       try {
         const issueData = (window.__AUDIT_ISSUES__ && window.__AUDIT_ISSUES__[index]) || null;
         const meta = window.__REPORT_META__ || {};
+        const urlParams = new URLSearchParams(window.location.search);
+        const projectParam = meta.project || urlParams.get('project') || '';
+        const fileParam = meta.reportFile || urlParams.get('file') || '';
 
         const res = await fetch('/api/ai-advice', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            project: meta.project,
-            reportFile: meta.reportFile,
+            project: projectParam,
+            reportFile: fileParam,
             issueIndex: index,
             issue: issueData
           })

@@ -142,20 +142,37 @@ function getMetricBadgeHtml(mDetail) {
  */
 function escapeHtml(str) {
   if (str === null || str === undefined) return '';
-  if (typeof str === 'object') {
+  let text = str;
+  if (typeof text === 'object') {
     try {
-      return JSON.stringify(str);
+      text = JSON.stringify(text);
     } catch (e) {
       return '';
     }
   }
-  return String(str)
+  return String(text)
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#039;');
 }
+
+/**
+ * Safely serializes data to JSON for embedding directly inside an inline <script> tag.
+ * Replaces characters that could terminate the <script> block prematurely (e.g. </script>)
+ * or cause JavaScript parsing issues with their unicode escape sequences.
+ */
+function safeJsonForScript(data) {
+  return JSON.stringify(data)
+    .replace(/</g, '\\u003c')
+    .replace(/>/g, '\\u003e')
+    .replace(/\u2028/g, '\\u2028')
+    .replace(/\u2029/g, '\\u2029');
+}
+
+export { safeJsonForScript, escapeHtml };
+
 
 
 
@@ -954,7 +971,7 @@ export async function generateReport(compiledResult, options = {}) {
   let cruxHistogramsHtml = '';
   if (historyPoints && historyPoints.length >= 2) {
     const historyRecord = options.cruxHistoryData.record || options.cruxHistoryData;
-    const historyJson = JSON.stringify(historyRecord);
+    const historyJson = safeJsonForScript(historyRecord);
     
     cruxHistogramsHtml += `
       <div class="crux-raw-section" style="margin-top: 24px;">
@@ -1441,11 +1458,11 @@ export async function generateReport(compiledResult, options = {}) {
 
   const clientMetaScript = `
   <script>
-    window.__AUDIT_ISSUES__ = ${JSON.stringify(compiledResult.issues)};
-    window.__AI_ADVISOR_STATUS__ = ${JSON.stringify({ ...(compiledResult.aiAdvisor || { status: 'completed' }), pdfSynchronized: isInitialAiComplete })};
-    window.__PDF_STATUS__ = ${JSON.stringify(pdfStatus)};
+    window.__AUDIT_ISSUES__ = ${safeJsonForScript(compiledResult.issues)};
+    window.__AI_ADVISOR_STATUS__ = ${safeJsonForScript({ ...(compiledResult.aiAdvisor || { status: 'completed' }), pdfSynchronized: isInitialAiComplete })};
+    window.__PDF_STATUS__ = ${safeJsonForScript(pdfStatus)};
     window.__REPORT_META__ = {
-      project: ${JSON.stringify(path.basename(options.projectPath))},
+      project: ${safeJsonForScript(path.basename(path.resolve(options.projectPath)))},
       reportFile: "report-${timestamp}.json",
       timestamp: ${timestamp}
     };

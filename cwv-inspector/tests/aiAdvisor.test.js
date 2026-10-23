@@ -40,6 +40,7 @@ import {
   findMatchingCssRules
 } from '../analyzers/correlation.js';
 import { compileRecommendations } from '../analyzers/recommendations.js';
+import { safeJsonForScript } from '../report/generatePdf.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -1438,6 +1439,35 @@ async function runTests() {
     assert.deepStrictEqual(issue.currentRect, { x: 10, y: 500, width: 300, height: 60 });
     assert.strictEqual(issue.cwv, 'cls');
     logPass('Observer fallback findings preserve deterministic measurements and are kept separate from Lighthouse');
+  }
+
+  // =========================================================================
+  // 38. Safe JSON script escaping prevents HTML parser breakouts
+  // =========================================================================
+  {
+    const problematicIssues = [
+      {
+        message: 'Below-the-fold image missing explicit loading="lazy"',
+        aiAdvice: {
+          recommendations: [
+            'Change <script src="app.js"></script> to <script async src="app.js"></script> or <script defer src="app.js"></script>. Use async for independent scripts (tracking, analytics), defer for dependent scripts.',
+            'Identify critical CSS (above-the-fold styles) and inline it directly in a <style> tag in the <head>.'
+          ]
+        }
+      }
+    ];
+
+    const serialized = safeJsonForScript(problematicIssues);
+    // Must NOT contain literal unescaped '<' or '</script>'
+    assert.strictEqual(serialized.includes('</script>'), false, 'Should not contain raw </script>');
+    assert.strictEqual(serialized.includes('<script'), false, 'Should not contain raw <script');
+    assert.strictEqual(serialized.includes('<style>'), false, 'Should not contain raw <style>');
+    assert.strictEqual(serialized.includes('\\u003c/script\\u003e'), true, 'Should encode < as \\u003c');
+
+    // Deserialization in JS engine must preserve exact original string faithfully
+    const parsed = JSON.parse(serialized);
+    assert.deepStrictEqual(parsed, problematicIssues, 'Parsed JSON must faithfully restore original content');
+    logPass('Safe JSON script escaping prevents HTML parser breakouts when advice contains literal <script> tags');
   }
 
   // Close server

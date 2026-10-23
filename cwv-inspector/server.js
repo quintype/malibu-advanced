@@ -502,68 +502,59 @@ const server = http.createServer(async (req, res) => {
       }
 
       // Approach 1: Reuse existing audit result via project + reportFile + issueIndex
-      if (payload.project || payload.reportFile || payload.issueIndex !== undefined) {
+      if ((payload.project || payload.reportFile) && payload.issueIndex !== undefined) {
         const { project: rawProject, reportFile, issueIndex } = payload;
         const parentDir = getProjectsParentDir(rawProject);
         const project = normalizeProjectInput(rawProject, parentDir);
 
-        if (!isSafeProjectName(project, parentDir)) {
-          sendJsonResponse(res, 400, { success: false, error: 'Invalid or unsafe project parameter' });
-          return;
-        }
+        if (isSafeProjectName(project, parentDir) && isSafeReportFile(reportFile)) {
+          const idx = Number(issueIndex);
+          if (Number.isInteger(idx) && idx >= 0 && idx <= 1000) {
+            const jsonFilename = reportFile.endsWith('.html') ? reportFile.replace(/\.html$/, '.json') : reportFile;
+            const reportPath = path.join(parentDir, project, 'reports', jsonFilename);
 
-        if (!isSafeReportFile(reportFile)) {
-          sendJsonResponse(res, 400, { success: false, error: 'Invalid reportFile format (expected report-<timestamp>.json or .html)' });
-          return;
-        }
+            if (fs.existsSync(reportPath)) {
+              try {
+                const fileData = fs.readFileSync(reportPath, 'utf8');
+                const parsedReport = JSON.parse(fileData);
+                const issuesList = parsedReport.issues || (parsedReport.compiledResult && parsedReport.compiledResult.issues);
 
-        const idx = Number(issueIndex);
-        if (!Number.isInteger(idx) || idx < 0 || idx > 1000) {
-          sendJsonResponse(res, 400, { success: false, error: 'Invalid issueIndex: must be an integer between 0 and 1000' });
-          return;
-        }
-
-        const jsonFilename = reportFile.endsWith('.html') ? reportFile.replace(/\.html$/, '.json') : reportFile;
-        const reportPath = path.join(parentDir, project, 'reports', jsonFilename);
-
-        if (fs.existsSync(reportPath)) {
-          try {
-            const fileData = fs.readFileSync(reportPath, 'utf8');
-            const parsedReport = JSON.parse(fileData);
-            const issuesList = parsedReport.issues || (parsedReport.compiledResult && parsedReport.compiledResult.issues);
-
-            if (Array.isArray(issuesList) && idx < issuesList.length) {
-              issueToAnalyze = issuesList[idx];
-              if (parsedReport.url && !targetContext.url) {
-                targetContext.url = parsedReport.url;
-              }
-            } else {
-              sendJsonResponse(res, 404, { success: false, error: `Issue index ${idx} out of range in report` });
-              return;
+                if (Array.isArray(issuesList) && idx < issuesList.length) {
+                  issueToAnalyze = issuesList[idx];
+                  if (parsedReport.url && !targetContext.url) {
+                    targetContext.url = parsedReport.url;
+                  }
+                }
+              } catch (_) {}
             }
-          } catch (readErr) {
-            sendJsonResponse(res, 500, { success: false, error: 'Failed to read existing report file' });
-            return;
           }
-        } else if (payload.issue) {
-          // If the .json companion wasn't created yet for an older report, fallback to validated issue in payload
-          issueToAnalyze = validateIssueInput(payload.issue);
-          if (!issueToAnalyze) {
-            sendJsonResponse(res, 400, { success: false, error: 'Report file not found and issue payload is invalid' });
-            return;
-          }
-        } else {
-          sendJsonResponse(res, 404, { success: false, error: `Report file "${jsonFilename}" not found for project "${project}"` });
-          return;
         }
-      } else if (payload.issue) {
-        // Approach 2: Directly analyzed validated issue object
+      }
+
+      // If issueToAnalyze was not loaded from disk, check if issue was provided directly in payload
+      if (!issueToAnalyze && payload.issue) {
         issueToAnalyze = validateIssueInput(payload.issue);
-        if (!issueToAnalyze) {
-          sendJsonResponse(res, 400, { success: false, error: 'Invalid issue object: missing required "message" property' });
+      }
+
+      // If still no issueToAnalyze, validate parameters and return appropriate error
+      if (!issueToAnalyze) {
+        if (payload.project || payload.reportFile) {
+          const { project: rawProject, reportFile } = payload;
+          const parentDir = getProjectsParentDir(rawProject);
+          const project = normalizeProjectInput(rawProject, parentDir);
+
+          if (!isSafeProjectName(project, parentDir)) {
+            sendJsonResponse(res, 400, { success: false, error: 'Invalid or unsafe project parameter' });
+            return;
+          }
+          if (!isSafeReportFile(reportFile)) {
+            sendJsonResponse(res, 400, { success: false, error: 'Invalid reportFile format (expected report-<timestamp>.json or .html)' });
+            return;
+          }
+          sendJsonResponse(res, 404, { success: false, error: 'Report file or issue not found' });
           return;
         }
-      } else {
+
         sendJsonResponse(res, 400, {
           success: false,
           error: 'Must provide either a valid issue object or (project, reportFile, issueIndex) reference.'
