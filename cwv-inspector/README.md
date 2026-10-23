@@ -222,7 +222,7 @@ The consolidator in `analyzers/recommendations.js` aggregates findings and deter
 | `analyzers/recommendations.js` | Groups findings, deduplicates static/runtime issues, and calculates the health score. | `compileRecommendations` |
 | `analyzers/aiAdvisor.js` | Automatically enriches prioritized findings with GitHub Copilot AI recommendations. | `enrichAuditWithCopilot` |
 | `report/generatePdf.js` | Populates HTML template tags, formats scores, and orchestrates PDF generation. | `generateReport`, `computeMetricDetails` |
-| `report/redesignedPdfTemplate.js` | Builds the redesigned multi-page executive PDF report with gauges and CrUX trends. | `buildRedesignedPdfHtml`, `extractCruxHistoryPoints` |
+| `report/redesignedPdfTemplate.js` | Builds the redesigned 3-page executive PDF report (hero executive summary, CrUX field trends, and metrics detail with findings). | `buildRedesignedPdfHtml`, `extractCruxHistoryPoints` |
 
 ---
 

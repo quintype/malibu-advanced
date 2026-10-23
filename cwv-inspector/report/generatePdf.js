@@ -1534,29 +1534,16 @@ export async function generateReport(compiledResult, options = {}) {
     if (localMLcp.statusLabel !== 'Good') {
       dynamicFindings.push({
         color: localMLcp.statusLabel === 'Poor' ? '#ef4444' : '#f59e0b',
-        title: `Mobile Lab LCP is ${localMLcp.valueDisplay} (recommended ≤ 2.5 s)`,
-        desc: 'Optimize largest above-the-fold content: preload critical hero images, eliminate render-blocking CSS/JS, and improve TTFB / server response time.'
+        cls: localMLcp.statusLabel === 'Poor' ? 'poor' : 'warn',
+        title: `Mobile lab LCP is ${localMLcp.valueDisplay}`,
+        desc: 'Preload critical hero images, remove render-blocking CSS and JS, and improve TTFB and server response time.'
       });
     } else {
       dynamicFindings.push({
         color: '#10b981',
-        title: `Mobile Lab LCP is ${localMLcp.valueDisplay} (Good ≤ 2.5 s)`,
+        cls: 'pass',
+        title: `Mobile lab LCP is ${localMLcp.valueDisplay}`,
         desc: 'Initial viewport content loads quickly and meets Google recommended loading thresholds.'
-      });
-    }
-
-    // CLS finding
-    if (localMCls.statusLabel !== 'Good') {
-      dynamicFindings.push({
-        color: localMCls.statusLabel === 'Poor' ? '#ef4444' : '#f59e0b',
-        title: `Mobile Lab CLS is ${localMCls.valueDisplay} (recommended ≤ 0.1)`,
-        desc: `Layout instability detected on branch ${gitBranch || 'current'}. Ensure explicit dimensions (width/height/aspect-ratio) on images and banners, avoid top-injected dynamic elements, and reserve ad container space.`
-      });
-    } else {
-      dynamicFindings.push({
-        color: '#10b981',
-        title: `Mobile Lab CLS is ${localMCls.valueDisplay} (Good ≤ 0.1)`,
-        desc: `Visual stability verified on branch ${gitBranch || 'current'}. Page layout remains stable with minimal unexpected shifting.`
       });
     }
 
@@ -1564,14 +1551,33 @@ export async function generateReport(compiledResult, options = {}) {
     if (localMTbt.statusLabel !== 'Good') {
       dynamicFindings.push({
         color: localMTbt.statusLabel === 'Poor' ? '#ef4444' : '#f59e0b',
-        title: `Mobile Lab TBT is ${localMTbt.valueDisplay} (recommended ≤ 200 ms)`,
-        desc: 'Break up long JavaScript execution tasks (>50ms), defer non-critical third-party analytics/widgets, and use Web Workers for CPU-heavy operations.'
+        cls: localMTbt.statusLabel === 'Poor' ? 'poor' : 'warn',
+        title: `Mobile lab TBT is ${localMTbt.valueDisplay}`,
+        desc: 'Break up JavaScript tasks over 50 ms, defer non-critical third-party analytics and widgets, and move CPU-heavy work to Web Workers.'
       });
     } else {
       dynamicFindings.push({
         color: '#10b981',
-        title: `Mobile Lab TBT is ${localMTbt.valueDisplay} (Good ≤ 200 ms)`,
+        cls: 'pass',
+        title: `Mobile lab TBT is ${localMTbt.valueDisplay}`,
         desc: 'Main thread responsiveness is healthy with low task execution delays.'
+      });
+    }
+
+    // CLS finding
+    if (localMCls.statusLabel !== 'Good') {
+      dynamicFindings.push({
+        color: localMCls.statusLabel === 'Poor' ? '#ef4444' : '#f59e0b',
+        cls: localMCls.statusLabel === 'Poor' ? 'poor' : 'warn',
+        title: `Mobile lab CLS is ${localMCls.valueDisplay}`,
+        desc: `Layout instability detected on branch ${gitBranch || 'main'}. Ensure explicit dimensions on images and reserve ad container space.`
+      });
+    } else {
+      dynamicFindings.push({
+        color: '#10b981',
+        cls: 'pass',
+        title: `Mobile lab CLS is ${localMCls.valueDisplay}`,
+        desc: `Layout is stable on branch ${gitBranch || 'main'}, with minimal unexpected shifting.`
       });
     }
 
@@ -1580,26 +1586,30 @@ export async function generateReport(compiledResult, options = {}) {
       if (fieldPassed) {
         dynamicFindings.push({
           color: '#10b981',
-          title: 'Field CrUX Data Confirms Good Real-World Experience',
+          cls: 'pass',
+          title: 'Field CrUX data confirms good real-world experience',
           desc: 'Production Chrome user experience percentiles meet Google recommended Core Web Vitals thresholds.'
         });
       } else {
         dynamicFindings.push({
           color: '#f59e0b',
-          title: 'Field CrUX Data Shows Opportunities for Improvement',
-          desc: '75th percentile of real-world visitors experience performance degradation on one or more metrics.'
+          cls: 'warn',
+          title: 'Field data shows room to improve',
+          desc: 'The 75th percentile of real visitors experiences degraded performance on one or more metrics.'
         });
       }
     } else if (compiledResult.issues && compiledResult.issues.length > 0) {
       const highIssues = compiledResult.issues.filter(i => (i.severity || '').toLowerCase() === 'high').length;
       dynamicFindings.push({
         color: highIssues > 0 ? '#ef4444' : '#0284c7',
+        cls: highIssues > 0 ? 'poor' : 'warn',
         title: `Static & Runtime Audit Flagged ${compiledResult.issues.length} Code/DOM Pattern(s)`,
         desc: `${highIssues} high-severity issue(s) detected. Review the detailed findings table and AI code fix recommendations below.`
       });
     } else {
       dynamicFindings.push({
         color: '#10b981',
+        cls: 'pass',
         title: 'Clean Performance Architecture',
         desc: 'No anti-patterns or blocking anomalies detected across audited template files.'
       });
@@ -1621,11 +1631,17 @@ export async function generateReport(compiledResult, options = {}) {
       thresh
     });
 
+    const pdfFormattedDate = new Intl.DateTimeFormat('en-GB', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric'
+    }).format(new Date());
+
     const redesignedData = {
       clientName: options.clientName || projectName,
       gitBranch: gitBranch,
       url: options.url || '',
-      date: formattedDate,
+      date: pdfFormattedDate,
       engineer: options.engineer || 'siripireddy Giri',
       assessment: assessmentObj,
       mobile: {
@@ -1686,7 +1702,7 @@ export async function generateReport(compiledResult, options = {}) {
     });
 
     await browser.close();
-    const pageCount = (historyPoints && historyPoints.length >= 2) ? 3 : 2;
+    const pageCount = 3;
     console.log(`🏆 Redesigned ${pageCount}-page PDF report successfully generated: ${pdfPath}`);
   } catch (err) {
     console.warn(`⚠️ Failed to generate PDF report: ${err.message}. HTML report is still available.`);
