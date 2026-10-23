@@ -79,7 +79,7 @@ Options:
   let targetPathInput = '';
   let url = null;
   let explicitBranch = null;
-  let explicitEngineer = null;
+  let explicitEngineer = 'Siripireddy Giri';
 
   if (args.length === 0) {
     const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
@@ -130,7 +130,8 @@ Options:
     }
     const engineerIndex = args.indexOf('--engineer');
     if (engineerIndex !== -1 && args[engineerIndex + 1]) {
-      explicitEngineer = args[engineerIndex + 1].trim();
+      const engineerName = args[engineerIndex + 1].trim();
+      if (engineerName) explicitEngineer = engineerName;
     }
   }
 
@@ -431,7 +432,7 @@ Options:
     clientName,
     gitBranch,
     remoteDeployment,
-    engineer: explicitEngineer || 'Not specified'
+    engineer: explicitEngineer
   });
 
   console.log(`\n==========================================`);

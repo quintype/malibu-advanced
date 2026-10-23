@@ -47,6 +47,7 @@ export function buildRedesignedPdfHtml(data = {}) {
     gitBranch = 'N/A',
     url = '',
     date = '',
+    engineer = 'Siripireddy Giri',
     assessment = {},
     mobile = {},
     desktop = {},
@@ -64,6 +65,10 @@ export function buildRedesignedPdfHtml(data = {}) {
 
   const branchDisplay = gitBranch || 'N/A';
   const projectDisplay = clientName || 'Performance Audit';
+  const engineerDisplay = engineer || 'Siripireddy Giri';
+  const escapeHtml = (value) => String(value).replace(/[&<>"']/g, char => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  })[char]);
 
   // Device score & classification logic
   // Score <50: poor, 50-89: warn, >=90: pass
@@ -156,8 +161,8 @@ export function buildRedesignedPdfHtml(data = {}) {
     if (!dStr) return '';
     const parts = dStr.split('-');
     if (parts.length < 3) return dStr;
-    const dateObj = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
-    return new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short' }).format(dateObj);
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    return `${Number(parts[2])} ${monthNames[Number(parts[1]) - 1] || ''}`.trim();
   };
 
   const cruxStartDate = formatDateShort(startPt.dateStr);
@@ -365,21 +370,21 @@ h1{font-size:24pt;font-weight:800;letter-spacing:-.02em}
 .hero~*:not(.foot){position:relative}
 .page1 .top b{color:#fff}.page1 .top span{color:var(--sky)}
 .page1 h1{color:#fff;font-size:30pt;margin-top:9mm}
-.url{color:var(--sky);font-size:9pt;margin-top:2mm;word-break:break-all}
-.branch{color:var(--sky);font-size:9pt;margin-top:4mm}
-.verdict{margin-top:9mm;background:#fff;border:1px solid var(--line);border-radius:3.5mm;padding:4mm 5mm;display:flex;gap:4mm;align-items:center}
+.url{color:var(--sky);font-size:9pt;margin-top:2mm;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.branch{color:var(--sky);font-size:9pt;margin-top:4mm}.branch strong{color:#fff}
+.verdict{margin-top:9mm;background:#fff;border:1px solid var(--line);border-radius:3.5mm;padding:4mm 5mm;display:flex;gap:4mm;align-items:center;color:var(--ink)}
 .verdict .ic{width:9mm;height:9mm;border-radius:50%;background:var(--poor-bg);color:var(--poor);font-weight:800;display:grid;place-items:center}
 .verdict.warn .ic{background:var(--warn-bg);color:var(--warn)}.verdict.pass .ic{background:var(--good-bg);color:var(--good)}
 .verdict b{font-size:12pt}.verdict p{font-size:9pt;color:var(--mute);margin-top:1mm}
 .cards{display:grid;grid-template-columns:1fr 1fr;gap:6mm;margin-top:8mm}
-.card{border-radius:4mm;padding:5mm}
+.card{border-radius:4mm;padding:5mm;color:var(--ink)}
 .card.poor{background:var(--poor-bg)}.card.warn{background:var(--warn-bg)}.card.pass{background:var(--good-bg)}
 .card h3{font-size:12pt}.card .dev{font-size:8pt;color:var(--mute);margin-top:1mm}
 .score{display:flex;align-items:center;gap:4mm;margin:6mm 0 5mm}
 .ring{--p:0;width:21mm;height:21mm;border-radius:50%;display:grid;place-items:center;position:relative;
   background:conic-gradient(var(--c) calc(var(--p)*1%), #fff 0)}
 .ring::after{content:"";position:absolute;inset:2mm;border-radius:50%;background:inherit;background:var(--bgc)}
-.ring span{position:relative;z-index:1;font-size:21pt;font-weight:800}
+.ring span{position:relative;z-index:1;font-size:21pt;font-weight:800;color:var(--ink)}
 .card.poor .ring{--c:var(--poor);--bgc:var(--poor-bg)}.card.warn .ring{--c:var(--warn);--bgc:var(--warn-bg)}.card.pass .ring{--c:var(--good);--bgc:var(--good-bg)}
 .score .v{font-weight:700;font-size:11.5pt}.card.poor .v{color:var(--poor)}.card.warn .v{color:var(--warn)}.card.pass .v{color:var(--good)}
 .score small{display:block;font-size:8pt;color:var(--mute);font-weight:400;margin-top:1mm}
@@ -418,7 +423,7 @@ td b{margin-right:2mm}td.t{color:var(--mute)}
 h2{font-size:13pt;margin:9mm 0 3mm}
 .find{border-radius:2.5mm;padding:3mm 4mm 3.2mm;margin-bottom:2.4mm;border-left:1.2mm solid}
 .find.warn{background:var(--warn-bg);border-color:var(--warn)}.find.pass{background:var(--good-bg);border-color:var(--good)}.find.poor{background:var(--poor-bg);border-color:var(--poor)}
-.find b{font-size:10pt}.find p{font-size:9pt;color:#475569;margin-top:1.2mm;line-height:1.4}
+.find{color:var(--ink)}.find b{font-size:10pt;color:var(--ink)}.find p{font-size:9pt;color:#475569;margin-top:1.2mm;line-height:1.4}
 </style></head><body>
 
 <!-- ============ PAGE 1 : EXECUTIVE SUMMARY ============ -->
@@ -426,8 +431,8 @@ h2{font-size:13pt;margin:9mm 0 3mm}
   <div class="hero"></div>
   <div class="top"><b>Core Web Vitals Diagnostic Lab</b><span>${projectDisplay} · ${branchDisplay} · ${formattedDate}</span></div>
   <h1>Performance Audit</h1>
-  <div class="url">${url}</div>
-  <div class="branch">Branch&nbsp; ${branchDisplay}</div>
+  <div class="url">${escapeHtml(url)}</div>
+  <div class="branch">Branch&nbsp; ${escapeHtml(branchDisplay)} <span>·</span> <strong>Engineering Analysis:</strong> <strong>${escapeHtml(engineerDisplay)}</strong></div>
   <div class="verdict ${verdictClass}"><div class="ic">!</div><div><b>${verdictTitle}</b><p>${verdictText}</p></div></div>
 
   <div class="cards">

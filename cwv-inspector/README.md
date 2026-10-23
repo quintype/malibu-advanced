@@ -283,7 +283,7 @@ node audit.js <project-path> [options]
 **CLI Options**:
 *   `--url <url>`: Target live/local URL for Lighthouse performance and Core Web Vitals audit.
 *   `--branch <branch>`: Override or specify Git branch name (default: auto-detected).
-*   `--engineer <name>`: Set author/engineer name for reports (default: `Not specified`).
+*   `--engineer <name>`: Set author/engineer name for reports (default: `Siripireddy Giri`).
 *   `--all-ai`: Opt in to Copilot advice for up to 999 eligible findings; this can make many model calls.
 *   `--max-ai <count>`: Set maximum number of issues to enrich with Copilot (default: `5`).
 *   `--no-ai`: Disable Copilot AI enrichment entirely.

@@ -274,7 +274,7 @@ function buildMetricGridHtml(lcp, cls, tbt, isLocal = false, branchName = '') {
 
 /**
  * Injects findings into the HTML template and renders it as HTML and PDF.
- * 
+ *
  * @param {object} compiledResult Compiled results from recommendations.js.
  * @param {object} options Options containing target project name, url, etc.
  * @returns {Promise<{pdfPath: string, htmlPath: string}>}
@@ -390,7 +390,7 @@ export async function generateReport(compiledResult, options = {}) {
     let res = { lcp: null, cls: null, tbt: null, inp: null };
     if (fieldData && fieldData.metrics) {
       const getVal = (key) => fieldData.metrics[key]?.percentile !== undefined ? fieldData.metrics[key].percentile : null;
-      
+
       const lcpVal = getVal('LARGEST_CONTENTFUL_PAINT_MS');
       const clsVal = getVal('CUMULATIVE_LAYOUT_SHIFT_SCORE');
       const fidVal = getVal('FIRST_INPUT_DELAY_MS');
@@ -472,7 +472,7 @@ export async function generateReport(compiledResult, options = {}) {
       (desktopData.tbt?.value !== undefined && desktopData.tbt?.value !== null ? desktopData.tbt.value <= config.thresholds.tbt : true)
     );
 
-     if (mobilePassed && desktopPassed) {
+    if (mobilePassed && desktopPassed) {
       assessmentBannerHtml = `
         <div class="assessment-banner passed">
           <div style="display: flex; align-items: center; justify-content: center; height: 32px;">${getIconSvg('passed', 32, 2.5)}</div>
@@ -739,7 +739,7 @@ export async function generateReport(compiledResult, options = {}) {
           deviceBadge = `<span class="card-badge device-badge">${escapeHtml(String(deviceVal).toUpperCase())}</span>`;
         }
       }
-      
+
       let affectedSummary = '';
       let filesListHtml = '';
 
@@ -845,7 +845,7 @@ export async function generateReport(compiledResult, options = {}) {
         const badgeClass = isAmbiguous ? 'ambiguous' : 'unresolved';
         const badgeLabel = isAmbiguous ? 'Ambiguous Correlation' : 'Unresolved Correlation';
         correlationBadge = `<span class="card-badge corr-badge ${badgeClass}">${badgeLabel}</span>`;
-        
+
         let ambiguousHtml = '';
         if (isAmbiguous && issue.ambiguousSources && issue.ambiguousSources.length > 0) {
           ambiguousHtml = `
@@ -875,10 +875,10 @@ export async function generateReport(compiledResult, options = {}) {
       } else if (issue.type === 'observer-fallback-correlated' || issue.type === 'observer-fallback-unresolved') {
         const isCorrelated = issue.type === 'observer-fallback-correlated';
         const isAmbiguous = issue.confidence === 'AMBIGUOUS';
-        
+
         let confidenceClass = 'unresolved';
         let badgeLabel = 'Unresolved Correlation';
-        
+
         if (isCorrelated) {
           confidenceClass = String(issue.confidence).toLowerCase();
           badgeLabel = `${escapeHtml(issue.confidence)} Correlation`;
@@ -886,7 +886,7 @@ export async function generateReport(compiledResult, options = {}) {
           confidenceClass = 'ambiguous';
           badgeLabel = 'Ambiguous Correlation';
         }
-        
+
         let ambiguousHtml = '';
         if (isAmbiguous && issue.ambiguousSources && issue.ambiguousSources.length > 0) {
           ambiguousHtml = `
@@ -1001,7 +1001,7 @@ export async function generateReport(compiledResult, options = {}) {
   if (historyPoints && historyPoints.length >= 2) {
     const historyRecord = options.cruxHistoryData.record || options.cruxHistoryData;
     const historyJson = safeJsonForScript(historyRecord);
-    
+
     cruxHistogramsHtml += `
       <div class="crux-raw-section" style="margin-top: 24px;">
         <div class="crux-raw-header">
@@ -1074,22 +1074,22 @@ export async function generateReport(compiledResult, options = {}) {
             }
             const historyData = ${historyJson};
             if (!historyData.collectionPeriods || !historyData.metrics) return;
-            
+
             let labels = [];
             let lcpData = [];
             let clsData = [];
             let inpData = [];
-            
+
             const lcpRaw = historyData.metrics.largest_contentful_paint?.percentilesTimeseries?.p75s || [];
             const clsRaw = historyData.metrics.cumulative_layout_shift?.percentilesTimeseries?.p75s || [];
             const inpRaw = historyData.metrics.interaction_to_next_paint?.percentilesTimeseries?.p75s || [];
-            
+
             historyData.collectionPeriods.forEach((p, idx) => {
               const lcpVal = lcpRaw[idx];
               const clsVal = clsRaw[idx];
               const inpVal = inpRaw[idx];
-              
-              if ((lcpVal !== null && lcpVal !== undefined && lcpVal !== 'NaN') || 
+
+              if ((lcpVal !== null && lcpVal !== undefined && lcpVal !== 'NaN') ||
                   (clsVal !== null && clsVal !== undefined && clsVal !== 'NaN') ||
                   (inpVal !== null && inpVal !== undefined && inpVal !== 'NaN')) {
                 labels.push(p.lastDate.year + '-' + String(p.lastDate.month).padStart(2, '0') + '-' + String(p.lastDate.day).padStart(2, '0'));
@@ -1326,14 +1326,14 @@ export async function generateReport(compiledResult, options = {}) {
     .replace(/{{AUDIT_DATE}}/g, formattedDate)
     .replace(/{{AUDIT_URL}}/g, options.url || 'No URL specified (Static scan only)')
     .replace(/{{REMOTE_DEPLOYMENT_META}}/g, options.remoteDeployment && options.remoteDeployment.deploymentId ? ` <span class="meta-sep">|</span> <strong>Live Deployment:</strong> <span class="meta-val" style="background: #f0fdf4; color: #166534; padding: 2px 8px; border-radius: 4px; font-weight: 700; font-family: monospace;">Build #${escapeHtml(options.remoteDeployment.deploymentId)}${options.remoteDeployment.commit ? ` (${escapeHtml(options.remoteDeployment.commit.substring(0, 7))})` : ''}</span>` : '')
-    .replace(/{{ENGINEER_NAME}}/g, escapeHtml(options.engineer || 'Not specified'))
+    .replace(/{{ENGINEER_NAME}}/g, escapeHtml(options.engineer))
     .replace(/{{SUMMARY_HIGH}}/g, compiledResult.summary.high)
     .replace(/{{SUMMARY_MEDIUM}}/g, compiledResult.summary.medium)
     .replace(/{{SUMMARY_LOW}}/g, compiledResult.summary.low)
     .replace(/{{MOBILE_EMULATION_CONFIG_BAR}}/g, mobileConfigBarHtml)
     .replace(/{{DESKTOP_EMULATION_CONFIG_BAR}}/g, desktopConfigBarHtml)
-    
-     // MOBILE values
+
+    // MOBILE values
     .replace(/{{MOBILE_MAIN_SCORE}}/g, mobileLocScore.score)
     .replace(/{{MOBILE_SCORE_CLASS}}/g, mobileLocScore.cls)
     .replace(/{{MOBILE_SCORE_TEXT_CLASS}}/g, mobileLocScore.textCls)
@@ -1368,7 +1368,7 @@ export async function generateReport(compiledResult, options = {}) {
     .replace(/{{MOBILE_TBT_SUBDESC}}/g, mTbt.subdesc)
     .replace(/{{MOBILE_TBT_PERCENT}}/g, mTbt.percent)
 
-     // Table values and statuses
+    // Table values and statuses
     .replace(/{{MOBILE_LCP_FIELD_VALUE}}/g, mobileCruxLcp.valueDisplay)
     .replace(/{{MOBILE_LCP_FIELD_STATUS}}/g, getStatusBadgeHtml(mobileCruxLcp))
     .replace(/{{MOBILE_LCP_LAB_VALUE}}/g, localMLcp.valueDisplay)
@@ -1465,7 +1465,7 @@ export async function generateReport(compiledResult, options = {}) {
 
   const timestamp = Date.now();
   const outputDir = path.join(options.projectPath, 'reports');
-  
+
   if (!fs.existsSync(outputDir)) {
     fs.mkdirSync(outputDir, { recursive: true });
   }
@@ -1524,7 +1524,7 @@ export async function generateReport(compiledResult, options = {}) {
   // Render to PDF using Puppeteer
   try {
     console.log('Generating redesigned 3-page executive PDF report...');
-    
+
     // Compute failing / warning metrics dynamically
     const labWarnings = [];
     if (localMLcp.statusLabel !== 'Good') labWarnings.push('Mobile LCP');
@@ -1580,7 +1580,7 @@ export async function generateReport(compiledResult, options = {}) {
 
     // Generate dynamic findings based on actual lab metrics and code issues
     const dynamicFindings = [];
-    
+
     // LCP finding
     if (localMLcp.statusLabel !== 'Good') {
       dynamicFindings.push({
@@ -1693,7 +1693,7 @@ export async function generateReport(compiledResult, options = {}) {
       gitBranch: gitBranch,
       url: options.url || '',
       date: pdfFormattedDate,
-      engineer: options.engineer || 'Not specified',
+      engineer: options.engineer || 'Siripireddy Giri',
       assessment: assessmentObj,
       mobile: {
         score: mobileLocScore.score,
@@ -1736,10 +1736,10 @@ export async function generateReport(compiledResult, options = {}) {
       headless: 'new',
       args: ['--no-sandbox', '--disable-setuid-sandbox']
     });
-    
+
     const page = await browser.newPage();
     await page.setContent(pdfHtml, { waitUntil: 'networkidle0' });
-    
+
     await page.pdf({
       path: pdfPath,
       format: 'A4',
