@@ -178,32 +178,5 @@ export function analyzeInp(files, reactAsts) {
     }
   }
 
-  // 4. Third-Party Script integrations
-  files.forEach(f => {
-    if (f.ext === '.html' || f.relativePath.endsWith('Document.js') || f.relativePath.endsWith('Document.tsx')) {
-      const matches = f.content.match(/<script[^>]+src=["']([^"']+)["']/g) || [];
-      matches.forEach(scriptTag => {
-        const isThirdParty = !scriptTag.includes('localhost') && !scriptTag.includes('src="/') && !scriptTag.includes('src="./');
-        const hasDeferOrAsync = scriptTag.includes('defer') || scriptTag.includes('async');
-        
-        if (isThirdParty && !hasDeferOrAsync) {
-          const scriptIdx = f.content.indexOf(scriptTag);
-          const { line: scriptLine } = getLineAndColumn(f.content, scriptIdx >= 0 ? scriptIdx : 0);
-          recommendations.push({
-            type: 'code',
-            file: f.filePath,
-            line: scriptLine || null,
-            cwv: 'inp',
-            severity: 'low',
-            message: `Synchronous Third-Party Script: "${scriptTag}"`,
-            impact: 'Synchronous third-party scripts block document parsing and execution, adding latency before interaction handlers can respond.',
-            suggestion: 'Add "defer" or "async" attribute to the script, or load it dynamically after user interaction.',
-            operation: 'third-party'
-          });
-        }
-      });
-    }
-  });
-
   return recommendations;
 }

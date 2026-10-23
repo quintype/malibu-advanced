@@ -14,8 +14,6 @@ export function parseReactCode(content, filePath) {
   const result = {
     imports: [],
     jsxTags: [],
-    useEffects: [],
-    contextProviders: [],
     functions: {}, // Stores functionName -> lineNumber
     calls: {},     // Stores functionName -> [calledFunctionName1, calledFunctionName2]
     memoUsage: false,
@@ -163,13 +161,6 @@ export function parseReactCode(content, filePath) {
           name = callee.name;
         } else if (callee.type === 'MemberExpression') {
           name = callee.property.name;
-        }
-
-        if (name === 'useEffect') {
-          result.useEffects.push({
-            loc: pathNode.node.loc,
-            argumentsCount: pathNode.node.arguments.length
-          });
         }
 
         if (name === 'memo' || name === 'useMemo') {

@@ -2,6 +2,7 @@
  * Redesigned Executive 3-Page PDF Template for CWV Inspector.
  * Strictly adheres to the 3-page A4 visual layout specified in template.html, page-1.png, page-2.png, page-3.png.
  */
+import { config } from '../config.js';
 
 export function extractCruxHistoryPoints(cruxHistoryData) {
   if (!cruxHistoryData) return null;
@@ -22,7 +23,9 @@ export function extractCruxHistoryPoints(cruxHistoryData) {
     const hasCls = clsVal !== null && clsVal !== undefined && clsVal !== 'NaN' && !isNaN(Number(clsVal));
     const hasInp = inpVal !== null && inpVal !== undefined && inpVal !== 'NaN' && !isNaN(Number(inpVal));
 
-    if (hasLcp || hasCls || hasInp) {
+    // Keep trend observations complete so the PDF never substitutes demo values
+    // for a metric that CrUX did not report in that collection period.
+    if (hasLcp && hasCls && hasInp) {
       const year = p.lastDate?.year || '';
       const month = String(p.lastDate?.month || '').padStart(2, '0');
       const day = String(p.lastDate?.day || '').padStart(2, '0');
@@ -40,8 +43,8 @@ export function extractCruxHistoryPoints(cruxHistoryData) {
 
 export function buildRedesignedPdfHtml(data = {}) {
   const {
-    clientName = 'deccanherald',
-    gitBranch = 'main',
+    clientName = 'Performance Audit',
+    gitBranch = 'N/A',
     url = '',
     date = '',
     assessment = {},
@@ -59,7 +62,7 @@ export function buildRedesignedPdfHtml(data = {}) {
     ? date 
     : new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }).format(new Date());
 
-  const branchDisplay = gitBranch || 'main';
+  const branchDisplay = gitBranch || 'N/A';
   const projectDisplay = clientName || 'Performance Audit';
 
   // Device score & classification logic
@@ -79,11 +82,11 @@ export function buildRedesignedPdfHtml(data = {}) {
   // Device configs
   const mobileConfig = emulationConfig?.mobile 
     ? `${emulationConfig.mobile.deviceName} · ${emulationConfig.mobile.throttlingProfile} · ${emulationConfig.mobile.cpuSlowdown}`
-    : 'Moto G Power · slow 4G · 4× CPU';
+    : 'Mobile emulation · simulated slow 4G · 4× CPU';
 
   const desktopConfig = emulationConfig?.desktop
     ? `${emulationConfig.desktop.deviceName} · ${emulationConfig.desktop.throttlingProfile} · ${emulationConfig.desktop.cpuSlowdown}`
-    : 'Desktop · dense 4G · no throttle';
+    : 'Desktop emulation · simulated dense 4G · 1× CPU';
 
   // Metric status to pill class & label
   const toPill = (valStr, isPass, type) => {
@@ -95,37 +98,37 @@ export function buildRedesignedPdfHtml(data = {}) {
     let label = isPass ? 'Pass' : 'Warn';
 
     if (type === 'lcp') {
-      if (num <= 2.5) { cls = 'pass'; label = 'Pass'; }
-      else if (num > 4.0) { cls = 'warn'; label = 'Warn'; }
+      if (num <= config.thresholds.lcp / 1000) { cls = 'pass'; label = 'Pass'; }
+      else if (num > config.thresholds.lcpNeedsImprovement / 1000) { cls = 'warn'; label = 'Warn'; }
       else { cls = 'warn'; label = 'Warn'; }
     } else if (type === 'cls') {
-      if (num <= 0.1) { cls = 'pass'; label = 'Pass'; }
-      else if (num <= 0.25) { cls = 'warn'; label = 'Warn'; }
+      if (num <= config.thresholds.cls) { cls = 'pass'; label = 'Pass'; }
+      else if (num <= config.thresholds.clsNeedsImprovement) { cls = 'warn'; label = 'Warn'; }
       else { cls = 'poor'; label = 'Poor'; }
     } else if (type === 'tbt') {
-      if (num <= 200) { cls = 'pass'; label = 'Pass'; }
+      if (num <= config.thresholds.tbt) { cls = 'pass'; label = 'Pass'; }
       else { cls = 'warn'; label = 'Warn'; }
     } else if (type === 'inp') {
-      if (num <= 200) { cls = 'pass'; label = 'Pass'; }
-      else if (num <= 500) { cls = 'warn'; label = 'Warn'; }
+      if (num <= config.thresholds.inp) { cls = 'pass'; label = 'Pass'; }
+      else if (num <= config.thresholds.inpNeedsImprovement) { cls = 'warn'; label = 'Warn'; }
       else { cls = 'poor'; label = 'Poor'; }
     }
     return { cls, label };
   };
 
   // Mobile Lab Metrics
-  const mLcpVal = mobile.lcp?.val || 'N/A';
-  const mClsVal = mobile.cls?.val || 'N/A';
-  const mTbtVal = mobile.tbt?.val || 'N/A';
+  const mLcpVal = mobile.lcp?.val ?? 'N/A';
+  const mClsVal = mobile.cls?.val ?? 'N/A';
+  const mTbtVal = mobile.tbt?.val ?? 'N/A';
 
   const mLcpPill = toPill(mLcpVal, mobile.lcp?.pass, 'lcp');
   const mClsPill = toPill(mClsVal, mobile.cls?.pass, 'cls');
   const mTbtPill = toPill(mTbtVal, mobile.tbt?.pass, 'tbt');
 
   // Desktop Lab Metrics
-  const dLcpVal = desktop.lcp?.val || 'N/A';
-  const dClsVal = desktop.cls?.val || 'N/A';
-  const dTbtVal = desktop.tbt?.val || 'N/A';
+  const dLcpVal = desktop.lcp?.val ?? 'N/A';
+  const dClsVal = desktop.cls?.val ?? 'N/A';
+  const dTbtVal = desktop.tbt?.val ?? 'N/A';
 
   const dLcpPill = toPill(dLcpVal, desktop.lcp?.pass, 'lcp');
   const dClsPill = toPill(dClsVal, desktop.cls?.pass, 'cls');
@@ -133,28 +136,21 @@ export function buildRedesignedPdfHtml(data = {}) {
 
   // Verdict Card
   const verdictTitle = assessment.status || (mobileScore < 50 || desktopScore < 50 ? 'Needs immediate attention' : 'Performance Audit');
-  const verdictText = assessment.text || `Mobile ${mobileScore} / 100 and Desktop ${desktopScore} / 100. Warnings on Mobile LCP and Mobile TBT.`;
+  const findingCount = Array.isArray(findings) ? findings.length : 0;
+  const verdictText = assessment.text || `Mobile ${mobileScore} / 100 and Desktop ${desktopScore} / 100. ${findingCount} prioritized finding${findingCount === 1 ? '' : 's'} in this report.`;
   const verdictClass = mobileScore < 50 || desktopScore < 50 ? 'poor' : (mobileScore < 90 || desktopScore < 90 ? 'warn' : 'pass');
 
-  // Page 2: Field trends (CrUX)
-  // Ensure we always have valid points for 3-page consistency
-  let validPoints = Array.isArray(cruxHistoryPoints) && cruxHistoryPoints.length >= 2
+  // Page 2: show real CrUX history only; never fill missing data with sample values.
+  const validPoints = (Array.isArray(cruxHistoryPoints) && cruxHistoryPoints.length >= 2
     ? cruxHistoryPoints
-    : extractCruxHistoryPoints(cruxHistory);
-
-  if (!validPoints || validPoints.length < 2) {
-    // Graceful baseline periods matching real user field metrics (e.g. page-2.png)
-    validPoints = [
-      { dateStr: '2026-09-26', lcp: 4680, inp: 193, cls: 0.020 },
-      { dateStr: '2026-10-03', lcp: 4520, inp: 193, cls: 0.025 },
-      { dateStr: '2026-10-10', lcp: 4350, inp: 192, cls: 0.028 },
-      { dateStr: '2026-10-17', lcp: 4170, inp: 192, cls: 0.030 }
-    ];
-  }
-
-  const pCount = validPoints.length;
-  const startPt = validPoints[0];
-  const endPt = validPoints[pCount - 1];
+    : extractCruxHistoryPoints(cruxHistory)) || [];
+  const completePoints = validPoints.filter(point =>
+    [point?.lcp, point?.inp, point?.cls].every(value => value !== null && value !== undefined && Number.isFinite(Number(value)))
+  );
+  const hasCruxHistory = completePoints.length >= 2;
+  const pCount = completePoints.length;
+  const startPt = completePoints[0] || { dateStr: '', lcp: 0, inp: 0, cls: 0 };
+  const endPt = completePoints[pCount - 1] || startPt;
 
   const formatDateShort = (dStr) => {
     if (!dStr) return '';
@@ -170,12 +166,12 @@ export function buildRedesignedPdfHtml(data = {}) {
 
   // Helper to calculate CrUX track values
   // Axis max: LCP 5.5 s, INP 300 ms, CLS 0.15
-  // Thresholds: LCP 2.5 s, INP 200 ms, CLS 0.10
+  // Good thresholds come from config.js.
   // LCP
   const lcpAxisMax = 5.5;
-  const lcpStartVal = typeof startPt.lcp === 'number' ? (startPt.lcp > 100 ? startPt.lcp / 1000 : startPt.lcp) : 4.68;
-  const lcpEndVal = typeof endPt.lcp === 'number' ? (endPt.lcp > 100 ? endPt.lcp / 1000 : endPt.lcp) : 4.17;
-  const lcpThrPct = ((2.5 / lcpAxisMax) * 100).toFixed(2);
+  const lcpStartVal = hasCruxHistory ? (startPt.lcp > 100 ? startPt.lcp / 1000 : startPt.lcp) : 0;
+  const lcpEndVal = hasCruxHistory ? (endPt.lcp > 100 ? endPt.lcp / 1000 : endPt.lcp) : 0;
+  const lcpThrPct = (((config.thresholds.lcp / 1000) / lcpAxisMax) * 100).toFixed(2);
   const lcpStartPct = (Math.min(lcpStartVal / lcpAxisMax, 1) * 100).toFixed(2);
   const lcpEndPct = (Math.min(lcpEndVal / lcpAxisMax, 1) * 100).toFixed(2);
   const lcpSegLeft = Math.min(Number(lcpStartPct), Number(lcpEndPct)).toFixed(2);
@@ -199,9 +195,9 @@ export function buildRedesignedPdfHtml(data = {}) {
 
   // INP
   const inpAxisMax = 300;
-  const inpStartVal = typeof startPt.inp === 'number' ? startPt.inp : 193;
-  const inpEndVal = typeof endPt.inp === 'number' ? endPt.inp : 192;
-  const inpThrPct = ((200 / inpAxisMax) * 100).toFixed(2);
+  const inpStartVal = hasCruxHistory ? startPt.inp : 0;
+  const inpEndVal = hasCruxHistory ? endPt.inp : 0;
+  const inpThrPct = ((config.thresholds.inp / inpAxisMax) * 100).toFixed(2);
   const inpStartPct = (Math.min(inpStartVal / inpAxisMax, 1) * 100).toFixed(2);
   const inpEndPct = (Math.min(inpEndVal / inpAxisMax, 1) * 100).toFixed(2);
   const inpSegLeft = Math.min(Number(inpStartPct), Number(inpEndPct)).toFixed(2);
@@ -225,9 +221,9 @@ export function buildRedesignedPdfHtml(data = {}) {
 
   // CLS
   const clsAxisMax = 0.15;
-  const clsStartVal = typeof startPt.cls === 'number' ? startPt.cls : 0.020;
-  const clsEndVal = typeof endPt.cls === 'number' ? endPt.cls : 0.030;
-  const clsThrPct = ((0.10 / clsAxisMax) * 100).toFixed(2);
+  const clsStartVal = hasCruxHistory ? startPt.cls : 0;
+  const clsEndVal = hasCruxHistory ? endPt.cls : 0;
+  const clsThrPct = ((config.thresholds.cls / clsAxisMax) * 100).toFixed(2);
   const clsStartPct = (Math.min(clsStartVal / clsAxisMax, 1) * 100).toFixed(2);
   const clsEndPct = (Math.min(clsEndVal / clsAxisMax, 1) * 100).toFixed(2);
   const clsSegLeft = Math.min(Number(clsStartPct), Number(clsEndPct)).toFixed(2);
@@ -250,17 +246,35 @@ export function buildRedesignedPdfHtml(data = {}) {
   }
 
   // Key takeaways
+  const goodLcpSeconds = config.thresholds.lcp / 1000;
   const lcpTakeaway = lcpEndVal < lcpStartVal
-    ? `Field LCP improved from ${lcpStartDisplay} to ${lcpEndDisplay} (${lcpDelta}) ${lcpEndVal <= 2.5 ? 'and is within the 2.5 s target.' : 'but is still above the 2.5 s target.'}`
-    : `Field LCP held steady at ${lcpEndDisplay} ${lcpEndVal <= 2.5 ? 'within the 2.5 s target.' : 'above the 2.5 s target.'}`;
+    ? `Field LCP improved from ${lcpStartDisplay} to ${lcpEndDisplay} (${lcpDelta}) ${lcpEndVal <= goodLcpSeconds ? `and is within the ${goodLcpSeconds} s target.` : `but is still above the ${goodLcpSeconds} s target.`}`
+    : `Field LCP held steady at ${lcpEndDisplay} ${lcpEndVal <= goodLcpSeconds ? `within the ${goodLcpSeconds} s target.` : `above the ${goodLcpSeconds} s target.`}`;
 
-  const inpTakeaway = inpEndVal <= 200
-    ? `Interaction latency held steady, ${inpStartDisplay} to ${inpEndDisplay}, just inside the 200 ms threshold.`
-    : `Interaction latency was ${inpEndDisplay}, exceeding the 200 ms threshold.`;
+  const inpTakeaway = inpEndVal <= config.thresholds.inp
+    ? `Interaction latency held steady, ${inpStartDisplay} to ${inpEndDisplay}, just inside the ${config.thresholds.inp} ms threshold.`
+    : `Interaction latency was ${inpEndDisplay}, exceeding the ${config.thresholds.inp} ms threshold.`;
 
-  const clsTakeaway = clsEndVal <= clsStartVal
-    ? `Layout shift improved from ${clsStartDisplay} to ${clsEndDisplay}, and remains well within the good range.`
-    : `Layout shift rose slightly, ${clsStartDisplay} to ${clsEndDisplay}, and remains well within the good range.`;
+  const clsDirection = clsEndVal <= clsStartVal ? 'improved' : 'increased';
+  const clsRange = clsEndVal <= config.thresholds.cls ? 'within' : 'above';
+  const clsTakeaway = `Layout shift ${clsDirection} from ${clsStartDisplay} to ${clsEndDisplay} and is ${clsRange} the ${config.thresholds.cls} good threshold.`;
+
+  const fieldTrendsHtml = hasCruxHistory ? `
+    <div class="sub">Real-user data (CrUX, 75th percentile) · ${pCount} collection periods, ${cruxRange}</div>
+    <div class="trend">
+      <div class="hd"><div><span class="chip">LCP</span><span class="nm">Largest Contentful Paint</span></div><div><div class="big">${lcpEndDisplay}</div><div class="delta">${lcpDelta} since ${cruxStartDate}</div></div></div>
+      <div class="track" style="--thr:${lcpThrPct}%"><div class="thr"><em>Good ≤ ${config.thresholds.lcp / 1000} s</em></div><div class="seg" style="left:${lcpSegLeft}%;width:${lcpSegPct}%"></div><div class="d s" style="left:${lcpStartPct}%"></div><div class="d e" style="left:${lcpEndPct}%"></div>${lcpLabelsHtml}</div>
+    </div>
+    <div class="trend">
+      <div class="hd"><div><span class="chip">INP</span><span class="nm">Interaction to Next Paint</span></div><div><div class="big">${inpEndDisplay}</div><div class="delta">${inpDelta} since ${cruxStartDate}</div></div></div>
+      <div class="track" style="--thr:${inpThrPct}%"><div class="thr"><em>Good ≤ ${config.thresholds.inp} ms</em></div><div class="seg" style="left:${inpSegLeft}%;width:${inpSegPct}%"></div><div class="d s" style="left:${inpStartPct}%"></div><div class="d e" style="left:${inpEndPct}%"></div>${inpLabelsHtml}</div>
+    </div>
+    <div class="trend">
+      <div class="hd"><div><span class="chip">CLS</span><span class="nm">Cumulative Layout Shift</span></div><div><div class="big">${clsEndDisplay}</div><div class="delta">${clsDelta} since ${cruxStartDate}</div></div></div>
+      <div class="track" style="--thr:${clsThrPct}%"><div class="thr"><em>Good ≤ ${config.thresholds.cls}</em></div><div class="seg" style="left:${clsSegLeft}%;width:${clsSegPct}%"></div><div class="d s" style="left:${clsStartPct}%"></div><div class="d e" style="left:${clsEndPct}%"></div>${clsLabelsHtml}</div>
+    </div>
+    <div class="take"><h3>Key takeaways</h3><p><b>LCP</b>${lcpTakeaway}</p><p><b>INP</b>${inpTakeaway}</p><p><b>CLS</b>${clsTakeaway}</p></div>
+  ` : '<div class="empty-history">CrUX historical data is unavailable for this URL. No synthetic trend values are shown.</div>';
 
   // Page 3: Metrics Table Rows
   // 8 rows: LCP Mobile, LCP Desktop, CLS Mobile, CLS Desktop, TBT Mobile, TBT Desktop, INP Mobile, INP Desktop
@@ -291,14 +305,14 @@ export function buildRedesignedPdfHtml(data = {}) {
   } else {
     // Fallback standard 8 rows
     tableRowsHtml = `
-      <tr><td class="m">LCP<span>Mobile</span></td><td><b>4.14 s</b><span class="pill warn">Warn</span></td><td><b>${mLcpVal}</b><span class="pill ${mLcpPill.cls}">${mLcpPill.label}</span></td><td class="t">≤ 2.5 s</td></tr>
-      <tr><td class="m">LCP<span>Desktop</span></td><td><b>1.64 s</b><span class="pill pass">Pass</span></td><td><b>${dLcpVal}</b><span class="pill ${dLcpPill.cls}">${dLcpPill.label}</span></td><td class="t">≤ 2.5 s</td></tr>
-      <tr><td class="m">CLS<span>Mobile</span></td><td><b>0.020</b><span class="pill pass">Pass</span></td><td><b>${mClsVal}</b><span class="pill ${mClsPill.cls}">${mClsPill.label}</span></td><td class="t">≤ 0.1</td></tr>
-      <tr><td class="m">CLS<span>Desktop</span></td><td><b>0.060</b><span class="pill pass">Pass</span></td><td><b>${dClsVal}</b><span class="pill ${dClsPill.cls}">${dClsPill.label}</span></td><td class="t">≤ 0.1</td></tr>
-      <tr><td class="m">TBT<span>Mobile</span></td><td><b>193 ms</b><span class="pill pass">Pass</span></td><td><b>${mTbtVal}</b><span class="pill ${mTbtPill.cls}">${mTbtPill.label}</span></td><td class="t">≤ 200 ms</td></tr>
-      <tr><td class="m">TBT<span>Desktop</span></td><td><b>102 ms</b><span class="pill pass">Pass</span></td><td><b>${dTbtVal}</b><span class="pill ${dTbtPill.cls}">${dTbtPill.label}</span></td><td class="t">≤ 200 ms</td></tr>
-      <tr><td class="m">INP<span>Mobile</span></td><td><b>193 ms</b><span class="pill pass">Pass</span></td><td>—</td><td class="t">≤ 200 ms</td></tr>
-      <tr><td class="m">INP<span>Desktop</span></td><td><b>102 ms</b><span class="pill pass">Pass</span></td><td>—</td><td class="t">≤ 200 ms</td></tr>
+      <tr><td class="m">LCP<span>Mobile</span></td><td>N/A</td><td><b>${mLcpVal}</b><span class="pill ${mLcpPill.cls}">${mLcpPill.label}</span></td><td class="t">≤ ${config.thresholds.lcp / 1000} s</td></tr>
+      <tr><td class="m">LCP<span>Desktop</span></td><td>N/A</td><td><b>${dLcpVal}</b><span class="pill ${dLcpPill.cls}">${dLcpPill.label}</span></td><td class="t">≤ ${config.thresholds.lcp / 1000} s</td></tr>
+      <tr><td class="m">CLS<span>Mobile</span></td><td>N/A</td><td><b>${mClsVal}</b><span class="pill ${mClsPill.cls}">${mClsPill.label}</span></td><td class="t">≤ ${config.thresholds.cls}</td></tr>
+      <tr><td class="m">CLS<span>Desktop</span></td><td>N/A</td><td><b>${dClsVal}</b><span class="pill ${dClsPill.cls}">${dClsPill.label}</span></td><td class="t">≤ ${config.thresholds.cls}</td></tr>
+      <tr><td class="m">TBT<span>Mobile</span></td><td>N/A</td><td><b>${mTbtVal}</b><span class="pill ${mTbtPill.cls}">${mTbtPill.label}</span></td><td class="t">≤ ${config.thresholds.tbt} ms</td></tr>
+      <tr><td class="m">TBT<span>Desktop</span></td><td>N/A</td><td><b>${dTbtVal}</b><span class="pill ${dTbtPill.cls}">${dTbtPill.label}</span></td><td class="t">≤ ${config.thresholds.tbt} ms</td></tr>
+      <tr><td class="m">INP<span>Mobile</span></td><td>N/A</td><td>—</td><td class="t">≤ ${config.thresholds.inp} ms</td></tr>
+      <tr><td class="m">INP<span>Desktop</span></td><td>N/A</td><td>—</td><td class="t">≤ ${config.thresholds.inp} ms</td></tr>
     `;
   }
 
@@ -377,6 +391,7 @@ h1{font-size:24pt;font-weight:800;letter-spacing:-.02em}
 
 /* ---------- page 2 ---------- */
 .trend{background:var(--panel);border:1px solid var(--line);border-radius:4mm;padding:5mm;margin-top:6mm}
+.empty-history{margin-top:12mm;padding:14mm 10mm;text-align:center;background:var(--panel);border:1px dashed var(--line);border-radius:4mm;color:var(--mute);font-size:11pt}
 .trend .hd{display:flex;justify-content:space-between;align-items:flex-start}
 .chip{background:var(--accent-bg);color:var(--accent);font-weight:700;font-size:10pt;padding:1.5mm 3.5mm;border-radius:2mm;margin-right:3mm}
 .trend .nm{font-size:9pt;color:var(--mute)}
@@ -421,17 +436,17 @@ h2{font-size:13pt;margin:9mm 0 3mm}
       <h3>Mobile</h3><div class="dev">${mobileConfig}</div>
       <div class="score"><div class="ring" style="--p:${mobileScore}"><span>${mobileScore}</span></div>
         <div class="v">${mobileLabel}<small>Lighthouse performance score</small></div></div>
-      <div class="row"><div><b>LCP</b><small>Largest Contentful Paint</small></div><div class="val">${mLcpVal}</div><div><span class="pill ${mLcpPill.cls}">${mLcpPill.label}</span><br><small>Good ≤ 2.5 s</small></div></div>
-      <div class="row"><div><b>CLS</b><small>Cumulative Layout Shift</small></div><div class="val">${mClsVal}</div><div><span class="pill ${mClsPill.cls}">${mClsPill.label}</span><br><small>Good ≤ 0.1</small></div></div>
-      <div class="row"><div><b>TBT</b><small>Total Blocking Time</small></div><div class="val">${mTbtVal}</div><div><span class="pill ${mTbtPill.cls}">${mTbtPill.label}</span><br><small>Good ≤ 200 ms</small></div></div>
+      <div class="row"><div><b>LCP</b><small>Largest Contentful Paint</small></div><div class="val">${mLcpVal}</div><div><span class="pill ${mLcpPill.cls}">${mLcpPill.label}</span><br><small>Good ≤ ${config.thresholds.lcp / 1000} s</small></div></div>
+      <div class="row"><div><b>CLS</b><small>Cumulative Layout Shift</small></div><div class="val">${mClsVal}</div><div><span class="pill ${mClsPill.cls}">${mClsPill.label}</span><br><small>Good ≤ ${config.thresholds.cls}</small></div></div>
+      <div class="row"><div><b>TBT</b><small>Total Blocking Time</small></div><div class="val">${mTbtVal}</div><div><span class="pill ${mTbtPill.cls}">${mTbtPill.label}</span><br><small>Good ≤ ${config.thresholds.tbt} ms</small></div></div>
     </div>
     <div class="card ${desktopClass}">
       <h3>Desktop</h3><div class="dev">${desktopConfig}</div>
       <div class="score"><div class="ring" style="--p:${desktopScore}"><span>${desktopScore}</span></div>
         <div class="v">${desktopLabel}<small>Lighthouse performance score</small></div></div>
-      <div class="row"><div><b>LCP</b><small>Largest Contentful Paint</small></div><div class="val">${dLcpVal}</div><div><span class="pill ${dLcpPill.cls}">${dLcpPill.label}</span><br><small>Good ≤ 2.5 s</small></div></div>
-      <div class="row"><div><b>CLS</b><small>Cumulative Layout Shift</small></div><div class="val">${dClsVal}</div><div><span class="pill ${dClsPill.cls}">${dClsPill.label}</span><br><small>Good ≤ 0.1</small></div></div>
-      <div class="row"><div><b>TBT</b><small>Total Blocking Time</small></div><div class="val">${dTbtVal}</div><div><span class="pill ${dTbtPill.cls}">${dTbtPill.label}</span><br><small>Good ≤ 200 ms</small></div></div>
+      <div class="row"><div><b>LCP</b><small>Largest Contentful Paint</small></div><div class="val">${dLcpVal}</div><div><span class="pill ${dLcpPill.cls}">${dLcpPill.label}</span><br><small>Good ≤ ${config.thresholds.lcp / 1000} s</small></div></div>
+      <div class="row"><div><b>CLS</b><small>Cumulative Layout Shift</small></div><div class="val">${dClsVal}</div><div><span class="pill ${dClsPill.cls}">${dClsPill.label}</span><br><small>Good ≤ ${config.thresholds.cls}</small></div></div>
+      <div class="row"><div><b>TBT</b><small>Total Blocking Time</small></div><div class="val">${dTbtVal}</div><div><span class="pill ${dTbtPill.cls}">${dTbtPill.label}</span><br><small>Good ≤ ${config.thresholds.tbt} ms</small></div></div>
     </div>
   </div>
   <div class="legend"><b style="color:var(--ink)">Score guide</b>
@@ -443,35 +458,7 @@ h2{font-size:13pt;margin:9mm 0 3mm}
 <section class="page">
   <div class="top"><b>Core Web Vitals Diagnostic Lab</b><span>${projectDisplay} · ${branchDisplay} · ${formattedDate}</span></div>
   <div class="bar"></div><h1>Field trends</h1>
-  <div class="sub">Real-user data (CrUX, 75th percentile) · ${pCount} collection periods, ${cruxRange}</div>
-
-  <div class="trend">
-    <div class="hd"><div><span class="chip">LCP</span><span class="nm">Largest Contentful Paint</span></div>
-      <div><div class="big">${lcpEndDisplay}</div><div class="delta">${lcpDelta} since ${cruxStartDate}</div></div></div>
-    <div class="track" style="--thr:${lcpThrPct}%"><div class="thr"><em>Good ≤ 2.5 s</em></div>
-      <div class="seg" style="left:${lcpSegLeft}%;width:${lcpSegPct}%"></div>
-      <div class="d s" style="left:${lcpStartPct}%"></div><div class="d e" style="left:${lcpEndPct}%"></div>
-      ${lcpLabelsHtml}</div>
-  </div>
-  <div class="trend">
-    <div class="hd"><div><span class="chip">INP</span><span class="nm">Interaction to Next Paint</span></div>
-      <div><div class="big">${inpEndDisplay}</div><div class="delta">${inpDelta} since ${cruxStartDate}</div></div></div>
-    <div class="track" style="--thr:${inpThrPct}%"><div class="thr"><em>Good ≤ 200 ms</em></div>
-      <div class="seg" style="left:${inpSegLeft}%;width:${inpSegPct}%"></div>
-      <div class="d s" style="left:${inpStartPct}%"></div><div class="d e" style="left:${inpEndPct}%"></div>
-      ${inpLabelsHtml}</div>
-  </div>
-  <div class="trend">
-    <div class="hd"><div><span class="chip">CLS</span><span class="nm">Cumulative Layout Shift</span></div>
-      <div><div class="big">${clsEndDisplay}</div><div class="delta">${clsDelta} since ${cruxStartDate}</div></div></div>
-    <div class="track" style="--thr:${clsThrPct}%"><div class="thr"><em>Good ≤ 0.10</em></div>
-      <div class="seg" style="left:${clsSegLeft}%;width:${clsSegPct}%"></div>
-      <div class="d s" style="left:${clsStartPct}%"></div><div class="d e" style="left:${clsEndPct}%"></div>
-      ${clsLabelsHtml}</div>
-  </div>
-
-  <div class="take"><h3>Key takeaways</h3>
-    <p><b>LCP</b>${lcpTakeaway}</p><p><b>INP</b>${inpTakeaway}</p><p><b>CLS</b>${clsTakeaway}</p></div>
+  ${fieldTrendsHtml}
   <div class="foot"><span>Confidential</span><span>2 / 3</span></div>
 </section>
 

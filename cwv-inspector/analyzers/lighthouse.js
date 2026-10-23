@@ -143,10 +143,8 @@ async function connectPuppeteerToPort(port, retries = 20) {
  */
 async function configurePageEmulation(page, device = 'mobile') {
   if (device === 'mobile') {
-    await page.setUserAgent('Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Mobile Safari/537.36');
     await page.setViewport({ width: 412, height: 823, deviceScaleFactor: 1.75, isMobile: true, hasTouch: true });
   } else {
-    await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36');
     await page.setViewport({ width: 1350, height: 940, deviceScaleFactor: 1, isMobile: false, hasTouch: false });
   }
   await page.setCacheEnabled(false);
@@ -360,27 +358,6 @@ async function throttledDiagnosticPass(url, port, device = 'mobile') {
 }
 
 /**
- * Recalculates CLS value and Lighthouse performance score if full-page scrolling
- * observed layout shifts that exceed the static non-scrolling trace.
- */
-function updateClsWithObservedShifts(deviceData, shifts, deviceName) {
-  if (!deviceData || !shifts || shifts.length === 0) return;
-  const shiftSum = shifts.reduce((acc, s) => acc + (Number(s.value) || 0), 0);
-  if (shiftSum > (deviceData.cls.value || 0)) {
-    console.log(`📊 ${deviceName} full-page scroll observed CLS (${shiftSum.toFixed(3)}) exceeds static viewport CLS (${(deviceData.cls.value || 0).toFixed(3)}). Updating report metrics.`);
-    deviceData.cls.value = shiftSum;
-    deviceData.cls.displayValue = shiftSum.toFixed(3);
-    if (shiftSum > 0.25) {
-      deviceData.cls.score = Math.max(0, Math.round((1 - Math.min(1, (shiftSum - 0.25) / 0.5)) * 49));
-    } else if (shiftSum > 0.10) {
-      deviceData.cls.score = Math.round(50 + ((0.25 - shiftSum) / 0.15) * 39);
-    } else {
-      deviceData.cls.score = 90 + Math.round(((0.10 - shiftSum) / 0.10) * 10);
-    }
-  }
-}
-
-/**
  * Runs Lighthouse audit on a URL for both Mobile and Desktop.
  *
  * @param {string} url The target page URL.
@@ -389,13 +366,9 @@ function updateClsWithObservedShifts(deviceData, shifts, deviceName) {
 export async function runLighthouseAudit(url) {
   if (!url) return null;
 
-  // Append unique timestamp parameter to bust CDN and intermediate proxy caches on every run
-  const cacheBuster = `_cwv_nocache=${Date.now()}`;
-  const auditUrl = url.includes('?') ? `${url}&${cacheBuster}` : `${url}?${cacheBuster}`;
-
   let chrome = null;
   try {
-    console.log(`\n🚀 Launching headless Chrome for dual Lighthouse audit on: ${auditUrl}...`);
+    console.log(`\n🚀 Launching headless Chrome for dual Lighthouse audit on: ${url}...`);
 
     chrome = await chromeLauncher.launch({
       chromeFlags: [
@@ -412,7 +385,7 @@ export async function runLighthouseAudit(url) {
     });
 
     // Run bot scrolling to trigger lazy loaders and initialize assets (Mobile pass)
-    const mobileCustomShifts = await preScrollPage(auditUrl, chrome.port, 'mobile');
+    const mobileCustomShifts = await preScrollPage(url, chrome.port, 'mobile');
 
     // Official Lighthouse & PageSpeed Insights Reference Configuration
     const mobileOptions = {
@@ -438,7 +411,6 @@ export async function runLighthouseAudit(url) {
         uploadThroughputKbps: 750 * 0.9,
         cpuSlowdownMultiplier: 4
       },
-      emulatedUserAgent: 'Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Mobile Safari/537.36'
     };
 
     const desktopOptions = {
@@ -464,36 +436,34 @@ export async function runLighthouseAudit(url) {
         downloadThroughputKbps: 0,
         uploadThroughputKbps: 0
       },
-      emulatedUserAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36'
     };
 
     console.log(`📱 Running Lighthouse Mobile Audit (412x823, 1.75x DPR, Slow 4G, 4x CPU)...`);
-    const mobileResult = await lighthouse(auditUrl, mobileOptions);
+    const mobileResult = await lighthouse(url, mobileOptions);
     const mobileData = extractScores(JSON.parse(mobileResult.report));
 
     // Check if Lighthouse failed to trace DOM nodes and preScrollPage had no custom shifts
     let finalMobileShifts = mobileCustomShifts;
     if (finalMobileShifts.length === 0 && mobileData.clsElements.some(el => el.selector.includes('Global/Unknown'))) {
-      const throttledShifts = await throttledDiagnosticPass(auditUrl, chrome.port, 'mobile');
+      const throttledShifts = await throttledDiagnosticPass(url, chrome.port, 'mobile');
       finalMobileShifts = throttledShifts;
     }
 
     // Run bot scrolling to trigger lazy loaders and initialize assets (Desktop pass)
-    const desktopCustomShifts = await preScrollPage(auditUrl, chrome.port, 'desktop');
+    const desktopCustomShifts = await preScrollPage(url, chrome.port, 'desktop');
 
     console.log(`💻 Running Lighthouse Desktop Audit (1350x940, 1x DPR, Dense 4G, 1x CPU)...`);
-    const desktopResult = await lighthouse(auditUrl, desktopOptions, desktopConfig);
+    const desktopResult = await lighthouse(url, desktopOptions, desktopConfig);
     const desktopData = extractScores(JSON.parse(desktopResult.report));
 
     let finalDesktopShifts = desktopCustomShifts;
     if (finalDesktopShifts.length === 0 && desktopData.clsElements.some(el => el.selector.includes('Global/Unknown'))) {
-      const desktopShifts = await throttledDiagnosticPass(auditUrl, chrome.port, 'desktop');
+      const desktopShifts = await throttledDiagnosticPass(url, chrome.port, 'desktop');
       finalDesktopShifts = desktopShifts;
     }
 
-    // Incorporate scroll-triggered layout shifts if observed shifts exceed the static non-scrolling trace
-    updateClsWithObservedShifts(mobileData, finalMobileShifts, 'Mobile');
-    updateClsWithObservedShifts(desktopData, finalDesktopShifts, 'Desktop');
+    // Keep Lighthouse's CLS metric authoritative. Observer shifts are retained for
+    // source correlation; summing them across a full scroll is not the CLS session-window algorithm.
 
     // Build emulation config metadata for report display
     const emulationConfig = {

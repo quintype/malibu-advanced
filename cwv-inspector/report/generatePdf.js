@@ -9,6 +9,7 @@ if (typeof globalThis.ReadableStream === 'undefined' && WebReadableStream) {
 
 import puppeteer from 'puppeteer';
 import { buildRedesignedPdfHtml, extractCruxHistoryPoints } from './redesignedPdfTemplate.js';
+import { config } from '../config.js';
 
 /**
  * Computes metric rendering properties.
@@ -19,56 +20,64 @@ function computeMetricDetails(data, type) {
   if (data) {
     if (type === 'lcp' && data.lcp && data.lcp.value !== undefined && data.lcp.value !== null && !isNaN(data.lcp.value)) {
       const lcpSec = data.lcp.value / 1000;
+      const goodLcpSec = config.thresholds.lcp / 1000;
+      const needsWorkLcpSec = config.thresholds.lcpNeedsImprovement / 1000;
       valueDisplay = `${lcpSec.toFixed(2)}s`;
-      if (lcpSec <= 2.5) {
+      if (lcpSec <= goodLcpSec) {
         statusClass = 'good'; statusLabel = 'Good'; textClass = 'good-text'; subdesc = 'Excellent rendering speed.';
-        percent = (lcpSec / 2.5) * 33;
-      } else if (lcpSec <= 4.0) {
-        statusClass = 'warning'; statusLabel = 'Needs Work'; textClass = 'warning-text'; subdesc = 'Needs work (over 2.5s).';
-        percent = 33 + ((lcpSec - 2.5) / 1.5) * 33;
+        percent = (lcpSec / goodLcpSec) * 33;
+      } else if (lcpSec <= needsWorkLcpSec) {
+        statusClass = 'warning'; statusLabel = 'Needs Work'; textClass = 'warning-text'; subdesc = `Needs work (over ${goodLcpSec}s).`;
+        percent = 33 + ((lcpSec - goodLcpSec) / (needsWorkLcpSec - goodLcpSec)) * 33;
       } else {
-        statusClass = 'poor'; statusLabel = 'Poor'; textClass = 'danger-text'; subdesc = `${(lcpSec - 2.5).toFixed(1)}s over the 2.5s limit.`;
-        percent = Math.min(100, 66 + ((lcpSec - 4.0) / 4.0) * 34);
+        statusClass = 'poor'; statusLabel = 'Poor'; textClass = 'danger-text'; subdesc = `${(lcpSec - goodLcpSec).toFixed(1)}s over the ${goodLcpSec}s limit.`;
+        percent = Math.min(100, 66 + ((lcpSec - needsWorkLcpSec) / needsWorkLcpSec) * 34);
       }
     } else if (type === 'cls' && data.cls && data.cls.value !== undefined && data.cls.value !== null && !isNaN(data.cls.value)) {
       const clsVal = Number(data.cls.value);
+      const goodCls = config.thresholds.cls;
+      const needsWorkCls = config.thresholds.clsNeedsImprovement;
       valueDisplay = clsVal.toFixed(3);
-      if (clsVal <= 0.1) {
+      if (clsVal <= goodCls) {
         statusClass = 'good'; statusLabel = 'Good'; textClass = 'good-text'; subdesc = 'No layout shift detected.';
-        percent = (clsVal / 0.1) * 33;
-      } else if (clsVal <= 0.25) {
+        percent = (clsVal / goodCls) * 33;
+      } else if (clsVal <= needsWorkCls) {
         statusClass = 'warning'; statusLabel = 'Needs Work'; textClass = 'warning-text'; subdesc = 'Some layout shifts present.';
-        percent = 33 + ((clsVal - 0.1) / 0.15) * 33;
+        percent = 33 + ((clsVal - goodCls) / (needsWorkCls - goodCls)) * 33;
       } else {
         statusClass = 'poor'; statusLabel = 'Poor'; textClass = 'danger-text'; subdesc = 'Poor layout stability.';
-        percent = Math.min(100, 66 + ((clsVal - 0.25) / 0.5) * 34);
+        percent = Math.min(100, 66 + ((clsVal - config.thresholds.clsNeedsImprovement) / 0.5) * 34);
       }
     } else if (type === 'tbt' && data.tbt && data.tbt.value !== undefined && data.tbt.value !== null && !isNaN(data.tbt.value)) {
       const tbtVal = Math.round(data.tbt.value);
+      const goodTbt = config.thresholds.tbt;
+      const needsWorkTbt = config.thresholds.tbtNeedsImprovement;
       valueDisplay = `${tbtVal}ms`;
-      if (tbtVal <= 200) {
+      if (tbtVal <= goodTbt) {
         statusClass = 'good'; statusLabel = 'Good'; textClass = 'good-text'; subdesc = 'Main thread is responsive.';
-        percent = (tbtVal / 200) * 33;
-      } else if (tbtVal <= 600) {
+        percent = (tbtVal / goodTbt) * 33;
+      } else if (tbtVal <= needsWorkTbt) {
         statusClass = 'warning'; statusLabel = 'Needs Work'; textClass = 'warning-text'; subdesc = 'Some input blocking present.';
-        percent = 33 + ((tbtVal - 200) / 400) * 33;
+        percent = 33 + ((tbtVal - goodTbt) / (needsWorkTbt - goodTbt)) * 33;
       } else {
-        statusClass = 'poor'; statusLabel = 'Poor'; textClass = 'danger-text'; subdesc = `${(tbtVal - 200)}ms over the 200ms limit.`;
-        percent = Math.min(100, 66 + ((tbtVal - 600) / 1000) * 34);
+        statusClass = 'poor'; statusLabel = 'Poor'; textClass = 'danger-text'; subdesc = `${(tbtVal - goodTbt)}ms over the ${goodTbt}ms limit.`;
+        percent = Math.min(100, 66 + ((tbtVal - needsWorkTbt) / 1000) * 34);
       }
     } else if (type === 'inp') {
       if (data.inp && data.inp.value !== undefined && data.inp.value !== null && !isNaN(data.inp.value)) {
         const inpVal = Math.round(data.inp.value);
+        const goodInp = config.thresholds.inp;
+        const needsWorkInp = config.thresholds.inpNeedsImprovement;
         valueDisplay = `${inpVal}ms`;
-        if (inpVal <= 200) {
+        if (inpVal <= goodInp) {
           statusClass = 'good'; statusLabel = 'Good'; textClass = 'good-text'; subdesc = 'Excellent input responsiveness.';
-          percent = (inpVal / 200) * 33;
-        } else if (inpVal <= 500) {
-          statusClass = 'warning'; statusLabel = 'Needs Work'; textClass = 'warning-text'; subdesc = 'Needs work (over 200ms).';
-          percent = 33 + ((inpVal - 200) / 300) * 33;
+          percent = (inpVal / goodInp) * 33;
+        } else if (inpVal <= needsWorkInp) {
+          statusClass = 'warning'; statusLabel = 'Needs Work'; textClass = 'warning-text'; subdesc = `Needs work (over ${goodInp}ms).`;
+          percent = 33 + ((inpVal - goodInp) / (needsWorkInp - goodInp)) * 33;
         } else {
-          statusClass = 'poor'; statusLabel = 'Poor'; textClass = 'danger-text'; subdesc = `${(inpVal - 200)}ms over the 200ms limit.`;
-          percent = Math.min(100, 66 + ((inpVal - 500) / 1000) * 34);
+          statusClass = 'poor'; statusLabel = 'Poor'; textClass = 'danger-text'; subdesc = `${(inpVal - goodInp)}ms over the ${goodInp}ms limit.`;
+          percent = Math.min(100, 66 + ((inpVal - needsWorkInp) / 1000) * 34);
         }
       } else {
         // Lab data doesn't measure INP; defaults to 0ms PASS in lab
@@ -204,7 +213,7 @@ function buildMetricGridHtml(lcp, cls, tbt, isLocal = false, branchName = '') {
           </div>
           <div class="metric-bottom-bar">
             ${getMetricBadgeHtml(lcp)}
-            <span class="threshold-lbl">Good &le; 2.5s</span>
+            <span class="threshold-lbl">Good &le; ${config.thresholds.lcp / 1000}s</span>
           </div>
         </div>
 
@@ -230,7 +239,7 @@ function buildMetricGridHtml(lcp, cls, tbt, isLocal = false, branchName = '') {
           </div>
           <div class="metric-bottom-bar">
             ${getMetricBadgeHtml(cls)}
-            <span class="threshold-lbl">Good &le; 0.1</span>
+            <span class="threshold-lbl">Good &le; ${config.thresholds.cls}</span>
           </div>
         </div>
 
@@ -256,7 +265,7 @@ function buildMetricGridHtml(lcp, cls, tbt, isLocal = false, branchName = '') {
           </div>
           <div class="metric-bottom-bar">
             ${getMetricBadgeHtml(tbt)}
-            <span class="threshold-lbl">Good &le; 200ms</span>
+            <span class="threshold-lbl">Good &le; ${config.thresholds.tbt}ms</span>
           </div>
         </div>
       </div>
@@ -453,14 +462,14 @@ export async function generateReport(compiledResult, options = {}) {
   let assessmentBannerHtml = '';
   if (hasLighthouse) {
     const mobilePassed = mobileData && (
-      (mobileData.lcp?.value !== undefined && mobileData.lcp?.value !== null ? mobileData.lcp.value / 1000 <= 2.5 : true) &&
-      (mobileData.cls?.value !== undefined && mobileData.cls?.value !== null ? mobileData.cls.value <= 0.1 : true) &&
-      (mobileData.tbt?.value !== undefined && mobileData.tbt?.value !== null ? mobileData.tbt.value <= 200 : true)
+      (mobileData.lcp?.value !== undefined && mobileData.lcp?.value !== null ? mobileData.lcp.value <= config.thresholds.lcp : true) &&
+      (mobileData.cls?.value !== undefined && mobileData.cls?.value !== null ? mobileData.cls.value <= config.thresholds.cls : true) &&
+      (mobileData.tbt?.value !== undefined && mobileData.tbt?.value !== null ? mobileData.tbt.value <= config.thresholds.tbt : true)
     );
     const desktopPassed = desktopData && (
-      (desktopData.lcp?.value !== undefined && desktopData.lcp?.value !== null ? desktopData.lcp.value / 1000 <= 2.5 : true) &&
-      (desktopData.cls?.value !== undefined && desktopData.cls?.value !== null ? desktopData.cls.value <= 0.1 : true) &&
-      (desktopData.tbt?.value !== undefined && desktopData.tbt?.value !== null ? desktopData.tbt.value <= 200 : true)
+      (desktopData.lcp?.value !== undefined && desktopData.lcp?.value !== null ? desktopData.lcp.value <= config.thresholds.lcp : true) &&
+      (desktopData.cls?.value !== undefined && desktopData.cls?.value !== null ? desktopData.cls.value <= config.thresholds.cls : true) &&
+      (desktopData.tbt?.value !== undefined && desktopData.tbt?.value !== null ? desktopData.tbt.value <= config.thresholds.tbt : true)
     );
 
      if (mobilePassed && desktopPassed) {
@@ -1013,7 +1022,7 @@ export async function generateReport(compiledResult, options = {}) {
                   <span style="width: 8px; height: 8px; background: #3b82f6; border-radius: 50%; display: inline-block;"></span>
                   Largest Contentful Paint (LCP)
                 </div>
-                <div style="font-size: 0.72rem; color: #64748b; margin-top: 2px;">Good: ≤ 2.5s | Needs Imp: ≤ 4.0s</div>
+                <div style="font-size: 0.72rem; color: #64748b; margin-top: 2px;">Good: ≤ ${config.thresholds.lcp / 1000}s | Needs Imp: ≤ ${config.thresholds.lcpNeedsImprovement / 1000}s</div>
               </div>
               <div id="latest-lcp-badge" style="font-size: 0.8rem; font-weight: 800; padding: 2px 8px; border-radius: 4px; background: #eff6ff; color: #1d4ed8; font-family: monospace;"></div>
             </div>
@@ -1030,7 +1039,7 @@ export async function generateReport(compiledResult, options = {}) {
                   <span style="width: 8px; height: 8px; background: #10b981; border-radius: 50%; display: inline-block;"></span>
                   Interaction to Next Paint (INP)
                 </div>
-                <div style="font-size: 0.72rem; color: #64748b; margin-top: 2px;">Good: ≤ 200ms | Needs Imp: ≤ 500ms</div>
+                <div style="font-size: 0.72rem; color: #64748b; margin-top: 2px;">Good: ≤ ${config.thresholds.inp}ms | Needs Imp: ≤ ${config.thresholds.inpNeedsImprovement}ms</div>
               </div>
               <div id="latest-inp-badge" style="font-size: 0.8rem; font-weight: 800; padding: 2px 8px; border-radius: 4px; background: #ecfdf5; color: #047857; font-family: monospace;"></div>
             </div>
@@ -1047,7 +1056,7 @@ export async function generateReport(compiledResult, options = {}) {
                   <span style="width: 8px; height: 8px; background: #f59e0b; border-radius: 50%; display: inline-block;"></span>
                   Cumulative Layout Shift (CLS)
                 </div>
-                <div style="font-size: 0.72rem; color: #64748b; margin-top: 2px;">Good: ≤ 0.10 | Needs Imp: ≤ 0.25</div>
+                <div style="font-size: 0.72rem; color: #64748b; margin-top: 2px;">Good: ≤ ${config.thresholds.cls} | Needs Imp: ≤ ${config.thresholds.clsNeedsImprovement}</div>
               </div>
               <div id="latest-cls-badge" style="font-size: 0.8rem; font-weight: 800; padding: 2px 8px; border-radius: 4px; background: #fffbeb; color: #b45309; font-family: monospace;"></div>
             </div>
@@ -1102,22 +1111,22 @@ export async function generateReport(compiledResult, options = {}) {
             const lcpBadge = document.getElementById('latest-lcp-badge');
             if (lcpBadge && latestLcp !== null) {
               lcpBadge.textContent = (latestLcp / 1000).toFixed(2) + 's (' + latestLcp.toLocaleString() + ' ms)';
-              lcpBadge.style.color = latestLcp <= 2500 ? '#166534' : latestLcp <= 4000 ? '#b45309' : '#991b1b';
-              lcpBadge.style.background = latestLcp <= 2500 ? '#f0fdf4' : latestLcp <= 4000 ? '#fffbeb' : '#fef2f2';
+              lcpBadge.style.color = latestLcp <= ${config.thresholds.lcp} ? '#166534' : latestLcp <= ${config.thresholds.lcpNeedsImprovement} ? '#b45309' : '#991b1b';
+              lcpBadge.style.background = latestLcp <= ${config.thresholds.lcp} ? '#f0fdf4' : latestLcp <= ${config.thresholds.lcpNeedsImprovement} ? '#fffbeb' : '#fef2f2';
             }
 
             const inpBadge = document.getElementById('latest-inp-badge');
             if (inpBadge && latestInp !== null) {
               inpBadge.textContent = latestInp + ' ms';
-              inpBadge.style.color = latestInp <= 200 ? '#166534' : latestInp <= 500 ? '#b45309' : '#991b1b';
-              inpBadge.style.background = latestInp <= 200 ? '#f0fdf4' : latestInp <= 500 ? '#fffbeb' : '#fef2f2';
+              inpBadge.style.color = latestInp <= ${config.thresholds.inp} ? '#166534' : latestInp <= ${config.thresholds.inpNeedsImprovement} ? '#b45309' : '#991b1b';
+              inpBadge.style.background = latestInp <= ${config.thresholds.inp} ? '#f0fdf4' : latestInp <= ${config.thresholds.inpNeedsImprovement} ? '#fffbeb' : '#fef2f2';
             }
 
             const clsBadge = document.getElementById('latest-cls-badge');
             if (clsBadge && latestCls !== null) {
               clsBadge.textContent = latestCls.toFixed(3);
-              clsBadge.style.color = latestCls <= 0.10 ? '#166534' : latestCls <= 0.25 ? '#b45309' : '#991b1b';
-              clsBadge.style.background = latestCls <= 0.10 ? '#f0fdf4' : latestCls <= 0.25 ? '#fffbeb' : '#fef2f2';
+              clsBadge.style.color = latestCls <= ${config.thresholds.cls} ? '#166534' : latestCls <= ${config.thresholds.clsNeedsImprovement} ? '#b45309' : '#991b1b';
+              clsBadge.style.background = latestCls <= ${config.thresholds.cls} ? '#f0fdf4' : latestCls <= ${config.thresholds.clsNeedsImprovement} ? '#fffbeb' : '#fef2f2';
             }
 
             const baseOptions = (yTitle, yMax, stepSize, unitSuffix = '') => ({
@@ -1168,7 +1177,7 @@ export async function generateReport(compiledResult, options = {}) {
             // 1. LCP Chart
             const lcpEl = document.getElementById('cruxLcpChart');
             if (lcpEl) {
-              const maxLcp = validLcp.length > 0 ? Math.max(...validLcp) : 2500;
+              const maxLcp = validLcp.length > 0 ? Math.max(...validLcp) : ${config.thresholds.lcp};
               const yMax = Math.max(3000, Math.ceil((maxLcp * 1.15) / 500) * 500);
               new Chart(lcpEl.getContext('2d'), {
                 type: 'line',
@@ -1186,8 +1195,8 @@ export async function generateReport(compiledResult, options = {}) {
                       pointBackgroundColor: '#3b82f6'
                     },
                     {
-                      label: 'Good Threshold (2500ms)',
-                      data: labels.map(() => 2500),
+                      label: 'Good Threshold (${config.thresholds.lcp}ms)',
+                      data: labels.map(() => ${config.thresholds.lcp}),
                       borderColor: '#10b981',
                       borderDash: [5, 5],
                       borderWidth: 1.5,
@@ -1203,7 +1212,7 @@ export async function generateReport(compiledResult, options = {}) {
             // 2. INP Chart
             const inpEl = document.getElementById('cruxInpChart');
             if (inpEl) {
-              const maxInp = validInp.length > 0 ? Math.max(...validInp) : 200;
+              const maxInp = validInp.length > 0 ? Math.max(...validInp) : ${config.thresholds.inp};
               const yMax = Math.max(300, Math.ceil((maxInp * 1.3) / 50) * 50);
               new Chart(inpEl.getContext('2d'), {
                 type: 'line',
@@ -1221,8 +1230,8 @@ export async function generateReport(compiledResult, options = {}) {
                       pointBackgroundColor: '#10b981'
                     },
                     {
-                      label: 'Good Threshold (200ms)',
-                      data: labels.map(() => 200),
+                      label: 'Good Threshold (${config.thresholds.inp}ms)',
+                      data: labels.map(() => ${config.thresholds.inp}),
                       borderColor: '#10b981',
                       borderDash: [5, 5],
                       borderWidth: 1.5,
@@ -1238,7 +1247,7 @@ export async function generateReport(compiledResult, options = {}) {
             // 3. CLS Chart
             const clsEl = document.getElementById('cruxClsChart');
             if (clsEl) {
-              const maxCls = validCls.length > 0 ? Math.max(...validCls) : 0.10;
+              const maxCls = validCls.length > 0 ? Math.max(...validCls) : ${config.thresholds.cls};
               const yMax = Math.max(0.15, Math.ceil((maxCls * 1.35) * 20) / 20);
               new Chart(clsEl.getContext('2d'), {
                 type: 'line',
@@ -1256,8 +1265,8 @@ export async function generateReport(compiledResult, options = {}) {
                       pointBackgroundColor: '#f59e0b'
                     },
                     {
-                      label: 'Good Threshold (0.10)',
-                      data: labels.map(() => 0.10),
+                      label: 'Good Threshold (${config.thresholds.cls})',
+                      data: labels.map(() => ${config.thresholds.cls}),
                       borderColor: '#10b981',
                       borderDash: [5, 5],
                       borderWidth: 1.5,
@@ -1307,13 +1316,17 @@ export async function generateReport(compiledResult, options = {}) {
 
   templateHtml = templateHtml
     .replace(/{{CRUX_HISTOGRAMS_SECTION}}/g, cruxHistogramsHtml)
+    .replace(/{{LCP_GOOD_THRESHOLD}}/g, (config.thresholds.lcp / 1000).toString())
+    .replace(/{{CLS_GOOD_THRESHOLD}}/g, config.thresholds.cls.toString())
+    .replace(/{{TBT_GOOD_THRESHOLD}}/g, config.thresholds.tbt.toString())
+    .replace(/{{INP_GOOD_THRESHOLD}}/g, config.thresholds.inp.toString())
     .replace(/{{CLIENT_NAME}}/g, options.clientName || 'Default Project')
     .replace(/{{PROJECT_PATH}}/g, projectName)
     .replace(/{{GIT_BRANCH}}/g, escapeHtml(gitBranch))
     .replace(/{{AUDIT_DATE}}/g, formattedDate)
     .replace(/{{AUDIT_URL}}/g, options.url || 'No URL specified (Static scan only)')
     .replace(/{{REMOTE_DEPLOYMENT_META}}/g, options.remoteDeployment && options.remoteDeployment.deploymentId ? ` <span class="meta-sep">|</span> <strong>Live Deployment:</strong> <span class="meta-val" style="background: #f0fdf4; color: #166534; padding: 2px 8px; border-radius: 4px; font-weight: 700; font-family: monospace;">Build #${escapeHtml(options.remoteDeployment.deploymentId)}${options.remoteDeployment.commit ? ` (${escapeHtml(options.remoteDeployment.commit.substring(0, 7))})` : ''}</span>` : '')
-    .replace(/{{ENGINEER_NAME}}/g, escapeHtml(options.engineer || 'siripireddy Giri'))
+    .replace(/{{ENGINEER_NAME}}/g, escapeHtml(options.engineer || 'Not specified'))
     .replace(/{{SUMMARY_HIGH}}/g, compiledResult.summary.high)
     .replace(/{{SUMMARY_MEDIUM}}/g, compiledResult.summary.medium)
     .replace(/{{SUMMARY_LOW}}/g, compiledResult.summary.low)
@@ -1503,6 +1516,7 @@ export async function generateReport(compiledResult, options = {}) {
       ...(compiledResult.aiAdvisor || { status: 'completed' }),
       pdfSynchronized: isInitialAiComplete
     },
+    copilotUsage: compiledResult.copilotUsage || null,
     pdfStatus
   }, null, 2));
   console.log(`\n📄 HTML report written to: ${htmlPath}`);
@@ -1679,35 +1693,35 @@ export async function generateReport(compiledResult, options = {}) {
       gitBranch: gitBranch,
       url: options.url || '',
       date: pdfFormattedDate,
-      engineer: options.engineer || 'siripireddy Giri',
+      engineer: options.engineer || 'Not specified',
       assessment: assessmentObj,
       mobile: {
         score: mobileLocScore.score,
         statusLabel: mobileLocScore.status,
         statusColor: mobileLocScore.score >= 90 ? '#10b981' : mobileLocScore.score >= 50 ? '#f59e0b' : '#ef4444',
         desc: `Lab Core Web Vitals audit under simulated mobile conditions${gitBranch ? ` for branch: ${gitBranch}` : ''}.`,
-        lcp: { val: localMLcp.valueDisplay, pass: localMLcp.statusLabel === 'Good', pct: localMLcp.percent, limit: 'Good ≤ 2.5 s' },
-        cls: { val: localMCls.valueDisplay, pass: localMCls.statusLabel === 'Good', pct: localMCls.percent, limit: 'Good ≤ 0.1' },
-        tbt: { val: localMTbt.valueDisplay, pass: localMTbt.statusLabel === 'Good', pct: localMTbt.percent, limit: 'Good ≤ 200 ms' }
+        lcp: { val: localMLcp.valueDisplay, pass: localMLcp.statusLabel === 'Good', pct: localMLcp.percent, limit: `Good ≤ ${config.thresholds.lcp / 1000} s` },
+        cls: { val: localMCls.valueDisplay, pass: localMCls.statusLabel === 'Good', pct: localMCls.percent, limit: `Good ≤ ${config.thresholds.cls}` },
+        tbt: { val: localMTbt.valueDisplay, pass: localMTbt.statusLabel === 'Good', pct: localMTbt.percent, limit: `Good ≤ ${config.thresholds.tbt} ms` }
       },
       desktop: {
         score: desktopLocScore.score,
         statusLabel: desktopLocScore.status,
         statusColor: desktopLocScore.score >= 90 ? '#10b981' : desktopLocScore.score >= 50 ? '#f59e0b' : '#ef4444',
         desc: `Lab Core Web Vitals audit under desktop conditions${gitBranch ? ` for branch: ${gitBranch}` : ''}.`,
-        lcp: { val: localDLcp.valueDisplay, pass: localDLcp.statusLabel === 'Good', pct: localDLcp.percent, limit: 'Good ≤ 2.5 s' },
-        cls: { val: localDCls.valueDisplay, pass: localDCls.statusLabel === 'Good', pct: localDCls.percent, limit: 'Good ≤ 0.1' },
-        tbt: { val: localDTbt.valueDisplay, pass: localDTbt.statusLabel === 'Good', pct: localDTbt.percent, limit: 'Good ≤ 200 ms' }
+        lcp: { val: localDLcp.valueDisplay, pass: localDLcp.statusLabel === 'Good', pct: localDLcp.percent, limit: `Good ≤ ${config.thresholds.lcp / 1000} s` },
+        cls: { val: localDCls.valueDisplay, pass: localDCls.statusLabel === 'Good', pct: localDCls.percent, limit: `Good ≤ ${config.thresholds.cls}` },
+        tbt: { val: localDTbt.valueDisplay, pass: localDTbt.statusLabel === 'Good', pct: localDTbt.percent, limit: `Good ≤ ${config.thresholds.tbt} ms` }
       },
       metricsDetail: [
-        makeMetricRow('MOBILE', 'Largest Contentful Paint (LCP)', mobileCruxLcp, localMLcp, '≤ 2.5 s'),
-        makeMetricRow('DESKTOP', 'Largest Contentful Paint (LCP)', desktopCruxLcp, localDLcp, '≤ 2.5 s'),
-        makeMetricRow('MOBILE', `Cumulative Layout Shift (CLS)${gitBranch ? ` [${gitBranch}]` : ''}`, mobileCruxCls, localMCls, '≤ 0.1'),
-        makeMetricRow('DESKTOP', `Cumulative Layout Shift (CLS)${gitBranch ? ` [${gitBranch}]` : ''}`, desktopCruxCls, localDCls, '≤ 0.1'),
-        makeMetricRow('MOBILE', 'Total Blocking Time (TBT)', mobileCruxTbt, localMTbt, '≤ 200 ms'),
-        makeMetricRow('DESKTOP', 'Total Blocking Time (TBT)', desktopCruxTbt, localDTbt, '≤ 200 ms'),
-        makeMetricRow('MOBILE', 'Interaction to Next Paint (INP)', mobileCruxInp, localMInp, '≤ 200 ms'),
-        makeMetricRow('DESKTOP', 'Interaction to Next Paint (INP)', desktopCruxInp, localDInp, '≤ 200 ms'),
+        makeMetricRow('MOBILE', 'Largest Contentful Paint (LCP)', mobileCruxLcp, localMLcp, `≤ ${config.thresholds.lcp / 1000} s`),
+        makeMetricRow('DESKTOP', 'Largest Contentful Paint (LCP)', desktopCruxLcp, localDLcp, `≤ ${config.thresholds.lcp / 1000} s`),
+        makeMetricRow('MOBILE', `Cumulative Layout Shift (CLS)${gitBranch ? ` [${gitBranch}]` : ''}`, mobileCruxCls, localMCls, `≤ ${config.thresholds.cls}`),
+        makeMetricRow('DESKTOP', `Cumulative Layout Shift (CLS)${gitBranch ? ` [${gitBranch}]` : ''}`, desktopCruxCls, localDCls, `≤ ${config.thresholds.cls}`),
+        makeMetricRow('MOBILE', 'Total Blocking Time (TBT)', mobileCruxTbt, localMTbt, `≤ ${config.thresholds.tbt} ms`),
+        makeMetricRow('DESKTOP', 'Total Blocking Time (TBT)', desktopCruxTbt, localDTbt, `≤ ${config.thresholds.tbt} ms`),
+        makeMetricRow('MOBILE', 'Interaction to Next Paint (INP)', mobileCruxInp, localMInp, `≤ ${config.thresholds.inp} ms`),
+        makeMetricRow('DESKTOP', 'Interaction to Next Paint (INP)', desktopCruxInp, localDInp, `≤ ${config.thresholds.inp} ms`),
       ],
       takeaways: [],
       findings: dynamicFindings,

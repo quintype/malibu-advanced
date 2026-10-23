@@ -1,5 +1,6 @@
 import path from 'path';
 import { correlateCls } from './correlation.js';
+import { config } from '../config.js';
 
 /**
  * Consolidates and groups all scanner findings to keep the report compact and clear.
@@ -128,8 +129,8 @@ export function compileRecommendations(staticIssues, lighthouseIssues = null, as
       }
       
       let severity = 'medium';
-      if (item.lhEl.score >= 0.25) severity = 'high';
-      else if (item.lhEl.score < 0.1) severity = 'low';
+      if (item.lhEl.score >= config.thresholds.clsNeedsImprovement) severity = 'high';
+      else if (item.lhEl.score < config.thresholds.cls) severity = 'low';
 
       correlatedIssues.push({
         type: 'lighthouse-unresolved',
@@ -157,8 +158,8 @@ export function compileRecommendations(staticIssues, lighthouseIssues = null, as
     let impact = `Unthrottled diagnostic observer captured a shift of ${item.lhEl.score.toFixed(4)} on "${item.lhEl.selector}".`;
     
     let severity = 'low';
-    if (item.lhEl.score >= 0.25) severity = 'high';
-    else if (item.lhEl.score >= 0.1) severity = 'medium';
+    if (item.lhEl.score >= config.thresholds.clsNeedsImprovement) severity = 'high';
+    else if (item.lhEl.score >= config.thresholds.cls) severity = 'medium';
 
     // Analyze geometry deltas
     const prev = item.lhEl.previousRect;
@@ -344,8 +345,8 @@ export function compileRecommendations(staticIssues, lighthouseIssues = null, as
       if (seenObsCorrelated.has(key)) {
         const existing = seenObsCorrelated.get(key);
         existing.score = (existing.score || 0) + (obs.score || 0);
-        if (existing.score >= 0.25) existing.severity = 'high';
-        else if (existing.score >= 0.1) existing.severity = 'medium';
+        if (existing.score >= config.thresholds.clsNeedsImprovement) existing.severity = 'high';
+        else if (existing.score >= config.thresholds.cls) existing.severity = 'medium';
         else existing.severity = 'low';
         
         // Upgrade confidence if the newer match is stronger (do not upgrade parent container matches to EXACT)
@@ -367,8 +368,8 @@ export function compileRecommendations(staticIssues, lighthouseIssues = null, as
        if (seenObsUnresolved.has(key)) {
          const existing = seenObsUnresolved.get(key);
          existing.score = (existing.score || 0) + (obs.score || 0);
-         if (existing.score >= 0.25) existing.severity = 'high';
-         else if (existing.score >= 0.1) existing.severity = 'medium';
+         if (existing.score >= config.thresholds.clsNeedsImprovement) existing.severity = 'high';
+         else if (existing.score >= config.thresholds.cls) existing.severity = 'medium';
          else existing.severity = 'low';
        } else {
          seenObsUnresolved.set(key, { ...obs });
@@ -464,10 +465,10 @@ export function compileRecommendations(staticIssues, lighthouseIssues = null, as
 
   // Perform V4 Phase and Signal-Based INP Correlation
   aggregatedInps.forEach((ri) => {
-    if (ri.score <= 200) return; // Do not correlate if INP is within Good limits (<= 200ms)
+    if (ri.score <= config.thresholds.inp) return; // Do not correlate if INP is within the configured Good limit
 
     // Classify impact bucket
-    const inpImpact = ri.score > 500 ? 'Poor' : 'Needs Improvement';
+    const inpImpact = ri.score > config.thresholds.inpNeedsImprovement ? 'Poor' : 'Needs Improvement';
 
     // Calculate phase breakdown
     const inDelay = ri.inputDelay || 0;
@@ -595,7 +596,7 @@ export function compileRecommendations(staticIssues, lighthouseIssues = null, as
       let severity = 'medium';
       if (ri.score >= 300 && (confidence === 'HIGH' || confidence === 'MEDIUM')) {
         severity = 'high';
-      } else if (ri.score > 200) {
+      } else if (ri.score > config.thresholds.inp) {
         severity = 'medium';
       } else {
         severity = 'low';
@@ -691,7 +692,7 @@ export function compileRecommendations(staticIssues, lighthouseIssues = null, as
       const mobileCls = Number(lighthouseIssues?.mobile?.cls?.value ?? 0);
       const desktopCls = Number(lighthouseIssues?.desktop?.cls?.value ?? 0);
       const maxCls = Math.max(mobileCls, desktopCls);
-      const isRuntimeClean = isLhRun && maxCls < 0.1;
+      const isRuntimeClean = isLhRun && maxCls < config.thresholds.cls;
 
       return {
         ...issue,

@@ -1,3 +1,5 @@
+import { getLineAndColumn } from './correlation.js';
+
 /**
  * Analyzes JS files and script tags in HTML.
  * 
@@ -9,14 +11,16 @@ export function analyzeJavascript(files) {
 
   files.forEach(f => {
     // 1. Scan HTML files for script tags without async or defer
-    if (f.ext === '.html') {
+    if (f.ext === '.html' || f.relativePath.endsWith('Document.js') || f.relativePath.endsWith('Document.tsx')) {
       const scriptTags = f.content.match(/<script\s+src=["'](?!https:\/\/www\.google-analytics\.com)([^"']+)["'][^>]*>/gi) || [];
       scriptTags.forEach(tag => {
         if (!tag.toLowerCase().includes('async') && !tag.toLowerCase().includes('defer') && !tag.toLowerCase().includes('type="module"')) {
+          const index = f.content.indexOf(tag);
+          const { line } = getLineAndColumn(f.content, index);
           recommendations.push({
             type: 'code',
             file: f.relativePath,
-            line: 1,
+            line: line || 1,
             cwv: 'inp',
             severity: 'high',
             message: `Synchronous, render-blocking script tag found: "${tag}".`,

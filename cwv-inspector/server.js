@@ -1,36 +1,11 @@
 import http from 'http';
-import https from 'https';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { spawn, exec, execSync } from 'child_process';
 import { CopilotService } from './services/copilotService.js';
-import { analyzeIssueWithCopilot, enrichAuditWithCopilot } from './analyzers/aiAdvisor.js';
-
-function httpGet(urlStr, timeoutMs = 6000) {
-  return new Promise((resolve, reject) => {
-    try {
-      const urlObj = new URL(urlStr);
-      const mod = urlObj.protocol === 'http:' ? http : https;
-      const req = mod.get(urlStr, { timeout: timeoutMs }, (res) => {
-        if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
-          return resolve(httpGet(new URL(res.headers.location, urlStr).toString(), timeoutMs));
-        }
-        let data = '';
-        res.on('data', chunk => { data += chunk; });
-        res.on('end', () => resolve({
-          ok: res.statusCode >= 200 && res.statusCode < 300,
-          status: res.statusCode,
-          text: () => Promise.resolve(data)
-        }));
-      });
-      req.on('error', reject);
-      req.on('timeout', () => { req.destroy(); reject(new Error('Request timed out')); });
-    } catch (err) {
-      reject(err);
-    }
-  });
-}
+import { analyzeIssueWithCopilot, enrichAuditWithCopilot, readIssueSourceExcerpt } from './analyzers/aiAdvisor.js';
+import { httpGet } from './utils/httpGet.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -521,6 +496,7 @@ const server = http.createServer(async (req, res) => {
 
                 if (Array.isArray(issuesList) && idx < issuesList.length) {
                   issueToAnalyze = issuesList[idx];
+                  targetContext.projectPath = path.join(parentDir, project);
                   if (parsedReport.url && !targetContext.url) {
                     targetContext.url = parsedReport.url;
                   }
@@ -565,10 +541,15 @@ const server = http.createServer(async (req, res) => {
       // Invoke Copilot AI Advisor
       try {
         const copilot = getCopilotService();
+        const usageBefore = copilot.getUsageSummary();
         const advice = await analyzeIssueWithCopilot(issueToAnalyze, copilot, {
           timeoutMs: 60000,
-          context: targetContext
+          context: {
+            ...targetContext,
+            sourceExcerpt: readIssueSourceExcerpt(issueToAnalyze, targetContext.projectPath)
+          }
         });
+        const usage = usageDelta(usageBefore, copilot.getUsageSummary());
 
         if (payload.project && payload.reportFile && payload.issueIndex !== undefined) {
           try {
@@ -597,6 +578,7 @@ const server = http.createServer(async (req, res) => {
                 if (reportJson.aiAdvisor) {
                   reportJson.aiAdvisor.pdfSynchronized = false;
                 }
+                reportJson.copilotUsage = mergeUsageTotals(reportJson.copilotUsage, usage);
 
                 fs.writeFileSync(rPath, JSON.stringify(reportJson, null, 2));
               }
@@ -608,7 +590,8 @@ const server = http.createServer(async (req, res) => {
 
         sendJsonResponse(res, 200, {
           success: true,
-          advice
+          advice,
+          copilotUsage: usage
         });
       } catch (err) {
         const sanitizedMsg = sanitizeServiceError(err);
@@ -714,16 +697,20 @@ const server = http.createServer(async (req, res) => {
         };
 
         const copilot = getCopilotService();
-        const maxIssues = Math.max(1, Number(payload.maxIssues) || 20);
+        const usageBefore = copilot.getUsageSummary();
+        const maxIssues = Math.max(1, Number(payload.maxIssues || process.env.COPILOT_MAX_ISSUES) || 5);
         const enriched = await enrichAuditWithCopilot(compiledResult, {
           copilotService: copilot,
           url: parsedReport.url,
+          projectPath: path.join(parentDir, project),
           maxIssues,
           severities: ['high', 'medium']
         });
+        const usage = usageDelta(usageBefore, copilot.getUsageSummary());
 
         // Update JSON file on disk with clear PDF status distinction
         parsedReport.issues = enriched.issues;
+        parsedReport.copilotUsage = mergeUsageTotals(parsedReport.copilotUsage, usage);
         parsedReport.aiAdvisor = {
           ...enriched.aiAdvisor,
           pdfSynchronized: false
@@ -743,6 +730,7 @@ const server = http.createServer(async (req, res) => {
           success: true,
           aiAdvisor: parsedReport.aiAdvisor,
           pdfStatus: parsedReport.pdfStatus,
+          copilotUsage: parsedReport.copilotUsage,
           issues: enriched.issues
         };
       })();
@@ -806,6 +794,35 @@ function sendJsonResponse(res, statusCode, data) {
     'X-Content-Type-Options': 'nosniff'
   });
   res.end(JSON.stringify(data));
+}
+
+function usageDelta(before = {}, after = {}) {
+  const fields = ['calls', 'inputTokens', 'outputTokens', 'cacheReadTokens', 'cacheWriteTokens', 'requestCostMultiplier'];
+  const result = {};
+  fields.forEach(field => { result[field] = Math.max(0, (Number(after[field]) || 0) - (Number(before[field]) || 0)); });
+  result.byModel = {};
+  for (const [model, totals] of Object.entries(after.byModel || {})) {
+    const prior = before.byModel?.[model] || {};
+    result.byModel[model] = {};
+    fields.filter(field => field !== 'cacheReadTokens' && field !== 'cacheWriteTokens').forEach(field => {
+      result.byModel[model][field] = Math.max(0, (Number(totals[field]) || 0) - (Number(prior[field]) || 0));
+    });
+  }
+  return result;
+}
+
+function mergeUsageTotals(existing = {}, increment = {}) {
+  const fields = ['calls', 'inputTokens', 'outputTokens', 'cacheReadTokens', 'cacheWriteTokens', 'requestCostMultiplier'];
+  const result = {};
+  fields.forEach(field => { result[field] = (Number(existing[field]) || 0) + (Number(increment[field]) || 0); });
+  result.byModel = { ...(existing.byModel || {}) };
+  for (const [model, totals] of Object.entries(increment.byModel || {})) {
+    const prior = result.byModel[model] || {};
+    const merged = { ...prior };
+    Object.keys(totals).forEach(field => { merged[field] = (Number(prior[field]) || 0) + (Number(totals[field]) || 0); });
+    result.byModel[model] = merged;
+  }
+  return result;
 }
 
 /**

@@ -2,39 +2,14 @@
 
 import fs from 'fs';
 import path from 'path';
-import http from 'http';
-import https from 'https';
 import { execSync } from 'child_process';
 import nodeFetch from 'node-fetch';
+import { httpGet } from './utils/httpGet.js';
 
 if (typeof globalThis.fetch === 'undefined' && nodeFetch) {
   globalThis.fetch = nodeFetch;
 }
 
-function httpGet(urlStr, timeoutMs = 6000) {
-  return new Promise((resolve, reject) => {
-    try {
-      const urlObj = new URL(urlStr);
-      const mod = urlObj.protocol === 'http:' ? http : https;
-      const req = mod.get(urlStr, { timeout: timeoutMs }, (res) => {
-        if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
-          return resolve(httpGet(new URL(res.headers.location, urlStr).toString(), timeoutMs));
-        }
-        let data = '';
-        res.on('data', chunk => { data += chunk; });
-        res.on('end', () => resolve({
-          ok: res.statusCode >= 200 && res.statusCode < 300,
-          status: res.statusCode,
-          text: () => Promise.resolve(data)
-        }));
-      });
-      req.on('error', reject);
-      req.on('timeout', () => { req.destroy(); reject(new Error('Request timed out')); });
-    } catch (err) {
-      reject(err);
-    }
-  });
-}
 import { scanFiles } from './scanners/scanFiles.js';
 import { parseReactCode } from './scanners/parseReact.js';
 import { scanDependencies } from './scanners/dependencyScanner.js';
@@ -93,7 +68,7 @@ Options:
   --url <url>          Run Lighthouse performance audit against a live/local URL
   --branch <branch>    Override or specify Git branch name (default: auto-detected)
   --engineer <name>    Set author/engineer name for reports
-  --all-ai             Generate Copilot AI recommendations for all issues without limit
+  --all-ai             Opt in to Copilot advice for up to 999 eligible findings
   --max-ai <count>     Set maximum number of issues to enrich with Copilot (default: 5)
   --no-ai              Disable Copilot AI enrichment entirely
   --help, -h           Show this usage guide
@@ -161,11 +136,11 @@ Options:
 
   const allAi = args.includes('--all-ai');
   const maxAiIndex = args.indexOf('--max-ai');
-  let maxAiIssues = Number(process.env.COPILOT_MAX_ISSUES) || 20;
+  let maxAiIssues = Number(process.env.COPILOT_MAX_ISSUES) || 5;
   if (allAi) {
     maxAiIssues = 999;
   } else if (maxAiIndex !== -1 && args[maxAiIndex + 1]) {
-    maxAiIssues = parseInt(args[maxAiIndex + 1], 10) || 20;
+    maxAiIssues = parseInt(args[maxAiIndex + 1], 10) || 5;
   }
 
   if (url && !/^https?:\/\//i.test(url)) {
@@ -276,7 +251,7 @@ Options:
   // Fetch optional Chrome UX Report (CrUX) Field Data and History Data
   let cruxData = null;
   let cruxHistoryData = null;
-  const cruxApiKey = process.env.CRUX_API_KEY || 'AIzaSyCxH_Ch4j49NIzqjfYwPIKRLsTc13FS-Ek';
+  const cruxApiKey = process.env.CRUX_API_KEY;
   if (url && cruxApiKey) {
     console.log('⚡ Fetching Field Data and History from Google CrUX API...');
     try {
@@ -328,34 +303,39 @@ Options:
     } catch (err) {
       console.warn('CrUX Data fetch failed:', err.message);
     }
+  } else if (url) {
+    console.log('CrUX data skipped: set CRUX_API_KEY to enable field and history data.');
   }
 
   // Fetch PSI Data
   let psiData = null;
   if (url) {
-    const psiApiKey = process.env.PSI_API_KEY || 'AIzaSyBlp2RAKJY40LUJPx-mrY93225m_9Q-h9Y';
-    console.log('⚡ Fetching Performance Data from Google PageSpeed Insights API...');
-    try {
-      const psiUrl = `${url}${url.includes('?') ? '&' : '?'}_cwv_ts=${Date.now()}`;
-      const psiMobileRes = await fetch(`https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${encodeURIComponent(psiUrl)}&key=${psiApiKey}&strategy=mobile`);
-      const psiDesktopRes = await fetch(`https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${encodeURIComponent(psiUrl)}&key=${psiApiKey}&strategy=desktop`);
+    const psiApiKey = process.env.PSI_API_KEY;
+    if (!psiApiKey) {
+      console.log('PageSpeed Insights data skipped: set PSI_API_KEY to enable it.');
+    } else {
+      console.log('⚡ Fetching Performance Data from Google PageSpeed Insights API...');
+      try {
+        const psiMobileRes = await fetch(`https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${encodeURIComponent(url)}&key=${psiApiKey}&strategy=mobile`);
+        const psiDesktopRes = await fetch(`https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${encodeURIComponent(url)}&key=${psiApiKey}&strategy=desktop`);
       
-      if (psiMobileRes.ok && psiDesktopRes.ok) {
-        const mobileJson = await psiMobileRes.json();
-        const desktopJson = await psiDesktopRes.json();
+        if (psiMobileRes.ok && psiDesktopRes.ok) {
+          const mobileJson = await psiMobileRes.json();
+          const desktopJson = await psiDesktopRes.json();
         
-        psiData = {
-          mobile: extractScores(mobileJson.lighthouseResult),
-          desktop: extractScores(desktopJson.lighthouseResult),
-          mobileField: mobileJson.loadingExperience,
-          desktopField: desktopJson.loadingExperience
-        };
-        console.log('PageSpeed Insights Data (including Field Data) fetched successfully.');
-      } else {
-        console.warn(`PSI API failed. Mobile: ${psiMobileRes.status}, Desktop: ${psiDesktopRes.status}`);
+          psiData = {
+            mobile: extractScores(mobileJson.lighthouseResult),
+            desktop: extractScores(desktopJson.lighthouseResult),
+            mobileField: mobileJson.loadingExperience,
+            desktopField: desktopJson.loadingExperience
+          };
+          console.log('PageSpeed Insights Data (including Field Data) fetched successfully.');
+        } else {
+          console.warn(`PSI API failed. Mobile: ${psiMobileRes.status}, Desktop: ${psiDesktopRes.status}`);
+        }
+      } catch (err) {
+        console.warn('PSI API fetch failed:', err.message);
       }
-    } catch (err) {
-      console.warn('PSI API fetch failed:', err.message);
     }
   }
 
@@ -375,8 +355,8 @@ Options:
 
   // Step 6: Automatically enrich priority findings with GitHub Copilot AI Advisor
   let enrichedResult = compiledResult;
+  let copilot = null;
   if (!args.includes('--no-ai')) {
-    let copilot = null;
     try {
       console.log('🤖 Generating automatic AI-powered recommendations with GitHub Copilot...');
       const { CopilotService } = await import('./services/copilotService.js');
@@ -385,6 +365,7 @@ Options:
       enrichedResult = await enrichAuditWithCopilot(compiledResult, {
         copilotService: copilot,
         url,
+        projectPath: targetPath,
         maxIssues: maxAiIssues,
         severities: allAi ? null : ['high', 'medium'],
         totalTimeoutMs: allAi || maxAiIssues > 10 ? 300000 : 120000
@@ -401,6 +382,9 @@ Options:
     }
   } else {
     enrichedResult.aiAdvisor = { status: 'skipped', note: 'AI enrichment disabled via --no-ai flag.' };
+  }
+  if (copilot) {
+    enrichedResult.copilotUsage = copilot.getUsageSummary();
   }
 
   // Get Client/Project Name from package.json or folder name
@@ -447,7 +431,7 @@ Options:
     clientName,
     gitBranch,
     remoteDeployment,
-    engineer: explicitEngineer || 'siripireddy Giri'
+    engineer: explicitEngineer || 'Not specified'
   });
 
   console.log(`\n==========================================`);

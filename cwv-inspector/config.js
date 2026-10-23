@@ -21,18 +21,10 @@ export const config = {
     lcp: 2500, // ms
     cls: 0.1,  // raw score
     inp: 200,  // ms
+    tbt: 200,  // ms (lab responsiveness proxy)
+    clsNeedsImprovement: 0.25,
+    lcpNeedsImprovement: 4000,
+    inpNeedsImprovement: 500,
+    tbtNeedsImprovement: 600
   },
-
-  // Scoring/weight rules for reports
-  rules: {
-    imagesMissingAlt: { severity: 'low', cwv: 'accessibility' },
-    imagesMissingDimensions: { severity: 'high', cwv: 'cls' },
-    imagesNotLazy: { severity: 'medium', cwv: 'lcp' },
-    fontsNoDisplaySwap: { severity: 'medium', cwv: 'lcp' },
-    cssRenderBlocking: { severity: 'high', cwv: 'lcp' },
-    jsSyncScript: { severity: 'high', cwv: 'inp' },
-    reactLargeContext: { severity: 'medium', cwv: 'inp' },
-    reactMissingMemo: { severity: 'low', cwv: 'inp' },
-    bundleNoCodeSplitting: { severity: 'high', cwv: 'lcp' }
-  }
 };

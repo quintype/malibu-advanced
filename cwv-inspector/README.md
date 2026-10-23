@@ -36,7 +36,7 @@ The tool requires two primary parameters to initiate a performance run:
 
 ### A. Project Directory Path
 *   **Purpose**: Points the static file scanner to the local codebase.
-*   **What is read**: Reads files matching the configured extensions (configured in `config.js` as `.js`, `.jsx`, `.ts`, `.tsx`, `.css`, and `.html`). It skips dependencies and build outputs (`node_modules`, `.git`, `dist`, `build`).
+*   **What is read**: Reads files matching the configured extensions in `config.js` (`.js`, `.jsx`, `.ts`, `.tsx`, `.css`, `.html`, `.ejs`, `.vue`, and `.php`). It skips configured dependency, generated, and public asset directories.
 *   **Format**: Absolute local path (e.g., `/Users/sirippireddygiri/Desktop/Quintype/malibu-advanced`).
 
 ### B. Target URL
@@ -72,7 +72,7 @@ graph TD
     J --> K
     K --> L[Recommendations Compiler recommendations.js]
     L --> M[Report Builder generatePdf.js]
-    M --> N[HTML & PDF Reports]
+    M --> N[HTML, PDF & JSON Reports]
 ```
 
 ---
@@ -86,8 +86,8 @@ When a performance audit is triggered from the Dashboard or CLI:
 3.  **AST Generation**: `parseReactCode()` in `parseReact.js` parses JS/TS files into AST structures using `@babel/parser`, indexing all JSX elements (`<img>`, `<a>`, `<link>`) with line numbers and file names.
 4.  **Static Auditing**: Static analyzers (CSS, fonts, JS, images, dependencies) run against the files/ASTs to produce a list of static code issues.
 5.  **Browser Boot**: Headless Chrome is launched via `chrome-launcher` on a debugging port.
-6.  **Bot Scroll Execution**: Puppeteer connects to the debug port, opens the URL, performs a vertical scroll loop to trigger all lazy-loaded assets, and scrolls back to the top to prime the cache and DOM.
-7.  **Lighthouse Run**: Lighthouse runs on the port for both Mobile and Desktop profiles, extracting Core Web Vitals values and the `layout-shift-elements` items.
+6.  **Bot Scroll Execution**: Puppeteer connects to the debug port, opens the original URL, and scrolls to trigger lazy-loaded assets and capture shift attribution. The diagnostic page disables its browser cache; this does not purge CDN or origin caches.
+7.  **Lighthouse Run**: Lighthouse runs on the port for both Mobile and Desktop profiles, extracting lab metrics and `layout-shift-elements`. A separate observer captures shift participants during scroll for attribution fallback; its shifts do not replace Lighthouse's CLS metric.
 8.  **Correlation Engine Run**: `correlateCls()` in `correlation.js` matches layout-shifting selectors to static AST element definitions.
 9.  **Consolidation**: `compileRecommendations()` deduplicates static issues, merging static image properties (e.g. missing size dimensions) with the matched Lighthouse shift element.
 10. **Report Builder**: `generateReport()` replaces placeholders in `template.html` with final scores, metrics, and correlation data, and prints the layout to PDF using Puppeteer.
@@ -97,7 +97,7 @@ When a performance audit is triggered from the Dashboard or CLI:
 ## 6. Lighthouse Integration
 
 ### Library & Configurations
-*   **Version**: `lighthouse` version `^11.3.0` (programmatic Node.js client).
+*   **Version**: `lighthouse` version `^11.3.0` in `package.json`; the lockfile currently resolves `11.7.1`.
 *   **Invocation**: Evaluated programmatically inside `analyzers/lighthouse.js`.
 *   **Categories**: Limits execution strictly to the `performance` category:
     ```javascript
@@ -127,8 +127,8 @@ When a performance audit is triggered from the Dashboard or CLI:
 
 Puppeteer (`^22.0.0`) is used for two specific runtime tasks in this project:
 
-### A. Bot Scroll Preloading
-To ensure Lighthouse catches LCP images and CLS shifts located below the fold, Puppeteer connects to the Chrome debugging port before Lighthouse starts and navigates to the URL. It executes a scroll-down script in increments of 250px, forcing lazy assets to load and compile in Chrome.
+### A. Bot Scroll Preloading and Shift Attribution
+Puppeteer connects to the Chrome debugging port before each Lighthouse run and scrolls down the page in increments, prompting lazy assets to load. The observer records unexpected layout-shift entries and candidate DOM sources for correlation. Lighthouse remains authoritative for the reported CLS metric because the observer's full-page event list is not itself the CLS session-window calculation.
 
 ### B. PDF Rendering
 After compile recommendations are saved as HTML, Puppeteer launches a separate headless session, loads the HTML string, and generates a print-ready PDF using `page.pdf()`.
@@ -142,7 +142,7 @@ We use `@babel/parser` and `@babel/traverse` inside `scanners/parseReact.js` to 
 ### AST Traversals
 *   **`JSXOpeningElement`**: Gathers all tag details. We extract the `tagName`, `id`, `className`, `src`, `href`, and structural line/column locations.
 *   **`ImportDeclaration`**: Traces import bindings to check for un-memoized structures or sync script declarations.
-*   **`CallExpression`**: Audits React hook declarations (such as `useEffect` dependencies).
+*   **`CallExpression`**: Detects `memo` / `useMemo` usage for the current React heuristics. It does not inspect hook dependencies or prove that a component is correctly memoized.
 
 This provides a code index that the Correlation Engine queries to map DOM selectors to the correct file path and line number.
 
@@ -152,10 +152,16 @@ This provides a code index that the Correlation Engine queries to map DOM select
 
 | Metric | What it Measures | Source in Code | Good Threshold |
 | :--- | :--- | :--- | :--- |
-| **LCP** | Largest Contentful Paint (Load speed) | `audits['largest-contentful-paint']` | &le; 2.5s |
-| **CLS** | Cumulative Layout Shift (Visual stability) | `audits['cumulative-layout-shift']` | &le; 0.1 |
-| **TBT** | Total Blocking Time (Input delay proxy) | `audits['total-blocking-time']` | &le; 200ms |
-| **INP** | Interaction to Next Paint (Responsiveness) | `audits['interaction-to-next-paint']` | &le; 200ms |
+| **LCP** | Largest Contentful Paint (Load speed) | Lighthouse lab audit; CrUX / optional PSI field data | `config.thresholds.lcp` (2500 ms) |
+| **CLS** | Cumulative Layout Shift (Visual stability) | Lighthouse lab audit; CrUX / optional PSI field data | `config.thresholds.cls` (0.1) |
+| **TBT** | Total Blocking Time (Input delay proxy) | Lighthouse lab audit | `config.thresholds.tbt` (200 ms) |
+| **INP** | Interaction to Next Paint (field responsiveness) | CrUX / optional PSI field data; Lighthouse lab runs do not measure true INP | `config.thresholds.inp` (200 ms) |
+
+### Interpreting lab and field results
+
+Lighthouse lab results are available immediately and are useful for controlled before/after comparisons. CrUX and PSI field data represent a rolling 28-day sample of real Chrome users and update gradually after a deployment; browser cache clearing cannot reset that history. Low-traffic UAT sites may not have enough CrUX samples, so use repeatable Lighthouse runs on UAT for release checks and add your own RUM collection if you need real-user feedback before production CrUX stabilizes. TBT is a lab diagnostic for main-thread blocking, not a substitute measurement for INP; INP requires real interactions.
+
+The audit uses the URL exactly as provided for Lighthouse and PSI. It does not append a random query parameter to attempt to bypass caching, because that can change the tested route or its cache key without purging an edge cache. The custom Puppeteer diagnostic page disables browser caching; this does not change field-data history or CDN behavior.
 
 ---
 
@@ -205,7 +211,7 @@ The consolidator in `analyzers/recommendations.js` aggregates findings and deter
 
 ## 13. Report Generation
 
-*   **Format**: Standalone HTML report (`report-<timestamp>.html`) and printed PDF (`report-<timestamp>.pdf`).
+*   **Format**: Standalone HTML report (`report-<timestamp>.html`), printed PDF (`report-<timestamp>.pdf`), and companion JSON (`report-<timestamp>.json`).
 *   **Location**: Written to the audited project's `reports/` folder.
 *   **Contents**: Performance assessment summary banner, Device tabs (Mobile/Desktop view toggle), Metrics Detail table (including CrUX field data and Lighthouse lab data), and categorized expandable recommendation cards.
 
@@ -215,7 +221,7 @@ The consolidator in `analyzers/recommendations.js` aggregates findings and deter
 
 | File | Responsibility | Key Functions / Exports |
 |------|----------------|-------------------------|
-| `server.js` | Handles Express web routing, Server-Sent Events (SSE) streaming, and folder dialogs. | `select-folder`, `run-audit` |
+| `server.js` | Native HTTP routes, Server-Sent Events (SSE) streaming, report access, and folder dialogs. | `select-folder`, `run-audit` |
 | `audit.js` | CLI entry point. Orchestrates the file scan, AST parser, static rules, and report generators. | `main` |
 | `analyzers/lighthouse.js` | Launches Chrome, runs the Puppeteer bot scroll, and executes programmatic Lighthouse runs. | `runLighthouseAudit`, `extractScores`, `preScrollPage` |
 | `analyzers/correlation.js` | Correlates layout shift selectors with static JSX elements. | `correlateCls`, `parseSelectorComponent` |
@@ -239,17 +245,25 @@ npm install
 ```
 
 ### Environment Variables (.env)
-You can optionally place a `.env` file in the `cwv-inspector/` directory with your own API keys:
+Place a `.env` file in `cwv-inspector/` or export environment variables before starting the audit. Google API keys are not bundled; each data source is skipped when its key is unset.
 ```env
-# Required for 28-Day Field Data Histograms & Historical Trends
+# Optional: enables CrUX field data and historical trends
 CRUX_API_KEY=your_chrome_ux_report_api_key
 
-# Optional: Overrides default PSI key
+# Optional: enables PageSpeed Insights lab and field data
 PSI_API_KEY=your_pagespeed_insights_api_key
+
+# Optional: limits automatic Copilot advice (default: 5 findings)
+COPILOT_MAX_ISSUES=5
+
+# Optional: explicit GitHub token instead of the Copilot CLI's signed-in user
+COPILOT_GITHUB_TOKEN=your_github_token
 ```
 
+Copilot authentication defaults to the user signed in to the Copilot CLI. Do not commit `.env` or put tokens in source control. The previous code contained Google API key literals; if those keys were active, rotate them in Google Cloud and configure replacements only through the environment.
+
 ### Starting the Server & Web Dashboard
-Start the Express server:
+Start the native HTTP dashboard server:
 ```bash
 node server.js
 ```
@@ -269,11 +283,13 @@ node audit.js <project-path> [options]
 **CLI Options**:
 *   `--url <url>`: Target live/local URL for Lighthouse performance and Core Web Vitals audit.
 *   `--branch <branch>`: Override or specify Git branch name (default: auto-detected).
-*   `--engineer <name>`: Set author/engineer name for reports (default: `siripireddy Giri`).
-*   `--all-ai`: Generate Copilot AI recommendations for all detected issues without limit.
+*   `--engineer <name>`: Set author/engineer name for reports (default: `Not specified`).
+*   `--all-ai`: Opt in to Copilot advice for up to 999 eligible findings; this can make many model calls.
 *   `--max-ai <count>`: Set maximum number of issues to enrich with Copilot (default: `5`).
 *   `--no-ai`: Disable Copilot AI enrichment entirely.
 *   `--help, -h`: Show usage guide.
+
+Copilot enrichment sends one concise prompt per selected finding and defaults to high and medium severity issues. When a verified file and line are available, the prompt includes at most 17 nearby source lines (capped at 2,400 characters), plus the runtime evidence already attached to the finding. It does not send the whole repository. The companion JSON report records observed input/output token totals and request multipliers; these are usage metrics, not a currency estimate. Transient retries are disabled by default because a timed-out request may already have been processed. The advice cache is in-memory and does not carry across separate dashboard audit processes.
 
 ---
 
@@ -299,6 +315,7 @@ node audit.js <project-path> [options]
 ## 17. Limitations
 
 *   **Authentication & Paywalls**: Headless Chrome starts with a clean profile, so it cannot audit pages behind login walls or paywalls unless session cookies are pre-injected.
+*   **Heuristic Source Analysis**: Most static rules use AST indexing plus simple text/regex heuristics. A finding is a lead to inspect, not proof of a measured cause. Dynamic values, generated classes, build output, source maps, and runtime-only markup can prevent an exact source match.
 *   **Dynamically Injected Sizing**: Static AST analysis cannot evaluate layout dimensions configured at runtime via Javascript calculations or dynamic style bindings.
 *   **Lab vs Field Variance**: Synthetic lab tests (Lighthouse) simulate network conditions and do not capture real-user variations like older hardware or network drops.
 

@@ -79,6 +79,7 @@ export class CopilotService {
     this.client = null;
     this.isStarted = false;
     this._queue = Promise.resolve();
+    this.usage = { calls: 0, inputTokens: 0, outputTokens: 0, cacheReadTokens: 0, cacheWriteTokens: 0, requestCostMultiplier: 0, byModel: {} };
   }
 
   /**
@@ -169,7 +170,21 @@ export class CopilotService {
       });
 
       unsubscribe = session.on((event) => {
-        if (event.type === 'assistant.message') {
+        if (event.type === 'assistant.usage') {
+          const usage = event.data || {};
+          this.usage.calls++;
+          this.usage.inputTokens += Number(usage.inputTokens) || 0;
+          this.usage.outputTokens += Number(usage.outputTokens) || 0;
+          this.usage.cacheReadTokens += Number(usage.cacheReadTokens) || 0;
+          this.usage.cacheWriteTokens += Number(usage.cacheWriteTokens) || 0;
+          this.usage.requestCostMultiplier += Number(usage.cost) || 0;
+          const model = String(usage.model || 'unknown');
+          const totals = this.usage.byModel[model] || (this.usage.byModel[model] = { calls: 0, inputTokens: 0, outputTokens: 0, requestCostMultiplier: 0 });
+          totals.calls++;
+          totals.inputTokens += Number(usage.inputTokens) || 0;
+          totals.outputTokens += Number(usage.outputTokens) || 0;
+          totals.requestCostMultiplier += Number(usage.cost) || 0;
+        } else if (event.type === 'assistant.message') {
           const text = event.data?.content;
           if (text && typeof text === 'string' && text.trim().length > 0) {
             lastAssistantMessage = event;
@@ -277,7 +292,9 @@ export class CopilotService {
       }
 
       const timeout = options.timeoutMs || this.timeoutMs;
-      const maxRetries = options.retries !== undefined ? options.retries : 1;
+      // Avoid an unintentional second model request when a timed-out request may
+      // already have been processed. Callers can explicitly opt into retries.
+      const maxRetries = options.retries !== undefined ? options.retries : 0;
       let lastError = null;
 
       for (let attempt = 0; attempt <= maxRetries; attempt++) {
@@ -330,6 +347,11 @@ export class CopilotService {
       this.client = null;
       this.isStarted = false;
     }
+  }
+
+  /** Returns observed Copilot model-call token totals for this service instance. */
+  getUsageSummary() {
+    return JSON.parse(JSON.stringify(this.usage));
   }
 }
 
