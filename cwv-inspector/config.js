@@ -2,6 +2,7 @@ export const config = {
   // Directories to ignore during scanning
   excludeDirs: [
     'node_modules',
+    'reports',
     '.git',
     '.next',
     'dist',

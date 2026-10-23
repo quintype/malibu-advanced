@@ -32,9 +32,9 @@ export function analyzeLcp(files = [], reactAsts = []) {
           srcVal.endsWith('.svg') ||
           tag.attributes.some(a => (a.name === 'width' || a.name === 'height') && Number(a.value) > 0 && Number(a.value) <= 64);
 
-        // Only check true hero, banner, or top-level page/template components (not every atom/molecule index.js)
-        const isHeroContext = /\b(hero|banner|lead[-_]?story|featured[-_]?story)\b/i.test(file.relativePath) ||
-          /(pages\/.*index|templates\/.*index)/i.test(file.relativePath);
+        // Only check true hero, banner, or top-level lead story components
+        const isHeroContext = /\b(hero[-_]?image|hero[-_]?banner|lead[-_]?story|featured[-_]?story)\b/i.test(file.relativePath) ||
+          tag.attributes.some(a => (a.name === "id" || a.name === "className" || a.name === "styleName") && /hero/i.test(a.value));
 
         if (isLazy && isHeroContext && !isIconOrTiny) {
           recommendations.push({
