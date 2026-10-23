@@ -723,15 +723,20 @@ export function compileRecommendations(staticIssues, lighthouseIssues = null, as
         let cwv = 'lcp';
         if (opp.id.includes('block') || opp.id.includes('delay') || opp.id.includes('thread')) cwv = 'inp';
 
+        let suggestion = 'Optimize performance using Lighthouse suggestions.';
+        if (opp.id === 'uses-rel-preconnect') {
+          suggestion = 'Limit <link rel="preconnect"> to at most 2–4 critical origins (e.g. fonts.gstatic.com or hero image CDN). Remove unused preconnects and downgrade secondary ad/analytics domains to <link rel="dns-prefetch">.';
+        }
+
         allIssues.push({
           type: 'lighthouse',
           file: `Runtime Audit (Lighthouse ${modeLabel})`,
           line: '-',
           cwv,
           severity: opp.score < 50 ? 'high' : 'medium',
-          message: `${opp.title} (${opp.displayValue || ''})`,
+          message: `${opp.title}${opp.displayValue ? ` (${opp.displayValue})` : ''}`,
           impact: opp.description || `Lighthouse flagged runtime efficiency opportunity on ${modeLabel}.`,
-          suggestion: 'Optimize performance using Lighthouse suggestions.'
+          suggestion
         });
       });
     };

@@ -90,15 +90,29 @@ export function extractScores(reportJson) {
       return mapped;
     })(),
     opportunities: Object.keys(audits)
-      .filter(key => audits[key].details?.type === 'opportunity' && audits[key].score < 1)
-      .map(key => ({
-        id: key,
-        title: audits[key].title,
-        description: audits[key].description,
-        score: audits[key].score * 100,
-        numericValue: audits[key].numericValue,
-        displayValue: audits[key].displayValue
-      }))
+      .filter(key => {
+        const audit = audits[key];
+        if (!audit) return false;
+        if (audit.details?.type === 'opportunity' && audit.score < 1) return true;
+        if (key === 'uses-rel-preconnect' && ((Array.isArray(audit.warnings) && audit.warnings.length > 0) || (audit.score !== null && audit.score < 1))) {
+          return true;
+        }
+        return false;
+      })
+      .map(key => {
+        const audit = audits[key];
+        const warningStr = Array.isArray(audit.warnings) && audit.warnings.length > 0
+          ? audit.warnings.join('; ')
+          : '';
+        return {
+          id: key,
+          title: audit.title,
+          description: audit.description,
+          score: audit.score !== null && audit.score !== undefined ? audit.score * 100 : 50,
+          numericValue: audit.numericValue,
+          displayValue: audit.displayValue || warningStr
+        };
+      })
   };
 }
 

@@ -147,6 +147,7 @@ STRICT INSTRUCTIONS:
    - Maximum brevity: keep explanations dense (1-2 sentences each). No filler or repetition.
    - NEVER suggest dummy wrapper <div>s ("DIV soup") or ternary fallback empty spacer divs. Reserve dimensions in CSS on existing elements or use semantic skeleton.
    - NEVER suggest wrapping presentation cards in React.memo/useMemo/useCallback or adding startTransition without proven lag. Respect framework primitives (<ResponsiveImage>, <Image>).
+   - PRECONNECT RULE: Enforce the Google/Lighthouse guideline to limit <link rel="preconnect"> to at most 2–4 critical origins (e.g. fonts or hero image CDN). More than 4 preconnect connections waste sockets and CPU on TLS handshakes, directly competing with and delaying LCP. Advise removing unused preconnects and downgrading secondary/ad origins to <link rel="dns-prefetch">.
 
 REQUIRED JSON SCHEMA:
 {

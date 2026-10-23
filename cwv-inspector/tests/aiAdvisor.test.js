@@ -40,6 +40,7 @@ import {
   findMatchingCssRules
 } from '../analyzers/correlation.js';
 import { compileRecommendations } from '../analyzers/recommendations.js';
+import { analyzeLcp } from '../analyzers/lcp.js';
 import { safeJsonForScript } from '../report/generatePdf.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -1516,6 +1517,44 @@ async function runTests() {
     assert.strictEqual(enriched.issues[3].aiAdvice, undefined);
 
     logPass('Automatic enrichment auto-analyzes HIGH and MEDIUM priority issues while preserving tokens by skipping LOW severity issues');
+  }
+
+  // =========================================================================
+  // 40. LCP Preconnect Limit Detection (> 4 Origins Warning)
+  // =========================================================================
+  {
+    const templateContent = [
+      '<!DOCTYPE html>',
+      '<html>',
+      '<head>',
+      '  <link rel="preconnect" href="https://fonts.googleapis.com">',
+      '  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>',
+      '  <link rel="preconnect" href="https://prod-analytics.qlitics.com">',
+      '  <link rel="preconnect" href="https://securepubads.g.doubleclick.net">',
+      '  <link rel="preconnect" href="https://cdn.gumlet.com">',
+      '  <link rel="preconnect" href="https://cdn.jsdelivr.net">',
+      '</head>',
+      '<body></body>',
+      '</html>'
+    ].join('\n');
+
+    const testFiles = [{
+      filePath: 'views/layout.ejs',
+      relativePath: 'views/layout.ejs',
+      content: templateContent,
+      ext: '.ejs'
+    }];
+
+    const lcpIssues = analyzeLcp(testFiles, []);
+    assert.ok(lcpIssues.length >= 1, 'Should flag at least one LCP issue');
+    const preconnectIssue = lcpIssues.find(i => i.message.includes('preconnect'));
+    assert.ok(preconnectIssue, 'Must flag excessive preconnect issue');
+    assert.strictEqual(preconnectIssue.cwv, 'lcp');
+    assert.strictEqual(preconnectIssue.severity, 'medium');
+    assert.ok(preconnectIssue.message.includes('6 origins declared'));
+    assert.ok(preconnectIssue.suggestion.includes('at most 2–4 critical origins'));
+    assert.ok(preconnectIssue.suggestion.includes('dns-prefetch'));
+    logPass('LCP analyzer flags excessive preconnect hints (> 4 origins) to prevent socket contention');
   }
 
   // Close server

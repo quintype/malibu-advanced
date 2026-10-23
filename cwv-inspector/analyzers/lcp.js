@@ -1,3 +1,4 @@
+import path from 'path';
 import { getLineAndColumn } from './correlation.js';
 
 /**
@@ -7,13 +8,13 @@ import { getLineAndColumn } from './correlation.js';
  * @param {Array<object>} reactAsts Pre-parsed React AST objects.
  * @returns {Array<object>} LCP recommendations
  */
-export function analyzeLcp(files, reactAsts) {
+export function analyzeLcp(files = [], reactAsts = []) {
   const recommendations = [];
 
+  // 1. Scan image tags in React ASTs
   for (const { file, ast } of reactAsts) {
     if (!ast.astSuccess) continue;
 
-    // 1. Scan image tags
     ast.jsxTags.forEach(tag => {
       if (tag.tagName === 'img' || tag.tagName === 'Image') {
         const loadingAttr = tag.attributes.find(a => a.name === 'loading');
@@ -39,28 +40,70 @@ export function analyzeLcp(files, reactAsts) {
         }
       }
     });
-
-    // 2. Scan HTML files for preloads
-    files.forEach(f => {
-      if (f.ext === '.html') {
-        const content = f.content.toLowerCase();
-        if (content.includes('<img') && !content.includes('rel="preload"') && !content.includes('rel="dns-prefetch"')) {
-          const imgIndex = content.indexOf('<img');
-          const { line: imgLine } = getLineAndColumn(f.content, imgIndex >= 0 ? imgIndex : 0);
-          recommendations.push({
-            type: 'code',
-            file: f.relativePath,
-            line: imgLine || null,
-            cwv: 'lcp',
-            severity: 'medium',
-            message: 'Images detected but no resource hints (preload / preconnect / dns-prefetch) found.',
-            impact: 'Critical assets like fonts or hero images are discovered late by the browser.',
-            suggestion: 'Add <link rel="preload" as="image" href="..."> or <link rel="preconnect" href="..."> in the head.'
-          });
-        }
-      }
-    });
   }
+
+  // 2. Scan template files for missing resource hints and excessive preconnects (> 4 origins)
+  const templateFiles = (files || []).filter(f =>
+    ['.html', '.ejs', '.php', '.jsx', '.tsx', '.vue'].includes(f.ext)
+  );
+
+  templateFiles.forEach(f => {
+    const content = f.content || '';
+    const contentLower = content.toLowerCase();
+
+    // Check for images without any resource hints
+    if (f.ext === '.html') {
+      if (contentLower.includes('<img') && !contentLower.includes('rel="preload"') && !contentLower.includes('rel="dns-prefetch"')) {
+        const imgIndex = contentLower.indexOf('<img');
+        const { line: imgLine } = getLineAndColumn(content, imgIndex >= 0 ? imgIndex : 0);
+        recommendations.push({
+          type: 'code',
+          file: f.relativePath,
+          line: imgLine || null,
+          cwv: 'lcp',
+          severity: 'medium',
+          message: 'Images detected but no resource hints (preload / preconnect / dns-prefetch) found.',
+          impact: 'Critical assets like fonts or hero images are discovered late by the browser.',
+          suggestion: 'Add <link rel="preload" as="image" href="..."> or <link rel="preconnect" href="..."> in the head (limit preconnect to at most 2–4 critical origins).'
+        });
+      }
+    }
+
+    // Check for excessive preconnect links (> 4 origins)
+    const linkRegex = /<link\b([^>]*?)>/gi;
+    let match;
+    const preconnectedOrigins = [];
+    let firstPreconnectLine = 1;
+
+    while ((match = linkRegex.exec(content)) !== null) {
+      const attrs = match[1];
+      if (/rel\s*=\s*["'][^"']*\bpreconnect\b[^"']*["']/i.test(attrs)) {
+        const hrefMatch = attrs.match(/href\s*=\s*["']([^"']+)["']/i);
+        const originOrUrl = hrefMatch ? hrefMatch[1] : 'unknown';
+        if (preconnectedOrigins.length === 0) {
+          const { line } = getLineAndColumn(content, match.index);
+          firstPreconnectLine = line || 1;
+        }
+        preconnectedOrigins.push(originOrUrl);
+      }
+    }
+
+    if (preconnectedOrigins.length > 4) {
+      const sampleOrigins = preconnectedOrigins.slice(0, 4).join(', ') +
+        (preconnectedOrigins.length > 4 ? ` (+${preconnectedOrigins.length - 4} more)` : '');
+      recommendations.push({
+        type: 'code',
+        file: f.relativePath,
+        line: firstPreconnectLine,
+        cwv: 'lcp',
+        severity: preconnectedOrigins.length > 6 ? 'high' : 'medium',
+        message: `More than 4 preconnect connections found (${preconnectedOrigins.length} origins declared in ${path.basename(f.relativePath)}).`,
+        impact: 'Preconnecting to more than 4 origins wastes CPU and network bandwidth on early TLS handshakes and ties up browser sockets, directly competing with and delaying critical LCP assets (HTML, CSS, fonts, and hero image).',
+        suggestion: `Limit <link rel="preconnect"> to at most 2–4 critical origins needed immediately on page load (e.g. fonts.gstatic.com or your hero image CDN). For secondary origins (ads, trackers, analytics: ${sampleOrigins}), remove preconnect or switch to <link rel="dns-prefetch">.`
+      });
+    }
+  });
 
   return recommendations;
 }
+
