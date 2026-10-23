@@ -26,7 +26,17 @@ export function analyzeLcp(files = [], reactAsts = []) {
         const isLazy = loadingAttr && loadingAttr.value === 'lazy';
 
         // Flag potential LCP images that are lazy loaded
-        if (isLazy && (file.relativePath.toLowerCase().includes('hero') || file.relativePath.toLowerCase().includes('banner') || file.relativePath.toLowerCase().includes('index'))) {
+        const srcVal = String(srcAttr?.value || '');
+        const isIconOrTiny = srcVal.includes('/icons/') ||
+          srcVal.toLowerCase().includes('icon') ||
+          srcVal.endsWith('.svg') ||
+          tag.attributes.some(a => (a.name === 'width' || a.name === 'height') && Number(a.value) > 0 && Number(a.value) <= 64);
+
+        // Only check true hero, banner, or top-level page/template components (not every atom/molecule index.js)
+        const isHeroContext = /\b(hero|banner|lead[-_]?story|featured[-_]?story)\b/i.test(file.relativePath) ||
+          /(pages\/.*index|templates\/.*index)/i.test(file.relativePath);
+
+        if (isLazy && isHeroContext && !isIconOrTiny) {
           recommendations.push({
             type: 'code',
             file: file.relativePath,
