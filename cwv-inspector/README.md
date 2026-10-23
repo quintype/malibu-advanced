@@ -103,10 +103,23 @@ When a performance audit is triggered from the Dashboard or CLI:
     ```javascript
     onlyCategories: ['performance']
     ```
-*   **Storage Flag**: Sets `disableStorageReset: true` to prevent Lighthouse from clearing the cache primed by Puppeteer's bot scroll.
-*   **Viewport Emulation**:
-    *   **Mobile**: Default mobile screen size.
-    *   **Desktop**: Explicitly emulates Desktop screens (`width: 1350`, `height: 940`) and turns off mobile emulation.
+*   **Storage Flag**: Sets `disableStorageReset: false` to allow consistent clean audits.
+*   **Device Emulation & Throttling Specifications**:
+    *   **Mobile Audit**:
+        *   **Device**: Moto G Power (2022) / `MOTOGPOWER_EMULATION_METRICS`
+        *   **Viewport**: `412 × 823` px
+        *   **Device Scale Factor (DPR)**: `1.75`
+        *   **Mobile Emulation**: `true` (`hasTouch: true`)
+        *   **Network Throttling**: Simulated Slow 4G (`150ms` RTT, `1.6 Mbps` throughput)
+        *   **CPU Slowdown**: `4x`
+    *   **Desktop Audit**:
+        *   **Device**: MacOS Desktop / `DESKTOP_EMULATION_METRICS`
+        *   **Viewport**: `1350 × 940` px
+        *   **Device Scale Factor (DPR)**: `1.0`
+        *   **Mobile Emulation**: `false` (`hasTouch: false`)
+        *   **Network Throttling**: Simulated Dense 4G (`40ms` RTT, `10 Mbps` throughput)
+        *   **CPU Slowdown**: `1x`
+*   **Test Configuration Reporting**: Both HTML and PDF reports display a Test Configuration banner in the Executive Summary for Mobile and Desktop audits, detailing the effective viewport, DPR, network throttling, CPU slowdown multiplier, and Lighthouse version.
 
 ---
 
@@ -207,7 +220,9 @@ The consolidator in `analyzers/recommendations.js` aggregates findings and deter
 | `analyzers/lighthouse.js` | Launches Chrome, runs the Puppeteer bot scroll, and executes programmatic Lighthouse runs. | `runLighthouseAudit`, `extractScores`, `preScrollPage` |
 | `analyzers/correlation.js` | Correlates layout shift selectors with static JSX elements. | `correlateCls`, `parseSelectorComponent` |
 | `analyzers/recommendations.js` | Groups findings, deduplicates static/runtime issues, and calculates the health score. | `compileRecommendations` |
-| `report/generatePdf.js` | Populates HTML template tags, formats scores, and prints the PDF report using Puppeteer. | `generateReport`, `computeMetricDetails` |
+| `analyzers/aiAdvisor.js` | Automatically enriches prioritized findings with GitHub Copilot AI recommendations. | `enrichAuditWithCopilot` |
+| `report/generatePdf.js` | Populates HTML template tags, formats scores, and orchestrates PDF generation. | `generateReport`, `computeMetricDetails` |
+| `report/redesignedPdfTemplate.js` | Builds the redesigned multi-page executive PDF report with gauges and CrUX trends. | `buildRedesignedPdfHtml`, `extractCruxHistoryPoints` |
 
 ---
 
@@ -223,28 +238,42 @@ Clone the codebase, navigate to `cwv-inspector/`, and install dependencies:
 npm install
 ```
 
-### Starting the Server
-
-**Environment Variables (.env)**
+### Environment Variables (.env)
 You can optionally place a `.env` file in the `cwv-inspector/` directory with your own API keys:
 ```env
-# Required for 28-Day Field Data Histograms
+# Required for 28-Day Field Data Histograms & Historical Trends
 CRUX_API_KEY=your_chrome_ux_report_api_key
 
 # Optional: Overrides default PSI key
 PSI_API_KEY=your_pagespeed_insights_api_key
 ```
 
+### Starting the Server & Web Dashboard
 Start the Express server:
 ```bash
 node server.js
 ```
 Open `http://localhost:3000` in your web browser.
 
-### Running an Audit
+**Running an Audit from the Dashboard**:
 1.  Click **Select Project Folder** and choose the directory you want to scan.
 2.  Enter the URL you want to audit (e.g. `http://localhost:3000`).
 3.  Click **Run Audit**. Once complete, the browser will open the generated HTML report.
+
+### Running Audits via CLI
+Run the command-line audit directly:
+```bash
+node audit.js <project-path> [options]
+```
+
+**CLI Options**:
+*   `--url <url>`: Target live/local URL for Lighthouse performance and Core Web Vitals audit.
+*   `--branch <branch>`: Override or specify Git branch name (default: auto-detected).
+*   `--engineer <name>`: Set author/engineer name for reports (default: `siripireddy Giri`).
+*   `--all-ai`: Generate Copilot AI recommendations for all detected issues without limit.
+*   `--max-ai <count>`: Set maximum number of issues to enrich with Copilot (default: `5`).
+*   `--no-ai`: Disable Copilot AI enrichment entirely.
+*   `--help, -h`: Show usage guide.
 
 ---
 

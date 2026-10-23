@@ -268,6 +268,52 @@ export async function generateReport(compiledResult, options = {}) {
   const hasLighthouse = options.lighthouseData && !options.lighthouseData.error && options.lighthouseData.mobile;
   const localMobileData = hasLighthouse ? options.lighthouseData.mobile : null;
   const localDesktopData = hasLighthouse ? options.lighthouseData.desktop : null;
+  const emulationConfig = hasLighthouse ? options.lighthouseData.emulationConfig : null;
+
+  // Build Test Configuration Info Bar HTML for each device
+  function buildEmulationConfigBar(config) {
+    if (!config) return '';
+    const isMobile = config.formFactor === 'mobile';
+    const deviceIcon = isMobile
+      ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>'
+      : '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>';
+    return `
+      <div class="emulation-config-bar" style="margin: 8px 0 12px 0; padding: 10px 16px; background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border: 1px solid #e2e8f0; border-radius: 10px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px; font-size: 0.72rem; color: #475569;">
+        <span style="display: inline-flex; align-items: center; gap: 5px; font-weight: 700; color: #0f172a; font-size: 0.73rem;">
+          ${deviceIcon}
+          Test Configuration
+        </span>
+        <span style="color: #cbd5e1;">|</span>
+        <span style="display: inline-flex; align-items: center; gap: 4px;">
+          <span style="background: #e0f2fe; color: #0369a1; padding: 2px 8px; border-radius: 5px; font-weight: 700; font-family: monospace; font-size: 0.7rem;">${config.viewport}</span>
+          <span style="color: #94a3b8;">@</span>
+          <span style="background: #f0fdf4; color: #166534; padding: 2px 6px; border-radius: 5px; font-weight: 700; font-family: monospace; font-size: 0.7rem;">${config.deviceScaleFactor}x DPR</span>
+        </span>
+        <span style="color: #cbd5e1;">|</span>
+        <span style="display: inline-flex; align-items: center; gap: 4px;">
+          <span style="font-weight: 600; color: #64748b;">Network:</span>
+          <span style="background: #fef3c7; color: #92400e; padding: 2px 8px; border-radius: 5px; font-weight: 600; font-family: monospace; font-size: 0.7rem;">${config.throttlingProfile}</span>
+        </span>
+        <span style="color: #cbd5e1;">|</span>
+        <span style="display: inline-flex; align-items: center; gap: 4px;">
+          <span style="font-weight: 600; color: #64748b;">CPU:</span>
+          <span style="background: ${isMobile ? '#fce7f3' : '#f0fdf4'}; color: ${isMobile ? '#9d174d' : '#166534'}; padding: 2px 6px; border-radius: 5px; font-weight: 700; font-family: monospace; font-size: 0.7rem;">${config.cpuSlowdown}</span>
+        </span>
+        <span style="color: #cbd5e1;">|</span>
+        <span style="display: inline-flex; align-items: center; gap: 4px;">
+          <span style="font-weight: 600; color: #64748b;">Device:</span>
+          <span style="font-weight: 600; color: #334155;">${config.deviceName}</span>
+        </span>
+        <span style="color: #cbd5e1;">|</span>
+        <span style="display: inline-flex; align-items: center; gap: 4px;">
+          <span style="background: #ede9fe; color: #5b21b6; padding: 2px 8px; border-radius: 5px; font-weight: 700; font-family: monospace; font-size: 0.7rem;">Lighthouse v${emulationConfig.lighthouseVersion}</span>
+          <span style="color: #94a3b8; font-size: 0.65rem; font-style: italic;">(${config.configSource.includes('Default') ? 'Default Config' : 'Custom'})</span>
+        </span>
+      </div>`;
+  }
+
+  const mobileConfigBarHtml = buildEmulationConfigBar(emulationConfig?.mobile);
+  const desktopConfigBarHtml = buildEmulationConfigBar(emulationConfig?.desktop);
 
   const hasPsi = options.psiData && options.psiData.mobile;
   const mobileData = hasPsi ? options.psiData.mobile : localMobileData;
@@ -1234,6 +1280,8 @@ export async function generateReport(compiledResult, options = {}) {
     .replace(/{{SUMMARY_HIGH}}/g, compiledResult.summary.high)
     .replace(/{{SUMMARY_MEDIUM}}/g, compiledResult.summary.medium)
     .replace(/{{SUMMARY_LOW}}/g, compiledResult.summary.low)
+    .replace(/{{MOBILE_EMULATION_CONFIG_BAR}}/g, mobileConfigBarHtml)
+    .replace(/{{DESKTOP_EMULATION_CONFIG_BAR}}/g, desktopConfigBarHtml)
     
      // MOBILE values
     .replace(/{{MOBILE_MAIN_SCORE}}/g, mobileLocScore.score)
@@ -1557,6 +1605,22 @@ export async function generateReport(compiledResult, options = {}) {
       });
     }
 
+    const toStatusPill = (detail, isField = false) => {
+      if (detail.statusLabel === 'Good') return 'PASS';
+      if (isField && detail.valueDisplay === 'N/A') return 'N/A';
+      return 'WARN';
+    };
+
+    const makeMetricRow = (device, metric, crux, local, thresh) => ({
+      device,
+      metric,
+      fVal: crux.valueDisplay,
+      fStat: toStatusPill(crux, true),
+      lVal: local.valueDisplay,
+      lStat: toStatusPill(local, false),
+      thresh
+    });
+
     const redesignedData = {
       clientName: options.clientName || projectName,
       gitBranch: gitBranch,
@@ -1583,19 +1647,20 @@ export async function generateReport(compiledResult, options = {}) {
         tbt: { val: localDTbt.valueDisplay, pass: localDTbt.statusLabel === 'Good', pct: localDTbt.percent, limit: 'Good ≤ 200 ms' }
       },
       metricsDetail: [
-        { device: 'MOBILE', metric: 'Largest Contentful Paint (LCP)', fVal: mobileCruxLcp.valueDisplay, fStat: mobileCruxLcp.statusLabel === 'Good' ? 'PASS' : mobileCruxLcp.valueDisplay === 'N/A' ? 'N/A' : 'WARN', lVal: localMLcp.valueDisplay, lStat: localMLcp.statusLabel === 'Good' ? 'PASS' : 'WARN', thresh: '≤ 2.5 s' },
-        { device: 'DESKTOP', metric: 'Largest Contentful Paint (LCP)', fVal: desktopCruxLcp.valueDisplay, fStat: desktopCruxLcp.statusLabel === 'Good' ? 'PASS' : desktopCruxLcp.valueDisplay === 'N/A' ? 'N/A' : 'WARN', lVal: localDLcp.valueDisplay, lStat: localDLcp.statusLabel === 'Good' ? 'PASS' : 'WARN', thresh: '≤ 2.5 s' },
-        { device: 'MOBILE', metric: `Cumulative Layout Shift (CLS)${gitBranch ? ` [${gitBranch}]` : ''}`, fVal: mobileCruxCls.valueDisplay, fStat: mobileCruxCls.statusLabel === 'Good' ? 'PASS' : mobileCruxCls.valueDisplay === 'N/A' ? 'N/A' : 'WARN', lVal: localMCls.valueDisplay, lStat: localMCls.statusLabel === 'Good' ? 'PASS' : 'WARN', thresh: '≤ 0.1' },
-        { device: 'DESKTOP', metric: `Cumulative Layout Shift (CLS)${gitBranch ? ` [${gitBranch}]` : ''}`, fVal: desktopCruxCls.valueDisplay, fStat: desktopCruxCls.statusLabel === 'Good' ? 'PASS' : desktopCruxCls.valueDisplay === 'N/A' ? 'N/A' : 'WARN', lVal: localDCls.valueDisplay, lStat: localDCls.statusLabel === 'Good' ? 'PASS' : 'WARN', thresh: '≤ 0.1' },
-        { device: 'MOBILE', metric: 'Total Blocking Time (TBT)', fVal: mobileCruxTbt.valueDisplay, fStat: mobileCruxTbt.statusLabel === 'Good' ? 'PASS' : mobileCruxTbt.valueDisplay === 'N/A' ? 'N/A' : 'WARN', lVal: localMTbt.valueDisplay, lStat: localMTbt.statusLabel === 'Good' ? 'PASS' : 'WARN', thresh: '≤ 200 ms' },
-        { device: 'DESKTOP', metric: 'Total Blocking Time (TBT)', fVal: desktopCruxTbt.valueDisplay, fStat: desktopCruxTbt.statusLabel === 'Good' ? 'PASS' : desktopCruxTbt.valueDisplay === 'N/A' ? 'N/A' : 'WARN', lVal: localDTbt.valueDisplay, lStat: localDTbt.statusLabel === 'Good' ? 'PASS' : 'WARN', thresh: '≤ 200 ms' },
-        { device: 'MOBILE', metric: 'Interaction to Next Paint (INP)', fVal: mobileCruxInp.valueDisplay, fStat: mobileCruxInp.statusLabel === 'Good' ? 'PASS' : mobileCruxInp.valueDisplay === 'N/A' ? 'N/A' : 'WARN', lVal: localMInp.valueDisplay, lStat: localMInp.statusLabel === 'Good' ? 'PASS' : 'WARN', thresh: '≤ 200 ms' },
-        { device: 'DESKTOP', metric: 'Interaction to Next Paint (INP)', fVal: desktopCruxInp.valueDisplay, fStat: desktopCruxInp.statusLabel === 'Good' ? 'PASS' : desktopCruxInp.valueDisplay === 'N/A' ? 'N/A' : 'WARN', lVal: localDInp.valueDisplay, lStat: localDInp.statusLabel === 'Good' ? 'PASS' : 'WARN', thresh: '≤ 200 ms' },
+        makeMetricRow('MOBILE', 'Largest Contentful Paint (LCP)', mobileCruxLcp, localMLcp, '≤ 2.5 s'),
+        makeMetricRow('DESKTOP', 'Largest Contentful Paint (LCP)', desktopCruxLcp, localDLcp, '≤ 2.5 s'),
+        makeMetricRow('MOBILE', `Cumulative Layout Shift (CLS)${gitBranch ? ` [${gitBranch}]` : ''}`, mobileCruxCls, localMCls, '≤ 0.1'),
+        makeMetricRow('DESKTOP', `Cumulative Layout Shift (CLS)${gitBranch ? ` [${gitBranch}]` : ''}`, desktopCruxCls, localDCls, '≤ 0.1'),
+        makeMetricRow('MOBILE', 'Total Blocking Time (TBT)', mobileCruxTbt, localMTbt, '≤ 200 ms'),
+        makeMetricRow('DESKTOP', 'Total Blocking Time (TBT)', desktopCruxTbt, localDTbt, '≤ 200 ms'),
+        makeMetricRow('MOBILE', 'Interaction to Next Paint (INP)', mobileCruxInp, localMInp, '≤ 200 ms'),
+        makeMetricRow('DESKTOP', 'Interaction to Next Paint (INP)', desktopCruxInp, localDInp, '≤ 200 ms'),
       ],
       takeaways: [],
       findings: dynamicFindings,
       cruxHistory: options.cruxHistoryData,
-      cruxHistoryPoints: historyPoints
+      cruxHistoryPoints: historyPoints,
+      emulationConfig: emulationConfig
     };
 
     const pdfHtml = buildRedesignedPdfHtml(redesignedData);

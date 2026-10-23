@@ -103,6 +103,136 @@ export function extractScores(reportJson) {
 }
 
 /**
+ * Connects Puppeteer to Chrome's debugging WebSocket endpoint with retries.
+ */
+async function connectPuppeteerToPort(port, retries = 20) {
+  let webSocketDebuggerUrl = '';
+  while (retries > 0) {
+    try {
+      const response = await fetch(`http://127.0.0.1:${port}/json/version`);
+      if (!response.ok) throw new Error('Not ok');
+      const data = await response.json();
+      webSocketDebuggerUrl = data.webSocketDebuggerUrl;
+      if (webSocketDebuggerUrl) break;
+    } catch (e) {
+      retries--;
+      if (retries === 0) throw e;
+      await new Promise(r => setTimeout(r, 200));
+    }
+  }
+  return await puppeteer.connect({ browserWSEndpoint: webSocketDebuggerUrl });
+}
+
+/**
+ * Configures Puppeteer page viewport, user agent, cache, and CDP network/CPU throttling
+ * to match official Lighthouse Mobile or Desktop constants.
+ */
+async function configurePageEmulation(page, device = 'mobile') {
+  if (device === 'mobile') {
+    await page.setUserAgent('Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Mobile Safari/537.36');
+    await page.setViewport({ width: 412, height: 823, deviceScaleFactor: 1.75, isMobile: true, hasTouch: true });
+  } else {
+    await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36');
+    await page.setViewport({ width: 1350, height: 940, deviceScaleFactor: 1, isMobile: false, hasTouch: false });
+  }
+  await page.setCacheEnabled(false);
+  await page.setExtraHTTPHeaders({
+    'Cache-Control': 'no-cache, no-store, must-revalidate',
+    'Pragma': 'no-cache',
+    'Expires': '0'
+  });
+
+  // Emulate Network & CPU Conditions (matching official Lighthouse constants)
+  const client = await page.target().createCDPSession();
+  if (device === 'mobile') {
+    await client.send('Network.emulateNetworkConditions', {
+      offline: false,
+      latency: 150,
+      downloadThroughput: (1.6 * 1024 * 1024 * 0.9) / 8,
+      uploadThroughput: (750 * 1024 * 0.9) / 8,
+      connectionType: 'cellular3g'
+    });
+    await client.send('Emulation.setCPUThrottlingRate', { rate: 4 });
+  } else {
+    await client.send('Network.emulateNetworkConditions', {
+      offline: false,
+      latency: 40,
+      downloadThroughput: (10 * 1024 * 1024) / 8,
+      uploadThroughput: (5 * 1024 * 1024) / 8,
+      connectionType: 'wifi'
+    });
+    await client.send('Emulation.setCPUThrottlingRate', { rate: 1 });
+  }
+}
+
+/**
+ * Injects a PerformanceObserver into the document before scripts run to capture layout shifts
+ * and resolve element selectors even if elements detach post-shift.
+ */
+async function injectLayoutShiftObserver(page) {
+  await page.evaluateOnNewDocument(() => {
+    if (window.__cwv_layout_shifts_injected) return;
+    window.__cwv_layout_shifts_injected = true;
+    window.__cwv_layout_shifts = [];
+    try {
+      window.__cwv_observer = new PerformanceObserver((list) => {
+        for (const entry of list.getEntries()) {
+          if (entry.hadRecentInput) continue;
+          let sources = [];
+          if (entry.sources) {
+            sources = entry.sources.map(s => {
+              const node = s.node;
+              if (!node) return { selector: 'Unknown/Removed' };
+
+              // Check if the node is still attached to the live document
+              const isDetached = !document.contains(node);
+
+              let path = [];
+              let el = node;
+              while (el && el.nodeType === 1) {
+                let sel = el.nodeName.toLowerCase();
+                if (el.id) sel += '#' + el.id;
+                else if (el.className && typeof el.className === 'string') {
+                  const c = el.className.trim().split(/\s+/).filter(Boolean);
+                  if (c.length > 0) sel += '.' + c.join('.');
+                }
+                path.unshift(sel);
+                el = el.parentNode;
+              }
+
+              let selectorStr = path.join(' > ');
+              if (isDetached) {
+                selectorStr = `Detached Node: ${selectorStr}`;
+              }
+
+              let snippetRaw = node.outerHTML ? node.outerHTML.substring(0, 150) : '';
+              if (isDetached && snippetRaw) {
+                snippetRaw = `[Captured post-shift; element detached] ${snippetRaw}`;
+              }
+
+              return {
+                selector: selectorStr,
+                nodeName: node.nodeName,
+                snippet: snippetRaw,
+                previousRect: s.previousRect ? { x: s.previousRect.x, y: s.previousRect.y, width: s.previousRect.width, height: s.previousRect.height } : null,
+                currentRect: s.currentRect ? { x: s.currentRect.x, y: s.currentRect.y, width: s.currentRect.width, height: s.currentRect.height } : null,
+                isDetached
+              };
+            });
+          }
+          window.__cwv_layout_shifts.push({
+            value: entry.value,
+            time: entry.startTime,
+            sources
+          });
+        }
+      });
+      window.__cwv_observer.observe({ type: 'layout-shift', buffered: true });
+    } catch (e) { }
+  });
+}
+
+/**
  * Programmatically scrolls down the page and back to the top to trigger lazy-loaded assets.
  * Also captures unthrottled layout shifts as a fallback attribution source.
  */
@@ -111,123 +241,12 @@ async function preScrollPage(url, port, device = 'mobile') {
   let browser = null;
   let customShifts = [];
   try {
-    let retries = 20;
-    let webSocketDebuggerUrl = '';
-    while (retries > 0) {
-      try {
-        const response = await fetch(`http://127.0.0.1:${port}/json/version`);
-        if (!response.ok) throw new Error('Not ok');
-        const data = await response.json();
-        webSocketDebuggerUrl = data.webSocketDebuggerUrl;
-        if (webSocketDebuggerUrl) break;
-      } catch (e) {
-        retries--;
-        if (retries === 0) throw e;
-        await new Promise(r => setTimeout(r, 200));
-      }
-    }
-    browser = await puppeteer.connect({
-      browserWSEndpoint: webSocketDebuggerUrl
-    });
+    browser = await connectPuppeteerToPort(port);
     const pages = await browser.pages();
     const page = pages.length > 0 ? pages[0] : await browser.newPage();
 
-    if (device === 'mobile') {
-      await page.setUserAgent('Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Mobile Safari/537.36');
-      await page.setViewport({ width: 412, height: 823, deviceScaleFactor: 1.75, isMobile: true, hasTouch: true });
-    } else {
-      await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36');
-      await page.setViewport({ width: 1350, height: 940, deviceScaleFactor: 1, isMobile: false, hasTouch: false });
-    }
-    await page.setCacheEnabled(false);
-    await page.setExtraHTTPHeaders({
-      'Cache-Control': 'no-cache, no-store, must-revalidate',
-      'Pragma': 'no-cache',
-      'Expires': '0'
-    });
-
-    // Emulate Network & CPU Conditions (matching official Lighthouse constants)
-    const client = await page.target().createCDPSession();
-    if (device === 'mobile') {
-      await client.send('Network.emulateNetworkConditions', {
-        offline: false,
-        latency: 150,
-        downloadThroughput: (1.6 * 1024 * 1024 * 0.9) / 8,
-        uploadThroughput: (750 * 1024 * 0.9) / 8,
-        connectionType: 'cellular3g'
-      });
-      await client.send('Emulation.setCPUThrottlingRate', { rate: 4 });
-    } else {
-      await client.send('Network.emulateNetworkConditions', {
-        offline: false,
-        latency: 40,
-        downloadThroughput: (10 * 1024 * 1024) / 8,
-        uploadThroughput: (5 * 1024 * 1024) / 8,
-        connectionType: 'wifi'
-      });
-      await client.send('Emulation.setCPUThrottlingRate', { rate: 1 });
-    }
-
-    await page.evaluateOnNewDocument(() => {
-      if (window.__cwv_layout_shifts_injected) return;
-      window.__cwv_layout_shifts_injected = true;
-      window.__cwv_layout_shifts = [];
-      try {
-        window.__cwv_observer = new PerformanceObserver((list) => {
-          for (const entry of list.getEntries()) {
-            if (entry.hadRecentInput) continue;
-            let sources = [];
-            if (entry.sources) {
-              sources = entry.sources.map(s => {
-                const node = s.node;
-                if (!node) return { selector: 'Unknown/Removed' };
-
-                // Check if the node is still attached to the live document
-                const isDetached = !document.contains(node);
-
-                let path = [];
-                let el = node;
-                while (el && el.nodeType === 1) {
-                  let sel = el.nodeName.toLowerCase();
-                  if (el.id) sel += '#' + el.id;
-                  else if (el.className && typeof el.className === 'string') {
-                    const c = el.className.trim().split(/\s+/).filter(Boolean);
-                    if (c.length > 0) sel += '.' + c.join('.');
-                  }
-                  path.unshift(sel);
-                  el = el.parentNode;
-                }
-
-                let selectorStr = path.join(' > ');
-                if (isDetached) {
-                  selectorStr = `Detached Node: ${selectorStr}`;
-                }
-
-                let snippetRaw = node.outerHTML ? node.outerHTML.substring(0, 150) : '';
-                if (isDetached && snippetRaw) {
-                  snippetRaw = `[Captured post-shift; element detached] ${snippetRaw}`;
-                }
-
-                return {
-                  selector: selectorStr,
-                  nodeName: node.nodeName,
-                  snippet: snippetRaw,
-                  previousRect: s.previousRect ? { x: s.previousRect.x, y: s.previousRect.y, width: s.previousRect.width, height: s.previousRect.height } : null,
-                  currentRect: s.currentRect ? { x: s.currentRect.x, y: s.currentRect.y, width: s.currentRect.width, height: s.currentRect.height } : null,
-                  isDetached
-                };
-              });
-            }
-            window.__cwv_layout_shifts.push({
-              value: entry.value,
-              time: entry.startTime,
-              sources
-            });
-          }
-        });
-        window.__cwv_observer.observe({ type: 'layout-shift', buffered: true });
-      } catch (e) { }
-    });
+    await configurePageEmulation(page, device);
+    await injectLayoutShiftObserver(page);
 
     // Navigate to URL
     await page.goto(url, { waitUntil: 'networkidle2', timeout: 45000 });
@@ -292,89 +311,12 @@ async function throttledDiagnosticPass(url, port, device = 'mobile') {
   let browser = null;
   let customShifts = [];
   try {
-    const response = await fetch(`http://127.0.0.1:${port}/json/version`);
-    const data = await response.json();
-    browser = await puppeteer.connect({ browserWSEndpoint: data.webSocketDebuggerUrl });
+    browser = await connectPuppeteerToPort(port);
     const pages = await browser.pages();
     const page = pages.length > 0 ? pages[0] : await browser.newPage();
 
-    // Emulate Device Viewport & User Agent (matching official Lighthouse specs)
-    if (device === 'mobile') {
-      await page.setUserAgent('Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Mobile Safari/537.36');
-      await page.setViewport({ width: 412, height: 823, deviceScaleFactor: 1.75, isMobile: true, hasTouch: true });
-    } else {
-      await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36');
-      await page.setViewport({ width: 1350, height: 940, deviceScaleFactor: 1, isMobile: false, hasTouch: false });
-    }
-    await page.setCacheEnabled(false);
-    await page.setExtraHTTPHeaders({
-      'Cache-Control': 'no-cache, no-store, must-revalidate',
-      'Pragma': 'no-cache',
-      'Expires': '0'
-    });
-
-    // Emulate Network & CPU Conditions (matching official Lighthouse constants)
-    const client = await page.target().createCDPSession();
-    if (device === 'mobile') {
-      await client.send('Network.emulateNetworkConditions', {
-        offline: false,
-        latency: 150,
-        downloadThroughput: (1.6 * 1024 * 1024 * 0.9) / 8,
-        uploadThroughput: (750 * 1024 * 0.9) / 8,
-        connectionType: 'cellular3g'
-      });
-      await client.send('Emulation.setCPUThrottlingRate', { rate: 4 });
-    } else {
-      await client.send('Network.emulateNetworkConditions', {
-        offline: false,
-        latency: 40,
-        downloadThroughput: (10 * 1024 * 1024) / 8,
-        uploadThroughput: (5 * 1024 * 1024) / 8,
-        connectionType: 'wifi'
-      });
-      await client.send('Emulation.setCPUThrottlingRate', { rate: 1 });
-    }
-
-    await page.evaluateOnNewDocument(() => {
-      if (window.__cwv_layout_shifts_injected) return;
-      window.__cwv_layout_shifts_injected = true;
-      window.__cwv_layout_shifts = [];
-      try {
-        window.__cwv_observer = new PerformanceObserver((list) => {
-          for (const entry of list.getEntries()) {
-            if (entry.hadRecentInput) continue;
-            let sources = entry.sources ? entry.sources.map(s => {
-              const node = s.node;
-              if (!node) return { selector: 'Unknown/Removed' };
-              const isDetached = !document.contains(node);
-
-              let path = [];
-              let el = node;
-              while (el && el.nodeType === 1) {
-                let sel = el.nodeName.toLowerCase();
-                if (el.id) sel += '#' + el.id;
-                else if (el.className && typeof el.className === 'string') {
-                  const c = el.className.trim().split(/\s+/).filter(Boolean);
-                  if (c.length > 0) sel += '.' + c.join('.');
-                }
-                path.unshift(sel);
-                el = el.parentNode;
-              }
-              return {
-                selector: (isDetached ? 'Detached Node: ' : '') + path.join(' > '),
-                nodeName: node.nodeName,
-                snippet: (isDetached ? '[Captured post-shift; element detached] ' : '') + (node.outerHTML ? node.outerHTML.substring(0, 150) : ''),
-                previousRect: s.previousRect ? { x: s.previousRect.x, y: s.previousRect.y, width: s.previousRect.width, height: s.previousRect.height } : null,
-                currentRect: s.currentRect ? { x: s.currentRect.x, y: s.currentRect.y, width: s.currentRect.width, height: s.currentRect.height } : null,
-                isDetached
-              };
-            }) : [];
-            window.__cwv_layout_shifts.push({ value: entry.value, time: entry.startTime, sources });
-          }
-        });
-        window.__cwv_observer.observe({ type: 'layout-shift', buffered: true });
-      } catch (e) { }
-    });
+    await configurePageEmulation(page, device);
+    await injectLayoutShiftObserver(page);
 
     await page.goto(url, { waitUntil: 'networkidle2', timeout: 45000 });
 
@@ -393,8 +335,35 @@ async function throttledDiagnosticPass(url, port, device = 'mobile') {
     console.log(`🤖 Custom Throttled Pass captured ${customShifts.length} layout shifts.`);
   } catch (err) {
     console.warn('⚠️ Custom Throttled Pass warning:', err.message);
+  } finally {
+    if (browser) {
+      try {
+        await browser.disconnect();
+      } catch (e) { }
+    }
   }
   return customShifts;
+}
+
+/**
+ * Recalculates CLS value and Lighthouse performance score if full-page scrolling
+ * observed layout shifts that exceed the static non-scrolling trace.
+ */
+function updateClsWithObservedShifts(deviceData, shifts, deviceName) {
+  if (!deviceData || !shifts || shifts.length === 0) return;
+  const shiftSum = shifts.reduce((acc, s) => acc + (Number(s.value) || 0), 0);
+  if (shiftSum > (deviceData.cls.value || 0)) {
+    console.log(`📊 ${deviceName} full-page scroll observed CLS (${shiftSum.toFixed(3)}) exceeds static viewport CLS (${(deviceData.cls.value || 0).toFixed(3)}). Updating report metrics.`);
+    deviceData.cls.value = shiftSum;
+    deviceData.cls.displayValue = shiftSum.toFixed(3);
+    if (shiftSum > 0.25) {
+      deviceData.cls.score = Math.max(0, Math.round((1 - Math.min(1, (shiftSum - 0.25) / 0.5)) * 49));
+    } else if (shiftSum > 0.10) {
+      deviceData.cls.score = Math.round(50 + ((0.25 - shiftSum) / 0.15) * 39);
+    } else {
+      deviceData.cls.score = 90 + Math.round(((0.10 - shiftSum) / 0.10) * 10);
+    }
+  }
 }
 
 /**
@@ -509,49 +478,59 @@ export async function runLighthouseAudit(url) {
     }
 
     // Incorporate scroll-triggered layout shifts if observed shifts exceed the static non-scrolling trace
-    if (mobileData && finalMobileShifts.length > 0) {
-      const shiftSum = finalMobileShifts.reduce((acc, s) => acc + (Number(s.value) || 0), 0);
-      if (shiftSum > (mobileData.cls.value || 0)) {
-        console.log(`📊 Mobile full-page scroll observed CLS (${shiftSum.toFixed(3)}) exceeds static viewport CLS (${(mobileData.cls.value || 0).toFixed(3)}). Updating report metrics.`);
-        mobileData.cls.value = shiftSum;
-        mobileData.cls.displayValue = shiftSum.toFixed(3);
-        if (shiftSum > 0.25) {
-          mobileData.cls.score = Math.max(0, Math.round((1 - Math.min(1, (shiftSum - 0.25) / 0.5)) * 49));
-        } else if (shiftSum > 0.10) {
-          mobileData.cls.score = Math.round(50 + ((0.25 - shiftSum) / 0.15) * 39);
-        } else {
-          mobileData.cls.score = 90 + Math.round(((0.10 - shiftSum) / 0.10) * 10);
-        }
-      }
-    }
+    updateClsWithObservedShifts(mobileData, finalMobileShifts, 'Mobile');
+    updateClsWithObservedShifts(desktopData, finalDesktopShifts, 'Desktop');
 
-    if (desktopData && finalDesktopShifts.length > 0) {
-      const shiftSum = finalDesktopShifts.reduce((acc, s) => acc + (Number(s.value) || 0), 0);
-      if (shiftSum > (desktopData.cls.value || 0)) {
-        console.log(`📊 Desktop full-page scroll observed CLS (${shiftSum.toFixed(3)}) exceeds static viewport CLS (${(desktopData.cls.value || 0).toFixed(3)}). Updating report metrics.`);
-        desktopData.cls.value = shiftSum;
-        desktopData.cls.displayValue = shiftSum.toFixed(3);
-        if (shiftSum > 0.25) {
-          desktopData.cls.score = Math.max(0, Math.round((1 - Math.min(1, (shiftSum - 0.25) / 0.5)) * 49));
-        } else if (shiftSum > 0.10) {
-          desktopData.cls.score = Math.round(50 + ((0.25 - shiftSum) / 0.15) * 39);
-        } else {
-          desktopData.cls.score = 90 + Math.round(((0.10 - shiftSum) / 0.10) * 10);
-        }
+    // Build emulation config metadata for report display
+    const emulationConfig = {
+      lighthouseVersion: '11.7.1',
+      mobile: {
+        deviceType: 'Mobile',
+        deviceName: 'Moto G Power (2022)',
+        formFactor: mobileOptions.formFactor,
+        viewport: `${mobileOptions.screenEmulation.width}×${mobileOptions.screenEmulation.height}`,
+        viewportWidth: mobileOptions.screenEmulation.width,
+        viewportHeight: mobileOptions.screenEmulation.height,
+        deviceScaleFactor: mobileOptions.screenEmulation.deviceScaleFactor,
+        mobileEmulation: mobileOptions.screenEmulation.mobile,
+        throttlingProfile: 'Slow 4G (simulated)',
+        networkRtt: `${mobileOptions.throttling.rttMs}ms`,
+        networkThroughput: `${(mobileOptions.throttling.throughputKbps / 1024).toFixed(1)} Mbps`,
+        cpuSlowdown: `${mobileOptions.throttling.cpuSlowdownMultiplier}x`,
+        throttlingMethod: mobileOptions.throttlingMethod,
+        configSource: 'Lighthouse Default (MOTOGPOWER_EMULATION_METRICS)'
+      },
+      desktop: {
+        deviceType: 'Desktop',
+        deviceName: 'MacOS Desktop',
+        formFactor: desktopOptions.formFactor,
+        viewport: `${desktopOptions.screenEmulation.width}×${desktopOptions.screenEmulation.height}`,
+        viewportWidth: desktopOptions.screenEmulation.width,
+        viewportHeight: desktopOptions.screenEmulation.height,
+        deviceScaleFactor: desktopOptions.screenEmulation.deviceScaleFactor,
+        mobileEmulation: desktopOptions.screenEmulation.mobile,
+        throttlingProfile: 'Dense 4G (simulated)',
+        networkRtt: `${desktopOptions.throttling.rttMs}ms`,
+        networkThroughput: `${(desktopOptions.throttling.throughputKbps / 1024).toFixed(1)} Mbps`,
+        cpuSlowdown: `${desktopOptions.throttling.cpuSlowdownMultiplier}x`,
+        throttlingMethod: desktopOptions.throttlingMethod,
+        configSource: 'Lighthouse Default (DESKTOP_EMULATION_METRICS)'
       }
-    }
+    };
 
     return {
       mobile: mobileData,
       desktop: desktopData,
-      customShifts: [...finalMobileShifts, ...finalDesktopShifts]
+      customShifts: [...finalMobileShifts, ...finalDesktopShifts],
+      emulationConfig
     };
   } catch (err) {
     console.error(`⚠️ Lighthouse execution failed: ${err.message}`);
     return {
       error: err.message,
       mobile: null,
-      desktop: null
+      desktop: null,
+      emulationConfig: null
     };
   } finally {
     if (chrome) {

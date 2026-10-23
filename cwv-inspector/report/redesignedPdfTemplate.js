@@ -77,7 +77,8 @@ export function buildRedesignedPdfHtml(data = {}) {
     takeaways = [],
     findings = [],
     cruxHistory = null,
-    cruxHistoryPoints = null
+    cruxHistoryPoints = null,
+    emulationConfig = null
   } = data || {};
 
   const validPoints = Array.isArray(cruxHistoryPoints) && cruxHistoryPoints.length >= 2
@@ -160,6 +161,31 @@ export function buildRedesignedPdfHtml(data = {}) {
       </div>
     </div>
   `;
+
+  const renderPdfTestConfig = (cfg) => {
+    if (!cfg) return '';
+    const isMobile = cfg.formFactor === 'mobile';
+    const cpuBg = isMobile ? '#fce7f3' : '#f0fdf4';
+    const cpuColor = isMobile ? '#9d174d' : '#166534';
+    return `
+      <div style="margin: 4px 0 8px 0; padding: 7px 12px; background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border: 1px solid #e2e8f0; border-radius: 6px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 0.58rem; color: #475569; font-family: Inter, sans-serif;">
+        <span style="font-weight: 700; color: #0f172a; font-size: 0.6rem;">⚙ Test Config</span>
+        <span style="color: #cbd5e1;">|</span>
+        <span style="background: #e0f2fe; color: #0369a1; padding: 1px 6px; border-radius: 4px; font-weight: 700; font-family: monospace;">${cfg.viewport}</span>
+        <span style="color: #94a3b8;">@</span>
+        <span style="background: #f0fdf4; color: #166534; padding: 1px 5px; border-radius: 4px; font-weight: 700; font-family: monospace;">${cfg.deviceScaleFactor}x DPR</span>
+        <span style="color: #cbd5e1;">|</span>
+        <span style="background: #fef3c7; color: #92400e; padding: 1px 6px; border-radius: 4px; font-weight: 600; font-family: monospace;">${cfg.throttlingProfile}</span>
+        <span style="color: #cbd5e1;">|</span>
+        <span style="font-weight: 600; color: #64748b;">CPU:</span>
+        <span style="background: ${cpuBg}; color: ${cpuColor}; padding: 1px 5px; border-radius: 4px; font-weight: 700; font-family: monospace;">${cfg.cpuSlowdown}</span>
+        <span style="color: #cbd5e1;">|</span>
+        <span style="font-weight: 600; color: #334155;">${cfg.deviceName}</span>
+        <span style="color: #cbd5e1;">|</span>
+        <span style="background: #ede9fe; color: #5b21b6; padding: 1px 6px; border-radius: 4px; font-weight: 700; font-family: monospace;">Lighthouse v${emulationConfig?.lighthouseVersion || '11.7.1'}</span>
+        <span style="color: #94a3b8; font-style: italic;">(Default)</span>
+      </div>`;
+  };
 
   const renderCruxTrendPage = () => {
     if (!hasCruxHistory || !validPoints) return '';
@@ -554,6 +580,8 @@ export function buildRedesignedPdfHtml(data = {}) {
           EXECUTIVE SUMMARY <span style="font-weight: 600; color: #64748b; margin-left: 6px;">MOBILE</span>
         </div>
 
+        ${renderPdfTestConfig(emulationConfig?.mobile)}
+
         <div class="exec-card">
           <div style="display: flex; gap: 14px; align-items: center;">
             ${renderGaugeSvg(mobile.score)}
@@ -580,6 +608,8 @@ export function buildRedesignedPdfHtml(data = {}) {
         <div class="section-title">
           EXECUTIVE SUMMARY <span style="font-weight: 600; color: #64748b; margin-left: 6px;">DESKTOP</span>
         </div>
+
+        ${renderPdfTestConfig(emulationConfig?.desktop)}
 
         <div class="exec-card">
           <div style="display: flex; gap: 14px; align-items: center;">
