@@ -624,9 +624,13 @@
               renderAiAdviceResult(container, issue.aiAdvice);
             } else if (issue.aiStatus === 'omitted_limit') {
               container.className = 'ai-advisor-container ai-limit-container';
+              const isLow = String(issue.severity || '').toLowerCase() === 'low' || String(issue.severity || '').toLowerCase() === 'info';
+              const noteText = issue.aiLimitNote || (isLow
+                ? 'Deterministic recommendation active (Low impact). High and medium findings are auto-analyzed by Copilot.'
+                : 'Deterministic recommendation active. Copilot advice auto-generated for top priority findings.');
               container.innerHTML = `
                 <div class="ai-limit-bar">
-                  <span>Deterministic recommendation active. Copilot advice auto-generated for top priority findings.</span>
+                  <span>${escapeClientHtml(noteText)}</span>
                   <button class="ai-retry-btn" type="button" onclick="retryAiAdvice(event, ${idx})">Analyze with Copilot</button>
                 </div>
               `;

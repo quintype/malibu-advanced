@@ -630,10 +630,14 @@ export async function generateReport(compiledResult, options = {}) {
     }
 
     if (issue.aiStatus === 'omitted_limit') {
+      const isLow = String(issue.severity || '').toLowerCase() === 'low' || String(issue.severity || '').toLowerCase() === 'info';
+      const noteText = isLow
+        ? 'Deterministic recommendation active (Low impact). High and medium findings are auto-analyzed by Copilot.'
+        : 'Deterministic recommendation active. Copilot advice auto-generated for top priority findings.';
       return `
         <div class="ai-advisor-container ai-limit-container" id="ai-advisor-container-${index}">
           <div class="ai-limit-bar">
-            <span>Deterministic recommendation active. Copilot advice auto-generated for top priority findings.</span>
+            <span>${noteText}</span>
             <button class="ai-retry-btn" type="button" onclick="retryAiAdvice(event, ${index})">Analyze with Copilot</button>
           </div>
           <div id="ai-advice-result-${index}" class="ai-advice-result-wrapper" style="display: none;"></div>
@@ -656,7 +660,23 @@ export async function generateReport(compiledResult, options = {}) {
       `;
     }
 
-    // Default / Pending auto-enrichment state on page load
+    const sev = String(issue.severity || '').toLowerCase();
+    const isLowSeverity = sev === 'low' || sev === 'info';
+
+    // Low priority tickets remain deterministic by default to conserve AI tokens
+    if (isLowSeverity) {
+      return `
+        <div class="ai-advisor-container ai-limit-container" id="ai-advisor-container-${index}">
+          <div class="ai-limit-bar">
+            <span>Deterministic recommendation active (Low impact). High and medium findings are auto-analyzed by Copilot.</span>
+            <button class="ai-retry-btn" type="button" onclick="retryAiAdvice(event, ${index})">Analyze with Copilot</button>
+          </div>
+          <div id="ai-advice-result-${index}" class="ai-advice-result-wrapper" style="display: none;"></div>
+        </div>
+      `;
+    }
+
+    // Default / Pending auto-enrichment state on page load for HIGH and MEDIUM issues
     return `
       <div class="ai-advisor-container" id="ai-advisor-container-${index}">
         <div id="ai-pending-${index}" class="ai-loading-box">

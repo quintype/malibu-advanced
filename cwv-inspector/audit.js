@@ -161,11 +161,11 @@ Options:
 
   const allAi = args.includes('--all-ai');
   const maxAiIndex = args.indexOf('--max-ai');
-  let maxAiIssues = Number(process.env.COPILOT_MAX_ISSUES) || 5;
+  let maxAiIssues = Number(process.env.COPILOT_MAX_ISSUES) || 20;
   if (allAi) {
     maxAiIssues = 999;
   } else if (maxAiIndex !== -1 && args[maxAiIndex + 1]) {
-    maxAiIssues = parseInt(args[maxAiIndex + 1], 10) || 5;
+    maxAiIssues = parseInt(args[maxAiIndex + 1], 10) || 20;
   }
 
   if (url && !/^https?:\/\//i.test(url)) {
@@ -386,7 +386,8 @@ Options:
         copilotService: copilot,
         url,
         maxIssues: maxAiIssues,
-        totalTimeoutMs: allAi || maxAiIssues > 10 ? 300000 : 90000
+        severities: allAi ? null : ['high', 'medium'],
+        totalTimeoutMs: allAi || maxAiIssues > 10 ? 300000 : 120000
       });
       const analyzedCount = enrichedResult.aiAdvisor?.analyzedCount || 0;
       console.log(`✓ Copilot AI recommendations generated (${analyzedCount} priority findings enriched).`);

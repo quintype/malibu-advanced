@@ -714,11 +714,12 @@ const server = http.createServer(async (req, res) => {
         };
 
         const copilot = getCopilotService();
-        const maxIssues = Math.min(10, Math.max(1, Number(payload.maxIssues) || 5));
+        const maxIssues = Math.max(1, Number(payload.maxIssues) || 20);
         const enriched = await enrichAuditWithCopilot(compiledResult, {
           copilotService: copilot,
           url: parsedReport.url,
-          maxIssues
+          maxIssues,
+          severities: ['high', 'medium']
         });
 
         // Update JSON file on disk with clear PDF status distinction

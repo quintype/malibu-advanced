@@ -1470,6 +1470,54 @@ async function runTests() {
     logPass('Safe JSON script escaping prevents HTML parser breakouts when advice contains literal <script> tags');
   }
 
+  // =========================================================================
+  // 39. Automatic High & Medium Severity Auto-Enrichment and Token Conservation
+  // =========================================================================
+  {
+    const mixedAudit = {
+      issues: [
+        { message: 'Hero banner missing dimensions', cwv: 'cls', severity: 'high', score: 0.25 },
+        { message: 'Search button latency lag', cwv: 'inp', severity: 'medium', score: 180 },
+        { message: 'Below-the-fold image missing lazy loading', cwv: 'lcp', severity: 'low', score: 0.05 },
+        { message: 'Minor font preload hint', cwv: 'fcp', severity: 'low', score: 0.01 }
+      ]
+    };
+
+    const enriched = await enrichAuditWithCopilot(mixedAudit, {
+      copilotService: {
+        generateResponse: async () => JSON.stringify({
+          issue: 'Mock Test Issue',
+          explanation: 'Mock explanation for priority finding.',
+          rootCause: 'Mock root cause.',
+          whyItHelps: 'Avoids layout shift.',
+          recommendations: ['Apply CSS width/height']
+        })
+      },
+      mock: true
+    });
+
+    // High and medium must have completed advice automatically without manual interaction
+    assert.strictEqual(enriched.issues[0].severity, 'high');
+    assert.strictEqual(enriched.issues[0].aiStatus, 'completed');
+    assert.ok(enriched.issues[0].aiAdvice, 'High severity issue must be auto-enriched');
+
+    assert.strictEqual(enriched.issues[1].severity, 'medium');
+    assert.strictEqual(enriched.issues[1].aiStatus, 'completed');
+    assert.ok(enriched.issues[1].aiAdvice, 'Medium severity issue must be auto-enriched');
+
+    // Low severity issues must NOT burn tokens and remain deterministic
+    assert.strictEqual(enriched.issues[2].severity, 'low');
+    assert.strictEqual(enriched.issues[2].aiStatus, 'omitted_limit');
+    assert.strictEqual(enriched.issues[2].aiAdvice, undefined);
+    assert.ok(enriched.issues[2].aiLimitNote.includes('low impact'), 'Low severity issue must note low impact deterministic status');
+
+    assert.strictEqual(enriched.issues[3].severity, 'low');
+    assert.strictEqual(enriched.issues[3].aiStatus, 'omitted_limit');
+    assert.strictEqual(enriched.issues[3].aiAdvice, undefined);
+
+    logPass('Automatic enrichment auto-analyzes HIGH and MEDIUM priority issues while preserving tokens by skipping LOW severity issues');
+  }
+
   // Close server
   await new Promise(resolve => server.close(resolve));
 

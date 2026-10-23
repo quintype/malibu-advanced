@@ -13,18 +13,35 @@ import { categorizeCopilotError } from '../services/copilotService.js';
  * prioritizing Core Web Vitals (CLS, LCP, INP) and HIGH/MEDIUM severities.
  *
  * @param {Array<object>} issues - The array of issues from compiledResult.
- * @param {number} [maxCount=5] - Maximum number of issues to return.
+ * @param {number|object} [maxCount=20] - Maximum number of issues to return (or options object).
+ * @param {object} [options] - Optional settings (severities: ['high', 'medium']).
  * @returns {Array<object>}
  */
-export function selectPriorityIssues(issues = [], maxCount = 5) {
+export function selectPriorityIssues(issues = [], maxCount = 20, options = {}) {
   if (!Array.isArray(issues)) return [];
+
+  if (typeof maxCount === 'object' && maxCount !== null) {
+    options = maxCount;
+    maxCount = options.maxCount || 20;
+  }
 
   const cwvWeights = { cls: 3, inp: 3, lcp: 2 };
   const severityWeights = { high: 3, medium: 2, low: 1 };
   const correlationWeights = { EXACT: 4, PROBABLE: 3, PARTIAL: 2, STATIC_ONLY: 1, UNRESOLVED: 1 };
 
+  const allowedSeverities = options.severities
+    ? new Set(options.severities.map(s => String(s).toLowerCase()))
+    : null;
+
   return [...issues]
-    .filter(issue => issue && typeof issue === 'object' && issue.message)
+    .filter(issue => {
+      if (!issue || typeof issue !== 'object' || !issue.message) return false;
+      if (allowedSeverities) {
+        const sev = String(issue.severity || 'medium').toLowerCase();
+        if (!allowedSeverities.has(sev)) return false;
+      }
+      return true;
+    })
     .sort((a, b) => {
       // Prioritize verified runtime/correlated issues over unconfirmed static-only code scans
       const corrA = correlationWeights[a.correlationState] || (a.type === 'correlated' ? 3 : (a.correlationState === 'STATIC_ONLY' ? 1 : 2));
@@ -119,29 +136,17 @@ AUDIT FINDING DETAILS:
 - Supporting Evidence: ${evidenceText}${geometryText}${issue.time ? `\n- Event Timestamp: ${issue.time.toFixed(1)}ms` : ''}${issue.inpPhase ? `\n- Dominant INP Phase: ${issue.inpPhase}` : ''}${issue.callChainString ? `\n- Traced Call Chain: ${issue.callChainString}` : ''}${context.url ? `\n- Target URL: ${context.url}` : ''}${geometryCaveat}${attributionCaveat}
 
 STRICT INSTRUCTIONS:
-1. Base your explanation and recommendation ONLY on the verified facts above.
-2. DO NOT invent, assume, or hallucinate file paths, line numbers, or DOM element selectors not present in the finding.
-3. Clearly distinguish verified authoritative findings (Lighthouse / AST match) from diagnostic fallbacks (unthrottled observer) and static-only rules.
-4. If evidence is incomplete or circumstantial, explicitly state this limitation under "limitations", provide alternative hypotheses, and adjust "confidence".
-5. Do not propose running commands that modify system state. Propose safe, non-destructive code edits only.
-6. Your response MUST be valid JSON conforming strictly to the schema below. Do not wrap in markdown or include conversational text.
-7. THREE-QUESTION STRUCTURE (MANDATORY & TOKEN-EFFICIENT):
-   - Pillar 1 (What's the reason for it?): In "rootCause", explain in 1-2 concise, dense sentences the exact technical browser/layout mechanism or code anti-pattern causing this metric regression.
-   - Pillar 2 (How are we solving it?): In "recommendations", provide concrete, minimal, actionable code steps applied directly to existing elements without adding extra wrapper nodes.
-   - Pillar 3 (Why only this way to solve it?): In "whyItHelps", explicitly explain why ONLY this specific solution is the correct engineering approach, and why alternative workarounds (such as dummy spacer divs, empty fallback elements, arbitrary wrappers, or premature memoization) fail, cause side effects, or bloat DOM depth.
-8. TOKEN ECONOMY:
-   - Keep answers direct, dense, and free of conversational fluff, greetings, or filler.
-   - Limit explanation, rootCause, and whyItHelps to 1-2 focused sentences each. Avoid repeating the finding title. Every token must deliver technical engineering value.
-9. ARCHITECTURAL & DOM INTEGRITY:
-   - NEVER suggest wrapping components with arbitrary dummy wrapper <div>s ("DIV soup") purely to attach a CSS class or min-height. Extra wrapper elements increase DOM tree depth, bloat HTML size, and violate the Lighthouse "Avoid an excessive DOM size" audit.
-   - NEVER suggest ternary fallback empty dummy divs or static spacer elements (e.g., "{condition ? <Component /> : <div style={{ minHeight: '32px' }} />}"). Static dummy divs render phantom whitespace when the prop/flag is false and clutter the JSX. Instead, reserve dimensions in CSS on the component wrapper itself, or provide a semantic skeleton loader if data loads asynchronously.
-   - NEVER recommend wrapping simple presentation card components (e.g., SpeakerCard, StoryCard, AuthorCard, MemberCard) with React.memo(), useMemo(), or useCallback() unless there is verified runtime evidence of interaction lag or heavy re-render cascades. Do not introduce premature optimization boilerplate to simple presentation components.
-   - NEVER suggest adding startTransition() or synthetic pending states to simple event handlers that only toggle local UI state (e.g. open/close modal, expand bio) or pass events to parents.
-   - NEVER suggest adding ternary fallback dummy divs or fixed-height spacer hacks (e.g., "{speaker.bio ? <p>...</p> : <div style={{ minHeight: '50px' }} />}") for optional text or fields in card components. Card layouts should flex naturally based on provided content; injecting empty spacer divs leaves awkward empty white gaps in the UI.
-   - For image components in cards, respect framework primitives (e.g., @quintype/components's <ResponsiveImage>, Next.js <Image>). Do not advise replacing clean framework components with raw <img> tags or manual inline style calculations unless specifically required.
-   - Recommend applying layout attributes (width, height, aspect-ratio), CSS classes, or CSS containment (contain: layout) directly to EXISTING elements or existing parent containers in the same line/hierarchy.
-   - NEVER suggest arbitrary dummy heights like "min-height: 1px" which provide no real CLS benefit. If space reservation is needed, recommend realistic dimensions, aspect-ratio, or proper skeleton placeholders with clear technical reasoning.
-   - Always provide sound technical reasoning explaining why the proposed fix resolves the metric without negatively impacting DOM performance, tree depth, or bundle size.
+1. Base explanation and recommendation ONLY on verified facts above. DO NOT invent, assume, or hallucinate file paths, line numbers, or DOM element selectors not present in the finding.
+2. Distinguish verified authoritative findings from diagnostic fallbacks or static-only rules. State limitations if evidence is incomplete. Propose safe, non-destructive code edits only.
+3. Response MUST be valid JSON conforming strictly to the schema below. Do not wrap in markdown or include conversational text.
+4. THREE-QUESTION STRUCTURE (MANDATORY & TOKEN-EFFICIENT):
+   - "rootCause": 1-2 dense technical sentences on the browser layout/runtime mechanism causing regression.
+   - "recommendations": 1-2 minimal, direct actionable code steps applied directly to existing elements without extra wrapper nodes.
+   - "whyItHelps": 1-2 sentences explaining why this specific solution works and why alternative workarounds (dummy spacers, extra wrappers, premature memoization) fail or bloat DOM depth.
+5. TOKEN ECONOMY & DOM INTEGRITY:
+   - Maximum brevity: keep explanations dense (1-2 sentences each). No filler or repetition.
+   - NEVER suggest dummy wrapper <div>s ("DIV soup") or ternary fallback empty spacer divs. Reserve dimensions in CSS on existing elements or use semantic skeleton.
+   - NEVER suggest wrapping presentation cards in React.memo/useMemo/useCallback or adding startTransition without proven lag. Respect framework primitives (<ResponsiveImage>, <Image>).
 
 REQUIRED JSON SCHEMA:
 {
@@ -463,16 +468,18 @@ export async function enrichAuditWithCopilot(compiledResult, options = {}) {
     return compiledResult;
   }
 
-  const maxIssues = Math.max(1, Number(options.maxIssues || process.env.COPILOT_MAX_ISSUES) || 5);
+  // Prioritize HIGH and MEDIUM severities by default to conserve AI tokens
+  const severities = options.severities || (options.allSeverities ? null : ['high', 'medium']);
+  const maxIssues = Math.max(1, Number(options.maxIssues || process.env.COPILOT_MAX_ISSUES) || 20);
   const copilotService = options.copilotService || options.copilot || null;
   const timeoutMs = options.timeoutMs || 60000;
   const totalTimeoutMs = options.totalTimeoutMs !== undefined
     ? Number(options.totalTimeoutMs)
-    : (Number(process.env.COPILOT_TOTAL_TIMEOUT_MS) || 90000);
+    : (Number(process.env.COPILOT_TOTAL_TIMEOUT_MS) || 120000);
   const batchSize = Math.max(1, Number(options.batchSize) || 1);
   const deadline = Date.now() + totalTimeoutMs;
 
-  const priorityIssues = selectPriorityIssues(compiledResult.issues, maxIssues);
+  const priorityIssues = selectPriorityIssues(compiledResult.issues, maxIssues, { severities });
   const prioritySet = new Set(priorityIssues);
 
   compiledResult.aiAdvisor = {
@@ -562,7 +569,12 @@ export async function enrichAuditWithCopilot(compiledResult, options = {}) {
     if (!prioritySet.has(issue)) {
       if (!issue.aiAdvice) {
         issue.aiStatus = 'omitted_limit';
-        issue.aiLimitNote = `Deterministic recommendation active. Copilot advice auto-generated for top ${maxIssues} priority findings.`;
+        const sev = String(issue.severity || 'low').toLowerCase();
+        if (sev === 'low' || sev === 'info') {
+          issue.aiLimitNote = 'Deterministic recommendation active (low impact). Copilot advice auto-generated for high and medium findings.';
+        } else {
+          issue.aiLimitNote = `Deterministic recommendation active. Copilot advice auto-generated for top ${maxIssues} priority findings.`;
+        }
       }
     }
   });
