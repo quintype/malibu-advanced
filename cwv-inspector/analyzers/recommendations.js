@@ -2,6 +2,44 @@ import path from 'path';
 import { correlateCls } from './correlation.js';
 import { config } from '../config.js';
 
+function summarizeOpportunityTargets(resourceEvidence = []) {
+  return resourceEvidence
+    .map(item => item.url || item.origin || item.selector || item.nodeLabel)
+    .filter(Boolean)
+    .slice(0, 3)
+    .join(', ');
+}
+
+function recommendationForOpportunity(opp) {
+  const targets = summarizeOpportunityTargets(opp.resourceEvidence);
+  const targetContext = targets ? ` Lighthouse identified: ${targets}.` : '';
+
+  switch (opp.id) {
+    case 'largest-contentful-paint-element':
+      return `Inspect the identified LCP DOM node. If it is an image, verify the selected src/srcset request and its discovery, priority, and render timing; map it to source through the asset manifest or source maps.${targetContext}`;
+    case 'unused-javascript':
+      return `Review the listed script requests and defer, split, or remove code only after confirming it is not needed for the initial route.${targetContext}`;
+    case 'unused-css-rules':
+      return `Inspect the listed stylesheets for rules unused on this route; split or defer non-critical styles while preserving dynamic and above-the-fold styles.${targetContext}`;
+    case 'uses-webp-images':
+    case 'modern-image-formats':
+      return `Serve the listed images in WebP or AVIF when supported, retain a compatible fallback, and verify the selected responsive variant.${targetContext}`;
+    case 'duplicated-javascript':
+      return `Use the listed script assets with a bundle/module analyzer to identify duplicate package copies, then deduplicate compatible versions.${targetContext}`;
+    case 'legacy-javascript':
+      return `Inspect the listed scripts and build target. Reduce unnecessary transforms only after confirming the supported browser matrix; Lighthouse has not identified a source file.${targetContext}`;
+    case 'uses-rel-preconnect':
+      return `Keep preconnect hints only for origins required early in this page's critical path; remove speculative origins or use dns-prefetch for secondary services.${targetContext}`;
+    case 'uses-rel-preload':
+    case 'preload-lcp-image':
+      return `Preload only resources confirmed to be critical to the first viewport, with a URL and request mode that match the eventual request.${targetContext}`;
+    default:
+      return targets
+        ? `Inspect the Lighthouse request evidence below and address the listed resources that contribute to this opportunity.${targetContext}`
+        : `Lighthouse reported this opportunity but returned no request-level evidence. Re-run Lighthouse with its JSON report to identify affected resources before changing code.`;
+  }
+}
+
 /**
  * Consolidates and groups all scanner findings to keep the report compact and clear.
  * Additionally runs the CLS Correlation Engine to map layout shifts to source coordinates.
@@ -724,20 +762,42 @@ export function compileRecommendations(staticIssues, lighthouseIssues = null, as
         let cwv = 'lcp';
         if (opp.id.includes('block') || opp.id.includes('delay') || opp.id.includes('thread')) cwv = 'inp';
 
-        let suggestion = 'Optimize performance using Lighthouse suggestions.';
-        if (opp.id === 'uses-rel-preconnect') {
-          suggestion = 'Limit <link rel="preconnect"> to at most 2–4 critical origins (e.g. fonts.gstatic.com or hero image CDN). Remove unused preconnects and downgrade secondary ad/analytics domains to <link rel="dns-prefetch">.';
+        const suggestion = recommendationForOpportunity(opp);
+        const resourceEvidence = (opp.resourceEvidence || []).map(item => ({
+          ...item,
+          device: modeLabel
+        }));
+        const savings = [];
+        if (Number.isFinite(opp.overallSavingsBytes) && opp.overallSavingsBytes > 0) {
+          savings.push(`estimated ${Math.round(opp.overallSavingsBytes / 1024)} KiB potential byte savings`);
         }
+        if (Number.isFinite(opp.overallSavingsMs) && opp.overallSavingsMs > 0) {
+          savings.push(`estimated ${Math.round(opp.overallSavingsMs)} ms potential time savings`);
+        }
+        const evidenceSummary = resourceEvidence.length
+          ? `${resourceEvidence.length} Lighthouse request row(s) captured for ${modeLabel}.`
+          : `No request-level rows were returned by Lighthouse for ${modeLabel}.`;
 
         allIssues.push({
           type: 'lighthouse',
           file: `Runtime Audit (Lighthouse ${modeLabel})`,
           line: '-',
           cwv,
+          device: modeLabel,
           severity: opp.score < 50 ? 'high' : 'medium',
           message: `${opp.title}${opp.displayValue ? ` (${opp.displayValue})` : ''}`,
-          impact: opp.description || `Lighthouse flagged runtime efficiency opportunity on ${modeLabel}.`,
-          suggestion
+          impact: [opp.description, savings.length ? `Lighthouse estimate: ${savings.join(' and ')}.` : '', evidenceSummary]
+            .filter(Boolean)
+            .join(' '),
+          suggestion,
+          evidence: resourceEvidence.map(item => [item.device, item.url || item.origin, item.resourceType, item.wastedBytes ? `${item.wastedBytes} wasted bytes` : '', item.wastedMs ? `${item.wastedMs} ms` : ''].filter(Boolean).join(': ')),
+          resourceEvidence,
+          evidenceCount: opp.evidenceCount || resourceEvidence.length,
+          evidenceTruncated: Boolean(opp.evidenceTruncated),
+          auditId: opp.id,
+          auditDetailsType: opp.detailsType || null,
+          overallSavingsMs: opp.overallSavingsMs ?? null,
+          overallSavingsBytes: opp.overallSavingsBytes ?? null
         });
       });
     };
@@ -783,6 +843,7 @@ export function compileRecommendations(staticIssues, lighthouseIssues = null, as
         correlationState: issue.correlationState || null,
         confidenceExplanation: issue.confidenceExplanation || null,
         evidence: issue.evidence || null,
+        devices: issue.device ? [issue.device] : [],
         selector: issue.selector || null,
         device: issue.device || null,
         snippet: issue.snippet || null,
@@ -792,8 +853,34 @@ export function compileRecommendations(staticIssues, lighthouseIssues = null, as
         callChain: issue.callChain || null,
         callChainString: issue.callChainString || null,
         relatedSources: issue.relatedSources || [],
+        resourceEvidence: issue.resourceEvidence || [],
+        evidenceCount: issue.evidenceCount || (issue.resourceEvidence || []).length,
+        evidenceTruncated: Boolean(issue.evidenceTruncated),
+        auditId: issue.auditId || null,
+        auditDetailsType: issue.auditDetailsType || null,
+        overallSavingsMs: issue.overallSavingsMs ?? null,
+        overallSavingsBytes: issue.overallSavingsBytes ?? null,
         occurrences: []
       };
+    }
+    if (issue.type === 'lighthouse') {
+      if (issue.device && !grouped[key].devices.includes(issue.device)) {
+        grouped[key].devices.push(issue.device);
+      }
+      if (grouped[key].devices.length > 1) grouped[key].device = null;
+      const currentEvidence = grouped[key].resourceEvidence;
+      const knownEvidence = new Set(currentEvidence.map(item => `${item.device || ''}|${item.url || item.origin || ''}|${item.resourceType || ''}`));
+      (issue.resourceEvidence || []).forEach(item => {
+        const evidenceKey = `${item.device || ''}|${item.url || item.origin || ''}|${item.resourceType || ''}`;
+        if (!knownEvidence.has(evidenceKey)) {
+          knownEvidence.add(evidenceKey);
+          currentEvidence.push(item);
+        }
+      });
+      grouped[key].evidenceCount = Math.max(grouped[key].evidenceCount, issue.evidenceCount || 0);
+      grouped[key].evidenceTruncated = grouped[key].evidenceTruncated || Boolean(issue.evidenceTruncated);
+      const allEvidenceText = [...(grouped[key].evidence || []), ...(issue.evidence || [])];
+      grouped[key].evidence = [...new Set(allEvidenceText)];
     }
     grouped[key].occurrences.push({ file: issue.file, line: issue.line });
   });
@@ -812,7 +899,7 @@ export function compileRecommendations(staticIssues, lighthouseIssues = null, as
 
     group.occurrences = uniqueOccurrences;
 
-    if (group.type !== 'correlated' && group.type !== 'lighthouse-unresolved') {
+    if (group.type !== 'correlated' && group.type !== 'lighthouse-unresolved' && group.type !== 'lighthouse') {
       if (uniqueOccurrences.length === 1) {
         group.file = uniqueOccurrences[0].file;
         group.line = uniqueOccurrences[0].line;

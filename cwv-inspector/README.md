@@ -121,6 +121,17 @@ When a performance audit is triggered from the Dashboard or CLI:
         *   **CPU Slowdown**: `1x`
 *   **Test Configuration Reporting**: Both HTML and PDF reports display a Test Configuration banner in the Executive Summary for Mobile and Desktop audits, detailing the effective viewport, DPR, network throttling, CPU slowdown multiplier, and Lighthouse version.
 
+### Request-level evidence and safe targeting
+The HTML findings and companion JSON retain Lighthouse's per-resource evidence for flagged opportunities, capped at 12 rows per audit/device to keep reports bounded. Rows can include the request URL or origin, resource type, transferred/total/unused bytes, estimated time savings, request count, cache lifetime, and node selector/snippet when Lighthouse supplies them. The dedicated `largest-contentful-paint-element` audit is also retained with its LCP candidate DOM node and phase timings (TTFB, load delay, load time, and render delay); Lighthouse may not provide the candidate's network URL in that audit, so use the selector/snippet to find the rendered element and inspect its actual request in DevTools. The report records the total row count and whether rows were truncated.
+
+Use the evidence to target investigation:
+1. Open the listed URL and match it to the Network panel request (including the device profile and query string); compare Lighthouse's measured transfer and unused bytes.
+2. Map that runtime URL to a local bundle, stylesheet, image, CDN rule, or CMS-managed asset using the application's build output/source maps and asset manifest. The URL alone does **not** prove which repository file produced it.
+3. Confirm route usage and runtime behavior before removing or splitting JavaScript/CSS, changing responsive images, or adding preload/preconnect hints. Lighthouse savings are estimates from a synthetic run, not guaranteed field improvements.
+4. If a finding has no request rows, treat it as an audit-level signal. Re-run against the exact route with a saved Lighthouse JSON/report and inspect the corresponding audit; do not guess an asset from the title alone.
+
+These rows make lab findings actionable immediately and can be compared across UAT/prod runs without waiting for CrUX aggregation. They do not replace CrUX: field data reflects real users over a rolling 28-day collection window, while Lighthouse is a repeatable lab snapshot under the report's stated throttling/emulation. The detailed HTML report and companion JSON carry the per-request rows; the redesigned executive PDF can summarize findings without listing every request.
+
 ---
 
 ## 7. Puppeteer Integration
@@ -213,7 +224,7 @@ The consolidator in `analyzers/recommendations.js` aggregates findings and deter
 
 *   **Format**: Standalone HTML report (`report-<timestamp>.html`), printed PDF (`report-<timestamp>.pdf`), and companion JSON (`report-<timestamp>.json`).
 *   **Location**: Written to the audited project's `reports/` folder.
-*   **Contents**: Performance assessment summary banner, Device tabs (Mobile/Desktop view toggle), Metrics Detail table (including CrUX field data and Lighthouse lab data), and categorized expandable recommendation cards.
+*   **Contents**: Performance assessment summary banner, Device tabs (Mobile/Desktop view toggle), Metrics Detail table (including CrUX field data and Lighthouse lab data), and categorized expandable recommendation cards. Lighthouse cards show request evidence when the audit supplies it; the companion JSON preserves the structured rows, audit ID, device, potential savings, and truncation status.
 
 ---
 

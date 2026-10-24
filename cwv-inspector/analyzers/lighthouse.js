@@ -13,6 +13,68 @@ import * as chromeLauncher from 'chrome-launcher';
 import lighthouse, { desktopConfig } from 'lighthouse';
 import puppeteer from 'puppeteer';
 
+const MAX_AUDIT_EVIDENCE_ITEMS = 12;
+
+function finiteNumber(value) {
+  if (value === null || value === undefined || value === '') return null;
+  const number = Number(value);
+  return Number.isFinite(number) ? number : null;
+}
+
+/**
+ * Keep the request-level facts Lighthouse exposes, without copying full trace
+ * objects into every generated report.
+ */
+function extractAuditEvidenceItem(item = {}) {
+  const request = item.request || item.requestData || {};
+  const node = item.node || {};
+  const source = item.source || {};
+
+  return {
+    url: item.url || request.url || item.resourceUrl || item.src || null,
+    origin: item.origin || null,
+    resourceType: item.resourceType || item.type || item.mimeType || request.resourceType || null,
+    totalBytes: finiteNumber(item.totalBytes ?? item.resourceSize ?? request.resourceSize),
+    transferSize: finiteNumber(item.transferSize ?? request.transferSize),
+    wastedBytes: finiteNumber(item.wastedBytes ?? item.wastedBytesByResource ?? item.unusedBytes),
+    wastedMs: finiteNumber(item.wastedMs ?? item.wastedMsByResource),
+    requestCount: finiteNumber(item.requestCount),
+    cacheLifetimeMs: finiteNumber(item.cacheLifetimeMs),
+    selector: node.selector || item.selector || null,
+    nodeLabel: node.nodeLabel || item.nodeLabel || null,
+    snippet: node.snippet || item.snippet || null,
+    source: (typeof source === 'string' ? source : source.url) || item.sourceUrl || null,
+    reason: item.reason || item.label || null,
+    phase: item.phase || null,
+    timing: finiteNumber(item.timing),
+    percent: item.percent || null
+  };
+}
+
+function flattenAuditDetailItems(items = []) {
+  const rows = [];
+  const visit = (item, parent = {}) => {
+    if (!item || typeof item !== 'object') return;
+    const { items: children, subItems, ...fields } = item;
+    const combined = { ...parent, ...fields };
+    const nested = [
+      ...(Array.isArray(children) ? children : []),
+      ...(Array.isArray(subItems?.items) ? subItems.items : [])
+    ];
+    if (nested.length) {
+      nested.forEach(child => visit(child, combined));
+      return;
+    }
+
+    if (combined.url || combined.origin || combined.node || combined.selector || combined.resourceType || combined.totalBytes !== undefined || combined.wastedBytes !== undefined || combined.source || combined.phase) {
+      rows.push(combined);
+    }
+  };
+
+  items.forEach(item => visit(item));
+  return rows;
+}
+
 /**
  * Extracts score and key metrics from Lighthouse report JSON.
  */
@@ -93,6 +155,9 @@ export function extractScores(reportJson) {
       .filter(key => {
         const audit = audits[key];
         if (!audit) return false;
+        // Lighthouse's dedicated LCP element audit is a table/list rather than
+        // an opportunity, but its DOM node is often the most useful target.
+        if (key === 'largest-contentful-paint-element' && Array.isArray(audit.details?.items) && audit.details.items.length > 0) return true;
         if (audit.details?.type === 'opportunity' && audit.score < 1) return true;
         if (key === 'uses-rel-preconnect' && ((Array.isArray(audit.warnings) && audit.warnings.length > 0) || (audit.score !== null && audit.score < 1))) {
           return true;
@@ -104,13 +169,24 @@ export function extractScores(reportJson) {
         const warningStr = Array.isArray(audit.warnings) && audit.warnings.length > 0
           ? audit.warnings.join('; ')
           : '';
+        const detailsItems = flattenAuditDetailItems(audit.details?.items);
+        const isLcpElementAudit = key === 'largest-contentful-paint-element';
         return {
           id: key,
-          title: audit.title,
-          description: audit.description,
+          title: audit.title || (isLcpElementAudit ? 'Largest Contentful Paint element' : key),
+          description: audit.description || (isLcpElementAudit ? 'Inspect the element Lighthouse identified as the Largest Contentful Paint candidate.' : ''),
           score: audit.score !== null && audit.score !== undefined ? audit.score * 100 : 50,
           numericValue: audit.numericValue,
-          displayValue: audit.displayValue || warningStr
+          displayValue: audit.displayValue || warningStr,
+          detailsType: audit.details?.type || null,
+          overallSavingsMs: finiteNumber(audit.details?.overallSavingsMs),
+          overallSavingsBytes: finiteNumber(audit.details?.overallSavingsBytes),
+          evidenceCount: detailsItems.length,
+          resourceEvidence: detailsItems
+            .slice(0, MAX_AUDIT_EVIDENCE_ITEMS)
+            .map(extractAuditEvidenceItem),
+          evidenceTruncated: detailsItems.length > MAX_AUDIT_EVIDENCE_ITEMS,
+          warnings: Array.isArray(audit.warnings) ? audit.warnings : []
         };
       })
   };

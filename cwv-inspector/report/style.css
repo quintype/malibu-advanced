@@ -1020,6 +1020,87 @@ body {
   font-weight: bold;
 }
 
+.runtime-evidence {
+  margin-top: 14px;
+  padding: 13px 14px;
+  border: 1px solid #bfdbfe;
+  border-radius: 8px;
+  background: #eff6ff;
+}
+
+.runtime-evidence-title {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+  color: #1e3a8a;
+  font-size: 0.8rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.runtime-evidence-title span {
+  color: #475569;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-align: right;
+}
+
+.runtime-evidence ul {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.runtime-evidence-row {
+  min-width: 0;
+  padding: 8px 10px;
+  border: 1px solid #dbeafe;
+  border-radius: 6px;
+  background: #ffffff;
+  overflow-wrap: anywhere;
+}
+
+.runtime-evidence-row code {
+  color: #0f172a;
+  font-size: 0.75rem;
+}
+
+.runtime-evidence-facts,
+.runtime-evidence-snippet,
+.runtime-evidence-note {
+  margin-top: 4px;
+  color: #475569;
+  font-size: 0.72rem;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.runtime-evidence-snippet {
+  color: #64748b;
+  font-family: var(--font-mono);
+}
+
+.runtime-evidence-note {
+  margin-top: 9px;
+  font-style: italic;
+}
+
+.runtime-evidence-empty {
+  color: #64748b;
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+
+.runtime-evidence-empty strong {
+  display: block;
+  margin-bottom: 3px;
+  color: #92400e;
+}
+
 /* Device Pills and Section Badges */
 .device-pill {
   font-size: 0.65rem;

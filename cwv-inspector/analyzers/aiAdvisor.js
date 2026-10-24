@@ -143,6 +143,27 @@ export function buildAdvisorPrompt(issue, context = {}) {
     attributionCaveat = `\nATTRIBUTION NOTE: The target shifting element was not found directly in AST or unbuilt templates due to dynamically generated bundler classes. The candidate source match (${file}) refers to a candidate parent container (<${containerTag}${containerId ? '#' + containerId : ''}>) located at line ${containerLine}${containerCol ? ':' + containerCol : ''}. The target child element's exact line is UNKNOWN and unresolvable without build source maps. Ground your advice on this uncertainty. DO NOT claim the parent container declaration line is the exact offending line.`;
   }
 
+  const resourceEvidence = Array.isArray(issue.resourceEvidence)
+    ? issue.resourceEvidence.slice(0, 6).map(item => ({
+      device: item.device || null,
+      url: item.url || null,
+      origin: item.origin || null,
+      resourceType: item.resourceType || null,
+      totalBytes: item.totalBytes ?? null,
+      transferSize: item.transferSize ?? null,
+      wastedBytes: item.wastedBytes ?? null,
+      wastedMs: item.wastedMs ?? null,
+      selector: item.selector || null,
+      nodeLabel: item.nodeLabel || null,
+      snippet: item.snippet || null,
+      source: item.source || null,
+      reason: item.reason || null,
+      phase: item.phase || null,
+      timing: item.timing ?? null,
+      percent: item.percent || null
+    }))
+    : [];
+
   const facts = {
     metric: cwvMetric,
     severity,
@@ -158,6 +179,14 @@ export function buildAdvisorPrompt(issue, context = {}) {
     confidence: issue.confidence || 'STATIC_ONLY',
     correlationState: issue.correlationState || null,
     evidence: evidenceText,
+    lighthouseResourceEvidence: resourceEvidence,
+    lighthouseEvidenceNote: issue.evidenceCount > resourceEvidence.length
+      ? `Showing ${resourceEvidence.length} of ${issue.evidenceCount} Lighthouse evidence rows. The report contains ${issue.evidenceTruncated ? 'additional truncated rows' : 'more rows'}; use only the supplied URLs and values.`
+      : null,
+    estimatedSavings: {
+      bytes: issue.overallSavingsBytes ?? null,
+      milliseconds: issue.overallSavingsMs ?? null
+    },
     geometry: issue.previousRect && issue.currentRect
       ? { before: issue.previousRect, after: issue.currentRect }
       : null,

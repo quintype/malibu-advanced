@@ -167,6 +167,73 @@ function escapeHtml(str) {
     .replace(/'/g, '&#039;');
 }
 
+function formatEvidenceBytes(value) {
+  if (value === null || value === undefined || value === '' || !Number.isFinite(Number(value))) return '';
+  const bytes = Number(value);
+  if (Math.abs(bytes) < 1024) return `${Math.round(bytes)} B`;
+  return `${(bytes / 1024).toFixed(1)} KiB`;
+}
+
+function renderLighthouseEvidenceHtml(issue) {
+  if (issue.type !== 'lighthouse') return '';
+
+  const items = Array.isArray(issue.resourceEvidence) ? issue.resourceEvidence : [];
+  if (items.length === 0) {
+    return `
+      <div class="runtime-evidence runtime-evidence-empty">
+        <strong>Request evidence unavailable.</strong>
+        Lighthouse returned no resource rows for this audit. The finding is an audit-level signal, not a source-code location.
+      </div>
+    `;
+  }
+
+  const rows = items.map(item => {
+    const target = item.url || item.origin || item.selector || item.nodeLabel || item.phase || item.reason || 'Resource detail unavailable';
+    let targetMarkup = `<code>${escapeHtml(target)}</code>`;
+    try {
+      const parsedUrl = new URL(target);
+      if (parsedUrl.protocol === 'http:' || parsedUrl.protocol === 'https:') {
+        targetMarkup = `<a href="${escapeHtml(parsedUrl.href)}" target="_blank" rel="noopener noreferrer"><code>${escapeHtml(target)}</code></a>`;
+      }
+    } catch (_) {
+      // Selectors and origin labels are evidence text, not navigable URLs.
+    }
+
+    const facts = [
+      item.device,
+      item.resourceType,
+      item.totalBytes !== null && item.totalBytes !== undefined ? `total ${formatEvidenceBytes(item.totalBytes)}` : '',
+      item.transferSize !== null && item.transferSize !== undefined ? `transfer ${formatEvidenceBytes(item.transferSize)}` : '',
+      item.wastedBytes !== null && item.wastedBytes !== undefined ? `${formatEvidenceBytes(item.wastedBytes)} unused` : '',
+      item.wastedMs !== null && item.wastedMs !== undefined ? `${Math.round(item.wastedMs)} ms potential savings` : '',
+      item.requestCount !== null && item.requestCount !== undefined ? `${item.requestCount} requests` : '',
+      item.timing !== null && item.timing !== undefined ? `${Math.round(item.timing)} ms${item.percent ? ` (${item.percent})` : ''}` : ''
+    ].filter(Boolean);
+
+    return `
+      <li class="runtime-evidence-row">
+        ${targetMarkup}
+        <div class="runtime-evidence-facts">${escapeHtml(facts.join(' · '))}</div>
+        ${item.source ? `<div class="runtime-evidence-snippet">Source map entry: ${escapeHtml(item.source)}</div>` : ''}
+        ${item.snippet ? `<div class="runtime-evidence-snippet">${escapeHtml(item.snippet)}</div>` : ''}
+      </li>
+    `;
+  }).join('');
+
+  const truncationNote = issue.evidenceTruncated
+    ? `<div class="runtime-evidence-note">Showing ${items.length} of ${escapeHtml(issue.evidenceCount)} Lighthouse rows. See the report JSON for retained metadata.</div>`
+    : '';
+
+  return `
+    <div class="runtime-evidence">
+      <div class="runtime-evidence-title">Lighthouse evidence <span>${items.length}${issue.devices?.length ? ` · ${escapeHtml(issue.devices.join(' + '))}` : ''}</span></div>
+      <ul>${rows}</ul>
+      ${truncationNote}
+      <div class="runtime-evidence-note">These rows are Lighthouse audit evidence and estimated savings. They do not identify a source-code line unless a matching source finding is listed separately.</div>
+    </div>
+  `;
+}
+
 /**
  * Safely serializes data to JSON for embedding directly inside an inline <script> tag.
  * Replaces characters that could terminate the <script> block prematurely (e.g. </script>)
@@ -713,7 +780,7 @@ export async function generateReport(compiledResult, options = {}) {
       const idxStr = (index + 1).toString().padStart(2, '0');
       const severityClass = issue.severity.toLowerCase();
       const categoryClass = issue.cwv.toLowerCase();
-      const isLighthouse = issue.file.includes('Runtime Audit (Lighthouse');
+      const isLighthouse = issue.type === 'lighthouse' || issue.file.includes('Runtime Audit (Lighthouse');
 
       let deviceVal = issue.device;
       if (!deviceVal && issue.file) {
@@ -743,7 +810,7 @@ export async function generateReport(compiledResult, options = {}) {
       let affectedSummary = '';
       let filesListHtml = '';
 
-      if (issue.occurrences && issue.occurrences.length > 1) {
+      if (issue.occurrences && issue.occurrences.length > 1 && !isLighthouse) {
         affectedSummary = `${issue.occurrences.length} files`;
         const fileRows = issue.occurrences.map(o => {
           const lineStr = o.line && o.line !== '-' ? `:${o.line}` : '';
@@ -764,7 +831,9 @@ export async function generateReport(compiledResult, options = {}) {
           </div>
         `;
       } else {
-        affectedSummary = isLighthouse ? (deviceVal ? `Runtime Audit (${deviceVal})` : 'Runtime Audit') : path.basename(issue.file);
+        affectedSummary = isLighthouse
+          ? `Lighthouse audit${issue.devices?.length ? ` (${issue.devices.join(' + ')})` : deviceVal ? ` (${deviceVal})` : ''}`
+          : path.basename(issue.file);
         const lineStr = (issue.line !== null && issue.line !== undefined && issue.line !== '-') ? `:${issue.line}` : '';
         if (!isLighthouse) {
           filesListHtml = `
@@ -964,6 +1033,7 @@ export async function generateReport(compiledResult, options = {}) {
               <div class="details-fix-text">${escapeHtml(issue.suggestion)}</div>
             </div>
             ${filesListHtml}
+            ${renderLighthouseEvidenceHtml(issue)}
             ${correlationDetailsHtml}
             ${renderAiSectionHtml(issue, index)}
           </div>
