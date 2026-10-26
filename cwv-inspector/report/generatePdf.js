@@ -255,7 +255,7 @@ export { safeJsonForScript, escapeHtml };
 /**
  * Helper to build Metrics Grid HTML.
  */
-function buildMetricGridHtml(lcp, cls, tbt, isLocal = false, branchName = '') {
+function buildMetricGridHtml(lcp, cls, tbt, isLocal = false, branchName = '', cruxScopeTag = '') {
   return `
       <div class="metrics-grid ${isLocal ? 'local-data-view' : 'api-data-view hidden-view'}">
         <!-- LCP Card -->
@@ -267,8 +267,8 @@ function buildMetricGridHtml(lcp, cls, tbt, isLocal = false, branchName = '') {
               </svg>
             </div>
             <div class="metric-title-group">
-              <span class="metric-fullname">Largest Contentful Paint (LCP)</span>
-              <span class="metric-desc-text">Measures loading performance.</span>
+              <span class="metric-fullname">Largest Contentful Paint (LCP)${!isLocal && cruxScopeTag ? ` <span class="scope-tag" style="margin-left: 6px; font-size: 0.65rem; font-weight: 700; color: #0284c7; background: #e0f2fe; padding: 2px 6px; border-radius: 4px; font-family: monospace;">${escapeHtml(cruxScopeTag)}</span>` : ''}</span>
+              <span class="metric-desc-text">${isLocal ? 'Measures loading performance.' : (cruxScopeTag ? `Real-user loading speed (${escapeHtml(cruxScopeTag)}).` : 'Measures loading performance.')}</span>
             </div>
           </div>
           <div class="metric-value ${lcp.textClass}">${lcp.valueDisplay}</div>
@@ -293,8 +293,8 @@ function buildMetricGridHtml(lcp, cls, tbt, isLocal = false, branchName = '') {
               </svg>
             </div>
             <div class="metric-title-group">
-              <span class="metric-fullname">Cumulative Layout Shift (CLS)${isLocal && branchName ? ` <span class="branch-tag" style="margin-left: 6px; font-size: 0.65rem; font-weight: 700; color: #0284c7; background: #e0f2fe; padding: 2px 6px; border-radius: 4px; font-family: monospace;">branch: ${escapeHtml(branchName)}</span>` : ''}</span>
-              <span class="metric-desc-text">Measures visual stability.</span>
+              <span class="metric-fullname">Cumulative Layout Shift (CLS)${isLocal && branchName ? ` <span class="branch-tag" style="margin-left: 6px; font-size: 0.65rem; font-weight: 700; color: #0284c7; background: #e0f2fe; padding: 2px 6px; border-radius: 4px; font-family: monospace;">branch: ${escapeHtml(branchName)}</span>` : (!isLocal && cruxScopeTag ? ` <span class="scope-tag" style="margin-left: 6px; font-size: 0.65rem; font-weight: 700; color: #0284c7; background: #e0f2fe; padding: 2px 6px; border-radius: 4px; font-family: monospace;">${escapeHtml(cruxScopeTag)}</span>` : '')}</span>
+              <span class="metric-desc-text">${isLocal ? 'Measures visual stability.' : (cruxScopeTag ? `Visual stability (${escapeHtml(cruxScopeTag)}).` : 'Measures visual stability.')}</span>
             </div>
           </div>
           <div class="metric-value ${cls.textClass}">${cls.valueDisplay}</div>
@@ -319,8 +319,8 @@ function buildMetricGridHtml(lcp, cls, tbt, isLocal = false, branchName = '') {
               </svg>
             </div>
             <div class="metric-title-group">
-              <span class="metric-fullname">Total Blocking Time (TBT)</span>
-              <span class="metric-desc-text">Measures responsiveness.</span>
+              <span class="metric-fullname">Total Blocking Time (TBT)${!isLocal && cruxScopeTag ? ` <span class="scope-tag" style="margin-left: 6px; font-size: 0.65rem; font-weight: 700; color: #0284c7; background: #e0f2fe; padding: 2px 6px; border-radius: 4px; font-family: monospace;">${escapeHtml(cruxScopeTag)}</span>` : ''}</span>
+              <span class="metric-desc-text">${isLocal ? 'Measures responsiveness.' : (cruxScopeTag ? `Responsiveness (${escapeHtml(cruxScopeTag)}).` : 'Measures responsiveness.')}</span>
             </div>
           </div>
           <div class="metric-value ${tbt.textClass}">${tbt.valueDisplay}</div>
@@ -524,6 +524,24 @@ export async function generateReport(compiledResult, options = {}) {
   const dCls = desktopCruxCls;
   const dTbt = desktopCruxTbt;
   const dInp = desktopCruxInp;
+
+  // CrUX Scope Resolution (Domain-level fallback vs Article URL-level)
+  const cruxRecordKey = options.cruxData?.record?.key || options.cruxData?.key;
+  const isCruxOrigin = Boolean(cruxRecordKey?.origin && !cruxRecordKey?.url);
+  const cruxScopeLabel = isCruxOrigin ? 'Domain' : 'Article';
+  let cruxOriginDomain = '';
+  if (cruxRecordKey?.origin) {
+    try {
+      cruxOriginDomain = new URL(cruxRecordKey.origin).hostname;
+    } catch (_) {
+      cruxOriginDomain = cruxRecordKey.origin;
+    }
+  }
+  const cruxScopeTag = isCruxOrigin ? (cruxOriginDomain ? `Domain: ${cruxOriginDomain}` : 'Domain') : 'Article URL';
+
+  const historyRecordKey = options.cruxHistoryData?.record?.key || options.cruxHistoryData?.key;
+  const isHistoryUrl = Boolean(historyRecordKey?.url);
+  const historyScopeLabel = isHistoryUrl ? 'Article Level (URL)' : 'Domain Level (Origin)';
 
   // Assessment Banner
   let assessmentBannerHtml = '';
@@ -1074,14 +1092,24 @@ export async function generateReport(compiledResult, options = {}) {
 
     cruxHistogramsHtml += `
       <div class="crux-raw-section" style="margin-top: 24px;">
-        <div class="crux-raw-header">
-          <h3>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
-            </svg>
-            CrUX Historical Trend (Past 6 Months)
-          </h3>
-          <p>LCP, INP, and CLS scores over the previous ${historyPoints.length} collection periods.</p>
+        <div class="crux-raw-header" style="margin-bottom: 14px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+            <h3 style="margin: 0; display: flex; align-items: center; gap: 8px;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+              </svg>
+              CrUX Historical Trend (Past 6 Months)
+            </h3>
+            <span style="font-size: 0.72rem; font-weight: 700; color: #047857; background: #ecfdf5; border: 1px solid #a7f3d0; padding: 2px 8px; border-radius: 4px; font-family: monospace;">Scope: ${escapeHtml(historyScopeLabel)}</span>
+          </div>
+          <p style="margin-top: 6px; font-size: 0.82rem; color: #64748b;">
+            Real-world Chrome performance data ${isHistoryUrl ? 'specifically for this article URL' : 'across the entire domain'} over the previous ${historyPoints.length} collection periods.
+          </p>
+          ${isCruxOrigin && isHistoryUrl ? `
+          <div style="margin-top: 10px; padding: 8px 12px; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 6px; font-size: 0.78rem; color: #1e40af; display: flex; align-items: center; gap: 8px;">
+            <span>ℹ️</span>
+            <span><strong>Scope Distinction:</strong> The overview card above displays <strong>Domain-level aggregate</strong> data (${escapeHtml(cruxOriginDomain || 'site-wide')}), while these trend charts display <strong>Article-level</strong> history specific to this article URL.</span>
+          </div>` : ''}
         </div>
         <div class="crux-subcharts-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 16px; margin-top: 16px;">
           <!-- Card 1: LCP -->
@@ -1386,6 +1414,8 @@ export async function generateReport(compiledResult, options = {}) {
 
   templateHtml = templateHtml
     .replace(/{{CRUX_HISTOGRAMS_SECTION}}/g, cruxHistogramsHtml)
+    .replace(/{{CRUX_SCOPE_LABEL}}/g, cruxScopeLabel)
+    .replace(/{{CRUX_SCOPE_TAG}}/g, cruxScopeTag)
     .replace(/{{LCP_GOOD_THRESHOLD}}/g, (config.thresholds.lcp / 1000).toString())
     .replace(/{{CLS_GOOD_THRESHOLD}}/g, config.thresholds.cls.toString())
     .replace(/{{TBT_GOOD_THRESHOLD}}/g, config.thresholds.tbt.toString())
@@ -1527,8 +1557,8 @@ export async function generateReport(compiledResult, options = {}) {
 
     // Sections
     .replace(/<!-- ASSESSMENT_BANNER_SECTION -->/g, assessmentBannerHtml)
-    .replace(/<!-- MOBILE_METRICS_GRID -->/g, buildMetricGridHtml(mLcp, mCls, mTbt, false) + buildMetricGridHtml(localMLcp, localMCls, localMTbt, true, gitBranch))
-    .replace(/<!-- DESKTOP_METRICS_GRID -->/g, buildMetricGridHtml(dLcp, dCls, dTbt, false) + buildMetricGridHtml(localDLcp, localDCls, localDTbt, true, gitBranch))
+    .replace(/<!-- MOBILE_METRICS_GRID -->/g, buildMetricGridHtml(mLcp, mCls, mTbt, false, '', cruxScopeTag) + buildMetricGridHtml(localMLcp, localMCls, localMTbt, true, gitBranch))
+    .replace(/<!-- DESKTOP_METRICS_GRID -->/g, buildMetricGridHtml(dLcp, dCls, dTbt, false, '', cruxScopeTag) + buildMetricGridHtml(localDLcp, localDCls, localDTbt, true, gitBranch))
     .replace(/{{TOP_RECOMMENDATIONS}}/g, topRecsHtml)
     .replace(/{{ISSUES_ACCORDIONS}}/g, accordionsHtml)
     .replace(/{{SEARCH_ICON}}/g, getIconSvg('search', 16, 2));
