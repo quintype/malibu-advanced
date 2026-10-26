@@ -132,8 +132,8 @@ export function compileRecommendations(staticIssues, lighthouseIssues = null, as
       let suggestion = `Reserve layout space for the <${item.source.tagName}> element by providing explicit width and height attributes or style definitions.`;
       
       if (staticDetails) {
-        message = `Layout Shift matched to source: <${item.source.tagName}> in ${shortFile}`;
-        suggestion = `${staticDetails.suggestion} This resolves the runtime shift participant identified by Lighthouse.`;
+        message = `Layout Shift selector matched candidate: <${item.source.tagName}> in ${shortFile}`;
+        suggestion = `${staticDetails.suggestion} Confirm this candidate is included in the audited route bundle before changing it.`;
       } else if (isImg) {
         suggestion = `Verify if the image is missing width/height attributes or CSS aspect-ratio properties.`;
       }
@@ -827,6 +827,13 @@ export function compileRecommendations(staticIssues, lighthouseIssues = null, as
         severity: issue.severity,
         impact: issue.impact,
         type: issue.type || 'code',
+        sourceAttribution: issue.sourceAttribution || (
+          issue.type === 'correlated' || issue.type === 'observer-fallback-correlated'
+            ? 'selector-candidate'
+            : issue.type === 'lighthouse' || issue.type === 'lighthouse-unresolved'
+              ? 'runtime-only'
+              : 'static-candidate'
+        ),
         file: issue.file,
         line: issue.line,
         column: issue.column || null,

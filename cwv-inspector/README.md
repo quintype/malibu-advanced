@@ -4,17 +4,17 @@ This repository contains the **Core Web Vitals Diagnostic Lab** (also referred t
 
 Standard Lighthouse reports indicate that a page is slow (e.g. flagging layout shifts on a selector like `div.header > img.logo`), but they cannot tell the developer *where* in their project source files that element is declared.
 
-This tool solves that problem by running a dual-mode scan:
+This tool investigates that problem by running a dual-mode scan:
 1.  **Synthetic Runtime Scan**: Evaluates page load behavior, metrics, and DOM shifting elements of a live/local URL.
 2.  **Static Source Scan**: Recursively processes the project directory, parsing files into Abstract Syntax Trees (ASTs) to locate layout triggers.
 
-By feeding both pipelines into a **Correlation Engine**, the tool maps performance bottlenecks directly to the physical source code files (components, styles) and line numbers.
+The **Correlation Engine** can identify source candidates from matching DOM selectors and static patterns. A candidate is not proof that the audited route loaded that file; exact bundle-to-source attribution requires source-map evidence.
 
 ---
 
 ## 1. Overview
 
-This tool combines Lighthouse results from the target URL with a static analysis of the local source-code directory to identify the likely source of performance problems. It helps developers move from *"this page has a poor Core Web Vital"* to *"this specific source file/component is likely contributing to the problem, and here is what can be improved."*
+This tool combines Lighthouse results from the target URL with static analysis of the local source directory to identify likely performance causes. It keeps runtime evidence separate from source candidates and does not claim a source file produced the audited page unless source-map evidence verifies that link.
 
 ---
 
@@ -88,7 +88,7 @@ When a performance audit is triggered from the Dashboard or CLI:
 5.  **Browser Boot**: Headless Chrome is launched via `chrome-launcher` on a debugging port.
 6.  **Bot Scroll Execution**: Puppeteer connects to the debug port, opens the original URL, and scrolls to trigger lazy-loaded assets and capture shift attribution. The diagnostic page disables its browser cache; this does not purge CDN or origin caches.
 7.  **Lighthouse Run**: Lighthouse runs on the port for both Mobile and Desktop profiles, extracting lab metrics and `layout-shift-elements`. A separate observer captures shift participants during scroll for attribution fallback; its shifts do not replace Lighthouse's CLS metric.
-8.  **Correlation Engine Run**: `correlateCls()` in `correlation.js` matches layout-shifting selectors to static AST element definitions.
+8.  **Correlation Engine Run**: `correlateCls()` in `correlation.js` compares layout-shifting selectors with static AST element definitions. A match is labeled a selector candidate because it does not prove that the component was included in the specific route bundle.
 9.  **Consolidation**: `compileRecommendations()` deduplicates static issues, merging static image properties (e.g. missing size dimensions) with the matched Lighthouse shift element.
 10. **Report Builder**: `generateReport()` replaces placeholders in `template.html` with final scores, metrics, and correlation data, and prints the layout to PDF using Puppeteer.
 
@@ -129,6 +129,13 @@ Use the evidence to target investigation:
 2. Map that runtime URL to a local bundle, stylesheet, image, CDN rule, or CMS-managed asset using the application's build output/source maps and asset manifest. The URL alone does **not** prove which repository file produced it.
 3. Confirm route usage and runtime behavior before removing or splitting JavaScript/CSS, changing responsive images, or adding preload/preconnect hints. Lighthouse savings are estimates from a synthetic run, not guaranteed field improvements.
 4. If a finding has no request rows, treat it as an audit-level signal. Re-run against the exact route with a saved Lighthouse JSON/report and inspect the corresponding audit; do not guess an asset from the title alone.
+
+### Source attribution guarantees
+* Static analyzer paths are labeled **Static Candidate File**. These findings come from the scanned checkout and are not proof that the Lighthouse URL loaded or used that file. Copilot auto-enrichment skips these candidates to avoid spending tokens on speculative file-specific advice.
+* A selector match is labeled **Selector-Matched Source Candidate**. It ties runtime DOM evidence to a local element with matching attributes, but does not prove that the corresponding module was in the loaded route bundle.
+* Lighthouse opportunities remain **runtime-only** and retain the request URLs, selectors, and byte/time estimates Lighthouse actually returned. The URL or selector does not independently identify a repository file.
+* When the site exposes `round-table.txt`, the report compares its deployed commit with the scanned checkout and calls out a mismatch. A matching commit confirms the source revision only; it does not establish which modules the route loaded.
+* File-level attribution is considered verified only when an accessible build source map maps a Lighthouse-loaded asset to the local file. This inspector does not currently resolve source maps automatically, so unresolved cases stay candidates rather than confirmed file issues.
 
 These rows make lab findings actionable immediately and can be compared across UAT/prod runs without waiting for CrUX aggregation. They do not replace CrUX: field data reflects real users over a rolling 28-day collection window, while Lighthouse is a repeatable lab snapshot under the report's stated throttling/emulation. The detailed HTML report and companion JSON carry the per-request rows; the redesigned executive PDF can summarize findings without listing every request.
 

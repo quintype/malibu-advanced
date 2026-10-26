@@ -546,7 +546,9 @@ const server = http.createServer(async (req, res) => {
           timeoutMs: 60000,
           context: {
             ...targetContext,
-            sourceExcerpt: readIssueSourceExcerpt(issueToAnalyze, targetContext.projectPath)
+            sourceExcerpt: issueToAnalyze.sourceAttribution === 'source-map-verified'
+              ? readIssueSourceExcerpt(issueToAnalyze, targetContext.projectPath)
+              : null
           }
         });
         const usage = usageDelta(usageBefore, copilot.getUsageSummary());
@@ -915,6 +917,9 @@ function validateIssueInput(issue) {
     cwv: issue.cwv ? String(issue.cwv).trim().slice(0, 20) : 'General',
     severity: issue.severity ? String(issue.severity).trim().slice(0, 20) : 'medium',
     type: issue.type ? String(issue.type).trim().slice(0, 50) : 'code',
+    sourceAttribution: ['static-candidate', 'selector-candidate', 'selector-parent-candidate', 'runtime-only'].includes(issue.sourceAttribution)
+      ? issue.sourceAttribution
+      : 'unverified',
     file: issue.file ? String(issue.file).trim().slice(0, 500) : 'Unknown file',
     line: issue.line !== undefined && issue.line !== null ? issue.line : '-',
     impact: issue.impact ? String(issue.impact).slice(0, 2000) : '',
