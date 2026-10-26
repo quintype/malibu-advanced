@@ -215,7 +215,6 @@ Options:
   // Step 4: Run optional Lighthouse
   let lighthouseData = null;
   let remoteDeployment = null;
-  let sourceRevisionComparison = { status: 'not-requested', localCommit: null, remoteCommit: null };
   if (url) {
     try {
       const parsedUrl = new URL(url);
@@ -244,25 +243,6 @@ Options:
           console.log(`🌐 Live Server Deployment Verified: Commit ${commitHashMatch[1]} (Build #${remoteDeployment.deploymentId})`);
           if (remoteDeployment.message) console.log(`   Commit Message: "${remoteDeployment.message}"`);
         }
-      }
-    } catch (_) {}
-
-    try {
-      const localCommit = execSync('git rev-parse HEAD', {
-        cwd: targetPath,
-        stdio: ['ignore', 'pipe', 'ignore'],
-        encoding: 'utf8'
-      }).trim();
-      const remoteCommit = remoteDeployment?.commit || null;
-      sourceRevisionComparison = {
-        status: remoteCommit
-          ? (localCommit.startsWith(remoteCommit) || remoteCommit.startsWith(localCommit) ? 'match' : 'mismatch')
-          : 'remote-unavailable',
-        localCommit,
-        remoteCommit
-      };
-      if (sourceRevisionComparison.status === 'mismatch') {
-        console.warn(`⚠️ Scanned checkout ${localCommit.slice(0, 7)} differs from live deployment ${remoteCommit.slice(0, 7)}; source-file attribution is not revision-verified.`);
       }
     } catch (_) {}
 
@@ -372,13 +352,7 @@ Options:
       astElements.push(...ra.ast.jsxTags);
     }
   });
-  // Static findings come from a repository-wide scan. They are source candidates,
-  // not proof that the audited URL loaded or used that file.
-  const attributedStaticIssues = staticIssues.map(issue => ({
-    ...issue,
-    sourceAttribution: 'static-candidate'
-  }));
-  const compiledResult = compileRecommendations(attributedStaticIssues, lighthouseData, astElements, files);
+  const compiledResult = compileRecommendations(staticIssues, lighthouseData, astElements, files);
 
   // Step 6: Automatically enrich priority findings with GitHub Copilot AI Advisor
   let enrichedResult = compiledResult;
@@ -458,7 +432,6 @@ Options:
     clientName,
     gitBranch,
     remoteDeployment,
-    sourceRevisionComparison,
     engineer: explicitEngineer
   });
 

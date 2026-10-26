@@ -580,13 +580,9 @@ export async function generateReport(compiledResult, options = {}) {
     topRecsHtml = topIssues.map((issue, idx) => {
       let subtitle = 'Static scan opportunity';
       if (issue.occurrences && issue.occurrences.length > 1) {
-        subtitle = `${issue.occurrences.length} static candidates`;
+        subtitle = `${issue.occurrences.length} files affected`;
       } else if (issue.file !== 'Runtime Audit (Lighthouse Mobile)' && issue.file !== 'Runtime Audit (Lighthouse Desktop)') {
-        subtitle = issue.sourceAttribution === 'static-candidate'
-          ? `Static candidate · ${path.basename(issue.file)}`
-          : issue.sourceAttribution === 'selector-candidate'
-            ? `Selector candidate · ${path.basename(issue.file)}`
-            : `${path.basename(issue.file)}`;
+        subtitle = `${path.basename(issue.file)}`;
       } else {
         subtitle = issue.file.replace('Runtime Audit (', '').replace(')', '');
       }
@@ -725,16 +721,6 @@ export async function generateReport(compiledResult, options = {}) {
       `;
     }
 
-    if (issue.aiStatus === 'source_unverified') {
-      return `
-        <div class="ai-advisor-container ai-limit-container" id="ai-advisor-container-${index}">
-          <div class="ai-limit-bar">
-            <span>Copilot skipped this static candidate because the audited route has not been mapped to this source file. The deterministic finding is available above.</span>
-          </div>
-        </div>
-      `;
-    }
-
     if (issue.aiStatus === 'error') {
       const errorTag = issue.aiErrorDetails?.type ? `[${escapeHtml(issue.aiErrorDetails.type)}] ` : '';
       return `
@@ -825,9 +811,7 @@ export async function generateReport(compiledResult, options = {}) {
       let filesListHtml = '';
 
       if (issue.occurrences && issue.occurrences.length > 1 && !isLighthouse) {
-        affectedSummary = issue.sourceAttribution === 'static-candidate'
-          ? `${issue.occurrences.length} static candidates`
-          : `${issue.occurrences.length} source candidates`;
+        affectedSummary = `${issue.occurrences.length} files`;
         const fileRows = issue.occurrences.map(o => {
           const lineStr = o.line && o.line !== '-' ? `:${o.line}` : '';
           return `
@@ -840,7 +824,7 @@ export async function generateReport(compiledResult, options = {}) {
 
         filesListHtml = `
           <div class="details-files">
-            <div class="details-files-title">${issue.sourceAttribution === 'static-candidate' ? 'Static Candidate Files (route usage not verified):' : 'Matched Source Candidates (bundle inclusion not verified):'}</div>
+            <div class="details-files-title">Affected Files:</div>
             <div class="files-list">
               ${fileRows}
             </div>
@@ -854,7 +838,7 @@ export async function generateReport(compiledResult, options = {}) {
         if (!isLighthouse) {
           filesListHtml = `
             <div class="details-files">
-            <div class="details-files-title">${issue.sourceAttribution === 'static-candidate' ? 'Static Candidate File (route usage not verified):' : issue.sourceAttribution === 'selector-candidate' ? 'Selector-Matched Source Candidate (bundle inclusion not verified):' : 'Source File:'}</div>
+              <div class="details-files-title">Affected File:</div>
               <div class="files-list">
                 <div class="file-row">
                   <span class="file-path">${escapeHtml(issue.file)}</span>
@@ -879,10 +863,10 @@ export async function generateReport(compiledResult, options = {}) {
 
       if (issue.cwv === 'inp' && issue.confidence) {
         const confidenceClass = String(issue.confidence).toLowerCase();
-        correlationBadge = `<span class="card-badge corr-badge ${confidenceClass}">${escapeHtml(issue.confidence)} Runtime Match</span>`;
+        correlationBadge = `<span class="card-badge corr-badge ${confidenceClass}">${escapeHtml(issue.confidence)} Correlation</span>`;
         correlationDetailsHtml = `
           <div class="correlation-info" style="margin-top: 12px; border-top: 1px dashed var(--border-color); padding-top: 12px;">
-            <div style="font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 6px;">INP Runtime-to-Source Candidate Evidence</div>
+            <div style="font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 6px;">INP Correlation Evidence</div>
             ${issue.selector ? `
             <div style="font-size: 0.82rem; margin-bottom: 4px;">
               <strong>DOM Selector:</strong> <code style="background-color: var(--bg-body); padding: 2px 6px; border-radius: 4px; color: #f43f5e;">${escapeHtml(issue.selector)}</code>
@@ -902,10 +886,10 @@ export async function generateReport(compiledResult, options = {}) {
         `;
       } else if (issue.type === 'correlated') {
         const confidenceClass = String(issue.confidence).toLowerCase();
-        correlationBadge = `<span class="card-badge corr-badge ${confidenceClass}">${escapeHtml(issue.confidence)} Selector Match</span>`;
+        correlationBadge = `<span class="card-badge corr-badge ${confidenceClass}">${escapeHtml(issue.confidence)} Correlation</span>`;
         correlationDetailsHtml = `
           <div class="correlation-info" style="margin-top: 12px; border-top: 1px dashed var(--border-color); padding-top: 12px;">
-            <div style="font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 6px;">CLS Runtime-to-Source Candidate Evidence</div>
+            <div style="font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 6px;">CLS Correlation Evidence</div>
             <div style="font-size: 0.82rem; margin-bottom: 4px;">
               <strong>DOM Selector:</strong> <code style="background-color: var(--bg-body); padding: 2px 6px; border-radius: 4px; color: #f43f5e;">${escapeHtml(issue.selector)}</code>
             </div>
@@ -921,7 +905,7 @@ export async function generateReport(compiledResult, options = {}) {
             </div>` : ''}
             ${issue.staticRule ? `
             <div style="font-size: 0.82rem; margin-top: 6px; color: #10b981; font-weight: 600;">
-              Static candidate rule: "${escapeHtml(issue.staticRule)}" (bundle inclusion not verified)
+              ✓ Combined static rule: "${escapeHtml(issue.staticRule)}"
             </div>` : ''}
           </div>
         `;
@@ -1412,17 +1396,6 @@ export async function generateReport(compiledResult, options = {}) {
     .replace(/{{AUDIT_DATE}}/g, formattedDate)
     .replace(/{{AUDIT_URL}}/g, options.url || 'No URL specified (Static scan only)')
     .replace(/{{REMOTE_DEPLOYMENT_META}}/g, options.remoteDeployment && options.remoteDeployment.deploymentId ? ` <span class="meta-sep">|</span> <strong>Live Deployment:</strong> <span class="meta-val" style="background: #f0fdf4; color: #166534; padding: 2px 8px; border-radius: 4px; font-weight: 700; font-family: monospace;">Build #${escapeHtml(options.remoteDeployment.deploymentId)}${options.remoteDeployment.commit ? ` (${escapeHtml(options.remoteDeployment.commit.substring(0, 7))})` : ''}</span>` : '')
-    .replace(/{{SOURCE_REVISION_META}}/g, (() => {
-      const comparison = options.sourceRevisionComparison;
-      if (comparison?.status === 'not-requested') return '';
-      if (!comparison || comparison.status === 'unavailable' || comparison.status === 'remote-unavailable') {
-        return ' <span class="meta-sep">|</span> <strong>Source Revision:</strong> <span class="meta-val">Live revision unavailable; source mapping unverified</span>';
-      }
-      if (comparison.status === 'match') {
-        return ' <span class="meta-sep">|</span> <strong>Source Revision:</strong> <span class="meta-val" style="background:#eff6ff;color:#1d4ed8;padding:2px 8px;border-radius:4px;">Checkout matches deployment; file usage still requires source-map evidence</span>';
-      }
-      return ` <span class="meta-sep">|</span> <strong>Source Revision:</strong> <span class="meta-val" style="background:#fef2f2;color:#b91c1c;padding:2px 8px;border-radius:4px;">Checkout ${escapeHtml((comparison.localCommit || '').slice(0, 7))} differs from deployment ${escapeHtml((comparison.remoteCommit || '').slice(0, 7))}; file mapping is unverified</span>`;
-    })())
     .replace(/{{ENGINEER_NAME}}/g, escapeHtml(options.engineer))
     .replace(/{{SUMMARY_HIGH}}/g, compiledResult.summary.high)
     .replace(/{{SUMMARY_MEDIUM}}/g, compiledResult.summary.medium)
