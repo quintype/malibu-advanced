@@ -14,7 +14,7 @@ By feeding both pipelines into a **Correlation Engine**, the tool maps performan
 
 ## 1. Overview
 
-This tool combines Lighthouse results from the target URL with a static analysis of the local source-code directory to identify the likely source of performance problems. It helps developers move from *"this page has a poor Core Web Vital"* to *"this specific source file/component is likely contributing to the problem, and here is what can be improved."*
+When a target URL is provided, Lighthouse findings drive the reported recommendations. Runtime CLS/INP evidence is correlated with the local source index, and static repository findings are included only when they support a runtime-correlated issue. Unrelated static patterns are omitted from URL-backed reports. Without a URL, the tool continues to report repository-wide static findings.
 
 ---
 
@@ -84,7 +84,7 @@ When a performance audit is triggered from the Dashboard or CLI:
 1.  **Input Verification**: The coordinator resolves and verifies the project path and checks if the URL format is valid.
 2.  **File Scan**: `scanFiles.js` gathers workspace files matching extensions and reads their content.
 3.  **AST Generation**: `parseReactCode()` in `parseReact.js` parses JS/TS files into AST structures using `@babel/parser`, indexing all JSX elements (`<img>`, `<a>`, `<link>`) with line numbers and file names.
-4.  **Static Auditing**: Static analyzers (CSS, fonts, JS, images, dependencies) run against the files/ASTs to produce a list of static code issues.
+4.  **Static Auditing**: Static analyzers (CSS, fonts, JS, images, dependencies) inspect files/ASTs. In URL-backed runs, these findings are supporting evidence only and are not reported unless connected to runtime findings.
 5.  **Browser Boot**: Headless Chrome is launched via `chrome-launcher` on a debugging port.
 6.  **Bot Scroll Execution**: Puppeteer connects to the debug port, opens the original URL, and scrolls to trigger lazy-loaded assets and capture shift attribution. The diagnostic page disables its browser cache; this does not purge CDN or origin caches.
 7.  **Lighthouse Run**: Lighthouse runs on the port for both Mobile and Desktop profiles, extracting lab metrics and `layout-shift-elements`. A separate observer captures shift participants during scroll for attribution fallback; its shifts do not replace Lighthouse's CLS metric.
@@ -352,4 +352,4 @@ Copilot enrichment sends one concise prompt per selected finding and defaults to
 
 ## 20. Summary
 
-This Core Web Vitals Diagnostic tool goes beyond standard Lighthouse metrics. By combining **synthetic runtime browser audits** with **static code AST scans**, it maps performance issues directly to the local source files and component lines causing them. This allows developers to quickly locate and fix bottlenecks, keeping performance optimizations aligned with standard development workflows.
+This Core Web Vitals Diagnostic tool combines **synthetic runtime browser audits** with **static source lookup**. For URL-backed runs, Lighthouse findings are the starting point; local source details are attached where selectors and available runtime evidence support a match. A source match is heuristic and may remain unresolved when markup is dynamic, selectors are generated, or several components match. Without a URL, the tool can still perform a repository-wide static audit.

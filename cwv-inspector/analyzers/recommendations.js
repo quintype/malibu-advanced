@@ -50,6 +50,13 @@ function recommendationForOpportunity(opp) {
  * @returns {object} Categorized, prioritized, and scored recommendations.
  */
 export function compileRecommendations(staticIssues, lighthouseIssues = null, astElements = [], allFiles = []) {
+  // A Lighthouse-backed report should be scoped to evidence observed on the
+  // requested page. Static scans still provide source details for correlated
+  // CLS/INP findings, but unrelated repository-wide patterns are not page
+  // findings and should not be presented alongside that URL's results.
+  const hasRuntimeAudit = Boolean(
+    lighthouseIssues && (lighthouseIssues.mobile || lighthouseIssues.desktop)
+  );
   // Extract runtime CLS elements
   const lhClsElements = [];
   if (lighthouseIssues) {
@@ -707,8 +714,10 @@ export function compileRecommendations(staticIssues, lighthouseIssues = null, as
     }
   });
 
-  // Filter staticIssues to keep non-correlated static-only issues as LOW severity
+  // Keep static-only findings for repository audits; URL-backed runs surface
+  // only runtime findings and static evidence attached to a correlation.
   const remainingStaticIssues = cleanStaticIssues.filter((issue, idx) => {
+    if (hasRuntimeAudit) return false;
     if (issue.cwv === 'inp') {
       return !matchedInpStaticIndices.has(idx);
     }
