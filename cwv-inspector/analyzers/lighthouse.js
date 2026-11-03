@@ -439,29 +439,44 @@ async function throttledDiagnosticPass(url, port, device = 'mobile') {
  * @param {string} url The target page URL.
  * @returns {Promise<object|null>} Lighthouse audit scores for both modes.
  */
+/**
+ * Launches a fresh headless Chrome instance with cache-disabling flags.
+ */
+async function launchChrome() {
+  return chromeLauncher.launch({
+    chromeFlags: [
+      '--headless=new',
+      '--disable-gpu',
+      '--no-sandbox',
+      '--disable-cache',
+      '--disk-cache-size=0',
+      '--media-cache-size=0',
+      '--disable-application-cache',
+      '--disable-offline-load-stale-cache',
+      '--aggressive-cache-discard'
+    ]
+  });
+}
+
 export async function runLighthouseAudit(url) {
   if (!url) return null;
 
   let chrome = null;
   try {
-    console.log(`\n🚀 Launching headless Chrome for dual Lighthouse audit on: ${url}...`);
+    // ── Mobile pre-scroll pass (separate Chrome instance to avoid warming the
+    //    TCP/DNS/V8 caches that Lighthouse will later measure cold).
+    console.log(`\n🤖 Launching separate Chrome for mobile pre-scroll pass on: ${url}...`);
+    const preScrollChromeMobile = await launchChrome();
+    let mobileCustomShifts = [];
+    try {
+      mobileCustomShifts = await preScrollPage(url, preScrollChromeMobile.port, 'mobile');
+    } finally {
+      await preScrollChromeMobile.kill();
+    }
 
-    chrome = await chromeLauncher.launch({
-      chromeFlags: [
-        '--headless=new',
-        '--disable-gpu',
-        '--no-sandbox',
-        '--disable-cache',
-        '--disk-cache-size=0',
-        '--media-cache-size=0',
-        '--disable-application-cache',
-        '--disable-offline-load-stale-cache',
-        '--aggressive-cache-discard'
-      ]
-    });
-
-    // Run bot scrolling to trigger lazy loaders and initialize assets (Mobile pass)
-    const mobileCustomShifts = await preScrollPage(url, chrome.port, 'mobile');
+    // ── Fresh Chrome for the actual Lighthouse audits
+    console.log(`\n🚀 Launching fresh headless Chrome for dual Lighthouse audit on: ${url}...`);
+    chrome = await launchChrome();
 
     // Official Lighthouse & PageSpeed Insights Reference Configuration
     const mobileOptions = {
@@ -525,8 +540,16 @@ export async function runLighthouseAudit(url) {
       finalMobileShifts = throttledShifts;
     }
 
-    // Run bot scrolling to trigger lazy loaders and initialize assets (Desktop pass)
-    const desktopCustomShifts = await preScrollPage(url, chrome.port, 'desktop');
+    // ── Desktop pre-scroll pass (again on a separate Chrome to keep Lighthouse's
+    //    measurement environment cold and unaffected by the prior scroll session).
+    console.log(`\n🤖 Launching separate Chrome for desktop pre-scroll pass on: ${url}...`);
+    const preScrollChromeDesktop = await launchChrome();
+    let desktopCustomShifts = [];
+    try {
+      desktopCustomShifts = await preScrollPage(url, preScrollChromeDesktop.port, 'desktop');
+    } finally {
+      await preScrollChromeDesktop.kill();
+    }
 
     console.log(`💻 Running Lighthouse Desktop Audit (1350x940, 1x DPR, Dense 4G, 1x CPU)...`);
     const desktopResult = await lighthouse(url, desktopOptions, desktopConfig);
