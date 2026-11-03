@@ -375,9 +375,16 @@ function checkLiveDeployment() {
       }
 
       badge.style.display = 'block';
+      // Only show the sidebar branch widget when a branch could actually be detected.
+      // When round-table.txt exists but carries no recognisable branch info, hide the
+      // widget so we never display a misleading green dot + "LIVE" / "Unknown Branch".
       if (sidebarWidget) {
-        sidebarWidget.style.display = 'flex';
-        sidebarBranch.textContent = data.detectedBranch ? data.detectedBranch.toUpperCase() : 'LIVE';
+        if (data.detectedBranch) {
+          sidebarWidget.style.display = 'flex';
+          sidebarBranch.textContent = data.detectedBranch.toUpperCase();
+        } else {
+          sidebarWidget.style.display = 'none';
+        }
       }
 
       const dot = document.getElementById('depStatusDot');
@@ -386,9 +393,13 @@ function checkLiveDeployment() {
       const warn = document.getElementById('depWarningMsg');
 
       const shortCommit = data.commit ? data.commit.substring(0, 7) : 'N/A';
-      const branchLabel = data.detectedBranch || 'Unknown Branch';
 
-      title.innerHTML = `<strong>${data.host}</strong> &nbsp;·&nbsp; Deployed Branch: <span style="color: #60a5fa; font-weight: 700;">${branchLabel}</span>`;
+      // Only append "Deployed Branch" label when a branch was actually resolved.
+      // Omit it entirely when the commit hash could not be mapped to a branch, to
+      // avoid showing the confusing "Deployed Branch: Unknown Branch" text.
+      title.innerHTML = data.detectedBranch
+        ? `<strong>${data.host}</strong> &nbsp;·&nbsp; Deployed Branch: <span style="color: #60a5fa; font-weight: 700;">${data.detectedBranch}</span>`
+        : `<strong>${data.host}</strong>`;
       
       let tagsHtml = '';
       if (data.commit) {
