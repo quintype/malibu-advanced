@@ -1,0 +1,23 @@
+{
+  "name": "cwv-inspector",
+  "version": "1.0.0",
+  "description": "Inspects projects for Core Web Vitals optimizations and suggestions.",
+  "main": "audit.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "audit": "node audit.js",
+    "test": "node tests/aiAdvisor.test.js",
+    "test:ai": "node tests/aiAdvisor.test.js",
+    "test:copilot": "node tests/test-copilot-connection.js",
+    "test:correlation": "node tests/correlation.test.js"
+  },
+  "dependencies": {
+    "@babel/parser": "^7.23.0",
+    "@babel/traverse": "^7.23.0",
+    "@github/copilot-sdk": "^0.1.22",
+    "chrome-launcher": "^1.1.1",
+    "lighthouse": "^11.3.0",
+    "puppeteer": "^22.0.0"
+  }
+}
