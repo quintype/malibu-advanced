@@ -1,5 +1,6 @@
 import path from 'path';
 import { getLineAndColumn } from './correlation.js';
+import { extractCodeContext } from '../utils/codeContext.js';
 
 /**
  * Analyzes code elements affecting Largest Contentful Paint (LCP).
@@ -37,15 +38,25 @@ export function analyzeLcp(files = [], reactAsts = []) {
           tag.attributes.some(a => (a.name === "id" || a.name === "className" || a.name === "styleName") && /hero/i.test(a.value));
 
         if (isLazy && isHeroContext && !isIconOrTiny) {
+          const lineNum = tag.loc?.start?.line || 1;
+          const tagAttrs = tag.attributes.map(a => ` ${a.name}="${a.value || ''}"`).join('');
+
           recommendations.push({
             type: 'code',
             file: file.relativePath,
-            line: tag.loc?.start?.line || 1,
+            line: lineNum,
             cwv: 'lcp',
             severity: 'high',
             message: `Possible LCP image ("${srcAttr?.value || 'unknown'}") is lazy loaded.`,
             impact: 'Lazy-loading above-the-fold or hero images delays LCP rendering by waiting for JS execution.',
-            suggestion: 'Remove loading="lazy" and add fetchpriority="high" or priority attribute to this image.'
+            suggestion: 'Remove loading="lazy" and add fetchpriority="high" or priority attribute to this image.',
+            whyExplanation: `This <${tag.tagName}> image at line ${lineNum} is located in a hero/lead story context but specifies loading="lazy". The browser's preload scanner defers downloading it until JavaScript execution and layout computation finish, substantially delaying the Largest Contentful Paint.`,
+            codeContext: extractCodeContext(file.content, lineNum),
+            fixCode: {
+              before: `<${tag.tagName}${tagAttrs}>`,
+              after: `<${tag.tagName}${tagAttrs.replace(/loading=["']lazy["']/, 'fetchpriority="high"')}>`,
+              description: 'Remove loading="lazy" and add fetchpriority="high" so the image is prioritized immediately by the browser.'
+            }
           });
         }
       }
@@ -66,15 +77,24 @@ export function analyzeLcp(files = [], reactAsts = []) {
       if (contentLower.includes('<img') && !contentLower.includes('rel="preload"') && !contentLower.includes('rel="dns-prefetch"')) {
         const imgIndex = contentLower.indexOf('<img');
         const { line: imgLine } = getLineAndColumn(content, imgIndex >= 0 ? imgIndex : 0);
+        const lineNum = imgLine || 1;
+
         recommendations.push({
           type: 'code',
           file: f.relativePath,
-          line: imgLine || null,
+          line: lineNum,
           cwv: 'lcp',
           severity: 'medium',
           message: 'Images detected but no resource hints (preload / preconnect / dns-prefetch) found.',
           impact: 'Critical assets like fonts or hero images are discovered late by the browser.',
-          suggestion: 'Add <link rel="preload" as="image" href="..."> or <link rel="preconnect" href="..."> in the head (limit preconnect to at most 2–4 critical origins).'
+          suggestion: 'Add <link rel="preload" as="image" href="..."> or <link rel="preconnect" href="..."> in the head (limit preconnect to at most 2–4 critical origins).',
+          whyExplanation: `HTML contains <img> tags, but <head> lacks resource preloads or preconnect hints. The browser cannot discover and request the hero asset until it traverses and parses this portion of the DOM tree.`,
+          codeContext: extractCodeContext(f.content, lineNum),
+          fixCode: {
+            before: `<head>\n  <!-- No resource preloads -->\n</head>`,
+            after: `<head>\n  <link rel="preload" as="image" href="/path/to/hero.webp" fetchpriority="high" />\n  <link rel="preconnect" href="https://image-cdn.com">\n</head>`,
+            description: 'Add a preload link in <head> for your primary hero image so discovery begins concurrently with HTML/CSS parsing.'
+          }
         });
       }
     }
@@ -101,6 +121,7 @@ export function analyzeLcp(files = [], reactAsts = []) {
     if (preconnectedOrigins.length > 4) {
       const sampleOrigins = preconnectedOrigins.slice(0, 4).join(', ') +
         (preconnectedOrigins.length > 4 ? ` (+${preconnectedOrigins.length - 4} more)` : '');
+
       recommendations.push({
         type: 'code',
         file: f.relativePath,
@@ -109,7 +130,14 @@ export function analyzeLcp(files = [], reactAsts = []) {
         severity: preconnectedOrigins.length > 6 ? 'high' : 'medium',
         message: `More than 4 preconnect connections found (${preconnectedOrigins.length} origins declared in ${path.basename(f.relativePath)}).`,
         impact: 'Preconnecting to more than 4 origins wastes CPU and network bandwidth on early TLS handshakes and ties up browser sockets, directly competing with and delaying critical LCP assets (HTML, CSS, fonts, and hero image).',
-        suggestion: `Limit <link rel="preconnect"> to at most 2–4 critical origins needed immediately on page load (e.g. fonts.gstatic.com or your hero image CDN). For secondary origins (ads, trackers, analytics: ${sampleOrigins}), remove preconnect or switch to <link rel="dns-prefetch">.`
+        suggestion: `Limit <link rel="preconnect"> to at most 2–4 critical origins needed immediately on page load (e.g. fonts.gstatic.com or your hero image CDN). For secondary origins (ads, trackers, analytics: ${sampleOrigins}), remove preconnect or switch to <link rel="dns-prefetch">.`,
+        whyExplanation: `Around line ${firstPreconnectLine}, ${preconnectedOrigins.length} origins are preconnected. Initiating TLS negotiations with >4 distinct hostnames congests browser socket pools and CPU, delaying the critical LCP network pipe.`,
+        codeContext: extractCodeContext(f.content, firstPreconnectLine),
+        fixCode: {
+          before: `<link rel="preconnect" href="..."> <!-- Repeated for ${preconnectedOrigins.length} origins -->`,
+          after: `<!-- Keep only 2-3 critical origins (fonts, image CDN) -->\n<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n<!-- Use dns-prefetch for secondary origins -->\n<link rel="dns-prefetch" href="https://analytics-service.com">`,
+          description: 'Keep preconnect for critical LCP origins only; downgrade analytics/ad services to dns-prefetch.'
+        }
       });
     }
   });

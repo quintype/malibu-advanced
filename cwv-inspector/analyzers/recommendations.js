@@ -1,6 +1,20 @@
 import path from 'path';
 import { correlateCls } from './correlation.js';
 import { config } from '../config.js';
+import { extractCodeContext } from '../utils/codeContext.js';
+
+function getFileCodeContext(filePath, line, allFiles = []) {
+  if (!filePath || !line || typeof line !== 'number') return null;
+  const match = allFiles.find(f => 
+    f.filePath === filePath || 
+    f.relativePath === filePath || 
+    (f.filePath && path.resolve(f.filePath) === path.resolve(filePath))
+  );
+  if (match && match.content) {
+    return extractCodeContext(match.content, line);
+  }
+  return null;
+}
 
 function summarizeOpportunityTargets(resourceEvidence = []) {
   return resourceEvidence
@@ -148,6 +162,14 @@ export function compileRecommendations(staticIssues, lighthouseIssues = null, as
       const evidenceText = item.evidence.join('; ');
       const impact = `Lighthouse flagged "${item.lhEl.selector}" as participating in layout shifts (Shift Score: ${item.lhEl.score.toFixed(3)}) on ${item.lhEl.device}. [Evidence: ${evidenceText}]`;
 
+      const targetLineNum = typeof srcLine === 'number' ? srcLine : (parseInt(srcLine, 10) || 1);
+      const fallbackWhy = `Element <${item.source.tagName}> at line ${targetLineNum} was captured shifting layout on ${item.lhEl.device} (Shift Score: ${item.lhEl.score.toFixed(3)}). Unreserved element space causes surrounding content to abruptly move upon render.`;
+      const fallbackFix = isImg ? {
+        before: `<${item.source.tagName} src="..." />`,
+        after: `<${item.source.tagName} src="..." width="800" height="450" />`,
+        description: 'Provide explicit width and height or CSS aspect-ratio on this element to reserve layout space.'
+      } : null;
+
       correlatedIssues.push({
         type: 'correlated',
         cwv: 'cls',
@@ -157,6 +179,9 @@ export function compileRecommendations(staticIssues, lighthouseIssues = null, as
         message,
         impact,
         suggestion,
+        whyExplanation: staticDetails?.whyExplanation || fallbackWhy,
+        codeContext: staticDetails?.codeContext || getFileCodeContext(srcFile, targetLineNum, allFiles),
+        fixCode: staticDetails?.fixCode || fallbackFix,
         confidence: item.confidence,
         evidence: item.evidence,
         selector: item.lhEl.selector,
@@ -295,6 +320,7 @@ export function compileRecommendations(staticIssues, lighthouseIssues = null, as
       // Parent container fallback must not report EXACT confidence
       const effectiveConfidence = (item.source.isParentContainer && item.confidence === 'EXACT') ? 'PROBABLE' : item.confidence;
 
+      const obsTargetLine = typeof srcLine === 'number' ? srcLine : (typeof containerLine === 'number' ? containerLine : 1);
       correlatedIssues.push({
         type: 'observer-fallback-correlated',
         cwv: 'cls',
@@ -311,6 +337,13 @@ export function compileRecommendations(staticIssues, lighthouseIssues = null, as
         message: message,
         impact: impact,
         suggestion: suggestion + ' While the selector matched a source element, verify that this is the actual cause of the Lighthouse shift.',
+        whyExplanation: `Diagnostic observer captured a layout shift of ${item.lhEl.score.toFixed(4)} on "${item.lhEl.selector}". The element's bounding geometry moved during runtime without pre-allocated container boundaries.`,
+        codeContext: getFileCodeContext(srcFile, obsTargetLine, allFiles),
+        fixCode: {
+          before: `<${item.source.tagName || 'div'} className="..." />`,
+          after: `<${item.source.tagName || 'div'} style={{ minHeight: '...' }} />`,
+          description: 'Reserve layout space with min-height or aspect-ratio on this element or its parent container.'
+        },
         confidence: effectiveConfidence,
         evidence: item.evidence,
         selector: item.lhEl.selector,
@@ -674,6 +707,9 @@ export function compileRecommendations(staticIssues, lighthouseIssues = null, as
         message: `Slow ${ri.type || 'interaction'} Interaction in ${shortFile}`,
         impact: `Runtime Evidence: Interaction latency of ${ri.score}ms on ${ri.device} (${inpImpact} impact). Phase: ${dominantPhase}. [Details: ${inDelay}ms Input / ${procDur}ms Proc / ${presDelay}ms Pres. Root cause: ${phaseEx}]`,
         suggestion: `Static Analysis identified the following contributing factors: ${mergedContributingFactors.join('; ')}. Remediation: ${primaryCandidate.issue.suggestion}`,
+        whyExplanation: primaryCandidate.issue.whyExplanation || `Event handler "${handlerName}" at line ${finalLineNum} contributes to ${ri.score}ms INP delay during ${dominantPhase}. Long-running tasks on the main thread prevent the browser from presenting the next frame promptly.`,
+        codeContext: primaryCandidate.issue.codeContext || getFileCodeContext(primaryCandidate.issue.file, finalLineNum, allFiles),
+        fixCode: primaryCandidate.issue.fixCode || null,
         confidence,
         correlationState,
         evidence: primaryCandidate.reasons,

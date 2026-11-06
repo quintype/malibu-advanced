@@ -10,6 +10,7 @@ if (typeof globalThis.ReadableStream === 'undefined' && WebReadableStream) {
 import puppeteer from 'puppeteer';
 import { buildRedesignedPdfHtml, extractCruxHistoryPoints } from './redesignedPdfTemplate.js';
 import { config } from '../config.js';
+import { calculateImprovement } from '../utils/improvementEstimator.js';
 
 /**
  * Computes metric rendering properties.
@@ -230,6 +231,65 @@ function renderLighthouseEvidenceHtml(issue) {
       <ul>${rows}</ul>
       ${truncationNote}
       <div class="runtime-evidence-note">These rows are Lighthouse audit evidence and estimated savings. They do not identify a source-code line unless a matching source finding is listed separately.</div>
+    </div>
+  `;
+}
+
+function renderCodeContextHtml(ctx) {
+  if (!ctx || !Array.isArray(ctx.lines) || ctx.lines.length === 0) return '';
+  const rows = ctx.lines.map(l => {
+    const isTarget = Boolean(l.isTarget);
+    return `
+      <div class="code-context-row ${isTarget ? 'target-line' : ''}">
+        <span class="code-context-lineno">${l.lineNumber}</span>
+        <span class="code-context-text">${escapeHtml(l.text || ' ')}</span>
+      </div>
+    `;
+  }).join('');
+
+  return `
+    <div class="code-context-container">
+      <div class="code-context-title">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="16 18 22 12 16 6"></polyline>
+          <polyline points="8 6 2 12 8 18"></polyline>
+        </svg>
+        Source Code Preview (Line ${ctx.targetLine} Highlighted)
+      </div>
+      <div class="code-context-box">
+        ${rows}
+      </div>
+    </div>
+  `;
+}
+
+function renderFixDiffHtml(fix) {
+  if (!fix || (!fix.before && !fix.after)) return '';
+  return `
+    <div class="fix-diff-container">
+      <div class="fix-diff-title">Suggested Code Fix</div>
+      ${fix.description ? `<div class="fix-diff-desc">${escapeHtml(fix.description)}</div>` : ''}
+      <div class="fix-diff-grid">
+        <div class="fix-diff-col">
+          <div class="fix-diff-header before">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+            Current / Problematic Code
+          </div>
+          <pre class="fix-diff-pre before">${escapeHtml(fix.before || '')}</pre>
+        </div>
+        <div class="fix-diff-col">
+          <div class="fix-diff-header after">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            Recommended Fix
+          </div>
+          <pre class="fix-diff-pre after">${escapeHtml(fix.after || '')}</pre>
+        </div>
+      </div>
     </div>
   `;
 }
@@ -1026,6 +1086,9 @@ export async function generateReport(compiledResult, options = {}) {
         `;
       }
 
+      const improvement = calculateImprovement(issue);
+      const improvementBadge = `<span class="card-badge improvement-badge" title="Estimated Metric Improvement if fixed">${escapeHtml(improvement.badge)}</span>`;
+
       return `
         <div class="issue-card" data-severity="${escapeHtml(issue.severity)}" data-category="${escapeHtml(issue.cwv)}" data-device="${escapeHtml(deviceAttr)}">
           <div class="issue-card-header" onclick="toggleAccordion(this)">
@@ -1036,6 +1099,7 @@ export async function generateReport(compiledResult, options = {}) {
                 <span class="card-badge cat">${escapeHtml(issue.cwv)}</span>
                 ${deviceBadge}
                 ${correlationBadge}
+                ${improvementBadge}
               </div>
               <span class="issue-title-text">${escapeHtml(issue.message)}</span>
             </div>
@@ -1050,7 +1114,25 @@ export async function generateReport(compiledResult, options = {}) {
               <div class="details-fix-title">Recommendation</div>
               <div class="details-fix-text">${escapeHtml(issue.suggestion)}</div>
             </div>
+            <div class="details-improvement-box">
+              <div class="details-improvement-header">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                </svg>
+                <span>Estimated Impact &amp; Improvement if Fixed</span>
+                <span class="improvement-gain-pill">${escapeHtml(improvement.percentGain)} Est. Gain</span>
+              </div>
+              <div class="details-improvement-metric">${escapeHtml(improvement.metricGain)}</div>
+              <div class="details-improvement-text">${escapeHtml(improvement.explanation)}</div>
+            </div>
+            ${issue.whyExplanation ? `
+            <div class="details-why-box">
+              <div class="details-why-title">Why this code causes the problem</div>
+              <div class="details-why-text">${escapeHtml(issue.whyExplanation)}</div>
+            </div>` : ''}
             ${filesListHtml}
+            ${renderCodeContextHtml(issue.codeContext)}
+            ${renderFixDiffHtml(issue.fixCode)}
             ${renderLighthouseEvidenceHtml(issue)}
             ${correlationDetailsHtml}
             ${renderAiSectionHtml(issue, index)}
