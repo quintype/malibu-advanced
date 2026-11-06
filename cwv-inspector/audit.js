@@ -288,6 +288,38 @@ Options:
         cHistory = await fetchCruxQuery('queryHistoryRecord', { origin: origin });
       }
 
+      // 3. Fall back to canonical/alternate origin (handles www <-> non-www redirects e.g. deccanherald.com -> www.deccanherald.com)
+      if (!cData || !cHistory) {
+        let altOrigin = null;
+        try {
+          const headRes = await fetch(url, { method: 'HEAD', redirect: 'follow' });
+          if (headRes.url) {
+            const finalUrl = new URL(headRes.url);
+            if (finalUrl.origin !== origin) {
+              altOrigin = finalUrl.origin;
+            }
+          }
+        } catch (_) {}
+
+        if (!altOrigin) {
+          if (parsedUrl.hostname.startsWith('www.')) {
+            altOrigin = `${parsedUrl.protocol}//${parsedUrl.hostname.replace(/^www\./, '')}`;
+          } else {
+            altOrigin = `${parsedUrl.protocol}//www.${parsedUrl.hostname}`;
+          }
+        }
+
+        if (altOrigin && altOrigin !== origin) {
+          console.log(`⚡ CrUX checking canonical/alternate origin: "${altOrigin}"...`);
+          if (!cData) {
+            cData = await fetchCruxQuery('queryRecord', { origin: altOrigin });
+          }
+          if (!cHistory) {
+            cHistory = await fetchCruxQuery('queryHistoryRecord', { origin: altOrigin });
+          }
+        }
+      }
+
       if (cData) {
         cruxData = cData;
         console.log('CrUX Field Data fetched successfully.');
