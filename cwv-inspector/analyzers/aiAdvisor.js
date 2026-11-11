@@ -2,6 +2,9 @@ import { categorizeCopilotError } from '../services/copilotService.js';
 import fs from 'fs';
 import path from 'path';
 
+// Default budget for all Copilot enrichment requests in one audit (2 minutes).
+const DEFAULT_COPILOT_TOTAL_TIMEOUT_MS = 2 * 60 * 1000;
+
 /** Reads a bounded excerpt around a verified finding, restricted to its project root. */
 export function readIssueSourceExcerpt(issue, projectPath, contextLines = 8) {
   if (!issue?.file || !Number.isInteger(Number(issue.line)) || !projectPath) return null;
@@ -509,7 +512,7 @@ export async function enrichAuditWithCopilot(compiledResult, options = {}) {
   const timeoutMs = options.timeoutMs || 60000;
   const totalTimeoutMs = options.totalTimeoutMs !== undefined
     ? Number(options.totalTimeoutMs)
-    : (Number(process.env.COPILOT_TOTAL_TIMEOUT_MS) || 120000);
+    : (Number(process.env.COPILOT_TOTAL_TIMEOUT_MS) || DEFAULT_COPILOT_TOTAL_TIMEOUT_MS);
   const batchSize = Math.max(1, Number(options.batchSize) || 1);
   const deadline = Date.now() + totalTimeoutMs;
 
