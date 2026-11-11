@@ -2,6 +2,7 @@ import { z } from 'zod';
 import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
+import { CopilotService } from '../services/copilotService.js';
 
 const thisDirectory = path.dirname(fileURLToPath(import.meta.url));
 const bundledCopilotPath = path.resolve(thisDirectory, `../node_modules/@github/copilot-${process.platform}-${process.arch}/copilot`);
@@ -200,12 +201,8 @@ export async function requestFix({ issue, sourceCode, workspaceRoot = process.cw
 
   let client;
   try {
-    const { CopilotClient } = await import('@github/copilot-sdk');
-    client = new CopilotClient({ cliPath: copilotCliPath, logLevel: 'error', autoRestart: false, useStdio: false, port: 0 });
-    await client.start();
-    const session = await client.createSession({ model: process.env.COPILOT_MODEL || undefined });
-    const response = await session.sendAndWait({ prompt }, 60000);
-    const rawContent = response?.data?.content;
+    client = new CopilotService({ cliPath: copilotCliPath, timeoutMs: 60000 });
+    const rawContent = await client.generateResponse(prompt, { model: process.env.COPILOT_MODEL || undefined });
     if (typeof rawContent !== 'string' || !rawContent.trim()) throw new Error('Copilot returned no assistant JSON response.');
     if (typeof onRawResponse === 'function') onRawResponse(rawContent, issue);
     return { ...parseAndValidateFix(rawContent), copilot_source: 'live' };

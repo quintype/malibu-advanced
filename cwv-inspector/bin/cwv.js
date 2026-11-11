@@ -8,8 +8,7 @@ import { startFixtureServer } from '../tests/fixtures/demo-app/serveFixture.js';
 import { collectInpMetrics, charOffsetToLineCol, setRepoRoot } from '../collector/index.js';
 import { resolveSourceLocation, resolveElementSelector } from '../sourcemap/index.js';
 import { runDeepAnalysis } from '../analyzers/deepAnalyzer.js';
-import { generateFixesForIssues, applyValidatedFixes } from '../generator/fixGenerator.js';
-import { setMockCopilotHandler } from '../generator/copilotClient.js';
+import { generateFixesForIssues, applyValidatedFixes, setMockCopilotHandler } from '../generator/index.js';
 import { prioritizeRuntimeIssues } from '../analyzers/recommendations.js';
 
 // Default targets are optional: a page that lacks one is measured without it and the skip is reported.

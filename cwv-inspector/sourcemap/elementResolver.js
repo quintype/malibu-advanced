@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import * as babelParser from '@babel/parser';
 import _traverse from '@babel/traverse';
-import { normalizeRepoPath } from '../collector/inpCollector.js';
+import { normalizeRepoPath } from '../collector/index.js';
 
 const traverse = _traverse.default || _traverse;
 

@@ -3,7 +3,7 @@ import path from 'path';
 import sourceMap from 'source-map-js';
 import * as babelParser from '@babel/parser';
 import _traverse from '@babel/traverse';
-import { normalizeRepoPath } from '../collector/inpCollector.js';
+import { normalizeRepoPath } from '../collector/index.js';
 
 const traverse = _traverse.default || _traverse;
 
