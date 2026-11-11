@@ -176,7 +176,7 @@ export async function generateFixesForIssues(issues = [], options = {}) {
       let validation = await validateCandidateFix({ issue, fix: candidateFix, workspaceRoot });
 
       // If initial validation fails, attempt exactly ONE retry with Copilot
-      if (!validation.valid) {
+      if (!validation.valid && options.retryCopilot !== false) {
         try {
           const retryCandidate = await retryFix({
             issue,

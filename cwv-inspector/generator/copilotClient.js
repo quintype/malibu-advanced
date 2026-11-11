@@ -203,7 +203,7 @@ export async function requestFix({ issue, sourceCode, workspaceRoot = process.cw
     const { CopilotClient } = await import('@github/copilot-sdk');
     client = new CopilotClient({ cliPath: copilotCliPath, logLevel: 'error', autoRestart: false, useStdio: false, port: 0 });
     await client.start();
-    const session = await client.createSession();
+    const session = await client.createSession({ model: process.env.COPILOT_MODEL || undefined });
     const response = await session.sendAndWait({ prompt }, 60000);
     const rawContent = response?.data?.content;
     if (typeof rawContent !== 'string' || !rawContent.trim()) throw new Error('Copilot returned no assistant JSON response.');

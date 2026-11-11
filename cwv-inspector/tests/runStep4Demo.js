@@ -245,6 +245,8 @@ async function main() {
     const promptSafety = prompt => !/(?:\/Users\/[^\s:'"`]+|\/home\/[^\s:'"`]+|[A-Z]:\\Users\\[^\s:'"`]+|[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}|gh[pousr]_[A-Za-z0-9_]{20,}|AKIA[0-9A-Z]{16}|Bearer\s+[A-Za-z0-9_.-]+)/i.test(prompt);
     const issuesWithFixes = await generateFixesForIssues(identifiedIssues, {
       workspaceRoot,
+      copilot: 'on',
+      retryCopilot: false,
       forceCopilotMetrics: ['INP'],
       onPrompt(prompt, issue) {
         const label = issue.location?.name || issue.location?.element || issue.metric;
