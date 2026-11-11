@@ -250,6 +250,7 @@ export function analyzeInpFunction({
 
   return {
     metric: 'INP',
+    current_value: worstInteraction?.duration?.median ?? culpritScript.duration,
     priority: (worstInteraction?.duration?.median || culpritScript.duration) >= 200 ? 'HIGH' : 'MEDIUM',
     confidence: location.confidence || 'high',
     evidence_type: 'measured',
@@ -462,6 +463,7 @@ export function analyzeLcp({
 
   return {
     metric: 'LCP',
+    current_value: lcpMetric.value ?? null,
     priority,
     confidence: lcpLocationResolved ? (lcpElementResolution.confidence ?? 'low') : 'low',
     evidence_type: 'measured',
@@ -558,6 +560,7 @@ export function analyzeCls({
     const evidence = [];
     const issue = {
       metric: 'CLS',
+      current_value: Number.isFinite(clsMetric.value) ? clsMetric.value : shiftScore,
       confidence,
       evidence_type: 'measured',
       location,
@@ -726,6 +729,7 @@ export function runDeepAnalysis({
       const medianMs = inter.duration?.median ?? null;
       issues.push({
         metric: 'INP',
+        current_value: medianMs,
         confidence: 'low',
         evidence_type: 'measured',
         location: null,

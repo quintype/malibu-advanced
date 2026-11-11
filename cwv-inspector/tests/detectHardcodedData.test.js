@@ -15,12 +15,13 @@ async function testNoHardcodedData() {
   ];
 
   const suspiciousPatterns = [
-    { pattern: /const\s+\w*issues\s*=\s*\[/, description: 'hardcoded issues array' },
+    { pattern: /(?:const|let|var)\s+\w*issues\s*=\s*\[/, description: 'hardcoded issues array' },
     { pattern: /const\s+mockIssues/, description: 'mock issues variable' },
     { pattern: /const\s+testData\s*=\s*{/, description: 'hardcoded test data' },
     // Catch numeric metrics in data literals (not in threshold configs)
     { pattern: /delta:\s*(\d+|0\.\d+)(?!,\s*\/\/)/, description: 'hardcoded metric delta in issue data' },
-    { pattern: /measured_improvement:\s*{[^}]*delta:\s*\d+/, description: 'hardcoded measured values' }
+    { pattern: /measured_improvement:\s*{[^}]*delta:\s*\d+/, description: 'hardcoded measured values' },
+    { pattern: /(?:current_value|metric_delta|shiftScore)\s*:\s*\d+(?:\.\d+)?/, description: 'hardcoded metric literal' }
   ];
 
   for (const file of filesToCheck) {
@@ -50,6 +51,7 @@ async function testNoHardcodedData() {
     if (!foundIssue) {
       console.log(`✓ ${file}: no hardcoded data detected`);
     }
+    assert.strictEqual(foundIssue, false, `${file} must not hardcode issue arrays or measured metric values`);
   }
 
   console.log('\n✓ Hardcoded data detection test passed');

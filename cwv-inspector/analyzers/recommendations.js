@@ -3,6 +3,67 @@ import { correlateCls } from './correlation.js';
 import { config } from '../config.js';
 import { extractCodeContext } from '../utils/codeContext.js';
 
+const METRIC_GOOD = { INP: 200, LCP: 2500, CLS: 0.1 };
+const CONFIDENCE_FACTOR = { high: 1, medium: 0.7, low: 0.35 };
+
+/**
+ * Compute priority from gain fraction × confidence × ease; upstream priority labels are ignored.
+ * Gain/current values come from collector issue fields. Confidence comes from source mapping and
+ * cause attribution. Ease is 1 for validated fixes, 0.65 for a categorized cause, and 0.3 otherwise.
+ */
+export function prioritizeRuntimeIssues(issues = []) {
+  const ranked = [];
+  const hidden = [];
+  for (const issue of issues) {
+    const metric = String(issue.metric || '').toUpperCase();
+    const metricValue = metric === 'INP'
+      ? Number(issue.current_value ?? issue.currentValue ?? issue.duration?.median ?? issue.inp?.median)
+      : metric === 'LCP'
+        ? Number(issue.current_value ?? issue.currentValue ?? issue.lcpValue ?? issue.value)
+        : metric === 'CLS'
+          ? Number(issue.current_value ?? issue.currentValue ?? issue.shiftScore)
+          : NaN;
+    const rawGain = Number(issue.measured_improvement?.metric_delta ?? issue.measured_improvement?.delta ?? issue.estimated_gain?.metric_delta);
+    const good = METRIC_GOOD[metric];
+    const confidence = String(issue.confidence || 'low').toLowerCase();
+    const isStatic = issue.evidence_type === 'static-only' || issue.correlationState === 'STATIC_ONLY';
+    const severity = Number.isFinite(metricValue) && Number.isFinite(rawGain) && good
+      ? Math.max(0, Math.min(1, rawGain / Math.max(Math.abs(metricValue - good), Number.EPSILON)))
+      : 0;
+    const ease = issue.fix?.fix_validated ? 1 : issue.rootCauseCategory ? 0.65 : 0.3;
+    const score = severity * (CONFIDENCE_FACTOR[confidence] || 0.35) * ease;
+    let reason = null;
+    const gain = Number.isFinite(rawGain) ? rawGain : 0;
+    if (issue.interactionSummary === 'below-threshold-majority' || issue.summary === 'below-threshold-majority') reason = 'interaction summary is below-threshold-majority';
+    else if (metric !== 'CLS' && Number.isFinite(metricValue) && good && metricValue <= good && gain <= 100) reason = 'metric is already good and estimated gain is not above 100';
+    else if (isStatic) reason = 'static-only finding';
+    else if (metric === 'LCP' && gain < 100) reason = 'LCP gain below 100ms';
+    else if (metric === 'CLS' && gain < 0.02) reason = 'CLS gain below 0.02';
+    else if (metric === 'INP' && Number.isFinite(metricValue) && metricValue < 200) reason = 'INP is below the 200ms threshold';
+    else if (metric === 'INP' && gain < 30) reason = 'INP gain below 30ms';
+    else if (issue.isThirdParty || /node_modules|vendor\//.test(issue.location?.file || '')) reason = 'third-party finding';
+    else if (confidence === 'low' && severity < 0.2) reason = 'low confidence and low impact';
+    if (reason) {
+      const thirdParty = reason === 'third-party finding';
+      hidden.push({ ...issue, priority: 'HIDDEN', hidden_reason: reason, ...(thirdParty ? { note: 'Third-party finding; reported without suggesting a code change.' } : {}), source: issue.source || 'live-run' });
+      continue;
+    }
+    const priority = isStatic ? 'LOW' : score >= 0.55 ? 'HIGH' : score >= 0.2 ? 'MEDIUM' : 'LOW';
+    ranked.push({
+      ...issue,
+      priority,
+      priority_score: score,
+      priority_factors: { gain_fraction: severity, confidence_factor: CONFIDENCE_FACTOR[confidence] || 0.35, ease_factor: ease },
+      source: issue.source || 'live-run',
+      estimate_vs_measured: { estimated_gain: issue.estimated_gain ?? null, measured_improvement: issue.measured_improvement ?? null }
+    });
+  }
+  const order = { HIGH: 0, MEDIUM: 1, LOW: 2 };
+  const metricOrder = { INP: 0, LCP: 1, CLS: 2 };
+  ranked.sort((a, b) => order[a.priority] - order[b.priority] || (metricOrder[String(a.metric).toUpperCase()] ?? 9) - (metricOrder[String(b.metric).toUpperCase()] ?? 9));
+  return { issues: ranked, hiddenIssues: hidden, hiddenCount: hidden.length };
+}
+
 function getFileCodeContext(filePath, line, allFiles = []) {
   if (!filePath || !line || typeof line !== 'number') return null;
   const match = allFiles.find(f => 

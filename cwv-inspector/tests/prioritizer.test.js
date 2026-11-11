@@ -1,5 +1,6 @@
 import assert from 'assert';
 import { computePriority, filterByPriority, groupByPriorityAndMetric } from '../utils/prioritizer.js';
+import { prioritizeRuntimeIssues } from '../analyzers/recommendations.js';
 
 async function runTests() {
   console.log('Running prioritizer tests...\n');
@@ -81,11 +82,12 @@ async function runTests() {
     priority: 'LOW',  // Input says LOW, but score should compute HIGH
     confidence: 'high',
     ease_of_fix: 'medium',
+    fix: { fix_validated: true },
     location: { file: 'src/handler.js', element: '#btn' }
   };
   const { priority: computedPriority, score } = computePriority(inputIssue);
   assert.strictEqual(computedPriority, 'HIGH', 'Priority computed from score, not input field');
-  assert(score >= 150, 'Score should be >= 150 for HIGH');
+  assert(score >= 0.55, 'Normalized score should be >= 0.55 for HIGH');
   console.log('✓ Test 7: Priority computed from score, not input field');
 
   // Test 8: Measured and estimated data preserved in output
@@ -151,6 +153,47 @@ async function runTests() {
   console.log('✓ Test 12: Metric gain and source returned');
 
   console.log('\nAll prioritizer tests passed!');
+
+  // Runtime priority acceptance: each hide rule, score scaling, provenance, and static cap.
+  const runtime = (metric, current_value, gain, extra = {}) => ({ metric, current_value, estimated_gain: { metric_delta: gain }, evidence_type: 'measured', confidence: 'high', rootCauseCategory: 'measured-cause', ...extra });
+  const hiddenRules = [
+    [runtime('LCP', 3000, 99), /100ms/],
+    [runtime('CLS', 0.3, 0.019), /0.02/],
+    [runtime('INP', 450, 29), /30ms/],
+    [runtime('INP', 150, 200), /200ms/],
+    [runtime('INP', 450, 300, { location: { file: 'vendor/pkg.js' } }), /third-party/],
+    [runtime('INP', 450, 20, { confidence: 'low' }), /30ms/],
+    [runtime('INP', 450, 30, { confidence: 'low' }), /low confidence/],
+    [runtime('INP', 450, 30, { interactionSummary: 'below-threshold-majority' }), /below-threshold-majority/],
+    [runtime('LCP', 2200, 100), /already good/],
+    [runtime('CLS', 0.3, 0.2, { evidence_type: 'static-only' }), /static-only/]
+  ];
+  for (const [issue, expected] of hiddenRules) {
+    const result = prioritizeRuntimeIssues([issue]);
+    assert.strictEqual(result.issues.length, 0, `${issue.metric}: should be hidden`);
+    assert.match(result.hiddenIssues[0].hidden_reason, expected);
+  }
+  const scaleA = prioritizeRuntimeIssues([runtime('INP', 300, 70, { fix: { fix_validated: true }, priority: 'LOW' })]).issues[0];
+  const scaleB = prioritizeRuntimeIssues([runtime('INP', 300, 50, { fix: { fix_validated: true } })]).issues[0];
+  assert.strictEqual(scaleA.priority, 'HIGH');
+  assert.strictEqual(scaleB.priority, 'MEDIUM', 'Changing gain scale flips computed priority');
+  assert.strictEqual(scaleA.priority, 'HIGH', 'Input priority does not override the computed score');
+  const staticResult = prioritizeRuntimeIssues([runtime('INP', 450, 300, { evidence_type: 'static-only', priority: 'HIGH' })]);
+  assert.strictEqual(staticResult.hiddenIssues[0].hidden_reason, 'static-only finding');
+  assert.strictEqual(staticResult.hiddenIssues[0].source, 'live-run');
+  const thirdPartyResult = prioritizeRuntimeIssues([runtime('INP', 450, 300, { location: { file: 'vendor/widget.js' } })]);
+  assert.match(thirdPartyResult.hiddenIssues[0].note, /Third-party/);
+  const ordered = prioritizeRuntimeIssues([
+    runtime('CLS', 0.3, 0.2),
+    runtime('LCP', 3000, 400),
+    runtime('INP', 450, 250)
+  ]).issues;
+  assert.deepStrictEqual(ordered.map(i => `${i.priority}:${i.metric}`), ['HIGH:INP', 'HIGH:CLS', 'MEDIUM:LCP']);
+  const goodWithLargeGain = prioritizeRuntimeIssues([runtime('LCP', 2200, 101)]);
+  assert.strictEqual(goodWithLargeGain.issues.length, 1, 'A good metric with gain above 100ms remains visible');
+  assert.strictEqual(goodWithLargeGain.issues[0].priority, 'MEDIUM');
+  assert.strictEqual(staticResult.hiddenCount, 1);
+  console.log('✓ Runtime prioritizer: hide rules, computed scale, static LOW cap, and source provenance');
 }
 
 runTests().catch(err => {

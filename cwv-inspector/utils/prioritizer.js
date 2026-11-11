@@ -29,29 +29,8 @@
  * - Static-only evidence (evidence_type !== 'measured')
  */
 
-/**
- * Calculate base score as fraction of distance from current value to good threshold.
- * @param {number} metric - INP, LCP or CLS metric value
- * @param {string} type - 'INP' | 'LCP' | 'CLS'
- * @returns {number} normalized base score (0-100)
- */
-function calculateBaseScore(metric, type) {
-  // Good thresholds per metric
-  const goodThresholds = {
-    'INP': 200,   // ms
-    'LCP': 2500,  // ms
-    'CLS': 0.1    // unitless 0-1 scale
-  };
-
-  const good = goodThresholds[type];
-  if (!good || metric <= good) return 0;
-
-  // Score = distance to good / current metric, normalized to 0-100
-  // Higher metric = further from good = higher urgency
-  const distanceToGood = metric - good;
-  const relativeDistance = distanceToGood / good;
-  return Math.min(100, Math.round(relativeDistance * 50)); // Cap at 100
-}
+const GOOD = { INP: 200, LCP: 2500, CLS: 0.1 };
+const confidenceFactor = { high: 1, medium: 0.7, low: 0.35 };
 
 /**
  * Compute priority based on gain, current metric, confidence, ease.
@@ -59,109 +38,33 @@ function calculateBaseScore(metric, type) {
  * Returns { score, priority, reason, baseScore, gainSource, metricGain, measured_improvement, estimated_gain }
  */
 export function computePriority(issue) {
-  // Static-only findings never reach HIGH or MEDIUM
-  if (issue.evidence_type !== 'measured') {
-    return {
-      score: 0,
-      priority: 'LOW',
-      reason: 'Static-only evidence; no measured runtime data',
-      measured_improvement: issue.measured_improvement || null,
-      estimated_gain: issue.estimated_gain || null
-    };
-  }
-
-  // Determine metric gain (measured > estimated)
-  let metricGain = 0;
-  let gainSource = 'none';
-  if (issue.measured_improvement && Number.isFinite(issue.measured_improvement.delta)) {
-    metricGain = Math.abs(issue.measured_improvement.delta);
-    gainSource = 'measured';
-  } else if (issue.estimated_gain && Number.isFinite(issue.estimated_gain.metric_delta)) {
-    metricGain = Math.abs(issue.estimated_gain.metric_delta);
-    gainSource = 'estimated';
-  }
-
-  // Metric-specific hide rules (absolute thresholds)
-  if (issue.metric === 'LCP') {
-    if (metricGain < 100) {
-      return {
-        score: 0,
-        priority: 'LOW',
-        reason: `LCP gain ${metricGain}ms < 100ms threshold`,
-        measured_improvement: issue.measured_improvement || null,
-        estimated_gain: issue.estimated_gain || null
-      };
-    }
-  } else if (issue.metric === 'CLS') {
-    if (metricGain < 0.02) {
-      return {
-        score: 0,
-        priority: 'LOW',
-        reason: `CLS gain ${metricGain.toFixed(4)} < 0.02 threshold`,
-        measured_improvement: issue.measured_improvement || null,
-        estimated_gain: issue.estimated_gain || null
-      };
-    }
-  } else if (issue.metric === 'INP') {
-    if (metricGain < 30 || (issue.location?.element && metricGain < 200)) {
-      return {
-        score: 0,
-        priority: 'LOW',
-        reason: `INP gain ${metricGain}ms below threshold (30ms global, 200ms per-interaction)`,
-        measured_improvement: issue.measured_improvement || null,
-        estimated_gain: issue.estimated_gain || null
-      };
-    }
-  }
-
-  // Third-party code: cannot fix
+  const metric = String(issue.metric || '').toUpperCase();
+  const good = GOOD[metric];
+  const measured = issue.measured_improvement;
+  const measuredDelta = measured?.metric_delta ?? measured?.delta;
+  const estimatedDelta = issue.estimated_gain?.metric_delta;
+  const metricGain = Number.isFinite(measuredDelta) ? Math.abs(measuredDelta) : Number.isFinite(estimatedDelta) ? Math.abs(estimatedDelta) : 0;
+  const gainSource = Number.isFinite(measuredDelta) ? 'measured' : Number.isFinite(estimatedDelta) ? 'estimated' : 'none';
+  const current = Number(issue.current_value ?? issue.currentValue ?? issue.shiftScore);
+  const distance = Number.isFinite(current) && Number.isFinite(good) ? Math.abs(current - good) : metricGain;
+  const gainFraction = distance > 0 ? Math.min(1, metricGain / distance) : 0;
+  const conf = String(issue.confidence || 'low').toLowerCase();
+  const easeFactor = issue.fix?.fix_validated ? 1 : issue.rootCauseCategory ? 0.65 : 0.3;
+  const factors = { gain_fraction: gainFraction, confidence_factor: confidenceFactor[conf] || 0.35, ease_factor: easeFactor };
+  const score = gainFraction * factors.confidence_factor * easeFactor;
+  let reason = '';
   const file = issue.location?.file || '';
-  if (file.includes('node_modules') || file.includes('vendor/') || file.startsWith('http')) {
-    return {
-      score: 0,
-      priority: 'LOW',
-      reason: 'Third-party code; no client-owned fix available',
-      measured_improvement: issue.measured_improvement || null,
-      estimated_gain: issue.estimated_gain || null
-    };
-  }
-
-  // Low confidence + low impact
-  const conf = issue.confidence || 'low';
-  const confRank = { low: 1, medium: 2, high: 3 };
-  if ((confRank[conf] || 0) === 1 && metricGain < 50) {
-    return {
-      score: 0,
-      priority: 'LOW',
-      reason: `Low confidence (${conf}) with low impact (${metricGain}ms gain)`,
-      measured_improvement: issue.measured_improvement || null,
-      estimated_gain: issue.estimated_gain || null
-    };
-  }
-
-  // Calculate score: base_score × confidence × ease
-  const baseScore = calculateBaseScore(metricGain, issue.metric);
-  const confMap = { low: 0.5, medium: 1.0, high: 1.2 };
-  const easeMap = { easy: 1.0, medium: 0.6, hard: 0.3 };
-  const confMultiplier = confMap[conf] || 0.5;
-  const ease = easeMap[issue.ease_of_fix] || 0.5;
-  const score = baseScore * confMultiplier * ease;
-
-  // Classify priority from computed score
-  let priority = 'LOW';
-  if (score >= 75) priority = 'HIGH';
-  else if (score >= 25) priority = 'MEDIUM';
-
-  return {
-    score,
-    priority,
-    reason: `${gainSource} gain ${metricGain}${issue.metric === 'CLS' ? '' : 'ms'} × confidence ${confMultiplier} × ease ${ease} = ${score.toFixed(0)}`,
-    baseScore,
-    gainSource,
-    metricGain,
-    measured_improvement: issue.measured_improvement || null,
-    estimated_gain: issue.estimated_gain || null
-  };
+  if (issue.evidence_type !== 'measured') reason = 'Static-only finding';
+  else if (metric === 'LCP' && metricGain < 100) reason = `LCP gain ${metricGain}ms below 100ms threshold`;
+  else if (metric === 'CLS' && metricGain < 0.02) reason = `CLS gain ${metricGain} below 0.02 threshold`;
+  else if (metric === 'INP' && Number.isFinite(current) && current < 200) reason = 'INP below 200ms threshold';
+  else if (metric === 'INP' && metricGain < 30) reason = 'INP gain below 30ms threshold';
+  else if (issue.interactionSummary === 'below-threshold-majority' || issue.summary === 'below-threshold-majority') reason = 'interaction summary is below-threshold-majority';
+  else if (issue.isThirdParty || /node_modules|vendor\//.test(file) || /^https?:/.test(file)) reason = 'Third-party finding; report as note';
+  else if (conf === 'low' && gainFraction < 0.2) reason = 'Low confidence and low impact';
+  else if (Number.isFinite(current) && Number.isFinite(good) && current <= good && metricGain <= 100) reason = 'Metric is already good and gain is not above 100';
+  const priority = reason ? 'LOW' : score >= 0.55 ? 'HIGH' : score >= 0.2 ? 'MEDIUM' : 'LOW';
+  return { score, priority, reason: reason || `${gainSource} gain fraction × confidence × ease`, gainFraction, factors, gainSource, metricGain, measured_improvement: measured || null, estimated_gain: issue.estimated_gain || null };
 }
 
 /**

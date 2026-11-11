@@ -9,6 +9,7 @@ import { resolveSourceLocation, resolveElementSelector } from '../sourcemap/inde
 import { runDeepAnalysis } from '../analyzers/deepAnalyzer.js';
 import { generateFixesForIssues } from '../generator/fixGenerator.js';
 import { setMockCopilotHandler } from '../generator/copilotClient.js';
+import { prioritizeRuntimeIssues } from '../analyzers/recommendations.js';
 
 // Default targets are optional: a page that lacks one is measured without it and the skip is reported.
 const DEFAULT_INTERACTIONS = [
@@ -24,7 +25,7 @@ function selectorForms(sel) {
   return [...new Set([sel, tail, tail.replace(/^[a-z][a-z0-9-]*(?=[.#])/i, '')])];
 }
 
-const USAGE = 'Usage: cwv analyze <url|fixture> --path <dir> [--interactions <file.json>] [--copilot | --mock-copilot <file.json>] [--format json]';
+const USAGE = 'Usage: cwv analyze <url|fixture> --path <dir> [--interactions <file.json>] [--copilot | --mock-copilot <file.json>] [--format json|console|md|html]';
 
 // Flags that are recognised but not built yet must fail loudly instead of being accepted and ignored.
 const NOT_IMPLEMENTED = ['--apply', '--verify', '--include-low'];
@@ -34,7 +35,7 @@ const command = args[0];
 const flags = {
   url: null,
   path: null,
-  format: 'json',
+  format: 'console',
   interactions: null,
   copilot: false,
   mockCopilot: null
@@ -74,8 +75,8 @@ if (!flags.path) {
   console.log('Error: --path <dir> required');
   process.exit(1);
 }
-if (flags.format !== 'json') {
-  console.error(`Error: --format ${flags.format} is not implemented yet (available: json).`);
+if (!['json', 'console', 'md', 'html'].includes(flags.format)) {
+  console.error(`Error: --format ${flags.format} is not implemented (available: json, console, md, html).`);
   process.exit(1);
 }
 if (flags.copilot && flags.mockCopilot) {
@@ -119,6 +120,52 @@ function registerMockCopilot(file, scanRoot, repoRoot) {
     const repoRelative = path.relative(repoRoot, path.resolve(scanRoot, entry.response.file)).replace(/\\/g, '/');
     return { ...entry.response, file: repoRelative, fix_target_file: repoRelative };
   });
+}
+
+function issueDetails(issue) {
+  const location = issue.location?.file
+    ? `${issue.location.file}${issue.location.line_start ? `:${issue.location.line_start}` : ''}${issue.location.element ? ` (${issue.location.element})` : ''}`
+    : 'unresolved';
+  return {
+    location,
+    problem: issue.problem || '',
+    evidence: issue.evidence || [],
+    root_cause: issue.root_cause || '',
+    diff: issue.fix?.diff || '',
+    why_it_works: issue.fix?.why_it_works || '',
+    tradeoffs: issue.fix?.tradeoffs || issue.tradeoffs || '',
+    estimate_vs_measured: issue.estimate_vs_measured || { estimated_gain: issue.estimated_gain ?? null, measured_improvement: issue.measured_improvement ?? null },
+    source: issue.source || 'live-run',
+    confidence: issue.confidence || 'unknown'
+  };
+}
+
+function renderReport(report, format) {
+  if (format === 'json') return JSON.stringify(report, null, 2);
+  const rows = report.issues.map(issue => ({ issue, ...issueDetails(issue) }));
+  const hidden = report.hiddenIssues.map(i => `${i.metric}: ${i.problem || i.rootCauseCategory} — ${i.hidden_reason}`).join('\n');
+  if (format === 'console') {
+    const lines = [`CWV report (${report.source})`, `Hidden issues: ${report.hiddenCount}`, ...rows.map(({ issue, ...d }) => [
+      `\n[${issue.priority}] ${issue.metric} (score ${Number(issue.priority_score || 0).toFixed(3)})`,
+      `Location: ${d.location}`, `Problem: ${d.problem}`, `Evidence: ${JSON.stringify(d.evidence)}`,
+      `Root cause: ${d.root_cause}`, `Diff:\n${d.diff || '(none)'}`, `Why it works: ${d.why_it_works}`,
+      `Tradeoffs: ${d.tradeoffs}`, `Estimate vs measured: ${JSON.stringify(d.estimate_vs_measured)}`,
+      `Source: ${d.source}; confidence: ${d.confidence}`
+    ].join('\n'))];
+    if (hidden) lines.push(`\nHidden issue reasons:\n${hidden}`);
+    return lines.join('\n');
+  }
+  if (format === 'md') {
+    return [`# CWV report`, `Source: ${report.source}`, `Hidden issue count: ${report.hiddenCount}`, ...rows.map(({ issue, ...d }) => [
+      `## ${issue.priority} ${issue.metric}`, `- Location: ${d.location}`, `- Problem: ${d.problem}`,
+      `- Evidence: ${JSON.stringify(d.evidence)}`, `- Root cause: ${d.root_cause}`,
+      `- Diff:\n\n\`\`\`diff\n${d.diff}\n\`\`\``, `- Why it works: ${d.why_it_works}`,
+      `- Tradeoffs: ${d.tradeoffs}`, `- Estimate vs measured: ${JSON.stringify(d.estimate_vs_measured)}`,
+      `- Source: ${d.source}; confidence: ${d.confidence}`
+    ].join('\n')), `## Hidden issues\n${hidden || 'None'}`].join('\n\n');
+  }
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  return `<!doctype html><meta charset="utf-8"><title>CWV report</title><h1>CWV report</h1><p>Source: ${esc(report.source)}; hidden issue count: ${report.hiddenCount}</p>${rows.map(({ issue, ...d }) => `<article><h2>${esc(issue.priority)} ${esc(issue.metric)}</h2><dl>${['location','problem','evidence','root_cause','why_it_works','tradeoffs','estimate_vs_measured','source','confidence'].map(k => `<dt>${esc(k)}</dt><dd><pre>${esc(typeof d[k] === 'string' ? d[k] : JSON.stringify(d[k], null, 2))}</pre></dd>`).join('')}</dl><h3>Diff</h3><pre>${esc(d.diff || '(none)')}</pre></article>`).join('')}<h2>Hidden issue reasons</h2><pre>${esc(hidden || 'None')}</pre>`;
 }
 
 async function main() {
@@ -215,7 +262,8 @@ async function main() {
       copilot: flags.copilot || flags.mockCopilot ? 'on' : 'off'
     });
 
-    console.log(JSON.stringify({
+    const prioritized = prioritizeRuntimeIssues(issuesWithFixes);
+    const report = {
       source: 'live-run',
       url: collected.url,
       timestamp: collected.timestamp,
@@ -233,8 +281,11 @@ async function main() {
         skipped: collected.interactionsSkipped
       },
       resolvedLocations,
-      issues: issuesWithFixes
-    }, null, 2));
+      issues: prioritized.issues,
+      hiddenIssues: prioritized.hiddenIssues,
+      hiddenCount: prioritized.hiddenCount
+    };
+    console.log(renderReport(report, flags.format));
 
     await cleanup();
   } catch (err) {
