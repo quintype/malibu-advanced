@@ -229,7 +229,7 @@ async function main() {
       console.log(JSON.stringify(sameRunIssue, null, 2));
     } else {
       console.log('--- [#filter-input Finding] ---');
-      console.log('No HIGH issue emitted: the five fresh-page runs were below threshold and handler timing independently confirmed the filter is cheap. The earlier 1448ms observation is not reproducible and is treated as a collector artifact.');
+      console.log('No HIGH issue emitted: the five fresh-page runs were below threshold and handler timing independently confirmed the filter is cheap. The earlier observation remains an unexplained collector artifact, guarded by the stale-entry regression test.');
     }
 
     console.log(`      • Identified ${identifiedIssues.length} issues across INP, CLS, and LCP`);
@@ -401,7 +401,7 @@ async function main() {
       },
       lcpResourceTiming: unbundledMetrics.metrics.lcp?.resourceTiming || null,
       investigationFilterInput: {
-        prior1448Observation: 'The earlier 1448ms observation was not reproducible. A fresh-page one-key diagnostic measured 27.1ms on the cold first call and 6.7-9.6ms subsequently; the fixture previously rebuilt its fixed dataset inside each keystroke handler.',
+        prior1448Observation: 'The earlier observation remains an unexplained collector artifact, guarded by the stale-entry regression test. Its root cause has not been established.',
         rawRuns: filterTested.rawRunDurations,
         handlerDurations: filterTested.handlerRunDurations,
         handlerEvidence: filterTested.runEvidence.map(run => ({ run: run.run, handlerTiming: run.handlerTiming, fixtureLog: run.filterHandlerLog, calibration: run.calibration })),

@@ -31,9 +31,9 @@ async function main() {
     console.log('[4/4] Summary Analysis:');
     console.log(`      • Measured INP: ${result.metrics.inp.value}ms (${result.metrics.inp.rating.toUpperCase()})`);
     console.log(`      • Culprit Target: ${result.worstInteraction?.target}`);
-    console.log(`      • Dominant Phase: ${result.worstInteraction?.largestPhase} (${result.worstInteraction?.phases[result.worstInteraction?.largestPhase]}ms)`);
-    if (result.worstInteraction?.culpritScripts?.length > 0) {
-      const topScript = result.worstInteraction.culpritScripts[0];
+    console.log(`      • Dominant Phase: ${result.worstInteraction?.largestPhase} (${result.worstInteraction?.phases?.[result.worstInteraction?.largestPhase]?.median ?? 'unavailable'}ms)`);
+    if (result.worstInteraction?.scripts?.length > 0) {
+      const topScript = result.worstInteraction.scripts[0];
       console.log(`      • Culprit Function: ${topScript.sourceFunctionName}()`);
       console.log(`      • Resolved Location: ${topScript.sourceURL}:${topScript.sourceLocation?.line}:${topScript.sourceLocation?.column} (offset: ${topScript.sourceCharPosition})`);
       console.log(`      • Script Duration: ${topScript.duration}ms`);

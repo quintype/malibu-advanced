@@ -102,7 +102,12 @@ async function main() {
     const bundledMetrics = await collectInpMetrics({
       url: `${fixture.url}/bundled.html`,
       cpuThrottlingRate: 4,
-      runs: 3
+      runs: 3,
+      customInteractions: [
+        { selector: '#slow-click-btn', type: 'click', label: 'Slow Button Click Task' },
+        { selector: '#menu-toggle', type: 'click', label: 'Fast Menu Toggle', optional: true },
+        { selector: '#search-input', type: 'type', text: 'quick test', label: 'Fast Search Input', optional: true }
+      ]
     });
 
     const worstBundled = bundledMetrics.worstInteraction;

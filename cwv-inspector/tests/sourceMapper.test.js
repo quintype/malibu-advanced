@@ -69,7 +69,7 @@ async function runTests() {
   assert.strictEqual(resNomap.resolved, true, 'Must resolve via function-name matching');
   assert.strictEqual(resNomap.confidence, 'low', 'Confidence must be low when falling back');
   assert.strictEqual(resNomap.method, 'function-name-matching');
-  assert.strictEqual(resNomap.line, 10, 'Must locate line 10 of app.js');
+  assert.strictEqual(resNomap.line, 17, 'Must locate handleSlowButtonClick at its current source line in app.js');
   console.log('✓ Test 3: No map fallback passed\n');
 
   // Test 4: Element Resolver for #slow-click-btn (HTML ID)

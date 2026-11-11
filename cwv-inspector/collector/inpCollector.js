@@ -642,6 +642,7 @@ export async function collectInpMetrics({
       const runProcessingDurations = [];
       const runPresentationDelays = [];
       const runCompletionDurations = [];
+      const runCompletionSources = [];
       const runEvidence = [];
       const collectedScripts = [];
       const rawLoafEntries = [];
@@ -736,8 +737,17 @@ export async function collectInpMetrics({
         });
         if (target.selector === '#slow-click-btn') {
           const completion = slowHandlerCompletionMs.slice(preCompletionCount);
-          if (completion.length !== 1) throw new Error(`Expected one measured handler completion time for ${target.selector}, run ${runIdx + 1}; found ${completion.length}.`);
-          runCompletionDurations.push(completion[0]);
+          if (completion.length === 1) {
+            runCompletionDurations.push(completion[0]);
+            runCompletionSources.push('app-console elapsed-time instrumentation');
+          } else if (completion.length === 0 && Number.isFinite(handlerTiming?.duration)) {
+            // Bundled fixtures may not preserve the app-level console probe. Use the captured
+            // synchronous event-handler window, and identify that measurement source explicitly.
+            runCompletionDurations.push(handlerTiming.duration);
+            runCompletionSources.push('collector capture-phase handler window');
+          } else {
+            throw new Error(`Expected one measured handler completion time or a captured handler window for ${target.selector}, run ${runIdx + 1}; found ${completion.length}.`);
+          }
         }
 
         for (const l of postData.loafs) {
@@ -806,6 +816,7 @@ export async function collectInpMetrics({
         warmupCalibration,
         runEvidence,
         handlerCompletionDurations: [...runCompletionDurations],
+        handlerCompletionSources: [...runCompletionSources],
         handlerCompletion: calculateStats(runCompletionDurations),
         rawLoafEntries,
         phases: {
