@@ -2,10 +2,13 @@
 
 import fs from 'fs';
 import path from 'path';
+import { execFileSync } from 'child_process';
 import { startFixtureServer } from '../tests/fixtures/demo-app/serveFixture.js';
-import { collectInpMetrics, charOffsetToLineCol } from '../collector/index.js';
+import { collectInpMetrics, charOffsetToLineCol, setRepoRoot } from '../collector/index.js';
 import { resolveSourceLocation, resolveElementSelector } from '../sourcemap/index.js';
 import { runDeepAnalysis } from '../analyzers/deepAnalyzer.js';
+import { generateFixesForIssues } from '../generator/fixGenerator.js';
+import { setMockCopilotHandler } from '../generator/copilotClient.js';
 
 // Default targets are optional: a page that lacks one is measured without it and the skip is reported.
 const DEFAULT_INTERACTIONS = [
@@ -21,16 +24,20 @@ function selectorForms(sel) {
   return [...new Set([sel, tail, tail.replace(/^[a-z][a-z0-9-]*(?=[.#])/i, '')])];
 }
 
+const USAGE = 'Usage: cwv analyze <url|fixture> --path <dir> [--interactions <file.json>] [--copilot | --mock-copilot <file.json>] [--format json]';
+
+// Flags that are recognised but not built yet must fail loudly instead of being accepted and ignored.
+const NOT_IMPLEMENTED = ['--apply', '--verify', '--include-low'];
+
 const args = process.argv.slice(2);
 const command = args[0];
 const flags = {
   url: null,
   path: null,
-  format: 'console',
+  format: 'json',
   interactions: null,
-  includeLow: args.includes('--include-low'),
-  apply: args.includes('--apply'),
-  verify: args.includes('--verify')
+  copilot: false,
+  mockCopilot: null
 };
 
 for (let i = 1; i < args.length; i++) {
@@ -40,29 +47,45 @@ for (let i = 1; i < args.length; i++) {
     flags.format = args[++i];
   } else if (args[i] === '--interactions' && args[i + 1]) {
     flags.interactions = args[++i];
-  } else if (!args[i].startsWith('--') && !flags.url) {
+  } else if (args[i] === '--mock-copilot' && args[i + 1]) {
+    flags.mockCopilot = args[++i];
+  } else if (args[i] === '--copilot') {
+    flags.copilot = true;
+  } else if (NOT_IMPLEMENTED.includes(args[i])) {
+    console.error(`Error: ${args[i]} is not implemented yet.`);
+    process.exit(1);
+  } else if (args[i].startsWith('--')) {
+    console.error(`Error: unknown flag ${args[i]}.\n${USAGE}`);
+    process.exit(1);
+  } else if (!flags.url) {
     flags.url = args[i];
   }
 }
 
 if (command !== 'analyze') {
-  console.log(`Usage: cwv analyze <url> [--path <dir>] [--format json|md|html|console] [--interactions <file.json>] [--include-low] [--apply] [--verify]`);
+  console.log(USAGE);
   process.exit(1);
 }
-
 if (!flags.url) {
-  console.log(`Error: URL required`);
+  console.log('Error: URL required');
   process.exit(1);
 }
-
 if (!flags.path) {
-  console.log(`Error: --path <dir> required`);
+  console.log('Error: --path <dir> required');
+  process.exit(1);
+}
+if (flags.format !== 'json') {
+  console.error(`Error: --format ${flags.format} is not implemented yet (available: json).`);
+  process.exit(1);
+}
+if (flags.copilot && flags.mockCopilot) {
+  console.error('Error: --copilot and --mock-copilot are mutually exclusive.');
   process.exit(1);
 }
 
-async function resolveLoafScript(script, workspaceRoot) {
+async function resolveLoafScript(script, scanRoot) {
   if (!script) return null;
-  const sourcePath = path.resolve(workspaceRoot, new URL(script.sourceURL).pathname.replace(/^\//, ''));
+  const sourcePath = path.resolve(scanRoot, new URL(script.sourceURL).pathname.replace(/^\//, ''));
   if (!fs.existsSync(sourcePath)) return null;
   const code = fs.readFileSync(sourcePath, 'utf8');
   const pos = charOffsetToLineCol(code, script.sourceCharPosition);
@@ -72,7 +95,29 @@ async function resolveLoafScript(script, workspaceRoot) {
     line: pos.line,
     column: pos.column,
     functionName: script.sourceFunctionName,
-    workspaceRoot
+    workspaceRoot: scanRoot
+  });
+}
+
+/** Git top-level of the analyzed directory, or the directory itself when it is not inside a git repository. */
+function findRepoRoot(scanRoot) {
+  try {
+    const top = execFileSync('git', ['-C', scanRoot, 'rev-parse', '--show-toplevel'], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();
+    return { root: top, isGit: true };
+  } catch {
+    return { root: scanRoot, isGit: false };
+  }
+}
+
+/** Registers stored responses with the Copilot client interface. Stored `file` paths are relative to the scanned directory. */
+function registerMockCopilot(file, scanRoot, repoRoot) {
+  const spec = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), file), 'utf8'));
+  if (!Array.isArray(spec.responses) || spec.responses.length === 0) throw new Error(`--mock-copilot ${file} must contain a non-empty "responses" array`);
+  setMockCopilotHandler(async ({ issue }) => {
+    const entry = spec.responses.find(r => Object.entries(r.match || {}).every(([key, value]) => issue.location?.[key] === value));
+    if (!entry) throw new Error(`mock-copilot: no stored response matches ${JSON.stringify(issue.location?.name ?? issue.location?.element ?? null)}`);
+    const repoRelative = path.relative(repoRoot, path.resolve(scanRoot, entry.response.file)).replace(/\\/g, '/');
+    return { ...entry.response, file: repoRelative, fix_target_file: repoRelative };
   });
 }
 
@@ -92,14 +137,19 @@ async function main() {
   });
 
   try {
-    let url = flags.url;
-    const workspaceRoot = path.resolve(process.cwd(), flags.path);
+    const scanRoot = path.resolve(process.cwd(), flags.path);
+    const repo = findRepoRoot(scanRoot);
+    setRepoRoot(repo.root);
 
-    if (url === 'fixture') {
-      if (!fs.existsSync(workspaceRoot)) throw new Error(`--path directory not found: ${workspaceRoot}`);
-      server = await startFixtureServer(0, workspaceRoot);
-      url = server.url;
-    } else if (!url.startsWith('http://') && !url.startsWith('https://')) {
+    const isFixture = flags.url === 'fixture';
+    let pageUrl;
+    if (isFixture) {
+      if (!fs.existsSync(scanRoot)) throw new Error(`--path directory not found: ${scanRoot}`);
+      server = await startFixtureServer(0, scanRoot);
+      pageUrl = `${server.url}/index.html`;
+    } else if (/^https?:\/\//.test(flags.url)) {
+      pageUrl = flags.url;
+    } else {
       console.error(`Error: url must be 'fixture' or an http(s) URL`);
       process.exit(1);
     }
@@ -109,9 +159,11 @@ async function main() {
       : DEFAULT_INTERACTIONS;
     if (!Array.isArray(interactions) || interactions.length === 0) throw new Error('--interactions must be a non-empty JSON array of { selector, type, text?, label? }');
 
+    if (flags.mockCopilot) registerMockCopilot(flags.mockCopilot, scanRoot, repo.root);
+
     // Collector: INP interactions, LCP (+subparts, resource timing) and CLS shifts all come from this one call
     const collected = await collectInpMetrics({
-      url: `${url}/index.html`,
+      url: pageUrl,
       cpuThrottlingRate: 4,
       runs: 5,
       customInteractions: interactions
@@ -129,19 +181,19 @@ async function main() {
       .filter(Boolean))];
     const clsTargets = causeSelectors.map(sel => {
       for (const form of selectorForms(sel)) {
-        const res = resolveElementSelector({ selector: form, workspaceRoot });
+        const res = resolveElementSelector({ selector: form, workspaceRoot: scanRoot });
         if (res.file) return { ...res, causeSelector: sel };
       }
       return { selector: sel, causeSelector: sel, file: '', matchType: 'unresolved', confidence: 'low' };
     });
 
     const resolvedLocations = {
-      culpritScript: await resolveLoafScript(worstScript, workspaceRoot),
-      culpritFilterScript: await resolveLoafScript(filterScript, workspaceRoot),
+      culpritScript: await resolveLoafScript(worstScript, scanRoot),
+      culpritFilterScript: await resolveLoafScript(filterScript, scanRoot),
       elements: {
-        inpTarget: collected.worstInteraction ? resolveElementSelector({ selector: collected.worstInteraction.target, workspaceRoot }) : null,
-        filterTarget: filterTested ? resolveElementSelector({ selector: filterTested.target, workspaceRoot }) : null,
-        lcpTarget: resolveElementSelector({ selector: collected.metrics.lcp?.element, workspaceRoot }),
+        inpTarget: collected.worstInteraction ? resolveElementSelector({ selector: collected.worstInteraction.target, workspaceRoot: scanRoot }) : null,
+        filterTarget: filterTested ? resolveElementSelector({ selector: filterTested.target, workspaceRoot: scanRoot }) : null,
+        lcpTarget: resolveElementSelector({ selector: collected.metrics.lcp?.element, workspaceRoot: scanRoot }),
         clsTargets
       }
     };
@@ -153,13 +205,25 @@ async function main() {
     };
     const step2Output = { resolvedLocations };
 
-    const issues = runDeepAnalysis({ step1Output, step2Output, workspaceRoot });
+    const issues = runDeepAnalysis({ step1Output, step2Output, workspaceRoot: scanRoot });
+
+    // Fixes: paths are relative to the repository root; the analyzed page is known only for the served fixture
+    const issuesWithFixes = await generateFixesForIssues(issues, {
+      workspaceRoot: repo.root,
+      searchRoot: scanRoot,
+      pageFile: isFixture ? 'index.html' : undefined,
+      copilot: flags.copilot || flags.mockCopilot ? 'on' : 'off'
+    });
 
     console.log(JSON.stringify({
       source: 'live-run',
       url: collected.url,
       timestamp: collected.timestamp,
       throttling: collected.throttling,
+      repo: { isGit: repo.isGit },
+      copilot: flags.mockCopilot
+        ? `not run: stored mock responses from ${path.basename(flags.mockCopilot)} used through the Copilot client interface`
+        : flags.copilot ? 'requested: real Copilot calls attempted' : 'not run: pass --copilot (real) or --mock-copilot <file> (stored response)',
       metrics: collected.metrics,
       interactionsTested: collected.interactionsTested,
       worstInteraction: collected.worstInteraction,
@@ -169,7 +233,7 @@ async function main() {
         skipped: collected.interactionsSkipped
       },
       resolvedLocations,
-      issues
+      issues: issuesWithFixes
     }, null, 2));
 
     await cleanup();

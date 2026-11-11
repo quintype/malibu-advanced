@@ -21,14 +21,26 @@ const WEB_VITALS_ATTRIBUTION_PATH = path.resolve(
  */
 export const CAUSE_MATCH_WINDOW_MS = 100;
 
+let currentRepoRoot = null;
+
+/** Sets the root that file paths are made relative to (the git top-level of the analyzed project). */
+export function setRepoRoot(root) {
+  currentRepoRoot = root ? path.resolve(root) : null;
+}
+
+/** The root set by setRepoRoot, or the current working directory when none was set. */
+export function getRepoRoot() {
+  return currentRepoRoot ?? process.cwd();
+}
+
 /**
- * Normalizes absolute filesystem paths to clean, repo-relative paths.
- * Strips user directories and environment-specific paths.
+ * Normalizes a file path or URL to a repo-relative path. Absolute paths inside the repo root become relative
+ * to it; paths outside the root are returned unchanged; URLs become their path without the leading slash.
  * @param {string} filePath
  * @param {string} [repoRoot]
  * @returns {string}
  */
-export function normalizeRepoPath(filePath, repoRoot = process.cwd()) {
+export function normalizeRepoPath(filePath, repoRoot = getRepoRoot()) {
   if (!filePath || typeof filePath !== 'string') return '';
   let clean = filePath.replace(/^file:\/\//, '');
   if (clean.startsWith('http://') || clean.startsWith('https://')) {
@@ -38,14 +50,10 @@ export function normalizeRepoPath(filePath, repoRoot = process.cwd()) {
     } catch {}
   }
   if (path.isAbsolute(clean)) {
-    if (clean.includes('malibu-advanced')) {
-      const idx = clean.indexOf('malibu-advanced');
-      clean = clean.slice(idx + 'malibu-advanced'.length).replace(/^[/\\]+/, '');
-    } else {
-      clean = path.relative(repoRoot, clean);
-    }
+    const relative = path.relative(repoRoot, clean);
+    if (!relative.startsWith('..') && !path.isAbsolute(relative)) clean = relative;
   }
-  return clean.replace(/^\.\//, '').replace(/^cwv-inspector\//, '');
+  return clean.replace(/^\.\//, '');
 }
 
 /**

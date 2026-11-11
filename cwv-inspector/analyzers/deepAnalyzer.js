@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import * as babelParser from '@babel/parser';
 import _traverse from '@babel/traverse';
-import { normalizeRepoPath } from '../collector/inpCollector.js';
+import { normalizeRepoPath, getRepoRoot } from '../collector/inpCollector.js';
 
 const traverse = _traverse.default || _traverse;
 
@@ -29,8 +29,11 @@ export function analyzeInpFunction({
     : path.resolve(workspaceRoot, location.file);
 
   if (!fs.existsSync(fullPath)) {
+    const fromRepoRoot = path.resolve(getRepoRoot(), location.file);
     const fromCwd = path.resolve(process.cwd(), location.file);
-    if (fs.existsSync(fromCwd)) {
+    if (fs.existsSync(fromRepoRoot)) {
+      fullPath = fromRepoRoot;
+    } else if (fs.existsSync(fromCwd)) {
       fullPath = fromCwd;
     } else {
       const byBasename = path.resolve(workspaceRoot, path.basename(location.file));

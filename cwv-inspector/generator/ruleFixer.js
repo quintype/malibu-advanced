@@ -163,8 +163,9 @@ function fixUnreservedContainer(issue, workspaceRoot, options) {
   const height = issue.container?.measuredHeight;
   if (!isPositive(height)) return noFix(rule, 'Inserted node height after insertion was not measured; not estimating a height.');
 
+  const searchRoot = options.searchRoot || workspaceRoot;
   const found = [];
-  for (const file of listStyleFiles(workspaceRoot)) {
+  for (const file of listStyleFiles(searchRoot)) {
     const text = fs.readFileSync(file, 'utf-8');
     for (const form of selectorForms(containerSelector)) {
       const ruleRegex = new RegExp(`(?<![\\w-])${escapeRegExp(form)}\\s*\\{[^}]*?min-height:\\s*0(?:px)?\\s*;?[^}]*?\\}`, 'i');
@@ -177,7 +178,7 @@ function fixUnreservedContainer(issue, workspaceRoot, options) {
   let chosen = found[0];
   if (found.length > 1) {
     // Several files declare the rule: prefer the document the lab run actually loaded (options.pageFile), then the issue's own file.
-    const pagePath = options.pageFile ? path.resolve(workspaceRoot, options.pageFile.replace(/^\//, '')) : null;
+    const pagePath = options.pageFile ? path.resolve(searchRoot, options.pageFile.replace(/^\//, '')) : null;
     let preferred = pagePath ? found.filter(f => f.file === pagePath) : [];
     if (preferred.length !== 1) preferred = found.filter(f => issue.location?.file && f.file.endsWith(issue.location.file));
     if (preferred.length !== 1) return noFix(rule, `A rule for ${containerSelector} was found in ${found.length} files and none is identified as the analyzed page; refusing to guess which to edit.`);
@@ -189,7 +190,7 @@ function fixUnreservedContainer(issue, workspaceRoot, options) {
     rule,
     fix: {
       strategy: 'rule-based',
-      file: path.relative(workspaceRoot, chosen.file),
+      file: path.relative(workspaceRoot, chosen.file).replace(/\\/g, '/'),
       edits: [{ original_snippet: chosen.block, replacement_snippet: replacementBlock }],
       description: `Reserve min-height: ${height}px on ${containerSelector}, the height of the inserted node recorded in the lab run.`,
       why_it_works: isPositive(issue.container?.heightBefore)
@@ -253,7 +254,8 @@ function fixFontDisplay(issue, content) {
  *
  * @param {Object} issue
  * @param {string} [workspaceRoot]
- * @param {{pageFile?: string}} [options] pageFile: path (relative to workspaceRoot) of the HTML document the lab run loaded
+ * @param {{pageFile?: string, searchRoot?: string}} [options] searchRoot: directory searched for CSS rules (default workspaceRoot);
+ *   pageFile: path, relative to searchRoot, of the HTML document the lab run loaded
  * @returns {{rule: string, fix: Object|null, no_fix_reason?: string}|null}
  */
 export function diagnoseRuleBasedFix(issue, workspaceRoot = process.cwd(), options = {}) {

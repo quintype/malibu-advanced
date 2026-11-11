@@ -3,6 +3,8 @@ export {
   charOffsetToLineCol,
   extractCodeSnippet,
   calculateTimeShare,
-  normalizeRepoPath
+  normalizeRepoPath,
+  setRepoRoot,
+  getRepoRoot
 } from './inpCollector.js';
 

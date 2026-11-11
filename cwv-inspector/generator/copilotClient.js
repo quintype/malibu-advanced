@@ -137,13 +137,13 @@ export function parseAndValidateFix(rawResponse) {
  * @param {Object} options.issue - Issue identified by Step 3 analyzer
  * @param {string} options.sourceCode - Context code around the bottleneck
  * @param {string} [options.workspaceRoot]
- * @returns {Promise<Object>} Validated fix object conforming to FixSchema
+ * @returns {Promise<Object>} Validated fix object conforming to FixSchema, plus copilot_source: 'mock' | 'live'
  */
 export async function requestFix({ issue, sourceCode, workspaceRoot = process.cwd(), onPrompt, onRawResponse }) {
   // Check mock queue first
   if (mockQueue.length > 0) {
     const nextMock = mockQueue.shift();
-    return parseAndValidateFix(nextMock);
+    return { ...parseAndValidateFix(nextMock), copilot_source: 'mock' };
   }
 
   // Check mock handler
@@ -151,7 +151,7 @@ export async function requestFix({ issue, sourceCode, workspaceRoot = process.cw
     const result = typeof mockHandler === 'function'
       ? await mockHandler({ issue, sourceCode, isRetry: false })
       : mockHandler;
-    return parseAndValidateFix(result);
+    return { ...parseAndValidateFix(result), copilot_source: 'mock' };
   }
 
   // Build sanitized prompt for real Copilot execution
@@ -208,7 +208,7 @@ export async function requestFix({ issue, sourceCode, workspaceRoot = process.cw
     const rawContent = response?.data?.content;
     if (typeof rawContent !== 'string' || !rawContent.trim()) throw new Error('Copilot returned no assistant JSON response.');
     if (typeof onRawResponse === 'function') onRawResponse(rawContent, issue);
-    return parseAndValidateFix(rawContent);
+    return { ...parseAndValidateFix(rawContent), copilot_source: 'live' };
   } catch (err) {
     throw new Error(`Copilot fix generation failed: ${sanitizePromptContext(err.message, workspaceRoot)}`);
   } finally {
@@ -230,14 +230,14 @@ export async function requestFix({ issue, sourceCode, workspaceRoot = process.cw
 export async function retryFix({ issue, sourceCode, previousFix, validationError, workspaceRoot = process.cwd(), onPrompt, onRawResponse }) {
   if (mockQueue.length > 0) {
     const nextMock = mockQueue.shift();
-    return parseAndValidateFix(nextMock);
+    return { ...parseAndValidateFix(nextMock), copilot_source: 'mock' };
   }
 
   if (mockHandler) {
     const result = typeof mockHandler === 'function'
       ? await mockHandler({ issue, sourceCode, previousFix, validationError, isRetry: true })
       : mockHandler;
-    return parseAndValidateFix(result);
+    return { ...parseAndValidateFix(result), copilot_source: 'mock' };
   }
 
   const prompt = sanitizePromptContext([
@@ -265,7 +265,7 @@ export async function retryFix({ issue, sourceCode, previousFix, validationError
     const rawContent = response?.data?.content;
     if (typeof rawContent !== 'string' || !rawContent.trim()) throw new Error('Copilot returned no assistant JSON response.');
     if (typeof onRawResponse === 'function') onRawResponse(rawContent, issue);
-    return parseAndValidateFix(rawContent);
+    return { ...parseAndValidateFix(rawContent), copilot_source: 'live' };
   } catch (err) {
     throw new Error(`Copilot fix retry failed: ${sanitizePromptContext(err.message, workspaceRoot)}`);
   } finally {

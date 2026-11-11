@@ -59,14 +59,37 @@ export function extractSourceContext(fullPath, lineStart = 1, lineEnd = 1, conte
 /**
  * Generates and validates concrete code fixes for all eligible performance issues.
  *
- * @param {Array<Object>} issues - Issues list from Step 3 deep analyzer
+ * Deterministic rules run first. Issues without a rule (INP handlers) go to the Copilot client interface only when
+ * options.copilot === 'on'; a fix returned by a mock response is labelled strategy "mock" and copilot "not run", and
+ * only a real response is labelled "copilot". Without the option, such issues get no fix and copilot "not run".
+ *
+ * @param {Array<Object>} issues - Issues list from the deep analyzer
  * @param {Object} [options]
- * @param {string} [options.workspaceRoot]
+ * @param {string} [options.workspaceRoot] - Repository root; issue and diff paths are relative to it
+ * @param {string} [options.searchRoot] - Directory searched for CSS rules (defaults to workspaceRoot)
+ * @param {string} [options.pageFile] - HTML document the lab run loaded, relative to searchRoot
+ * @param {'on'|'off'} [options.copilot='off'] - Whether the Copilot client interface may be consulted
  * @returns {Promise<Array<Object>>} Enriched issues with concrete validated fixes
  */
 export async function generateFixesForIssues(issues = [], options = {}) {
   const workspaceRoot = options.workspaceRoot || process.cwd();
+  const copilotEnabled = options.copilot === 'on';
   const enrichedIssues = [];
+
+  const fixRecord = (strategy, candidate, validation, relativeFile, extra = {}) => ({
+    strategy,
+    fix_target_file: candidate.fix_target_file || candidate.file || relativeFile,
+    diff: validation.unifiedDiff,
+    edits: candidate.edits,
+    description: candidate.description,
+    why_it_works: candidate.why_it_works,
+    tradeoffs: candidate.tradeoffs,
+    gitApplyEvidence: validation.gitApplyEvidence,
+    gitApplyOutput: validation.gitApplyOutput,
+    validation: validation.checks,
+    fix_validated: true,
+    ...extra
+  });
 
   for (const issue of issues) {
     const enriched = { ...issue };
@@ -77,6 +100,7 @@ export async function generateFixesForIssues(issues = [], options = {}) {
         enriched.note = `Third-party code detected (${issue.location?.file}); automated modification skipped.`;
       }
       enriched.fix = null;
+      enriched.no_fix_reason = eligibility.reason;
       enriched.fix_validated = false;
       enriched.measured_improvement = null;
       enrichedIssues.push(enriched);
@@ -86,9 +110,9 @@ export async function generateFixesForIssues(issues = [], options = {}) {
     const relativeFile = issue.location?.file;
     const fullPath = resolveFilePath(relativeFile, workspaceRoot);
 
-    // 1. Attempt deterministic rule-based fix first (no LLM)
+    // 1. Deterministic rule-based fix first (no LLM)
     const forceCopilotForIssue = options.forceCopilot || options.forceCopilotMetrics?.includes(issue.metric);
-    const diagnosis = forceCopilotForIssue ? null : diagnoseRuleBasedFix(issue, workspaceRoot, { pageFile: options.pageFile });
+    const diagnosis = forceCopilotForIssue ? null : diagnoseRuleBasedFix(issue, workspaceRoot, { pageFile: options.pageFile, searchRoot: options.searchRoot });
     if (diagnosis && !diagnosis.fix) {
       // A rule applies but a required measurement or location is missing: report why, do not ask an LLM to guess.
       enriched.fix = null;
@@ -102,31 +126,43 @@ export async function generateFixesForIssues(issues = [], options = {}) {
     if (ruleFix) {
       const validation = await validateCandidateFix({ issue, fix: ruleFix, workspaceRoot });
       if (validation.valid) {
-        enriched.fix = {
-          strategy: 'rule-based',
-          fix_target_file: ruleFix.fix_target_file || ruleFix.file || relativeFile,
-          diff: validation.unifiedDiff,
-          edits: ruleFix.edits,
-          description: ruleFix.description,
-          why_it_works: ruleFix.why_it_works,
-          tradeoffs: ruleFix.tradeoffs,
-          gitApplyEvidence: validation.gitApplyEvidence,
-          gitApplyOutput: validation.gitApplyOutput,
-          fix_validated: true
-        };
+        enriched.fix = fixRecord('rule-based', ruleFix, validation, relativeFile);
+        enriched.copilot = 'not used (rule-based fix)';
         enriched.fix_validated = true;
         enriched.measured_improvement = null;
         enrichedIssues.push(enriched);
         continue;
       }
+      enriched.fix = {
+        strategy: 'rule-based',
+        fix_target_file: ruleFix.fix_target_file || ruleFix.file || relativeFile,
+        fix_validated: false,
+        fix_unverified: true,
+        validation_error: validation.error,
+        validation: validation.checks,
+        gitApplyEvidence: validation.gitApplyEvidence,
+        description: ruleFix.description,
+        edits: ruleFix.edits
+      };
+      enriched.copilot = 'not used (rule-based fix)';
+      enriched.fix_validated = false;
+      enriched.measured_improvement = null;
+      enrichedIssues.push(enriched);
+      continue;
     }
 
-    // 2. Fall back to Copilot for complex/restructuring fixes
-    const sourceCode = extractSourceContext(
-      fullPath,
-      issue.location?.line_start,
-      issue.location?.line_end
-    );
+    // 2. No rule applies: only the Copilot client interface can produce a fix, and only when enabled
+    if (!copilotEnabled) {
+      enriched.fix = null;
+      enriched.no_fix_reason = 'No deterministic rule applies to this issue.';
+      enriched.copilot = 'not run: Copilot was not enabled (use --copilot, or --mock-copilot <file> for a stored response)';
+      enriched.fix_validated = false;
+      enriched.measured_improvement = null;
+      enrichedIssues.push(enriched);
+      continue;
+    }
+
+    const sourceCode = extractSourceContext(fullPath, issue.location?.line_start, issue.location?.line_end);
 
     try {
       let candidateFix = await requestFix({
@@ -161,29 +197,23 @@ export async function generateFixesForIssues(issues = [], options = {}) {
         }
       }
 
+      const isMock = candidateFix.copilot_source === 'mock';
+      const strategy = isMock ? 'mock' : 'copilot';
+      enriched.copilot = isMock ? 'not run: a stored mock response was used, no Copilot call was made' : 'live';
+
       if (validation.valid) {
-        enriched.fix = {
-          strategy: 'copilot',
-          fix_target_file: candidateFix.fix_target_file || candidateFix.file || relativeFile,
-          diff: validation.unifiedDiff,
-          edits: candidateFix.edits,
-          description: candidateFix.description,
-          why_it_works: candidateFix.why_it_works,
-          tradeoffs: candidateFix.tradeoffs,
-          gitApplyEvidence: validation.gitApplyEvidence,
-          gitApplyOutput: validation.gitApplyOutput,
-          fix_validated: true
-        };
+        enriched.fix = fixRecord(strategy, candidateFix, validation, relativeFile);
         enriched.fix_validated = true;
         enriched.measured_improvement = null;
       } else {
         // Mark as fix_unverified: do NOT present diff as actionable
         enriched.fix = {
-          strategy: 'copilot',
+          strategy,
           fix_target_file: candidateFix.fix_target_file || candidateFix.file || relativeFile,
           fix_validated: false,
           fix_unverified: true,
           validation_error: validation.error,
+          validation: validation.checks,
           gitApplyEvidence: validation.gitApplyEvidence,
           description: candidateFix?.description || 'Attempted fix failed automated diff validation',
           why_it_works: candidateFix?.why_it_works || '',
@@ -202,6 +232,7 @@ export async function generateFixesForIssues(issues = [], options = {}) {
         validation_error: err.message,
         description: 'Failed to generate automated fix'
       };
+      enriched.copilot = `not run: ${err.message}`;
       enriched.fix_validated = false;
       enriched.measured_improvement = null;
     }

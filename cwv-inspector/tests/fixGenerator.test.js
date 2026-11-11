@@ -3,7 +3,7 @@ import path from 'path';
 import fs from 'fs';
 import vm from 'vm';
 import os from 'os';
-import { spawnSync } from 'child_process';
+import { spawnSync, execFileSync } from 'child_process';
 import { fileURLToPath } from 'url';
 import {
   setMockCopilotHandler,
@@ -137,10 +137,11 @@ async function runTests() {
 
   queueMockResponse(mockGoodFix);
 
-  const [goodResult] = await generateFixesForIssues([inpIssue], { workspaceRoot });
+  const [goodResult] = await generateFixesForIssues([inpIssue], { workspaceRoot, copilot: 'on' });
   console.log('goodResult.fix:', goodResult.fix);
   assert(goodResult.fix_validated, 'Good edit must have fix_validated: true');
-  assert.strictEqual(goodResult.fix.strategy, 'copilot');
+  assert.strictEqual(goodResult.fix.strategy, 'mock', 'A stored/queued response must be labelled mock, never copilot');
+  assert(/^not run/.test(goodResult.copilot), 'No Copilot call was made, so the status must say not run');
   assert(goodResult.fix.diff.includes('+  // 1. Chunked compute preserving all 14,000,000 operations'), 'Diff must contain patched lines');
   assert(goodResult.fix.gitApplyEvidence, 'Must have gitApplyEvidence');
   assert.strictEqual(goodResult.fix.gitApplyEvidence.exitCode, 0, 'git apply exitCode must be 0');
@@ -167,7 +168,7 @@ async function runTests() {
   queueMockResponse(mockBadSnippetFix);
   queueMockResponse(mockGoodFix);
 
-  const [retryResultB] = await generateFixesForIssues([inpIssue], { workspaceRoot });
+  const [retryResultB] = await generateFixesForIssues([inpIssue], { workspaceRoot, copilot: 'on' });
   assert(retryResultB.fix_validated, 'Fix must recover and be verified after retry');
   console.log('✓ Case B: Snippet not found triggered retry and recovered successfully\n');
 
@@ -191,7 +192,7 @@ async function runTests() {
   queueMockResponse(mockAmbiguousFix);
   queueMockResponse(mockGoodFix);
 
-  const [retryResultC] = await generateFixesForIssues([inpIssue], { workspaceRoot });
+  const [retryResultC] = await generateFixesForIssues([inpIssue], { workspaceRoot, copilot: 'on' });
   assert(retryResultC.fix_validated, 'Ambiguous snippet must trigger retry and recover');
   console.log('✓ Case C: Ambiguous snippet rejected and recovered via retry\n');
 
@@ -215,7 +216,7 @@ async function runTests() {
   queueMockResponse(mockSyntaxErrorFix);
   queueMockResponse(mockGoodFix);
 
-  const [retryResultD] = await generateFixesForIssues([inpIssue], { workspaceRoot });
+  const [retryResultD] = await generateFixesForIssues([inpIssue], { workspaceRoot, copilot: 'on' });
   assert(retryResultD.fix_validated, 'Syntax error must be caught and resolved on retry');
   console.log('✓ Case D: Syntax error caught by parser and resolved on retry\n');
 
@@ -246,7 +247,7 @@ async function runTests() {
   queueMockResponse(mockShrunkWorkFix);
   queueMockResponse(mockShrunkWorkFix);
 
-  const [failedShrunk] = await generateFixesForIssues([inpIssue], { workspaceRoot });
+  const [failedShrunk] = await generateFixesForIssues([inpIssue], { workspaceRoot, copilot: 'on' });
   assert(!failedShrunk.fix_validated, 'Shrunk work must fail verification');
   assert(failedShrunk.fix.validation_error.includes('Original workload bound (14000000) was shrunk or deleted'), 'Error must report workload deletion');
   console.log('✓ Case E.1: Workload deletion (shrinking 14M to 1k) caught and rejected\n');
@@ -277,7 +278,7 @@ async function runTests() {
   queueMockResponse(mockNoYieldFix);
   queueMockResponse(mockNoYieldFix);
 
-  const [failedNoYield] = await generateFixesForIssues([inpIssue], { workspaceRoot });
+  const [failedNoYield] = await generateFixesForIssues([inpIssue], { workspaceRoot, copilot: 'on' });
   console.log('failedNoYield error:', failedNoYield.fix?.validation_error);
   assert(!failedNoYield.fix_validated, 'Missing yield must fail verification');
   assert(failedNoYield.fix.validation_error.includes('does not add a cooperative yielding call'), 'Error must report missing yield');
@@ -337,7 +338,7 @@ async function runTests() {
   queueMockResponse(reactBadFix);
   queueMockResponse(reactBadFix);
 
-  const [failedReact] = await generateFixesForIssues([reactIssue], { workspaceRoot });
+  const [failedReact] = await generateFixesForIssues([reactIssue], { workspaceRoot, copilot: 'on' });
   assert(!failedReact.fix_validated, 'React fix removing console.log must fail');
   assert(failedReact.fix.validation_error.includes('Side effect statement') || failedReact.fix.validation_error.includes('Inner computation loop'), 'Must report removed statements');
   console.log('✓ Case E.3: React fix that removed console.log / inner loop rejected\n');
@@ -358,10 +359,11 @@ async function runTests() {
   // ---------------------------------------------------------------------------
   // Case G: Rule-Based Fixes on Fixture App
   // ---------------------------------------------------------------------------
-  // G.1/G.2/G.4: rule-based CLS fixes driven by LIVE CLI output on BOTH fixtures (source: live-run).
+  // G.1/G.2/G.4: CLS fixes produced by the CLI from LIVE output on BOTH fixtures (source: live-run).
   // Every number in a fix must equal a value recorded in that run; image sizes are also cross-checked against the image file headers.
-  const runCliLive = (fixtureDir, interactions) => {
-    const args = ['bin/cwv.js', 'analyze', 'fixture', '--path', path.relative(workspaceRoot, fixtureDir)];
+  const repoRoot = execFileSync('git', ['-C', workspaceRoot, 'rev-parse', '--show-toplevel'], { encoding: 'utf8' }).trim();
+  const runCliLive = (fixtureDir, interactions, extraArgs = []) => {
+    const args = ['bin/cwv.js', 'analyze', 'fixture', '--path', path.relative(workspaceRoot, fixtureDir), ...extraArgs];
     if (interactions) {
       const file = path.join(os.tmpdir(), `cwv-interactions-${process.pid}-${path.basename(fixtureDir)}.json`);
       fs.writeFileSync(file, JSON.stringify(interactions));
@@ -386,34 +388,35 @@ async function runTests() {
     const containerIssue = cls.find(i => i.rootCauseCategory === 'unreserved-container-shift');
     assert(imageIssue, `${fx.name}: live run must yield an unsized-image CLS issue`);
     assert(containerIssue, `${fx.name}: live run must yield an unreserved-container CLS issue`);
-    const pageFile = new URL(report.url).pathname;
-    liveIssues[fx.name] = { imageIssue, containerIssue, pageFile };
+    liveIssues[fx.name] = { imageIssue, containerIssue, pageFile: new URL(report.url).pathname };
 
     // Independent cross-check: recorded natural size equals the size in the image file header
-    const imageFile = path.resolve(fx.dir, imageIssue.timingCorrelation.candidates[0].url);
-    const header = getImageDimensions(imageFile);
-    assert(header, `${fx.name}: must read image header from ${imageFile}`);
+    const header = getImageDimensions(path.resolve(fx.dir, imageIssue.timingCorrelation.candidates[0].url));
+    assert(header, `${fx.name}: must read the image header`);
     assert.strictEqual(imageIssue.naturalWidth, header.width);
     assert.strictEqual(imageIssue.naturalHeight, header.height);
 
-    // Image fix uses exactly the recorded natural size
-    const imageFix = generateRuleBasedFix(imageIssue, fx.dir);
-    assert(imageFix, `${fx.name}: rule fixer must produce an image fix`);
-    assert(imageFix.edits[0].replacement_snippet.includes(`width="${imageIssue.naturalWidth}" height="${imageIssue.naturalHeight}"`));
-    const imageValidation = await validateCandidateFix({ issue: imageIssue, fix: imageFix, workspaceRoot: fx.dir });
-    assert(imageValidation.valid, `${fx.name}: image fix must pass diff validation: ${imageValidation.error}`);
-    assert(imageValidation.gitApplyOutput.includes('Checking patch'), 'git apply --check must succeed');
-    console.log(`\n[${fx.name}] image fix diff (source: live-run, natural size ${imageIssue.naturalWidth}x${imageIssue.naturalHeight} recorded and equal to file header):\n${imageValidation.unifiedDiff}`);
-
-    // Container fix uses exactly the recorded inserted-node height
-    const containerFix = generateRuleBasedFix(containerIssue, fx.dir, { pageFile });
-    assert(containerFix, `${fx.name}: rule fixer must produce a container fix`);
-    assert(containerFix.edits[0].replacement_snippet.includes(`min-height: ${containerIssue.container.measuredHeight}px;`));
-    const containerValidation = await validateCandidateFix({ issue: containerIssue, fix: containerFix, workspaceRoot: fx.dir });
-    assert(containerValidation.valid, `${fx.name}: container fix must pass diff validation: ${containerValidation.error}`);
-    console.log(`\n[${fx.name}] container fix diff (source: live-run, node height after insertion ${containerIssue.container.measuredHeight}px recorded):\n${containerValidation.unifiedDiff}`);
+    for (const [label, issue, expected] of [
+      ['image', imageIssue, `width="${imageIssue.naturalWidth}" height="${imageIssue.naturalHeight}"`],
+      ['container', containerIssue, `min-height: ${containerIssue.container.measuredHeight}px;`]
+    ]) {
+      const fix = issue.fix;
+      assert(fix && fix.fix_validated === true, `${fx.name} ${label}: CLI must produce a validated fix`);
+      assert.strictEqual(fix.strategy, 'rule-based');
+      assert(fix.diff.includes(expected), `${fx.name} ${label}: diff must contain the recorded value ${expected}`);
+      // Paths are relative to the repository root and apply from there
+      assert(!path.isAbsolute(fix.fix_target_file) && fs.existsSync(path.join(repoRoot, fix.fix_target_file)), `${fx.name} ${label}: fix_target_file must exist relative to the repo root (${fix.fix_target_file})`);
+      assert(fix.diff.includes(`--- a/${fix.fix_target_file}`), 'diff paths must match fix_target_file');
+      // Raw git apply --check evidence
+      assert.strictEqual(fix.gitApplyEvidence.exitCode, 0);
+      assert(/git apply --check/.test(fix.gitApplyEvidence.command));
+      assert.strictEqual(fix.gitApplyEvidence.success, true);
+      assert.strictEqual(fix.validation.hunkHeaderCounts.valid, true);
+      assert.strictEqual(issue.measured_improvement, null, 'fix_validated is not a measured improvement');
+      console.log(`\n[${fx.name}] ${label} fix (source: live-run; ${expected} recorded in this run) git: \`${fix.gitApplyEvidence.command}\` exit ${fix.gitApplyEvidence.exitCode} stderr: ${JSON.stringify(fix.gitApplyEvidence.stderr.trim())}\n${fix.diff}`);
+    }
   }
-  console.log('\n✓ Case G.1: Rule-based image + container fixes on demo-app use only values recorded in the live run');
+  console.log('\n✓ Case G.1: CLI CLS fixes on demo-app use only values recorded in the live run, with repo-relative diffs and git apply evidence');
   console.log('✓ Case G.4: Same on demo-app-alt (different ids, insertBefore, different timing)');
 
   // G.2: a missing measurement yields NO fix, a reason, and no Copilot call
@@ -421,6 +424,7 @@ async function runTests() {
   setMockCopilotHandler(async () => { copilotCalls++; throw new Error('Copilot must not be consulted when a rule lacks a measurement'); });
   for (const fx of liveFixtures) {
     const { imageIssue, containerIssue, pageFile } = liveIssues[fx.name];
+    const ruleOptions = { pageFile, searchRoot: fx.dir };
     const withoutNatural = { ...imageIssue };
     delete withoutNatural.naturalWidth;
     delete withoutNatural.naturalHeight;
@@ -436,12 +440,12 @@ async function runTests() {
       ['container rule absent from workspace', unknownContainer, /No CSS rule/],
       ['source location unresolved', unresolved, /unresolved/i]
     ]) {
-      const diagnosis = diagnoseRuleBasedFix(issue, fx.dir, { pageFile });
+      const diagnosis = diagnoseRuleBasedFix(issue, repoRoot, ruleOptions);
       assert(diagnosis, `${fx.name} / ${label}: a rule must apply`);
       assert.strictEqual(diagnosis.fix, null, `${fx.name} / ${label}: must emit no fix`);
       assert(reasonPattern.test(diagnosis.no_fix_reason), `${fx.name} / ${label}: reason was "${diagnosis.no_fix_reason}"`);
     }
-    const [enriched] = await generateFixesForIssues([withoutNatural], { workspaceRoot: fx.dir });
+    const [enriched] = await generateFixesForIssues([withoutNatural], { workspaceRoot: repoRoot, copilot: 'on' });
     assert.strictEqual(enriched.fix, null);
     assert(enriched.no_fix_reason && /not measured/.test(enriched.no_fix_reason));
     assert.strictEqual(enriched.fix_validated, false);
@@ -551,7 +555,10 @@ async function runTests() {
     functionName: 'handleSlowButtonClick'
   });
   assert(dynResultCorrect.valid, 'Correct chunked version must pass dynamic equivalence');
-  assert.strictEqual(dynResultCorrect.operationsExecuted, 401, 'Must execute exactly 401 DOM operations in exact order');
+  assert.strictEqual(dynResultCorrect.operationsExecuted, dynResultCorrect.originalOperations, 'Patched run must execute exactly the original\'s DOM operations in the same order');
+  assert(dynResultCorrect.originalOperations > 0);
+  assert(/^passed/.test(dynResultCorrect.checks.reentrancy), 'Re-entrancy guard must be verified: ' + dynResultCorrect.checks.reentrancy);
+  assert(/^passed/.test(dynResultCorrect.checks.exceptionSafety), 'try/finally guard reset must be verified: ' + dynResultCorrect.checks.exceptionSafety);
   assert(patchedCorrect.includes('if (btn.__cwvProcessing) return;'), 'Chunked diff must reject clicks while yielding');
 
   let releaseChunk;
@@ -579,7 +586,7 @@ async function runTests() {
   releaseChunk();
   await firstClick;
   assert(counterText.startsWith('Tasks completed: 1'), 'Guarded handler must preserve the completed result');
-  console.log('✓ Case I.5: Chunked guard passed dynamic equivalence and ignored a second click during yielding (401 operations)\n');
+  console.log('✓ Case I.5: Chunked guard passed dynamic equivalence and ignored a second click during yielding (' + dynResultCorrect.originalOperations + ' recorded operations)\n');
 
   // ---------------------------------------------------------------------------
   // Case J: rootCauseCategory Assertion & handleProductFilterInput Fix Validation

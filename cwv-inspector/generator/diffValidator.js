@@ -385,6 +385,8 @@ export function verifyBehaviorPreservation(issue, originalContent, patchedConten
  */
 export function verifySemanticResolution({ issue, filePath, patchedContent }) {
   const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'cwv-semantic-verify-'));
+  let inpReanalysis = null;
+  let cssReanalysis = null;
   try {
     const tempFilePath = path.join(tempDir, filePath);
     fs.mkdirSync(path.dirname(tempFilePath), { recursive: true });
@@ -392,56 +394,49 @@ export function verifySemanticResolution({ issue, filePath, patchedContent }) {
 
     // 1. INP Verification: Check if culprit function still contains unyielded heavy loop or layout thrashing
     if (issue.metric === 'INP' && (issue.rootCauseCategory === 'heavy-compute-loop' || issue.rootCauseCategory === 'layout-thrashing')) {
-      const functionName = issue.location?.name || 'handleSlowButtonClick';
-      const mockScript = {
-        sourceFunctionName: functionName,
-        duration: 35,
-        forcedStyleAndLayoutDuration: 0,
-        timeShare: {
-          totalDuration: 35,
-          computeDuration: 35,
-          forcedLayoutDuration: 0,
-          computeShare: '100%',
-          forcedLayoutShare: '0%'
-        }
-      };
+      const functionName = issue.location?.name;
+      if (!functionName) return { valid: false, error: 'Semantic re-analysis cannot run: the issue names no function.' };
 
+      // Static re-analysis of the patched file: zero durations are neutral stand-ins, only the AST findings are used.
       const reanalysis = analyzeInpFunction({
-        culpritScript: mockScript,
-        location: {
-          file: tempFilePath,
-          line: issue.location.line_start || 1,
-          name: functionName
+        culpritScript: {
+          sourceFunctionName: functionName,
+          duration: 0,
+          forcedStyleAndLayoutDuration: 0,
+          timeShare: { totalDuration: 0, computeDuration: 0, forcedLayoutDuration: 0, computeShare: '0%', forcedLayoutShare: '0%' }
         },
+        location: { file: tempFilePath, line: issue.location.line_start || 1, name: functionName },
         workspaceRoot: tempDir,
-        worstInteraction: {
-          target: issue.location.element || '#slow-click-btn',
-          duration: { median: 35 }
-        }
+        worstInteraction: { target: issue.location.element ?? null, duration: { median: 0 } }
       });
 
-      // If heavy loop or layout thrashing is still cited in the reanalysis evidence, fix failed!
-      if (reanalysis && (
-        reanalysis.evidence.some(e => e.includes('iterations') && e.includes('blocking main thread')) ||
-        reanalysis.evidence.some(e => e.includes('forced synchronous reflow') && reanalysis.timeShare?.forcedLayoutDuration > 0)
-      )) {
-        return {
-          valid: false,
-          error: 'Semantic verification failed: Heavy loop or layout thrashing remains unaddressed in patched function.'
-        };
+      const heavyLoopRemains = Boolean(reanalysis && reanalysis.evidence.some(e => e.includes('iterations') && e.includes('blocking main thread')));
+      const layoutThrashingRemains = Boolean(reanalysis && reanalysis.evidence.some(e => e.includes('Interleaved DOM style writes')));
+      inpReanalysis = { heavyLoopRemains, layoutThrashingRemains, analyzerFoundFunction: Boolean(reanalysis) };
+      if (heavyLoopRemains) {
+        return { valid: false, error: 'Semantic verification failed: a heavy synchronous loop remains unaddressed in the patched function.' };
       }
     }
 
     // 2. CLS Verification: Check that image has width/height or container has min-height
     if (issue.metric === 'CLS') {
       if (issue.rootCauseCategory === 'unsized-image-shift') {
-        const hasDims = /<img[^>]+(?:width=["'][0-9]+["'][^>]+height=["'][0-9]+["']|height=["'][0-9]+["'][^>]+width=["'][0-9]+["'])/i.test(patchedContent);
-        if (!hasDims) {
+        // The issue's own <img> (found by its id/class selector) must now declare both width and height.
+        const element = issue.location?.element || '';
+        const imgSource = element.startsWith('#')
+          ? `<img\\s+[^>]*?id=["']${escapeRegExp(element.slice(1))}["'][^>]*?\\/?>`
+          : element.startsWith('.')
+            ? `<img\\s+[^>]*?class=["'][^"']*?\\b${escapeRegExp(element.slice(1))}\\b[^"']*?["'][^>]*?\\/?>`
+            : '<img\\s[^>]*?>';
+        const tag = patchedContent.match(new RegExp(imgSource, 'i'));
+        const declares = Boolean(tag) && /\swidth=["'][0-9.]+["']/i.test(tag[0]) && /\sheight=["'][0-9.]+["']/i.test(tag[0]);
+        if (!declares) {
           return {
             valid: false,
             error: 'Semantic verification failed: Image still lacks explicit width and height attributes.'
           };
         }
+        cssReanalysis = { verified: `<img> ${element || '(any)'} declares width and height in the patched file` };
       }
       if (issue.rootCauseCategory === 'unreserved-container-shift') {
         // The issue's own container must now declare a positive min-height (decimals allowed); without a recorded selector, any positive min-height.
@@ -459,10 +454,11 @@ export function verifySemanticResolution({ issue, filePath, patchedContent }) {
             error: 'Semantic verification failed: Container still lacks positive reserved min-height.'
           };
         }
+        cssReanalysis = { verified: `rule for ${containerSelector || '(any container)'} declares a positive min-height in the patched file` };
       }
     }
 
-    return { valid: true };
+    return { valid: true, reanalysis: inpReanalysis ?? cssReanalysis ?? { verified: 'no static re-analysis applies to this issue category' } };
   } finally {
     try {
       fs.rmSync(tempDir, { recursive: true, force: true });
@@ -470,241 +466,206 @@ export function verifySemanticResolution({ issue, filePath, patchedContent }) {
   }
 }
 
+// An operation on a property whose name starts with "__" (e.g. btn.__cwvProcessing) is treated as guard
+// bookkeeping added by a fix, not as page behavior, and is excluded when traces are compared.
+const isGuardPath = (opPath) => opPath.split('.').some(segment => segment.startsWith('__'));
+const behavioralOps = (ops) => ops.filter(op => !isGuardPath(op.path));
+
 /**
- * Executes original and patched functions in a secure VM sandbox with stubbed DOM
- * recording every layout write, read, and side-effect in order.
- * Asserts strict equivalence in:
- * 1. Total operation count (detects skipped loops or strides like j += 10)
- * 2. Exact operation order (write -> read -> write -> read)
- * 3. Exact written values
- * 4. Final calculated outputs and textContent (detects altered loop bounds or logic)
- * 5. Preservation of side-effects (console.log)
+ * A recording stand-in for the DOM: every property read, property write and call on it is logged in order.
+ * Unknown property reads return another recorder node (so chains like el.style.width work) whose numeric
+ * value is derived deterministically from its path; "__"-prefixed expando flags read as undefined until written.
+ */
+function createRecorder() {
+  const ops = [];
+  const store = new Map();
+  const state = { failAtWrite: null, writes: 0 };
+  const summarize = (v) => (typeof v === 'function' ? '[function]' : v !== null && typeof v === 'object' ? '[object]' : String(v));
+  const numberFor = (nodePath) => {
+    let h = 7;
+    for (const ch of nodePath) h = (h * 31 + ch.charCodeAt(0)) % 997;
+    return (h % 89) + 11;
+  };
+
+  const makeNode = (nodePath) => new Proxy(function () {}, {
+    get(_, prop) {
+      if (prop === Symbol.toPrimitive) return (hint) => (hint === 'string' ? nodePath : numberFor(nodePath));
+      if (typeof prop === 'symbol' || prop === 'then') return undefined;
+      const propPath = `${nodePath}.${prop}`;
+      ops.push({ type: 'read', path: propPath });
+      if (store.has(propPath)) return store.get(propPath);
+      if (prop.startsWith('__')) return undefined;
+      return makeNode(propPath);
+    },
+    set(_, prop, value) {
+      const propPath = `${nodePath}.${String(prop)}`;
+      if (!isGuardPath(propPath)) {
+        state.writes++;
+        if (state.failAtWrite !== null && state.writes === state.failAtWrite) throw new Error('injected failure');
+      }
+      ops.push({ type: 'write', path: propPath, value: summarize(value) });
+      store.set(propPath, value);
+      return true;
+    },
+    apply(_, thisArg, args) {
+      const callPath = `${nodePath}(${args.map(summarize).join(',')})`;
+      ops.push({ type: 'call', path: callPath });
+      return makeNode(callPath);
+    }
+  });
+
+  return { ops, store, state, makeNode };
+}
+
+/** Loads `code` into a fresh vm context wired to a recorder; load-time activity is discarded. */
+function loadSandbox(code, functionName, { yieldHook = null, timerHook = null } = {}) {
+  const recorder = createRecorder();
+  const logs = [];
+  let clock = 1000;
+  const record = (...args) => logs.push(args.map(String).join(' '));
+  const sandbox = {
+    document: recorder.makeNode('document'),
+    window: recorder.makeNode('window'),
+    console: { log: record, info: record, warn: record, error: record },
+    performance: { now: () => (clock += 0.5) },
+    scheduler: { yield: yieldHook || (() => Promise.resolve()) },
+    setTimeout: timerHook || ((fn, ms) => { if (typeof fn === 'function' && !ms) process.nextTick(fn); return 1; })
+  };
+  const context = vm.createContext(sandbox);
+  new vm.Script(code).runInContext(context);
+  recorder.ops.length = 0;
+  const fn = vm.runInContext(`typeof ${functionName} === 'function' ? ${functionName} : undefined`, context);
+  if (!fn) throw new Error(`function ${functionName} is not defined by the file`);
+  const makeEvent = (query) => {
+    recorder.store.set('event.target.value', query);
+    return recorder.makeNode('event');
+  };
+  return { recorder, logs, fn, makeEvent };
+}
+
+async function traceHandler(code, functionName, query) {
+  const box = loadSandbox(code, functionName);
+  await box.fn(box.makeEvent(query));
+  return {
+    ops: behavioralOps(box.recorder.ops),
+    logs: box.logs,
+    writes: box.recorder.state.writes,
+    readsEventValue: box.recorder.ops.some(op => op.path === 'event.target.value')
+  };
+}
+
+function compareTraces(original, patched) {
+  if (patched.ops.length !== original.ops.length) {
+    return `Dynamic equivalence failed: operation count mismatch. Original executed ${original.ops.length} DOM operations, but patched code executed ${patched.ops.length} operations; all reads and writes must be preserved without skipping or striding.`;
+  }
+  for (let i = 0; i < original.ops.length; i++) {
+    const o = original.ops[i];
+    const q = patched.ops[i];
+    if (o.type !== q.type || o.path !== q.path) {
+      return `Dynamic equivalence failed: operation #${i + 1} order mismatch. Expected ${o.type} on ${o.path}, but found ${q.type} on ${q.path}. Reads and writes must keep their exact execution order.`;
+    }
+    if (o.type === 'write' && o.value !== q.value) {
+      return `Dynamic equivalence failed: write value mismatch at operation #${i + 1} on ${o.path}. Expected '${o.value}', got '${q.value}'. Total compute work or bounds were altered.`;
+    }
+  }
+  if (original.logs.length > 0 && patched.logs.length < original.logs.length) {
+    return 'Dynamic equivalence failed: console.log side-effects were removed from patched function.';
+  }
+  return null;
+}
+
+/**
+ * Executes the original and patched function in a vm sandbox against a recording DOM and requires:
+ * 1. identical ordered DOM operations (reads, writes with their values, calls) and no dropped console output,
+ *    for each of several input queries when the handler reads event.target.value;
+ * 2. if the patched handler yields (returns a promise): a second invocation while the first is suspended must be
+ *    ignored, and the work done must equal one original run (re-entrancy guard);
+ * 3. if so, after an exception thrown mid-handler the next invocation must run in full (the guard is released in
+ *    a finally block).
+ * Guard bookkeeping on "__"-prefixed properties is excluded from the comparison.
  *
  * @param {Object} options
  * @param {string} options.originalCode - Complete original file content
  * @param {string} options.patchedCode - Complete patched file content
- * @param {string} [options.functionName] - Target function name
- * @returns {Promise<{valid: boolean, error?: string, operationsExecuted?: number}>}
+ * @param {string} options.functionName - Handler function to exercise
+ * @returns {Promise<{valid: boolean, error?: string, operationsExecuted?: number, originalOperations?: number, checks?: Object}>}
  */
-export async function verifyDynamicEquivalence({ originalCode, patchedCode, functionName = 'handleSlowButtonClick' }) {
-  function createHarness() {
-    const recordedOps = [];
-    const logs = [];
+export async function verifyDynamicEquivalence({ originalCode, patchedCode, functionName }) {
+  if (!functionName) return { valid: false, error: 'Dynamic equivalence cannot run: the issue names no handler function.' };
 
-    let widthVal = '100px';
-    let paddingLeftVal = '10px';
-
-    const btn = {
-      style: new Proxy({}, {
-        set(target, prop, val) {
-          recordedOps.push({ type: 'write', target: 'btn.style', prop, value: String(val) });
-          if (prop === 'width') widthVal = String(val);
-          if (prop === 'paddingLeft') paddingLeftVal = String(val);
-          return true;
-        },
-        get(target, prop) {
-          if (prop === 'width') return widthVal;
-          if (prop === 'paddingLeft') return paddingLeftVal;
-          return '';
-        }
-      }),
-      get offsetHeight() {
-        recordedOps.push({ type: 'read', target: 'btn', prop: 'offsetHeight' });
-        return 40;
-      },
-      getBoundingClientRect() {
-        recordedOps.push({ type: 'read', target: 'btn', prop: 'getBoundingClientRect.width' });
-        return { width: 120, height: 40, top: 0, left: 0 };
-      }
-    };
-
-    let counterText = '';
-    const counterEl = {
-      set textContent(val) {
-        counterText = String(val);
-        recordedOps.push({ type: 'write', target: 'counterEl', prop: 'textContent', value: String(val) });
-      },
-      get textContent() {
-        return counterText;
-      }
-    };
-
-    const makeElement = (id = '', tag = 'div') => ({
-      id,
-      tagName: tag.toUpperCase(),
-      style: new Proxy({}, { set: () => true, get: () => '' }),
-      addEventListener: () => {},
-      removeEventListener: () => {},
-      appendChild: () => {},
-      hasChildNodes: () => false,
-      classList: { toggle: () => {}, add: () => {}, remove: () => {} },
-      textContent: ''
-    });
-
-    btn.addEventListener = () => {};
-    counterEl.addEventListener = () => {};
-
-    const documentMock = {
-      getElementById(id) {
-        if (id === 'slow-click-btn') return btn;
-        if (id === 'counter') return counterEl;
-        return makeElement(id);
-      },
-      createElement(tag) {
-        return makeElement('', tag);
-      },
-      addEventListener(evt, fn) {
-        // Don't auto-run DOMContentLoaded; handler is tested specifically
-      },
-      removeEventListener() {}
-    };
-
-    let currentTime = 1000;
-    const sandbox = {
-      document: documentMock,
-      window: null,
-      taskCount: 0,
-      performance: {
-        now: () => (currentTime += 0.5)
-      },
-      console: {
-        log: (...args) => logs.push(args.join(' ')),
-        info: (...args) => logs.push(args.join(' ')),
-        warn: (...args) => logs.push(args.join(' ')),
-        error: (...args) => logs.push(args.join(' '))
-      },
-      scheduler: {
-        yield: () => Promise.resolve()
-      },
-      setTimeout: (fn, ms) => {
-        if (typeof fn === 'function' && (!ms || ms === 0)) {
-          process.nextTick(fn);
-        }
-        return 1;
-      },
-      Math
-    };
-    sandbox.window = sandbox;
-
-    const context = vm.createContext(sandbox);
-    return { context, sandbox, recordedOps, logs, getCounterText: () => counterText };
-  }
-
-  const targetFn = functionName || 'handleSlowButtonClick';
-
-  // If function is handleProductFilterInput:
-  if (targetFn === 'handleProductFilterInput') {
-    const harnessOrig = createHarness();
-    const harnessPatched = createHarness();
-    try {
-      const runOrigScript = new vm.Script(`
-        ${originalCode}
-        (async () => {
-          if (typeof handleProductFilterInput === 'function') {
-            await handleProductFilterInput({ target: { value: 'Product Title #42' } });
-          }
-        })()
-      `);
-      await runOrigScript.runInContext(harnessOrig.context);
-
-      const runPatchedScript = new vm.Script(`
-        ${patchedCode}
-        (async () => {
-          if (typeof handleProductFilterInput === 'function') {
-            await handleProductFilterInput({ target: { value: 'Product Title #42' } });
-          }
-        })()
-      `);
-      await runPatchedScript.runInContext(harnessPatched.context);
-
-      if (harnessOrig.logs.length > 0 && harnessPatched.logs.length === 0) {
-        return { valid: false, error: 'Dynamic equivalence failed: console.log was removed from handleProductFilterInput.' };
-      }
-      return { valid: true };
-    } catch (err) {
-      return { valid: false, error: `Dynamic execution failed for handleProductFilterInput: ${err.message}` };
-    }
-  }
-
-  // 1. Run Original Handler
-  const harnessOrig = createHarness();
+  const queries = ['Product Title #42'];
+  let original;
   try {
-    const runOrigScript = new vm.Script(`
-      ${originalCode}
-      (async () => {
-        if (typeof ${targetFn} === 'function') {
-          return await ${targetFn}({});
-        }
-      })()
-    `);
-    await runOrigScript.runInContext(harnessOrig.context);
+    original = await traceHandler(originalCode, functionName, queries[0]);
   } catch (err) {
     return { valid: false, error: `Failed to execute original function in dynamic sandbox: ${err.message}` };
   }
+  if (original.readsEventValue) queries.push('', 'a', 'no-such-text-anywhere');
 
-  // 2. Run Patched Handler
-  const harnessPatched = createHarness();
-  try {
-    const runPatchedScript = new vm.Script(`
-      ${patchedCode}
-      (async () => {
-        if (typeof ${targetFn} === 'function') {
-          return await ${targetFn}({});
+  let patched;
+  for (const [index, query] of queries.entries()) {
+    const reference = index === 0 ? original : await traceHandler(originalCode, functionName, query);
+    try {
+      patched = await traceHandler(patchedCode, functionName, query);
+    } catch (err) {
+      return { valid: false, error: `Failed to execute patched function in dynamic sandbox: ${err.message}` };
+    }
+    const mismatch = compareTraces(reference, patched);
+    if (mismatch) return { valid: false, error: mismatch };
+  }
+
+  const checks = { trace: `identical for ${queries.length} input(s)` };
+
+  // Re-entrancy: hold the first invocation at its first yield and call again.
+  let releaseGate;
+  let gateOpen = false;
+  const gate = new Promise(resolve => { releaseGate = () => { gateOpen = true; resolve(); }; });
+  const gated = loadSandbox(patchedCode, functionName, {
+    yieldHook: () => (gateOpen ? Promise.resolve() : gate),
+    timerHook: (fn) => { if (gateOpen) process.nextTick(fn); else gate.then(fn); return 1; }
+  });
+  const first = gated.fn(gated.makeEvent(queries[0]));
+  if (first && typeof first.then === 'function') {
+    const second = gated.fn(gated.makeEvent(queries[0]));
+    releaseGate();
+    await Promise.all([first, second]);
+    // Repeated work shows up as repeated DOM writes: together the two invocations must write exactly what one original run writes.
+    const writesOf = (ops) => ops.filter(op => op.type === 'write').map(op => `${op.path}=${op.value}`);
+    const combined = writesOf(behavioralOps(gated.recorder.ops));
+    const expected = writesOf(original.ops);
+    if (combined.length !== expected.length || combined.some((w, i) => w !== expected[i])) {
+      return { valid: false, error: `Re-entrancy check failed: a second invocation while the first was yielding repeated the work (${combined.length} DOM writes instead of ${expected.length}). A fix that yields needs a guard that ignores repeated clicks.` };
+    }
+    checks.reentrancy = 'passed: a second invocation during yielding was ignored';
+
+    // Exception safety: fail partway through, then require the next invocation to complete in full.
+    if (original.writes >= 2) {
+      const failing = loadSandbox(patchedCode, functionName);
+      failing.recorder.state.failAtWrite = Math.ceil(original.writes / 2);
+      let threw = false;
+      try { await failing.fn(failing.makeEvent(queries[0])); } catch { threw = true; }
+      if (threw) {
+        failing.recorder.state.failAtWrite = null;
+        failing.recorder.ops.length = 0;
+        await failing.fn(failing.makeEvent(queries[0]));
+        const rerun = behavioralOps(failing.recorder.ops);
+        const sameShape = rerun.length === original.ops.length && rerun.every((op, i) => op.type === original.ops[i].type && op.path === original.ops[i].path);
+        if (!sameShape) {
+          return { valid: false, error: 'Exception-safety check failed: after an exception mid-handler the next invocation did not run in full; the guard must be released in a finally block.' };
         }
-      })()
-    `);
-    await runPatchedScript.runInContext(harnessPatched.context);
-  } catch (err) {
-    return { valid: false, error: `Failed to execute patched function in dynamic sandbox: ${err.message}` };
-  }
-
-  // 3. Verify Operations Count & Order
-  const opsOrig = harnessOrig.recordedOps;
-  const opsPatch = harnessPatched.recordedOps;
-
-  if (opsPatch.length !== opsOrig.length) {
-    return {
-      valid: false,
-      error: `Dynamic equivalence failed: operation count mismatch. Original executed ${opsOrig.length} DOM operations, but patched code executed ${opsPatch.length} operations. All 100 layout writes/reads must be preserved without skipping or stride.`
-    };
-  }
-
-  for (let i = 0; i < opsOrig.length; i++) {
-    const o = opsOrig[i];
-    const p = opsPatch[i];
-    if (o.type !== p.type || o.prop !== p.prop || o.target !== p.target) {
-      return {
-        valid: false,
-        error: `Dynamic equivalence failed: operation #${i + 1} order mismatch. Expected ${o.type} on ${o.target}.${o.prop}, but found ${p.type} on ${p.target}.${p.prop}. Reflow reads/writes must preserve exact execution order.`
-      };
+        checks.exceptionSafety = 'passed: the next invocation after a mid-handler exception ran in full';
+      } else {
+        checks.exceptionSafety = 'not applicable: the patched handler did not propagate the injected failure';
+      }
+    } else {
+      checks.exceptionSafety = 'not applicable: the original performs fewer than 2 DOM writes';
     }
-    if (o.type === 'write' && o.value !== p.value) {
-      return {
-        valid: false,
-        error: `Dynamic equivalence failed: write value mismatch at operation #${i + 1} on ${o.target}.${o.prop}. Expected '${o.value}', got '${p.value}'.`
-      };
-    }
+  } else {
+    checks.reentrancy = 'not applicable: the patched handler is synchronous, so there is no yielding window';
+    checks.exceptionSafety = 'not applicable: the patched handler is synchronous';
   }
 
-  // 4. Verify Final Calculated Results
-  const textOrig = harnessOrig.getCounterText();
-  const textPatch = harnessPatched.getCounterText();
-  if (textOrig && textOrig !== textPatch) {
-    return {
-      valid: false,
-      error: `Dynamic equivalence failed: final calculation output mismatch. Expected textContent '${textOrig}', but got '${textPatch}'. Total compute work or bounds were altered.`
-    };
-  }
-
-  // 5. Verify Side-Effects (console.log)
-  if (harnessOrig.logs.length > 0 && harnessPatched.logs.length === 0) {
-    return {
-      valid: false,
-      error: 'Dynamic equivalence failed: console.log side-effects were removed from patched function.'
-    };
-  }
-
-  return { valid: true, operationsExecuted: opsPatch.length };
+  return { valid: true, operationsExecuted: patched.ops.length, originalOperations: original.ops.length, checks };
 }
 
 /**
@@ -740,10 +701,13 @@ export async function validateCandidateFix({ issue, fix, workspaceRoot = process
 
   const originalContent = fs.readFileSync(fullPath, 'utf-8');
 
+  const checks = {};
+
   // Step 1: Unambiguity check
   const unambiguityCheck = validateSnippetUnambiguity(originalContent, fix.edits);
+  checks.snippetUnambiguity = unambiguityCheck;
   if (!unambiguityCheck.valid) {
-    return { valid: false, error: unambiguityCheck.error };
+    return { valid: false, error: unambiguityCheck.error, checks };
   }
 
   // Step 2: Patch generation
@@ -751,20 +715,23 @@ export async function validateCandidateFix({ issue, fix, workspaceRoot = process
 
   // Step 2.1: Hunk header count verification
   const hunkCheck = verifyHunkHeaderCounts(unifiedDiff);
+  checks.hunkHeaderCounts = hunkCheck;
   if (!hunkCheck.valid) {
-    return { valid: false, error: hunkCheck.error, unifiedDiff };
+    return { valid: false, error: hunkCheck.error, unifiedDiff, checks };
   }
 
   // Step 3: Syntax parsing
   const syntaxCheck = validateSyntax(relativePath, patchedContent);
+  checks.syntax = syntaxCheck;
   if (!syntaxCheck.valid) {
-    return { valid: false, error: syntaxCheck.error, unifiedDiff };
+    return { valid: false, error: syntaxCheck.error, unifiedDiff, checks };
   }
 
   // Step 4: Behavior & logic preservation check (syntactic)
   const behaviorCheck = verifyBehaviorPreservation(issue, originalContent, patchedContent, fix.edits);
+  checks.behaviorPreservation = behaviorCheck;
   if (!behaviorCheck.valid) {
-    return { valid: false, error: behaviorCheck.error, unifiedDiff };
+    return { valid: false, error: behaviorCheck.error, unifiedDiff, checks };
   }
 
   // Step 4.5: Dynamic equivalence check in VM sandbox (for JS INP functions)
@@ -774,32 +741,27 @@ export async function validateCandidateFix({ issue, fix, workspaceRoot = process
       patchedCode: patchedContent,
       functionName: issue.location?.name
     });
+    checks.dynamicEquivalence = dynCheck;
     if (!dynCheck.valid) {
-      return { valid: false, error: dynCheck.error, unifiedDiff };
+      return { valid: false, error: dynCheck.error, unifiedDiff, checks };
     }
+  } else {
+    checks.dynamicEquivalence = { status: 'not applicable: only JavaScript INP handler fixes are executed in the sandbox' };
   }
 
   // Step 5: git apply --check in isolated scratch repo
   const gitCheck = runGitApplyCheck(relativePath, originalContent, unifiedDiff, { repoRoot: workspaceRoot });
+  const gitEvidence = (success) => ({ command: gitCheck.command, cwd: gitCheck.cwd, exitCode: gitCheck.exitCode, stdout: gitCheck.stdout, stderr: gitCheck.stderr, success });
+  checks.gitApply = gitEvidence(gitCheck.valid);
   if (!gitCheck.valid) {
-    return {
-      valid: false,
-      error: gitCheck.error,
-      unifiedDiff,
-      gitApplyEvidence: {
-        command: gitCheck.command,
-        exitCode: gitCheck.exitCode,
-        stdout: gitCheck.stdout,
-        stderr: gitCheck.stderr,
-        success: false
-      }
-    };
+    return { valid: false, error: gitCheck.error, unifiedDiff, gitApplyEvidence: gitEvidence(false), checks };
   }
 
   // Step 6: Semantic verification against Step 3 analyzer
   const semanticCheck = verifySemanticResolution({ issue, filePath: relativePath, patchedContent });
+  checks.reanalysis = semanticCheck;
   if (!semanticCheck.valid) {
-    return { valid: false, error: semanticCheck.error, unifiedDiff };
+    return { valid: false, error: semanticCheck.error, unifiedDiff, checks, gitApplyEvidence: gitEvidence(true) };
   }
 
   return {
@@ -807,12 +769,7 @@ export async function validateCandidateFix({ issue, fix, workspaceRoot = process
     unifiedDiff,
     patchedContent,
     gitApplyOutput: gitCheck.output,
-    gitApplyEvidence: {
-      command: gitCheck.command,
-      exitCode: gitCheck.exitCode,
-      stdout: gitCheck.stdout,
-      stderr: gitCheck.stderr,
-      success: true
-    }
+    gitApplyEvidence: gitEvidence(true),
+    checks
   };
 }
