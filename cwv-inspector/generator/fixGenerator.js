@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import { execFileSync, spawnSync } from 'child_process';
 import { diagnoseRuleBasedFix, resolveFilePath } from './ruleFixer.js';
 import { requestFix, retryFix } from './copilotClient.js';
 import { validateCandidateFix } from './diffValidator.js';
@@ -241,4 +242,49 @@ export async function generateFixesForIssues(issues = [], options = {}) {
   }
 
   return enrichedIssues;
+}
+
+/** Applies only fixes explicitly validated by the generator; default CLI runs never call this. */
+export function applyValidatedFixes(issues = [], workspaceRoot = process.cwd()) {
+  const root = path.resolve(workspaceRoot);
+  const eligible = issues.filter(issue => issue.fix_validated === true && issue.fix?.fix_validated !== false && issue.ineffective !== true && issue.fix?.ineffective !== true && typeof issue.fix?.diff === 'string');
+  const skipped = issues.filter(issue => !eligible.includes(issue)).map(issue => ({
+    issue: issue.problem || issue.metric || 'unknown',
+    reason: issue.ineffective === true || issue.fix?.ineffective === true ? 'fix marked ineffective' : 'fix is not validated'
+  }));
+  if (!eligible.length) return { applied: [], skipped, error: null };
+
+  try {
+    const repoRoot = execFileSync('git', ['rev-parse', '--show-toplevel'], { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();
+    if (fs.realpathSync(repoRoot) !== fs.realpathSync(root)) return { applied: [], skipped, error: `--apply requires --path to be the git repository root; detected ${repoRoot}.` };
+  } catch (err) {
+    return { applied: [], skipped, error: `--apply requires a git repository: ${err.stderr?.toString().trim() || err.message}` };
+  }
+
+  const checked = [];
+  for (const issue of eligible) {
+    const fix = issue.fix;
+    const command = 'git apply --check --verbose -';
+    try {
+      const result = spawnSync('git', ['apply', '--check', '--verbose', '-'], { cwd: root, input: fix.diff, encoding: 'utf8' });
+      if (result.error || result.status !== 0) throw Object.assign(new Error(result.error?.message || result.stderr || 'git apply --check failed'), { status: result.status, stdout: result.stdout, stderr: result.stderr });
+      checked.push({ issue: issue.metric, fix_target_file: fix.fix_target_file, command, exitCode: result.status, stdout: result.stdout, stderr: result.stderr, success: true });
+    } catch (err) {
+      return { applied: [], skipped, error: `Validated fix no longer applies: ${err.stderr?.toString().trim() || err.message}`, evidence: checked.concat({ issue: issue.metric, fix_target_file: fix.fix_target_file, command, exitCode: err.status ?? 1, stdout: err.stdout?.toString() || '', stderr: err.stderr?.toString() || err.message, success: false }) };
+    }
+  }
+
+  const applied = [];
+  for (const [index, issue] of eligible.entries()) {
+    const fix = issue.fix;
+    const command = 'git apply -';
+    try {
+      const result = spawnSync('git', ['apply', '-'], { cwd: root, input: fix.diff, encoding: 'utf8' });
+      if (result.error || result.status !== 0) throw Object.assign(new Error(result.error?.message || result.stderr || 'git apply failed'), { status: result.status, stdout: result.stdout, stderr: result.stderr });
+      applied.push({ ...checked[index], applyCommand: command, applyExitCode: result.status, applyStdout: result.stdout, applyStderr: result.stderr, success: true });
+    } catch (err) {
+      return { applied, skipped, error: `git apply failed: ${err.stderr?.toString().trim() || err.message}`, evidence: applied.concat({ issue: issue.metric, fix_target_file: fix.fix_target_file, command, exitCode: err.status ?? 1, stdout: err.stdout?.toString() || '', stderr: err.stderr?.toString() || err.message, success: false }) };
+    }
+  }
+  return { applied, skipped, error: null };
 }

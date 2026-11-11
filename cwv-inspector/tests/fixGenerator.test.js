@@ -23,7 +23,7 @@ import {
   verifyDynamicEquivalence
 } from '../generator/diffValidator.js';
 import { generateRuleBasedFix, diagnoseRuleBasedFix, getImageDimensions } from '../generator/ruleFixer.js';
-import { generateFixesForIssues, checkIssueEligibility } from '../generator/fixGenerator.js';
+import { generateFixesForIssues, checkIssueEligibility, applyValidatedFixes } from '../generator/fixGenerator.js';
 import { analyzeInpFunction } from '../analyzers/deepAnalyzer.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -383,7 +383,9 @@ async function runTests() {
   const liveIssues = {};
   for (const fx of liveFixtures) {
     const report = runCliLive(fx.dir, fx.interactions);
-    const cls = report.issues.filter(i => i.metric === 'CLS');
+    // Phase 4 reporters hide sub-threshold findings; checks that validate measured fixture fixes
+    // must inspect both visible and explicitly hidden issues returned in the same real report.
+    const cls = [...report.issues, ...report.hiddenIssues].filter(i => i.metric === 'CLS');
     const imageIssue = cls.find(i => i.rootCauseCategory === 'unsized-image-shift');
     const containerIssue = cls.find(i => i.rootCauseCategory === 'unreserved-container-shift');
     assert(imageIssue, `${fx.name}: live run must yield an unsized-image CLS issue`);
@@ -637,6 +639,39 @@ async function runTests() {
   const gitCheckFilter = runGitApplyCheck('tests/fixtures/demo-app/app.js', appJsOriginal, filterDiffResult.unifiedDiff);
   assert(gitCheckFilter.valid, 'git apply --check must succeed for filter hoisting patch');
   console.log('✓ Case J.3: Filter fix hunk header count and git apply --check verified\n');
+
+  // K: --apply is opt-in and writes only validated, effective diffs in a temporary Git repository.
+  const applyRepo = fs.mkdtempSync(path.join(os.tmpdir(), 'cwv-apply-test-'));
+  try {
+    execFileSync('git', ['init', '-q'], { cwd: applyRepo });
+    execFileSync('git', ['config', 'user.email', 'test@example.invalid'], { cwd: applyRepo });
+    execFileSync('git', ['config', 'user.name', 'CWV Test'], { cwd: applyRepo });
+    fs.mkdirSync(path.join(applyRepo, 'src'), { recursive: true });
+    const oldText = 'const state = "before";\n';
+    const newText = 'const state = "after";\n';
+    const sourceFile = path.join(applyRepo, 'src/app.js');
+    fs.writeFileSync(sourceFile, oldText);
+    execFileSync('git', ['add', '.'], { cwd: applyRepo });
+    execFileSync('git', ['commit', '-qm', 'baseline'], { cwd: applyRepo });
+    const patch = generateUnifiedDiff('src/app.js', oldText, [{ original_snippet: oldText.trimEnd(), replacement_snippet: newText.trimEnd() }]).unifiedDiff;
+    const defaultIssues = await generateFixesForIssues([{ metric: 'LCP', confidence: 'high', evidence_type: 'measured', location: { file: 'src/app.js' }, rootCauseCategory: 'no-rule' }], { workspaceRoot: applyRepo });
+    assert.strictEqual(defaultIssues[0].fix, null);
+    assert.strictEqual(execFileSync('git', ['status', '--porcelain'], { cwd: applyRepo, encoding: 'utf8' }), '', 'Default generation must leave temp repo untouched');
+    const applyResult = applyValidatedFixes([
+      { metric: 'INP', fix_validated: false, fix: { diff: patch, fix_validated: false } },
+      { metric: 'CLS', fix_validated: true, fix: { diff: patch, fix_validated: true, ineffective: true } },
+      { metric: 'INP', fix_validated: true, fix: { diff: patch, fix_validated: true, fix_target_file: 'src/app.js' } }
+    ], applyRepo);
+    assert.strictEqual(applyResult.error, null);
+    assert.strictEqual(applyResult.applied.length, 1);
+    assert.strictEqual(applyResult.skipped.length, 2);
+    assert.strictEqual(fs.readFileSync(sourceFile, 'utf8'), newText);
+    assert.strictEqual(applyResult.applied[0].exitCode, 0);
+    assert.strictEqual(applyResult.applied[0].applyExitCode, 0);
+    console.log('✓ Case K: default generation leaves a temp Git tree untouched; --apply writes only a validated effective fix');
+  } finally {
+    fs.rmSync(applyRepo, { recursive: true, force: true });
+  }
 
   console.log('All Step 4 Fix Generator & Diff Validator Tests passed successfully!');
 }
