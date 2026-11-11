@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { generateRuleBasedFix, resolveFilePath } from './ruleFixer.js';
+import { diagnoseRuleBasedFix, resolveFilePath } from './ruleFixer.js';
 import { requestFix, retryFix } from './copilotClient.js';
 import { validateCandidateFix } from './diffValidator.js';
 
@@ -88,7 +88,17 @@ export async function generateFixesForIssues(issues = [], options = {}) {
 
     // 1. Attempt deterministic rule-based fix first (no LLM)
     const forceCopilotForIssue = options.forceCopilot || options.forceCopilotMetrics?.includes(issue.metric);
-    const ruleFix = forceCopilotForIssue ? null : generateRuleBasedFix(issue, workspaceRoot);
+    const diagnosis = forceCopilotForIssue ? null : diagnoseRuleBasedFix(issue, workspaceRoot, { pageFile: options.pageFile });
+    if (diagnosis && !diagnosis.fix) {
+      // A rule applies but a required measurement or location is missing: report why, do not ask an LLM to guess.
+      enriched.fix = null;
+      enriched.no_fix_reason = diagnosis.no_fix_reason;
+      enriched.fix_validated = false;
+      enriched.measured_improvement = null;
+      enrichedIssues.push(enriched);
+      continue;
+    }
+    const ruleFix = diagnosis ? diagnosis.fix : null;
     if (ruleFix) {
       const validation = await validateCandidateFix({ issue, fix: ruleFix, workspaceRoot });
       if (validation.valid) {

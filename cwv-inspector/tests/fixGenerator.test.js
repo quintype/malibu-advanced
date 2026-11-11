@@ -2,6 +2,8 @@ import assert from 'assert';
 import path from 'path';
 import fs from 'fs';
 import vm from 'vm';
+import os from 'os';
+import { spawnSync } from 'child_process';
 import { fileURLToPath } from 'url';
 import {
   setMockCopilotHandler,
@@ -20,7 +22,7 @@ import {
   verifyHunkHeaderCounts,
   verifyDynamicEquivalence
 } from '../generator/diffValidator.js';
-import { generateRuleBasedFix, getImageDimensions } from '../generator/ruleFixer.js';
+import { generateRuleBasedFix, diagnoseRuleBasedFix, getImageDimensions } from '../generator/ruleFixer.js';
 import { generateFixesForIssues, checkIssueEligibility } from '../generator/fixGenerator.js';
 import { analyzeInpFunction } from '../analyzers/deepAnalyzer.js';
 
@@ -356,73 +358,97 @@ async function runTests() {
   // ---------------------------------------------------------------------------
   // Case G: Rule-Based Fixes on Fixture App
   // ---------------------------------------------------------------------------
-  // G.1: Natural image dimensions (800x450 read directly from hero.jpg)
-  const heroDims = getImageDimensions(path.resolve(demoAppDir, 'hero.jpg'));
-  assert(heroDims, 'Must read natural image dimensions from hero.jpg');
-  assert.strictEqual(heroDims.width, 800);
-  assert.strictEqual(heroDims.height, 450);
-
-  const heroClsIssue = {
-    metric: 'CLS',
-    priority: 'HIGH',
-    confidence: 'high',
-    evidence_type: 'measured',
-    location: {
-      file: 'tests/fixtures/demo-app/index.html',
-      line_start: 124,
-      line_end: 124,
-      element: '#hero-img'
-    },
-    problem: 'Unsized hero image hero.jpg causes layout shift of 0.1.',
-    root_cause: 'Missing width and height attributes.',
-    rootCauseCategory: 'unsized-image-shift',
-    evidence: ['Unsized <img> element #hero-img lacks explicit width and height attributes']
+  // G.1/G.2/G.4: rule-based CLS fixes driven by LIVE CLI output on BOTH fixtures (source: live-run).
+  // Every number in a fix must equal a value recorded in that run; image sizes are also cross-checked against the image file headers.
+  const runCliLive = (fixtureDir, interactions) => {
+    const args = ['bin/cwv.js', 'analyze', 'fixture', '--path', path.relative(workspaceRoot, fixtureDir)];
+    if (interactions) {
+      const file = path.join(os.tmpdir(), `cwv-interactions-${process.pid}-${path.basename(fixtureDir)}.json`);
+      fs.writeFileSync(file, JSON.stringify(interactions));
+      args.push('--interactions', file);
+    }
+    const run = spawnSync('node', args, { cwd: workspaceRoot, encoding: 'utf8', maxBuffer: 256 * 1024 * 1024, timeout: 280000 });
+    assert.strictEqual(run.status, 0, `CLI run failed: ${run.stderr.split('\n').filter(l => !l.startsWith('[Calibration')).join('\n')}`);
+    const report = JSON.parse(run.stdout);
+    assert.strictEqual(report.source, 'live-run');
+    return report;
   };
 
-  const heroFix = generateRuleBasedFix(heroClsIssue, demoAppDir);
-  assert(heroFix, 'Rule fixer must produce fix for unsized image');
-  assert.strictEqual(heroFix.strategy, 'rule-based');
-  assert(heroFix.edits[0].replacement_snippet.includes('width="800" height="450"'), 'Must add width and height attributes');
+  const liveFixtures = [
+    { name: 'demo-app', dir: demoAppDir, interactions: [{ selector: '#menu-toggle', type: 'click', label: 'menu' }] },
+    { name: 'demo-app-alt', dir: demoAppAltDir, interactions: null }
+  ];
+  const liveIssues = {};
+  for (const fx of liveFixtures) {
+    const report = runCliLive(fx.dir, fx.interactions);
+    const cls = report.issues.filter(i => i.metric === 'CLS');
+    const imageIssue = cls.find(i => i.rootCauseCategory === 'unsized-image-shift');
+    const containerIssue = cls.find(i => i.rootCauseCategory === 'unreserved-container-shift');
+    assert(imageIssue, `${fx.name}: live run must yield an unsized-image CLS issue`);
+    assert(containerIssue, `${fx.name}: live run must yield an unreserved-container CLS issue`);
+    const pageFile = new URL(report.url).pathname;
+    liveIssues[fx.name] = { imageIssue, containerIssue, pageFile };
 
-  const heroValidation = await validateCandidateFix({ issue: heroClsIssue, fix: heroFix, workspaceRoot: demoAppDir });
-  assert(heroValidation.valid, 'Hero image fix must pass diff validation');
-  assert.strictEqual(heroFix.fix_target_file, 'index.html', 'fix_target_file must name the edited HTML file');
-  assert(heroValidation.unifiedDiff.includes('--- a/index.html'), 'Diff path must match fix_target_file');
-  assert(heroValidation.gitApplyOutput.includes('Checking patch'), 'git apply --check must succeed');
-  console.log('✓ Case G.1: Rule-based unsized hero image fix passed (read 800x450 from disk)');
+    // Independent cross-check: recorded natural size equals the size in the image file header
+    const imageFile = path.resolve(fx.dir, imageIssue.timingCorrelation.candidates[0].url);
+    const header = getImageDimensions(imageFile);
+    assert(header, `${fx.name}: must read image header from ${imageFile}`);
+    assert.strictEqual(imageIssue.naturalWidth, header.width);
+    assert.strictEqual(imageIssue.naturalHeight, header.height);
 
-  // G.2: Measured container height (54px) on #dynamic-banner-slot
-  const bannerClsIssue = {
-    metric: 'CLS',
-    priority: 'MEDIUM',
-    confidence: 'high',
-    evidence_type: 'measured',
-    location: {
-      file: 'tests/fixtures/demo-app/app.js',
-      line_start: 100,
-      line_end: 103,
-      element: '#dynamic-banner-slot'
-    },
-    container: {
-      selector: '#dynamic-banner-slot',
-      measuredHeight: 54
-    },
-    problem: 'Late injected banner pushes content downward.',
-    root_cause: 'Container has min-height: 0.',
-    rootCauseCategory: 'unreserved-container-shift',
-    evidence: ['Container #dynamic-banner-slot has min-height: 0 and fails to reserve vertical space']
-  };
+    // Image fix uses exactly the recorded natural size
+    const imageFix = generateRuleBasedFix(imageIssue, fx.dir);
+    assert(imageFix, `${fx.name}: rule fixer must produce an image fix`);
+    assert(imageFix.edits[0].replacement_snippet.includes(`width="${imageIssue.naturalWidth}" height="${imageIssue.naturalHeight}"`));
+    const imageValidation = await validateCandidateFix({ issue: imageIssue, fix: imageFix, workspaceRoot: fx.dir });
+    assert(imageValidation.valid, `${fx.name}: image fix must pass diff validation: ${imageValidation.error}`);
+    assert(imageValidation.gitApplyOutput.includes('Checking patch'), 'git apply --check must succeed');
+    console.log(`\n[${fx.name}] image fix diff (source: live-run, natural size ${imageIssue.naturalWidth}x${imageIssue.naturalHeight} recorded and equal to file header):\n${imageValidation.unifiedDiff}`);
 
-  const bannerFix = generateRuleBasedFix(bannerClsIssue, workspaceRoot);
-  assert(bannerFix, 'Rule fixer must produce fix for unreserved container');
-  assert.strictEqual(bannerFix.strategy, 'rule-based');
-  assert(bannerFix.edits[0].replacement_snippet.includes('min-height: 54px;'), 'Must reserve min-height: 54px');
+    // Container fix uses exactly the recorded inserted-node height
+    const containerFix = generateRuleBasedFix(containerIssue, fx.dir, { pageFile });
+    assert(containerFix, `${fx.name}: rule fixer must produce a container fix`);
+    assert(containerFix.edits[0].replacement_snippet.includes(`min-height: ${containerIssue.container.measuredHeight}px;`));
+    const containerValidation = await validateCandidateFix({ issue: containerIssue, fix: containerFix, workspaceRoot: fx.dir });
+    assert(containerValidation.valid, `${fx.name}: container fix must pass diff validation: ${containerValidation.error}`);
+    console.log(`\n[${fx.name}] container fix diff (source: live-run, node height after insertion ${containerIssue.container.measuredHeight}px recorded):\n${containerValidation.unifiedDiff}`);
+  }
+  console.log('\n✓ Case G.1: Rule-based image + container fixes on demo-app use only values recorded in the live run');
+  console.log('✓ Case G.4: Same on demo-app-alt (different ids, insertBefore, different timing)');
 
-  const bannerValidation = await validateCandidateFix({ issue: bannerClsIssue, fix: bannerFix, workspaceRoot });
-  assert(bannerValidation.valid, 'Banner slot container fix must pass diff validation');
-  assert.strictEqual(bannerFix.fix_target_file, 'tests/fixtures/demo-app/index.html', 'fix_target_file must reflect the actual edit target even when issue.location points to app.js');
-  assert(bannerValidation.unifiedDiff.includes('--- a/tests/fixtures/demo-app/index.html'), 'Banner diff path must match fix_target_file');
-  console.log('✓ Case G.2: Rule-based unreserved container fix passed (measured 54px)');
+  // G.2: a missing measurement yields NO fix, a reason, and no Copilot call
+  let copilotCalls = 0;
+  setMockCopilotHandler(async () => { copilotCalls++; throw new Error('Copilot must not be consulted when a rule lacks a measurement'); });
+  for (const fx of liveFixtures) {
+    const { imageIssue, containerIssue, pageFile } = liveIssues[fx.name];
+    const withoutNatural = { ...imageIssue };
+    delete withoutNatural.naturalWidth;
+    delete withoutNatural.naturalHeight;
+    const withoutHeight = { ...containerIssue, container: { selector: containerIssue.container.selector } };
+    const withoutContainer = { ...containerIssue, container: null };
+    const unknownContainer = { ...containerIssue, container: { ...containerIssue.container, selector: '#no-such-container-anywhere' } };
+    const unresolved = { ...imageIssue, location: null };
+
+    for (const [label, issue, reasonPattern] of [
+      ['natural size not measured', withoutNatural, /not measured/],
+      ['node height not measured', withoutHeight, /not measured|not estimating/],
+      ['container selector not measured', withoutContainer, /not measured/],
+      ['container rule absent from workspace', unknownContainer, /No CSS rule/],
+      ['source location unresolved', unresolved, /unresolved/i]
+    ]) {
+      const diagnosis = diagnoseRuleBasedFix(issue, fx.dir, { pageFile });
+      assert(diagnosis, `${fx.name} / ${label}: a rule must apply`);
+      assert.strictEqual(diagnosis.fix, null, `${fx.name} / ${label}: must emit no fix`);
+      assert(reasonPattern.test(diagnosis.no_fix_reason), `${fx.name} / ${label}: reason was "${diagnosis.no_fix_reason}"`);
+    }
+    const [enriched] = await generateFixesForIssues([withoutNatural], { workspaceRoot: fx.dir });
+    assert.strictEqual(enriched.fix, null);
+    assert(enriched.no_fix_reason && /not measured/.test(enriched.no_fix_reason));
+    assert.strictEqual(enriched.fix_validated, false);
+  }
+  assert.strictEqual(copilotCalls, 0, 'No Copilot call may be made for missing measurements');
+  clearMockCopilot();
+  console.log('✓ Case G.2: Missing measurements yield no fix + no_fix_reason on both fixtures, with 0 Copilot calls');
 
   // G.3: Corrupted Hunk Rejection Test (Tests real git apply failure)
   const corruptDiff = `--- a/app.js\n+++ b/app.js\n@@ -999,5 +999,5 @@\n-nonexistent_line_1;\n+replacement_line;\n`;
@@ -430,51 +456,6 @@ async function runTests() {
   assert.strictEqual(gitCorruptCheck.valid, false, 'Corrupted hunk must fail git apply --check');
   assert(gitCorruptCheck.error.includes('git apply --check failed:'), 'Must report git failure');
   console.log('✓ Case G.3: Corrupted diff hunk correctly rejected by git apply --check');
-
-  // G.4: Dynamic Rule-Based Fix on Alternative Fixture demo-app-alt (No hardcoded selectors)
-  const altDims = getImageDimensions(path.resolve(demoAppAltDir, 'cover.svg'));
-  assert(altDims, 'Must read dimensions from demo-app-alt cover.svg');
-  assert.strictEqual(altDims.width, 640);
-  assert.strictEqual(altDims.height, 360);
-
-  const altImageIssue = {
-    metric: 'CLS',
-    priority: 'HIGH',
-    confidence: 'high',
-    evidence_type: 'measured',
-    location: {
-      file: 'tests/fixtures/demo-app-alt/index.html',
-      element: '#alt-news-cover'
-    },
-    rootCauseCategory: 'unsized-image-shift',
-    evidence: ['Unsized <img> element #alt-news-cover lacks explicit width and height attributes']
-  };
-
-  const altFix = generateRuleBasedFix(altImageIssue, demoAppAltDir);
-  assert(altFix, 'Must generate fix for demo-app-alt image');
-  assert(altFix.edits[0].replacement_snippet.includes('width="640" height="360"'), 'Must dynamically use 640x360 from cover.svg');
-
-  const altContainerIssue = {
-    metric: 'CLS',
-    priority: 'MEDIUM',
-    confidence: 'high',
-    evidence_type: 'measured',
-    location: {
-      file: 'tests/fixtures/demo-app-alt/index.html',
-      element: '#news-ticker-slot'
-    },
-    container: {
-      selector: '#news-ticker-slot',
-      measuredHeight: 48
-    },
-    rootCauseCategory: 'unreserved-container-shift',
-    evidence: ['Container #news-ticker-slot has min-height: 0 and fails to reserve vertical space']
-  };
-
-  const altContainerFix = generateRuleBasedFix(altContainerIssue, demoAppAltDir);
-  assert(altContainerFix, 'Must generate fix for demo-app-alt ticker container');
-  assert(altContainerFix.edits[0].replacement_snippet.includes('min-height: 48px;'), 'Must dynamically reserve 48px');
-  console.log('✓ Case G.4: Dynamic rule-based fixes verified on demo-app-alt (zero hardcoded numbers)\n');
 
   // ---------------------------------------------------------------------------
   // Case H: Hunk Header Line Counts Verification

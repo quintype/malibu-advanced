@@ -6,7 +6,7 @@ import { execSync, spawnSync } from 'child_process';
 import * as diff from 'diff';
 import * as babelParser from '@babel/parser';
 import { analyzeInpFunction } from '../analyzers/deepAnalyzer.js';
-import { resolveFilePath } from './ruleFixer.js';
+import { resolveFilePath, selectorForms, escapeRegExp } from './ruleFixer.js';
 
 /**
  * Counts occurrences of a substring inside a target string.
@@ -444,7 +444,15 @@ export function verifySemanticResolution({ issue, filePath, patchedContent }) {
         }
       }
       if (issue.rootCauseCategory === 'unreserved-container-shift') {
-        const hasMinHeight = /min-height:\s*([1-9][0-9]*px)/i.test(patchedContent);
+        // The issue's own container must now declare a positive min-height (decimals allowed); without a recorded selector, any positive min-height.
+        const containerSelector = issue.container?.selector;
+        const positivePx = (text) => { const m = text.match(/min-height:\s*([0-9]*\.?[0-9]+)px/i); return Boolean(m) && parseFloat(m[1]) > 0; };
+        const hasMinHeight = containerSelector
+          ? selectorForms(containerSelector).some(form => {
+              const rule = patchedContent.match(new RegExp(`(?<![\\w-])${escapeRegExp(form)}\\s*\\{[^}]*\\}`, 'i'));
+              return Boolean(rule) && positivePx(rule[0]);
+            })
+          : positivePx(patchedContent);
         if (!hasMinHeight) {
           return {
             valid: false,
