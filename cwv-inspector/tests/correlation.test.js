@@ -464,13 +464,22 @@ try {
   assert.strictEqual(t32Issue.correlationState, 'UNRESOLVED');
   console.log('✓ Test 32: UNRESOLVED correlation state passed.');
 
-  // Test 33: Runtime-scoped reports omit repository-wide static-only findings when no runtime interaction matches.
+  // Test 33: Keep static INP recommendations when Lighthouse provides no interaction-level evidence.
   const t33Static = [{ type: 'code', cwv: 'inp', file: 'src/components/T33.jsx', line: 10, message: 'loops', handler: 'onClick' }];
   const t33Lh = { mobile: { inp: { value: 150 }, inpInteractions: [] } };
   const t33Result = compileRecommendations(t33Static, t33Lh, []);
   const t33Issue = t33Result.issues.find(i => i.cwv === 'inp');
-  assert.strictEqual(t33Issue, undefined);
-  console.log('✓ Test 33: Unmatched static-only findings are omitted from runtime-scoped reports.');
+  assert.ok(t33Issue, 'A static INP recommendation should remain visible when Lighthouse captured no interactions');
+  assert.strictEqual(t33Issue.correlationState, 'STATIC_ONLY');
+  assert.strictEqual(t33Issue.severity, 'low');
+  assert(t33Issue.evidence[0].includes('did not capture interaction-level INP evidence'));
+  console.log('✓ Test 33: Static INP findings remain labeled low-confidence when Lighthouse has no interaction evidence.');
+
+  // Test 33b: When interaction-level runtime evidence exists, unrelated static INP findings remain scoped out.
+  const t33bLh = { mobile: { inp: { value: 150 }, inpInteractions: [{ type: 'click', selector: 'button.other', score: 150 }] } };
+  const t33bResult = compileRecommendations(t33Static, t33bLh, []);
+  assert.strictEqual(t33bResult.issues.some(i => i.cwv === 'inp' && i.file === 'src/components/T33.jsx'), false);
+  console.log('✓ Test 33b: Runtime evidence still scopes out unrelated static INP findings.');
 
   // Test 34: High confidence + low runtime impact
   const t34Static = [{ type: 'code', cwv: 'inp', file: 'src/components/T34.jsx', line: 10, message: 'loops', handler: 'onClick', operation: 'computation' }];

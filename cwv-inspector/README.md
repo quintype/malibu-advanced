@@ -46,7 +46,7 @@ By feeding both pipelines into a **Correlation Engine**, the tool maps performan
 
 ## 1. Overview
 
-When a target URL is provided, Lighthouse findings drive the reported recommendations. Runtime CLS/INP evidence is correlated with the local source index, and static repository findings are included only when they support a runtime-correlated issue. Unrelated static patterns are omitted from URL-backed reports. Without a URL, the tool continues to report repository-wide static findings.
+When a target URL is provided, Lighthouse findings drive the reported recommendations. Runtime CLS/INP evidence is correlated with the local source index, and static repository findings are included when they support a runtime-correlated issue. If Lighthouse provides no interaction-level INP samples, detected INP code patterns remain visible as low-confidence static-only findings. Without a URL, the tool reports repository-wide static findings.
 
 ---
 

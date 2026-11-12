@@ -544,6 +544,7 @@ export function compileRecommendations(staticIssues, lighthouseIssues = null, as
   const mobileInps = (lighthouseIssues?.mobile?.inpInteractions || []).map(item => ({ ...item, device: 'Mobile', score: item.score || lighthouseIssues?.mobile?.inp?.value || 0 }));
   const desktopInps = (lighthouseIssues?.desktop?.inpInteractions || []).map(item => ({ ...item, device: 'Desktop', score: item.score || lighthouseIssues?.desktop?.inp?.value || 0 }));
   const runtimeInps = [...mobileInps, ...desktopInps];
+  const hasRuntimeInpEvidence = runtimeInps.length > 0;
 
   // Outlier / Representative Aggregation: Sort worst latency first and deduplicate by device + selector + type
   const aggregatedInps = [];
@@ -812,22 +813,30 @@ export function compileRecommendations(staticIssues, lighthouseIssues = null, as
   });
 
   // Keep static-only findings for repository audits; URL-backed runs surface
-  // only runtime findings and static evidence attached to a correlation.
+  // runtime findings and attached static evidence. Lighthouse does not replay
+  // user interactions in a normal page audit, so preserve static INP findings
+  // as explicitly low-confidence when it returned no interaction rows.
   const remainingStaticIssues = cleanStaticIssues.filter((issue, idx) => {
-    if (hasRuntimeAudit) return false;
+    if (hasRuntimeAudit) {
+      if (issue.cwv === 'inp' && !hasRuntimeInpEvidence) return !matchedInpStaticIndices.has(idx);
+      return false;
+    }
     if (issue.cwv === 'inp') {
       return !matchedInpStaticIndices.has(idx);
     }
     return true;
   }).map(issue => {
     if (issue.cwv === 'inp') {
+      const runtimeNote = hasRuntimeAudit && !hasRuntimeInpEvidence
+        ? 'Static code pattern scanned; the Lighthouse page audit did not capture interaction-level INP evidence.'
+        : 'Static code pattern scanned without runtime interaction measurement.';
       return {
         ...issue,
         severity: 'low',
         confidence: 'LOW',
         correlationState: 'STATIC_ONLY',
-        evidence: ['Static rule scanned; no runtime INP latency triggered for this component.'],
-        confidenceExplanation: 'Signals: ✗ No corresponding runtime latency event registered',
+        evidence: [runtimeNote],
+        confidenceExplanation: 'Signals: ✗ No corresponding runtime interaction evidence was available',
         impact: `Static Evidence: ${issue.impact} [Static Only - No runtime INP correlation established]`
       };
     }
