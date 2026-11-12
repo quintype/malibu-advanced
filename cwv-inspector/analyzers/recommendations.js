@@ -124,7 +124,7 @@ function recommendationForOpportunity(opp) {
  * @param {Array<object>} astElements JSX elements parsed from project files.
  * @returns {object} Categorized, prioritized, and scored recommendations.
  */
-export function compileRecommendations(staticIssues, lighthouseIssues = null, astElements = [], allFiles = []) {
+export function compileRecommendations(staticIssues, lighthouseIssues = null, astElements = [], allFiles = [], fieldInpData = null) {
   // A Lighthouse-backed report should be scoped to evidence observed on the
   // requested page. Static scans still provide source details for correlated
   // CLS/INP findings, but unrelated repository-wide patterns are not page
@@ -560,6 +560,38 @@ export function compileRecommendations(staticIssues, lighthouseIssues = null, as
 
   const processedInpIssues = [];
   const matchedInpStaticIndices = new Set();
+  const fieldInpIssues = (fieldInpData?.observations || [])
+    .filter(item => Number.isFinite(Number(item.value)) && Number(item.value) > config.thresholds.inp)
+    .map(item => {
+      const value = Number(item.value);
+      const severity = value > config.thresholds.inpNeedsImprovement ? 'high' : 'medium';
+      const source = item.source || 'CrUX field data';
+      const scope = item.scope || 'reported page or origin';
+      return {
+        type: 'field',
+        cwv: 'inp',
+        severity,
+        file: 'Runtime Audit (CrUX Field Data)',
+        line: '-',
+        message: `Elevated field INP (${Math.round(value)}ms p75)`,
+        impact: `${source} reports p75 INP of ${Math.round(value)}ms for ${scope} over its field-data collection period. This is above the 200ms good threshold.`,
+        suggestion: 'Use real-user INP attribution or a configured interaction test to identify the slow selector and dominant phase, then optimize the measured handler or rendering work. Static INP findings below may provide source-level leads, but are not proven causes of this field result.',
+        whyExplanation: 'This value comes from real-user field data, not a Lighthouse page-load simulation. Field INP establishes that users experience slow interactions, but does not identify which interaction or source function caused them.',
+        confidence: 'UNRESOLVED',
+        correlationState: 'UNRESOLVED',
+        evidence: [
+          `Source: ${source}`,
+          `p75 INP: ${Math.round(value)}ms`,
+          `Scope: ${scope}`,
+          'Field data does not include the event-level source location needed to attribute this value to a local handler.'
+        ],
+        confidenceExplanation: 'Field metric confirms slow real-user responsiveness; no event-level source attribution is available.',
+        selector: null,
+        device: item.device || null,
+        score: value,
+        inpImpact: value > config.thresholds.inpNeedsImprovement ? 'Poor' : 'Needs Improvement'
+      };
+    });
 
   // V4 Call Graph Tracing with Cycle / Recursion Protection (max depth 2)
   const traceCallChain = (srcFile, handlerName) => {
@@ -863,7 +895,7 @@ export function compileRecommendations(staticIssues, lighthouseIssues = null, as
   });
 
   // Build final consolidated issues list
-  const allIssues = [...remainingStaticIssues, ...processedInpIssues, ...correlatedIssues];
+  const allIssues = [...remainingStaticIssues, ...processedInpIssues, ...fieldInpIssues, ...correlatedIssues];
 
   // Append other general (non-CLS) Lighthouse opportunities
   if (lighthouseIssues) {

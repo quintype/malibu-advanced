@@ -384,7 +384,34 @@ Options:
       astElements.push(...ra.ast.jsxTags);
     }
   });
-  const compiledResult = compileRecommendations(staticIssues, lighthouseData, astElements, files);
+  const fieldInpObservations = [];
+  for (const device of ['mobile', 'desktop']) {
+    const fieldData = psiData?.[`${device}Field`];
+    const metric = fieldData?.metrics?.INTERACTION_TO_NEXT_PAINT;
+    const rawValue = metric?.percentile;
+    const value = Number(rawValue);
+    if (rawValue !== null && rawValue !== undefined && Number.isFinite(value)) {
+      fieldInpObservations.push({
+        value,
+        device: device === 'mobile' ? 'Mobile field' : 'Desktop field',
+        source: 'PageSpeed Insights / CrUX field data',
+        scope: fieldData.id || fieldData.initial_url || 'URL or origin returned by PageSpeed Insights'
+      });
+    }
+  }
+  if (fieldInpObservations.length === 0) {
+    const cruxMetric = cruxData?.record?.metrics?.interaction_to_next_paint;
+    const rawValue = cruxMetric?.percentiles?.p75;
+    const value = Number(rawValue);
+    if (rawValue !== null && rawValue !== undefined && Number.isFinite(value)) {
+      const key = cruxData.record.key || {};
+      const scope = key.url || key.origin || 'URL or origin returned by CrUX';
+      fieldInpObservations.push({ value, device: 'CrUX field', source: 'CrUX API field data', scope });
+    }
+  }
+  const compiledResult = compileRecommendations(staticIssues, lighthouseData, astElements, files, {
+    observations: fieldInpObservations
+  });
 
   // Step 6: Automatically enrich priority findings with GitHub Copilot AI Advisor
   let enrichedResult = compiledResult;

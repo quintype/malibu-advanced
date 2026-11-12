@@ -97,11 +97,14 @@ export function extractScores(reportJson) {
       score: (audits['total-blocking-time']?.score || 0) * 100,
       displayValue: audits['total-blocking-time']?.displayValue || '0ms'
     },
-    inp: {
-      value: audits['interaction-to-next-paint']?.numericValue || audits['inp']?.numericValue || 0,
-      score: (audits['interaction-to-next-paint']?.score !== undefined ? audits['interaction-to-next-paint']?.score : audits['inp']?.score || 0) * 100,
-      displayValue: audits['interaction-to-next-paint']?.displayValue || audits['inp']?.displayValue || 'N/A'
-    },
+    inp: (() => {
+      const audit = audits['interaction-to-next-paint'] || audits['inp'];
+      return {
+        value: Number.isFinite(audit?.numericValue) ? audit.numericValue : null,
+        score: Number.isFinite(audit?.score) ? audit.score * 100 : null,
+        displayValue: audit?.displayValue || 'Not measured by Lighthouse page-load audit'
+      };
+    })(),
     inpInteractions: (() => {
       const audit = audits['interaction-to-next-paint'] || audits['inp'];
       if (!audit || !audit.details || !Array.isArray(audit.details.items)) return [];

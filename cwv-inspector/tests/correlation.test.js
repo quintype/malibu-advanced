@@ -1,5 +1,6 @@
 import { correlateCls } from '../analyzers/correlation.js';
 import { compileRecommendations } from '../analyzers/recommendations.js';
+import { extractScores } from '../analyzers/lighthouse.js';
 import assert from 'assert';
 
 const traceCallChain = (srcFile, handlerName, astElementsList = []) => {
@@ -869,7 +870,29 @@ try {
   assert.strictEqual(t70Result.issues[0].relatedSources[0].selector, 'footer#footer');
   console.log('✓ Test 70: CLS Merge - Multiple sources inside a single shift are grouped under one issue passed.');
 
-  console.log('\n🎉 All 70 Core Web Vitals Correlation Engine tests passed successfully!');
+  // Test 71: CrUX/PSI field INP creates a clearly sourced recommendation.
+  const t71Result = compileRecommendations([], {
+    mobile: { inp: { value: 0 }, inpInteractions: [] },
+    desktop: { inp: { value: 0 }, inpInteractions: [] }
+  }, [], [], {
+    observations: [{ value: 250, device: 'Mobile field', source: 'PageSpeed Insights / CrUX field data', scope: 'https://example.com/article' }]
+  });
+  const t71Issue = t71Result.issues.find(i => i.cwv === 'inp');
+  assert.ok(t71Issue, 'Field INP above 200ms should produce an issue');
+  assert.strictEqual(t71Issue.score, 250);
+  assert.strictEqual(t71Issue.severity, 'medium');
+  assert(t71Issue.impact.includes('PageSpeed Insights / CrUX field data'));
+  assert(t71Issue.suggestion.includes('interaction test'));
+  console.log('✓ Test 71: Field INP produces a sourced recommendation and next step.');
+
+  // Test 72: A Lighthouse page-load report without an INP audit must remain unmeasured.
+  const t72Scores = extractScores({ categories: { performance: { score: 0.8 } }, audits: {} });
+  assert.strictEqual(t72Scores.inp.value, null);
+  assert.strictEqual(t72Scores.inp.score, null);
+  assert.strictEqual(t72Scores.inp.displayValue, 'Not measured by Lighthouse page-load audit');
+  console.log('✓ Test 72: Missing Lighthouse INP is not fabricated as 0ms / Good.');
+
+  console.log('\n🎉 All 72 Core Web Vitals Correlation Engine tests passed successfully!');
 } catch (err) {
   console.error('\n❌ Test execution failed:');
   console.error(err);

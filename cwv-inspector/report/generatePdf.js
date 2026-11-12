@@ -81,12 +81,11 @@ function computeMetricDetails(data, type) {
           percent = Math.min(100, 66 + ((inpVal - needsWorkInp) / 1000) * 34);
         }
       } else {
-        // Lab data doesn't measure INP; defaults to 0ms PASS in lab
-        valueDisplay = '0ms';
-        statusClass = 'good';
-        statusLabel = 'Good';
-        textClass = 'good-text';
-        subdesc = 'Lab simulation does not measure runtime INP.';
+        valueDisplay = 'N/A';
+        statusClass = 'warning';
+        statusLabel = 'Not Measured';
+        textClass = 'warning-text';
+        subdesc = 'Lighthouse page-load audits do not measure INP. Use CrUX field data or an interaction test.';
         percent = 0;
       }
     }
@@ -520,13 +519,10 @@ export async function generateReport(compiledResult, options = {}) {
 
       const lcpVal = getVal('LARGEST_CONTENTFUL_PAINT_MS');
       const clsVal = getVal('CUMULATIVE_LAYOUT_SHIFT_SCORE');
-      const fidVal = getVal('FIRST_INPUT_DELAY_MS');
       const inpVal = getVal('INTERACTION_TO_NEXT_PAINT');
 
       if (lcpVal !== null) res.lcp = computeMetricDetails({ lcp: { value: lcpVal } }, 'lcp');
       if (clsVal !== null) res.cls = computeMetricDetails({ cls: { value: clsVal / 100 } }, 'cls'); // PSI CLS is * 100
-      if (fidVal !== null) res.tbt = computeMetricDetails({ tbt: { value: fidVal } }, 'tbt');
-      else if (inpVal !== null) res.tbt = computeMetricDetails({ tbt: { value: inpVal } }, 'tbt');
       if (inpVal !== null) res.inp = computeMetricDetails({ inp: { value: inpVal } }, 'inp');
     }
     return res;
@@ -557,7 +553,6 @@ export async function generateReport(compiledResult, options = {}) {
 
     const cruxLcpVal = parseCruxMetric('largest_contentful_paint');
     const cruxClsVal = parseCruxMetric('cumulative_layout_shift');
-    const cruxFidVal = parseCruxMetric('first_input_delay') || parseCruxMetric('interaction_to_next_paint');
     const cruxInpVal = parseCruxMetric('interaction_to_next_paint');
 
     if (cruxLcpVal !== null) {
@@ -565,9 +560,6 @@ export async function generateReport(compiledResult, options = {}) {
     }
     if (cruxClsVal !== null) {
       mobileCruxCls = desktopCruxCls = computeMetricDetails({ cls: { value: cruxClsVal } }, 'cls');
-    }
-    if (cruxFidVal !== null) {
-      mobileCruxTbt = desktopCruxTbt = computeMetricDetails({ tbt: { value: cruxFidVal } }, 'tbt');
     }
     if (cruxInpVal !== null) {
       mobileCruxInp = desktopCruxInp = computeMetricDetails({ inp: { value: cruxInpVal } }, 'inp');
@@ -858,7 +850,7 @@ export async function generateReport(compiledResult, options = {}) {
       const idxStr = (index + 1).toString().padStart(2, '0');
       const severityClass = issue.severity.toLowerCase();
       const categoryClass = issue.cwv.toLowerCase();
-      const isLighthouse = issue.type === 'lighthouse' || issue.file.includes('Runtime Audit (Lighthouse');
+      const isLighthouse = issue.type === 'lighthouse' || issue.file.includes('Runtime Audit (Lighthouse') || issue.type === 'field';
 
       let deviceVal = issue.device;
       if (!deviceVal && issue.file) {
@@ -910,7 +902,9 @@ export async function generateReport(compiledResult, options = {}) {
         `;
       } else {
         affectedSummary = isLighthouse
-          ? `Lighthouse audit${issue.devices?.length ? ` (${issue.devices.join(' + ')})` : deviceVal ? ` (${deviceVal})` : ''}`
+          ? issue.type === 'field'
+            ? `CrUX field data${deviceVal ? ` (${deviceVal})` : ''}`
+            : `Lighthouse audit${issue.devices?.length ? ` (${issue.devices.join(' + ')})` : deviceVal ? ` (${deviceVal})` : ''}`
           : path.basename(issue.file);
         const lineStr = (issue.line !== null && issue.line !== undefined && issue.line !== '-') ? `:${issue.line}` : '';
         if (!isLighthouse) {
