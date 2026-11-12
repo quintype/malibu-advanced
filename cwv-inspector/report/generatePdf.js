@@ -352,7 +352,7 @@ function buildMetricGridHtml(lcp, cls, tbt, isLocal = false, branchName = '', cr
               </svg>
             </div>
             <div class="metric-title-group">
-              <span class="metric-fullname">Cumulative Layout Shift (CLS)${isLocal && branchName ? ` <span class="branch-tag" style="margin-left: 6px; font-size: 0.65rem; font-weight: 700; color: #0284c7; background: #e0f2fe; padding: 2px 6px; border-radius: 4px; font-family: monospace;">branch: ${escapeHtml(branchName)}</span>` : (!isLocal && cruxScopeTag ? ` <span class="scope-tag" style="margin-left: 6px; font-size: 0.65rem; font-weight: 700; color: #0284c7; background: #e0f2fe; padding: 2px 6px; border-radius: 4px; font-family: monospace;">${escapeHtml(cruxScopeTag)}</span>` : '')}</span>
+              <span class="metric-fullname">Cumulative Layout Shift (CLS)${!isLocal && cruxScopeTag ? ` <span class="scope-tag" style="margin-left: 6px; font-size: 0.65rem; font-weight: 700; color: #0284c7; background: #e0f2fe; padding: 2px 6px; border-radius: 4px; font-family: monospace;">${escapeHtml(cruxScopeTag)}</span>` : ''}</span>
               <span class="metric-desc-text">${isLocal ? 'Measures visual stability.' : (cruxScopeTag ? `Visual stability (${escapeHtml(cruxScopeTag)}).` : 'Measures visual stability.')}</span>
             </div>
           </div>
@@ -1892,8 +1892,8 @@ export async function generateReport(compiledResult, options = {}) {
       metricsDetail: [
         makeMetricRow('MOBILE', 'Largest Contentful Paint (LCP)', mobileCruxLcp, localMLcp, `≤ ${config.thresholds.lcp / 1000} s`),
         makeMetricRow('DESKTOP', 'Largest Contentful Paint (LCP)', desktopCruxLcp, localDLcp, `≤ ${config.thresholds.lcp / 1000} s`),
-        makeMetricRow('MOBILE', `Cumulative Layout Shift (CLS)${gitBranch ? ` [${gitBranch}]` : ''}`, mobileCruxCls, localMCls, `≤ ${config.thresholds.cls}`),
-        makeMetricRow('DESKTOP', `Cumulative Layout Shift (CLS)${gitBranch ? ` [${gitBranch}]` : ''}`, desktopCruxCls, localDCls, `≤ ${config.thresholds.cls}`),
+        makeMetricRow('MOBILE', 'Cumulative Layout Shift (CLS)', mobileCruxCls, localMCls, `≤ ${config.thresholds.cls}`),
+        makeMetricRow('DESKTOP', 'Cumulative Layout Shift (CLS)', desktopCruxCls, localDCls, `≤ ${config.thresholds.cls}`),
         makeMetricRow('MOBILE', 'Total Blocking Time (TBT)', mobileCruxTbt, localMTbt, `≤ ${config.thresholds.tbt} ms`),
         makeMetricRow('DESKTOP', 'Total Blocking Time (TBT)', desktopCruxTbt, localDTbt, `≤ ${config.thresholds.tbt} ms`),
         makeMetricRow('MOBILE', 'Interaction to Next Paint (INP)', mobileCruxInp, localMInp, `≤ ${config.thresholds.inp} ms`),
