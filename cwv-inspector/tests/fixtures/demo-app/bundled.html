@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CWV Inspector Fixture Demo App (Bundled & Minified)</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      padding: 24px;
+      max-width: 800px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    header {
+      margin-bottom: 24px;
+      border-bottom: 1px solid #e2e8f0;
+      padding-bottom: 16px;
+    }
+
+    .hero-container {
+      margin: 20px 0;
+      background: #f8fafc;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    #hero-img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    .btn {
+      background: #2563eb;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      font-size: 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn:hover {
+      background: #1d4ed8;
+    }
+
+    .btn:active {
+      background: #1e40af;
+    }
+
+    .form-group {
+      margin: 16px 0;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 10px 12px;
+      font-size: 1rem;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      box-sizing: border-box;
+    }
+
+    .nav-menu {
+      display: none;
+      margin-top: 12px;
+      padding: 16px;
+      background: #f1f5f9;
+      border-radius: 6px;
+    }
+
+    .nav-menu.open {
+      display: block;
+    }
+
+    #dynamic-banner-slot {
+      min-height: 0;
+    }
+
+    .injected-banner {
+      padding: 14px;
+      background: #fef3c7;
+      border: 1px solid #f59e0b;
+      color: #92400e;
+      border-radius: 6px;
+      margin: 16px 0;
+      font-weight: 600;
+    }
+
+    .counter-display {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin: 12px 0;
+      color: #0f172a;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>CWV Inspector Test Fixture (Bundled)</h1>
+    <p>Bundled and minified with external source map.</p>
+    <button id="menu-toggle" class="btn" type="button">Toggle Navigation Menu</button>
+    <nav id="nav-menu" class="nav-menu">
+      <ul>
+        <li><a href="#section-1">Section 1: Interactive Tasks</a></li>
+        <li><a href="#section-2">Section 2: LCP Hero</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div id="dynamic-banner-slot"></div>
+
+  <main>
+    <section id="section-2">
+      <h2>Hero Story (LCP & CLS Bottleneck)</h2>
+      <div class="hero-container">
+        <img id="hero-img" class="hero-image" src="/hero.jpg" alt="Featured Hero Article" />
+      </div>
+      <p>Unsized hero image without explicit dimensions causing layout shift.</p>
+    </section>
+
+    <section id="section-1">
+      <h2>Interactive Actions (INP Bottleneck)</h2>
+      <button id="slow-click-btn" class="btn" type="button">Run Heavy Processing Task</button>
+      <div id="counter" class="counter-display">Tasks completed: 0</div>
+
+      <div class="form-group">
+        <label for="search-input">Fast Search Filter:</label>
+        <input id="search-input" type="text" placeholder="Type to trigger keypress..." />
+      </div>
+      <div id="search-results"></div>
+
+      <div class="form-group">
+        <label for="filter-input">Interactive Product Filter:</label>
+        <input id="filter-input" type="text" placeholder="Type query to trigger unmemoized filter loop..." />
+      </div>
+      <div id="product-results"></div>
+    </section>
+  </main>
+
+  <script src="/dist/bundle.external.js"></script>
+</body>
+
+</html>

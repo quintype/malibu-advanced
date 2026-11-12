@@ -156,7 +156,7 @@ export class CopilotService {
 
     try {
       session = await this.client.createSession({
-        model: options.model || undefined
+        model: options.model || process.env.COPILOT_MODEL || undefined
       });
 
       let lastAssistantMessage = null;

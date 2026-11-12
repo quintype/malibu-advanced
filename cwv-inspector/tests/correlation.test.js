@@ -192,9 +192,8 @@ try {
   };
   const result = compileRecommendations(mockStaticIssues, mockLhData, mockAstElements);
   
-  // Verify deduplication: mockStaticIssues[0] (Hero.jsx:25 missing dimensions) should be merged
-  // into the correlated issue, meaning total issues count is 2 (the correlated one + the header alt tag lcp one)
-  assert.strictEqual(result.summary.total, 2);
+  // Runtime-scoped reports omit unrelated repository-wide static findings, retaining the correlated Hero issue only.
+  assert.strictEqual(result.summary.total, 1);
   const correlated = result.issues.find(i => i.type === 'correlated');
   assert.ok(correlated);
   assert.strictEqual(correlated.file, 'src/components/Hero.jsx');
@@ -465,13 +464,13 @@ try {
   assert.strictEqual(t32Issue.correlationState, 'UNRESOLVED');
   console.log('✓ Test 32: UNRESOLVED correlation state passed.');
 
-  // Test 33: STATIC_ONLY state
+  // Test 33: Runtime-scoped reports omit repository-wide static-only findings when no runtime interaction matches.
   const t33Static = [{ type: 'code', cwv: 'inp', file: 'src/components/T33.jsx', line: 10, message: 'loops', handler: 'onClick' }];
   const t33Lh = { mobile: { inp: { value: 150 }, inpInteractions: [] } };
   const t33Result = compileRecommendations(t33Static, t33Lh, []);
   const t33Issue = t33Result.issues.find(i => i.cwv === 'inp');
-  assert.strictEqual(t33Issue.correlationState, 'STATIC_ONLY');
-  console.log('✓ Test 33: STATIC_ONLY correlation state passed.');
+  assert.strictEqual(t33Issue, undefined);
+  console.log('✓ Test 33: Unmatched static-only findings are omitted from runtime-scoped reports.');
 
   // Test 34: High confidence + low runtime impact
   const t34Static = [{ type: 'code', cwv: 'inp', file: 'src/components/T34.jsx', line: 10, message: 'loops', handler: 'onClick', operation: 'computation' }];

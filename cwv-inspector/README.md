@@ -1,5 +1,37 @@
 # Core Web Vitals Diagnostic Lab: Engineering Documentation
 
+## Runtime CWV Inspector CLI (`bin/cwv.js`)
+
+This standalone CLI measures a live page in Chrome, correlates measured INP/CLS/LCP evidence with files under `--path`, and emits JSON, console, Markdown, or HTML. It uses 4x CPU throttling and five fresh-page samples per configured interaction; one warm-up sample is discarded. Numbers from this lab run are not field data.
+
+### Setup and usage
+
+Install the repository dependencies with `npm install`, then run:
+
+```bash
+node bin/cwv.js analyze fixture --path tests/fixtures/demo-app --format json
+node bin/cwv.js analyze https://example.com --path /path/to/source --interactions interactions.json --format md
+```
+
+`fixture` serves the directory given by `--path` using the included local fixture server. The page URL may instead be an `http(s)` URL. `--interactions <file.json>` accepts an array of `{ "selector": "...", "type": "click|type", "text": "...", "label": "...", "optional": true }`; `text` is used for `type`. If omitted, the CLI reads `cwv-interactions.json` from the scanned root when present. With neither configuration, it measures page-load metrics but does not probe INP interactions.
+
+### Flags and write behavior
+
+- `--format json|console|md|html` selects the report format (default `json`). JSON goes to stdout and diagnostics go to stderr.
+- `--apply` is experimental and writes validated rule-based fixes only. Copilot fixes are never applied by this flag. The default run does not modify the analyzed tree.
+- `--verify` applies eligible diffs only to an isolated temporary copy, then performs one discarded warm-up plus five fresh-page measurements. Calibration-suspect runs are excluded; an unavailable measurement is reported as not run.
+- `--copilot` permits a real Copilot request for eligible measured findings. A stored response file can be used with `--mock-copilot <file.json>` instead; mock output is always labeled as mock and is never a live call. The flags are mutually exclusive.
+- `COPILOT_MODEL` optionally selects the model passed to the Copilot SDK. Authentication and request limits are managed by the installed Copilot CLI/runtime. Without `--copilot` or `--mock-copilot`, fix generation does not call Copilot.
+- Copilot INP output is labeled “suggested, unverified.” Failed fixes receive up to two retries, each with the latest validator error. If validation still fails for the demo handler, the report may show a stored chunked fix as an example template; it is not Copilot output and is not eligible for `--apply`.
+
+### Rating and suppression thresholds
+
+Good thresholds used in gain calculations are INP 200 ms, LCP 2.5 s, and CLS 0.1. The reporter suppresses gains below 30 ms for INP, 100 ms for LCP, and 0.02 for CLS; third-party findings are notes, static-only findings cannot exceed LOW, and low-confidence/low-impact findings are hidden. An interaction summary marked `below-threshold-majority` is not emitted as an issue. Estimated gain and measured improvement are shown separately, with the evidence source on each finding.
+
+### Copilot and known limits
+
+Copilot is opt-in. A real request can fail when the Copilot CLI/runtime is unavailable, authentication is missing, or the account quota is exhausted; the report preserves the exact failure and does not replace it with mock data. Lab timings depend on the host and 4x throttling and should not be treated as field performance. LoAF attribution requires Chrome 123 or newer. High-confidence source mapping generally requires source maps; dynamic markup and generated selectors may remain unresolved. CLS cause attribution is based on nearby measured image timings and observed DOM insertions, so unmatched shifts remain lower-confidence.
+
 This repository contains the **Core Web Vitals Diagnostic Lab** (also referred to as `cwv-inspector`), an automated web performance analysis tool. It bridges the gap between **runtime diagnostics** and **local source code configuration**.
 
 Standard Lighthouse reports indicate that a page is slow (e.g. flagging layout shifts on a selector like `div.header > img.logo`), but they cannot tell the developer *where* in their project source files that element is declared.

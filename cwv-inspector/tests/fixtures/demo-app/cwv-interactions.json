@@ -1,0 +1,6 @@
+[
+  { "selector": "#slow-click-btn", "type": "click", "label": "Slow Button Click Task", "optional": true },
+  { "selector": "#menu-toggle", "type": "click", "label": "Fast Menu Toggle", "optional": true },
+  { "selector": "#search-input", "type": "type", "text": "quick test", "label": "Fast Search Input", "optional": true },
+  { "selector": "#filter-input", "type": "type", "text": "product query", "label": "Interactive Component Filter", "optional": true }
+]

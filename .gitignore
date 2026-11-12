@@ -68,3 +68,7 @@ typings/
 .DS_Store
 stats.json
 cwv-inspector/reports/
+
+# cwv-inspector: generated fixture bundles (regenerate with tests/fixtures/demo-app/dist/buildBundles.js)
+cwv-inspector/tests/fixtures/*/dist/*
+!cwv-inspector/tests/fixtures/*/dist/buildBundles.js
