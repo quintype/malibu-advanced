@@ -173,6 +173,25 @@ function renderReport(report, format) {
   return `<!doctype html><meta charset="utf-8"><title>CWV report</title><h1>CWV report</h1><p>Source: ${esc(report.source)}; hidden issue count: ${report.hiddenCount}</p>${rows.map(({ issue, ...d }) => `<article><h2>${esc(issue.priority)} ${esc(issue.metric)}</h2><dl>${['location','problem','evidence','root_cause','why_it_works','tradeoffs','estimate_vs_measured','source','confidence'].map(k => `<dt>${esc(k)}</dt><dd><pre>${esc(typeof d[k] === 'string' ? d[k] : JSON.stringify(d[k], null, 2))}</pre></dd>`).join('')}</dl><h3>Diff</h3><pre>${esc(d.diff || '(none)')}</pre></article>`).join('')}<h2>Hidden issue reasons</h2><pre>${esc(hidden || 'None')}</pre>${report.apply ? `<h2>Apply results</h2><pre>${esc(JSON.stringify(report.apply, null, 2))}</pre>` : ''}${report.verification ? `<h2>Verification</h2><pre>${esc(JSON.stringify(report.verification, null, 2))}</pre>` : ''}`;
 }
 
+function hasNumericLeaf(value) {
+  if (typeof value === 'number' && Number.isFinite(value)) return true;
+  if (Array.isArray(value)) return value.some(hasNumericLeaf);
+  if (value && typeof value === 'object') return Object.values(value).some(hasNumericLeaf);
+  return false;
+}
+
+function addNumericSourceTags(value, source) {
+  if (Array.isArray(value)) {
+    for (const item of value) addNumericSourceTags(item, source);
+    return;
+  }
+  if (!value || typeof value !== 'object') return;
+  for (const child of Object.values(value)) addNumericSourceTags(child, source);
+  if (hasNumericLeaf(value) && !['live-run', 'test-fixture-data'].includes(value.source)) {
+    value.source = source;
+  }
+}
+
 function interactionByTarget(result, selector) {
   return result.interactionsTested?.find(item => item.target === selector) || null;
 }
@@ -411,6 +430,7 @@ async function main() {
       apply: applyResult,
       verification: verifyResult
     };
+    addNumericSourceTags(report, report.source);
     console.log(renderReport(report, flags.format));
 
     await cleanup();

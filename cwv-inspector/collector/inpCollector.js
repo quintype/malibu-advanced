@@ -190,26 +190,14 @@ export async function collectInpMetrics({
   }
 
   const page = await browser.newPage();
-  const slowHandlerCompletionMs = [];
-  const filterHandlerSamples = [];
+  const handlerCompletionMs = [];
   const recentPageConsole = [];
   page.on('console', message => {
     const messageText = message.text();
     recentPageConsole.push(messageText);
     if (recentPageConsole.length > 30) recentPageConsole.shift();
-    const match = messageText.match(/handleSlowButtonClick completed in ([0-9.]+)ms/);
-    if (match) slowHandlerCompletionMs.push(Number(match[1]));
-    const filterMatch = messageText.match(/handleProductFilterInput query=("(?:[^"\\]|\\.)*") arrayLength=(\d+) heavyBranch=(true|false).*?start=([0-9.]+) end=([0-9.]+).*?duration=([0-9.]+)ms/);
-    if (filterMatch) {
-      filterHandlerSamples.push({
-        query: JSON.parse(filterMatch[1]),
-        arrayLength: Number(filterMatch[2]),
-        heavyBranch: filterMatch[3] === 'true',
-        startTime: Number(filterMatch[4]),
-        endTime: Number(filterMatch[5]),
-        duration: Number(filterMatch[6])
-      });
-    }
+    const match = messageText.match(/\bcompleted in ([0-9.]+)ms/);
+    if (match) handlerCompletionMs.push({ duration: Number(match[1]), message: messageText });
   });
 
   try {
@@ -543,7 +531,7 @@ export async function collectInpMetrics({
       );
     }
 
-    // Wait for initial load, delayed hero.jpg (800ms), and late injected banner (1500ms) to settle
+    // Allow delayed page resources and DOM insertions to settle before measuring interactions.
     await new Promise(r => setTimeout(r, 2200));
 
     // Wait for next paint helper (adequate wait in Node for event queue and paint pipeline delivery under 4x CPU throttle)
@@ -552,7 +540,7 @@ export async function collectInpMetrics({
       await new Promise(r => setTimeout(r, delay));
     };
 
-    // 5. Build interaction targets (including fast controls + React product filter)
+    // 5. Build configured interaction targets or discover common controls from the live page.
     const interactionsToTest = [];
     const interactionsSkipped = [];
     if (Array.isArray(customInteractions)) {
@@ -566,17 +554,38 @@ export async function collectInpMetrics({
         }
       }
     } else {
-      const candidateSelectors = [
-        { selector: '#filter-input', type: 'type', text: 'product query', label: 'Interactive Component Filter' },
-        { selector: '#slow-click-btn', type: 'click', label: 'Slow Button Click Task' },
-        { selector: '#menu-toggle', type: 'click', label: 'Fast Menu Toggle' },
-        { selector: '#search-input', type: 'type', text: 'quick test', label: 'Fast Search Input' }
-      ];
-
-      for (const item of candidateSelectors) {
-        const el = await page.$(item.selector);
-        if (el) interactionsToTest.push(item);
-      }
+      const discovered = await page.evaluate(() => {
+        const selectorFor = element => {
+          if (element.id) return `#${CSS.escape(element.id)}`;
+          const parts = [];
+          let node = element;
+          while (node && node.nodeType === Node.ELEMENT_NODE && node !== document.body) {
+            const tag = node.localName;
+            const siblings = [...node.parentElement.children].filter(sibling => sibling.localName === tag);
+            parts.unshift(`${tag}:nth-of-type(${siblings.indexOf(node) + 1})`);
+            if (node.parentElement.id) {
+              parts.unshift(`#${CSS.escape(node.parentElement.id)}`);
+              break;
+            }
+            node = node.parentElement;
+          }
+          return parts.join(' > ') || element.localName;
+        };
+        return [...document.querySelectorAll('button:not([disabled]), [role="button"], input:not([type]), input[type="text"], input[type="search"], textarea')]
+          .slice(0, 12)
+          .map(element => {
+            const isTextEntry = element.matches('input, textarea');
+            const descriptor = element.getAttribute('aria-label') || element.name || element.id || element.localName;
+            return {
+              selector: selectorFor(element),
+              type: isTextEntry ? 'type' : 'click',
+              ...(isTextEntry ? { text: 'cwv test' } : {}),
+              label: `${descriptor} ${isTextEntry ? 'input' : 'button'}`,
+              optional: true
+            };
+          });
+      });
+      interactionsToTest.push(...discovered);
     }
 
     // Helper: dispatch single interaction cleanly
@@ -587,9 +596,6 @@ export async function collectInpMetrics({
       }, target.selector);
 
       if (target.type === 'click') {
-        const previousCounterText = target.selector === '#slow-click-btn'
-          ? await page.$eval('#counter', el => el.textContent).catch(() => '')
-          : null;
         const point = await page.evaluate((sel) => {
           const el = document.querySelector(sel);
           if (!el) return null;
@@ -599,12 +605,6 @@ export async function collectInpMetrics({
         if (point) {
           const actionStart = await page.evaluate(() => performance.now());
           await page.mouse.click(point.x, point.y);
-          if (target.selector === '#slow-click-btn') {
-            await page.waitForFunction(previous => {
-              const counter = document.getElementById('counter');
-              return counter && counter.textContent !== previous;
-            }, { timeout: 30000 }, previousCounterText);
-          }
           return actionStart;
         }
       } else if (target.type === 'type') {
@@ -652,8 +652,7 @@ export async function collectInpMetrics({
         runCalibrations.push(calibration);
         const preLoafCount = await page.evaluate(() => window.__loaf_entries.length);
         const preEventCount = await page.evaluate(() => window.__event_timing_entries.length);
-        const preCompletionCount = slowHandlerCompletionMs.length;
-        const preFilterCount = filterHandlerSamples.length;
+        const preCompletionCount = handlerCompletionMs.length;
         const actionStart = await dispatchInteraction(target, runIdx);
         await waitForNextPaint();
 
@@ -680,15 +679,7 @@ export async function collectInpMetrics({
           .filter(e => e.startTime >= actionStart - 0.1 && e.targetSelector === target.selector)
           .filter(e => target.type === 'type' ? e.type === 'input' : e.type === 'click')
           .sort((a, b) => b.duration - a.duration)[0] || null;
-        const filterLogs = filterHandlerSamples.slice(preFilterCount);
-
-        if (target.selector === '#filter-input') {
-          if (filterLogs.length !== 1) throw new Error(`Expected exactly one filter handler diagnostic for measured run ${runIdx + 1}; got ${filterLogs.length}.`);
-          const filterLog = filterLogs[0];
-          if (filterLog.arrayLength !== 8000 || !filterLog.heavyBranch) {
-            throw new Error(`Filter workload changed during run ${runIdx + 1}: ${JSON.stringify(filterLog)}.`);
-          }
-        }
+        const completionLogs = handlerCompletionMs.slice(preCompletionCount);
 
         if (!bestEvent) {
           if (!handlerTiming || handlerTiming.duration > 16) {
@@ -732,22 +723,15 @@ export async function collectInpMetrics({
           event: bestEvent,
           loafEntries: associatedLoafs,
           handlerTiming,
-          filterHandlerLog: filterLogs[0] || null,
+          handlerCompletionLog: completionLogs[0] || null,
           calibration
         });
-        if (target.selector === '#slow-click-btn') {
-          const completion = slowHandlerCompletionMs.slice(preCompletionCount);
-          if (completion.length === 1) {
-            runCompletionDurations.push(completion[0]);
-            runCompletionSources.push('app-console elapsed-time instrumentation');
-          } else if (completion.length === 0 && Number.isFinite(handlerTiming?.duration)) {
-            // Bundled fixtures may not preserve the app-level console probe. Use the captured
-            // synchronous event-handler window, and identify that measurement source explicitly.
-            runCompletionDurations.push(handlerTiming.duration);
-            runCompletionSources.push('collector capture-phase handler window');
-          } else {
-            throw new Error(`Expected one measured handler completion time or a captured handler window for ${target.selector}, run ${runIdx + 1}; found ${completion.length}.`);
-          }
+        if (completionLogs.length === 1) {
+          runCompletionDurations.push(completionLogs[0].duration);
+          runCompletionSources.push('app-console elapsed-time instrumentation');
+        } else if (Number.isFinite(handlerTiming?.duration)) {
+          runCompletionDurations.push(handlerTiming.duration);
+          runCompletionSources.push('collector capture-phase handler window');
         }
 
         for (const l of postData.loafs) {
@@ -935,7 +919,7 @@ export async function collectInpMetrics({
         rootCauseCategory = 'heavy-filter-loop';
       } else if (topScript && topScript.timeShare?.dominantCause === 'layout-thrashing') {
         rootCauseCategory = 'layout-thrashing';
-      } else if (worstInteraction.target === '#filter-input') {
+      } else if (/filter/i.test(worstInteraction.label || '')) {
         rootCauseCategory = 'heavy-filter-loop';
       } else if (worstInteraction.layoutThrashing?.detected) {
         rootCauseCategory = 'layout-thrashing';
@@ -944,24 +928,23 @@ export async function collectInpMetrics({
       }
     }
 
-    // 9. Resource Timing for the LCP image record (hero.jpg), used for the LCP resourceTiming block below
-    const heroResource = (rawMetrics.resources || []).find(r => {
-      try { return new URL(r.name).pathname.endsWith('/hero.jpg'); } catch { return false; }
-    });
+    // 9. Resource Timing for the element the browser identified as LCP.
+    const lcpUrl = rawMetrics.lcp?.url;
+    const lcpResource = (rawMetrics.resources || []).find(resource => resource.name === lcpUrl);
 
-    let heroResourceTiming = null;
-    if (heroResource) {
-      const serverWait = Math.round((heroResource.responseStart - heroResource.requestStart) * 10) / 10;
-      const transferDuration = Math.round((heroResource.responseEnd - heroResource.responseStart) * 10) / 10;
+    let lcpResourceTiming = null;
+    if (lcpResource) {
+      const serverWait = Math.round((lcpResource.responseStart - lcpResource.requestStart) * 10) / 10;
+      const transferDuration = Math.round((lcpResource.responseEnd - lcpResource.responseStart) * 10) / 10;
       const total = serverWait + transferDuration;
       const serverWaitPct = total > 0 ? Math.round((serverWait / total) * 100) : 100;
-      heroResourceTiming = {
-        name: heroResource.name,
-        startTime: heroResource.startTime,
-        requestStart: heroResource.requestStart,
-        responseStart: heroResource.responseStart,
-        responseEnd: heroResource.responseEnd,
-        duration: heroResource.duration,
+      lcpResourceTiming = {
+        name: lcpResource.name,
+        startTime: lcpResource.startTime,
+        requestStart: lcpResource.requestStart,
+        responseStart: lcpResource.responseStart,
+        responseEnd: lcpResource.responseEnd,
+        duration: lcpResource.duration,
         serverWait,
         transferDuration,
         serverWaitPct
@@ -1095,7 +1078,7 @@ export async function collectInpMetrics({
           rating: rawMetrics.lcp.renderTime <= 2500 ? 'good' : rawMetrics.lcp.renderTime <= 4000 ? 'needs-improvement' : 'poor',
           subparts: lcpSubparts,
           largestSubpart,
-          resourceTiming: heroResourceTiming
+          resourceTiming: lcpResourceTiming
         } : null,
         cls: {
           value: roundedCls,

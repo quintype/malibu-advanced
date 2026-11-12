@@ -373,6 +373,20 @@ async function runTests() {
     assert.strictEqual(run.status, 0, `CLI run failed: ${run.stderr.split('\n').filter(l => !l.startsWith('[Calibration')).join('\n')}`);
     const report = JSON.parse(run.stdout);
     assert.strictEqual(report.source, 'live-run');
+    const allowedSources = new Set(['live-run', 'test-fixture-data']);
+    const sourceTagFailures = [];
+    const inspect = (value, parentObject, location) => {
+      if (typeof value === 'number' && Number.isFinite(value)) {
+        if (!parentObject || !allowedSources.has(parentObject.source)) sourceTagFailures.push(location);
+      } else if (Array.isArray(value)) {
+        value.forEach((item, index) => inspect(item, parentObject, `${location}[${index}]`));
+      } else if (value && typeof value === 'object') {
+        for (const [key, child] of Object.entries(value)) inspect(child, value, `${location}.${key}`);
+      }
+    };
+    inspect(report, null, '$');
+    assert.deepStrictEqual(sourceTagFailures, [], `Every numeric leaf must have a valid source tag on its parent object: ${sourceTagFailures.join(', ')}`);
+    console.log(`✓ Source-tag audit: ${sourceTagFailures.length} numeric leaves missing provenance tags`);
     return report;
   };
 

@@ -79,11 +79,9 @@ async function main() {
         for (const run of sample.runEvidence) {
           console.log(`    Run ${run.run} detail: ${JSON.stringify({
             documentId: run.documentId,
-            query: run.filterHandlerLog?.query ?? run.handlerTiming?.query,
-            arrayLength: run.filterHandlerLog?.arrayLength,
-            heavyBranch: run.filterHandlerLog?.heavyBranch,
-            handlerStart: run.filterHandlerLog?.startTime,
-            handlerEnd: run.filterHandlerLog?.endTime,
+            query: run.handlerTiming?.query,
+            handlerStart: run.handlerTiming?.startTime,
+            handlerEnd: run.handlerTiming?.endTime,
             handlerDurationMs: run.handlerTiming?.duration,
             eventTiming: run.event,
             loafScripts: run.loafEntries.flatMap(entry => entry.scripts.map(script => ({ sourceURL: script.sourceURL, function: script.sourceFunctionName, sourceCharPosition: script.sourceCharPosition, duration: script.duration, forcedStyleAndLayoutDuration: script.forcedStyleAndLayoutDuration }))),
@@ -410,10 +408,10 @@ async function main() {
       },
       lcpResourceTiming: unbundledMetrics.metrics.lcp?.resourceTiming || null,
       investigationFilterInput: {
-        prior1448Observation: 'The earlier observation remains an unexplained collector artifact, guarded by the stale-entry regression test. Its root cause has not been established.',
+        prior1448Observation: '1448ms: unexplained collector artifact, guarded by the stale-entry regression test; root cause not established.',
         rawRuns: filterTested.rawRunDurations,
         handlerDurations: filterTested.handlerRunDurations,
-        handlerEvidence: filterTested.runEvidence.map(run => ({ run: run.run, handlerTiming: run.handlerTiming, fixtureLog: run.filterHandlerLog, calibration: run.calibration })),
+        handlerEvidence: filterTested.runEvidence.map(run => ({ run: run.run, handlerTiming: run.handlerTiming, completionLog: run.handlerCompletionLog, calibration: run.calibration })),
         stats: filterTested.duration,
         sameRunLoaf: sameRunIssue?.loaf.rawEntry || null,
         conclusion: sameRunIssue ? 'measured filter LoAF issue' : 'below threshold; no filter INP issue emitted'
