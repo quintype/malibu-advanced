@@ -12,13 +12,6 @@ import { generateFixesForIssues, applyValidatedFixes, setMockCopilotHandler } fr
 import { prioritizeRuntimeIssues } from '../analyzers/recommendations.js';
 
 // Default targets are optional: a page that lacks one is measured without it and the skip is reported.
-const DEFAULT_INTERACTIONS = [
-  { selector: '#slow-click-btn', type: 'click', label: 'Slow Button Click Task', optional: true },
-  { selector: '#menu-toggle', type: 'click', label: 'Fast Menu Toggle', optional: true },
-  { selector: '#search-input', type: 'type', text: 'quick test', label: 'Fast Search Input', optional: true },
-  { selector: '#filter-input', type: 'type', text: 'product query', label: 'Interactive Component Filter', optional: true }
-];
-
 // Forms a cause selector may be resolvable under: as reported, its last compound token, and that token without its tag.
 function selectorForms(sel) {
   const tail = sel.trim().split(/\s+/).pop();
@@ -235,7 +228,7 @@ async function verifyFixesOnTemporaryCopy(issues, sourceRoot, repoRoot, before, 
     if (!copied.applied.length) return { status: 'not run', source: 'live-run', method, reason: copied.reason };
     server = await startFixtureServer(0, copyRoot);
     const after = await collectInpMetrics({ url: `${server.url}/index.html`, cpuThrottlingRate: 4, runs: 5, customInteractions: interactions });
-    const targets = ['#slow-click-btn', '#menu-toggle', '#search-input'];
+    const targets = before.interactionsTested.map(interaction => interaction.target);
     const interactionsReport = {};
     for (const selector of targets) {
       const a = interactionByTarget(before, selector);
@@ -328,10 +321,11 @@ async function main() {
       process.exit(1);
     }
 
+    const defaultInteractionsFile = path.join(scanRoot, 'cwv-interactions.json');
     const interactions = flags.interactions
       ? JSON.parse(fs.readFileSync(path.resolve(process.cwd(), flags.interactions), 'utf8'))
-      : DEFAULT_INTERACTIONS;
-    if (!Array.isArray(interactions) || interactions.length === 0) throw new Error('--interactions must be a non-empty JSON array of { selector, type, text?, label? }');
+      : fs.existsSync(defaultInteractionsFile) ? JSON.parse(fs.readFileSync(defaultInteractionsFile, 'utf8')) : [];
+    if (!Array.isArray(interactions)) throw new Error('--interactions must contain a JSON array of { selector, type, text?, label? }');
 
     if (flags.mockCopilot) registerMockCopilot(flags.mockCopilot, scanRoot, repo.root);
 
@@ -343,10 +337,11 @@ async function main() {
       customInteractions: interactions
     });
 
-    // Source mapper: culprit script of the worst interaction, and of #filter-input if tested
+    // Source mapper: culprit script of the worst interaction and configured filter interaction, if present
     const worstTested = collected.interactionsTested.find(i => i.target === collected.worstInteraction?.target);
     const worstScript = worstTested?.scripts?.[0] ?? null;
-    const filterTested = collected.interactionsTested.find(i => i.target === '#filter-input');
+    const filterDefinition = interactions.find(i => /filter/i.test(i.label || ''));
+    const filterTested = filterDefinition && collected.interactionsTested.find(i => i.target === filterDefinition.selector);
     const filterScript = filterTested?.scripts?.[0] || null;
 
     // CLS: locate the cause the collector matched to each shift (its selector comes from measured candidates)

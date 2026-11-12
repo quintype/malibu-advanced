@@ -31,6 +31,13 @@ function median(values) {
   return sorted.length % 2 ? sorted[middle] : (sorted[middle - 1] + sorted[middle]) / 2;
 }
 
+function formatRunSamples(samples = []) {
+  return samples.map(sample => {
+    if (typeof sample !== 'object' || sample === null) return sample;
+    return Number.isFinite(sample.duration) ? sample.duration : sample.belowThreshold ? 'below-threshold' : 'unavailable';
+  }).join(', ');
+}
+
 async function main() {
   console.log('========================================================================');
   console.log('⚡ Core Web Vitals Inspector: Step 4 Fix Generator & Diff Validator Demo');
@@ -65,7 +72,7 @@ async function main() {
 
     for (const [label, sample] of [['#filter-input', filterTested], ['#slow-click-btn', slowBtnTested]]) {
       if (!sample || sample.runDurations.length !== 5) throw new Error(`${label} did not produce five measured Event Timing samples.`);
-      console.log(`  • ${label} raw measured runs: [${sample.rawRunDurations.join(', ')}]`);
+      console.log(`  • ${label} raw measured runs: [${formatRunSamples(sample.rawRunDurations)}]`);
       console.log(`    Stats: min=${sample.duration.min}ms, median=${sample.duration.median}ms, max=${sample.duration.max}ms`);
       if (label === '#filter-input') {
         console.log(`    In-page handler durations: [${sample.handlerRunDurations.join(', ')}] ms`);
@@ -368,8 +375,8 @@ async function main() {
     console.log('2. Fast Controls Regression Verification (Post-Patch):');
     const postMenu = remeasuredMetrics?.interactionsTested.find(i => i.target === '#menu-toggle');
     const postSearch = remeasuredMetrics?.interactionsTested.find(i => i.target === '#search-input');
-    console.log(`   #menu-toggle:  Before [${menuTested.rawRunDurations.join(', ')}] median=${menuTested.duration.median} -> After [${postMenu.rawRunDurations.join(', ')}] median=${postMenu.duration.median} (Regressed: ${postMenu.duration.median > menuTested.duration.median ? 'YES' : 'NO'})`);
-    console.log(`   #search-input: Before [${searchTested.rawRunDurations.join(', ')}] median=${searchTested.duration.median} -> After [${postSearch.rawRunDurations.join(', ')}] median=${postSearch.duration.median} (Regressed: ${postSearch.duration.median > searchTested.duration.median ? 'YES' : 'NO'})\n`);
+    console.log(`   #menu-toggle:  Before [${formatRunSamples(menuTested.rawRunDurations)}] median=${menuTested.duration.median} -> After [${formatRunSamples(postMenu.rawRunDurations)}] median=${postMenu.duration.median} (Regressed: ${postMenu.duration.median > menuTested.duration.median ? 'YES' : 'NO'})`);
+    console.log(`   #search-input: Before [${formatRunSamples(searchTested.rawRunDurations)}] median=${searchTested.duration.median} -> After [${formatRunSamples(postSearch.rawRunDurations)}] median=${postSearch.duration.median} (Regressed: ${postSearch.duration.median > searchTested.duration.median ? 'YES' : 'NO'})\n`);
 
     console.log('3. INP Fix Estimate vs Measured Median Improvement:');
     for (const issue of issuesWithFixes.filter(i => i.metric === 'INP' && i.fix?.fix_validated)) {

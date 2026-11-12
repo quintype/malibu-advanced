@@ -159,7 +159,7 @@ export async function requestFix({ issue, sourceCode, workspaceRoot = process.cw
   const sanitizedCode = sanitizePromptContext(sourceCode, workspaceRoot);
   const causeGuidance = issue.metric === 'INP' && issue.rootCauseCategory === 'heavy-filter-loop'
     ? [
-        `4. For this measured #filter-input loop, prefer hoisting query.toLowerCase() out of the per-item/per-iteration loop; hoist repeated title normalization where equivalent.`,
+        `4. For this measured filter loop, prefer hoisting query.toLowerCase() out of the per-item/per-iteration loop; hoist repeated title normalization where equivalent.`,
         `5. Preserve the exact filtered output for identical input queries. Chunk/yield only if the event/result contract remains equivalent.`,
         `6. startTransition/useDeferredValue applies only if the measured target is implemented in React; do not introduce useMemo keyed to the changing query as the fix.`
       ]

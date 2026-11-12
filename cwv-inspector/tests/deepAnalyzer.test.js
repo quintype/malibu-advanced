@@ -99,7 +99,7 @@ async function runTests() {
   assert.strictEqual(lcpIssue.metric, 'LCP');
   assert.strictEqual(lcpIssue.largestSubpart, 'resourceLoadDuration');
   assert(lcpIssue.evidence.some(e => e.includes('resourceLoadDuration')), 'Evidence must cite largest subpart');
-  assert(lcpIssue.evidence.some(e => e.includes('Resource Timing for the LCP image /hero.jpg was unavailable')), 'Without Resource Timing no server-wait/format conclusion may be inferred');
+  assert(lcpIssue.evidence.some(e => e.includes('Resource Timing for the LCP image resource was unavailable')), 'Without Resource Timing no server-wait/format conclusion may be inferred');
   assert.strictEqual(lcpIssue.location.line_start, 124, 'Location comes from the supplied resolution');
 
   const unlocatedLcp = analyzeLcp({

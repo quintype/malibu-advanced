@@ -555,7 +555,7 @@ export async function collectInpMetrics({
     // 5. Build interaction targets (including fast controls + React product filter)
     const interactionsToTest = [];
     const interactionsSkipped = [];
-    if (Array.isArray(customInteractions) && customInteractions.length > 0) {
+    if (Array.isArray(customInteractions)) {
       for (const item of customInteractions) {
         if (await page.$(item.selector)) {
           interactionsToTest.push(item);

@@ -241,10 +241,10 @@ export function analyzeInpFunction({
   let tradeoffs = 'Longer total wall-clock duration; possible re-entrancy from repeated clicks while the handler is yielding (recommend adding an isProcessing guard or disabling the trigger element); state and DOM textContent updates now complete later.';
 
   if (filterLoopDetected || location.name === 'handleProductFilterInput') {
-    problem = `Synchronous filter loop in ${location.name || 'filter handler'} on ${worstInteraction?.target || '#filter-input'} takes ${culpritScript.duration}ms, recalculating loop-invariant query.toLowerCase() across 8,000 items and 300 iterations per item.`;
+    problem = `Synchronous filter loop in ${location.name || 'filter handler'} on ${worstInteraction?.target || 'configured filter interaction'} takes ${culpritScript.duration}ms, recalculating loop-invariant query.toLowerCase() in nested iterations.`;
     rootCause = `The filter callback repeatedly invokes redundant string normalization (query.toLowerCase()) inside a 300-iteration inner loop without hoisting loop invariants, blocking the main thread during typing interactions.`;
     estimatedDelta = Math.round((worstInteraction?.duration?.median || culpritScript.duration) * 0.85);
-    estimatedBasis = `Hoisting loop-invariant query.toLowerCase() outside inner loop eliminates redundant function calls across 8,000 items, lowering interaction delay by ~${estimatedDelta}ms`;
+    estimatedBasis = `Hoisting loop-invariant query.toLowerCase() outside the inner loop eliminates redundant function calls, lowering interaction delay by ~${estimatedDelta}ms`;
     tradeoffs = 'Consumes minimal memory for single lowercased query string variable.';
   }
 
@@ -313,8 +313,8 @@ export function analyzeReactComponents(workspaceRoot = process.cwd(), interactio
 
   const reactFiles = walk(workspaceRoot);
 
-  // Check if runtime interaction tested this component (e.g. #filter-input)
-  const filterInteraction = (interactionsTested || []).find(i => i.target === '#filter-input');
+  // Check whether a configured filter interaction measured this component.
+  const filterInteraction = (interactionsTested || []).find(i => /filter/i.test(i.label || ''));
   const isRuntimeConfirmed = filterInteraction && filterInteraction.duration?.median >= 40;
 
   for (const filePath of reactFiles) {
@@ -427,7 +427,10 @@ export function analyzeLcp({
   const priority = isGood ? 'LOW' : 'MEDIUM';
 
   const rawTiming = lcpMetric.resourceTiming;
-  const validHeroTiming = rawTiming && /\/hero\.jpg(?:\?|$)/.test(rawTiming.name || '');
+  const resourcePath = value => { try { return new URL(value, 'http://cwv.invalid').pathname; } catch { return ''; } };
+  const expectedResourcePath = resourcePath(lcpMetric.url || '');
+  const actualResourcePath = resourcePath(rawTiming?.name || '');
+  const validHeroTiming = Boolean(rawTiming && expectedResourcePath && actualResourcePath.endsWith(expectedResourcePath));
   const serverWait = validHeroTiming ? Math.round((rawTiming.responseStart - rawTiming.requestStart) * 10) / 10 : null;
   const transferDuration = validHeroTiming ? Math.round((rawTiming.responseEnd - rawTiming.responseStart) * 10) / 10 : null;
   const measuredResourceInterval = validHeroTiming ? Math.round((rawTiming.responseEnd - rawTiming.requestStart) * 10) / 10 : null;
@@ -442,17 +445,17 @@ export function analyzeLcp({
     evidence.push(`Raw Resource Timing for ${rawTiming.name}: startTime=${rawTiming.startTime}ms, requestStart=${rawTiming.requestStart}ms, responseStart=${rawTiming.responseStart}ms, responseEnd=${rawTiming.responseEnd}ms, duration=${rawTiming.duration}ms`);
     evidence.push(`Resource Timing only: server wait (responseStart - requestStart)=${serverWait}ms; transfer (responseEnd - responseStart)=${transferDuration}ms; requestStart-to-responseEnd=${measuredResourceInterval}ms; server-wait share=${serverWaitPct}%`);
   } else {
-    evidence.push('Resource Timing for the LCP image /hero.jpg was unavailable; server wait and transfer were not inferred from LCP subparts.');
+    evidence.push('Resource Timing for the LCP image resource was unavailable; server wait and transfer were not inferred from LCP subparts.');
   }
   evidence.push(`LCP attribution breakdown: TTFB ${subparts.timeToFirstByte ?? 'unavailable'}ms, load delay ${subparts.resourceLoadDelay ?? 'unavailable'}ms, load duration ${subparts.resourceLoadDuration ?? 'unavailable'}ms, render delay ${subparts.elementRenderDelay ?? 'unavailable'}ms`);
   if (largestSubpart && Number.isFinite(subparts[largestSubpart])) evidence.push(`Largest attribution subpart is ${largestSubpart} (${subparts[largestSubpart]}ms)`);
   if (validHeroTiming && Math.abs((serverWait + transferDuration) - measuredResourceInterval) >= 0.2) {
-    evidence.push('Resource Timing interval consistency check failed; values do not come from one consistent /hero.jpg timing record.');
+    evidence.push('Resource Timing interval consistency check failed; values do not come from one consistent LCP resource timing record.');
   }
 
   const serverCdnNote = validHeroTiming
-    ? `Measured /hero.jpg server wait is ${serverWait}ms (${serverWaitPct}% of requestStart-to-responseEnd). Any potential savings require a separate before/after CDN measurement.`
-    : 'Resource Timing did not provide a usable /hero.jpg record; no server-wait conclusion is reported.';
+    ? `Measured LCP resource server wait is ${serverWait}ms (${serverWaitPct}% of requestStart-to-responseEnd). Any potential savings require a separate before/after CDN measurement.`
+    : 'Resource Timing did not provide a usable LCP resource record; no server-wait conclusion is reported.';
 
   // Canonical file target: index.html (never bundled.html)
   const lcpLocationResolved = Boolean(lcpElementResolution.file);
@@ -476,11 +479,11 @@ export function analyzeLcp({
         }
       : null,
     problem: validHeroTiming
-      ? `The /hero.jpg Resource Timing entry shows ${serverWait}ms server wait (${serverWaitPct}% of its request-to-response interval); overall LCP is ${lcpMetric.value ?? 'unavailable'}ms.`
-      : `LCP is ${lcpMetric.value ?? 'unavailable'}ms, but /hero.jpg Resource Timing is unavailable for source-specific network attribution.`,
+      ? `The LCP Resource Timing entry shows ${serverWait}ms server wait (${serverWaitPct}% of its request-to-response interval); overall LCP is ${lcpMetric.value ?? 'unavailable'}ms.`
+      : `LCP is ${lcpMetric.value ?? 'unavailable'}ms, but its Resource Timing entry is unavailable for source-specific network attribution.`,
     evidence,
     root_cause: validHeroTiming
-      ? `Resource Timing measured ${serverWait}ms between /hero.jpg requestStart and responseStart.`
+      ? `Resource Timing measured ${serverWait}ms between the LCP resource requestStart and responseStart.`
       : 'The available LCP data does not establish an image server wait cause.',
     rootCauseCategory: 'server-response-wait',
     serverCdnNote,
@@ -694,7 +697,7 @@ export function runDeepAnalysis({
     const med = t.duration?.median ?? t.duration ?? 0;
     const isSlow = med >= 200 || t.flagged;
     const hasLongScript = t.scripts?.some(s => (s.duration || 0) >= 50);
-    return isSlow || (t.target === '#filter-input' && hasLongScript);
+    return isSlow || (/filter/i.test(t.label || '') && hasLongScript);
   });
 
   // Filter out duplicates by target
