@@ -164,6 +164,13 @@ export async function requestFix({ issue, sourceCode, workspaceRoot = process.cw
         `6. startTransition/useDeferredValue applies only if the measured target is implemented in React; do not introduce useMemo keyed to the changing query as the fix.`
       ]
     : [];
+  const inpConstraints = issue.metric === 'INP' ? [
+    `Constraints (the patch is rejected if any is violated):`,
+    `- Preserve EVERY operation, in the same order: all 100 style writes and layout reads, all 14,000,000 compute iterations. Do not batch, reorder, or drop reads.`,
+    `- Yield between chunks with scheduler.yield() (setTimeout fallback).`,
+    `- Add a re-entrancy guard (a flag set at entry, reset in a finally block).`,
+    `- Return JSON only, with original_snippet/replacement_snippet edits.`
+  ] : [];
   const prompt = sanitizePromptContext([
     `You are a senior web performance engineer fixing a Core Web Vitals ${issue.metric} issue.`,
     `File: ${issue.location.file}`,
@@ -195,6 +202,7 @@ export async function requestFix({ issue, sourceCode, workspaceRoot = process.cw
     `2. "original_snippet" MUST match an EXACT character sequence in the source code.`,
     `3. For INP: fix the measured cause using cooperative yielding (scheduler.yield() or setTimeout), loop-invariant hoisting, or batching DOM reads/writes as appropriate.`,
     ...causeGuidance,
+    ...inpConstraints,
     `${4 + causeGuidance.length}. Do NOT wrap output in conversational text.`
   ].join('\n'), workspaceRoot);
   if (typeof onPrompt === 'function') onPrompt(prompt, issue);
@@ -237,6 +245,13 @@ export async function retryFix({ issue, sourceCode, previousFix, validationError
     return { ...parseAndValidateFix(result), copilot_source: 'mock' };
   }
 
+  const inpConstraints = issue.metric === 'INP' ? [
+    `Constraints (the patch is rejected if any is violated):`,
+    `- Preserve EVERY operation, in the same order: all 100 style writes and layout reads, all 14,000,000 compute iterations. Do not batch, reorder, or drop reads.`,
+    `- Yield between chunks with scheduler.yield() (setTimeout fallback).`,
+    `- Add a re-entrancy guard (a flag set at entry, reset in a finally block).`,
+    `- Return JSON only, with original_snippet/replacement_snippet edits.`
+  ] : [];
   const prompt = sanitizePromptContext([
     `Your previous fix failed validation with error: ${validationError}`,
     `Previous Edits: ${JSON.stringify(previousFix?.edits, null, 2)}`,
@@ -248,18 +263,15 @@ export async function retryFix({ issue, sourceCode, previousFix, validationError
     `Please correct the edit so that:`,
     `1. original_snippet matches the file exactly once.`,
     `2. The replacement code is syntactically valid and eliminates the CWV root cause without introducing new issues.`,
+    ...inpConstraints,
     `Return ONLY a valid JSON object matching the required schema.`
   ].join('\n'), workspaceRoot);
   if (typeof onPrompt === 'function') onPrompt(prompt, issue);
 
   let client;
   try {
-    const { CopilotClient } = await import('@github/copilot-sdk');
-    client = new CopilotClient({ cliPath: copilotCliPath, logLevel: 'error', autoRestart: false, useStdio: false, port: 0 });
-    await client.start();
-    const session = await client.createSession();
-    const response = await session.sendAndWait({ prompt }, 60000);
-    const rawContent = response?.data?.content;
+    client = new CopilotService({ cliPath: copilotCliPath, timeoutMs: 60000 });
+    const rawContent = await client.generateResponse(prompt, { model: process.env.COPILOT_MODEL || undefined });
     if (typeof rawContent !== 'string' || !rawContent.trim()) throw new Error('Copilot returned no assistant JSON response.');
     if (typeof onRawResponse === 'function') onRawResponse(rawContent, issue);
     return { ...parseAndValidateFix(rawContent), copilot_source: 'live' };

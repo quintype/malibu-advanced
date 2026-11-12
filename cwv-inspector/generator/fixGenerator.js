@@ -175,8 +175,8 @@ export async function generateFixesForIssues(issues = [], options = {}) {
       });
       let validation = await validateCandidateFix({ issue, fix: candidateFix, workspaceRoot });
 
-      // If initial validation fails, attempt exactly ONE retry with Copilot
-      if (!validation.valid && options.retryCopilot !== false) {
+      // At most two retries; each receives the latest exact validator error.
+      for (let attempt = 0; !validation.valid && options.retryCopilot !== false && attempt < 2; attempt++) {
         try {
           const retryCandidate = await retryFix({
             issue,
@@ -188,13 +188,11 @@ export async function generateFixesForIssues(issues = [], options = {}) {
             onRawResponse: options.onRawResponse
           });
           const retryValidation = await validateCandidateFix({ issue, fix: retryCandidate, workspaceRoot });
-
-          if (retryValidation.valid) {
-            candidateFix = retryCandidate;
-            validation = retryValidation;
-          }
+          candidateFix = retryCandidate;
+          validation = retryValidation;
         } catch (retryErr) {
-          // Retry failed, keep initial validation error
+          validation = { ...validation, error: `${validation.error}\nRetry ${attempt + 1} failed: ${retryErr.message}` };
+          if (attempt === 1) break;
         }
       }
 
@@ -203,13 +201,14 @@ export async function generateFixesForIssues(issues = [], options = {}) {
       enriched.copilot = isMock ? 'not run: a stored mock response was used, no Copilot call was made' : 'live';
 
       if (validation.valid) {
-        enriched.fix = fixRecord(strategy, candidateFix, validation, relativeFile);
+        enriched.fix = fixRecord(strategy, candidateFix, validation, relativeFile, strategy === 'copilot' ? { status: 'suggested, unverified' } : {});
         enriched.fix_validated = true;
         enriched.measured_improvement = null;
       } else {
         // Mark as fix_unverified: do NOT present diff as actionable
         enriched.fix = {
           strategy,
+          status: 'suggested, unverified',
           fix_target_file: candidateFix.fix_target_file || candidateFix.file || relativeFile,
           fix_validated: false,
           fix_unverified: true,
@@ -247,10 +246,10 @@ export async function generateFixesForIssues(issues = [], options = {}) {
 /** Applies only fixes explicitly validated by the generator; default CLI runs never call this. */
 export function applyValidatedFixes(issues = [], workspaceRoot = process.cwd()) {
   const root = path.resolve(workspaceRoot);
-  const eligible = issues.filter(issue => issue.fix_validated === true && issue.fix?.fix_validated !== false && issue.ineffective !== true && issue.fix?.ineffective !== true && typeof issue.fix?.diff === 'string');
+  const eligible = issues.filter(issue => issue.fix?.strategy === 'rule-based' && issue.fix_validated === true && issue.fix?.fix_validated !== false && issue.ineffective !== true && issue.fix?.ineffective !== true && typeof issue.fix?.diff === 'string');
   const skipped = issues.filter(issue => !eligible.includes(issue)).map(issue => ({
     issue: issue.problem || issue.metric || 'unknown',
-    reason: issue.ineffective === true || issue.fix?.ineffective === true ? 'fix marked ineffective' : 'fix is not validated'
+    reason: issue.ineffective === true || issue.fix?.ineffective === true ? 'fix marked ineffective' : issue.fix?.strategy !== 'rule-based' ? '--apply is experimental and accepts validated rule-based fixes only' : 'fix is not validated'
   }));
   if (!eligible.length) return { applied: [], skipped, error: null };
 

@@ -4,6 +4,7 @@ import fs from 'fs';
 import path from 'path';
 import os from 'os';
 import { execFileSync } from 'child_process';
+import { fileURLToPath } from 'url';
 import { startFixtureServer } from '../tests/fixtures/demo-app/serveFixture.js';
 import { collectInpMetrics, charOffsetToLineCol, setRepoRoot } from '../collector/index.js';
 import { resolveSourceLocation, resolveElementSelector } from '../sourcemap/index.js';
@@ -134,6 +135,7 @@ function issueDetails(issue) {
     problem: issue.problem || '',
     evidence: issue.evidence || [],
     root_cause: issue.root_cause || '',
+    fix_status: issue.fix?.status || (issue.fix?.strategy === 'copilot' ? 'suggested, unverified' : issue.fix?.strategy || 'none'),
     diff: issue.fix?.diff || '',
     why_it_works: issue.fix?.why_it_works || '',
     tradeoffs: issue.fix?.tradeoffs || issue.tradeoffs || '',
@@ -151,7 +153,8 @@ function renderReport(report, format) {
     const lines = [`CWV report (${report.source})`, `Hidden issues: ${report.hiddenCount}`, ...rows.map(({ issue, ...d }) => [
       `\n[${issue.priority}] ${issue.metric} (score ${Number(issue.priority_score || 0).toFixed(3)})`,
       `Location: ${d.location}`, `Problem: ${d.problem}`, `Evidence: ${JSON.stringify(d.evidence)}`,
-      `Root cause: ${d.root_cause}`, `Diff:\n${d.diff || '(none)'}`, `Why it works: ${d.why_it_works}`,
+      `Root cause: ${d.root_cause}`, `Fix status: ${d.fix_status || 'none'}`, `Diff:\n${d.diff || '(none)'}`, `Why it works: ${d.why_it_works}`,
+      ...(issue.suggested_template ? [`Stored chunked fix template (example only; not Copilot output):\n${JSON.stringify(issue.suggested_template, null, 2)}`] : []),
       `Tradeoffs: ${d.tradeoffs}`, `Estimate vs measured: ${JSON.stringify(d.estimate_vs_measured)}`,
       `Source: ${d.source}; confidence: ${d.confidence}`
     ].join('\n'))];
@@ -163,14 +166,15 @@ function renderReport(report, format) {
   if (format === 'md') {
     return [`# CWV report`, `Source: ${report.source}`, `Hidden issue count: ${report.hiddenCount}`, ...rows.map(({ issue, ...d }) => [
       `## ${issue.priority} ${issue.metric}`, `- Location: ${d.location}`, `- Problem: ${d.problem}`,
-      `- Evidence: ${JSON.stringify(d.evidence)}`, `- Root cause: ${d.root_cause}`,
+      `- Evidence: ${JSON.stringify(d.evidence)}`, `- Root cause: ${d.root_cause}`, `- Fix status: ${d.fix_status || 'none'}`,
       `- Diff:\n\n\`\`\`diff\n${d.diff}\n\`\`\``, `- Why it works: ${d.why_it_works}`,
+      ...(issue.suggested_template ? [`- Stored chunked fix template (example only; not Copilot output):\n\n\`\`\`json\n${JSON.stringify(issue.suggested_template, null, 2)}\n\`\`\``] : []),
       `- Tradeoffs: ${d.tradeoffs}`, `- Estimate vs measured: ${JSON.stringify(d.estimate_vs_measured)}`,
       `- Source: ${d.source}; confidence: ${d.confidence}`
     ].join('\n')), `## Hidden issues\n${hidden || 'None'}`, ...(report.apply ? [`## Apply results\n\n\`\`\`json\n${JSON.stringify(report.apply, null, 2)}\n\`\`\``] : []), ...(report.verification ? [`## Verification\n\n\`\`\`json\n${JSON.stringify(report.verification, null, 2)}\n\`\`\``] : [])].join('\n\n');
   }
   const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-  return `<!doctype html><meta charset="utf-8"><title>CWV report</title><h1>CWV report</h1><p>Source: ${esc(report.source)}; hidden issue count: ${report.hiddenCount}</p>${rows.map(({ issue, ...d }) => `<article><h2>${esc(issue.priority)} ${esc(issue.metric)}</h2><dl>${['location','problem','evidence','root_cause','why_it_works','tradeoffs','estimate_vs_measured','source','confidence'].map(k => `<dt>${esc(k)}</dt><dd><pre>${esc(typeof d[k] === 'string' ? d[k] : JSON.stringify(d[k], null, 2))}</pre></dd>`).join('')}</dl><h3>Diff</h3><pre>${esc(d.diff || '(none)')}</pre></article>`).join('')}<h2>Hidden issue reasons</h2><pre>${esc(hidden || 'None')}</pre>${report.apply ? `<h2>Apply results</h2><pre>${esc(JSON.stringify(report.apply, null, 2))}</pre>` : ''}${report.verification ? `<h2>Verification</h2><pre>${esc(JSON.stringify(report.verification, null, 2))}</pre>` : ''}`;
+  return `<!doctype html><meta charset="utf-8"><title>CWV report</title><h1>CWV report</h1><p>Source: ${esc(report.source)}; hidden issue count: ${report.hiddenCount}</p>${rows.map(({ issue, ...d }) => `<article><h2>${esc(issue.priority)} ${esc(issue.metric)}</h2><dl>${['location','problem','evidence','root_cause','fix_status','why_it_works','tradeoffs','estimate_vs_measured','source','confidence'].map(k => `<dt>${esc(k)}</dt><dd><pre>${esc(typeof d[k] === 'string' ? d[k] : JSON.stringify(d[k], null, 2))}</pre></dd>`).join('')}</dl><h3>Diff</h3><pre>${esc(d.diff || '(none)')}</pre>${issue.suggested_template ? `<h3>Stored chunked fix template (example only; not Copilot output)</h3><pre>${esc(JSON.stringify(issue.suggested_template, null, 2))}</pre>` : ''}</article>`).join('')}<h2>Hidden issue reasons</h2><pre>${esc(hidden || 'None')}</pre>${report.apply ? `<h2>Apply results</h2><p>${esc(report.applyMode || '')}</p><pre>${esc(JSON.stringify(report.apply, null, 2))}</pre>` : ''}${report.verification ? `<h2>Verification</h2><pre>${esc(JSON.stringify(report.verification, null, 2))}</pre>` : ''}`;
 }
 
 function hasNumericLeaf(value) {
@@ -402,6 +406,23 @@ async function main() {
       pageFile: isFixture ? 'index.html' : undefined,
       copilot: flags.copilot || flags.mockCopilot ? 'on' : 'off'
     });
+    if (flags.copilot) {
+      const templatePath = path.join(path.dirname(fileURLToPath(import.meta.url)), '../tests/fixtures/demo-app/mock-copilot.json');
+      const templateSpec = JSON.parse(fs.readFileSync(templatePath, 'utf8'));
+      for (const issue of issuesWithFixes) {
+        if (issue.metric !== 'INP' || issue.fix?.fix_unverified !== true) continue;
+        const entry = templateSpec.responses.find(item => item.match?.name === issue.location?.name);
+        if (!entry) continue;
+        issue.fix.status = 'suggested, unverified';
+        issue.suggested_template = {
+          label: 'Stored chunked fix template (example only; not Copilot output)',
+          source: 'test-fixture-data',
+          edits: entry.response.edits,
+          description: entry.response.description
+        };
+      }
+    }
+    if (flags.apply) console.error('Warning: --apply is experimental and applies validated rule-based fixes only.');
     const applyResult = flags.apply ? applyValidatedFixes(issuesWithFixes, repo.root) : null;
     const verifyResult = flags.verify ? await verifyFixesOnTemporaryCopy(issuesWithFixes, scanRoot, repo.root, collected, interactions) : null;
 
@@ -428,6 +449,7 @@ async function main() {
       hiddenIssues: prioritized.hiddenIssues,
       hiddenCount: prioritized.hiddenCount,
       apply: applyResult,
+      applyMode: flags.apply ? 'experimental; validated rule-based fixes only' : null,
       verification: verifyResult
     };
     addNumericSourceTags(report, report.source);

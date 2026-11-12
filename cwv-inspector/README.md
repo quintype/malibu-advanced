@@ -18,10 +18,11 @@ node bin/cwv.js analyze https://example.com --path /path/to/source --interaction
 ### Flags and write behavior
 
 - `--format json|console|md|html` selects the report format (default `json`). JSON goes to stdout and diagnostics go to stderr.
-- `--apply` writes only fixes that passed validation and are not measured ineffective. The default run does not modify the analyzed tree.
+- `--apply` is experimental and writes validated rule-based fixes only. Copilot fixes are never applied by this flag. The default run does not modify the analyzed tree.
 - `--verify` applies eligible diffs only to an isolated temporary copy, then performs one discarded warm-up plus five fresh-page measurements. Calibration-suspect runs are excluded; an unavailable measurement is reported as not run.
 - `--copilot` permits a real Copilot request for eligible measured findings. A stored response file can be used with `--mock-copilot <file.json>` instead; mock output is always labeled as mock and is never a live call. The flags are mutually exclusive.
 - `COPILOT_MODEL` optionally selects the model passed to the Copilot SDK. Authentication and request limits are managed by the installed Copilot CLI/runtime. Without `--copilot` or `--mock-copilot`, fix generation does not call Copilot.
+- Copilot INP output is labeled “suggested, unverified.” Failed fixes receive up to two retries, each with the latest validator error. If validation still fails for the demo handler, the report may show a stored chunked fix as an example template; it is not Copilot output and is not eligible for `--apply`.
 
 ### Rating and suppression thresholds
 

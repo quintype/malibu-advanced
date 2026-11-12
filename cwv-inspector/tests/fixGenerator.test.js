@@ -220,6 +220,22 @@ async function runTests() {
   assert(retryResultD.fix_validated, 'Syntax error must be caught and resolved on retry');
   console.log('✓ Case D: Syntax error caught by parser and resolved on retry\n');
 
+  // Case D.1: Two retries receive the latest exact validator error.
+  clearMockCopilot();
+  const retryErrors = [];
+  let responseIndex = 0;
+  setMockCopilotHandler(async ({ isRetry, validationError }) => {
+    if (isRetry) retryErrors.push(validationError);
+    const responses = [mockBadSnippetFix, mockBadSnippetFix, mockGoodFix];
+    return responses[responseIndex++];
+  });
+  const [twoRetryResult] = await generateFixesForIssues([inpIssue], { workspaceRoot, copilot: 'on' });
+  assert(twoRetryResult.fix_validated, 'Second retry should recover the rejected initial response');
+  assert.strictEqual(retryErrors.length, 2, 'The generator should make at most two retries');
+  assert(retryErrors[0].includes('not found'), 'First retry should receive the original validator error');
+  assert(retryErrors[1].includes('not found'), 'Second retry should receive the latest validator error');
+  console.log('✓ Case D.1: Two retries receive validation feedback and recover successfully\n');
+
   // ---------------------------------------------------------------------------
   // Case E.1: Shrunk or Deleted Workload Rejected
   // ---------------------------------------------------------------------------
@@ -674,11 +690,12 @@ async function runTests() {
     const applyResult = applyValidatedFixes([
       { metric: 'INP', fix_validated: false, fix: { diff: patch, fix_validated: false } },
       { metric: 'CLS', fix_validated: true, fix: { diff: patch, fix_validated: true, ineffective: true } },
-      { metric: 'INP', fix_validated: true, fix: { diff: patch, fix_validated: true, fix_target_file: 'src/app.js' } }
+      { metric: 'INP', fix_validated: true, fix: { strategy: 'copilot', diff: patch, fix_validated: true, fix_target_file: 'src/app.js' } },
+      { metric: 'CLS', fix_validated: true, fix: { strategy: 'rule-based', diff: patch, fix_validated: true, fix_target_file: 'src/app.js' } }
     ], applyRepo);
     assert.strictEqual(applyResult.error, null);
     assert.strictEqual(applyResult.applied.length, 1);
-    assert.strictEqual(applyResult.skipped.length, 2);
+    assert.strictEqual(applyResult.skipped.length, 3);
     assert.strictEqual(fs.readFileSync(sourceFile, 'utf8'), newText);
     assert.strictEqual(applyResult.applied[0].exitCode, 0);
     assert.strictEqual(applyResult.applied[0].applyExitCode, 0);
