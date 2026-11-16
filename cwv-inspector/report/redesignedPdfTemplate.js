@@ -72,30 +72,32 @@ export function buildRedesignedPdfHtml(data = {}) {
 
   // Device score & classification logic
   // Score <50: poor, 50-89: warn, >=90: pass
-  const mobileScore = typeof mobile.score === 'number' ? mobile.score : 0;
-  const desktopScore = typeof desktop.score === 'number' ? desktop.score : 0;
+  const hasMobileScore = typeof mobile.score === 'number' && !isNaN(mobile.score);
+  const mobileScore = hasMobileScore ? mobile.score : 0;
+  const mobileScoreText = hasMobileScore ? String(mobile.score) : '-';
+  const mobileScoreDisplay = hasMobileScore ? mobile.score : 0;
 
-  const getScoreClass = (s) => (s < 50 ? 'poor' : s >= 90 ? 'pass' : 'warn');
-  const getScoreLabel = (s) => (s < 50 ? 'Failed' : s >= 90 ? 'Good' : 'Needs improvement');
+  const hasDesktopScore = typeof desktop.score === 'number' && !isNaN(desktop.score);
+  const desktopScore = hasDesktopScore ? desktop.score : 0;
+  const desktopScoreText = hasDesktopScore ? String(desktop.score) : '-';
+  const desktopScoreDisplay = hasDesktopScore ? desktop.score : 0;
 
-  const mobileClass = getScoreClass(mobileScore);
-  const desktopClass = getScoreClass(desktopScore);
+  const getScoreClass = (hasScore, s) => (!hasScore ? 'warn' : s < 50 ? 'poor' : s >= 90 ? 'pass' : 'warn');
+  const getScoreLabel = (hasScore, s) => (!hasScore ? '-' : s < 50 ? 'Failed' : s >= 90 ? 'Passed' : 'Needs improvement');
 
-  const mobileLabel = mobile.statusLabel && mobile.statusLabel !== 'Poor' ? mobile.statusLabel : getScoreLabel(mobileScore);
-  const desktopLabel = desktop.statusLabel || getScoreLabel(desktopScore);
+  const mobileClass = getScoreClass(hasMobileScore, mobileScore);
+  const desktopClass = getScoreClass(hasDesktopScore, desktopScore);
 
-  // Device configs
-  const mobileConfig = emulationConfig?.mobile 
-    ? `${emulationConfig.mobile.deviceName} · ${emulationConfig.mobile.throttlingProfile} · ${emulationConfig.mobile.cpuSlowdown}`
-    : 'Mobile emulation · simulated slow 4G · 4× CPU';
+  const mobileLabel = mobile.statusLabel && mobile.statusLabel !== 'Poor' ? mobile.statusLabel : getScoreLabel(hasMobileScore, mobileScore);
+  const desktopLabel = desktop.statusLabel || getScoreLabel(hasDesktopScore, desktopScore);
 
-  const desktopConfig = emulationConfig?.desktop
-    ? `${emulationConfig.desktop.deviceName} · ${emulationConfig.desktop.throttlingProfile} · ${emulationConfig.desktop.cpuSlowdown}`
-    : 'Desktop emulation · simulated dense 4G · 1× CPU';
+  // Device configs for CrUX
+  const mobileConfig = mobile.desc || 'Real-user Chrome mobile traffic (CrUX p75)';
+  const desktopConfig = desktop.desc || 'Real-user Chrome desktop traffic (CrUX p75)';
 
   // Metric status to pill class & label
   const toPill = (valStr, isPass, type) => {
-    if (!valStr || valStr === 'N/A' || valStr === '—') {
+    if (!valStr || valStr === 'N/A' || valStr === '—' || valStr === '-') {
       return { cls: '', label: '' };
     }
     const num = parseFloat(valStr);
@@ -104,7 +106,7 @@ export function buildRedesignedPdfHtml(data = {}) {
 
     if (type === 'lcp') {
       if (num <= config.thresholds.lcp / 1000) { cls = 'pass'; label = 'Pass'; }
-      else if (num > config.thresholds.lcpNeedsImprovement / 1000) { cls = 'warn'; label = 'Warn'; }
+      else if (num > config.thresholds.lcpNeedsImprovement / 1000) { cls = 'poor'; label = 'Poor'; }
       else { cls = 'warn'; label = 'Warn'; }
     } else if (type === 'cls') {
       if (num <= config.thresholds.cls) { cls = 'pass'; label = 'Pass'; }
@@ -121,29 +123,29 @@ export function buildRedesignedPdfHtml(data = {}) {
     return { cls, label };
   };
 
-  // Mobile Lab Metrics
-  const mLcpVal = mobile.lcp?.val ?? 'N/A';
-  const mClsVal = mobile.cls?.val ?? 'N/A';
-  const mTbtVal = mobile.tbt?.val ?? 'N/A';
+  // Mobile CrUX Metrics
+  const mLcpVal = mobile.lcp?.val && mobile.lcp?.val !== 'N/A' && mobile.lcp?.val !== '—' ? mobile.lcp.val : '-';
+  const mClsVal = mobile.cls?.val && mobile.cls?.val !== 'N/A' && mobile.cls?.val !== '—' ? mobile.cls.val : '-';
+  const mInpVal = mobile.inp?.val && mobile.inp?.val !== 'N/A' && mobile.inp?.val !== '—' ? mobile.inp.val : '-';
 
   const mLcpPill = toPill(mLcpVal, mobile.lcp?.pass, 'lcp');
   const mClsPill = toPill(mClsVal, mobile.cls?.pass, 'cls');
-  const mTbtPill = toPill(mTbtVal, mobile.tbt?.pass, 'tbt');
+  const mInpPill = toPill(mInpVal, mobile.inp?.pass, 'inp');
 
-  // Desktop Lab Metrics
-  const dLcpVal = desktop.lcp?.val ?? 'N/A';
-  const dClsVal = desktop.cls?.val ?? 'N/A';
-  const dTbtVal = desktop.tbt?.val ?? 'N/A';
+  // Desktop CrUX Metrics
+  const dLcpVal = desktop.lcp?.val && desktop.lcp?.val !== 'N/A' && desktop.lcp?.val !== '—' ? desktop.lcp.val : '-';
+  const dClsVal = desktop.cls?.val && desktop.cls?.val !== 'N/A' && desktop.cls?.val !== '—' ? desktop.cls.val : '-';
+  const dInpVal = desktop.inp?.val && desktop.inp?.val !== 'N/A' && desktop.inp?.val !== '—' ? desktop.inp.val : '-';
 
   const dLcpPill = toPill(dLcpVal, desktop.lcp?.pass, 'lcp');
   const dClsPill = toPill(dClsVal, desktop.cls?.pass, 'cls');
-  const dTbtPill = toPill(dTbtVal, desktop.tbt?.pass, 'tbt');
+  const dInpPill = toPill(dInpVal, desktop.inp?.pass, 'inp');
 
   // Verdict Card
-  const verdictTitle = assessment.status || (mobileScore < 50 || desktopScore < 50 ? 'Needs immediate attention' : 'Performance Audit');
-  const findingCount = Array.isArray(findings) ? findings.length : 0;
-  const verdictText = assessment.text || `Mobile ${mobileScore} / 100 and Desktop ${desktopScore} / 100. ${findingCount} prioritized finding${findingCount === 1 ? '' : 's'} in this report.`;
-  const verdictClass = mobileScore < 50 || desktopScore < 50 ? 'poor' : (mobileScore < 90 || desktopScore < 90 ? 'warn' : 'pass');
+  const verdictTitle = assessment.status || 'CrUX Field Data Audit';
+  const verdictText = assessment.text || 'Real-user field performance from the Chrome User Experience Report (CrUX).';
+  const verdictClass = assessment.color === '#ef4444' ? 'poor' : assessment.color === '#10b981' ? 'pass' : 'warn';
+  const verdictIcon = assessment.icon || (verdictClass === 'pass' ? '✓' : verdictClass === 'poor' ? '✕' : '!');
 
   // Page 2: show real CrUX history only; never fill missing data with sample values.
   const validPoints = (Array.isArray(cruxHistoryPoints) && cruxHistoryPoints.length >= 2
@@ -282,42 +284,33 @@ export function buildRedesignedPdfHtml(data = {}) {
   ` : '<div class="empty-history">CrUX historical data is unavailable for this URL. No synthetic trend values are shown.</div>';
 
   // Page 3: Metrics Table Rows
-  // 8 rows: LCP Mobile, LCP Desktop, CLS Mobile, CLS Desktop, TBT Mobile, TBT Desktop, INP Mobile, INP Desktop
+  // CrUX Core Web Vitals: LCP, CLS, INP (Mobile & Desktop)
   let tableRowsHtml = '';
-  if (Array.isArray(metricsDetail) && metricsDetail.length >= 8) {
+  if (Array.isArray(metricsDetail) && metricsDetail.length > 0) {
     metricsDetail.forEach((row) => {
       const metricShort = row.metric.includes('LCP') ? 'LCP'
         : row.metric.includes('CLS') ? 'CLS'
         : row.metric.includes('TBT') ? 'TBT'
         : 'INP';
       const devName = (row.device || '').toLowerCase().includes('mob') ? 'Mobile' : 'Desktop';
-      const isLabInp = metricShort === 'INP';
 
-      const fVal = row.fVal || '—';
-      const fStatCls = (row.fStat || '').toLowerCase().includes('pass') ? 'pass' : (row.fStat || '').toLowerCase().includes('warn') ? 'warn' : 'pass';
-      const fStatLabel = fStatCls === 'pass' ? 'Pass' : 'Warn';
-      const fPillHtml = fVal !== '—' && fVal !== 'N/A' ? `<span class="pill ${fStatCls}">${fStatLabel}</span>` : '';
+      const fVal = row.fVal || '-';
+      const hasValue = fVal !== '-' && fVal !== '—' && fVal !== 'N/A';
+      const fStatCls = (row.fStat || '').toLowerCase().includes('pass') ? 'pass' : (row.fStat || '').toLowerCase().includes('fail') ? 'poor' : 'warn';
+      const fStatLabel = fStatCls === 'pass' ? 'Pass' : fStatCls === 'poor' ? 'Fail' : 'Warn';
+      const fPillHtml = hasValue && row.fStat !== '-' ? `<span class="pill ${fStatCls}">${fStatLabel}</span>` : '';
 
-      const lVal = row.lVal || '—';
-      const lStatCls = (row.lStat || '').toLowerCase().includes('pass') ? 'pass' : (row.lStat || '').toLowerCase().includes('warn') ? 'warn' : 'pass';
-      const lStatLabel = lStatCls === 'pass' ? 'Pass' : 'Warn';
-      const lLabCellHtml = isLabInp
-        ? '—'
-        : `<b>${lVal}</b><span class="pill ${lStatCls}">${lStatLabel}</span>`;
-
-      tableRowsHtml += `<tr><td class="m">${metricShort}<span>${devName}</span></td><td><b>${fVal}</b>${fPillHtml}</td><td>${lLabCellHtml}</td><td class="t">${row.thresh || ''}</td></tr>\n`;
+      tableRowsHtml += `<tr><td class="m">${metricShort}<span>${devName}</span></td><td><b>${fVal}</b>${fPillHtml}</td><td class="t">${row.thresh || ''}</td></tr>\n`;
     });
   } else {
-    // Fallback standard 8 rows
+    // Fallback standard 6 rows
     tableRowsHtml = `
-      <tr><td class="m">LCP<span>Mobile</span></td><td>N/A</td><td><b>${mLcpVal}</b><span class="pill ${mLcpPill.cls}">${mLcpPill.label}</span></td><td class="t">≤ ${config.thresholds.lcp / 1000} s</td></tr>
-      <tr><td class="m">LCP<span>Desktop</span></td><td>N/A</td><td><b>${dLcpVal}</b><span class="pill ${dLcpPill.cls}">${dLcpPill.label}</span></td><td class="t">≤ ${config.thresholds.lcp / 1000} s</td></tr>
-      <tr><td class="m">CLS<span>Mobile</span></td><td>N/A</td><td><b>${mClsVal}</b><span class="pill ${mClsPill.cls}">${mClsPill.label}</span></td><td class="t">≤ ${config.thresholds.cls}</td></tr>
-      <tr><td class="m">CLS<span>Desktop</span></td><td>N/A</td><td><b>${dClsVal}</b><span class="pill ${dClsPill.cls}">${dClsPill.label}</span></td><td class="t">≤ ${config.thresholds.cls}</td></tr>
-      <tr><td class="m">TBT<span>Mobile</span></td><td>N/A</td><td><b>${mTbtVal}</b><span class="pill ${mTbtPill.cls}">${mTbtPill.label}</span></td><td class="t">≤ ${config.thresholds.tbt} ms</td></tr>
-      <tr><td class="m">TBT<span>Desktop</span></td><td>N/A</td><td><b>${dTbtVal}</b><span class="pill ${dTbtPill.cls}">${dTbtPill.label}</span></td><td class="t">≤ ${config.thresholds.tbt} ms</td></tr>
-      <tr><td class="m">INP<span>Mobile</span></td><td>N/A</td><td>—</td><td class="t">≤ ${config.thresholds.inp} ms</td></tr>
-      <tr><td class="m">INP<span>Desktop</span></td><td>N/A</td><td>—</td><td class="t">≤ ${config.thresholds.inp} ms</td></tr>
+      <tr><td class="m">LCP<span>Mobile</span></td><td><b>${mLcpVal}</b>${mLcpPill.label ? `<span class="pill ${mLcpPill.cls}">${mLcpPill.label}</span>` : ''}</td><td class="t">≤ ${config.thresholds.lcp / 1000} s</td></tr>
+      <tr><td class="m">LCP<span>Desktop</span></td><td><b>${dLcpVal}</b>${dLcpPill.label ? `<span class="pill ${dLcpPill.cls}">${dLcpPill.label}</span>` : ''}</td><td class="t">≤ ${config.thresholds.lcp / 1000} s</td></tr>
+      <tr><td class="m">CLS<span>Mobile</span></td><td><b>${mClsVal}</b>${mClsPill.label ? `<span class="pill ${mClsPill.cls}">${mClsPill.label}</span>` : ''}</td><td class="t">≤ ${config.thresholds.cls}</td></tr>
+      <tr><td class="m">CLS<span>Desktop</span></td><td><b>${dClsVal}</b>${dClsPill.label ? `<span class="pill ${dClsPill.cls}">${dClsPill.label}</span>` : ''}</td><td class="t">≤ ${config.thresholds.cls}</td></tr>
+      <tr><td class="m">INP<span>Mobile</span></td><td><b>${mInpVal}</b>${mInpPill.label ? `<span class="pill ${mInpPill.cls}">${mInpPill.label}</span>` : ''}</td><td class="t">≤ ${config.thresholds.inp} ms</td></tr>
+      <tr><td class="m">INP<span>Desktop</span></td><td><b>${dInpVal}</b>${dInpPill.label ? `<span class="pill ${dInpPill.cls}">${dInpPill.label}</span>` : ''}</td><td class="t">≤ ${config.thresholds.inp} ms</td></tr>
     `;
   }
 
@@ -332,10 +325,10 @@ export function buildRedesignedPdfHtml(data = {}) {
     }).join('\n');
   } else {
     findingsHtml = `
-      <div class="find warn"><b>Mobile lab LCP is ${mLcpVal}</b><p>Preload critical hero images, remove render-blocking CSS and JS, and improve TTFB and server response time.</p></div>
-      <div class="find warn"><b>Mobile lab TBT is ${mTbtVal}</b><p>Break up JavaScript tasks over 50 ms, defer non-critical third-party analytics and widgets, and move CPU-heavy work to Web Workers.</p></div>
-      <div class="find pass"><b>Mobile lab CLS is ${mClsVal}</b><p>Layout is stable on branch ${branchDisplay}, with minimal unexpected shifting.</p></div>
-      <div class="find warn"><b>Field data shows room to improve</b><p>The 75th percentile of real visitors experiences degraded performance on one or more metrics.</p></div>
+      <div class="find ${mLcpPill.cls || 'pass'}"><b>Field LCP is ${mLcpVal}</b><p>Optimize server response times, CDN routing, and preload hero images to ensure rapid real-user loading.</p></div>
+      <div class="find ${mClsPill.cls || 'pass'}"><b>Field CLS is ${mClsVal}</b><p>Layout stability reflects real-user browsing. Ensure image and dynamic container dimensions are explicitly reserved.</p></div>
+      <div class="find ${mInpPill.cls || 'warn'}"><b>Field INP is ${mInpVal}</b><p>Interaction latency measures real-user responsiveness. Break up long JavaScript tasks and defer non-critical work.</p></div>
+      <div class="find warn"><b>CrUX Field Observations</b><p>The 75th percentile of real visitors is measured across 28-day rolling collection windows.</p></div>
     `;
   }
 
@@ -433,25 +426,25 @@ h2{font-size:13pt;margin:9mm 0 3mm}
   <h1>Performance Audit</h1>
   <div class="url">${escapeHtml(url)}</div>
   <div class="branch">Branch&nbsp; ${escapeHtml(branchDisplay)} <span>·</span> <strong>Engineering Analysis:</strong> <strong>${escapeHtml(engineerDisplay)}</strong></div>
-  <div class="verdict ${verdictClass}"><div class="ic">!</div><div><b>${verdictTitle}</b><p>${verdictText}</p></div></div>
+  <div class="verdict ${verdictClass}"><div class="ic">${verdictIcon}</div><div><b>${verdictTitle}</b><p>${verdictText}</p></div></div>
 
   <div class="cards">
     <!-- card class: poor (<50) | warn (50-89) | pass (>=90) -->
     <div class="card ${mobileClass}">
       <h3>Mobile</h3><div class="dev">${mobileConfig}</div>
-      <div class="score"><div class="ring" style="--p:${mobileScore}"><span>${mobileScore}</span></div>
-        <div class="v">${mobileLabel}<small>Lighthouse performance score</small></div></div>
-      <div class="row"><div><b>LCP</b><small>Largest Contentful Paint</small></div><div class="val">${mLcpVal}</div><div><span class="pill ${mLcpPill.cls}">${mLcpPill.label}</span><br><small>Good ≤ ${config.thresholds.lcp / 1000} s</small></div></div>
-      <div class="row"><div><b>CLS</b><small>Cumulative Layout Shift</small></div><div class="val">${mClsVal}</div><div><span class="pill ${mClsPill.cls}">${mClsPill.label}</span><br><small>Good ≤ ${config.thresholds.cls}</small></div></div>
-      <div class="row"><div><b>TBT</b><small>Total Blocking Time</small></div><div class="val">${mTbtVal}</div><div><span class="pill ${mTbtPill.cls}">${mTbtPill.label}</span><br><small>Good ≤ ${config.thresholds.tbt} ms</small></div></div>
+      <div class="score"><div class="ring" style="--p:${mobileScoreDisplay}"><span>${mobileScoreText}</span></div>
+        <div class="v">${mobileLabel}<small>CrUX field assessment</small></div></div>
+      <div class="row"><div><b>LCP</b><small>Largest Contentful Paint</small></div><div class="val">${mLcpVal}</div><div>${mLcpPill.label ? `<span class="pill ${mLcpPill.cls}">${mLcpPill.label}</span><br>` : ''}<small>Good ≤ ${config.thresholds.lcp / 1000} s</small></div></div>
+      <div class="row"><div><b>CLS</b><small>Cumulative Layout Shift</small></div><div class="val">${mClsVal}</div><div>${mClsPill.label ? `<span class="pill ${mClsPill.cls}">${mClsPill.label}</span><br>` : ''}<small>Good ≤ ${config.thresholds.cls}</small></div></div>
+      <div class="row"><div><b>INP</b><small>Interaction to Next Paint</small></div><div class="val">${mInpVal}</div><div>${mInpPill.label ? `<span class="pill ${mInpPill.cls}">${mInpPill.label}</span><br>` : ''}<small>Good ≤ ${config.thresholds.inp} ms</small></div></div>
     </div>
     <div class="card ${desktopClass}">
       <h3>Desktop</h3><div class="dev">${desktopConfig}</div>
-      <div class="score"><div class="ring" style="--p:${desktopScore}"><span>${desktopScore}</span></div>
-        <div class="v">${desktopLabel}<small>Lighthouse performance score</small></div></div>
-      <div class="row"><div><b>LCP</b><small>Largest Contentful Paint</small></div><div class="val">${dLcpVal}</div><div><span class="pill ${dLcpPill.cls}">${dLcpPill.label}</span><br><small>Good ≤ ${config.thresholds.lcp / 1000} s</small></div></div>
-      <div class="row"><div><b>CLS</b><small>Cumulative Layout Shift</small></div><div class="val">${dClsVal}</div><div><span class="pill ${dClsPill.cls}">${dClsPill.label}</span><br><small>Good ≤ ${config.thresholds.cls}</small></div></div>
-      <div class="row"><div><b>TBT</b><small>Total Blocking Time</small></div><div class="val">${dTbtVal}</div><div><span class="pill ${dTbtPill.cls}">${dTbtPill.label}</span><br><small>Good ≤ ${config.thresholds.tbt} ms</small></div></div>
+      <div class="score"><div class="ring" style="--p:${desktopScoreDisplay}"><span>${desktopScoreText}</span></div>
+        <div class="v">${desktopLabel}<small>CrUX field assessment</small></div></div>
+      <div class="row"><div><b>LCP</b><small>Largest Contentful Paint</small></div><div class="val">${dLcpVal}</div><div>${dLcpPill.label ? `<span class="pill ${dLcpPill.cls}">${dLcpPill.label}</span><br>` : ''}<small>Good ≤ ${config.thresholds.lcp / 1000} s</small></div></div>
+      <div class="row"><div><b>CLS</b><small>Cumulative Layout Shift</small></div><div class="val">${dClsVal}</div><div>${dClsPill.label ? `<span class="pill ${dClsPill.cls}">${dClsPill.label}</span><br>` : ''}<small>Good ≤ ${config.thresholds.cls}</small></div></div>
+      <div class="row"><div><b>INP</b><small>Interaction to Next Paint</small></div><div class="val">${dInpVal}</div><div>${dInpPill.label ? `<span class="pill ${dInpPill.cls}">${dInpPill.label}</span><br>` : ''}<small>Good ≤ ${config.thresholds.inp} ms</small></div></div>
     </div>
   </div>
   <div class="legend"><b style="color:var(--ink)">Score guide</b>
@@ -471,14 +464,14 @@ h2{font-size:13pt;margin:9mm 0 3mm}
 <section class="page">
   <div class="top"><b>Core Web Vitals Diagnostic Lab</b><span>${projectDisplay} · ${branchDisplay} · ${formattedDate}</span></div>
   <div class="bar"></div><h1>Metrics detail</h1>
-  <div class="sub">Field data from real users versus Lighthouse lab data</div>
+  <div class="sub">Field data from real users (CrUX, 75th percentile)</div>
   <table>
-    <thead><tr><th>METRIC</th><th>FIELD (REAL USERS)</th><th>LAB (LIGHTHOUSE)</th><th>TARGET</th></tr></thead>
+    <thead><tr><th>METRIC</th><th>FIELD (REAL USERS)</th><th>TARGET</th></tr></thead>
     <tbody>
       ${tableRowsHtml}
     </tbody>
   </table>
-  <div class="note">INP is a field-only metric; Lighthouse does not report it in lab runs.</div>
+  <div class="note">All metrics represent 75th percentile (p75) real-user experience collected by Google Chrome (CrUX).</div>
 
   <h2>Findings &amp; recommended focus</h2>
   ${findingsHtml}

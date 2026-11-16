@@ -496,7 +496,6 @@ Options:
 
   console.log(`\n==========================================`);
   console.log(`CWV Audit Completed!`);
-  console.log(`Health Score: ${compiledResult.healthScore}/100`);
   console.log(`Total Issues: ${compiledResult.summary.total} (High: ${compiledResult.summary.high}, Medium: ${compiledResult.summary.medium}, Low: ${compiledResult.summary.low})`);
   console.log(`==========================================\n`);
 }

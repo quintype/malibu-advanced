@@ -1701,136 +1701,170 @@ export async function generateReport(compiledResult, options = {}) {
   try {
     console.log('Generating redesigned 3-page executive PDF report...');
 
-    // Compute failing / warning metrics dynamically
-    const labWarnings = [];
-    if (localMLcp.statusLabel !== 'Good') labWarnings.push('Mobile LCP');
-    if (localMCls.statusLabel !== 'Good') labWarnings.push('Mobile CLS');
-    if (localMTbt.statusLabel !== 'Good') labWarnings.push('Mobile TBT');
-    if (localDLcp.statusLabel !== 'Good') labWarnings.push('Desktop LCP');
-    if (localDCls.statusLabel !== 'Good') labWarnings.push('Desktop CLS');
-    if (localDTbt.statusLabel !== 'Good') labWarnings.push('Desktop TBT');
+    // Helper to format CrUX metric: if not available or N/A, fallback to '-'
+    const formatCruxVal = (detail) => {
+      if (!detail || detail.valueDisplay === 'N/A' || detail.valueDisplay === '—' || !detail.valueDisplay || detail.valueDisplay === '-') {
+        return '-';
+      }
+      return detail.valueDisplay;
+    };
 
-    const hasRealCrux = mobileCruxLcp.valueDisplay !== 'N/A' || desktopCruxLcp.valueDisplay !== 'N/A';
-    const fieldPassed = hasRealCrux && (
-      (mobileCruxLcp.statusLabel === 'Good' || mobileCruxLcp.valueDisplay === 'N/A') &&
-      (mobileCruxCls.statusLabel === 'Good' || mobileCruxCls.valueDisplay === 'N/A') &&
-      (desktopCruxLcp.statusLabel === 'Good' || desktopCruxLcp.valueDisplay === 'N/A') &&
-      (desktopCruxCls.statusLabel === 'Good' || desktopCruxCls.valueDisplay === 'N/A')
-    );
+    const isCruxPass = (detail) => detail && detail.statusLabel === 'Good';
+
+    const mLcpFormatted = formatCruxVal(mobileCruxLcp);
+    const mClsFormatted = formatCruxVal(mobileCruxCls);
+    const mInpFormatted = formatCruxVal(mobileCruxInp);
+
+    const dLcpFormatted = formatCruxVal(desktopCruxLcp);
+    const dClsFormatted = formatCruxVal(desktopCruxCls);
+    const dInpFormatted = formatCruxVal(desktopCruxInp);
+
+    const hasRealCrux = mLcpFormatted !== '-' || mClsFormatted !== '-' || mInpFormatted !== '-' ||
+                         dLcpFormatted !== '-' || dClsFormatted !== '-' || dInpFormatted !== '-';
+
+    const fieldPassed = hasRealCrux &&
+      (mLcpFormatted === '-' || isCruxPass(mobileCruxLcp)) &&
+      (mClsFormatted === '-' || isCruxPass(mobileCruxCls)) &&
+      (mInpFormatted === '-' || isCruxPass(mobileCruxInp)) &&
+      (dLcpFormatted === '-' || isCruxPass(desktopCruxLcp)) &&
+      (dClsFormatted === '-' || isCruxPass(desktopCruxCls)) &&
+      (dInpFormatted === '-' || isCruxPass(desktopCruxInp));
+
+    const calcCruxScore = (lcp, cls, inp, lcpDetail, clsDetail, inpDetail) => {
+      const active = [];
+      if (lcp !== '-') active.push(lcpDetail);
+      if (cls !== '-') active.push(clsDetail);
+      if (inp !== '-') active.push(inpDetail);
+
+      if (active.length === 0) return { score: null, label: '-', color: '#94a3b8' };
+      const passes = active.filter(d => d.statusLabel === 'Good').length;
+      const poors = active.filter(d => d.statusLabel === 'Poor').length;
+
+      if (passes === active.length) {
+        return { score: 100, label: 'Passed', color: '#10b981' };
+      }
+      if (poors > 0) {
+        return { score: Math.max(30, Math.round((passes / active.length) * 100)), label: 'Failed', color: '#ef4444' };
+      }
+      return { score: Math.round((passes / active.length) * 100), label: 'Needs Improvement', color: '#f59e0b' };
+    };
+
+    const mobileCruxScore = calcCruxScore(mLcpFormatted, mClsFormatted, mInpFormatted, mobileCruxLcp, mobileCruxCls, mobileCruxInp);
+    const desktopCruxScore = calcCruxScore(dLcpFormatted, dClsFormatted, dInpFormatted, desktopCruxLcp, desktopCruxCls, desktopCruxInp);
 
     let assessmentObj;
-    if (labWarnings.length === 0 && mobileLocScore.score >= 90 && desktopLocScore.score >= 90) {
-      assessmentObj = {
-        status: 'Passed',
-        color: '#10b981',
-        bgColor: '#ecfdf5',
-        borderColor: '#d1fae5',
-        borderLeftColor: '#10b981',
-        icon: '✓',
-        text: 'All Core Web Vitals parameters on both Mobile and Desktop meet Google recommended performance standards.'
-      };
-    } else if (labWarnings.length >= 3 || mobileLocScore.score < 50 || desktopLocScore.score < 50) {
-      assessmentObj = {
-        status: 'Needs Immediate Attention',
-        color: '#ef4444',
-        bgColor: '#fef2f2',
-        borderColor: '#fee2e2',
-        borderLeftColor: '#ef4444',
-        icon: '✕',
-        text: `Multiple Core Web Vitals parameters require optimization. Scores: Mobile ${mobileLocScore.score}/100, Desktop ${desktopLocScore.score}/100. Warnings detected on: ${labWarnings.join(', ') || 'overall metrics'}.`
-      };
+    if (hasRealCrux) {
+      if (fieldPassed) {
+        assessmentObj = {
+          status: 'Passed',
+          color: '#10b981',
+          bgColor: '#ecfdf5',
+          borderColor: '#d1fae5',
+          borderLeftColor: '#10b981',
+          icon: '✓',
+          text: 'All Core Web Vitals parameters (LCP, CLS, INP) meet Google recommended performance standards in Chrome User Experience (CrUX) field data.'
+        };
+      } else {
+        const hasPoor = [mobileCruxLcp, mobileCruxCls, mobileCruxInp, desktopCruxLcp, desktopCruxCls, desktopCruxInp]
+          .some(d => d && d.valueDisplay !== 'N/A' && d.statusLabel === 'Poor');
+        assessmentObj = {
+          status: hasPoor ? 'Needs Immediate Attention' : 'Needs Improvement',
+          color: hasPoor ? '#ef4444' : '#f59e0b',
+          bgColor: hasPoor ? '#fef2f2' : '#fffbeb',
+          borderColor: hasPoor ? '#fee2e2' : '#fef3c7',
+          borderLeftColor: hasPoor ? '#ef4444' : '#f59e0b',
+          icon: hasPoor ? '✕' : '!',
+          text: 'Real-user field data from the Chrome User Experience Report (CrUX) shows room for improvement across Core Web Vitals.'
+        };
+      }
     } else {
-      const fieldNote = hasRealCrux
-        ? (fieldPassed ? 'Real-user field metrics pass on measured devices.' : 'Field data shows real-user variance.')
-        : 'Lab audit baseline evaluated.';
       assessmentObj = {
-        status: 'Needs Improvement',
-        color: '#f59e0b',
-        bgColor: '#fffbeb',
-        borderColor: '#fef3c7',
-        borderLeftColor: '#f59e0b',
-        icon: '!',
-        text: `${fieldNote} Lighthouse lab scores (${mobileLocScore.score} / ${desktopLocScore.score})${labWarnings.length > 0 ? ` with warnings on ${labWarnings.join(', ')} outside the Good range.` : '.'}`
+        status: 'No Field Data',
+        color: '#64748b',
+        bgColor: '#f8fafc',
+        borderColor: '#e2e8f0',
+        borderLeftColor: '#64748b',
+        icon: '—',
+        text: 'Chrome User Experience Report (CrUX) field data is not available for this URL or domain. Minimum real-user traffic threshold not met in Google CrUX.'
       };
     }
 
-    // Generate dynamic findings based on actual lab metrics and code issues
+    // Dynamic findings based on real CrUX field data
     const dynamicFindings = [];
 
-    // LCP finding
-    if (localMLcp.statusLabel !== 'Good') {
-      dynamicFindings.push({
-        color: localMLcp.statusLabel === 'Poor' ? '#ef4444' : '#f59e0b',
-        cls: localMLcp.statusLabel === 'Poor' ? 'poor' : 'warn',
-        title: `Mobile lab LCP is ${localMLcp.valueDisplay}`,
-        desc: 'Preload critical hero images, remove render-blocking CSS and JS, and improve TTFB and server response time.'
-      });
-    } else {
-      dynamicFindings.push({
-        color: '#10b981',
-        cls: 'pass',
-        title: `Mobile lab LCP is ${localMLcp.valueDisplay}`,
-        desc: 'Initial viewport content loads quickly and meets Google recommended loading thresholds.'
-      });
+    // CrUX LCP Finding
+    if (mLcpFormatted !== '-') {
+      if (isCruxPass(mobileCruxLcp)) {
+        dynamicFindings.push({
+          color: '#10b981',
+          cls: 'pass',
+          title: `Field LCP is ${mLcpFormatted}`,
+          desc: 'Initial viewport content loads quickly and meets Google recommended loading thresholds for real users.'
+        });
+      } else {
+        dynamicFindings.push({
+          color: mobileCruxLcp.statusLabel === 'Poor' ? '#ef4444' : '#f59e0b',
+          cls: mobileCruxLcp.statusLabel === 'Poor' ? 'poor' : 'warn',
+          title: `Field LCP is ${mLcpFormatted}`,
+          desc: 'Real users experience delayed content loading. Optimize server response times (TTFB), CDN routing, and critical hero asset preloading.'
+        });
+      }
     }
 
-    // TBT finding
-    if (localMTbt.statusLabel !== 'Good') {
-      dynamicFindings.push({
-        color: localMTbt.statusLabel === 'Poor' ? '#ef4444' : '#f59e0b',
-        cls: localMTbt.statusLabel === 'Poor' ? 'poor' : 'warn',
-        title: `Mobile lab TBT is ${localMTbt.valueDisplay}`,
-        desc: 'Break up JavaScript tasks over 50 ms, defer non-critical third-party analytics and widgets, and move CPU-heavy work to Web Workers.'
-      });
-    } else {
-      dynamicFindings.push({
-        color: '#10b981',
-        cls: 'pass',
-        title: `Mobile lab TBT is ${localMTbt.valueDisplay}`,
-        desc: 'Main thread responsiveness is healthy with low task execution delays.'
-      });
+    // CrUX CLS Finding
+    if (mClsFormatted !== '-') {
+      if (isCruxPass(mobileCruxCls)) {
+        dynamicFindings.push({
+          color: '#10b981',
+          cls: 'pass',
+          title: `Field CLS is ${mClsFormatted}`,
+          desc: 'Layout stability is healthy for real visitors, with minimal unexpected shifting.'
+        });
+      } else {
+        dynamicFindings.push({
+          color: mobileCruxCls.statusLabel === 'Poor' ? '#ef4444' : '#f59e0b',
+          cls: mobileCruxCls.statusLabel === 'Poor' ? 'poor' : 'warn',
+          title: `Field CLS is ${mClsFormatted}`,
+          desc: 'Layout instability detected in field data. Ensure explicit dimensions on images/media and reserve space for dynamic content.'
+        });
+      }
     }
 
-    // CLS finding
-    if (localMCls.statusLabel !== 'Good') {
+    // CrUX INP Finding
+    if (mInpFormatted !== '-') {
+      if (isCruxPass(mobileCruxInp)) {
+        dynamicFindings.push({
+          color: '#10b981',
+          cls: 'pass',
+          title: `Field INP is ${mInpFormatted}`,
+          desc: 'Real-user interaction latency meets Google recommended 200 ms threshold with responsive user feedback.'
+        });
+      } else {
+        dynamicFindings.push({
+          color: mobileCruxInp.statusLabel === 'Poor' ? '#ef4444' : '#f59e0b',
+          cls: mobileCruxInp.statusLabel === 'Poor' ? 'poor' : 'warn',
+          title: `Field INP is ${mInpFormatted}`,
+          desc: 'Real users experience interaction delays exceeding 200 ms. Break up long JavaScript tasks and defer non-critical main-thread execution.'
+        });
+      }
+    }
+
+    if (dynamicFindings.length === 0) {
       dynamicFindings.push({
-        color: localMCls.statusLabel === 'Poor' ? '#ef4444' : '#f59e0b',
-        cls: localMCls.statusLabel === 'Poor' ? 'poor' : 'warn',
-        title: `Mobile lab CLS is ${localMCls.valueDisplay}`,
-        desc: `Layout instability detected on branch ${gitBranch || 'main'}. Ensure explicit dimensions on images and reserve ad container space.`
-      });
-    } else {
-      dynamicFindings.push({
-        color: '#10b981',
-        cls: 'pass',
-        title: `Mobile lab CLS is ${localMCls.valueDisplay}`,
-        desc: `Layout is stable on branch ${gitBranch || 'main'}, with minimal unexpected shifting.`
+        color: '#64748b',
+        cls: 'warn',
+        title: 'CrUX Field Data Unavailable',
+        desc: 'The Chrome User Experience Report requires a minimum threshold of real-user Chrome visits over a 28-day window to report metrics.'
       });
     }
 
     // Fourth finding: Field vs Static/Code findings
-    if (hasRealCrux) {
-      if (fieldPassed) {
-        dynamicFindings.push({
-          color: '#10b981',
-          cls: 'pass',
-          title: 'Field CrUX data confirms good real-world experience',
-          desc: 'Production Chrome user experience percentiles meet Google recommended Core Web Vitals thresholds.'
-        });
-      } else {
-        dynamicFindings.push({
-          color: '#f59e0b',
-          cls: 'warn',
-          title: 'Field data shows room to improve',
-          desc: 'The 75th percentile of real visitors experiences degraded performance on one or more metrics.'
-        });
-      }
-    } else if (compiledResult.issues && compiledResult.issues.length > 0) {
+    if (compiledResult.issues && compiledResult.issues.length > 0) {
       const highIssues = compiledResult.issues.filter(i => (i.severity || '').toLowerCase() === 'high').length;
       dynamicFindings.push({
         color: highIssues > 0 ? '#ef4444' : '#0284c7',
         cls: highIssues > 0 ? 'poor' : 'warn',
-        title: `Static & Runtime Audit Flagged ${compiledResult.issues.length} Code/DOM Pattern(s)`,
+        title: `Static & Code Audit Flagged ${compiledResult.issues.length} Pattern(s)`,
         desc: `${highIssues} high-severity issue(s) detected. Review the detailed findings table and AI code fix recommendations below.`
       });
     } else {
@@ -1842,19 +1876,20 @@ export async function generateReport(compiledResult, options = {}) {
       });
     }
 
-    const toStatusPill = (detail, isField = false) => {
+    const toCruxStatusPill = (detail) => {
+      if (!detail || detail.valueDisplay === 'N/A' || detail.valueDisplay === '—' || !detail.valueDisplay || detail.valueDisplay === '-') {
+        return '-';
+      }
       if (detail.statusLabel === 'Good') return 'PASS';
-      if (isField && detail.valueDisplay === 'N/A') return 'N/A';
+      if (detail.statusLabel === 'Poor') return 'FAIL';
       return 'WARN';
     };
 
-    const makeMetricRow = (device, metric, crux, local, thresh) => ({
+    const makeMetricRow = (device, metric, crux, thresh) => ({
       device,
       metric,
-      fVal: crux.valueDisplay,
-      fStat: toStatusPill(crux, true),
-      lVal: local.valueDisplay,
-      lStat: toStatusPill(local, false),
+      fVal: formatCruxVal(crux),
+      fStat: toCruxStatusPill(crux),
       thresh
     });
 
@@ -1872,32 +1907,30 @@ export async function generateReport(compiledResult, options = {}) {
       engineer: options.engineer || 'Siripireddy Giri',
       assessment: assessmentObj,
       mobile: {
-        score: mobileLocScore.score,
-        statusLabel: mobileLocScore.status,
-        statusColor: mobileLocScore.score >= 90 ? '#10b981' : mobileLocScore.score >= 50 ? '#f59e0b' : '#ef4444',
-        desc: `Lab Core Web Vitals audit under simulated mobile conditions${gitBranch ? ` for branch: ${gitBranch}` : ''}.`,
-        lcp: { val: localMLcp.valueDisplay, pass: localMLcp.statusLabel === 'Good', pct: localMLcp.percent, limit: `Good ≤ ${config.thresholds.lcp / 1000} s` },
-        cls: { val: localMCls.valueDisplay, pass: localMCls.statusLabel === 'Good', pct: localMCls.percent, limit: `Good ≤ ${config.thresholds.cls}` },
-        tbt: { val: localMTbt.valueDisplay, pass: localMTbt.statusLabel === 'Good', pct: localMTbt.percent, limit: `Good ≤ ${config.thresholds.tbt} ms` }
+        score: mobileCruxScore.score,
+        statusLabel: mobileCruxScore.label,
+        statusColor: mobileCruxScore.color,
+        desc: 'Real-user Chrome mobile traffic (CrUX p75)',
+        lcp: { val: mLcpFormatted, pass: isCruxPass(mobileCruxLcp), limit: `Good ≤ ${config.thresholds.lcp / 1000} s` },
+        cls: { val: mClsFormatted, pass: isCruxPass(mobileCruxCls), limit: `Good ≤ ${config.thresholds.cls}` },
+        inp: { val: mInpFormatted, pass: isCruxPass(mobileCruxInp), limit: `Good ≤ ${config.thresholds.inp} ms` }
       },
       desktop: {
-        score: desktopLocScore.score,
-        statusLabel: desktopLocScore.status,
-        statusColor: desktopLocScore.score >= 90 ? '#10b981' : desktopLocScore.score >= 50 ? '#f59e0b' : '#ef4444',
-        desc: `Lab Core Web Vitals audit under desktop conditions${gitBranch ? ` for branch: ${gitBranch}` : ''}.`,
-        lcp: { val: localDLcp.valueDisplay, pass: localDLcp.statusLabel === 'Good', pct: localDLcp.percent, limit: `Good ≤ ${config.thresholds.lcp / 1000} s` },
-        cls: { val: localDCls.valueDisplay, pass: localDCls.statusLabel === 'Good', pct: localDCls.percent, limit: `Good ≤ ${config.thresholds.cls}` },
-        tbt: { val: localDTbt.valueDisplay, pass: localDTbt.statusLabel === 'Good', pct: localDTbt.percent, limit: `Good ≤ ${config.thresholds.tbt} ms` }
+        score: desktopCruxScore.score,
+        statusLabel: desktopCruxScore.label,
+        statusColor: desktopCruxScore.color,
+        desc: 'Real-user Chrome desktop traffic (CrUX p75)',
+        lcp: { val: dLcpFormatted, pass: isCruxPass(desktopCruxLcp), limit: `Good ≤ ${config.thresholds.lcp / 1000} s` },
+        cls: { val: dClsFormatted, pass: isCruxPass(desktopCruxCls), limit: `Good ≤ ${config.thresholds.cls}` },
+        inp: { val: dInpFormatted, pass: isCruxPass(desktopCruxInp), limit: `Good ≤ ${config.thresholds.inp} ms` }
       },
       metricsDetail: [
-        makeMetricRow('MOBILE', 'Largest Contentful Paint (LCP)', mobileCruxLcp, localMLcp, `≤ ${config.thresholds.lcp / 1000} s`),
-        makeMetricRow('DESKTOP', 'Largest Contentful Paint (LCP)', desktopCruxLcp, localDLcp, `≤ ${config.thresholds.lcp / 1000} s`),
-        makeMetricRow('MOBILE', 'Cumulative Layout Shift (CLS)', mobileCruxCls, localMCls, `≤ ${config.thresholds.cls}`),
-        makeMetricRow('DESKTOP', 'Cumulative Layout Shift (CLS)', desktopCruxCls, localDCls, `≤ ${config.thresholds.cls}`),
-        makeMetricRow('MOBILE', 'Total Blocking Time (TBT)', mobileCruxTbt, localMTbt, `≤ ${config.thresholds.tbt} ms`),
-        makeMetricRow('DESKTOP', 'Total Blocking Time (TBT)', desktopCruxTbt, localDTbt, `≤ ${config.thresholds.tbt} ms`),
-        makeMetricRow('MOBILE', 'Interaction to Next Paint (INP)', mobileCruxInp, localMInp, `≤ ${config.thresholds.inp} ms`),
-        makeMetricRow('DESKTOP', 'Interaction to Next Paint (INP)', desktopCruxInp, localDInp, `≤ ${config.thresholds.inp} ms`),
+        makeMetricRow('MOBILE', 'Largest Contentful Paint (LCP)', mobileCruxLcp, `≤ ${config.thresholds.lcp / 1000} s`),
+        makeMetricRow('DESKTOP', 'Largest Contentful Paint (LCP)', desktopCruxLcp, `≤ ${config.thresholds.lcp / 1000} s`),
+        makeMetricRow('MOBILE', 'Cumulative Layout Shift (CLS)', mobileCruxCls, `≤ ${config.thresholds.cls}`),
+        makeMetricRow('DESKTOP', 'Cumulative Layout Shift (CLS)', desktopCruxCls, `≤ ${config.thresholds.cls}`),
+        makeMetricRow('MOBILE', 'Interaction to Next Paint (INP)', mobileCruxInp, `≤ ${config.thresholds.inp} ms`),
+        makeMetricRow('DESKTOP', 'Interaction to Next Paint (INP)', desktopCruxInp, `≤ ${config.thresholds.inp} ms`),
       ],
       takeaways: [],
       findings: dynamicFindings,
