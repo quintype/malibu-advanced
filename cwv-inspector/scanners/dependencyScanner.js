@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import { extractCodeContext } from '../utils/codeContext.js';
 
 // List of heavy packages and recommended lightweight alternatives
 const HEAVY_PACKAGES = {
@@ -26,7 +27,9 @@ export function scanDependencies(projectPath) {
   }
 
   try {
-    const pkg = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+    const rawContent = fs.readFileSync(packageJsonPath, 'utf8');
+    const pkgLines = rawContent.split('\n');
+    const pkg = JSON.parse(rawContent);
     const dependencies = {
       ...(pkg.dependencies || {}),
       ...(pkg.devDependencies || {})
@@ -35,6 +38,10 @@ export function scanDependencies(projectPath) {
     for (const [dep, version] of Object.entries(dependencies)) {
       if (HEAVY_PACKAGES[dep]) {
         const recommendation = HEAVY_PACKAGES[dep];
+        let lineNum = 1;
+        const foundIdx = pkgLines.findIndex(l => l.includes(`"${dep}"`));
+        if (foundIdx >= 0) lineNum = foundIdx + 1;
+
         issues.push({
           type: 'dependency',
           name: dep,
@@ -42,10 +49,17 @@ export function scanDependencies(projectPath) {
           severity: 'medium',
           cwv: recommendation.cwv,
           file: 'package.json',
-          line: '-',
+          line: lineNum,
           message: `Heavy dependency "${dep}" detected (version: ${version}).`,
           impact: recommendation.impact,
-          suggestion: `Replace "${dep}" with "${recommendation.alt}".`
+          suggestion: `Replace "${dep}" with "${recommendation.alt}".`,
+          whyExplanation: `Dependency "${dep}" (${version}) adds considerable JavaScript parsing and execution weight on the main thread. Synchronously evaluating large library bundles inflates interaction latency (INP) and Total Blocking Time (TBT).`,
+          codeContext: extractCodeContext(rawContent, lineNum),
+          fixCode: {
+            before: `"${dep}": "${version}"`,
+            after: `// Replace with tree-shakeable modern alternative:\n// e.g. "${recommendation.alt.split(',')[0].trim()}"`,
+            description: `Replace "${dep}" with "${recommendation.alt}" for a lightweight, tree-shakeable alternative.`
+          }
         });
       }
     }

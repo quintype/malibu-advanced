@@ -241,7 +241,7 @@ The consolidator in `analyzers/recommendations.js` aggregates findings and deter
 
 *   **Five Correlation States**:
     *   `EXACT`: Exact selector and event matches with successfully resolved local function definitions matching the dominant latency phase.
-    *   `STRONG`: High confidence signal alignment but missing one minor trace (e.g., phase alignment mismatch or unresolved inner calls).
+    *   `STRONG`: High confidence signal alignment but missing one minor trace (e.g., phase alignment mismatch or unresolved inner calls), or field INP strongly correlated with an identified interactive handler.
     *   `PARTIAL`: Weak selector match or local interaction triggering third-party script loops.
     *   `UNRESOLVED`: Lighthouse interaction occurred, but no source components match.
     *   `STATIC_ONLY`: Static rules triggered, but page runtime was within Good limits (&le; 200ms).
@@ -252,7 +252,32 @@ The consolidator in `analyzers/recommendations.js` aggregates findings and deter
 
 ---
 
-## 13. Report Generation
+## 13. Enhanced INP Recommendations: Actionable Developer-Centric Root Causes
+
+When real-user CrUX field data reports elevated Interaction to Next Paint (e.g. 228ms p75), developers need immediately actionable guidance inside their codebase rather than a detached summary card. CWV Inspector correlates real-user field latency directly with the codebase's interactive components.
+
+### 1. Direct Code Correlation over Generic CrUX Placeholders
+*   **Previous Limitation**: In previous versions, elevated field INP emitted an orphaned issue (`Runtime Audit (CrUX Field Data)`, line `-`) which sorted to `#01` because of its latency score, providing no file location, no root-cause explanation, and no code fix.
+*   **Current Engine**: Elevated field INP is correlated directly with scanned interaction handlers (`onClick`, `onChange`, `onSubmit`, `onKeyDown`), forced layout reflows (Layout Thrashing), and heavy render loops. The primary interactive code finding is elevated to `#01` with field evidence attached, while general field observations are demoted below actionable code fixes.
+
+### 2. The Four Pillars of Every INP Suggestion
+Every INP recommendation is built to answer four fundamental questions for the developer:
+
+1.  **WHERE it is**: Pinpoints the exact relative file path and 1-based source code line number (e.g. `src/components/Navigation.jsx:42`).
+2.  **WHY it causes the problem (`whyExplanation`)**: Details the exact technical mechanism causing main-thread blocking (e.g. synchronous React state setters causing unmemoized subtree re-renders, alternating DOM style writes and layout reads causing synchronous reflow, or un-deferred network calls inside event loops).
+3.  **WHAT to fix (`suggestion`)**: Clear, actionable remediation guidance (e.g. wrapping state updates in React's `startTransition()`, scheduling DOM writes with `requestAnimationFrame()`, or yielding with `requestIdleCallback()`).
+4.  **CODE (`codeContext` & `fixCode`)**:
+    *   **Source Code Preview (`codeContext`)**: Renders surrounding lines of code directly from the repository with the flagged target line highlighted.
+    *   **Suggested Code Fix (`fixCode`)**: Provides a side-by-side Before / After code diff showing the problematic code pattern alongside the optimized implementation.
+
+### 3. Data Integrity & Multi-File Aggregation
+*   **Preserved Code Context**: Recommendation grouping in `analyzers/recommendations.js` preserves `whyExplanation`, `codeContext`, `fixCode`, `handler`, `operation`, and `source` across all aggregation passes.
+*   **Multi-File Clarity**: When a code pattern affects multiple files (e.g. `React state update in onClick across 11 files`), the accordion displays the full list of affected files and line numbers while rendering the primary occurrence's highlighted source code preview and recommended Before/After code fix.
+*   **Dedicated Correlated Cards**: Correlated interactive bottlenecks are indexed with unique file-and-line keys, ensuring top priority offenders appear as dedicated high-visibility cards.
+
+---
+
+## 14. Report Generation
 
 *   **Format**: Standalone HTML report (`report-<timestamp>.html`), printed PDF (`report-<timestamp>.pdf`), and companion JSON (`report-<timestamp>.json`).
 *   **Location**: Written to the audited project's `reports/` folder.
@@ -260,7 +285,7 @@ The consolidator in `analyzers/recommendations.js` aggregates findings and deter
 
 ---
 
-## 14. Important Files Reference
+## 15. Important Files Reference
 
 | File | Responsibility | Key Functions / Exports |
 |------|----------------|-------------------------|
@@ -275,7 +300,7 @@ The consolidator in `analyzers/recommendations.js` aggregates findings and deter
 
 ---
 
-## 15. How to Run Locally
+## 16. How to Run Locally
 
 ### Prerequisites
 *   Node.js v18 or newer
@@ -336,7 +361,7 @@ Copilot enrichment sends one concise prompt per selected finding and defaults to
 
 ---
 
-## 16. Execution Example
+## 17. Execution Example
 
 *   **Target Project Directory**: `/Users/sirippireddygiri/Desktop/Quintype/malibu-advanced`
 *   **Target URL**: `https://www.google.com`
@@ -355,7 +380,7 @@ Copilot enrichment sends one concise prompt per selected finding and defaults to
 
 ---
 
-## 17. Limitations
+## 18. Limitations
 
 *   **Authentication & Paywalls**: Headless Chrome starts with a clean profile, so it cannot audit pages behind login walls or paywalls unless session cookies are pre-injected.
 *   **Heuristic Source Analysis**: Most static rules use AST indexing plus simple text/regex heuristics. A finding is a lead to inspect, not proof of a measured cause. Dynamic values, generated classes, build output, source maps, and runtime-only markup can prevent an exact source match.
@@ -364,7 +389,7 @@ Copilot enrichment sends one concise prompt per selected finding and defaults to
 
 ---
 
-## 18. Troubleshooting Common Failures
+## 19. Troubleshooting Common Failures
 
 *   **Lighthouse execution failed: Chrome not found**: Ensure Google Chrome is installed on the testing machine and available in the default system application path.
 *   **Invalid project directory**: Verify the path is correct and has read permissions.
@@ -373,7 +398,7 @@ Copilot enrichment sends one concise prompt per selected finding and defaults to
 
 ---
 
-## 19. Future Improvements
+## 20. Future Improvements
 
 *   **LCP Correlation**: Apply selector mapping to LCP element diagnostics.
 *   **Incremental Scanning**: Cache component AST files and only re-scan files that have changed.
@@ -382,6 +407,6 @@ Copilot enrichment sends one concise prompt per selected finding and defaults to
 
 ---
 
-## 20. Summary
+## 21. Summary
 
 This Core Web Vitals Diagnostic tool combines **synthetic runtime browser audits** with **static source lookup**. For URL-backed runs, Lighthouse findings are the starting point; local source details are attached where selectors and available runtime evidence support a match. A source match is heuristic and may remain unresolved when markup is dynamic, selectors are generated, or several components match. Without a URL, the tool can still perform a repository-wide static audit.

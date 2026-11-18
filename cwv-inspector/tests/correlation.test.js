@@ -892,7 +892,45 @@ try {
   assert.strictEqual(t72Scores.inp.displayValue, 'Not measured by Lighthouse page-load audit');
   console.log('✓ Test 72: Missing Lighthouse INP is not fabricated as 0ms / Good.');
 
-  console.log('\n🎉 All 72 Core Web Vitals Correlation Engine tests passed successfully!');
+  // Test 73: Elevated field INP correlates with interactive code finding, showing exact file, line, why, what, and code fix at #01.
+  const t73Static = [
+    {
+      type: 'code',
+      cwv: 'inp',
+      file: 'src/components/Header.jsx',
+      line: 42,
+      message: 'React state update triggering component render inside handler "onClick".',
+      impact: 'Subtree re-renders stall paint.',
+      suggestion: 'Use startTransition or React.memo.',
+      whyExplanation: 'Updating state inside onClick at line 42 with full array mapping forces an entire subtree re-render.',
+      codeContext: { lines: [{ lineNumber: 42, text: 'setItems(items.map(...));', isTarget: true }], targetLine: 42 },
+      fixCode: { before: 'setItems(items.map(...));', after: 'startTransition(() => setItems(items.map(...)));' },
+      handler: 'onClick',
+      operation: 'react-rendering'
+    }
+  ];
+  const t73Result = compileRecommendations(t73Static, {
+    mobile: { inp: { value: 0 }, inpInteractions: [] },
+    desktop: { inp: { value: 0 }, inpInteractions: [] }
+  }, [], [], {
+    observations: [{ value: 228, device: 'Mobile field', source: 'CrUX field data', scope: 'https://example.com' }]
+  });
+
+  // #01 must be the correlated actionable code recommendation, NOT an orphaned CrUX card
+  const topIssue = t73Result.issues[0];
+  assert.strictEqual(topIssue.cwv, 'inp');
+  assert.strictEqual(topIssue.file, 'src/components/Header.jsx', 'Top recommendation must point to exact file path');
+  assert.strictEqual(topIssue.line, 42, 'Top recommendation must point to exact line number');
+  assert.strictEqual(topIssue.correlationState, 'STRONG');
+  assert.strictEqual(topIssue.severity, 'medium');
+  assert.strictEqual(topIssue.score, 228, 'Top recommendation score must reflect field INP latency');
+  assert.ok(topIssue.whyExplanation && topIssue.whyExplanation.includes('line 42'), 'Must include technical why reason');
+  assert.ok(topIssue.codeContext && topIssue.codeContext.targetLine === 42, 'Must include source code context');
+  assert.ok(topIssue.fixCode && topIssue.fixCode.after.includes('startTransition'), 'Must include before/after fix code diff');
+  assert.ok(topIssue.impact.includes('CrUX field data') && topIssue.impact.includes('228ms'), 'Must include field evidence');
+  console.log('✓ Test 73: Elevated field INP correlates with interactive code finding at #01 with file, line, why, and code diff.');
+
+  console.log('\n🎉 All 73 Core Web Vitals Correlation Engine tests passed successfully!');
 } catch (err) {
   console.error('\n❌ Test execution failed:');
   console.error(err);
