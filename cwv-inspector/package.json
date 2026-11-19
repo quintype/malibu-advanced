@@ -17,7 +17,8 @@
     "test:step3": "node tests/runStep3Demo.js",
     "test:ai": "node tests/aiAdvisor.test.js",
     "test:copilot": "node tests/test-copilot-connection.js",
-    "test:correlation": "node tests/correlation.test.js"
+    "test:correlation": "node tests/correlation.test.js",
+    "test:enhancements": "node tests/planEnhancements.test.js"
   },
   "dependencies": {
     "@babel/parser": "^7.23.0",

@@ -410,3 +410,43 @@ Copilot enrichment sends one concise prompt per selected finding and defaults to
 ## 21. Summary
 
 This Core Web Vitals Diagnostic tool combines **synthetic runtime browser audits** with **static source lookup**. For URL-backed runs, Lighthouse findings are the starting point; local source details are attached where selectors and available runtime evidence support a match. A source match is heuristic and may remain unresolved when markup is dynamic, selectors are generated, or several components match. Without a URL, the tool can still perform a repository-wide static audit.
+
+---
+
+## 22. Enhanced 95% Metric Coverage Implementation
+
+To close the metric coverage gap across INP, CLS, and LCP as specified in `CWV_95_PERCENT_PLAN.md` and `CWV_IMPLEMENTATION_PLAN.md`, the following core modules and analyzers are active:
+
+### 1. AST Traversal & Call Graph Tracing (`utils/astTraversal.js`)
+*   **`followFunctionCalls(rootFunc, fileFunctions, fileCalls, maxDepth)`**: Recursively traces function invocation chains from event handlers to nested helper functions with cycle protection.
+*   **`getFullFunctionScope(functionName, content, fileFunctions, maxLines)`**: Extracts the complete function implementation without arbitrary line truncation.
+*   **`extractFunctionCalls(scopeText)`**: Extracts called function identifiers from code blocks while filtering reserved language keywords.
+*   **`findAllEventHandlers(files)`**: Scans workspace files for vanilla JavaScript (`addEventListener`), direct property listeners (`element.onclick`), and jQuery (`.on()`).
+*   **`detectLayoutThrashingInScope(lines, startLineIndex, windowSize)`**: Detects forced synchronous layouts where DOM writes (`style.*`, `classList.*`) are immediately followed by geometry reads (`offsetHeight`, `clientWidth`, `getBoundingClientRect`).
+
+### 2. Validation & Verification Framework (`utils/validationHelpers.js`)
+*   **`validateImageSizing(tag, cssRules)`**: Comprehensive dimension validation checking for missing dimensions, relative percentage widths (`width="100%"`) lacking height or CSS `aspect-ratio`, and matching stylesheet rules.
+*   **`validateHandlerDeferral(handlerCode)`**: Evaluates whether interaction handlers properly yield or defer state updates via `startTransition`, `requestIdleCallback`, `requestAnimationFrame`, or `setTimeout`.
+*   **`generateVerificationGuidance(cwv, issue)`**: Attaches concrete `howToVerify` instructions containing verification methods, terminal commands (`npm run audit -- --url <url> --verify`), and quantified expected metrics improvements to every recommendation.
+
+### 3. High-Coverage INP Analysis (`analyzers/inp.js`)
+*   **Vanilla JS & jQuery Event Handlers**: Detects un-deferred network calls and heavy sync loops across non-React and vanilla scripts.
+*   **Heavy Operations Categorization**: Pinpoints cryptographic operations (`sha256`, `encryptData`), JSON parsing inside loops, DOM queries (`querySelector`, `getElementById`) in loops, and intensive regex executions.
+*   **Render-Blocking Scripts in `<head>`**: Identifies synchronous `<script>` tags in document `<head>` that delay DOM parsing and postpone event listener attachment.
+*   **Smart React State Update Analysis**: Skips re-render warnings when components are already protected by `React.memo` or list virtualization (`react-window`, `react-virtualized`).
+
+### 4. High-Coverage CLS Analysis (`analyzers/cls.js`)
+*   **Image Sizing & Ratio Validation**: Catches images missing width/height attributes, relative `%` widths without ratio, and responsive `srcSet` elements lacking consistent aspect-ratio constraints.
+*   **Dynamic Asynchronous State Renders**: Flags unreserved async conditional renders, including boolean ternary operators (`{isLoading ? null : <Story />}`), negations (`{!hasData && <Story />}`), and `useEffect` fetch setters lacking skeleton placeholders.
+*   **Font Loading Shift Detection (FOIT / FOUT)**: Scans CSS files for `@font-face` declarations lacking `font-display: swap` or `font-display: optional`.
+*   **Intersection Observer Content Insertion**: Detects dynamic DOM injection (`innerHTML`, `appendChild`) upon viewport intersection where container `min-height` or `aspect-ratio` is not pre-reserved.
+
+### 5. High-Coverage LCP Analysis (`analyzers/lcp.js`)
+*   **Runtime LCP Correlation**: Matches Lighthouse runtime LCP candidate elements (`lcpElement`) against source code AST and templates.
+*   **Network Request Priority Analysis**: Flags when primary LCP hero images are preceded by >2 render-blocking stylesheets or synchronous scripts in `<head>`.
+*   **Image Format Optimization**: Recommends modern AVIF and WebP formats with `<picture>` fallbacks for legacy `.jpg`/`.png` hero assets.
+*   **Responsive Sizing Delivery**: Recommends `srcSet` and `sizes` attributes for hero images to prevent mobile viewports from downloading desktop-resolution assets.
+*   **Preconnect Limits**: Enforces a strict limit of 2–4 critical origins for `<link rel="preconnect">` to avoid browser socket contention.
+
+### 6. Executive Report & PDF Verification Guidance (`report/generatePdf.js`)
+*   Every issue rendered in the report and generated PDF displays an integrated **"How to Verify Fix"** card, showing developers the exact test command and expected performance outcome.

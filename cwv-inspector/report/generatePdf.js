@@ -293,6 +293,27 @@ function renderFixDiffHtml(fix) {
   `;
 }
 
+function renderHowToVerifyHtml(howToVerify) {
+  if (!howToVerify) return '';
+  return `
+    <div class="fix-verify-container" style="margin-top: 12px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px; padding: 10px 14px; font-size: 12px; color: #166534;">
+      <div style="font-weight: 600; margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between;">
+        <span style="display: flex; align-items: center; gap: 6px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+          How to Verify Fix
+        </span>
+        <span style="font-size: 11px; font-weight: normal; background: #dcfce7; color: #15803d; padding: 2px 8px; border-radius: 4px;">
+          ${escapeHtml(howToVerify.method || 'Audit Verification')}
+        </span>
+      </div>
+      ${howToVerify.command ? `<div style="font-family: monospace; background: #ffffff; border: 1px solid #dcfce7; padding: 6px 10px; border-radius: 4px; margin-bottom: 6px; color: #14532d; font-size: 11px;">${escapeHtml(howToVerify.command)}</div>` : ''}
+      ${howToVerify.expectedChange ? `<div style="color: #15803d; line-height: 1.4; font-size: 11px;"><strong>Expected Result:</strong> ${escapeHtml(howToVerify.expectedChange)}</div>` : ''}
+    </div>
+  `;
+}
+
 /**
  * Safely serializes data to JSON for embedding directly inside an inline <script> tag.
  * Replaces characters that could terminate the <script> block prematurely (e.g. </script>)
@@ -1127,6 +1148,7 @@ export async function generateReport(compiledResult, options = {}) {
             ${filesListHtml}
             ${renderCodeContextHtml(issue.codeContext)}
             ${renderFixDiffHtml(issue.fixCode)}
+            ${renderHowToVerifyHtml(issue.howToVerify)}
             ${renderLighthouseEvidenceHtml(issue)}
             ${correlationDetailsHtml}
             ${renderAiSectionHtml(issue, index)}

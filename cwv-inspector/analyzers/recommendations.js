@@ -243,6 +243,7 @@ export function compileRecommendations(staticIssues, lighthouseIssues = null, as
         whyExplanation: staticDetails?.whyExplanation || fallbackWhy,
         codeContext: staticDetails?.codeContext || getFileCodeContext(srcFile, targetLineNum, allFiles),
         fixCode: staticDetails?.fixCode || fallbackFix,
+        howToVerify: staticDetails?.howToVerify || { method: 'Lighthouse Performance Audit', command: 'npm run audit -- --url <url>', expectedChange: 'Cumulative Layout Shift should decrease to <= 0.10' },
         confidence: item.confidence,
         evidence: item.evidence,
         selector: item.lhEl.selector,
@@ -405,6 +406,7 @@ export function compileRecommendations(staticIssues, lighthouseIssues = null, as
           after: `<${item.source.tagName || 'div'} style={{ minHeight: '...' }} />`,
           description: 'Reserve layout space with min-height or aspect-ratio on this element or its parent container.'
         },
+        howToVerify: { method: 'Lighthouse Performance Audit', command: 'npm run audit -- --url <url>', expectedChange: 'Cumulative Layout Shift should decrease to <= 0.10' },
         confidence: effectiveConfidence,
         evidence: item.evidence,
         selector: item.lhEl.selector,
@@ -772,6 +774,7 @@ export function compileRecommendations(staticIssues, lighthouseIssues = null, as
         whyExplanation: primaryCandidate.issue.whyExplanation || `Event handler "${handlerName}" at line ${finalLineNum} contributes to ${ri.score}ms INP delay during ${dominantPhase}. Long-running tasks on the main thread prevent the browser from presenting the next frame promptly.`,
         codeContext: primaryCandidate.issue.codeContext || getFileCodeContext(primaryCandidate.issue.file, finalLineNum, allFiles),
         fixCode: primaryCandidate.issue.fixCode || null,
+        howToVerify: primaryCandidate.issue.howToVerify || { method: 'Chrome DevTools Performance Panel / Lighthouse Timespan', command: 'npm run audit -- --url <url> --verify', expectedChange: 'INP latency should decrease to <= 200ms' },
         confidence,
         correlationState,
         evidence: primaryCandidate.reasons,
@@ -959,6 +962,7 @@ export function compileRecommendations(staticIssues, lighthouseIssues = null, as
           whyExplanation: `Real-user field data confirms elevated INP (${Math.round(fieldVal)}ms). User clicks and taps on <${primaryEl.tagName || 'element'}> at line ${lineNum} trigger synchronous state updates or re-renders that delay the next frame paint.`,
           codeContext: codeCtx,
           fixCode,
+          howToVerify: { method: 'Chrome UX Report / Field Performance Tracking', command: 'npm run audit -- --url <url> --verify', expectedChange: 'Field INP p75 should decrease to <= 200ms' },
           confidence: 'HIGH',
           correlationState: 'STRONG',
           evidence: [
@@ -1148,6 +1152,7 @@ export function compileRecommendations(staticIssues, lighthouseIssues = null, as
         whyExplanation: issue.whyExplanation || null,
         codeContext: issue.codeContext || null,
         fixCode: issue.fixCode || null,
+        howToVerify: issue.howToVerify || null,
         handler: issue.handler || null,
         handlerFunction: issue.handlerFunction || null,
         operation: issue.operation || null,
@@ -1193,6 +1198,9 @@ export function compileRecommendations(staticIssues, lighthouseIssues = null, as
       }
       if (!grouped[key].whyExplanation && issue.whyExplanation) {
         grouped[key].whyExplanation = issue.whyExplanation;
+      }
+      if (!grouped[key].howToVerify && issue.howToVerify) {
+        grouped[key].howToVerify = issue.howToVerify;
       }
     }
     if (issue.type === 'lighthouse') {
