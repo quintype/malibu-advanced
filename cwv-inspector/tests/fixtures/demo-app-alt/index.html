@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Alt Fixture: News Reader App</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    .news-card { border: 1px solid #ccc; padding: 16px; margin: 10px 0; }
+    #news-ticker-slot { min-height: 0; }
+    .breaking-strip { display: block; padding: 20px 16px; background: #fde68a; }
+    .cover-art { display: block; max-width: 100%; height: auto; }
+  </style>
+</head>
+<body>
+  <h1>News Reader Feed</h1>
+  <div id="news-ticker-slot"><span class="ticker-label">Live feed</span></div>
+  <div class="hero-box">
+    <img id="alt-news-cover" class="cover-art" data-src="/cover.svg" alt="Cover" />
+  </div>
+  <div class="news-card">Headline one: council approves transit budget</div>
+  <div class="news-card">Headline two: regional markets close higher</div>
+  <div class="news-card">Headline three: new library branch opens downtown</div>
+  <button id="refresh-feed-btn" type="button">Refresh Feed (Sync Task)</button>
+  <div id="articles-container"></div>
+  <script src="/script.js"></script>
+</body>
+</html>
+

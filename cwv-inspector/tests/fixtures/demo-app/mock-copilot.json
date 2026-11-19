@@ -1,0 +1,22 @@
+{
+  "_note": "Stored response for --mock-copilot. This is NOT output from a Copilot call; it is served through the Copilot client interface and labelled strategy \"mock\". \"file\" is relative to the scanned directory.",
+  "responses": [
+    {
+      "match": {
+        "name": "handleSlowButtonClick"
+      },
+      "response": {
+        "file": "app.js",
+        "edits": [
+          {
+            "original_snippet": "function handleSlowButtonClick(event) {\n  const start = performance.now();\n  const counterEl = document.getElementById('counter');\n  const btn = document.getElementById('slow-click-btn');\n\n  // 1. Heavy synchronous CPU loop (~350ms on standard CPU, ~400-500ms on 4x throttle)\n  let sum = 0;\n  for (let i = 0; i < 14000000; i++) {\n    sum += Math.sqrt(i) * Math.sin(i);\n  }\n\n  // 2. Real forced synchronous layout calculation (Layout Thrashing)\n  // Repeatedly writing styles that dirty layout, then immediately reading layout metrics\n  // forces the browser into repeated synchronous reflows, causing forcedStyleAndLayoutDuration > 0\n  let forcedDimsTotal = 0;\n  for (let j = 0; j < 100; j++) {\n    btn.style.width = `${180 + (j % 30)}px`;\n    forcedDimsTotal += btn.offsetHeight; // layout read forcing synchronous layout\n    btn.style.paddingLeft = `${10 + (j % 12)}px`;\n    forcedDimsTotal += btn.getBoundingClientRect().width; // layout read forcing another reflow\n  }",
+            "replacement_snippet": "async function handleSlowButtonClick(event) {\n  const start = performance.now();\n  const counterEl = document.getElementById('counter');\n  const btn = document.getElementById('slow-click-btn');\n\n  // Ignore repeated clicks while this handler yields between chunks.\n  if (btn.__cwvProcessing) return;\n  btn.__cwvProcessing = true;\n  let sum = 0;\n  let forcedDimsTotal = 0;\n  try {\n\n  // Cooperative yielding helper\n  const yieldToMain = () => (typeof scheduler !== 'undefined' && scheduler.yield ? scheduler.yield() : new Promise(r => setTimeout(r, 0)));\n\n  // 1. Chunked compute preserving all 14,000,000 operations\n  const CHUNK_SIZE = 1000000;\n  for (let i = 0; i < 14000000; i += CHUNK_SIZE) {\n    const chunkEnd = Math.min(i + CHUNK_SIZE, 14000000);\n    for (let k = i; k < chunkEnd; k++) {\n      sum += Math.sqrt(k) * Math.sin(k);\n    }\n    await yieldToMain();\n  }\n\n  // 2. Preserved all 100 layout operations in exact order, yielding in batches of 10\n  for (let j = 0; j < 100; j++) {\n    btn.style.width = `${180 + (j % 30)}px`;\n    forcedDimsTotal += btn.offsetHeight;\n    btn.style.paddingLeft = `${10 + (j % 12)}px`;\n    forcedDimsTotal += btn.getBoundingClientRect().width;\n    if ((j + 1) % 10 === 0) {\n      await yieldToMain();\n    }\n  }\n  } finally {\n    btn.__cwvProcessing = false;\n  }"
+          }
+        ],
+        "description": "Chunk the compute loop and the layout loop with cooperative yielding, keeping every operation, and ignore repeated clicks while the handler is yielding.",
+        "why_it_works": "Yielding to the main thread between 1,000,000-iteration chunks and after every 10 layout operations lets the browser handle pending input and paint between slices, so the handler no longer runs as one long task. All iterations and layout reads/writes still run in the same order.",
+        "tradeoffs": "The handler takes longer in total wall-clock time; clicks made while it is yielding are ignored; the counter text updates later."
+      }
+    }
+  ]
+}
